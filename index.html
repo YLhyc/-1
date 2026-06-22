@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>考研英语生词本</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f7; color: #1d1d1f; padding: 16px 16px 40px;
+    -webkit-tap-highlight-color: transparent; user-select: none;
+  }
+  h1 { font-size: 22px; text-align: center; margin-bottom: 2px; }
+  .subtitle { text-align: center; font-size: 12px; color: #86868b; margin-bottom: 18px; }
+  .group-card {
+    background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .group-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+  .word-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .word-swipe {
+    position: relative; overflow: hidden; border-radius: 10px;
+  }
+  .ws-actions {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    display: flex; align-items: stretch;
+  }
+  .ws-btn {
+    min-width: 52px; border: none; color: #fff;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    white-space: nowrap; padding: 0 12px;
+    -webkit-appearance: none; outline: none;
+  }
+  .ws-btn:active { filter: brightness(0.85); }
+  .ws-familiar { background: #34c759; }
+  .ws-hard { background: #ff9500; }
+  .ws-reset { background: #8e8e93; }
+  .word-block {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    background: #f9f9fb; transition: transform 0.25s ease, background 0.2s;
+    position: relative; z-index: 1;
+  }
+  .word-block.active { background: #d4f5d4; }
+  .word-block.loading-word { background: #fffde8; }
+  .wb-en { font-weight: 700; font-size: 16px; color: #1d1d1f; min-width: 90px; }
+  .word-block.active .wb-en { color: #0a6e0a; }
+  .wb-cn { font-size: 14px; color: #86868b; flex: 1; }
+  .word-block.active .wb-cn { color: #2d7d2d; }
+  .wb-step { font-size: 11px; color: #bbb; white-space: nowrap; display: none; }
+  .word-block.active .wb-step { display: inline; }
+  .wb-count {
+    font-size: 9px; color: #aaa; font-weight: 600; white-space: nowrap;
+    min-width: 20px; text-align: center;
+  }
+  .wb-badge {
+    font-size: 10px; font-weight: 700; margin-left: 2px;
+    padding: 1px 5px; border-radius: 4px; display: none;
+  }
+  .wb-badge.wb-familiar { display: inline; background: #d4f5d4; color: #0a6e0a; }
+  .wb-badge.wb-hard { display: inline; background: #ffe0cc; color: #cc6600; }
+  .loading { display: none; text-align: center; padding: 8px; color: #86868b; font-size: 12px; margin-bottom: 8px; }
+  .loading.show { display: block; }
+  .spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid #e0e0e0; border-top-color: #007aff;
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    vertical-align: middle; margin-right: 4px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-row { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    height: 46px; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.15s; -webkit-appearance: none; outline: none;
+  }
+  .btn:active { opacity: 0.7; transform: scale(0.97); }
+  .btn-play { flex: 2; background: #007aff; color: #fff; }
+  .btn-play.playing { background: #ff9500; }
+  .btn-play.paused { background: #34c759; }
+  .btn-pause { flex: 1; background: #f0f0f5; color: #1d1d1f; }
+  .btn-pause:disabled { opacity: 0.35; }
+  .btn-rewind { flex: 1; background: #f0f0f5; color: #1d1d1f; }
+  .btn svg { width: 20px; height: 20px; pointer-events: none; }
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  .sync-top-btn {
+    font-size: 16px; cursor: pointer; margin-left: 6px;
+    opacity: 0.5; transition: opacity 0.2s;
+  }
+  .sync-top-btn:active { opacity: 1; }
+  .sync-modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; }
+  .sync-modal.show { display: block; }
+  .sync-modal-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); }
+  .sync-modal-card {
+    position: absolute; left: 50%; top: 40%; transform: translate(-50%,-50%);
+    background: #fff; border-radius: 16px; padding: 24px; width: 300px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15); text-align: center;
+  }
+  .sync-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .sync-desc { font-size: 12px; color: #86868b; margin-bottom: 16px; line-height: 1.5; }
+  .sync-textarea {
+    width: 100%; height: 70px; border: 1px solid #e0e0e0; border-radius: 10px;
+    padding: 10px; font-size: 12px; resize: none; margin-bottom: 12px;
+    -webkit-appearance: none;
+  }
+  .sync-btn-row { display: flex; gap: 10px; }
+  .sync-action {
+    flex: 1; height: 42px; border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    -webkit-appearance: none; outline: none;
+  }
+  .sync-action:active { opacity: 0.7; }
+  .sync-export { background: #007aff; color: #fff; }
+  .sync-import { background: #34c759; color: #fff; }
+  .sync-close {
+    margin-top: 10px; background: none; border: none; color: #8e8e93;
+    font-size: 14px; cursor: pointer; width: 100%; height: 36px;
+  }
+  .sync-msg { font-size: 11px; margin-top: 6px; min-height: 16px; }
+  .sync-msg.ok { color: #34c759; }
+  .sync-msg.err { color: #ff3b30; }
+
+</style>
+</head>
+<body>
+<h1>&#x1F4DA; 考研英语生词本</h1>
+<div class="subtitle">2025 Text 1 · 莎士比亚排练室教学法 · 4组 · 35词 <span class="sync-top-btn" onclick="toggleSyncPanel()">☁</span></div>
+    <div class="group-card">
+      <div class="group-title">第1组（10个）</div>
+      <div class="word-list" id="wl0">
+        <div class="word-swipe" id="ws0_0">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="0" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="0" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="0" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_0">
+            <div class="wb-en">rehearsal</div>
+            <div class="wb-cn">排练</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_1">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="1" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="1" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="1" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_1">
+            <div class="wb-en">instruction</div>
+            <div class="wb-cn">教学/指导</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_2">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="2" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="2" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="2" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_2">
+            <div class="wb-en">vocabulary</div>
+            <div class="wb-cn">词汇（量）</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_3">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="3" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="3" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="3" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_3">
+            <div class="wb-en">sophisticated</div>
+            <div class="wb-cn">复杂的/精密的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_4">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="4" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="4" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="4" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_4">
+            <div class="wb-en">stimulate</div>
+            <div class="wb-cn">激发/刺激</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_5">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="5" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="5" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="5" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_5">
+            <div class="wb-en">desert</div>
+            <div class="wb-cn">荒凉的（形容词）</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_6">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="6" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="6" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="6" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_6">
+            <div class="wb-en">cliché</div>
+            <div class="wb-cn">陈词滥调</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_7">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="7" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="7" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="7" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_7">
+            <div class="wb-en">description</div>
+            <div class="wb-cn">描写/描述</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_8">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="8" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="8" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="8" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_8">
+            <div class="wb-en">omission</div>
+            <div class="wb-cn">遗漏/忽略</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws0_9">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="0" data-w="9" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="0" data-w="9" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="0" data-w="9" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb0_9">
+            <div class="wb-en">casual</div>
+            <div class="wb-cn">随意的/不正式的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+      </div>
+      <div class="loading" id="loading0"><div class="spinner"></div>加载中…</div>
+      <div class="btn-row">
+        <button class="btn btn-play" id="btnPlay0" onclick="togglePlay(0)">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+          <span class="btn-label">朗读</span>
+        </button>
+        <button class="btn btn-pause" id="btnPause0" onclick="togglePause(0)" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="btn btn-rewind" onclick="doRewind(0)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="group-card">
+      <div class="group-title">第2组（10个）</div>
+      <div class="word-list" id="wl1">
+        <div class="word-swipe" id="ws1_0">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="0" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="0" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="0" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_0">
+            <div class="wb-en">preference</div>
+            <div class="wb-cn">偏好</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_1">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="1" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="1" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="1" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_1">
+            <div class="wb-en">promote</div>
+            <div class="wb-cn">提升/促进</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_2">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="2" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="2" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="2" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_2">
+            <div class="wb-en">literacy</div>
+            <div class="wb-cn">素养/读写能力</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_3">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="3" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="3" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="3" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_3">
+            <div class="wb-en">identify with</div>
+            <div class="wb-cn">与…共情/认同</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_4">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="4" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="4" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="4" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_4">
+            <div class="wb-en">literary</div>
+            <div class="wb-cn">文学的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_5">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="5" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="5" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="5" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_5">
+            <div class="wb-en">infer</div>
+            <div class="wb-cn">推断</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_6">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="6" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="6" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="6" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_6">
+            <div class="wb-en">formidable</div>
+            <div class="wb-cn">令人生畏的/难对付的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_7">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="7" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="7" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="7" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_7">
+            <div class="wb-en">primary</div>
+            <div class="wb-cn">小学的/初级的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_8">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="8" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="8" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="8" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_8">
+            <div class="wb-en">reluctant</div>
+            <div class="wb-cn">不情愿的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws1_9">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="1" data-w="9" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="1" data-w="9" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="1" data-w="9" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb1_9">
+            <div class="wb-en">groundbreaking</div>
+            <div class="wb-cn">开创性的/突破性的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+      </div>
+      <div class="loading" id="loading1"><div class="spinner"></div>加载中…</div>
+      <div class="btn-row">
+        <button class="btn btn-play" id="btnPlay1" onclick="togglePlay(1)">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+          <span class="btn-label">朗读</span>
+        </button>
+        <button class="btn btn-pause" id="btnPause1" onclick="togglePause(1)" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="btn btn-rewind" onclick="doRewind(1)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="group-card">
+      <div class="group-title">第3组（10个）</div>
+      <div class="word-list" id="wl2">
+        <div class="word-swipe" id="ws2_0">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="0" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="0" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="0" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_0">
+            <div class="wb-en">commission</div>
+            <div class="wb-cn">委托/受托</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_1">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="1" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="1" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="1" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_1">
+            <div class="wb-en">randomised</div>
+            <div class="wb-cn">随机的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_2">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="2" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="2" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="2" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_2">
+            <div class="wb-en">pedagogy</div>
+            <div class="wb-cn">教学法</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_3">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="3" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="3" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="3" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_3">
+            <div class="wb-en">shipwreck</div>
+            <div class="wb-cn">船只失事/船难</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_4">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="4" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="4" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="4" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_4">
+            <div class="wb-en">The Tempest</div>
+            <div class="wb-cn">《暴风雨》（莎剧）</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_5">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="5" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="5" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="5" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_5">
+            <div class="wb-en">accompany</div>
+            <div class="wb-cn">伴随/配合</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_6">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="6" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="6" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="6" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_6">
+            <div class="wb-en">rarer</div>
+            <div class="wb-cn">更罕见的（rare比较级）</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_7">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="7" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="7" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="7" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_7">
+            <div class="wb-en">peer-reviewed</div>
+            <div class="wb-cn">同行评审的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_8">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="8" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="8" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="8" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_8">
+            <div class="wb-en">expansive</div>
+            <div class="wb-cn">开阔的/详尽的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws2_9">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="2" data-w="9" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="2" data-w="9" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="2" data-w="9" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb2_9">
+            <div class="wb-en">atmospheric</div>
+            <div class="wb-cn">大气的/大气状况的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+      </div>
+      <div class="loading" id="loading2"><div class="spinner"></div>加载中…</div>
+      <div class="btn-row">
+        <button class="btn btn-play" id="btnPlay2" onclick="togglePlay(2)">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+          <span class="btn-label">朗读</span>
+        </button>
+        <button class="btn btn-pause" id="btnPause2" onclick="togglePause(2)" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="btn btn-rewind" onclick="doRewind(2)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="group-card">
+      <div class="group-title">第4组（5个）</div>
+      <div class="word-list" id="wl3">
+        <div class="word-swipe" id="ws3_0">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="3" data-w="0" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="3" data-w="0" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="3" data-w="0" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb3_0">
+            <div class="wb-en">evident</div>
+            <div class="wb-cn">明显的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws3_1">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="3" data-w="1" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="3" data-w="1" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="3" data-w="1" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb3_1">
+            <div class="wb-en">resilient</div>
+            <div class="wb-cn">有韧性的/适应力强的</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws3_2">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="3" data-w="2" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="3" data-w="2" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="3" data-w="2" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb3_2">
+            <div class="wb-en">embed</div>
+            <div class="wb-cn">嵌入/融入</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws3_3">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="3" data-w="3" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="3" data-w="3" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="3" data-w="3" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb3_3">
+            <div class="wb-en">replicate</div>
+            <div class="wb-cn">复制/再现</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+        <div class="word-swipe" id="ws3_4">
+          <div class="ws-actions">
+            <button class="ws-btn ws-familiar" data-g="3" data-w="4" data-act="familiar">熟悉</button>
+            <button class="ws-btn ws-hard" data-g="3" data-w="4" data-act="hard">不熟悉</button>
+            <button class="ws-btn ws-reset" data-g="3" data-w="4" data-act="reset">恢复</button>
+          </div>
+          <div class="word-block" id="wb3_4">
+            <div class="wb-en">land a punch</div>
+            <div class="wb-cn">打出一拳（引申：引发轰动）</div>
+            <div class="wb-step"></div>
+            <div class="wb-count"></div>
+            <div class="wb-badge"></div>
+          </div>
+        </div>
+      </div>
+      <div class="loading" id="loading3"><div class="spinner"></div>加载中…</div>
+      <div class="btn-row">
+        <button class="btn btn-play" id="btnPlay3" onclick="togglePlay(3)">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+          <span class="btn-label">朗读</span>
+        </button>
+        <button class="btn btn-pause" id="btnPause3" onclick="togglePause(3)" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="btn btn-rewind" onclick="doRewind(3)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+        </button>
+      </div>
+    </div>
+
+<script>
+var WORD_DATA = [[{"en": "rehearsal", "cn": "排练"}, {"en": "instruction", "cn": "教学/指导"}, {"en": "vocabulary", "cn": "词汇（量）"}, {"en": "sophisticated", "cn": "复杂的/精密的"}, {"en": "stimulate", "cn": "激发/刺激"}, {"en": "desert", "cn": "荒凉的（形容词）"}, {"en": "cliché", "cn": "陈词滥调"}, {"en": "description", "cn": "描写/描述"}, {"en": "omission", "cn": "遗漏/忽略"}, {"en": "casual", "cn": "随意的/不正式的"}], [{"en": "preference", "cn": "偏好"}, {"en": "promote", "cn": "提升/促进"}, {"en": "literacy", "cn": "素养/读写能力"}, {"en": "identify with", "cn": "与…共情/认同"}, {"en": "literary", "cn": "文学的"}, {"en": "infer", "cn": "推断"}, {"en": "formidable", "cn": "令人生畏的/难对付的"}, {"en": "primary", "cn": "小学的/初级的"}, {"en": "reluctant", "cn": "不情愿的"}, {"en": "groundbreaking", "cn": "开创性的/突破性的"}], [{"en": "commission", "cn": "委托/受托"}, {"en": "randomised", "cn": "随机的"}, {"en": "pedagogy", "cn": "教学法"}, {"en": "shipwreck", "cn": "船只失事/船难"}, {"en": "The Tempest", "cn": "《暴风雨》（莎剧）"}, {"en": "accompany", "cn": "伴随/配合"}, {"en": "rarer", "cn": "更罕见的（rare比较级）"}, {"en": "peer-reviewed", "cn": "同行评审的"}, {"en": "expansive", "cn": "开阔的/详尽的"}, {"en": "atmospheric", "cn": "大气的/大气状况的"}], [{"en": "evident", "cn": "明显的"}, {"en": "resilient", "cn": "有韧性的/适应力强的"}, {"en": "embed", "cn": "嵌入/融入"}, {"en": "replicate", "cn": "复制/再现"}, {"en": "land a punch", "cn": "打出一拳（引申：引发轰动）"}]];
+var TOTAL_GROUPS = 4;
+var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10]};
+
+// Per-word familiarity preferences, persisted in localStorage
+var wordPrefs = JSON.parse(localStorage.getItem("vocab_prefs") || "{}");
+var playCounts = JSON.parse(localStorage.getItem("vocab_counts") || "{}");
+
+// Step definitions per level
+var STEP_DEFS = {
+  familiar:  { labels: ["英①","中①"], isEN: [0] },
+  default:   { labels: ["英①","英②","中①","中②","英③","中③","英④","中④"], isEN: [0,1,4,6] },
+  hard:      { labels: ["英①","英②","中①","中②","英③","中③","英④","中④","英⑤","中⑤","英⑥","中⑥"], isEN: [0,1,4,6,8,10] }
+};
+
+var audioCache = {};
+var groupLoaded = {};
+var currentGroup = -1, wordIdx = 0, step = 0, paused = false, activeAudio = null;
+var singleWordMode = false;
+var wasSwipe = false;
+
+function getStepInfo() {
+  var key = currentGroup + "_" + wordIdx;
+  var pref = wordPrefs[key];
+  if (pref === "familiar") return STEP_DEFS.familiar;
+  if (pref === "hard") return STEP_DEFS.hard;
+  return STEP_DEFS.default;
+}
+
+function makeAudio(b64) {
+  var a = new Audio("data:audio/mpeg;base64," + b64);
+  a.preload = "auto";
+  return a;
+}
+
+function highlight(gIdx, wIdx) {
+  document.querySelectorAll(".word-block.active,.word-block.loading-word").forEach(function(el) {
+    el.classList.remove("active", "loading-word");
+  });
+  var wb = document.getElementById("wb" + gIdx + "_" + wIdx);
+  if (wb) {
+    wb.classList.add("active");
+    var si = getStepInfo();
+    wb.querySelector(".wb-step").textContent = si.labels[step];
+  }
+}
+
+function clearHighlight() {
+  document.querySelectorAll(".word-block.active,.word-block.loading-word").forEach(function(el) {
+    el.classList.remove("active", "loading-word");
+  });
+}
+
+function setBtnState(gIdx, playing, isPaused, disabled) {
+  var btnPlay = document.getElementById("btnPlay" + gIdx);
+  var btnPause = document.getElementById("btnPause" + gIdx);
+  if (!btnPlay) return;
+  var icon = btnPlay.querySelector(".play-icon");
+  var label = btnPlay.querySelector(".btn-label");
+  btnPlay.disabled = !!disabled;
+  btnPause.disabled = !!disabled;
+  btnPlay.classList.remove("playing", "paused");
+  if (disabled) {
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    label.textContent = "加载中";
+    return;
+  }
+  if (playing) {
+    btnPlay.classList.add("playing");
+    icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    label.textContent = "播放中";
+    btnPause.disabled = false;
+  } else if (isPaused) {
+    btnPlay.classList.add("paused");
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    label.textContent = "继续";
+    btnPause.disabled = false;
+  } else {
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    label.textContent = "朗读";
+    btnPause.disabled = true;
+  }
+}
+
+function stopAll() {
+  if (activeAudio) { activeAudio.onended = null; activeAudio.onerror = null; activeAudio.pause(); activeAudio = null; }
+  clearHighlight();
+  for (var i = 0; i < TOTAL_GROUPS; i++) setBtnState(i, false, false, false);
+  currentGroup = -1; wordIdx = 0; step = 0; paused = false;
+}
+
+function finishGroup() {
+  clearHighlight();
+  setBtnState(currentGroup, false, false, false);
+  currentGroup = -1; wordIdx = 0; step = 0; paused = false; activeAudio = null; singleWordMode = false;
+}
+
+function playCurrentWord() {
+  if (currentGroup < 0) return;
+  var groupWords = WORD_DATA[currentGroup];
+  if (wordIdx >= groupWords.length) { finishGroup(); return; }
+  var key = currentGroup + "_" + wordIdx;
+  var cached = audioCache[key];
+  if (!cached) { finishGroup(); return; }
+
+  var si = getStepInfo();
+  var isEN = si.isEN.indexOf(step) !== -1;
+  var b64 = isEN ? cached.en : cached.cn;
+  var au = makeAudio(b64);
+  activeAudio = au;
+  highlight(currentGroup, wordIdx);
+
+  if (step === 0) {
+    var ck = currentGroup + '_' + wordIdx;
+    playCounts[ck] = (playCounts[ck] || 0) + 1;
+    localStorage.setItem('vocab_counts', JSON.stringify(playCounts));
+    updateCount(currentGroup, wordIdx);
+  }
+
+  au.onended = function() {
+    if (currentGroup < 0) return;
+    step++;
+    var si2 = getStepInfo();
+    if (step >= si2.labels.length) {
+      if (singleWordMode) { finishGroup(); return; }
+      step = 0;
+      preloadWord(currentGroup, wordIdx + 2);
+      wordIdx++;
+    }
+    if (wordIdx >= groupWords.length) { finishGroup(); }
+    else { playCurrentWord(); }
+  };
+
+  au.onerror = function() {
+    if (currentGroup < 0) return;
+    step++;
+    var si2 = getStepInfo();
+    if (step >= si2.labels.length) {
+      if (singleWordMode) { finishGroup(); return; }
+      step = 0; wordIdx++;
+    }
+    if (wordIdx >= groupWords.length) { finishGroup(); }
+    else { playCurrentWord(); }
+  };
+
+  au.play();
+}
+
+function playSingleWord(gIdx, wIdx) {
+  stopAll();
+  currentGroup = gIdx;
+  wordIdx = wIdx;
+  step = 0;
+  paused = false;
+  singleWordMode = true;
+  var key = gIdx + '_' + wIdx;
+  if (audioCache[key]) {
+    setBtnState(gIdx, true, false, false);
+    playCurrentWord();
+  } else {
+    var loading = document.getElementById('loading' + gIdx);
+    if (loading) loading.classList.add('show');
+    setBtnState(gIdx, false, false, true);
+    var af = getAudioFile(gIdx);
+    fetch('audio_g' + af.fileIdx + '.json?t=' + Date.now())
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        groupLoaded[gIdx] = true;
+        for (var i = 0; i < WORD_DATA[gIdx].length; i++) {
+          var srcIdx = af.offset + i;
+          if (srcIdx < data.words.length) {
+            audioCache[gIdx + "_" + i] = data.words[srcIdx];
+          }
+        }
+        if (loading) loading.classList.remove('show');
+        setBtnState(gIdx, true, false, false);
+        playCurrentWord();
+      })
+      .catch(function() {
+        if (loading) loading.textContent = '加载失败';
+        finishGroup();
+      });
+  }
+}
+
+function getAudioFile(gIdx) {
+  var map = AUDIO_MAP[String(gIdx)] || [gIdx, 0];
+  return { fileIdx: map[0], offset: map[1] };
+}
+
+function preloadWord(gIdx, wIdx) {
+  if (gIdx < 0 || gIdx >= TOTAL_GROUPS) return;
+  if (wIdx < 0 || wIdx >= WORD_DATA[gIdx].length) return;
+  var key = gIdx + "_" + wIdx;
+  if (audioCache[key]) return;
+  if (groupLoaded[gIdx]) return;
+  var wb = document.getElementById("wb" + gIdx + "_" + wIdx);
+  if (wb) wb.classList.add("loading-word");
+  groupLoaded[gIdx] = "loading";
+  var af = getAudioFile(gIdx);
+  fetch("audio_g" + af.fileIdx + ".json?t=" + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      groupLoaded[gIdx] = true;
+      for (var i = 0; i < WORD_DATA[gIdx].length; i++) {
+        var srcIdx = af.offset + i;
+        if (srcIdx < data.words.length) {
+          audioCache[gIdx + "_" + i] = data.words[srcIdx];
+        }
+      }
+      // Clear loading on all words in this group
+      for (var j = 0; j < WORD_DATA[gIdx].length; j++) {
+        var wb2 = document.getElementById("wb" + gIdx + "_" + j);
+        if (wb2) wb2.classList.remove("loading-word");
+      }
+    })
+    .catch(function() {
+      delete groupLoaded[gIdx];
+      if (wb) wb.classList.remove("loading-word");
+    });
+}
+
+function fetchFirstWord(gIdx, callback) {
+  var key = gIdx + "_0";
+  if (audioCache[key]) { callback(null); return; }
+  if (groupLoaded[gIdx] === true) { callback(null); return; }
+  var loading = document.getElementById("loading" + gIdx);
+  if (loading) loading.classList.add("show");
+  setBtnState(gIdx, false, false, true);
+
+  var af = getAudioFile(gIdx);
+  fetch("audio_g" + af.fileIdx + ".json?t=" + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      groupLoaded[gIdx] = true;
+      for (var i = 0; i < WORD_DATA[gIdx].length; i++) {
+        var srcIdx = af.offset + i;
+        if (srcIdx < data.words.length) {
+          audioCache[gIdx + "_" + i] = data.words[srcIdx];
+        }
+      }
+      if (loading) loading.classList.remove("show");
+      callback(null);
+    })
+    .catch(function(err) {
+      if (loading) loading.textContent = "加载失败，请重试";
+      callback(err);
+    });
+}
+
+function togglePlay(gIdx) {
+  if (currentGroup === gIdx && !paused) {
+    if (activeAudio) { activeAudio.pause(); }
+    paused = true;
+    setBtnState(gIdx, false, true, false);
+  } else if (currentGroup === gIdx && paused) {
+    if (activeAudio) { activeAudio.play(); }
+    paused = false;
+    setBtnState(gIdx, true, false, false);
+  } else {
+    stopAll();
+    fetchFirstWord(gIdx, function(err) {
+      if (err) return;
+      currentGroup = gIdx;
+      wordIdx = 0;
+      step = 0;
+      paused = false;
+      setBtnState(gIdx, true, false, false);
+      preloadWord(gIdx, 1);
+      preloadWord(gIdx, 2);
+      playCurrentWord();
+    });
+  }
+}
+
+function togglePause(gIdx) {
+  if (currentGroup !== gIdx) return;
+  if (paused) {
+    if (activeAudio) { activeAudio.play(); }
+    paused = false;
+    setBtnState(gIdx, true, false, false);
+  } else {
+    if (activeAudio) { activeAudio.pause(); }
+    paused = true;
+    setBtnState(gIdx, false, true, false);
+  }
+}
+
+function doRewind(gIdx) {
+  stopAll();
+  currentGroup = gIdx;
+  wordIdx = 0;
+  step = 0;
+  paused = false;
+  setBtnState(gIdx, false, false, false);
+}
+
+// --- Swipe & familiarity ---
+var swipeOpenEl = null;
+var swipeStartX = 0, swipeStartY = 0, swipeCurrentEl = null;
+var swipeStartTX = 0;
+var SWIPE_WIDTH = 156; // 3 buttons × 52px
+
+function closeSwipe(el) {
+  if (!el) el = swipeOpenEl;
+  if (el) {
+    var wb = el.querySelector(".word-block");
+    if (wb) wb.style.transform = "translateX(0)";
+    el.classList.remove("swiped");
+  }
+  if (swipeOpenEl === el || !el) swipeOpenEl = null;
+}
+
+document.addEventListener("touchstart", function(e) {
+  wasSwipe = false;
+  var swipe = e.target.closest(".word-swipe");
+  if (!swipe) { closeSwipe(); swipeCurrentEl = null; return; }
+  // Close previously open if different
+  if (swipeOpenEl && swipeOpenEl !== swipe) closeSwipe(swipeOpenEl);
+  swipeCurrentEl = swipe;
+  swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
+  var wb = swipe.querySelector(".word-block");
+  swipeStartTX = 0;
+  if (wb) {
+    var m = wb.style.transform.match(/-?[0-9.]+/);
+    if (m) swipeStartTX = parseFloat(m[0]);
+  }
+}, { passive: true });
+
+document.addEventListener("touchmove", function(e) {
+  if (!swipeCurrentEl) return;
+  var dx = e.touches[0].clientX - swipeStartX;
+  var dy = e.touches[0].clientY - swipeStartY;
+  // Only intercept horizontal swipes
+  if (Math.abs(dy) > Math.abs(dx)) { closeSwipe(swipeCurrentEl); return; }
+  if (Math.abs(dx) > 10) wasSwipe = true;
+  if (dx > 10) { closeSwipe(swipeCurrentEl); return; } // ignore right swipe
+  e.preventDefault();
+  var newTX = swipeStartTX + dx;
+  newTX = Math.max(-SWIPE_WIDTH, Math.min(0, newTX));
+  var wb = swipeCurrentEl.querySelector(".word-block");
+  if (wb) {
+    wb.style.transition = "none";
+    wb.style.transform = "translateX(" + newTX + "px)";
+  }
+}, { passive: false });
+
+document.addEventListener("touchend", function(e) {
+  if (!swipeCurrentEl) return;
+  var wb = swipeCurrentEl.querySelector(".word-block");
+  if (!wb) { swipeCurrentEl = null; return; }
+  wb.style.transition = "transform 0.25s ease";
+  var m = wb.style.transform.match(/-?[0-9.]+/);
+  var curTX = m ? parseFloat(m[0]) : 0;
+  if (Math.abs(curTX) > SWIPE_WIDTH * 0.4) {
+    wb.style.transform = "translateX(-" + SWIPE_WIDTH + "px)";
+    swipeCurrentEl.classList.add("swiped");
+    swipeOpenEl = swipeCurrentEl;
+  } else {
+    wb.style.transform = "translateX(0)";
+    swipeCurrentEl.classList.remove("swiped");
+    swipeOpenEl = null;
+  }
+  swipeCurrentEl = null;
+});
+
+// Button clicks via delegation
+document.addEventListener("click", function(e) {
+  var btn = e.target.closest(".ws-btn");
+  if (btn) {
+    var g = parseInt(btn.dataset.g);
+    var w = parseInt(btn.dataset.w);
+    var act = btn.dataset.act;
+    setPref(g, w, act);
+    return;
+  }
+  // Tap outside swiped element closes it
+  if (!e.target.closest(".word-swipe")) {
+    closeSwipe();
+  }
+  // Tap on word block (not after a swipe) -> play single word
+  if (!wasSwipe) {
+    var wb = e.target.closest(".word-block");
+    if (wb) {
+      var swipeEl = wb.closest(".word-swipe");
+      if (swipeEl && swipeEl.classList.contains("swiped")) {
+        closeSwipe(swipeEl);
+      } else {
+        var m = wb.id.match(/wb(\d+)_(\d+)/);
+        if (m) playSingleWord(parseInt(m[1]), parseInt(m[2]));
+      }
+    }
+  }
+  wasSwipe = false;
+});
+
+function setPref(gIdx, wIdx, act) {
+  var key = gIdx + "_" + wIdx;
+  if (act === "reset") {
+    delete wordPrefs[key];
+  } else {
+    wordPrefs[key] = act;
+  }
+  localStorage.setItem("vocab_prefs", JSON.stringify(wordPrefs));
+  updateBadges();
+  // Close swipe after selection
+  var el = document.getElementById("ws" + gIdx + "_" + wIdx);
+  if (el) setTimeout(function() { closeSwipe(el); }, 200);
+}
+
+function updateBadges() {
+  for (var g = 0; g < TOTAL_GROUPS; g++) {
+    for (var w = 0; w < WORD_DATA[g].length; w++) {
+      var key = g + "_" + w;
+      var pref = wordPrefs[key];
+      var badge = document.querySelector("#wb" + g + "_" + w + " .wb-badge");
+      if (!badge) continue;
+      badge.className = "wb-badge";
+      badge.textContent = "";
+      if (pref === "familiar") {
+        badge.classList.add("wb-familiar");
+        badge.textContent = "熟";
+      } else if (pref === "hard") {
+        badge.classList.add("wb-hard");
+        badge.textContent = "难";
+      }
+    }
+  }
+}
+
+function updateCount(gIdx, wIdx) {
+  var ck = gIdx + '_' + wIdx;
+  var cnt = playCounts[ck] || 0;
+  var el = document.querySelector('#wb' + gIdx + '_' + wIdx + ' .wb-count');
+  if (el) el.textContent = cnt > 0 ? cnt : '';
+}
+
+function updateAllCounts() {
+  for (var g = 0; g < TOTAL_GROUPS; g++) {
+    for (var w = 0; w < WORD_DATA[g].length; w++) {
+      updateCount(g, w);
+    }
+  }
+}
+
+// Init badges and counts on load
+updateBadges();
+updateAllCounts();
+
+// Preload first word of every group on page load (triggers group-level fetch)
+for (var i = 0; i < TOTAL_GROUPS; i++) {
+  preloadWord(i, 0);
+}
+
+// --- Cross-device sync ---
+function toggleSyncPanel() {
+  var modal = document.getElementById('syncModal');
+  if (modal) modal.classList.toggle('show');
+  var ta = document.getElementById('syncText');
+  if (ta) ta.value = '';
+  var msg = document.getElementById('syncMsg');
+  if (msg) { msg.textContent = ''; msg.className = 'sync-msg'; }
+}
+
+function doExport() {
+  var data = { p: wordPrefs, c: playCounts };
+  var code = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  var ta = document.getElementById('syncText');
+  if (ta) ta.value = code;
+  // Also copy to clipboard
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(function() {
+      showSyncMsg('已复制到剪贴板', 'ok');
+    }).catch(function() {
+      showSyncMsg('请手动复制上方同步码', '');
+    });
+  } else {
+    showSyncMsg('请手动复制上方同步码', '');
+  }
+}
+
+function doImport() {
+  var ta = document.getElementById('syncText');
+  var code = ta ? ta.value.trim() : '';
+  if (!code) { showSyncMsg('请先粘贴同步码', 'err'); return; }
+  try {
+    var json = JSON.parse(decodeURIComponent(escape(atob(code))));
+    if (!json.p && !json.c) throw new Error('Invalid');
+    // Merge: higher play count wins
+    if (json.p) {
+      for (var k in json.p) {
+        if (!wordPrefs[k]) wordPrefs[k] = json.p[k];
+      }
+    }
+    if (json.c) {
+      for (var k in json.c) {
+        var v = json.c[k] || 0;
+        if (v > (playCounts[k] || 0)) playCounts[k] = v;
+      }
+    }
+    localStorage.setItem('vocab_prefs', JSON.stringify(wordPrefs));
+    localStorage.setItem('vocab_counts', JSON.stringify(playCounts));
+    updateBadges();
+    updateAllCounts();
+    showSyncMsg('同步成功!', 'ok');
+    ta.value = '';
+  } catch(e) {
+    showSyncMsg('同步码无效，请检查', 'err');
+  }
+}
+
+function showSyncMsg(text, cls) {
+  var msg = document.getElementById('syncMsg');
+  if (msg) { msg.textContent = text; msg.className = 'sync-msg ' + (cls || ''); }
+}
+
+</script>
+
+<div class="sync-modal" id="syncModal">
+  <div class="sync-modal-bg" onclick="toggleSyncPanel()"></div>
+  <div class="sync-modal-card">
+    <div class="sync-title">☁ 跨设备同步</div>
+    <div class="sync-desc">导出：复制同步码，发到另一台设备<br>导入：粘贴同步码，记录自动合并</div>
+    <textarea class="sync-textarea" id="syncText" placeholder="在此粘贴同步码…"></textarea>
+    <div class="sync-btn-row">
+      <button class="sync-action sync-export" onclick="doExport()">导出</button>
+      <button class="sync-action sync-import" onclick="doImport()">导入</button>
+    </div>
+    <div class="sync-msg" id="syncMsg"></div>
+    <button class="sync-close" onclick="toggleSyncPanel()">关闭</button>
+  </div>
+</div>
+</body>
+</html>
