@@ -1,0 +1,58 @@
+{
+  "706_s1": {
+    "key": "706_s1",
+    "file": "706_s1.mp3",
+    "size": 251424,
+    "lang": "zh",
+    "heading": "杜甫 · 沉郁顿挫风格",
+    "subj": "706"
+  },
+  "706_s2": {
+    "key": "706_s2",
+    "file": "706_s2.mp3",
+    "size": 178848,
+    "lang": "zh",
+    "heading": "杜甫 · 诗史性质",
+    "subj": "706"
+  },
+  "706_s3": {
+    "key": "706_s3",
+    "file": "706_s3.mp3",
+    "size": 151056,
+    "lang": "zh",
+    "heading": "杜甫 · 律诗艺术成就",
+    "subj": "706"
+  },
+  "807_s1": {
+    "key": "807_s1",
+    "file": "807_s1.mp3",
+    "size": 192672,
+    "lang": "zh",
+    "heading": "评论写作方法：从效果到机制",
+    "subj": "807"
+  },
+  "807_s2": {
+    "key": "807_s2",
+    "file": "807_s2.mp3",
+    "size": 289008,
+    "lang": "zh",
+    "heading": "807资料体系与考试结构",
+    "subj": "807"
+  },
+  "english_s1": {
+    "key": "english_s1",
+    "file": "english_s1.mp3",
+    "size": 147456,
+    "lang": "en",
+    "heading": "2025 Text 1 · 莎士比亚排练室教学法",
+    "subj": "english"
+  },
+  "english_s2": {
+    "key": "english_s2",
+    "file": "english_s2.mp3",
+    "size": 163728,
+    "lang": "en",
+    "heading": "核心生词积累（19个）",
+    "subj": "english"
+  }
+}

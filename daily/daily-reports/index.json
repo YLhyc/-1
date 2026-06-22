@@ -1,0 +1,13 @@
+{
+  "description": "每日报告索引 — 前端通过此文件发现可用的报告日期",
+  "last_updated": "2026-06-22T00:00:00",
+  "available_dates": [
+    {
+      "date": "2026-06-22",
+      "has_706": true,
+      "has_807": true,
+      "has_english": true,
+      "note": "示例报告：706杜甫+诗经 | 807资料体系+评论方法 | 英语2025 Text1阅读"
+    }
+  ]
+}

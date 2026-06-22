@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a2e">
+<title>考研每日晨报</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root {
+  --bg: #f5f3ef; --card: #fff; --text: #2c2416; --text2: #6b6150;
+  --border: #e7e0d5; --shadow: 0 1px 3px rgba(0,0,0,.06);
+  --radius: 14px; --hdr: #1a1a2e; --hdr-txt: #f0ede5;
+  --c706: #c77d20; --c706-l: #fdf0e0; --c706-bg: #fef9f3;
+  --c807: #2e7d8c; --c807-l: #dff2f5; --c807-bg: #f3fafb;
+  --cen: #b8485e; --cen-l: #fce8ec; --cen-bg: #fef6f7;
+  --tts: #e87040; --tree-line: #d0cbc2;
+  --font: -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1c1a16; --card: #2a2722; --text: #e8e2d5; --text2: #a09884; --border: #3a3630; --shadow: 0 1px 4px rgba(0,0,0,.3); --c706-l: #3d2a18; --c706-bg: #2a2218; --c807-l: #1a2d32; --c807-bg: #1a2428; --cen-l: #3a1a24; --cen-bg: #2a1a20; --tree-line: #4a4540; }
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; -webkit-text-size-adjust:100%; }
+body { font-family:var(--font); background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; padding-bottom:env(safe-area-inset-bottom,20px); }
+
+/* Header */
+.header { background:var(--hdr); color:var(--hdr-txt); padding:16px 20px 12px; text-align:center; }
+.header h1 { font-size:1rem; font-weight:700; letter-spacing:.02em; }
+.header .date { font-size:.72rem; opacity:.6; margin-top:2px; }
+.container { max-width:600px; margin:0 auto; padding:12px 14px 24px; }
+
+/* Dashboard */
+.dash { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
+.dc { background:var(--card); border-radius:var(--radius); padding:13px 10px; text-align:center; box-shadow:var(--shadow); border:1px solid var(--border); cursor:pointer; transition:transform .15s; -webkit-tap-highlight-color:transparent; }
+.dc:active { transform:scale(.97); }
+.dc .icon { font-size:1.4rem; margin-bottom:2px; }
+.dc .name { font-size:.72rem; font-weight:600; color:var(--text2); }
+.dc .bar-wrap { background:#e0dcd4; border-radius:99px; height:5px; margin:7px 0 3px; overflow:hidden; }
+@media (prefers-color-scheme: dark) { .dc .bar-wrap { background:#3a3630; } }
+.dc .bar { height:100%; border-radius:99px; transition:width .4s; }
+.dc.c706 .bar { background:var(--c706); } .dc.c706 .pct { color:var(--c706); }
+.dc.c807 .bar { background:var(--c807); } .dc.c807 .pct { color:var(--c807); }
+.dc.cen .bar { background:var(--cen); } .dc.cen .pct { color:var(--cen); }
+.dc .pct { font-size:.8rem; font-weight:700; }
+.dc .info { font-size:.68rem; color:var(--text2); margin-top:1px; }
+
+/* Back button */
+.back-bar { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.back-btn { font-size:.85rem; padding:7px 14px; border-radius:99px; border:1.5px solid var(--border); background:var(--card); color:var(--text2); cursor:pointer; transition:all .15s; -webkit-tap-highlight-color:transparent; }
+.back-btn:active { transform:scale(.95); }
+
+/* Subject detail header */
+.subj-hdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:12px 14px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); }
+.subj-hdr .dot { width:10px; height:10px; border-radius:99px; flex-shrink:0; }
+.subj-hdr .sh-title { font-weight:700; font-size:1rem; }
+.subj-hdr .sh-info { font-size:.75rem; color:var(--text2); }
+
+/* Trend stats */
+.trend { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+.trend-item { background:var(--card); border-radius:var(--radius); padding:10px; text-align:center; box-shadow:var(--shadow); border:1px solid var(--border); font-size:.73rem; }
+.trend-item .val { font-size:1.1rem; font-weight:700; }
+.trend-item .lbl { font-size:.65rem; color:var(--text2); margin-top:1px; }
+
+/* Section / Accordion header */
+.sec-hdr { display:flex; align-items:center; gap:8px; margin:16px 0 6px; user-select:none; }
+.sec-hdr h2 { font-size:1rem; font-weight:700; }
+
+/* Date accordion */
+.date-accordion { margin-bottom:6px; }
+.date-row { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); margin-bottom:10px; overflow:hidden; }
+.date-row-head { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; cursor:pointer; -webkit-tap-highlight-color:transparent; user-select:none; }
+.date-row-head .dlabel { font-weight:650; font-size:.9rem; }
+.date-row-head .dmeta { font-size:.73rem; color:var(--text2); }
+.date-row-head .darrow { font-size:.8rem; color:var(--text2); transition:transform .25s; }
+.date-row.open .date-row-head .darrow { transform:rotate(180deg); }
+.date-row-body { display:none; }
+.date-row.open .date-row-body { display:block; }
+
+/* Report mini card - 彩色科目卡片 */
+.rmc {
+  margin: 0 12px 12px 12px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border-left: 4px solid transparent;
+}
+.rmc:first-child { margin-top: 12px; }
+.rmc.subj-706 { border-left-color: var(--c706); background: var(--c706-bg); }
+.rmc.subj-807 { border-left-color: var(--c807); background: var(--c807-bg); }
+.rmc.subj-en { border-left-color: var(--cen); background: var(--cen-bg); }
+.rmc-topbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 6px;
+}
+.rmc-topbar .r-icon { font-size: 1.1rem; }
+.rmc-topbar .r-subj-name { font-size: .75rem; font-weight: 700; }
+.rmc-topbar .r-subj-name.n706 { color: var(--c706); }
+.rmc-topbar .r-subj-name.n807 { color: var(--c807); }
+.rmc-topbar .r-subj-name.nen { color: var(--cen); }
+.rmc-topbar .r-phase { font-size: .65rem; color: var(--text2); margin-left: auto; }
+.rmc-content { padding: 0 12px 10px; }
+.rmc-content .si:first-child { border-top: 1px solid var(--border); }
+
+/* Tree mind map */
+.tree { padding:4px 0 4px 8px; }
+.tree-node { position:relative; }
+.tree-node-toggle { display:inline-flex; align-items:center; cursor:pointer; -webkit-tap-highlight-color:transparent; user-select:none; padding:2px 0; }
+.tree-node-toggle .tn-arrow { font-size:.65rem; width:16px; flex-shrink:0; transition:transform .2s; color:var(--text2); display:inline-block; text-align:center; }
+.tree-node.open > .tree-node-toggle .tn-arrow { transform:rotate(90deg); }
+.tree-node-text { font-size:.82rem; line-height:1.5; }
+.tree-node-text strong { color:var(--text); }
+.tree-children { padding-left:20px; border-left:1.5px solid var(--tree-line); margin-left:7px; display:none; }
+.tree-node.open > .tree-children { display:block; }
+.tree-leaf { font-size:.8rem; color:var(--text2); padding:2px 0 2px 12px; position:relative; line-height:1.5; }
+.tree-leaf::before { content:''; position:absolute; left:0; top:10px; width:5px; height:5px; border-radius:99px; background:var(--tree-line); }
+.tree-leaf.has-tag::before { background:var(--c706); }
+
+/* Mind map toggle */
+.view-toggle { display:inline-flex; gap:3px; margin-left:4px; }
+.view-toggle button { font-size:.6rem; padding:2px 7px; border-radius:99px; border:1px solid var(--border); background:var(--card); cursor:pointer; -webkit-tap-highlight-color:transparent; opacity:.6; }
+.view-toggle button.on { opacity:1; font-weight:600; background:var(--hdr); color:var(--hdr-txt); border-color:var(--hdr); }
+
+/* SVG mind map */
+.mindmap-svg { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; display:none; padding:6px 0; }
+.mindmap-svg.show { display:block; }
+.mindmap-svg svg { display:block; }
+.mindmap-svg .mm-node rect { rx:8; ry:8; stroke-width:1.5; }
+.mindmap-svg .mm-node text { font-size:12px; font-family:var(--font); }
+.mindmap-svg .mm-link { stroke-width:1.5; fill:none; }
+
+/* Section item plain (no tree) */
+.si { padding:8px 0; border-top:1px solid var(--border); }
+.si:first-child { border-top:none; }
+.si-head { display:flex; align-items:flex-start; justify-content:space-between; gap:6px; }
+.si-title { font-weight:600; font-size:.85rem; flex:1; }
+.si-type { font-size:.65rem; background:var(--border); padding:1px 7px; border-radius:99px; white-space:nowrap; flex-shrink:0; }
+.si-body { font-size:.8rem; color:var(--text2); margin-top:4px; line-height:1.6; }
+.si-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.si-tags span { font-size:.65rem; padding:2px 7px; border-radius:99px; background:var(--c706-l); color:var(--c706); }
+.si-src { font-size:.68rem; color:var(--text2); margin-top:2px; opacity:.6; }
+
+/* TTS */
+.tts-btn { width:32px; height:32px; border-radius:99px; border:1.5px solid var(--border); background:var(--card); font-size:.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; -webkit-tap-highlight-color:transparent; }
+.tts-btn:active { transform:scale(.92); }
+.tts-btn.playing { background:var(--tts); border-color:var(--tts); color:#fff; }
+
+/* Review / Weak / Plan blocks */
+.rb { border-top:1px solid var(--border); padding:8px 0; }
+.rb-label { font-size:.7rem; font-weight:700; letter-spacing:.04em; margin-bottom:4px; }
+.rb-label.recall { color:#5b8c3e; } .rb-label.weak { color:#c7533a; } .rb-label.plan { color:#3a7ec7; }
+.rb ul { list-style:none; }
+.rb li { font-size:.78rem; padding:3px 0 3px 14px; position:relative; line-height:1.5; }
+.rb li::before { content:''; position:absolute; left:0; top:10px; width:4px; height:4px; border-radius:99px; background:var(--text2); }
+.rb.recall li::before { background:#5b8c3e; } .rb.weak li::before { background:#c7533a; } .rb.plan li::before { background:#3a7ec7; }
+
+/* Quiz */
+.quiz-block { border-top:1px solid var(--border); padding:8px 0; }
+.quiz-block .qz { font-size:.78rem; }
+
+/* Read all bar */
+.ra-bar { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+.ra-btn { font-size:.73rem; padding:7px 12px; border-radius:99px; border:1.5px solid var(--border); background:var(--card); cursor:pointer; display:flex; align-items:center; gap:4px; transition:all .15s; -webkit-tap-highlight-color:transparent; white-space:nowrap; }
+.ra-btn:active { transform:scale(.96); }
+.ra-btn.playing { background:var(--tts); border-color:var(--tts); color:#fff; }
+
+/* Loading / Empty */
+.loading { text-align:center; padding:40px; color:var(--text2); }
+.spinner { width:26px; height:26px; border:3px solid var(--border); border-top-color:var(--c706); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 10px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.empty { text-align:center; padding:28px 16px; color:var(--text2); }
+.empty .eicon { font-size:2rem; margin-bottom:6px; }
+.empty p { font-size:.82rem; }
+
+/* Footer */
+.footer { text-align:center; padding:20px; font-size:.7rem; color:var(--text2); opacity:.5; }
+.footer .dbg { color:var(--text2); text-decoration:underline; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+
+/* Debug modal */
+.dbg-overlay { display:none; position:fixed; inset:0; z-index:999; background:var(--bg); overflow-y:auto; padding:16px; }
+.dbg-overlay.show { display:block; }
+.dbg-close { position:sticky; top:8px; float:right; font-size:1.2rem; width:36px; height:36px; border-radius:99px; border:1.5px solid var(--border); background:var(--card); cursor:pointer; z-index:1; }
+.dbg-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
+.dbg-note { font-size:.73rem; color:var(--text2); margin-bottom:12px; }
+.dbg-table { width:100%; border-collapse:collapse; font-size:.72rem; }
+.dbg-table th,.dbg-table td { padding:6px 8px; border-bottom:1px solid var(--border); text-align:left; vertical-align:middle; }
+.dbg-table th { font-size:.65rem; color:var(--text2); position:sticky; top:0; background:var(--bg); }
+.dbg-table .hi { font-weight:700; color:var(--c706); }
+.dbg-play { font-size:.65rem; padding:3px 9px; border-radius:99px; border:1px solid var(--border); background:var(--card); cursor:pointer; }
+
+/* Hide subject views initially */
+.subject-view { display:none; }
+.subject-view.active { display:block; }
+.home-view { display:none; }
+.home-view.active { display:block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📚 考研每日晨报</h1>
+  <div class="date" id="headerDate">加载中...</div>
+</div>
+
+<div class="container">
+
+  <!-- ===== HOME VIEW ===== -->
+  <div class="home-view active" id="homeView">
+    <div class="dash" id="dashboard"></div>
+    <div class="ra-bar" id="raHome" style="display:none">
+      <button class="ra-btn" onclick="readAll('all')" id="raAll">▶️ 朗读全部</button>
+    </div>
+    <div class="sec-hdr"><h2>📅 全部复习记录</h2></div>
+    <div class="date-accordion" id="homeAccordion"></div>
+    <div class="loading" id="homeLoading"><div class="spinner"></div><p>加载中...</p></div>
+  </div>
+
+  <!-- ===== SUBJECT VIEW ===== -->
+  <div class="subject-view" id="subjectView">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">← 返回首页</button>
+    </div>
+    <div class="subj-hdr" id="subjHeader"></div>
+    <div class="trend" id="trendStats"></div>
+    <div class="ra-bar" id="raSubj" style="display:none">
+      <button class="ra-btn" onclick="readAll('current')" id="raCur">▶️ 朗读全部</button>
+    </div>
+    <div class="sec-hdr"><h2>📅 复习记录</h2></div>
+    <div class="date-accordion" id="subjAccordion"></div>
+    <div class="loading" id="subjLoading"><div class="spinner"></div><p>加载中...</p></div>
+  </div>
+
+  <div class="footer">每日自动生成 · 清晨朗读回顾 · <span class="dbg" onclick="showVoiceDebug()">语音调试</span></div>
+</div>
+
+<!-- Voice debug overlay -->
+<div class="dbg-overlay" id="dbgOverlay">
+  <button class="dbg-close" onclick="hideVoiceDebug()">✕</button>
+  <div class="dbg-title">🔊 可用语音列表</div>
+  <div class="dbg-note" id="dbgNote">加载中...</div>
+  <table class="dbg-table" id="dbgTable"></table>
+</div>
+
+<script>
+// ====== STATE ======
+let curUtt = null, curBtn = null, curAudio = null;
+let allDates = [];
+let allReports = {};
+let currentView = 'home';
+let currentSubject = '';
+let audioManifests = {};  // { '2026-06-22': { '706_s1': {file, ...}, ... } }
+const SUBJECTS = [
+  { id:'706', name:'706 古代文学·汉语', icon:'📜', css:'c706', fullName:'中国古代文学与古代汉语', max:18, key:'论述题框架' },
+  { id:'807', name:'807 现当代·评论', icon:'📖', css:'c807', fullName:'中国现当代文学与评论写作', max:25, key:null },
+  { id:'english', name:'英语一', icon:'🔤', css:'cen', fullName:'考研英语一', max:12, key:null },
+];
+
+// ====== INIT ======
+document.addEventListener('DOMContentLoaded', init);
+async function init() {
+  const today = new Date();
+  document.getElementById('headerDate').textContent =
+    `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日 · 星期${'日一二三四五六'[today.getDay()]}`;
+
+  // Load index
+  try {
+    const r = await fetch('./daily-reports/index.json');
+    if (r.ok) { const idx = await r.json(); allDates = (idx.available_dates||[]).sort((a,b)=>b.date.localeCompare(a.date)); }
+  } catch(_){}
+
+  // Load ALL reports for all dates
+  await loadAllReports();
+  // Load audio manifests (tiny files)
+  await loadAllAudio();
+  renderHome();
+}
+
+async function loadAllReports() {
+  for (const d of allDates) {
+    if (allReports[d.date]) continue;
+    const dayData = {};
+    for (const s of SUBJECTS) {
+      try {
+        const r = await fetch(`./daily-reports/${d.date}/${s.id}_report.json`);
+        if (r.ok) dayData[s.id] = await r.json();
+      } catch(_) {}
+    }
+    allReports[d.date] = dayData;
+  }
+}
+
+async function loadAllAudio() {
+  for (const d of allDates) {
+    if (audioManifests[d.date]) continue;
+    try {
+      const r = await fetch(`./daily-reports/${d.date}/audio/manifest.json`);
+      if (r.ok) audioManifests[d.date] = await r.json();
+    } catch(_) {}
+  }
+}
+
+// ====== RENDER HOME ======
+function renderHome() {
+  document.getElementById('homeView').classList.add('active');
+  document.getElementById('subjectView').classList.remove('active');
+  document.getElementById('homeLoading').style.display = 'none';
+  currentView = 'home'; currentSubject = '';
+
+  // Dashboard
+  const dash = document.getElementById('dashboard');
+  let dh = '';
+  for (const s of SUBJECTS) {
+    const stats = calcStats(s.id);
+    const pct = stats.pct;
+    dh += `<div class="dc ${s.css}" onclick="goSubject('${s.id}')">
+      <div class="icon">${s.icon}</div>
+      <div class="name">${s.name}</div>
+      <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
+      <div class="pct">${pct}%</div>
+      <div class="info">${stats.label}</div>
+    </div>`;
+  }
+  dash.innerHTML = dh;
+
+  // Date accordion
+  buildAccordion('homeAccordion', null);
+}
+
+// ====== CALC STATS ======
+function calcStats(subjId) {
+  let days = 0, sections = 0, quiz = 0, totalTime = 0;
+  for (const ds in allReports) {
+    const d = allReports[ds][subjId];
+    if (!d) continue;
+    days++;
+    if (d.sections) sections += d.sections.length;
+    if (d.quiz) quiz++;
+    if (d.study_time) { const m = parseFloat(d.study_time); if (!isNaN(m)) totalTime += m; }
+  }
+  const s = SUBJECTS.find(x => x.id === subjId);
+  const pct = Math.min(Math.round((sections / s.max) * 100), 100);
+  let label = `已学${days}天`;
+  if (subjId === 'english') label = `刷${quiz}/12年`;
+  return { days, sections, quiz, totalTime, pct, label };
+}
+
+// ====== GO SUBJECT ======
+function goSubject(subjId) {
+  document.getElementById('homeView').classList.remove('active');
+  document.getElementById('subjectView').classList.add('active');
+  document.getElementById('subjLoading').style.display = 'none';
+  currentView = 'subject'; currentSubject = subjId;
+
+  const s = SUBJECTS.find(x => x.id === subjId);
+  const stats = calcStats(subjId);
+
+  // Header
+  document.getElementById('subjHeader').innerHTML = `
+    <div class="dot" style="background:var(--${s.id==='english'?'cen':s.id==='807'?'c807':'c706'})"></div>
+    <div>
+      <div class="sh-title">${s.icon} ${s.fullName}</div>
+      <div class="sh-info">累计学习 ${stats.days} 天 · 共 ${stats.totalTime}h</div>
+    </div>`;
+
+  // Trends
+  document.getElementById('trendStats').innerHTML = `
+    <div class="trend-item"><div class="val">${stats.days}</div><div class="lbl">学习天数</div></div>
+    <div class="trend-item"><div class="val">${stats.sections}</div><div class="lbl">知识点数</div></div>
+    <div class="trend-item"><div class="val">${subjId==='english'?stats.quiz+'/12':stats.totalTime+'h'}</div><div class="lbl">${subjId==='english'?'刷题年份':'总学习时长'}</div></div>`;
+
+  // Accordion
+  buildAccordion('subjAccordion', subjId);
+
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function goHome() {
+  renderHome();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+// ====== BUILD DATE ACCORDION ======
+function buildAccordion(containerId, filterSubject) {
+  const c = document.getElementById(containerId);
+  if (allDates.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="eicon">📭</div><p>暂无复习记录</p></div>';
+    return;
+  }
+
+  let html = '';
+  for (const di of allDates) {
+    const dd = allReports[di.date];
+    if (!dd) continue;
+
+    let hasContent = false;
+    if (filterSubject) {
+      hasContent = !!dd[filterSubject];
+    } else {
+      hasContent = !!(dd['706'] || dd['807'] || dd['english']);
+    }
+    if (!hasContent) continue;
+
+    // Date label
+    const parts = di.date.split('-');
+    const dlabel = `${parseInt(parts[1])}月${parseInt(parts[2])}日`;
+    const dow = new Date(di.date).getDay();
+    const week = '周' + '日一二三四五六'[dow];
+
+    html += `<div class="date-row"><div class="date-row-head" onclick="toggleDateRow(this.parentElement)">`;
+    html += `<span class="dlabel">📅 ${dlabel} <span style="font-weight:400;font-size:.75rem;color:var(--text2)">${week}</span></span>`;
+    html += `<span class="darrow">▾</span></div><div class="date-row-body">`;
+
+    if (filterSubject) {
+      // Show only this subject
+      if (dd[filterSubject]) {
+        html += renderSubjectReport(filterSubject, dd[filterSubject], di.date);
+      }
+    } else {
+      // Show all three
+      for (const s of SUBJECTS) {
+        if (dd[s.id]) html += renderSubjectReport(s.id, dd[s.id], di.date);
+      }
+    }
+
+    html += `</div></div>`;
+  }
+  c.innerHTML = html;
+}
+
+function renderSubjectReport(subjId, data, dateStr) {
+  const s = SUBJECTS.find(x => x.id === subjId);
+  const time = data.study_time || '';
+  const phase = data.phase || '';
+  const sections = data.sections || [];
+  const cs = subjId === 'english' ? 'en' : subjId;
+  const nc = subjId === 'english' ? 'nen' : (subjId === '807' ? 'n807' : 'n706');
+
+  let h = `<div class="rmc subj-${cs}">`;
+  // Colorful top bar
+  h += `<div class="rmc-topbar">`;
+  h += `<span class="r-icon">${s.icon}</span>`;
+  h += `<span class="r-subj-name ${nc}">${data.subject_name || s.fullName}</span>`;
+  if (phase) h += `<span class="r-phase">${escHtml(phase)}</span>`;
+  h += `</div>`;
+
+  h += `<div class="rmc-content">`;
+  // Meta line
+  if (time) h += `<div style="font-size:.7rem;color:var(--text2);margin-bottom:6px">⏱ ${time}</div>`;
+
+  // Sections
+  for (let i = 0; i < sections.length; i++) {
+    const sec = sections[i];
+    const hasPoints = sec.points && sec.points.length > 0;
+    const sid = `s_${subjId}_${dateStr.replace(/-/g,'')}_${i}`;
+
+    h += `<div class="si"><div class="si-head">`;
+    h += `<span class="si-title">${escHtml(sec.heading)}</span>`;
+    if (sec.type) h += `<span class="si-type">${escHtml(sec.type)}</span>`;
+    h += `<button class="tts-btn" data-key="${subjId}_${escHtml(sec.id)}" onclick="toggleTts(event,'${subjId}','${dateStr}','${sec.id}')" title="朗读">🔊</button>`;
+    h += `</div>`;
+
+    // View toggle + Tree / Mindmap
+    if (hasPoints) {
+      h += `<div class="view-toggle">`;
+      h += `<button class="on" onclick="switchView('${sid}','tree')">📋 层级</button>`;
+      h += `<button onclick="switchView('${sid}','map')">🗺️ 导图</button>`;
+      h += `</div>`;
+      h += `<div class="tree" id="${sid}_tree">${renderTree(sec.points)}</div>`;
+      h += `<div class="mindmap-svg" id="${sid}_map">${renderMindMap(s.id, sec.heading, sec.points)}</div>`;
+    } else {
+      h += `<div class="si-body">${simpleMd(sec.content)}</div>`;
+    }
+
+    if (sec.tags && sec.tags.length) {
+      h += `<div class="si-tags">${sec.tags.map(t=>`<span>${escHtml(t)}</span>`).join('')}</div>`;
+    }
+    if (sec.source) h += `<div class="si-src">📎 ${escHtml(sec.source)}</div>`;
+    h += `</div>`;
+  }
+
+  // Quiz
+  if (data.quiz) {
+    h += `<div class="quiz-block"><div class="rb-label">📊 测验结果</div>`;
+    h += `<div class="qz">${data.quiz.correct}/${data.quiz.total} 正确 · ${data.quiz.accuracy}</div>`;
+    if (data.quiz.wrong_items) h += `<div style="font-size:.73rem;color:var(--text2)">错题：${data.quiz.wrong_items.map(w=>escHtml(w)).join('、')}</div>`;
+    h += `</div>`;
+  }
+
+  // Review / Weak / Note
+  if (data.key_review && data.key_review.length) {
+    h += `<div class="rb recall"><div class="rb-label recall">🧠 回顾要点</div><ul>${data.key_review.map(r=>`<li>${escHtml(r)}</li>`).join('')}</ul></div>`;
+  }
+  if (data.weak_points && data.weak_points.length) {
+    h += `<div class="rb weak"><div class="rb-label weak">⚠️ 薄弱点</div><ul>${data.weak_points.map(w=>`<li>${escHtml(w)}</li>`).join('')}</ul></div>`;
+  }
+  if (data.note) {
+    h += `<div class="rb"><div style="font-size:.75rem;color:var(--text2);font-style:italic">💬 ${escHtml(data.note)}</div></div>`;
+  }
+
+  h += `</div></div>`; // close rmc-content + rmc
+  return h;
+}
+
+function switchView(sid, mode) {
+  const tree = document.getElementById(sid+'_tree');
+  const map = document.getElementById(sid+'_map');
+  const btns = document.querySelectorAll(`[onclick*="${sid}"]`);
+  btns.forEach(b => b.classList.toggle('on', b.textContent.includes(mode==='tree'?'层级':'导图')));
+  if (mode === 'tree') { if(tree) tree.style.display='block'; if(map) map.classList.remove('show'); }
+  else { if(tree) tree.style.display='none'; if(map) map.classList.add('show'); }
+}
+
+// ====== MIND MAP TREE ======
+function renderTree(points, depth) {
+  depth = depth || 0;
+  let h = '';
+  for (const p of points) {
+    const hasKids = p.children && p.children.length > 0;
+    h += `<div class="tree-node${hasKids?' open':''}">`;
+    h += `<div class="tree-node-toggle" onclick="toggleTreeNode(event, this.parentElement)">`;
+    if (hasKids) h += `<span class="tn-arrow">▶</span>`;
+    else h += `<span class="tn-arrow" style="visibility:hidden">▶</span>`;
+    h += `<span class="tree-node-text">${hasKids ? '<strong>'+escHtml(p.text)+'</strong>' : escHtml(p.text)}</span>`;
+    h += `</div>`;
+    if (hasKids) {
+      h += `<div class="tree-children">${renderTree(p.children, depth+1)}</div>`;
+    }
+    h += `</div>`;
+  }
+  return h;
+}
+
+function toggleTreeNode(event, node) {
+  event.stopPropagation();
+  node.classList.toggle('open');
+}
+
+// ====== MIND MAP SVG ======
+function renderMindMap(subjId, heading, points) {
+	if (!points || points.length === 0) return '';
+	var colors = {
+		'706': { main: '#c77d20', light: '#fdf0e0', light2: '#fef5e8' },
+		'807': { main: '#2e7d8c', light: '#dff2f5', light2: '#edf7f9' },
+		'english': { main: '#b8485e', light: '#fce8ec', light2: '#fef2f4' }
+	};
+	var c = colors[subjId] || colors['706'];
+	var W = 340, MARGIN = 10, NODE_H = 28, PAD = 12;
+	var ROOT_Y = 14, L1_Y = 64, VGAP = 8;
+	var usableW = W - MARGIN * 2;
+
+	function tw(text) {
+		var w = 0;
+		for (var i = 0; i < text.length; i++) w += text.charCodeAt(i) > 127 ? 13 : 7;
+		return Math.min(w + PAD * 2, usableW - 4);
+	}
+	function trunc(text, max) {
+		return text.length > max ? text.substring(0, max) + '…' : text;
+	}
+
+	var nodes = [];
+	var rootCX = W / 2;
+	var rootW = Math.min(tw(heading), 160);
+	nodes.push({ x: rootCX - rootW/2, y: ROOT_Y, w: rootW, text: trunc(heading, 14), fill: c.main, stroke: c.main, tc: '#fff', bold: true, fs: 12 });
+	var maxY = ROOT_Y + NODE_H;
+	var n = points.length;
+
+	for (var i = 0; i < n; i++) {
+		var p = points[i];
+		var slotW = usableW / n;
+		var cx = MARGIN + slotW * (i + 0.5);
+		var w = Math.min(tw(p.text), slotW - 6);
+		var ny = L1_Y;
+		nodes.push({ x: cx - w/2, y: ny, w: w, text: trunc(p.text, 16), fill: c.light, stroke: c.main, tc: c.main, bold: true, fs: 11, px: rootCX, py: ROOT_Y + NODE_H });
+		maxY = Math.max(maxY, ny + NODE_H);
+		if (!p.children || !p.children.length) continue;
+		var childY = ny + NODE_H + VGAP;
+		for (var j = 0; j < p.children.length; j++) {
+			var child = p.children[j];
+			var cw = Math.min(tw(child.text), slotW - 6);
+			nodes.push({ x: cx - cw/2, y: childY, w: cw, text: trunc(child.text, 18), fill: '#fff', stroke: '#ddd8ce', tc: '#5c5240', bold: false, fs: 10, px: cx, py: childY - VGAP/2 });
+			childY += NODE_H + VGAP;
+			maxY = Math.max(maxY, childY - VGAP);
+			if (!child.children || !child.children.length) continue;
+			for (var k = 0; k < child.children.length; k++) {
+				var gc = child.children[k];
+				var gcw = Math.min(tw(gc.text), slotW - 10);
+				nodes.push({ x: cx - gcw/2, y: childY, w: gcw, text: trunc(gc.text, 22), fill: c.light2, stroke: '#e8e2d6', tc: '#9a8e78', bold: false, fs: 10, px: cx, py: childY - VGAP/2 });
+				childY += NODE_H + VGAP;
+				maxY = Math.max(maxY, childY - VGAP);
+			}
+		}
+	}
+
+	var H = maxY + 20;
+	var svg = '<svg width="100%" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+	// Lines
+	for (var li = 0; li < nodes.length; li++) {
+		var nd = nodes[li];
+		if (nd.px === undefined) continue;
+		var ex = nd.x + nd.w / 2, ey = nd.y, midY = (nd.py + ey) / 2;
+		svg += '<path d="M' + nd.px + ',' + nd.py + ' C' + nd.px + ',' + midY + ' ' + ex + ',' + midY + ' ' + ex + ',' + ey + '" stroke="' + c.main + '" stroke-width="1" fill="none" opacity="0.3"/>';
+	}
+	// Non-root nodes
+	for (var ni = 1; ni < nodes.length; ni++) {
+		var nd2 = nodes[ni];
+		svg += '<rect x="' + nd2.x + '" y="' + nd2.y + '" width="' + nd2.w + '" height="' + NODE_H + '" rx="9" fill="' + nd2.fill + '" stroke="' + nd2.stroke + '" stroke-width="1"/>';
+		svg += '<text x="' + (nd2.x + nd2.w/2) + '" y="' + (nd2.y + NODE_H/2 + 4) + '" text-anchor="middle" fill="' + nd2.tc + '" font-size="' + nd2.fs + '" font-weight="' + (nd2.bold ? 'bold' : 'normal') + '">' + escXml(nd2.text) + '</text>';
+	}
+	// Root node (on top)
+	var r = nodes[0];
+	svg += '<rect x="' + (r.x - 1) + '" y="' + (r.y + 1) + '" width="' + r.w + '" height="' + NODE_H + '" rx="14" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="2"/>';
+	svg += '<rect x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + NODE_H + '" rx="14" fill="' + r.fill + '" stroke="' + r.stroke + '" stroke-width="1.5"/>';
+	svg += '<text x="' + (r.x + r.w/2) + '" y="' + (r.y + NODE_H/2 + 5) + '" text-anchor="middle" fill="' + r.tc + '" font-size="' + r.fs + '" font-weight="bold">' + escXml(r.text) + '</text>';
+	svg += '</svg>';
+	return svg;
+}
+
+// ====== DATE ROW TOGGLE ======
+function toggleDateRow(row) {
+  row.classList.toggle('open');
+}
+
+// ====== TTS / AUDIO ======
+function toggleTts(event, subjectId, dateStr, sectionId) {
+  event.stopPropagation();
+  const btn = event.currentTarget;
+
+  // 点同一个按钮 → 暂停
+  if (curBtn === btn && (curAudio || (curUtt && window.speechSynthesis.speaking))) {
+    stopAll();
+    return;
+  }
+
+  stopAll();
+
+  const audioKey = subjectId + '_' + sectionId;
+  const manifest = audioManifests[dateStr];
+
+  // 优先播 mp3（Edge TTS 神经网络语音）
+  if (manifest && manifest[audioKey]) {
+    const url = './daily-reports/' + dateStr + '/audio/' + manifest[audioKey].file;
+    playAudio(url, btn);
+    return;
+  }
+
+  // 回退：Web Speech API
+  const dd = allReports[dateStr];
+  if (!dd) return;
+  const data = dd[subjectId];
+  if (!data) return;
+  const sec = data.sections.find(function(s) { return s.id === sectionId; });
+  if (!sec) return;
+
+  let text = sec.heading + '。';
+  if (sec.points && sec.points.length) {
+    text += flattenPoints(sec.points);
+  } else {
+    text += stripTags(sec.content||'');
+  }
+  speak(text, subjectId, btn);
+}
+
+function playAudio(url, btn) {
+  var a = new Audio(url);
+  a.onplay = function() { btn.classList.add('playing'); btn.textContent = '⏸️'; curAudio = a; curBtn = btn; };
+  a.onended = function() { resetBtn(btn); curAudio = null; curBtn = null; };
+  a.onerror = function() { resetBtn(btn); curAudio = null; curBtn = null; /* 静默失败 */ };
+  a.play().catch(function() { resetBtn(btn); });
+}
+
+function stopAll() {
+  if (curAudio) { curAudio.pause(); curAudio.currentTime = 0; curAudio = null; }
+  stopTts();
+}
+
+function flattenPoints(points) {
+  let t = '';
+  for (const p of points) {
+    t += p.text + '。';
+    if (p.children && p.children.length) t += flattenPoints(p.children);
+  }
+  return t;
+}
+
+let _voiceCache = null;
+function getVoicesList() {
+  if (_voiceCache && _voiceCache.length > 0) return _voiceCache;
+  var v = speechSynthesis.getVoices();
+  if (v && v.length > 0) _voiceCache = v;
+  return v || [];
+}
+speechSynthesis.onvoiceschanged = function() {
+  _voiceCache = speechSynthesis.getVoices();
+};
+
+function pickVoice(lang) {
+  var voices = getVoicesList();
+  if (!voices || voices.length === 0) return null;
+
+  var lc = function(s) { return (s||'').toLowerCase(); };
+
+  // 1) name 或 voiceURI 含 "siri"（覆盖中英文 iOS）
+  var v = null;
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang !== lang) continue;
+    var n = lc(voices[i].name);
+    var u = lc(voices[i].voiceURI);
+    if (n.indexOf('siri') !== -1 || u.indexOf('siri') !== -1) {
+      v = voices[i];
+      break;
+    }
+  }
+  if (v) return v;
+
+  // 2) iOS 语音 URI 常见模式：compact 或 enhanced 通常是 Siri 类高品质语音
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang !== lang) continue;
+    var u = lc(voices[i].voiceURI);
+    if (u.indexOf('compact') !== -1 || u.indexOf('enhanced') !== -1 || u.indexOf('premium') !== -1) {
+      v = voices[i];
+      break;
+    }
+  }
+  if (v) return v;
+
+  // 3) 标记为 default 的语音
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang === lang && voices[i].default) {
+      v = voices[i];
+      break;
+    }
+  }
+  if (v) return v;
+
+  // 4) 任意匹配 lang
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang === lang) { v = voices[i]; break; }
+  }
+  if (v) return v;
+
+  // 5) 语言前缀匹配
+  var prefix = lang.split('-')[0];
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang.indexOf(prefix) === 0) { v = voices[i]; break; }
+  }
+  return v;
+}
+
+function speak(text, subjectId, btn) {
+  var u = new SpeechSynthesisUtterance(text);
+  var lang = subjectId === 'english' ? 'en-US' : 'zh-CN';
+  u.lang = lang;
+  u.rate = 0.88;
+  // 始终尝试选语音（不依赖 voicesReady，避免事件未触发导致永远用默认语音）
+  var voice = pickVoice(lang);
+  if (voice) u.voice = voice;
+  u.onstart = () => { btn.classList.add('playing'); btn.textContent='⏸️'; curBtn=btn; curUtt=u; };
+  u.onend = () => resetBtn(btn);
+  u.onerror = () => resetBtn(btn);
+  window.speechSynthesis.speak(u);
+}
+
+function stopTts() { window.speechSynthesis.cancel(); if (curBtn) resetBtn(curBtn); curUtt=null; curBtn=null; }
+function resetBtn(btn) { btn.classList.remove('playing'); btn.textContent='🔊'; }
+
+// ====== READ ALL ======
+function readAll(scope) {
+  stopAll();
+  let all = [];
+  const dates = Object.keys(allReports).sort((a,b)=>b.localeCompare(a));
+
+  for (const ds of dates) {
+    for (const s of SUBJECTS) {
+      if (scope !== 'all' && scope !== 'current') continue;
+      if (currentView === 'subject' && s.id !== currentSubject) continue;
+      const dd = allReports[ds][s.id];
+      if (!dd || !dd.sections) continue;
+      for (const sec of dd.sections) {
+        let txt = sec.heading + '。';
+        if (sec.points) txt += flattenPoints(sec.points);
+        else txt += stripTags(sec.content||'');
+        all.push({ text:txt, subjId:s.id, date:ds, heading:sec.heading });
+      }
+    }
+  }
+
+  if (all.length === 0) return;
+
+  let fullText = all.map((a,i) => {
+    const d = a.date.split('-');
+    return `第${i+1}段，${parseInt(d[1])}月${parseInt(d[2])}日，${a.heading}。${a.text}`;
+  }).join('\n\n');
+
+  const lang = all[0].subjId === 'english' ? 'en-US' : 'zh-CN';
+  const btnId = scope === 'all' ? 'raAll' : 'raCur';
+  const btn = document.getElementById(btnId);
+  speak(fullText, lang === 'en-US' ? 'english' : '706', btn);
+}
+
+// ====== HELPERS ======
+function escHtml(s) { if(!s)return''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escXml(s) { if(!s)return''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;'); }
+function stripTags(s) { if(!s)return''; return s.replace(/<[^>]*>/g,'').replace(/\*\*/g,'').replace(/\[\[/g,'').replace(/\]\]/g,''); }
+function simpleMd(s) {
+  if(!s)return'';
+  return s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\[\[([^\]]+)\]\]/g,'$1').replace(/\n/g,'<br>');
+}
+
+// Preload voices (iOS 需要异步加载)
+if ('speechSynthesis' in window) { speechSynthesis.getVoices(); }
+
+// ====== VOICE DEBUG ======
+function showVoiceDebug() {
+  var overlay = document.getElementById('dbgOverlay');
+  overlay.classList.add('show');
+  refreshVoiceDebug();
+}
+function hideVoiceDebug() {
+  document.getElementById('dbgOverlay').classList.remove('show');
+  window.speechSynthesis.cancel();
+}
+
+function refreshVoiceDebug() {
+  var voices = speechSynthesis.getVoices();
+  var note = document.getElementById('dbgNote');
+  var table = document.getElementById('dbgTable');
+
+  if (!voices || voices.length === 0) {
+    note.textContent = '语音列表为空 — 请稍候再点（iOS 异步加载中），或者刷新页面后等 2 秒再试。';
+    table.innerHTML = '';
+    return;
+  }
+
+  // 找出当前 pickVoice 选中的语音
+  var zhPicked = pickVoice('zh-CN');
+  var enPicked = pickVoice('en-US');
+  var pickedURI = {};
+  if (zhPicked) pickedURI[zhPicked.voiceURI] = 'zh-CN';
+  if (enPicked) pickedURI[enPicked.voiceURI] = 'en-US';
+
+  note.innerHTML = '共 <b>' + voices.length + '</b> 个语音。高亮行 = <b>当前 pickVoice() 选中</b>（zh-CN / en-US）。点 ▶ 试听。';
+
+  // 按 lang 分组排序
+  voices.sort(function(a, b) {
+    if (a.lang !== b.lang) return a.lang.localeCompare(b.lang);
+    return (a.name || '').localeCompare(b.name || '');
+  });
+
+  var h = '<thead><tr><th>语言</th><th>名称</th><th>voiceURI</th><th>默认</th><th>试听</th></tr></thead><tbody>';
+  for (var i = 0; i < voices.length; i++) {
+    var v = voices[i];
+    var uri = v.voiceURI || '';
+    var picked = pickedURI[uri];
+    var hi = picked ? ' class="hi"' : '';
+    var def = v.default ? '✓' : '';
+    var langLabel = picked ? '<b>' + picked + '</b>' : v.lang;
+    h += '<tr' + hi + '>';
+    h += '<td>' + langLabel + '</td>';
+    h += '<td>' + escHtml(v.name || '') + '</td>';
+    h += '<td style="font-size:.65rem;word-break:break-all">' + escHtml(uri) + '</td>';
+    h += '<td>' + def + '</td>';
+    h += '<td><button class="dbg-play" data-uri="' + escHtml(uri) + '" onclick="testVoice(this.getAttribute(\'data-uri\'))">▶</button></td>';
+    h += '</tr>';
+  }
+  h += '</tbody>';
+  table.innerHTML = h;
+}
+
+function testVoice(voiceURI) {
+  window.speechSynthesis.cancel();
+  var voices = speechSynthesis.getVoices();
+  var voice = null;
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].voiceURI === voiceURI) { voice = voices[i]; break; }
+  }
+  if (!voice) return;
+  var u = new SpeechSynthesisUtterance('你好，这是语音测试。用于确认该语音是否为你在系统设置中选择的Siri男声。');
+  u.voice = voice;
+  u.lang = voice.lang;
+  u.rate = 0.88;
+  window.speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>
