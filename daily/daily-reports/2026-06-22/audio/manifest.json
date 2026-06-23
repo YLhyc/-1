@@ -42,17 +42,17 @@
   "english_s1": {
     "key": "english_s1",
     "file": "english_s1.mp3",
-    "size": 147456,
+    "size": 319824,
     "lang": "en",
-    "heading": "2025 Text 1 · 莎士比亚排练室教学法",
+    "heading": "2025 Text 1 · 逐段精读 ¶4-¶7",
     "subj": "english"
   },
   "english_s2": {
     "key": "english_s2",
     "file": "english_s2.mp3",
-    "size": 163728,
+    "size": 215712,
     "lang": "en",
-    "heading": "核心生词积累（19个）",
+    "heading": "新增生词（8个）—— 按词频分级",
     "subj": "english"
   }
 }

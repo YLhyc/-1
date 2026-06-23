@@ -1,65 +1,69 @@
 {
   "subject": "english",
   "subject_name": "考研英语一",
-  "date": "2026-06-19",
-  "generated_at": "2026-06-19T22:00:00",
+  "date": "2026-06-22",
+  "generated_at": "2026-06-22T23:30:00",
   "phase": "第一轮：分题型刷",
-  "study_time": "1h",
+  "study_time": "1.5h",
   "sections": [
     {
       "id": "s1",
-      "heading": "2025 Text 1 · 莎士比亚排练室教学法",
+      "heading": "2025 Text 1 · 逐段精读 ¶4-¶7",
       "type": "真题练习",
-      "content": "讨论将排练室方法引入课堂教学的RCT研究。5题做对2道，错3道(23/24/25)，错因全部是词汇不认识。",
+      "content": "回顾6月19日做错的2025 Text 1，逐句拆解¶4-¶7。重点分析23题(control pupils' clichés → weakness in description)、24题(emotional literacy → identifying with characters)、25题(末段推断 → Shakespeare works best)。",
       "points": [
-        { "text": "文章主题", "children": [
-          { "text": "rehearsal room approach = 排练室教学法" },
-          { "text": "RCT研究发现：排练法比传统讲授课更能提升literacy(素养)" },
-          { "text": "批判传统教学将莎士比亚当作文物研究" }
+        { "text": "¶4 实验组结果", "children": [
+          { "text": "peer-reviewed results: target group drew on wider vocabulary, more sophisticated words, greater length" },
+          { "text": "对照组：想象自己遇船难会怎样；实验组：代入文学角色(put themselves in the shoes of)" },
+          { "text": "24题答案B：identifying with literary characters 提升 emotional literacy" }
         ]},
-        { "text": "做题结果：2/5 (40%)", "children": [
-          { "text": "23题错：选项生词 sophisticated/cliché/omission" },
-          { "text": "24题错：选项生词 literacy/literary/formidable" },
-          { "text": "25题错：选项生词 reluctant/groundbreaking" }
+        { "text": "¶5 描写对比", "children": [
+          { "text": "对照组：desert island clichés (palm trees)；实验组：expansive (sky, sea, atmospheric conditions)" },
+          { "text": "23题答案A：weakness in description，不是casual style" }
         ]},
-        { "text": "根因分析", "children": [
-          { "text": "不是看不懂文章，而是看不懂选项中的生词" },
-          { "text": "literacy(素养) vs literary(文学的) 需要区分" }
+        { "text": "¶6 情感素养", "children": [
+          { "text": "实验组more resilient, more hopeful" },
+          { "text": "根源：rehearsal room process → imagine your way through → put yourself in different shoes" }
+        ]},
+        { "text": "¶7 可迁移性", "children": [
+          { "text": "Shakespeare 20000词 vs 日常2000词 → massive expansion of language" },
+          { "text": "25题答案A：new teaching method may work best with Shakespeare" }
         ]}
       ],
-      "tags": ["#阅读A", "#2025真题", "#教育类"]
+      "tags": ["#阅读A", "#2025真题", "#逐段精读", "#错题回顾"]
     },
     {
       "id": "s2",
-      "heading": "核心生词积累（19个）",
+      "heading": "新增生词（8个）—— 按词频分级",
       "type": "词汇积累",
-      "content": "本次积累19个生词。高频考点词：rehearsal/pedagogy/literacy/commission/groundbreaking。重点区分literacy vs literary。",
+      "content": "基于全文词频检索（12年真题），8个生词分三档。7年高频4个、3年中频1个、2025新增3个。",
       "points": [
-        { "text": "高频考点词（必记）", "children": [
-          { "text": "rehearsal = 排练" },
-          { "text": "pedagogy = 教学法" },
-          { "text": "literacy = 素养/读写能力" },
-          { "text": "literary = 文学的（注意与literacy区分）" },
-          { "text": "commission = 委托/受托" }
+        { "text": "☆ 7年高频（必记）", "children": [
+          { "text": "evident = 明显的（evidence/evident在7年出现，2015-2025每年都有）" },
+          { "text": "rarer = 更罕见的（rare/rarely在7年出现）" },
+          { "text": "expansive = 开阔的/详尽的（expand/expansive在6年出现）" },
+          { "text": "peer-reviewed = 同行评审的（peer/peer-review在5年出现）" }
         ]},
-        { "text": "易错词", "children": [
-          { "text": "sophisticated = 复杂的/精密的" },
-          { "text": "cliché = 陈词滥调" },
-          { "text": "omission = 遗漏/忽略" },
-          { "text": "formidable = 令人生畏的" },
-          { "text": "reluctant = 不情愿的" },
-          { "text": "groundbreaking = 开创性的" }
+        { "text": "△ 3年中频", "children": [
+          { "text": "atmospheric = 大气的/大气状况的（2017/2023/2025）" }
+        ]},
+        { "text": "★ 2025首次出现（眼熟即可）", "children": [
+          { "text": "resilient = 有韧性的/适应力强的" },
+          { "text": "embed = 嵌入/融入" },
+          { "text": "replicate = 复制/再现" }
         ]}
       ],
-      "tags": ["#词汇", "#2025真题", "#易错词"]
+      "tags": ["#词汇", "#2025真题", "#词频分析"]
     }
   ],
-  "quiz": { "total": 5, "correct": 2, "accuracy": "40%", "wrong_items": ["23题词汇不认识", "24题词汇不认识", "25题词汇不认识"] },
+  "quiz": null,
   "key_review": [
-    "2025 Text 1 核心：排练室教学法(rehearsal room approach)",
-    "研究结论：排练法比传统讲授更能提升素养(literacy)和共情能力",
-    "重点记：sophisticated/cliché/omission/formidable/reluctant"
+    "23题：cliché → weakness in description（描写贫乏），非casual style",
+    "24题：emotional literacy 来源于 put oneself in the shoes of a literary character（代入角色），非imaginative writing",
+    "25题：末段暗示 Shakespeare works best（20000词 vs 2000词），非formidable（令人生畏）",
+    "高频四词必背：evident / rarer / expansive / peer-reviewed —— 均5年以上真题反复出现",
+    "2025新词三词：resilient / embed / replicate —— 认识中文即可，不必优先背"
   ],
-  "weak_points": ["选项词汇不认识", "literary vs literacy 需要区分"],
-  "tomorrow_plan": "继续2025 Text 2（15-18分钟），目标正确率60%+"
+  "weak_points": ["选项关键词不认识→导致逻辑判断错误"],
+  "tomorrow_plan": "建议做2025 Text 2（科学家减碳争议），目标15-18分钟，先通读再逐段精读"
 }
