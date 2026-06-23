@@ -252,11 +252,11 @@ let allDates = [];
 let allReports = {};
 let currentView = 'home';
 let currentSubject = '';
-let audioManifests = {};  // { '2026-06-22': { '706_s1': {file, ...}, ... } }
+let audioManifests = {};  // { '2026-06-22': { '706': {file, ...}, ... } }
 const SUBJECTS = [
-  { id:'706', name:'706 古代文学·汉语', icon:'📜', css:'c706', fullName:'中国古代文学与古代汉语', max:18, key:'论述题框架' },
-  { id:'807', name:'807 现当代·评论', icon:'📖', css:'c807', fullName:'中国现当代文学与评论写作', max:25, key:null },
-  { id:'english', name:'英语一', icon:'🔤', css:'cen', fullName:'考研英语一', max:12, key:null },
+  { id:'706', name:'706 古代文学·汉语', icon:'📜', css:'c706', fullName:'中国古代文学与古代汉语', },
+  { id:'807', name:'807 现当代·评论', icon:'📖', css:'c807', fullName:'中国现当代文学与评论写作', },
+  { id:'english', name:'英语一', icon:'🔤', css:'cen', fullName:'考研英语一', },
 ];
 
 // ====== INIT ======
@@ -315,13 +315,11 @@ function renderHome() {
   let dh = '';
   for (const s of SUBJECTS) {
     const stats = calcStats(s.id);
-    const pct = stats.pct;
     dh += `<div class="dc ${s.css}" onclick="goSubject('${s.id}')">
       <div class="icon">${s.icon}</div>
       <div class="name">${s.name}</div>
-      <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
-      <div class="pct">${pct}%</div>
-      <div class="info">${stats.label}</div>
+      <div class="pct">${stats.days}天</div>
+      <div class="info">${stats.sections}个知识点</div>
     </div>`;
   }
   dash.innerHTML = dh;
@@ -332,20 +330,14 @@ function renderHome() {
 
 // ====== CALC STATS ======
 function calcStats(subjId) {
-  let days = 0, sections = 0, quiz = 0, totalTime = 0;
+  let days = 0, sections = 0;
   for (const ds in allReports) {
     const d = allReports[ds][subjId];
     if (!d) continue;
     days++;
-    if (d.sections) sections += d.sections.length;
-    if (d.quiz) quiz++;
-    if (d.study_time) { const m = parseFloat(d.study_time); if (!isNaN(m)) totalTime += m; }
+    if (d.topics) sections += d.topics.length;
   }
-  const s = SUBJECTS.find(x => x.id === subjId);
-  const pct = Math.min(Math.round((sections / s.max) * 100), 100);
-  let label = `已学${days}天`;
-  if (subjId === 'english') label = `刷${quiz}/12年`;
-  return { days, sections, quiz, totalTime, pct, label };
+  return { days, sections };
 }
 
 // ====== GO SUBJECT ======
@@ -363,14 +355,14 @@ function goSubject(subjId) {
     <div class="dot" style="background:var(--${s.id==='english'?'cen':s.id==='807'?'c807':'c706'})"></div>
     <div>
       <div class="sh-title">${s.icon} ${s.fullName}</div>
-      <div class="sh-info">累计学习 ${stats.days} 天 · 共 ${stats.totalTime}h</div>
+      <div class="sh-info">累计学习 ${stats.days} 天 · ${stats.sections} 个知识点</div>
     </div>`;
 
   // Trends
   document.getElementById('trendStats').innerHTML = `
     <div class="trend-item"><div class="val">${stats.days}</div><div class="lbl">学习天数</div></div>
     <div class="trend-item"><div class="val">${stats.sections}</div><div class="lbl">知识点数</div></div>
-    <div class="trend-item"><div class="val">${subjId==='english'?stats.quiz+'/12':stats.totalTime+'h'}</div><div class="lbl">${subjId==='english'?'刷题年份':'总学习时长'}</div></div>`;
+    <div class="trend-item"><div class="val">-</div><div class="lbl">今日晨报</div></div>`;
 
   // Accordion
   buildAccordion('subjAccordion', subjId);
@@ -433,52 +425,46 @@ function buildAccordion(containerId, filterSubject) {
 
 function renderSubjectReport(subjId, data, dateStr) {
   const s = SUBJECTS.find(x => x.id === subjId);
-  const time = data.study_time || '';
-  const phase = data.phase || '';
-  const sections = data.sections || [];
+  const topics = data.topics || [];
   const cs = subjId === 'english' ? 'en' : subjId;
   const nc = subjId === 'english' ? 'nen' : (subjId === '807' ? 'n807' : 'n706');
+  const duration = data.audio_duration || '';
 
   let h = `<div class="rmc subj-${cs}">`;
   // Colorful top bar
   h += `<div class="rmc-topbar">`;
   h += `<span class="r-icon">${s.icon}</span>`;
   h += `<span class="r-subj-name ${nc}">${data.subject_name || s.fullName}</span>`;
-  if (phase) h += `<span class="r-phase">${escHtml(phase)}</span>`;
+  if (duration) h += `<span class="r-phase">${escHtml(duration)}</span>`;
   h += `</div>`;
 
   h += `<div class="rmc-content">`;
-  // Meta line
-  if (time) h += `<div style="font-size:.7rem;color:var(--text2);margin-bottom:6px">⏱ ${time}</div>`;
 
-  // Sections
-  for (let i = 0; i < sections.length; i++) {
-    const sec = sections[i];
-    const hasPoints = sec.points && sec.points.length > 0;
-    const sid = `s_${subjId}_${dateStr.replace(/-/g,'')}_${i}`;
+  // One play button for entire subject
+  h += `<div style="padding:6px 0 10px">`;
+  h += `<button class="ra-btn" onclick="toggleSubjAudio(event,'${subjId}','${dateStr}')" id="btn_${subjId}_${dateStr.replace(/-/g,'')}">▶️ 朗读复习</button>`;
+  h += `</div>`;
+
+  // Topics
+  for (let i = 0; i < topics.length; i++) {
+    const t = topics[i];
+    const hasPoints = t.points && t.points.length > 0;
+    const tid = `t_${subjId}_${dateStr.replace(/-/g,'')}_${i}`;
 
     h += `<div class="si"><div class="si-head">`;
-    h += `<span class="si-title">${escHtml(sec.heading)}</span>`;
-    if (sec.type) h += `<span class="si-type">${escHtml(sec.type)}</span>`;
-    h += `<button class="tts-btn" data-key="${subjId}_${escHtml(sec.id)}" onclick="toggleTts(event,'${subjId}','${dateStr}','${sec.id}')" title="朗读">🔊</button>`;
+    h += `<span class="si-title">${escHtml(t.title)}</span>`;
     h += `</div>`;
 
-    // View toggle + Tree / Mindmap
     if (hasPoints) {
       h += `<div class="view-toggle">`;
-      h += `<button class="on" onclick="switchView('${sid}','tree')">📋 层级</button>`;
-      h += `<button onclick="switchView('${sid}','map')">🗺️ 导图</button>`;
+      h += `<button class="on" onclick="switchView('${tid}','tree')">📋 层级</button>`;
+      h += `<button onclick="switchView('${tid}','map')">🗺️ 导图</button>`;
       h += `</div>`;
-      h += `<div class="tree" id="${sid}_tree">${renderTree(sec.points)}</div>`;
-      h += `<div class="mindmap-svg" id="${sid}_map">${renderMindMap(s.id, sec.heading, sec.points)}</div>`;
-    } else {
-      h += `<div class="si-body">${simpleMd(sec.content)}</div>`;
+      h += `<div class="tree" id="${tid}_tree">${renderTree(t.points)}</div>`;
+      h += `<div class="mindmap-svg" id="${tid}_map">${renderMindMap(s.id, t.title, t.points)}</div>`;
+    } else if (t.summary) {
+      h += `<div class="si-body">${simpleMd(t.summary)}</div>`;
     }
-
-    if (sec.tags && sec.tags.length) {
-      h += `<div class="si-tags">${sec.tags.map(t=>`<span>${escHtml(t)}</span>`).join('')}</div>`;
-    }
-    if (sec.source) h += `<div class="si-src">📎 ${escHtml(sec.source)}</div>`;
     h += `</div>`;
   }
 
@@ -490,15 +476,19 @@ function renderSubjectReport(subjId, data, dateStr) {
     h += `</div>`;
   }
 
-  // Review / Weak / Note
-  if (data.key_review && data.key_review.length) {
-    h += `<div class="rb recall"><div class="rb-label recall">🧠 回顾要点</div><ul>${data.key_review.map(r=>`<li>${escHtml(r)}</li>`).join('')}</ul></div>`;
+  // Key takeaways
+  if (data.key_takeaways && data.key_takeaways.length) {
+    h += `<div class="rb recall"><div class="rb-label recall">🧠 必记要点</div><ul>${data.key_takeaways.map(r=>`<li>${escHtml(r)}</li>`).join('')}</ul></div>`;
   }
+
+  // Weak points
   if (data.weak_points && data.weak_points.length) {
     h += `<div class="rb weak"><div class="rb-label weak">⚠️ 薄弱点</div><ul>${data.weak_points.map(w=>`<li>${escHtml(w)}</li>`).join('')}</ul></div>`;
   }
-  if (data.note) {
-    h += `<div class="rb"><div style="font-size:.75rem;color:var(--text2);font-style:italic">💬 ${escHtml(data.note)}</div></div>`;
+
+  // Tomorrow
+  if (data.tomorrow_note) {
+    h += `<div class="rb"><div class="rb-label plan">📅 明日</div><ul><li>${escHtml(data.tomorrow_note)}</li></ul></div>`;
   }
 
   h += `</div></div>`; // close rmc-content + rmc
@@ -625,7 +615,7 @@ function toggleDateRow(row) {
 }
 
 // ====== TTS / AUDIO ======
-function toggleTts(event, subjectId, dateStr, sectionId) {
+function toggleSubjAudio(event, subjectId, dateStr) {
   event.stopPropagation();
   const btn = event.currentTarget;
 
@@ -637,29 +627,34 @@ function toggleTts(event, subjectId, dateStr, sectionId) {
 
   stopAll();
 
-  const audioKey = subjectId + '_' + sectionId;
   const manifest = audioManifests[dateStr];
 
-  // 优先播 mp3（Edge TTS 神经网络语音）
-  if (manifest && manifest[audioKey]) {
-    const url = './daily-reports/' + dateStr + '/audio/' + manifest[audioKey].file;
+  // 优先播 mp3（Edge TTS 整科音频）
+  if (manifest && manifest[subjectId]) {
+    const url = './daily-reports/' + dateStr + '/audio/' + manifest[subjectId].file;
     playAudio(url, btn);
     return;
   }
 
-  // 回退：Web Speech API
+  // 回退：Web Speech API — 朗读整科全部 topics
   const dd = allReports[dateStr];
   if (!dd) return;
   const data = dd[subjectId];
   if (!data) return;
-  const sec = data.sections.find(function(s) { return s.id === sectionId; });
-  if (!sec) return;
+  const topics = data.topics || [];
 
-  let text = sec.heading + '。';
-  if (sec.points && sec.points.length) {
-    text += flattenPoints(sec.points);
-  } else {
-    text += stripTags(sec.content||'');
+  let text = '';
+  for (const t of topics) {
+    text += t.title + '。。。。。';
+    if (t.points && t.points.length) {
+      text += flattenPoints(t.points);
+    } else if (t.summary) {
+      text += stripTags(t.summary);
+    }
+    text += '。。。。。';
+  }
+  if (data.key_takeaways && data.key_takeaways.length) {
+    text += '回顾要点。' + data.key_takeaways.join('。。');
   }
   speak(text, subjectId, btn);
 }
@@ -765,7 +760,7 @@ function speak(text, subjectId, btn) {
 }
 
 function stopTts() { window.speechSynthesis.cancel(); if (curBtn) resetBtn(curBtn); curUtt=null; curBtn=null; }
-function resetBtn(btn) { btn.classList.remove('playing'); btn.textContent='🔊'; }
+function resetBtn(btn) { btn.classList.remove('playing'); btn.textContent='▶️ 朗读复习'; }
 
 // ====== READ ALL ======
 function readAll(scope) {
@@ -778,12 +773,12 @@ function readAll(scope) {
       if (scope !== 'all' && scope !== 'current') continue;
       if (currentView === 'subject' && s.id !== currentSubject) continue;
       const dd = allReports[ds][s.id];
-      if (!dd || !dd.sections) continue;
-      for (const sec of dd.sections) {
-        let txt = sec.heading + '。';
+      if (!dd || !dd.topics) continue;
+      for (const t of dd.topics) {
+        let txt = t.title + '。';
         if (sec.points) txt += flattenPoints(sec.points);
-        else txt += stripTags(sec.content||'');
-        all.push({ text:txt, subjId:s.id, date:ds, heading:sec.heading });
+        else txt += stripTags(t.summary||'');
+        all.push({ text:txt, subjId:s.id, date:ds, heading:t.title });
       }
     }
   }

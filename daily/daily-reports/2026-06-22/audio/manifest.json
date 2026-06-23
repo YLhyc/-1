@@ -1,65 +1,26 @@
 {
-  "706_s1": {
-    "key": "706_s1",
-    "file": "706_s1.mp3",
-    "size": 233424,
+  "706": {
+    "key": "706",
+    "file": "706.mp3",
+    "size": 1042272,
     "lang": "zh",
-    "heading": "标点翻译训练：郑伯克段于鄢（第1篇，全篇完成）",
-    "hash": "d3080ec942254ee25ec129f061f52f57",
-    "subj": "706"
+    "hash": "b7d784aa7915f6d476dc964816b61989",
+    "duration_min": 5
   },
-  "706_s2": {
-    "key": "706_s2",
-    "file": "706_s2.mp3",
-    "size": 187776,
+  "807": {
+    "key": "807",
+    "file": "807.mp3",
+    "size": 780048,
     "lang": "zh",
-    "heading": "翻译薄弱点诊断",
-    "hash": "93bdd4238a818927356abfeada132d1b",
-    "subj": "706"
+    "hash": "f78aad94a2e4ed5e09ed19acbc6cad36",
+    "duration_min": 4
   },
-  "706_s3": {
-    "key": "706_s3",
-    "file": "706_s3.mp3",
-    "size": 167040,
+  "english": {
+    "key": "english",
+    "file": "english.mp3",
+    "size": 849744,
     "lang": "zh",
-    "heading": "标点翻译训练规划",
-    "hash": "b9981d58cd0c3243a82b0871462ca3d7",
-    "subj": "706"
-  },
-  "807_s1": {
-    "key": "807_s1",
-    "file": "807_s1.mp3",
-    "size": 192672,
-    "lang": "zh",
-    "heading": "评论写作方法：从效果到机制",
-    "hash": "16a1c4ca99d766d0373d44f9856f7e54",
-    "subj": "807"
-  },
-  "807_s2": {
-    "key": "807_s2",
-    "file": "807_s2.mp3",
-    "size": 289008,
-    "lang": "zh",
-    "heading": "807资料体系与考试结构",
-    "hash": "abe37ab5ab4853fe07d4b11dbec3da56",
-    "subj": "807"
-  },
-  "english_s1": {
-    "key": "english_s1",
-    "file": "english_s1.mp3",
-    "size": 319824,
-    "lang": "en",
-    "heading": "2025 Text 1 · 逐段精读 ¶4-¶7",
-    "hash": "dd95a15772f34d503b44fc3f90250569",
-    "subj": "english"
-  },
-  "english_s2": {
-    "key": "english_s2",
-    "file": "english_s2.mp3",
-    "size": 215712,
-    "lang": "en",
-    "heading": "新增生词（8个）—— 按词频分级",
-    "hash": "6121edd0414456737adc28ca571da132",
-    "subj": "english"
+    "hash": "19e60cbd98ac77b87b7eb68770abe059",
+    "duration_min": 6
   }
 }

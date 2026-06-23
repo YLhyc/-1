@@ -1,38 +1,10 @@
 {
-  "706_s1": {
-    "key": "706_s1",
-    "file": "706_s1.mp3",
-    "size": 277488,
+  "706": {
+    "key": "706",
+    "file": "706.mp3",
+    "size": 1527120,
     "lang": "zh",
-    "heading": "杜甫 · 教材原文精读",
-    "hash": "87b14540665f205b6e7be8ccc2b57ed1",
-    "subj": "706"
-  },
-  "706_s2": {
-    "key": "706_s2",
-    "file": "706_s2.mp3",
-    "size": 239040,
-    "lang": "zh",
-    "heading": "杜甫 · 秋兴八首逐首解析",
-    "hash": "b78c916d55107a1893151fe0dc3465bd",
-    "subj": "706"
-  },
-  "706_s3": {
-    "key": "706_s3",
-    "file": "706_s3.mp3",
-    "size": 234144,
-    "lang": "zh",
-    "heading": "杜甫 · 羌村三首 + 又呈吴郎逐句解析",
-    "hash": "5177cba15bed24cc4f45a95f7a50dbd2",
-    "subj": "706"
-  },
-  "706_s4": {
-    "key": "706_s4",
-    "file": "706_s4.mp3",
-    "size": 242784,
-    "lang": "zh",
-    "heading": "杜甫 · 叙事抒情融合的诗歌史意义",
-    "hash": "f5cdacc20ce36412bcd8c6a17c91720b",
-    "subj": "706"
+    "hash": "8867c4658565170f328c77c0a18a5a1a",
+    "duration_min": 7
   }
 }

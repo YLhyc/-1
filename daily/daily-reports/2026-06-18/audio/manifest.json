@@ -1,20 +1,10 @@
 {
-  "706_s1": {
-    "key": "706_s1",
-    "file": "706_s1.mp3",
-    "size": 279216,
+  "706": {
+    "key": "706",
+    "file": "706.mp3",
+    "size": 838512,
     "lang": "zh",
-    "heading": "真题分析与复习重点梳理",
-    "hash": "dbcd2da2170d143e3c97bd0f9adfc847",
-    "subj": "706"
-  },
-  "706_s2": {
-    "key": "706_s2",
-    "file": "706_s2.mp3",
-    "size": 299664,
-    "lang": "zh",
-    "heading": "古代汉语教材提取——王力第1-2册",
-    "hash": "0bdb5efb2808100e972c3bdb65b9e8df",
-    "subj": "706"
+    "hash": "aeb6f075647d1afc6dd27adfec73126d",
+    "duration_min": 4
   }
 }

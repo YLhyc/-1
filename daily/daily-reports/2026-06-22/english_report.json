@@ -3,67 +3,64 @@
   "subject_name": "考研英语一",
   "date": "2026-06-22",
   "generated_at": "2026-06-22T23:30:00",
-  "phase": "第一轮：分题型刷",
-  "study_time": "1.5h",
-  "sections": [
+  "audio_duration": "4min",
+  "topics": [
     {
-      "id": "s1",
-      "heading": "2025 Text 1 · 逐段精读 ¶4-¶7",
-      "type": "真题练习",
-      "content": "回顾6月19日做错的2025 Text 1，逐句拆解¶4-¶7。重点分析23题(control pupils' clichés → weakness in description)、24题(emotional literacy → identifying with characters)、25题(末段推断 → Shakespeare works best)。",
+      "id": "t1",
+      "title": "排练室教学法：逐段精读与错题回顾",
+      "summary": "回顾6月19日做错的2025 Text 1，逐句拆解第4-7段，分析23/24/25题正确答案",
       "points": [
-        { "text": "¶4 实验组结果", "children": [
-          { "text": "peer-reviewed results: target group drew on wider vocabulary, more sophisticated words, greater length" },
-          { "text": "对照组：想象自己遇船难会怎样；实验组：代入文学角色(put themselves in the shoes of)" },
-          { "text": "24题答案B：identifying with literary characters 提升 emotional literacy" }
-        ]},
-        { "text": "¶5 描写对比", "children": [
-          { "text": "对照组：desert island clichés (palm trees)；实验组：expansive (sky, sea, atmospheric conditions)" },
-          { "text": "23题答案A：weakness in description，不是casual style" }
-        ]},
-        { "text": "¶6 情感素养", "children": [
-          { "text": "实验组more resilient, more hopeful" },
-          { "text": "根源：rehearsal room process → imagine your way through → put yourself in different shoes" }
-        ]},
-        { "text": "¶7 可迁移性", "children": [
-          { "text": "Shakespeare 20000词 vs 日常2000词 → massive expansion of language" },
-          { "text": "25题答案A：new teaching method may work best with Shakespeare" }
-        ]}
-      ],
-      "tags": ["#阅读A", "#2025真题", "#逐段精读", "#错题回顾"]
+        {
+          "text": "第4段·实验组结果：peer-reviewed results显示实验组用词更广、更精密、篇幅更长——实验组代入文学角色（put themselves in the shoes of），对照组想象自己遇船难",
+          "children": [
+            {"text": "24题选B：identifying with literary characters提升emotional literacy，不是imaginative writing"}
+          ]
+        },
+        {
+          "text": "第5段·描写对比：对照组写棕榈树等陈词滥调，实验组写天空、海洋、大气状况——23题选A：weakness in description，不是casual style",
+          "children": [
+            {"text": "cliché（陈词滥调）指向描写能力的差异，不是风格问题"}
+          ]
+        },
+        {
+          "text": "第6-7段·情感素养与可迁移性：实验组更有韧性、更有希望——根源是rehearsal room process让人学会换位思考。末段暗示Shakespeare 20000词vs日常2000词，教学法在莎剧中最有效",
+          "children": [
+            {"text": "25题选A：new teaching method may work best with Shakespeare"}
+          ]
+        }
+      ]
     },
     {
-      "id": "s2",
-      "heading": "新增生词（8个）—— 按词频分级",
-      "type": "词汇积累",
-      "content": "基于全文词频检索（12年真题），8个生词分三档。7年高频4个、3年中频1个、2025新增3个。",
+      "id": "t2",
+      "title": "新增生词8个：按词频分级",
+      "summary": "基于12年真题词频检索，8个生词分三档",
       "points": [
-        { "text": "☆ 7年高频（必记）", "children": [
-          { "text": "evident = 明显的（evidence/evident在7年出现，2015-2025每年都有）" },
-          { "text": "rarer = 更罕见的（rare/rarely在7年出现）" },
-          { "text": "expansive = 开阔的/详尽的（expand/expansive在6年出现）" },
-          { "text": "peer-reviewed = 同行评审的（peer/peer-review在5年出现）" }
-        ]},
-        { "text": "△ 3年中频", "children": [
-          { "text": "atmospheric = 大气的/大气状况的（2017/2023/2025）" }
-        ]},
-        { "text": "★ 2025首次出现（眼熟即可）", "children": [
-          { "text": "resilient = 有韧性的/适应力强的" },
-          { "text": "embed = 嵌入/融入" },
-          { "text": "replicate = 复制/再现" }
-        ]}
-      ],
-      "tags": ["#词汇", "#2025真题", "#词频分析"]
+        {
+          "text": "7年高频必记4词：evident（明显的）——每年都有；rarer（更罕见的）——7年出现；expansive（开阔的/详尽的）——6年出现；peer-reviewed（同行评审的）——5年出现",
+          "children": [
+            {"text": "高频词优先背，后续真题还会反复遇到"}
+          ]
+        },
+        {
+          "text": "3年中频：atmospheric（大气的/大气状况的）——2017/2023/2025出现",
+          "children": [
+            {"text": "与atmosphere同源，描写环境时常用"}
+          ]
+        },
+        {
+          "text": "2025首次出现3词：resilient（有韧性的）、embed（嵌入）、replicate（复制）——认识中文即可，不必优先背"
+        }
+      ]
     }
   ],
   "quiz": null,
-  "key_review": [
+  "key_takeaways": [
     "23题：cliché → weakness in description（描写贫乏），非casual style",
-    "24题：emotional literacy 来源于 put oneself in the shoes of a literary character（代入角色），非imaginative writing",
-    "25题：末段暗示 Shakespeare works best（20000词 vs 2000词），非formidable（令人生畏）",
-    "高频四词必背：evident / rarer / expansive / peer-reviewed —— 均5年以上真题反复出现",
-    "2025新词三词：resilient / embed / replicate —— 认识中文即可，不必优先背"
+    "24题：emotional literacy来源于代入文学角色，非imaginative writing",
+    "25题：末段暗示Shakespeare works best（20000词vs2000词），非formidable",
+    "高频四词必背：evident / rarer / expansive / peer-reviewed",
+    "2025新词：resilient / embed / replicate——认识中文即可"
   ],
   "weak_points": ["选项关键词不认识→导致逻辑判断错误"],
-  "tomorrow_plan": "建议做2025 Text 2（科学家减碳争议），目标15-18分钟，先通读再逐段精读"
+  "tomorrow_note": "2025 Text 2（科学家减碳争议），目标15-18分钟"
 }

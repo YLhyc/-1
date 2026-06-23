@@ -3,79 +3,59 @@
   "subject_name": "考研英语一",
   "date": "2026-06-19",
   "generated_at": "2026-06-23T09:00:00",
-  "phase": "第一轮：分题型刷",
-  "study_time": "1h",
-  "sections": [
+  "audio_duration": "4min",
+  "topics": [
     {
-      "id": "s1",
-      "heading": "2025 Text 1 · 莎士比亚排练室教学法",
-      "type": "真题练习",
-      "content": "首篇真题阅读练习。讨论将排练室方法（rehearsal room approach）引入课堂教学的RCT研究。研究发现排练法比传统讲授课更能提升学生素养和共情能力。5题做对2道（40%），错3题（23/24/25），错因全部是选项词汇不认识——不是看不懂文章，而是看不懂选项。",
+      "id": "t1",
+      "title": "排练室教学法：RCT研究与错题分析",
+      "summary": "2025年Text1真题首练——排练室教学法（rehearsal room approach）引入课堂的RCT研究，5题做对2道",
       "points": [
         {
-          "text": "文章核心",
+          "text": "文章核心：rehearsal room approach（排练室教学法）→ RCT随机对照试验，实验组vs对照组 → 结论：排练法优于传统讲授，提升literacy（素养）和empathy（共情）",
           "children": [
-            {"text": "主题：rehearsal room approach = 排练室教学法"},
-            {"text": "方法：RCT随机对照试验，实验组vs对照组"},
-            {"text": "结论：排练法优于传统讲授，提升literacy(素养)和empathy(共情)"}
+            {"text": "实验组：代入文学角色（put themselves in the shoes of）——描述更丰富、词汇更广"},
+            {"text": "对照组：想象自己遇船难会怎样——描述贫乏、充满陈词滥调（cliché）"}
           ]
         },
         {
-          "text": "三题错因分析",
+          "text": "三题全错在选项生词上——不是看不懂文章，而是看不懂选项",
           "children": [
-            {"text": "23题错：选项有sophisticated / cliché / omission — 全不认识"},
-            {"text": "24题错：选项有literacy / literary / formidable — literacy≠literary需区分"},
-            {"text": "25题错：选项有reluctant / groundbreaking — 不认识无法判断"}
+            {"text": "23题：sophisticated / cliché / omission 不认识 → 无法判断选项"},
+            {"text": "24题：literacy（素养）≠ literary（文学的）→ 关键区分"},
+            {"text": "25题：reluctant / groundbreaking 不认识 → 无法推断"}
           ]
         },
         {
-          "text": "关键教训",
-          "children": [
-            {"text": "不是看不懂文章，而是看不懂选项中的生词"},
-            {"text": "词汇是当前最大短板——先补词汇，再练速度"}
-          ]
+          "text": "关键教训：词汇是当前最大短板，选项生词不认识即使看懂文章也做不对题"
         }
-      ],
-      "tags": ["#阅读A", "#2025真题", "#教育类"],
-      "source": "2025年真题 Text 1"
+      ]
     },
     {
-      "id": "s2",
-      "heading": "核心生词积累（19个）",
-      "type": "词汇积累",
-      "content": "从2025 Text 1中积累19个生词，按重要性分两档。最高频5词（rehearsal/pedagogy/literacy/commission/groundbreaking）贯穿12年真题，必须牢记。易错词6词需结合例句理解。特别注意literacy(素养)≠literary(文学的)。",
+      "id": "t2",
+      "title": "核心生词19个：按词频分级",
+      "summary": "从2025 Text 1积累19个生词，分高频考点词和易错词两档",
       "points": [
         {
-          "text": "☆ 高频考点词（必记5个）",
+          "text": "高频考点词（必记5个）：rehearsal（排练）、pedagogy（教学法）、literacy（素养/读写能力）、commission（委托/受托）、groundbreaking（开创性的）",
           "children": [
-            {"text": "rehearsal = 排练 | pedagogy = 教学法 | literacy = 素养/读写能力"},
-            {"text": "commission = 委托/受托 | groundbreaking = 开创性的"}
+            {"text": "这5个词在12年真题中反复出现，必须牢记"}
           ]
         },
         {
-          "text": "△ 易错词（6个）",
+          "text": "易错词（6个）：sophisticated（复杂的/精密的）、cliché（陈词滥调）、omission（遗漏/忽略）、formidable（令人生畏的）、reluctant（不情愿的）、literary（文学的）",
           "children": [
-            {"text": "sophisticated = 复杂的/精密的 | cliché = 陈词滥调 | omission = 遗漏/忽略"},
-            {"text": "formidable = 令人生畏的 | reluctant = 不情愿的 | literary = 文学的"}
-          ]
-        },
-        {
-          "text": "★ 重点区分",
-          "children": [
-            {"text": "literacy（素养/读写能力）≠ literary（文学的）≠ literal（字面的）"}
+            {"text": "literacy（素养）≠ literary（文学的）≠ literal（字面的）——三个形近词必须区分清楚"}
           ]
         }
-      ],
-      "tags": ["#词汇", "#2025真题", "#易错词"],
-      "source": "2025 Text 1"
+      ]
     }
   ],
   "quiz": { "total": 5, "correct": 2, "accuracy": "40%", "wrong_items": ["23题词汇不认识", "24题词汇不认识", "25题词汇不认识"] },
-  "key_review": [
-    "2025 Text 1 核心：排练室教学法优于传统讲授，提升素养和共情能力",
-    "三题全错在选项生词上 → 词汇是当前最大短板，优先攻克",
+  "key_takeaways": [
+    "2025 Text 1 核心结论：排练室教学法优于传统讲授，能提升素养和共情能力",
+    "三题全错在选项生词上 → 词汇是当前最大短板，优先攻克选项词汇",
     "高频5词必背：rehearsal / pedagogy / literacy / commission / groundbreaking"
   ],
   "weak_points": ["选项词汇不认识", "literacy vs literary 需要区分"],
-  "tomorrow_plan": "下次继续2025 Text 2（科学家减碳争议），做之前先回顾Text 1生词"
+  "tomorrow_note": "2025 Text 2（科学家减碳争议），做之前先回顾Text 1生词"
 }

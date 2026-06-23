@@ -1,56 +1,26 @@
 {
-  "706_s1": {
-    "key": "706_s1",
-    "file": "706_s1.mp3",
-    "size": 339264,
+  "706": {
+    "key": "706",
+    "file": "706.mp3",
+    "size": 648000,
     "lang": "zh",
-    "heading": "杜甫 · 论述题答题框架",
-    "hash": "961fa03cc7f20bb11f520bf97d6c6cb6",
-    "subj": "706"
+    "hash": "8c5a55250d0a9b4d06a09a0d09c3b014",
+    "duration_min": 3
   },
-  "706_s2": {
-    "key": "706_s2",
-    "file": "706_s2.mp3",
-    "size": 188928,
+  "807": {
+    "key": "807",
+    "file": "807.mp3",
+    "size": 823824,
     "lang": "zh",
-    "heading": "古代汉语辅导书 + 考点精讲提取",
-    "hash": "8255467b8d398c2dc75dff6e5372ef00",
-    "subj": "706"
+    "hash": "11ffaca11083096990a8857339695350",
+    "duration_min": 4
   },
-  "807_s1": {
-    "key": "807_s1",
-    "file": "807_s1.mp3",
-    "size": 335088,
+  "english": {
+    "key": "english",
+    "file": "english.mp3",
+    "size": 769968,
     "lang": "zh",
-    "heading": "评论写作方法：从效果到机制",
-    "hash": "9ba32ae215cde53588c5b16d2bb39df1",
-    "subj": "807"
-  },
-  "807_s2": {
-    "key": "807_s2",
-    "file": "807_s2.mp3",
-    "size": 235296,
-    "lang": "zh",
-    "heading": "范文精读：鲁迅《故乡》——刘俐俐分析",
-    "hash": "8f2ebb1b9e4cc8b66b48ba42826f6eff",
-    "subj": "807"
-  },
-  "english_s1": {
-    "key": "english_s1",
-    "file": "english_s1.mp3",
-    "size": 138096,
-    "lang": "en",
-    "heading": "2025 Text 1 · 莎士比亚排练室教学法",
-    "hash": "07d3274830698047781b3b934a4f05b3",
-    "subj": "english"
-  },
-  "english_s2": {
-    "key": "english_s2",
-    "file": "english_s2.mp3",
-    "size": 157536,
-    "lang": "en",
-    "heading": "核心生词积累（19个）",
-    "hash": "e75a3b255f8ef14cd8a4844c825c5f79",
-    "subj": "english"
+    "hash": "4413098ed5d5701485c32b993cb462f0",
+    "duration_min": 5
   }
 }
