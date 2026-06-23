@@ -1,0 +1,56 @@
+{
+  "706_s1": {
+    "key": "706_s1",
+    "file": "706_s1.mp3",
+    "size": 120816,
+    "lang": "zh",
+    "heading": "杜甫 · 论述题答题框架",
+    "hash": "f3508fe67c222014d165ad150a2d0760",
+    "subj": "706"
+  },
+  "706_s2": {
+    "key": "706_s2",
+    "file": "706_s2.mp3",
+    "size": 82368,
+    "lang": "zh",
+    "heading": "古代汉语辅导书 + 考点精讲提取",
+    "hash": "3a33dcbe73f12014e0b08a2f2bc05964",
+    "subj": "706"
+  },
+  "807_s1": {
+    "key": "807_s1",
+    "file": "807_s1.mp3",
+    "size": 154800,
+    "lang": "zh",
+    "heading": "评论写作方法：从效果到机制",
+    "hash": "01bf9cbac85c0bc2f967f27b7c99518f",
+    "subj": "807"
+  },
+  "807_s2": {
+    "key": "807_s2",
+    "file": "807_s2.mp3",
+    "size": 148608,
+    "lang": "zh",
+    "heading": "范文精读：鲁迅《故乡》—— 刘俐俐分析",
+    "hash": "5b17cb8bbb3eb52d68c50dc637de9588",
+    "subj": "807"
+  },
+  "english_s1": {
+    "key": "english_s1",
+    "file": "english_s1.mp3",
+    "size": 115488,
+    "lang": "en",
+    "heading": "2025 Text 1 · 莎士比亚排练室教学法",
+    "hash": "4dd454deaacc0256829a17b21786a8d4",
+    "subj": "english"
+  },
+  "english_s2": {
+    "key": "english_s2",
+    "file": "english_s2.mp3",
+    "size": 97920,
+    "lang": "en",
+    "heading": "核心生词积累（19个）",
+    "hash": "985843f2e4a5613dd4ba6e570ef54074",
+    "subj": "english"
+  }
+}

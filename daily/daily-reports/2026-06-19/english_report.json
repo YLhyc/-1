@@ -1,0 +1,43 @@
+{
+  "subject": "english",
+  "subject_name": "考研英语一",
+  "date": "2026-06-19",
+  "generated_at": "2026-06-23T09:00:00",
+  "phase": "第一轮：分题型刷",
+  "study_time": "1h",
+  "sections": [
+    {
+      "id": "s1",
+      "heading": "2025 Text 1 · 莎士比亚排练室教学法",
+      "type": "真题练习",
+      "content": "首篇真题练习。讨论将排练室方法引入课堂教学的RCT研究。5题做对2道（40%），错3题（23/24/25），错因全部是选项词汇不认识。",
+      "points": [
+        { "text": "文章主题：rehearsal room approach = 排练室教学法，RCT研究发现排练法比传统讲授更能提升literacy" },
+        { "text": "23题错因：选项生词 sophisticated / cliché / omission" },
+        { "text": "24题错因：选项生词 literacy / literary / formidable —— 注意literacy(素养)≠literary(文学的)" },
+        { "text": "25题错因：选项生词 reluctant / groundbreaking" }
+      ],
+      "tags": ["#阅读A", "#2025真题", "#教育类"]
+    },
+    {
+      "id": "s2",
+      "heading": "核心生词积累（19个）",
+      "type": "词汇积累",
+      "content": "从2025 Text 1中积累19个生词，按重要性分两档。高频考点词：rehearsal(排练)、pedagogy(教学法)、literacy(素养)、commission(委托)、groundbreaking(开创性的)。重点区分literacy vs literary。",
+      "points": [
+        { "text": "☆ 高频考点词（必记）：rehearsal = 排练, pedagogy = 教学法, literacy = 素养, commission = 委托, groundbreaking = 开创性的" },
+        { "text": "△ 易错词：sophisticated(复杂的), cliché(陈词滥调), omission(遗漏), formidable(令人生畏), reluctant(不情愿)" },
+        { "text": "注意区分：literacy(素养/读写能力) vs literary(文学的)" }
+      ],
+      "tags": ["#词汇", "#2025真题", "#易错词"]
+    }
+  ],
+  "quiz": { "total": 5, "correct": 2, "accuracy": "40%", "wrong_items": ["23题词汇不认识", "24题词汇不认识", "25题词汇不认识"] },
+  "key_review": [
+    "2025 Text 1 核心：排练室教学法优于传统讲授，提升素养和共情",
+    "三题全错在选项生词上，不是看不懂文章 → 词汇是当前最大短板",
+    "重点记5个高频词：rehearsal, pedagogy, literacy, commission, groundbreaking"
+  ],
+  "weak_points": ["选项词汇不认识", "literacy vs literary 需要区分"],
+  "tomorrow_plan": "下次继续2025 Text 2（15-18分钟），做之前先回顾Text 1生词"
+}

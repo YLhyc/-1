@@ -1,13 +1,34 @@
 {
   "description": "每日报告索引 — 前端通过此文件发现可用的报告日期",
-  "last_updated": "2026-06-22T23:30:00",
+  "last_updated": "2026-06-23T09:00:00",
   "available_dates": [
     {
       "date": "2026-06-22",
       "has_706": true,
-      "has_807": false,
+      "has_807": true,
       "has_english": true,
-      "note": "706：标点翻译训练第1篇；英语：2025 Text 1 ¶4-¶7精读+8生词"
+      "note": "706杜甫速览+标点翻译；807资料体系+刷题；英语2025 Text 1 ¶4-¶7精读+8生词"
+    },
+    {
+      "date": "2026-06-20",
+      "has_706": true,
+      "has_807": false,
+      "has_english": false,
+      "note": "杜甫专题精读：教材原文+秋兴八首+羌村三首+又呈吴郎+叙事抒情融合"
+    },
+    {
+      "date": "2026-06-19",
+      "has_706": true,
+      "has_807": true,
+      "has_english": true,
+      "note": "706杜甫答题框架；807评论写作方法论+鲁迅范文精读；英语2025 Text 1首刷(40%)"
+    },
+    {
+      "date": "2026-06-18",
+      "has_706": true,
+      "has_807": false,
+      "has_english": false,
+      "note": "706真题分析+王力古代汉语1-2册提取"
     }
   ]
 }
