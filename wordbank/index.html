@@ -54,9 +54,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-play{flex:3;background:#007aff;color:#fff}
 .btn-play.playing{background:#ff9500}
 .btn-play.paused{background:#34c759}
-.btn-pause{flex:1;background:#f0f0f5;color:#1d1d1f}
-.btn-skip{flex:1;background:#f0f0f5;color:#1d1d1f}
-.btn-rewind{flex:1;background:#f0f0f5;color:#1d1d1f}
+.btn-skip{flex:1.5;background:#f0f0f5;color:#1d1d1f}
+.btn-rewind{flex:1.5;background:#f0f0f5;color:#1d1d1f}
 .btn svg{width:17px;height:17px;pointer-events:none}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn-label{white-space:nowrap}
@@ -66,7 +65,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div id="view-home">
   <div class="home-hero">WORD BANK</div>
-  <div class="home-sub">2026-06-24 15:18</div>
+  <div class="home-sub">2026-06-24 15:26</div>
   <div class="entry-list" id="entryList"></div>
   <div class="empty-msg" id="homeEmpty" style="display:none">暂无词单</div>
 </div>
@@ -86,9 +85,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
         <span class="btn-label">朗读</span>
       </button>
-      <button class="btn btn-pause" id="btnPauseTop" onclick="togglePause()" disabled>
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </button>
       <button class="btn btn-skip" id="btnSkipTop" onclick="skipWord()" disabled>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18l-8.5-6L16 6v12zM8 6v12H6V6h2z"/></svg>
       </button>
@@ -101,9 +97,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">
         <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
         <span class="btn-label">朗读</span>
-      </button>
-      <button class="btn btn-pause" id="btnPause" onclick="togglePause()" disabled>
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
       <button class="btn btn-skip" id="btnSkip" onclick="skipWord()" disabled>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18l-8.5-6L16 6v12zM8 6v12H6V6h2z"/></svg>
@@ -118,10 +111,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var ENTRIES = [{"id": "wb_2026-06-24_000001", "label": "测试单词", "date": "2026-06-24", "words": [{"en": "articulate", "cn": "清晰表达的；口齿伶俐的"}, {"en": "forthcoming", "cn": "即将发生的；乐于提供信息的"}, {"en": "susceptible", "cn": "易受影响的；敏感的"}, {"en": "conceivable", "cn": "可以想象的"}, {"en": "invariably", "cn": "总是；不变地"}, {"en": "chronic", "cn": "慢性的；长期的"}, {"en": "retrospect", "cn": "回顾；回想"}, {"en": "obscure", "cn": "模糊的；使费解"}, {"en": "negligible", "cn": "微不足道的"}, {"en": "rigorous", "cn": "严格的；严密的"}]}, {"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_OK = ["wb_2026-06-24_000001", "wb_2026-06-23_demo"];
-var TS = 1782285528;
+var TS = 1782285980;
 
 var entryId = null, wIdx = 0, step = 0, paused = false, single = false;
-var curAudio = null, nextAudio = null;
+var curAudio = null, nextAu = null;
 var P = [true, false, true, false];  // STEP_IS_EN
 var PF = [true, false];  // FAM version
 
@@ -141,7 +134,7 @@ function showView(v) {
 }
 function stop() {
   if (curAudio) { curAudio.onended=null; curAudio.onerror=null; curAudio.pause(); curAudio=null; }
-  if (nextAudio) { nextAudio.onended=null; nextAudio.onerror=null; nextAudio.pause(); nextAudio=null; }
+  if (nextAu) { nextAu.onended=null; nextAu.onerror=null; nextAu.pause(); nextAu=null; }
 }
 function showHome() { stop(); showView('home'); renderHome(); }
 
@@ -152,9 +145,9 @@ function showGroup(id) {
   $('groupTitle').textContent = e.label;
   $('groupLabel').textContent = e.label;
   renderWords(e);
-  // Preload ALL audio for this group
+  // Preload all audio for this group
   preloaded = {};
-  preloadRange(id, 0, e.words.length);
+  preloadAll(id, e.words.length);
 }
 
 // ── mp3 URL ──
@@ -164,11 +157,10 @@ function mp3(eid, w, lang) {
 
 // ── Preload ──
 var preloaded = {};  // eid_w_lang -> Audio element
-function preloadRange(eid, from, to) {
-  for (var w = from; w < to; w++) {
+function preloadAll(eid, n) {
+  for (var w = 0; w < n; w++) {
     ['en','cn'].forEach(function(l) {
       var k = eid + '_' + w + '_' + l;
-      if (preloaded[k]) return;
       var a = new Audio();
       a.preload = 'auto';
       a.src = mp3(eid, w, l);
@@ -237,18 +229,20 @@ function clearHl() {
 
 // ── Buttons ──
 function setBtns(playing, isPaused, loading) {
+  var playIcon = '<path d="M8 5v14l11-7z"/>';
+  var pauseIcon = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
   ['btnPlay','btnPlayTop'].forEach(function(id) {
     var b = $(id); if (!b) return;
     var icon = b.querySelector('.play-icon'), label = b.querySelector('.btn-label');
     b.disabled = !!loading;
     b.classList.remove('playing','paused');
-    if (loading) { icon.innerHTML='<path d="M8 5v14l11-7z"/>'; label.textContent='加载'; return; }
-    if (playing) { b.classList.add('playing'); icon.innerHTML='<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; label.textContent='播放中'; }
-    else if (isPaused) { b.classList.add('paused'); icon.innerHTML='<path d="M8 5v14l11-7z"/>'; label.textContent='继续'; }
-    else { icon.innerHTML='<path d="M8 5v14l11-7z"/>'; label.textContent='朗读'; }
+    if (loading) { icon.innerHTML = playIcon; label.textContent = '加载'; return; }
+    if (playing) { b.classList.add('playing'); icon.innerHTML = pauseIcon; label.textContent = '播放中'; }
+    else if (isPaused) { b.classList.add('paused'); icon.innerHTML = playIcon; label.textContent = '继续'; }
+    else { icon.innerHTML = playIcon; label.textContent = '朗读'; }
   });
-  var aux = (playing||isPaused) && !loading;
-  ['btnPause','btnPauseTop','btnSkip','btnSkipTop'].forEach(function(id) {
+  var aux = (playing || isPaused) && !loading;
+  ['btnSkip','btnSkipTop'].forEach(function(id) {
     var b = $(id); if (b) b.disabled = !aux;
   });
 }
@@ -258,60 +252,102 @@ function done() {
   wIdx=0; step=0; paused=false; single=false;
 }
 
+// ── Audio warm (pre-create + pre-load for instant play) ──
+function warmAudio(eid, w, lang) {
+  var k = eid + '_' + w + '_' + lang;
+  var a = preloaded[k] ? new Audio(preloaded[k].src) : new Audio(mp3(eid, w, lang));
+  a.preload = 'auto';
+  a.load();
+  return a;
+}
+
+function getWordLabels(p, eid, widx) {
+  var pf = p[eid + '_' + widx];
+  return pf === 'familiar'
+    ? {labels: ['英①','中①'], isENs: PF}
+    : {labels: ['英①','中①','英②','中②'], isENs: P};
+}
+
+// ── Pre-warm next audio while current plays ──
+function preWarmNext(e, p) {
+  var ns = step + 1, nw = wIdx;
+  var info = getWordLabels(p, e.id, wIdx);
+  var labels = info.labels;
+  if (ns >= labels.length) { if (single) return; ns = 0; nw = wIdx + 1; }
+  if (nw >= e.words.length) return;
+  var nInfo = getWordLabels(p, e.id, nw);
+  var nIsEN = nInfo.isENs[ns];
+  var nLang = nIsEN ? 'en' : 'cn';
+  nextAu = warmAudio(e.id, nw, nLang);
+}
+
 // ── Playback ──
 function playWord() {
   var e = getE();
-  if (!e || wIdx>=e.words.length) { done(); return; }
+  if (!e || wIdx >= e.words.length) { done(); return; }
 
-  var p = prefs(), pf = p[e.id+'_'+wIdx];
-  var labels = pf==='familiar' ? ['英①','中①'] : ['英①','中①','英②','中②'];
-  var isENs = pf==='familiar' ? PF : P;
+  var p = prefs();
 
-  if (step >= labels.length) {
+  // Advance past completed word steps (skip familiar-marked words' extra steps)
+  var info = getWordLabels(p, e.id, wIdx);
+  var labels = info.labels, isENs = info.isENs;
+  while (step >= labels.length) {
     if (single) { done(); return; }
     step = 0; wIdx++;
     if (wIdx >= e.words.length) { done(); return; }
-    pf = p[e.id+'_'+wIdx];
-    labels = pf==='familiar'?['英①','中①']:['英①','中①','英②','中②'];
-    isENs = pf==='familiar'?PF:P;
+    info = getWordLabels(p, e.id, wIdx);
+    labels = info.labels; isENs = info.isENs;
   }
 
   var isEN = isENs[step];
   var lang = isEN ? 'en' : 'cn';
-  var k = e.id + '_' + wIdx + '_' + lang;
-  // Use preloaded audio (instant from cache) or fallback to URL
-  var au = preloaded[k] ? new Audio(preloaded[k].src) : new Audio(mp3(e.id, wIdx, lang));
+
+  // Use pre-warmed audio (instant) or warm fresh
+  var au = nextAu || warmAudio(e.id, wIdx, lang);
+  nextAu = null;
   curAudio = au;
   hl(wIdx);
 
-  au.onended = next;
-  au.onerror = next;
-  au.play();
+  // Pre-warm next step while this one plays — eliminates EN-CN gap
+  preWarmNext(e, p);
 
-  function next() {
+  au.onended = function() {
     step++;
-    if (step>=labels.length) { if(single){done();return;} step=0; wIdx++; }
-    if (wIdx>=e.words.length) { done(); }
+    if (step >= labels.length) { if (single) { done(); return; } step = 0; wIdx++; }
+    if (wIdx >= e.words.length) { done(); }
     else { playWord(); }
-  }
+  };
+  au.onerror = au.onended;
+  au.play();
 }
 
 function togglePlay() {
-  if (wIdx>0 && !paused && !single) {
-    if (curAudio) curAudio.pause();
-    paused=true; setBtns(false,true,false);
-  } else if (paused) {
-    if (curAudio) curAudio.play();
-    paused=false; setBtns(true,false,false);
+  if (curAudio && !curAudio.ended && !paused) {
+    // Playing → pause
+    curAudio.pause();
+    paused = true;
+    setBtns(false, true, false);
+  } else if (paused && curAudio) {
+    // Paused → resume
+    curAudio.play();
+    paused = false;
+    setBtns(true, false, false);
   } else {
-    stop(); wIdx=0; step=0; paused=false; single=false;
-    setBtns(true,false,false); playWord();
+    // Start from beginning
+    stop();
+    wIdx = 0; step = 0; paused = false; single = false;
+    // Pre-warm first word's first step for instant start
+    var e = getE();
+    if (e) {
+      var p = prefs();
+      var fInfo = getWordLabels(p, e.id, 0);
+      var fIsEN = fInfo.isENs[0];
+      var fLang = fIsEN ? 'en' : 'cn';
+      nextAu = warmAudio(e.id, 0, fLang);
+    }
+    setBtns(true, false, false);
+    playWord();
   }
-}
-
-function togglePause() {
-  if (paused) { if (curAudio) curAudio.play(); paused=false; setBtns(true,false,false); }
-  else { if (curAudio) curAudio.pause(); paused=true; setBtns(false,true,false); }
 }
 
 function doRewind() { stop(); wIdx=0; step=0; paused=false; setBtns(false,false,false); }
@@ -320,12 +356,28 @@ function skipWord() {
   stop(); step=0; wIdx++; paused=false; single=false;
   var e = getE();
   if (!e || wIdx>=e.words.length) { done(); return; }
-  setBtns(true,false,false); playWord();
+  // Pre-warm first step of next word
+  var p = prefs();
+  var info = getWordLabels(p, e.id, wIdx);
+  var isEN = info.isENs[0];
+  var lang = isEN ? 'en' : 'cn';
+  nextAu = warmAudio(e.id, wIdx, lang);
+  setBtns(true, false, false);
+  playWord();
 }
 
 function playSingleW(w) {
   stop(); wIdx=w; step=0; paused=false; single=true;
-  setBtns(true,false,false); playWord();
+  var e = getE();
+  if (e) {
+    var p = prefs();
+    var info = getWordLabels(p, e.id, w);
+    var isEN = info.isENs[0];
+    var lang = isEN ? 'en' : 'cn';
+    nextAu = warmAudio(e.id, w, lang);
+  }
+  setBtns(true, false, false);
+  playWord();
 }
 
 // ── Prefs ──
