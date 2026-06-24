@@ -7,51 +7,31 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;padding:16px 16px 40px;-webkit-tap-highlight-color:transparent;user-select:none}
-.home-hero{text-align:center;margin:32px 0 4px;font-size:28px;font-weight:800}
-.home-sub{text-align:center;color:#86868b;font-size:13px;margin-bottom:36px}
-.home-cards{display:flex;flex-direction:column;gap:14px}
-.home-card{background:#fff;border-radius:18px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,0.06);cursor:pointer;transition:transform .15s}
-.home-card:active{transform:scale(.98)}
-.home-card h2{font-size:20px;margin-bottom:4px}
-.home-card p{font-size:13px;color:#86868b}
-.nav-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.nav-back{background:none;border:none;color:#007aff;font-size:16px;cursor:pointer;padding:6px 0}
-.nav-title{font-size:17px;font-weight:600}
-.entry-area{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.entry-area textarea{width:100%;height:200px;border:1px solid #e0e0e0;border-radius:10px;padding:12px;font-size:14px;resize:vertical;-webkit-appearance:none;font-family:inherit;line-height:1.6}
-.entry-area textarea:focus{outline:none;border-color:#007aff}
-.entry-hint{font-size:12px;color:#86868b;margin:8px 0}
-.parse-btn{width:100%;height:46px;background:#007aff;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
-.parse-btn:active{opacity:.7}
-.preview-box{margin-top:12px;background:#f9f9fb;border-radius:10px;padding:12px;max-height:300px;overflow-y:auto;font-size:13px;line-height:1.8;display:none}
-.preview-box.show{display:block}
-.preview-box .pw{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #f0f0f0}
-.preview-box .pw-en{font-weight:600}
-.preview-box .pw-cn{color:#86868b}
-.preview-summary{font-size:13px;color:#86868b;margin-top:8px;display:none}
-.preview-summary.show{display:block}
-.confirm-row{display:flex;gap:10px;margin-top:10px;display:none}
-.confirm-row.show{display:flex}
-.confirm-btn{flex:1;height:44px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
-.confirm-save{background:#34c759;color:#fff}
-.confirm-cancel{background:#f0f0f5;color:#1d1d1f}
-.confirm-btn:active{opacity:.7}
-.entry-msg{font-size:13px;text-align:center;margin-top:8px;min-height:20px}
-.entry-msg.ok{color:#34c759}
-.entry-msg.err{color:#ff3b30}
+
+/* ── Home (word list) ── */
+.home-hero{text-align:center;margin:28px 0 4px;font-size:24px;font-weight:800}
+.home-sub{text-align:center;color:#86868b;font-size:12px;margin-bottom:24px}
 .entry-list{display:flex;flex-direction:column;gap:8px}
 .entry-item{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:transform .1s}
 .entry-item:active{transform:scale(.98)}
+.entry-item-info{flex:1}
 .entry-item-label{font-size:16px;font-weight:500}
 .entry-item-meta{font-size:12px;color:#86868b}
-.entry-item-del{background:none;border:none;color:#ff3b30;font-size:18px;cursor:pointer;padding:4px 8px;opacity:.5}
-.entry-item-del:active{opacity:1}
 .empty-msg{text-align:center;color:#86868b;padding:40px;font-size:14px}
+
+/* ── Nav ── */
+.nav-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.nav-back{background:none;border:none;color:#007aff;font-size:16px;cursor:pointer;padding:6px 0}
+.nav-title{font-size:17px;font-weight:600}
+
+/* ── Group view ── */
 .word-group{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .group-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .group-label{font-size:15px;font-weight:600}
 .group-stat{font-size:12px;color:#86868b}
 .word-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+
+/* swipe */
 .word-swipe{position:relative;overflow:hidden;border-radius:10px}
 .ws-actions{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:stretch}
 .ws-btn{min-width:50px;border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;padding:0 10px;-webkit-appearance:none;outline:none}
@@ -70,6 +50,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wb-badge{font-size:10px;font-weight:700;margin-left:2px;padding:1px 5px;border-radius:4px;display:none}
 .wb-badge.wb-familiar{display:inline;background:#d4f5d4;color:#0a6e0a}
 .wb-badge.wb-hard{display:inline;background:#ffe0cc;color:#cc6600}
+
+/* ── Buttons ── */
 .btn-row{display:flex;gap:10px;align-items:center}
 .btn{height:46px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;-webkit-appearance:none;outline:none}
 .btn:active{opacity:.7;transform:scale(.97)}
@@ -82,72 +64,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn svg{width:20px;height:20px;pointer-events:none}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn-label{white-space:nowrap}
-.sync-modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%}
-.sync-modal.show{display:block}
-.sync-modal-bg{position:absolute;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.3)}
-.sync-modal-card{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);background:#fff;border-radius:16px;padding:24px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,.15);text-align:center}
-.sync-title{font-size:17px;font-weight:700;margin-bottom:6px}
-.sync-desc{font-size:12px;color:#86868b;margin-bottom:16px;line-height:1.5}
-.sync-textarea{width:100%;height:70px;border:1px solid #e0e0e0;border-radius:10px;padding:10px;font-size:12px;resize:none;margin-bottom:12px;-webkit-appearance:none}
-.sync-btn-row{display:flex;gap:10px}
-.sync-action{flex:1;height:42px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;outline:none}
-.sync-action:active{opacity:.7}
-.sync-export{background:#007aff;color:#fff}
-.sync-import{background:#34c759;color:#fff}
-.sync-close{margin-top:10px;background:none;border:none;color:#8e8e93;font-size:14px;cursor:pointer;width:100%;height:36px}
-.sync-msg{font-size:11px;margin-top:6px;min-height:16px}
-.sync-msg.ok{color:#34c759}
-.sync-msg.err{color:#ff3b30}
+
+/* ── Loading overlay ── */
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;z-index:50}
+.loading-spinner{width:32px;height:32px;border:3px solid #e0e0e0;border-top-color:#007aff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+
+<!-- HOME = word list -->
 <div id="view-home">
   <div class="home-hero">考研英语单词本</div>
-  <div class="home-sub">Build 2026-06-24 11:57</div>
-  <div class="home-cards">
-    <div class="home-card" onclick="showEntry()">
-      <h2>录入单词</h2>
-      <p>粘贴单词列表，自动识别中英文并保存</p>
-    </div>
-    <div class="home-card" onclick="showList()">
-      <h2>单词清单</h2>
-      <p id="listCardStat">查看和管理已录入的单词</p>
-    </div>
-  </div>
-  <div style="text-align:center;margin-top:24px">
-    <span style="cursor:pointer;opacity:.4;font-size:14px" onclick="toggleSync()">☁ 导出/导入</span>
-  </div>
-</div>
-<div id="view-entry" style="display:none">
-  <div class="nav-bar">
-    <button class="nav-back" onclick="showHome()">← 首页</button>
-    <span class="nav-title">录入单词</span>
-  </div>
-  <div class="entry-area">
-    <textarea id="entryInput" placeholder="粘贴单词，每行一个，格式如：&#10;noteworthy 值得注意的&#10;quirk 怪癖&#10;elite 精英的&#10;..."></textarea>
-    <div class="entry-hint">支持格式：<b>英文 中文</b>（空格或Tab分隔），每行一个单词</div>
-    <button class="parse-btn" onclick="parseEntry()">识别单词</button>
-    <div class="preview-box" id="previewBox"></div>
-    <div class="preview-summary" id="previewSummary"></div>
-    <div class="confirm-row" id="confirmRow">
-      <button class="confirm-btn confirm-save" onclick="saveEntry()">确认保存</button>
-      <button class="confirm-btn confirm-cancel" onclick="cancelEntry()">取消</button>
-    </div>
-    <div class="entry-msg" id="entryMsg"></div>
-  </div>
-</div>
-<div id="view-list" style="display:none">
-  <div class="nav-bar">
-    <button class="nav-back" onclick="showHome()">← 首页</button>
-    <span class="nav-title">单词清单</span>
-    <span style="margin-left:auto;font-size:12px;color:#86868b" id="listCount"></span>
-  </div>
+  <div class="home-sub">Build 2026-06-24 12:06</div>
   <div class="entry-list" id="entryList"></div>
-  <div class="empty-msg" id="listEmpty" style="display:none">还没有录入单词</div>
+  <div class="empty-msg" id="homeEmpty" style="display:none">还没有单词清单<br><br>在电脑上编辑 wordbank/entries.json<br>运行 generate_audio.py → build.py<br>推送到 GitHub Pages 后即可使用</div>
 </div>
+
+<!-- GROUP = word playback -->
 <div id="view-group" style="display:none">
   <div class="nav-bar">
-    <button class="nav-back" onclick="showList()">← 清单</button>
+    <button class="nav-back" onclick="showHome()">← 清单</button>
     <span class="nav-title" id="groupTitle"></span>
   </div>
   <div class="word-group">
@@ -170,44 +107,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 </div>
-<div class="sync-modal" id="syncModal">
-  <div class="sync-modal-bg" onclick="toggleSync()"></div>
-  <div class="sync-modal-card">
-    <div class="sync-title">☁ 导出/导入</div>
-    <div class="sync-desc">导出：复制全部数据到剪贴板<br>导入：粘贴数据，合并到当前单词本</div>
-    <textarea class="sync-textarea" id="syncText" placeholder="在此粘贴数据…"></textarea>
-    <div class="sync-btn-row">
-      <button class="sync-action sync-export" onclick="doExport()">导出</button>
-      <button class="sync-action sync-import" onclick="doImport()">导入</button>
-    </div>
-    <div class="sync-msg" id="syncMsg"></div>
-    <button class="sync-close" onclick="toggleSync()">关闭</button>
-  </div>
-</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadOverlay" style="display:none"><div class="loading-spinner"></div></div>
+
 <script>
-var PREBUILT_ENTRIES = [{"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
+var ENTRIES = [{"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_AVAILABLE = ["wb_2026-06-23_demo"];
-var BUILD_TS = 1782273425;
+var BUILD_TS = 1782273992;
 
 var currentEntryId = null;
-var parsedWords = [];
 var wordIdx = 0, step = 0, paused = false, singleWordMode = false;
 var edgeAudio = null;
-var edgeAudioCache = {}; // eid -> [{en:b64,cn:b64}, ...]
-var edgeAudioLoading = {}; // eid -> true|false
-var TTS_WORKER = 'http://localhost:8765/tts';
-var ttsBuffer = {}; // 'lang:text' -> blob URL, cache fetched audio
+var edgeAudioCache = {};  // eid -> [{en:b64,cn:b64}, ...]
+var edgeAudioLoading = {};  // eid -> true|false
 
 var STEP_LABELS = ["英①","中①","英②","中②"];
 var STEP_IS_EN = [true, false, true, false];
 var STEP_LABELS_FAM = ["英①","中①"];
 var STEP_IS_EN_FAM = [true, false];
 
-function loadEntries() {
-  try { return JSON.parse(localStorage.getItem('wb_entries') || '[]'); }
-  catch(e) { return []; }
-}
-function saveEntries(arr) { localStorage.setItem('wb_entries', JSON.stringify(arr)); }
 function loadPrefs() {
   try { return JSON.parse(localStorage.getItem('wb_prefs') || '{}'); }
   catch(e) { return {}; }
@@ -215,32 +134,22 @@ function loadPrefs() {
 function savePrefs(obj) { localStorage.setItem('wb_prefs', JSON.stringify(obj)); }
 
 function showView(name) {
-  ['home','entry','list','group'].forEach(function(v) {
-    document.getElementById('view-' + v).style.display = v === name ? 'block' : 'none';
-  });
+  document.getElementById('view-home').style.display = name === 'home' ? 'block' : 'none';
+  document.getElementById('view-group').style.display = name === 'group' ? 'block' : 'none';
 }
 
-function stopEdgeAudio() { if (edgeAudio) { edgeAudio.onended = null; edgeAudio.onerror = null; edgeAudio.pause(); edgeAudio = null; } }
-function stopWebSpeech() { if (window.speechSynthesis) window.speechSynthesis.cancel(); }
-
-function showHome() { stopEdgeAudio(); stopWebSpeech(); showView('home'); updateHomeStat(); }
-function showEntry() { stopEdgeAudio(); stopWebSpeech(); showView('entry');
-  document.getElementById('entryInput').value = '';
-  document.getElementById('previewBox').classList.remove('show'); document.getElementById('previewBox').innerHTML = '';
-  document.getElementById('previewSummary').classList.remove('show');
-  document.getElementById('confirmRow').classList.remove('show');
-  document.getElementById('entryMsg').textContent = ''; document.getElementById('entryMsg').className = 'entry-msg';
-  parsedWords = [];
+function stopAudio() {
+  if (edgeAudio) { edgeAudio.onended = null; edgeAudio.onerror = null; edgeAudio.pause(); edgeAudio = null; }
 }
-function showList() { stopEdgeAudio(); stopWebSpeech(); showView('list'); renderList(); }
+
+function showHome() { stopAudio(); showView('home'); renderHome(); }
 
 function showGroup(entryId) {
-  stopEdgeAudio(); stopWebSpeech();
+  stopAudio();
   currentEntryId = entryId;
-  var entries = loadEntries();
   var entry = null;
-  for (var i = 0; i < entries.length; i++) { if (entries[i].id === entryId) { entry = entries[i]; break; } }
-  if (!entry) { showList(); return; }
+  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === entryId) { entry = ENTRIES[i]; break; } }
+  if (!entry) { showHome(); return; }
   showView('group');
   document.getElementById('groupTitle').textContent = entry.label;
   document.getElementById('groupLabel').textContent = entry.label;
@@ -248,6 +157,7 @@ function showGroup(entryId) {
   loadEdgeAudio(entryId);
 }
 
+// ── Audio loading ──
 function loadEdgeAudio(eid) {
   if (edgeAudioCache[eid] || edgeAudioLoading[eid]) return;
   if (AUDIO_AVAILABLE.indexOf(eid) < 0) return;
@@ -262,118 +172,25 @@ function hasEdgeAudio(eid, widx) {
   return edgeAudioCache[eid] && edgeAudioCache[eid][widx];
 }
 
-function parseEntry() {
-  var text = document.getElementById('entryInput').value.trim();
-  if (!text) { showEntryMsg('请先粘贴单词内容', 'err'); return; }
-  var lines = text.split('\n');
-  var words = [];
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i].trim();
-    if (!line) continue;
-    var parts = line.split('\t');
-    if (parts.length < 2) {
-      var m = line.match(/^(.+?)\s{2,}(.+)$/);
-      if (!m) {
-        var idx = line.search(/\s[一-鿿]/);
-        if (idx >= 0) parts = [line.substring(0, idx), line.substring(idx + 1)];
-        else { var si = line.indexOf(' '); if (si > 0) parts = [line.substring(0, si), line.substring(si + 1)]; }
-      } else { parts = [m[1], m[2]]; }
-    }
-    if (parts.length >= 2) {
-      var en = parts[0].trim(), cn = parts.slice(1).join(' ').trim();
-      if (en && cn) words.push({en: en, cn: cn});
-    }
-  }
-  if (words.length === 0) { showEntryMsg('未能识别出单词，请检查格式', 'err'); return; }
-  parsedWords = words;
-  var pb = document.getElementById('previewBox');
-  var h = '';
-  for (var j = 0; j < words.length; j++) h += '<div class="pw"><span class="pw-en">' + esc(words[j].en) + '</span><span class="pw-cn">' + esc(words[j].cn) + '</span></div>';
-  pb.innerHTML = h; pb.classList.add('show');
-  document.getElementById('previewSummary').textContent = '识别到 ' + words.length + ' 个单词';
-  document.getElementById('previewSummary').classList.add('show');
-  document.getElementById('confirmRow').classList.add('show');
-  document.getElementById('entryMsg').textContent = ''; document.getElementById('entryMsg').className = 'entry-msg';
-}
-
-function saveEntry() {
-  if (parsedWords.length === 0) return;
-  var now = new Date();
-  var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
-  var dateStr = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate());
-  var label = pad(now.getMonth()+1) + '.' + pad(now.getDate()) + '单词';
-  var id = 'wb_' + dateStr + '_' + Date.now();
-  var entry = { id: id, label: label, date: dateStr, words: parsedWords };
-  var entries = loadEntries(); entries.unshift(entry); saveEntries(entries);
-  showEntryMsg('已保存：' + label + '（' + parsedWords.length + '词）', 'ok');
-  document.getElementById('confirmRow').classList.remove('show');
-  document.getElementById('entryInput').value = '';
-  parsedWords = [];
-  updateHomeStat();
-}
-
-function cancelEntry() {
-  parsedWords = [];
-  document.getElementById('previewBox').classList.remove('show'); document.getElementById('previewBox').innerHTML = '';
-  document.getElementById('previewSummary').classList.remove('show');
-  document.getElementById('confirmRow').classList.remove('show');
-  document.getElementById('entryMsg').textContent = ''; document.getElementById('entryMsg').className = 'entry-msg';
-}
-
-function deleteEntry(entryId, e) {
-  e.stopPropagation();
-  if (!confirm('确定删除？')) return;
-  var entries = loadEntries();
-  entries = entries.filter(function(en) { return en.id !== entryId; });
-  saveEntries(entries);
-  var prefs = loadPrefs(), newPrefs = {};
-  for (var k in prefs) { if (k.indexOf(entryId + '_') !== 0) newPrefs[k] = prefs[k]; }
-  savePrefs(newPrefs);
-  delete edgeAudioCache[entryId];
-  renderList(); updateHomeStat();
-}
-
-function showEntryMsg(text, cls) {
-  var el = document.getElementById('entryMsg');
-  el.textContent = text; el.className = 'entry-msg ' + (cls || '');
-}
-
-function renderList() {
-  var entries = loadEntries();
-  if (entries.length === 0) {
+// ── Home (word list) ──
+function renderHome() {
+  if (ENTRIES.length === 0) {
     document.getElementById('entryList').innerHTML = '';
-    document.getElementById('listEmpty').style.display = 'block';
-    document.getElementById('listCount').textContent = '';
-    document.getElementById('listCardStat').textContent = '查看和管理已录入的单词';
+    document.getElementById('homeEmpty').style.display = 'block';
   } else {
-    document.getElementById('listEmpty').style.display = 'none';
-    document.getElementById('listCount').textContent = entries.length + '个清单';
+    document.getElementById('homeEmpty').style.display = 'none';
     var totalW = 0, html = '', prefs = loadPrefs();
-    for (var i = 0; i < entries.length; i++) {
-      var e = entries[i]; totalW += e.words.length;
+    for (var i = 0; i < ENTRIES.length; i++) {
+      var e = ENTRIES[i]; totalW += e.words.length;
       var familiar = 0;
       for (var w = 0; w < e.words.length; w++) { if (prefs[e.id + '_' + w] === 'familiar') familiar++; }
-      html += '<div class="entry-item" onclick="showGroup(\'' + e.id + '\')"><div><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div><button class="entry-item-del" onclick="deleteEntry(\'' + e.id + '\',event)">✕</button></div>';
+      html += '<div class="entry-item" onclick="showGroup(\'' + e.id + '\')"><div class="entry-item-info"><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div></div>';
     }
     document.getElementById('entryList').innerHTML = html;
-    document.getElementById('listCardStat').textContent = entries.length + '个清单 · ' + totalW + '词';
   }
 }
 
-function updateHomeStat() {
-  var entries = loadEntries();
-  if (entries.length === 0) {
-    // Seed with pre-built entries on first visit
-    if (PREBUILT_ENTRIES && PREBUILT_ENTRIES.length > 0) {
-      saveEntries(PREBUILT_ENTRIES);
-      entries = PREBUILT_ENTRIES;
-    }
-  }
-  var total = 0;
-  for (var i = 0; i < entries.length; i++) total += entries[i].words.length;
-  document.getElementById('listCardStat').textContent = entries.length + '个清单 · ' + total + '词';
-}
-
+// ── Word list for group ──
 function renderWords(entry) {
   var prefs = loadPrefs(), html = '', familiar = 0;
   for (var w = 0; w < entry.words.length; w++) {
@@ -387,8 +204,8 @@ function renderWords(entry) {
 }
 
 function updateBadges() {
-  var entries = loadEntries(), entry = null;
-  for (var i = 0; i < entries.length; i++) { if (entries[i].id === currentEntryId) { entry = entries[i]; break; } }
+  var entry = null;
+  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
   if (!entry) return;
   var prefs = loadPrefs();
   for (var w = 0; w < entry.words.length; w++) {
@@ -399,12 +216,6 @@ function updateBadges() {
     if (pref === 'familiar') { badge.classList.add('wb-familiar'); badge.textContent = '熟'; }
     else if (pref === 'hard') { badge.classList.add('wb-hard'); badge.textContent = '难'; }
   }
-}
-
-function getCurrentEntry() {
-  var entries = loadEntries();
-  for (var i = 0; i < entries.length; i++) { if (entries[i].id === currentEntryId) return entries[i]; }
-  return null;
 }
 
 function highlight(wIdx) {
@@ -422,6 +233,7 @@ function clearHighlight() {
   document.querySelectorAll('#wordList .word-block.active').forEach(function(el) { el.classList.remove('active'); });
 }
 
+// ── Buttons ──
 function setBtnState(playing, isPaused, disabled) {
   var btnPlay = document.getElementById('btnPlay'), btnPause = document.getElementById('btnPause');
   if (!btnPlay) return;
@@ -435,176 +247,93 @@ function setBtnState(playing, isPaused, disabled) {
 }
 
 function finishPlayback() {
-  stopEdgeAudio(); stopWebSpeech(); clearHighlight();
+  stopAudio(); clearHighlight();
   setBtnState(false, false, false);
   wordIdx = 0; step = 0; paused = false; singleWordMode = false;
 }
 
-function stopAudio() { finishPlayback(); }
-
-function playCurrentWordWorker() {
-  var entry = getCurrentEntry();
+// ── Playback (Edge TTS pre-built audio only) ──
+function playCurrentWord() {
+  var entry = null;
+  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
   if (!entry) { finishPlayback(); return; }
   if (wordIdx >= entry.words.length) { finishPlayback(); return; }
+
   var prefs = loadPrefs(), pref = prefs[entry.id + '_' + wordIdx];
   var labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
   var isENArr = pref === 'familiar' ? STEP_IS_EN_FAM : STEP_IS_EN;
+
   if (step >= labels.length) {
     if (singleWordMode) { finishPlayback(); return; }
     step = 0; wordIdx++;
     if (wordIdx >= entry.words.length) { finishPlayback(); return; }
+    pref = prefs[entry.id + '_' + wordIdx];
     labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
     isENArr = pref === 'familiar' ? STEP_IS_EN_FAM : STEP_IS_EN;
   }
-  highlight(wordIdx);
-  var isEN = isENArr[step];
-  var text = isEN ? entry.words[wordIdx].en : entry.words[wordIdx].cn;
-  var voice = isEN ? 'en-US-AriaNeural' : 'zh-CN-XiaoxiaoNeural';
-  var ck = (isEN ? 'en:' : 'cn:') + text;
 
-  function advance() {
-    step++;
-    if (step >= labels.length) { if (singleWordMode) { finishPlayback(); return; } step = 0; wordIdx++; }
-    if (wordIdx >= entry.words.length) { finishPlayback(); }
-    else { playCurrentWordWorker(); }
-  }
-
-  if (ttsBuffer[ck]) {
-    var au = new Audio(ttsBuffer[ck]);
-    edgeAudio = au;
-    au.onended = advance;
-    au.onerror = advance;
-    au.play();
-    return;
-  }
-
-  var url = TTS_WORKER + '?text=' + encodeURIComponent(text) + '&voice=' + voice;
-  fetch(url)
-    .then(function(r) {
-      if (!r.ok) throw new Error('worker err');
-      return r.blob();
-    })
-    .then(function(blob) {
-      var blobUrl = URL.createObjectURL(blob);
-      ttsBuffer[ck] = blobUrl;
-      if (!edgeAudio || edgeAudio.paused || edgeAudio.ended) {
-        var au = new Audio(blobUrl);
-        edgeAudio = au;
-        au.onended = advance;
-        au.onerror = advance;
-        au.play();
-      }
-    })
-    .catch(function() {
-      // Worker failed, fall back to Web Speech API
-      playCurrentWordWeb();
-    });
-}
-
-function playCurrentWordEdge() {
-  var entry = getCurrentEntry();
-  if (!entry) { finishPlayback(); return; }
-  var prefs = loadPrefs(), pref = prefs[entry.id + '_' + wordIdx];
-  var labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
-  var isENArr = pref === 'familiar' ? STEP_IS_EN_FAM : STEP_IS_EN;
-  if (step >= labels.length) {
-    if (singleWordMode) { finishPlayback(); return; }
-    step = 0; wordIdx++;
-    if (wordIdx >= entry.words.length) { finishPlayback(); return; }
-  }
   var aw = edgeAudioCache[entry.id] && edgeAudioCache[entry.id][wordIdx];
-  if (!aw) { playCurrentWordWorker(); return; }
+  if (!aw) { finishPlayback(); return; }  // audio not loaded yet
+
   var isEN = isENArr[step];
   var b64 = isEN ? aw.en : aw.cn;
   var au = new Audio('data:audio/mpeg;base64,' + b64);
   edgeAudio = au;
   highlight(wordIdx);
+
   au.onended = function() {
     step++;
     if (step >= labels.length) { if (singleWordMode) { finishPlayback(); return; } step = 0; wordIdx++; }
     if (wordIdx >= entry.words.length) { finishPlayback(); }
-    else { playCurrentWordEdge(); }
+    else { playCurrentWord(); }
   };
   au.onerror = function() {
     step++;
     if (step >= labels.length) { if (singleWordMode) { finishPlayback(); return; } step = 0; wordIdx++; }
     if (wordIdx >= entry.words.length) { finishPlayback(); }
-    else { playCurrentWordEdge(); }
+    else { playCurrentWord(); }
   };
   au.play();
-}
-
-function speakWeb(text, lang, onEnd) {
-  if (!window.speechSynthesis) { onEnd(); return; }
-  window.speechSynthesis.cancel();
-  var u = new SpeechSynthesisUtterance(text);
-  u.lang = lang; u.rate = 0.85;
-  var keepAlive = setInterval(function() { if (window.speechSynthesis.speaking) { window.speechSynthesis.pause(); window.speechSynthesis.resume(); } }, 5000);
-  var done = function() { clearInterval(keepAlive); onEnd(); };
-  u.onend = done; u.onerror = done;
-  window.speechSynthesis.speak(u);
-}
-
-function playCurrentWordWeb() {
-  var entry = getCurrentEntry();
-  if (!entry) { finishPlayback(); return; }
-  var prefs = loadPrefs(), pref = prefs[entry.id + '_' + wordIdx];
-  var labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
-  var isENArr = pref === 'familiar' ? STEP_IS_EN_FAM : STEP_IS_EN;
-  if (step >= labels.length) {
-    if (singleWordMode) { finishPlayback(); return; }
-    step = 0; wordIdx++;
-    if (wordIdx >= entry.words.length) { finishPlayback(); return; }
-  }
-  highlight(wordIdx);
-  var isEN = isENArr[step];
-  var text = isEN ? entry.words[wordIdx].en : entry.words[wordIdx].cn;
-  var lang = isEN ? 'en-US' : 'zh-CN';
-  speakWeb(text, lang, function() {
-    step++;
-    if (step >= labels.length) { if (singleWordMode) { finishPlayback(); return; } step = 0; wordIdx++; }
-    if (wordIdx >= entry.words.length) { finishPlayback(); }
-    else { playCurrentWordWeb(); }
-  });
-}
-
-function playCurrentWord() {
-  var entry = getCurrentEntry();
-  if (!entry || wordIdx >= entry.words.length) { finishPlayback(); return; }
-  if (hasEdgeAudio(entry.id, wordIdx)) { playCurrentWordEdge(); }
-  else { playCurrentWordWorker(); }
 }
 
 function togglePlay() {
   if (wordIdx > 0 && !paused && !singleWordMode) {
     if (edgeAudio) edgeAudio.pause();
-    if (window.speechSynthesis) window.speechSynthesis.pause();
     paused = true; setBtnState(false, true, false);
   } else if (paused) {
     if (edgeAudio) edgeAudio.play();
-    if (window.speechSynthesis) window.speechSynthesis.resume();
     paused = false; setBtnState(true, false, false);
   } else {
     stopAudio(); wordIdx = 0; step = 0; paused = false; singleWordMode = false;
-    setBtnState(true, false, false);
-    if (currentEntryId && (edgeAudioCache[currentEntryId] || edgeAudioLoading[currentEntryId])) {
-      // Wait for audio to load then play
-      var eid = currentEntryId;
+    var eid = currentEntryId;
+    if (edgeAudioCache[eid]) {
+      setBtnState(true, false, false);
+      playCurrentWord();
+    } else if (edgeAudioLoading[eid]) {
+      setBtnState(false, false, true);  // loading
       var tryPlay = function() {
-        if (edgeAudioCache[eid]) { playCurrentWord(); }
+        if (edgeAudioCache[eid]) { setBtnState(true, false, false); playCurrentWord(); }
         else if (edgeAudioLoading[eid]) { setTimeout(tryPlay, 200); }
-        else { playCurrentWordWorker(); setBtnState(true, false, false); }
+        else { setBtnState(false, false, false); }  // failed
       };
-      if (edgeAudioCache[eid]) { playCurrentWord(); }
-      else if (edgeAudioLoading[eid]) { setBtnState(false, false, true); setTimeout(tryPlay, 200); }
-      else { playCurrentWordWorker(); }
-    } else { playCurrentWordWorker(); }
+      setTimeout(tryPlay, 200);
+    } else {
+      // Not loaded and not loading — try loading now
+      loadEdgeAudio(eid);
+      setBtnState(false, false, true);
+      var tryPlay2 = function() {
+        if (edgeAudioCache[eid]) { setBtnState(true, false, false); playCurrentWord(); }
+        else if (edgeAudioLoading[eid]) { setTimeout(tryPlay2, 200); }
+        else { setBtnState(false, false, false); }
+      };
+      setTimeout(tryPlay2, 200);
+    }
   }
 }
 
 function togglePause() {
-  if (paused) { if (edgeAudio) edgeAudio.play(); if (window.speechSynthesis) window.speechSynthesis.resume(); paused = false; setBtnState(true, false, false); }
-  else { if (edgeAudio) edgeAudio.pause(); if (window.speechSynthesis) window.speechSynthesis.pause(); paused = true; setBtnState(false, true, false); }
+  if (paused) { if (edgeAudio) edgeAudio.play(); paused = false; setBtnState(true, false, false); }
+  else { if (edgeAudio) edgeAudio.pause(); paused = true; setBtnState(false, true, false); }
 }
 
 function doRewind() { stopAudio(); wordIdx = 0; step = 0; paused = false; setBtnState(false, false, false); }
@@ -614,11 +343,13 @@ function playSingleWord(wIdx) {
   setBtnState(true, false, false); playCurrentWord();
 }
 
+// ── Prefs (familiar/hard) ──
 function setPref(wIdx, act) {
   var key = currentEntryId + '_' + wIdx, prefs = loadPrefs();
   if (act === 'reset') delete prefs[key]; else prefs[key] = act;
   savePrefs(prefs); updateBadges();
-  var entry = getCurrentEntry();
+  var entry = null;
+  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
   if (entry) { var familiar = 0; for (var w = 0; w < entry.words.length; w++) { if (prefs[entry.id + '_' + w] === 'familiar') familiar++; } document.getElementById('groupStat').textContent = entry.words.length + '词 · ' + familiar + '熟'; }
   var el = document.getElementById('ws' + wIdx);
   if (el) setTimeout(function() { closeSwipe(el); }, 200);
@@ -678,34 +409,9 @@ document.addEventListener('click', function(e) {
   wasSwipe = false;
 });
 
-// ── Export/Import ──
-function toggleSync() { document.getElementById('syncModal').classList.toggle('show'); document.getElementById('syncText').value = ''; document.getElementById('syncMsg').textContent = ''; document.getElementById('syncMsg').className = 'sync-msg'; }
-function doExport() {
-  var code = btoa(unescape(encodeURIComponent(JSON.stringify({ entries: loadEntries(), prefs: loadPrefs() }))));
-  document.getElementById('syncText').value = code;
-  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(function() { showSyncMsg('已复制到剪贴板', 'ok'); }).catch(function() { showSyncMsg('请手动复制上方同步码', ''); }); }
-  else { showSyncMsg('请手动复制上方同步码', ''); }
-}
-function doImport() {
-  var code = document.getElementById('syncText').value.trim();
-  if (!code) { showSyncMsg('请先粘贴同步码', 'err'); return; }
-  try {
-    var data = JSON.parse(decodeURIComponent(escape(atob(code))));
-    if (!data.entries) throw new Error('Invalid');
-    var existing = loadEntries(), existingIds = {};
-    for (var i = 0; i < existing.length; i++) existingIds[existing[i].id] = true;
-    var added = 0;
-    for (var j = data.entries.length - 1; j >= 0; j--) { if (!existingIds[data.entries[j].id]) { existing.unshift(data.entries[j]); existingIds[data.entries[j].id] = true; added++; } }
-    saveEntries(existing);
-    if (data.prefs) { var prefs = loadPrefs(); for (var k in data.prefs) { if (!prefs[k]) prefs[k] = data.prefs[k]; } savePrefs(prefs); }
-    showSyncMsg('导入成功（新增' + added + '个清单）', 'ok');
-    document.getElementById('syncText').value = ''; updateHomeStat();
-  } catch(e) { showSyncMsg('数据格式无效', 'err'); }
-}
-function showSyncMsg(text, cls) { var el = document.getElementById('syncMsg'); el.textContent = text; el.className = 'sync-msg ' + (cls || ''); }
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-updateHomeStat();
+renderHome();
 </script>
 </body>
 </html>
