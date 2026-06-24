@@ -103,7 +103,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 <div id="view-home">
   <div class="home-hero">考研英语单词本</div>
-  <div class="home-sub">Build 2026-06-24 09:02</div>
+  <div class="home-sub">Build 2026-06-24 09:10</div>
   <div class="home-cards">
     <div class="home-card" onclick="showEntry()">
       <h2>录入单词</h2>
@@ -350,7 +350,7 @@ function renderList() {
       var e = entries[i]; totalW += e.words.length;
       var familiar = 0;
       for (var w = 0; w < e.words.length; w++) { if (prefs[e.id + '_' + w] === 'familiar') familiar++; }
-      html += '<div class="entry-item" onclick="showGroup('' + e.id + '')"><div><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div><button class="entry-item-del" onclick="deleteEntry('' + e.id + '',event)">✕</button></div>';
+      html += '<div class="entry-item" onclick="showGroup(\'' + e.id + '\')"><div><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div><button class="entry-item-del" onclick="deleteEntry(\'' + e.id + '\',event)">✕</button></div>';
     }
     document.getElementById('entryList').innerHTML = html;
     document.getElementById('listCardStat').textContent = entries.length + '个清单 · ' + totalW + '词';
