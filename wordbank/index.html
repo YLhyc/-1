@@ -103,7 +103,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 <div id="view-home">
   <div class="home-hero">考研英语单词本</div>
-  <div class="home-sub">Build 2026-06-24 00:08</div>
+  <div class="home-sub">Build 2026-06-24 09:02</div>
   <div class="home-cards">
     <div class="home-card" onclick="showEntry()">
       <h2>录入单词</h2>
@@ -262,13 +262,12 @@ function hasEdgeAudio(eid, widx) {
 function parseEntry() {
   var text = document.getElementById('entryInput').value.trim();
   if (!text) { showEntryMsg('请先粘贴单词内容', 'err'); return; }
-  var lines = text.split('
-');
+  var lines = text.split('\n');
   var words = [];
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i].trim();
     if (!line) continue;
-    var parts = line.split('	');
+    var parts = line.split('\t');
     if (parts.length < 2) {
       var m = line.match(/^(.+?)\s{2,}(.+)$/);
       if (!m) {
