@@ -15,12 +15,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .home-sub{text-align:center;color:#86868b;font-size:12px;margin-bottom:24px}
 .entry-list{display:flex;flex-direction:column;gap:8px}
 .entry-item{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:transform .1s;gap:8px}
-.entry-acts{display:flex;gap:6px;flex-shrink:0}
-.entry-act{width:36px;height:36px;border-radius:10px;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none;outline:none;color:#fff}
-.entry-act:active{filter:brightness(.85)}
-.entry-pin{background:#007aff}
-.entry-del{background:#ff3b30}
-.entry-item:active{transform:scale(.98)}
+.entry-swipe{position:relative;overflow:hidden;border-radius:14px}
+.es-actions{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:stretch}
+.es-btn{min-width:40px;border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;padding:0 10px;-webkit-appearance:none;outline:none}
+.es-btn:active{filter:brightness(.85)}
+.es-pin{background:#007aff}
+.es-del{background:#ff3b30}
+.entry-item{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;transition:transform .25s ease;position:relative;z-index:1}
 .entry-item-info{flex:1}
 .entry-item-label{font-size:16px;font-weight:500}
 .entry-item-meta{font-size:12px;color:#86868b}
@@ -73,7 +74,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div id="view-home" style="display:block">
   <div class="home-hero">WORD BANK</div>
-  <div class="home-sub">2026-06-24 18:32</div>
+  <div class="home-sub">2026-06-24 18:40</div>
   <div class="entry-list" id="entryList"></div>
   <div class="empty-msg" id="homeEmpty" style="display:none">暂无词单</div>
 </div>
@@ -119,9 +120,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var ENTRIES = [{"id": "wb_2026-06-24_000001", "label": "测试单词", "date": "2026-06-24", "words": [{"en": "articulate", "cn": "清晰表达的；口齿伶俐的"}, {"en": "forthcoming", "cn": "即将发生的；乐于提供信息的"}, {"en": "susceptible", "cn": "易受影响的；敏感的"}, {"en": "conceivable", "cn": "可以想象的"}, {"en": "invariably", "cn": "总是；不变地"}, {"en": "chronic", "cn": "慢性的；长期的"}, {"en": "retrospect", "cn": "回顾；回想"}, {"en": "obscure", "cn": "模糊的；使费解"}, {"en": "negligible", "cn": "微不足道的"}, {"en": "rigorous", "cn": "严格的；严密的"}]}, {"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_OK = ["wb_2026-06-24_000001", "wb_2026-06-23_demo"];
-var TS = 1782297133;
+var TS = 1782297611;
 
 var entryId = null, wIdx = 0, step = 0, paused = false, single = false;
+var GAP_MS = 250, gapTimer = null;
 var curAudio = null, nextAu = null;
 var homeList = [];
 
@@ -157,6 +159,7 @@ function showView(v) {
 function stop() {
   if (curAudio) { curAudio.onended=null; curAudio.onerror=null; curAudio.pause(); curAudio=null; }
   if (nextAu) { nextAu.onended=null; nextAu.onerror=null; nextAu.pause(); nextAu=null; }
+  clearTimeout(gapTimer);
 }
 function showHome() { stop(); showView('home'); renderHome(); }
 
@@ -181,20 +184,41 @@ function mp3(eid, w, lang) {
 // ── Preload (fetch to blob — iPhone Safari ignores Audio.preload) ──
 var preloaded = {};  // eid_w_lang -> blob URL (instant playback)
 var preloadDone = false;
+var preloadNext = 0;
 function preloadAll(eid, n) {
   preloadDone = false; preloaded = {};
-  var pending = 0;
-  for (var w = 0; w < n; w++) {
+  preloadNext = 0;
+  // Progressive: first 5 words (10 files) must load before button unlocks
+  var INIT = Math.min(5, n), total = INIT * 2, got = 0;
+  function inc() { got++; if (got >= total) { preloadDone = true; refreshBtns(); prewarmContinue(eid, n); } }
+  for (var w = 0; w < INIT; w++) {
     ['en','cn'].forEach(function(l) {
-      pending++;
       var k = eid + '_' + w + '_' + l;
       fetch(mp3(eid, w, l)).then(function(r){return r.blob()}).then(function(blob){
-        preloaded[k] = URL.createObjectURL(blob);
-        pending--;
-        if (pending === 0) { preloadDone = true; refreshBtns(); }
-      }).catch(function(){ pending--; });
+        preloaded[k] = URL.createObjectURL(blob); inc();
+      }).catch(function(){ inc(); });
     });
   }
+  if (n <= INIT) { preloadNext = n; }
+}
+function prewarmContinue(eid, n) {
+  // Load remaining words lazily, 3 at a time
+  preloadNext = Math.min(5, n);
+  function loadBatch() {
+    var start = preloadNext, end = Math.min(start + 3, n);
+    if (start >= n) return;
+    var batch = 0, need = (end - start) * 2;
+    function doneBatch() { batch++; if (batch >= need) { preloadNext = end; loadBatch(); } }
+    for (var w = start; w < end; w++) {
+      ['en','cn'].forEach(function(l) {
+        var k = eid + '_' + w + '_' + l;
+        fetch(mp3(eid, w, l)).then(function(r){return r.blob()}).then(function(blob){
+          preloaded[k] = URL.createObjectURL(blob); doneBatch();
+        }).catch(function(){ doneBatch(); });
+      });
+    }
+  }
+  loadBatch();
 }
 
 // ── Home ──
@@ -216,7 +240,7 @@ function renderHome() {
     for (var i=0; i<homeList.length; i++) {
       var e = homeList[i], fam=0;
       for (var w=0; w<e.words.length; w++) if (p[e.id+'_'+w]==='familiar') fam++;
-      h += '<div class="entry-item"><div class="entry-item-info" onclick="openEntry('+i+')"><div class="entry-item-label">'+esc(e.label)+'</div><div class="entry-item-meta">'+e.words.length+'词'+(fam>0?' · '+fam+'熟':'')+'</div></div><div class="entry-acts"><button class="entry-act entry-pin" onclick="event.stopPropagation();doPin('+i+')" title="置顶">↑</button><button class="entry-act entry-del" onclick="event.stopPropagation();doDel('+i+')" title="删除">×</button></div></div>';
+      h += '<div class="entry-swipe" id="es'+i+'"><div class="es-actions"><button class="es-btn es-pin" data-idx="'+i+'" data-act="pin">↑</button><button class="es-btn es-del" data-idx="'+i+'" data-act="del">×</button></div><div class="entry-item" onclick="openEntry('+i+')"><div class="entry-item-info"><div class="entry-item-label">'+esc(e.label)+'</div><div class="entry-item-meta">'+e.words.length+'词'+(fam>0?' · '+fam+'熟':'')+'</div></div></div></div>';
     }
     $('entryList').innerHTML = h;
   }
@@ -358,9 +382,9 @@ function playWord() {
     step++;
     if (step >= labels.length) { if (single) { done(); return; } step = 0; wIdx++; }
     if (wIdx >= e.words.length) { done(); }
-    else { playWord(); }
+    else { gapTimer = setTimeout(playWord, GAP_MS); }
   };
-  au.onerror = au.onended;
+  au.onerror = function() {};
   au.play();
 }
 
@@ -438,7 +462,7 @@ function setPref(w, act) {
 }
 
 // ── Swipe (word + entry) ──
-var swOpen=null, swCur=null, swX=0, swY=0, swTX=0, wasSw=false, SW_W=150, swBlk=null;
+var swOpen=null, swCur=null, swX=0, swY=0, swTX=0, wasSw=false, swW=0, swBlk=null, swType="";
 function closeSw(el) {
   if (!el) el=swOpen;
   if (el) {
@@ -451,11 +475,13 @@ function closeSw(el) {
 
 document.addEventListener('touchstart',function(e){
   wasSw=false;
-  var sw = e.target.closest('.word-swipe');
+  var sw = e.target.closest('.word-swipe') || e.target.closest('.entry-swipe');
   if (!sw) { closeSw(); swCur=null; swBlk=null; return; }
   if (swOpen && swOpen!==sw) closeSw(swOpen);
   swCur = sw;
-  swBlk = sw.querySelector('.word-block');
+  swType = sw.classList.contains('entry-swipe') ? 'entry' : 'word';
+  swBlk = swType === 'entry' ? sw.querySelector('.entry-item') : sw.querySelector('.word-block');
+  swW = swType === 'entry' ? 80 : 150;
   swX = e.touches[0].clientX; swY = e.touches[0].clientY;
   swTX = 0;
   if (swBlk) { var m=swBlk.style.transform.match(/-?[0-9.]+/); if(m) swTX=parseFloat(m[0]); }
@@ -467,22 +493,24 @@ document.addEventListener('touchmove',function(e){
   if(Math.abs(dx)>10) wasSw=true;
   if(dx>10){closeSw(swCur);return}
   e.preventDefault();
-  var tx=Math.max(-SW_W,Math.min(0,swTX+dx));
+  var tx=Math.max(-swW,Math.min(0,swTX+dx));
   if(swBlk){swBlk.style.transition='none';swBlk.style.transform='translateX('+tx+'px)'}
 },{passive:false});
 document.addEventListener('touchend',function(){
   if(!swCur || !swBlk){swCur=null;swBlk=null;return}
   swBlk.style.transition='transform .25s ease';
   var m=swBlk.style.transform.match(/-?[0-9.]+/), tx=m?parseFloat(m[0]):0;
-  if(Math.abs(tx)>SW_W*.35){swBlk.style.transform='translateX(-'+SW_W+'px)';swCur.classList.add('swiped');swOpen=swCur}
+  if(Math.abs(tx)>swW*.35){swBlk.style.transform='translateX(-'+swW+'px)';swCur.classList.add('swiped');swOpen=swCur}
   else{swBlk.style.transform='translateX(0)';swCur.classList.remove('swiped');swOpen=null}
-  swCur=null; swBlk=null;
+  swCur=null; swBlk=null; swType="";
 });
 document.addEventListener('click',function(e){
   // Close swipe if tapping outside
-  if (!e.target.closest('.word-swipe')) closeSw();
+  if (!e.target.closest('.word-swipe') && !e.target.closest('.entry-swipe')) closeSw();
   var wsBtn = e.target.closest('.ws-btn');
   if (wsBtn) { setPref(parseInt(wsBtn.dataset.w), wsBtn.dataset.act); return; }
+  var esBtn = e.target.closest('.es-btn');
+  if (esBtn) { var ei=parseInt(esBtn.dataset.idx); if (esBtn.dataset.act==='pin') doPin(ei); else doDel(ei); return; }
   if (!wasSw) {
     var wb = e.target.closest('.word-block');
     if (wb) {
