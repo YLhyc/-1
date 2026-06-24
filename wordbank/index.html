@@ -74,7 +74,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div id="view-home" style="display:block">
   <div class="home-hero">WORD BANK</div>
-  <div class="home-sub">2026-06-24 20:11</div>
+  <div class="home-sub">2026-06-24 20:13</div>
   <div class="entry-list" id="entryList"></div>
   <div class="empty-msg" id="homeEmpty" style="display:none">暂无词单</div>
 </div>
@@ -120,10 +120,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var ENTRIES = [{"id": "wb_2026-06-24_000001", "label": "测试单词", "date": "2026-06-24", "words": [{"en": "articulate", "cn": "清晰表达的；口齿伶俐的"}, {"en": "forthcoming", "cn": "即将发生的；乐于提供信息的"}, {"en": "susceptible", "cn": "易受影响的；敏感的"}, {"en": "conceivable", "cn": "可以想象的"}, {"en": "invariably", "cn": "总是；不变地"}, {"en": "chronic", "cn": "慢性的；长期的"}, {"en": "retrospect", "cn": "回顾；回想"}, {"en": "obscure", "cn": "模糊的；使费解"}, {"en": "negligible", "cn": "微不足道的"}, {"en": "rigorous", "cn": "严格的；严密的"}]}, {"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_OK = ["wb_2026-06-24_000001", "wb_2026-06-23_demo"];
-var TS = 1782303097;
+var TS = 1782303224;
 
 var entryId = null, wIdx = 0, step = 0, paused = false, single = false;
-var GAP_MS = 0, gapTimer = null;
 var curAudio = null;
 var auA = null, auB = null, curSlot = 0, auUrlA = null, auUrlB = null;
 var homeList = [];
@@ -162,7 +161,6 @@ function stop() {
   if (auB) { auB.onended=null; auB.onerror=null; auB.pause(); auB.removeAttribute('src'); }
   auUrlA = null; auUrlB = null;
   curAudio = null;
-  clearTimeout(gapTimer);
 }
 function showHome() { stop(); showView('home'); renderHome(); }
 
@@ -330,81 +328,114 @@ function getWordLabels(p, eid, widx) {
   return {labels: makeLabels(2), isENs: makeIsENs(2)};
 }
 
-// ── Playback (AB audio swap — next segment preloads while current plays) ──
+// ── Playback (AB direct swap — no setTimeout, A ends → B plays instantly) ──
+
 function getAu(slot) {
   if (slot === 0) { if (!auA) auA = new Audio(); return auA; }
   if (!auB) auB = new Audio(); return auB;
 }
-function nextUrlAfterStep() {
+function loadAu(slot, url) {
+  var au = getAu(slot);
+  var prev = slot === 0 ? auUrlA : auUrlB;
+  if (prev !== url) { au.src = url; if (slot === 0) auUrlA = url; else auUrlB = url; }
+}
+function segUrlFor(ns, nw) {
   var e = getE(); if (!e) return null;
-  var p = prefs();
-  var ns = step, nw = wIdx;
-  var info = getWordLabels(p, e.id, nw);
-  if (ns >= info.labels.length) {
-    if (single) return null;
-    ns = 0; nw++;
-    if (nw >= e.words.length) return null;
-    info = getWordLabels(p, e.id, nw);
-  }
+  var info = getWordLabels(prefs(), e.id, nw);
+  if (ns >= info.labels.length) return null;
   var isEN = info.isENs[ns];
   var lang = isEN ? 'en' : 'cn';
   var k = e.id + '_' + nw + '_' + lang;
   return preloaded[k] || mp3(e.id, nw, lang);
+}
+function nextStepAfter(ns, nw) {
+  // returns {step, wIdx} for the next segment, or null if done
+  var e = getE(); if (!e) return null;
+  var info = getWordLabels(prefs(), e.id, nw);
+  if (ns + 1 < info.labels.length) return {step: ns + 1, wIdx: nw};
+  if (single) return null;
+  if (nw + 1 < e.words.length) return {step: 0, wIdx: nw + 1};
+  return null;
+}
+
+function onSegEnd() {
+  // Play the OTHER slot (preloaded with current segment) when current ends
+  var au = getAu(1 - curSlot);
+  curSlot = 1 - curSlot;
+  curAudio = au;
+  au.playbackRate = 1.0;
+  hl(wIdx);
+
+  var segDone = false;
+  function next() { if (!segDone) { segDone = true; onSegEnd(); } }
+  au.onended = function() {
+    var nx = nextStepAfter(step, wIdx);
+    if (!nx) { done(); return; }
+    step = nx.step; wIdx = nx.wIdx;
+    next();
+  };
+  au.onerror = function() {
+    var nx = nextStepAfter(step, wIdx);
+    if (!nx) { done(); return; }
+    step = nx.step; wIdx = nx.wIdx;
+    next();
+  };
+  var playP = au.play();
+  if (playP !== undefined) { playP.catch(function() {
+    var nx = nextStepAfter(step, wIdx);
+    if (!nx) { done(); return; }
+    step = nx.step; wIdx = nx.wIdx;
+    next();
+  }); }
+
+  // Preload the segment after this one into the now-idle other Audio
+  var nx = nextStepAfter(step, wIdx);
+  if (nx) {
+    var url = segUrlFor(nx.step, nx.wIdx);
+    if (url) loadAu(1 - curSlot, url);
+  }
 }
 
 function playWord() {
   var e = getE();
   if (!e || wIdx >= e.words.length) { done(); return; }
 
-  var p = prefs();
-  var info = getWordLabels(p, e.id, wIdx);
-  var labels = info.labels, isENs = info.isENs;
-  if (step >= labels.length) {
-    if (single) { done(); return; }
-    step = 0; wIdx++;
-    if (wIdx >= e.words.length) { done(); return; }
-    info = getWordLabels(p, e.id, wIdx);
-    labels = info.labels; isENs = info.isENs;
-  }
+  var url = segUrlFor(step, wIdx);
+  if (!url) { done(); return; }
 
-  var isEN = isENs[step];
-  var lang = isEN ? 'en' : 'cn';
-  var k = e.id + '_' + wIdx + '_' + lang;
-  var url = preloaded[k] || mp3(e.id, wIdx, lang);
-
-  step++;
+  loadAu(curSlot, url);
   var au = getAu(curSlot);
-  var segDone = false;
-  function nextSeg() { if (!segDone) { segDone = true; gapTimer = setTimeout(playWord, GAP_MS); } }
-
   curAudio = au;
-  var prevUrl = curSlot === 0 ? auUrlA : auUrlB;
-  if (prevUrl !== url) {
-    au.src = url;
-    if (curSlot === 0) auUrlA = url; else auUrlB = url;
-  }
   au.playbackRate = 1.0;
   hl(wIdx);
 
+  var segDone = false;
+  function next() { if (!segDone) { segDone = true; onSegEnd(); } }
   au.onended = function() {
-    if (step >= labels.length) { if (single) { done(); return; } step = 0; wIdx++; }
-    if (wIdx >= e.words.length) { done(); }
-    else { nextSeg(); }
+    var nx = nextStepAfter(step, wIdx);
+    if (!nx) { done(); return; }
+    step = nx.step; wIdx = nx.wIdx;
+    next();
   };
-  au.onerror = function() { nextSeg(); };
+  au.onerror = function() {
+    var nx = nextStepAfter(step, wIdx);
+    if (!nx) { done(); return; }
+    step = nx.step; wIdx = nx.wIdx;
+    next();
+  };
   var playP = au.play();
-  if (playP !== undefined) { playP.catch(function() { nextSeg(); }); }
+  if (playP !== undefined) { playP.catch(function() {
+    var nx = nextStepAfter(step, wIdx);
+    if (!nx) { done(); return; }
+    step = nx.step; wIdx = nx.wIdx;
+    next();
+  }); }
 
-  // Preload next segment into the other audio element while current plays
-  curSlot = 1 - curSlot;
-  var nu = nextUrlAfterStep();
-  if (nu) {
-    var other = getAu(curSlot);
-    var otherPrev = curSlot === 0 ? auUrlA : auUrlB;
-    if (otherPrev !== nu) {
-      other.src = nu;
-      if (curSlot === 0) auUrlA = nu; else auUrlB = nu;
-    }
+  // Preload next segment into other Audio
+  var nx = nextStepAfter(step, wIdx);
+  if (nx) {
+    var nu = segUrlFor(nx.step, nx.wIdx);
+    if (nu) loadAu(1 - curSlot, nu);
   }
 }
 
