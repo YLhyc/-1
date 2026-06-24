@@ -52,16 +52,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wb-badge.wb-hard{display:inline;background:#ffe0cc;color:#cc6600}
 
 /* ── Buttons ── */
-.btn-row{display:flex;gap:10px;align-items:center}
-.btn{height:46px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;-webkit-appearance:none;outline:none}
+.btn-row{display:flex;gap:8px;align-items:center}
+.btn-row-top{margin-bottom:10px}
+.btn{height:42px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s;-webkit-appearance:none;outline:none}
 .btn:active{opacity:.7;transform:scale(.97)}
-.btn-play{flex:2;background:#007aff;color:#fff}
+.btn-play{flex:3;background:#007aff;color:#fff}
 .btn-play.playing{background:#ff9500}
 .btn-play.paused{background:#34c759}
 .btn-pause{flex:1;background:#f0f0f5;color:#1d1d1f}
 .btn-pause:disabled{opacity:.35}
+.btn-skip{flex:1;background:#f0f0f5;color:#1d1d1f}
+.btn-skip:disabled{opacity:.35}
 .btn-rewind{flex:1;background:#f0f0f5;color:#1d1d1f}
-.btn svg{width:20px;height:20px;pointer-events:none}
+.btn svg{width:18px;height:18px;pointer-events:none}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn-label{white-space:nowrap}
 
@@ -76,7 +79,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- HOME = word list -->
 <div id="view-home">
   <div class="home-hero">考研英语单词本</div>
-  <div class="home-sub">Build 2026-06-24 12:14</div>
+  <div class="home-sub">Build 2026-06-24 12:18</div>
   <div class="entry-list" id="entryList"></div>
   <div class="empty-msg" id="homeEmpty" style="display:none">还没有单词清单<br><br>在电脑上编辑 wordbank/entries.json<br>运行 generate_audio.py → build.py<br>推送到 GitHub Pages 后即可使用</div>
 </div>
@@ -92,6 +95,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <span class="group-label" id="groupLabel"></span>
       <span class="group-stat" id="groupStat"></span>
     </div>
+    <div class="btn-row btn-row-top">
+      <button class="btn btn-play" id="btnPlayTop" onclick="togglePlay()">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+        <span class="btn-label">朗读</span>
+      </button>
+      <button class="btn btn-pause" id="btnPauseTop" onclick="togglePause()" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <button class="btn btn-skip" id="btnSkipTop" onclick="skipWord()" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18l-8.5-6L16 6v12zM8 6v12H6V6h2z"/></svg>
+      </button>
+      <button class="btn btn-rewind" onclick="doRewind()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+      </button>
+    </div>
     <div class="word-list" id="wordList"></div>
     <div class="btn-row">
       <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">
@@ -100,6 +118,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </button>
       <button class="btn btn-pause" id="btnPause" onclick="togglePause()" disabled>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <button class="btn btn-skip" id="btnSkip" onclick="skipWord()" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18l-8.5-6L16 6v12zM8 6v12H6V6h2z"/></svg>
       </button>
       <button class="btn btn-rewind" onclick="doRewind()">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
@@ -114,7 +135,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var ENTRIES = [{"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_AVAILABLE = ["wb_2026-06-23_demo"];
-var BUILD_TS = 1782274445;
+var BUILD_TS = 1782274732;
 
 var currentEntryId = null;
 var wordIdx = 0, step = 0, paused = false, singleWordMode = false;
@@ -187,6 +208,11 @@ function renderHome() {
       html += '<div class="entry-item" onclick="showGroup(\'' + e.id + '\')"><div class="entry-item-info"><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div></div>';
     }
     document.getElementById('entryList').innerHTML = html;
+    // Prefetch audio JSONs in background so playback starts instantly
+    for (var i = 0; i < ENTRIES.length; i++) {
+      var eid = ENTRIES[i].id;
+      if (AUDIO_AVAILABLE.indexOf(eid) >= 0) loadEdgeAudio(eid);
+    }
   }
 }
 
@@ -235,15 +261,22 @@ function clearHighlight() {
 
 // ── Buttons ──
 function setBtnState(playing, isPaused, disabled) {
-  var btnPlay = document.getElementById('btnPlay'), btnPause = document.getElementById('btnPause');
-  if (!btnPlay) return;
-  var icon = btnPlay.querySelector('.play-icon'), label = btnPlay.querySelector('.btn-label');
-  btnPlay.disabled = !!disabled; btnPause.disabled = !!disabled;
-  btnPlay.classList.remove('playing', 'paused');
-  if (disabled) { icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '加载中'; return; }
-  if (playing) { btnPlay.classList.add('playing'); icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; label.textContent = '播放中'; btnPause.disabled = false; }
-  else if (isPaused) { btnPlay.classList.add('paused'); icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '继续'; btnPause.disabled = false; }
-  else { icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '朗读'; btnPause.disabled = true; }
+  ['btnPlay','btnPlayTop'].forEach(function(id) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    var icon = btn.querySelector('.play-icon'), label = btn.querySelector('.btn-label');
+    btn.disabled = !!disabled;
+    btn.classList.remove('playing', 'paused');
+    if (disabled) { icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '加载中'; return; }
+    if (playing) { btn.classList.add('playing'); icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; label.textContent = '播放中'; }
+    else if (isPaused) { btn.classList.add('paused'); icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '继续'; }
+    else { icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '朗读'; }
+  });
+  var aux = (playing || isPaused) && !disabled;
+  ['btnPause','btnPauseTop','btnSkip','btnSkipTop'].forEach(function(id) {
+    var btn = document.getElementById(id);
+    if (btn) btn.disabled = !aux;
+  });
 }
 
 function finishPlayback() {
@@ -337,6 +370,14 @@ function togglePause() {
 }
 
 function doRewind() { stopAudio(); wordIdx = 0; step = 0; paused = false; setBtnState(false, false, false); }
+
+function skipWord() {
+  stopAudio(); step = 0; wordIdx++; paused = false; singleWordMode = false;
+  var entry = null;
+  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
+  if (!entry || wordIdx >= entry.words.length) { finishPlayback(); return; }
+  setBtnState(true, false, false); playCurrentWord();
+}
 
 function playSingleWord(wIdx) {
   stopAudio(); wordIdx = wIdx; step = 0; paused = false; singleWordMode = true;
