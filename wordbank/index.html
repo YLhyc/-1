@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>考研英语单词本</title>
+<title>KAOYAN WORDBANK</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;padding:16px 16px 40px;-webkit-tap-highlight-color:transparent;user-select:none}
 
-/* ── Home (word list) ── */
 .home-hero{text-align:center;margin:28px 0 4px;font-size:24px;font-weight:800}
 .home-sub{text-align:center;color:#86868b;font-size:12px;margin-bottom:24px}
 .entry-list{display:flex;flex-direction:column;gap:8px}
@@ -19,19 +18,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .entry-item-meta{font-size:12px;color:#86868b}
 .empty-msg{text-align:center;color:#86868b;padding:40px;font-size:14px}
 
-/* ── Nav ── */
-.nav-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.nav-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .nav-back{background:none;border:none;color:#007aff;font-size:16px;cursor:pointer;padding:6px 0}
 .nav-title{font-size:17px;font-weight:600}
 
-/* ── Group view ── */
-.word-group{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.group-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.word-group{background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.group-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .group-label{font-size:15px;font-weight:600}
 .group-stat{font-size:12px;color:#86868b}
-.word-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.word-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
 
-/* swipe */
 .word-swipe{position:relative;overflow:hidden;border-radius:10px}
 .ws-actions{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:stretch}
 .ws-btn{min-width:50px;border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;padding:0 10px;-webkit-appearance:none;outline:none}
@@ -39,7 +35,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ws-familiar{background:#34c759}
 .ws-hard{background:#ff9500}
 .ws-reset{background:#8e8e93}
-.word-block{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#f9f9fb;transition:transform .25s ease,background .2s;position:relative;z-index:1}
+.word-block{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#f9f9fb;transition:transform .25s ease,background .2s;position:relative;z-index:1}
 .word-block.active{background:#d4f5d4}
 .wb-en{font-weight:700;font-size:16px;color:#1d1d1f;flex:1}
 .word-block.active .wb-en{color:#0a6e0a}
@@ -51,43 +47,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wb-badge.wb-familiar{display:inline;background:#d4f5d4;color:#0a6e0a}
 .wb-badge.wb-hard{display:inline;background:#ffe0cc;color:#cc6600}
 
-/* ── Buttons ── */
-.btn-row{display:flex;gap:8px;align-items:center}
-.btn-row-top{margin-bottom:10px}
-.btn{height:42px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s;-webkit-appearance:none;outline:none}
+.btn-row{display:flex;gap:7px;align-items:center}
+.btn-row-top{margin-bottom:8px}
+.btn{height:40px;border:none;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all .15s;-webkit-appearance:none;outline:none}
 .btn:active{opacity:.7;transform:scale(.97)}
 .btn-play{flex:3;background:#007aff;color:#fff}
 .btn-play.playing{background:#ff9500}
 .btn-play.paused{background:#34c759}
 .btn-pause{flex:1;background:#f0f0f5;color:#1d1d1f}
-.btn-pause:disabled{opacity:.35}
 .btn-skip{flex:1;background:#f0f0f5;color:#1d1d1f}
-.btn-skip:disabled{opacity:.35}
 .btn-rewind{flex:1;background:#f0f0f5;color:#1d1d1f}
-.btn svg{width:18px;height:18px;pointer-events:none}
+.btn svg{width:17px;height:17px;pointer-events:none}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn-label{white-space:nowrap}
-
-/* ── Loading overlay ── */
-.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;z-index:50}
-.loading-spinner{width:32px;height:32px;border:3px solid #e0e0e0;border-top-color:#007aff;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- HOME = word list -->
 <div id="view-home">
-  <div class="home-hero">考研英语单词本</div>
-  <div class="home-sub">Build 2026-06-24 12:18</div>
+  <div class="home-hero">WORD BANK</div>
+  <div class="home-sub">2026-06-24 13:45</div>
   <div class="entry-list" id="entryList"></div>
-  <div class="empty-msg" id="homeEmpty" style="display:none">还没有单词清单<br><br>在电脑上编辑 wordbank/entries.json<br>运行 generate_audio.py → build.py<br>推送到 GitHub Pages 后即可使用</div>
+  <div class="empty-msg" id="homeEmpty" style="display:none">NO WORD LISTS YET</div>
 </div>
 
-<!-- GROUP = word playback -->
 <div id="view-group" style="display:none">
   <div class="nav-bar">
-    <button class="nav-back" onclick="showHome()">← 清单</button>
+    <button class="nav-back" onclick="showHome()">← BACK</button>
     <span class="nav-title" id="groupTitle"></span>
   </div>
   <div class="word-group">
@@ -95,10 +81,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <span class="group-label" id="groupLabel"></span>
       <span class="group-stat" id="groupStat"></span>
     </div>
-    <div class="btn-row btn-row-top">
+    <div class="btn-row btn-row-top" id="btnRowTop">
       <button class="btn btn-play" id="btnPlayTop" onclick="togglePlay()">
         <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
-        <span class="btn-label">朗读</span>
+        <span class="btn-label">PLAY</span>
       </button>
       <button class="btn btn-pause" id="btnPauseTop" onclick="togglePause()" disabled>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -111,10 +97,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </button>
     </div>
     <div class="word-list" id="wordList"></div>
-    <div class="btn-row">
+    <div class="btn-row" id="btnRowBot">
       <button class="btn btn-play" id="btnPlay" onclick="togglePlay()">
         <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
-        <span class="btn-label">朗读</span>
+        <span class="btn-label">PLAY</span>
       </button>
       <button class="btn btn-pause" id="btnPause" onclick="togglePause()" disabled>
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -129,328 +115,288 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- Loading overlay -->
-<div class="loading-overlay" id="loadOverlay" style="display:none"><div class="loading-spinner"></div></div>
-
 <script>
 var ENTRIES = [{"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
-var AUDIO_AVAILABLE = ["wb_2026-06-23_demo"];
-var BUILD_TS = 1782274732;
+var AUDIO_OK = ["wb_2026-06-23_demo"];
+var TS = 1782279936;
 
-var currentEntryId = null;
-var wordIdx = 0, step = 0, paused = false, singleWordMode = false;
-var edgeAudio = null;
-var edgeAudioCache = {};  // eid -> [{en:b64,cn:b64}, ...]
-var edgeAudioLoading = {};  // eid -> true|false
+var entryId = null, wIdx = 0, step = 0, paused = false, single = false;
+var curAudio = null, nextAudio = null;
+var P = [true, false, true, false];  // STEP_IS_EN
+var PF = [true, false];  // FAM version
 
-var STEP_LABELS = ["英①","中①","英②","中②"];
-var STEP_IS_EN = [true, false, true, false];
-var STEP_LABELS_FAM = ["英①","中①"];
-var STEP_IS_EN_FAM = [true, false];
-
-function loadPrefs() {
-  try { return JSON.parse(localStorage.getItem('wb_prefs') || '{}'); }
-  catch(e) { return {}; }
+function prefs() {
+  try { return JSON.parse(localStorage.getItem('wb_prefs')||'{}'); } catch(e) { return {}; }
 }
-function savePrefs(obj) { localStorage.setItem('wb_prefs', JSON.stringify(obj)); }
-
-function showView(name) {
-  document.getElementById('view-home').style.display = name === 'home' ? 'block' : 'none';
-  document.getElementById('view-group').style.display = name === 'group' ? 'block' : 'none';
+function saveP(obj) { localStorage.setItem('wb_prefs', JSON.stringify(obj)); }
+function getE() {
+  for (var i=0; i<ENTRIES.length; i++) if (ENTRIES[i].id===entryId) return ENTRIES[i];
+  return null;
 }
 
-function stopAudio() {
-  if (edgeAudio) { edgeAudio.onended = null; edgeAudio.onerror = null; edgeAudio.pause(); edgeAudio = null; }
+function $(id) { return document.getElementById(id); }
+function showView(v) {
+  $('view-home').style.display = v==='home'?'block':'none';
+  $('view-group').style.display = v==='group'?'block':'none';
 }
+function stop() {
+  if (curAudio) { curAudio.onended=null; curAudio.onerror=null; curAudio.pause(); curAudio=null; }
+  if (nextAudio) { nextAudio.onended=null; nextAudio.onerror=null; nextAudio.pause(); nextAudio=null; }
+}
+function showHome() { stop(); showView('home'); renderHome(); }
 
-function showHome() { stopAudio(); showView('home'); renderHome(); }
-
-function showGroup(entryId) {
-  stopAudio();
-  currentEntryId = entryId;
-  var entry = null;
-  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === entryId) { entry = ENTRIES[i]; break; } }
-  if (!entry) { showHome(); return; }
+function showGroup(id) {
+  stop(); entryId = id;
+  var e = getE(); if (!e) { showHome(); return; }
   showView('group');
-  document.getElementById('groupTitle').textContent = entry.label;
-  document.getElementById('groupLabel').textContent = entry.label;
-  renderWords(entry);
-  loadEdgeAudio(entryId);
+  $('groupTitle').textContent = e.label;
+  $('groupLabel').textContent = e.label;
+  renderWords(e);
+  // Preload first 3 words' audio
+  preloadRange(id, 0, Math.min(3, e.words.length));
 }
 
-// ── Audio loading ──
-function loadEdgeAudio(eid) {
-  if (edgeAudioCache[eid] || edgeAudioLoading[eid]) return;
-  if (AUDIO_AVAILABLE.indexOf(eid) < 0) return;
-  edgeAudioLoading[eid] = true;
-  fetch('audio_' + eid + '.json?v=' + BUILD_TS)
-    .then(function(r) { return r.json(); })
-    .then(function(data) { edgeAudioCache[eid] = data.words; edgeAudioLoading[eid] = false; })
-    .catch(function() { edgeAudioLoading[eid] = false; });
+// ── mp3 URL ──
+function mp3(eid, w, lang) {
+  return 'audio/' + eid + '_' + w + '_' + lang + '.mp3?v=' + TS;
 }
 
-function hasEdgeAudio(eid, widx) {
-  return edgeAudioCache[eid] && edgeAudioCache[eid][widx];
+// ── Preload ──
+var preloaded = {};  // eid_w_lang -> Audio element
+function preloadRange(eid, from, to) {
+  for (var w = from; w < to; w++) {
+    ['en','cn'].forEach(function(l) {
+      var k = eid + '_' + w + '_' + l;
+      if (preloaded[k]) return;
+      var a = new Audio();
+      a.preload = 'auto';
+      a.src = mp3(eid, w, l);
+      a.load();
+      preloaded[k] = a;
+    });
+  }
 }
 
-// ── Home (word list) ──
+// ── Home ──
 function renderHome() {
-  if (ENTRIES.length === 0) {
-    document.getElementById('entryList').innerHTML = '';
-    document.getElementById('homeEmpty').style.display = 'block';
+  if (ENTRIES.length===0) {
+    $('entryList').innerHTML=''; $('homeEmpty').style.display='block';
   } else {
-    document.getElementById('homeEmpty').style.display = 'none';
-    var totalW = 0, html = '', prefs = loadPrefs();
-    for (var i = 0; i < ENTRIES.length; i++) {
-      var e = ENTRIES[i]; totalW += e.words.length;
-      var familiar = 0;
-      for (var w = 0; w < e.words.length; w++) { if (prefs[e.id + '_' + w] === 'familiar') familiar++; }
-      html += '<div class="entry-item" onclick="showGroup(\'' + e.id + '\')"><div class="entry-item-info"><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div></div>';
+    $('homeEmpty').style.display='none';
+    var h='', p=prefs();
+    for (var i=0; i<ENTRIES.length; i++) {
+      var e = ENTRIES[i], fam=0;
+      for (var w=0; w<e.words.length; w++) if (p[e.id+'_'+w]==='familiar') fam++;
+      h += '<div class="entry-item" onclick="showGroup(\''+e.id+'\')"><div class="entry-item-info"><div class="entry-item-label">'+esc(e.label)+'</div><div class="entry-item-meta">'+e.words.length+'w'+(fam>0?' · '+fam:'')+'</div></div></div>';
     }
-    document.getElementById('entryList').innerHTML = html;
-    // Prefetch audio JSONs in background so playback starts instantly
-    for (var i = 0; i < ENTRIES.length; i++) {
-      var eid = ENTRIES[i].id;
-      if (AUDIO_AVAILABLE.indexOf(eid) >= 0) loadEdgeAudio(eid);
-    }
+    $('entryList').innerHTML = h;
   }
 }
 
-// ── Word list for group ──
-function renderWords(entry) {
-  var prefs = loadPrefs(), html = '', familiar = 0;
-  for (var w = 0; w < entry.words.length; w++) {
-    var word = entry.words[w], key = entry.id + '_' + w, pref = prefs[key];
-    if (pref === 'familiar') familiar++;
-    html += '<div class="word-swipe" id="ws' + w + '"><div class="ws-actions"><button class="ws-btn ws-familiar" data-w="' + w + '" data-act="familiar">熟</button><button class="ws-btn ws-hard" data-w="' + w + '" data-act="hard">难</button><button class="ws-btn ws-reset" data-w="' + w + '" data-act="reset">恢复</button></div><div class="word-block" id="wb' + w + '"><div class="wb-en">' + esc(word.en) + '</div><div class="wb-cn">' + esc(word.cn) + '</div><div class="wb-step"></div><div class="wb-badge"></div></div></div>';
+// ── Word list ──
+function renderWords(e) {
+  var p=prefs(), h='', fam=0;
+  for (var w=0; w<e.words.length; w++) {
+    var word=e.words[w], pref=p[e.id+'_'+w];
+    if (pref==='familiar') fam++;
+    h += '<div class="word-swipe" id="ws'+w+'"><div class="ws-actions"><button class="ws-btn ws-familiar" data-w="'+w+'" data-act="familiar">FAM</button><button class="ws-btn ws-hard" data-w="'+w+'" data-act="hard">HARD</button><button class="ws-btn ws-reset" data-w="'+w+'" data-act="reset">RST</button></div><div class="word-block" id="wb'+w+'"><div class="wb-en">'+esc(word.en)+'</div><div class="wb-cn">'+esc(word.cn)+'</div><div class="wb-step"></div><div class="wb-badge"></div></div></div>';
   }
-  document.getElementById('wordList').innerHTML = html;
-  document.getElementById('groupStat').textContent = entry.words.length + '词 · ' + familiar + '熟';
+  $('wordList').innerHTML = h;
+  $('groupStat').textContent = e.words.length+'w · '+fam+'fam';
   updateBadges();
 }
 
 function updateBadges() {
-  var entry = null;
-  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
-  if (!entry) return;
-  var prefs = loadPrefs();
-  for (var w = 0; w < entry.words.length; w++) {
-    var pref = prefs[entry.id + '_' + w];
-    var badge = document.querySelector('#wb' + w + ' .wb-badge');
+  var e = getE(); if (!e) return;
+  var p = prefs();
+  for (var w=0; w<e.words.length; w++) {
+    var pref = p[e.id+'_'+w];
+    var badge = document.querySelector('#wb'+w+' .wb-badge');
     if (!badge) continue;
-    badge.className = 'wb-badge'; badge.textContent = '';
-    if (pref === 'familiar') { badge.classList.add('wb-familiar'); badge.textContent = '熟'; }
-    else if (pref === 'hard') { badge.classList.add('wb-hard'); badge.textContent = '难'; }
+    badge.className='wb-badge'; badge.textContent='';
+    if (pref==='familiar') { badge.classList.add('wb-familiar'); badge.textContent='FAM'; }
+    else if (pref==='hard') { badge.classList.add('wb-hard'); badge.textContent='HARD'; }
   }
 }
 
-function highlight(wIdx) {
-  document.querySelectorAll('#wordList .word-block.active').forEach(function(el) { el.classList.remove('active'); });
-  var wb = document.getElementById('wb' + wIdx);
+function hl(w) {
+  document.querySelectorAll('#wordList .word-block.active').forEach(function(el){el.classList.remove('active')});
+  var wb = $('wb'+w);
   if (wb) {
     wb.classList.add('active');
-    var prefs = loadPrefs(), pref = prefs[currentEntryId + '_' + wIdx];
-    var labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
-    wb.querySelector('.wb-step').textContent = labels[step] || '';
+    var pf = prefs()[entryId+'_'+w];
+    var labels = pf==='familiar' ? ['E1','C1'] : ['E1','C1','E2','C2'];
+    wb.querySelector('.wb-step').textContent = labels[step]||'';
   }
 }
 
-function clearHighlight() {
-  document.querySelectorAll('#wordList .word-block.active').forEach(function(el) { el.classList.remove('active'); });
+function clearHl() {
+  document.querySelectorAll('#wordList .word-block.active').forEach(function(el){el.classList.remove('active')});
 }
 
 // ── Buttons ──
-function setBtnState(playing, isPaused, disabled) {
+function setBtns(playing, isPaused, loading) {
   ['btnPlay','btnPlayTop'].forEach(function(id) {
-    var btn = document.getElementById(id);
-    if (!btn) return;
-    var icon = btn.querySelector('.play-icon'), label = btn.querySelector('.btn-label');
-    btn.disabled = !!disabled;
-    btn.classList.remove('playing', 'paused');
-    if (disabled) { icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '加载中'; return; }
-    if (playing) { btn.classList.add('playing'); icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; label.textContent = '播放中'; }
-    else if (isPaused) { btn.classList.add('paused'); icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '继续'; }
-    else { icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; label.textContent = '朗读'; }
+    var b = $(id); if (!b) return;
+    var icon = b.querySelector('.play-icon'), label = b.querySelector('.btn-label');
+    b.disabled = !!loading;
+    b.classList.remove('playing','paused');
+    if (loading) { icon.innerHTML='<path d="M8 5v14l11-7z"/>'; label.textContent='LOAD'; return; }
+    if (playing) { b.classList.add('playing'); icon.innerHTML='<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; label.textContent='PLAYING'; }
+    else if (isPaused) { b.classList.add('paused'); icon.innerHTML='<path d="M8 5v14l11-7z"/>'; label.textContent='PAUSED'; }
+    else { icon.innerHTML='<path d="M8 5v14l11-7z"/>'; label.textContent='PLAY'; }
   });
-  var aux = (playing || isPaused) && !disabled;
+  var aux = (playing||isPaused) && !loading;
   ['btnPause','btnPauseTop','btnSkip','btnSkipTop'].forEach(function(id) {
-    var btn = document.getElementById(id);
-    if (btn) btn.disabled = !aux;
+    var b = $(id); if (b) b.disabled = !aux;
   });
 }
 
-function finishPlayback() {
-  stopAudio(); clearHighlight();
-  setBtnState(false, false, false);
-  wordIdx = 0; step = 0; paused = false; singleWordMode = false;
+function done() {
+  stop(); clearHl(); setBtns(false,false,false);
+  wIdx=0; step=0; paused=false; single=false;
 }
 
-// ── Playback (Edge TTS pre-built audio only) ──
-function playCurrentWord() {
-  var entry = null;
-  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
-  if (!entry) { finishPlayback(); return; }
-  if (wordIdx >= entry.words.length) { finishPlayback(); return; }
+// ── Playback ──
+function playWord() {
+  var e = getE();
+  if (!e || wIdx>=e.words.length) { done(); return; }
 
-  var prefs = loadPrefs(), pref = prefs[entry.id + '_' + wordIdx];
-  var labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
-  var isENArr = pref === 'familiar' ? STEP_IS_EN_FAM : STEP_IS_EN;
+  var p = prefs(), pf = p[e.id+'_'+wIdx];
+  var labels = pf==='familiar' ? ['E1','C1'] : ['E1','C1','E2','C2'];
+  var isENs = pf==='familiar' ? PF : P;
 
   if (step >= labels.length) {
-    if (singleWordMode) { finishPlayback(); return; }
-    step = 0; wordIdx++;
-    if (wordIdx >= entry.words.length) { finishPlayback(); return; }
-    pref = prefs[entry.id + '_' + wordIdx];
-    labels = pref === 'familiar' ? STEP_LABELS_FAM : STEP_LABELS;
-    isENArr = pref === 'familiar' ? STEP_IS_EN_FAM : STEP_IS_EN;
+    if (single) { done(); return; }
+    step = 0; wIdx++;
+    if (wIdx >= e.words.length) { done(); return; }
+    pf = p[e.id+'_'+wIdx];
+    labels = pf==='familiar'?['E1','C1']:['E1','C1','E2','C2'];
+    isENs = pf==='familiar'?PF:P;
   }
 
-  var aw = edgeAudioCache[entry.id] && edgeAudioCache[entry.id][wordIdx];
-  if (!aw) { finishPlayback(); return; }  // audio not loaded yet
+  var isEN = isENs[step];
+  var lang = isEN ? 'en' : 'cn';
+  var url = mp3(e.id, wIdx, lang);
+  var au = new Audio(url);
+  curAudio = au;
+  hl(wIdx);
 
-  var isEN = isENArr[step];
-  var b64 = isEN ? aw.en : aw.cn;
-  var au = new Audio('data:audio/mpeg;base64,' + b64);
-  edgeAudio = au;
-  highlight(wordIdx);
+  // Preload next word while this one plays
+  var nextW = wIdx + 1;
+  if (nextW < e.words.length) preloadRange(e.id, nextW, nextW+1);
 
-  au.onended = function() {
-    step++;
-    if (step >= labels.length) { if (singleWordMode) { finishPlayback(); return; } step = 0; wordIdx++; }
-    if (wordIdx >= entry.words.length) { finishPlayback(); }
-    else { playCurrentWord(); }
-  };
-  au.onerror = function() {
-    step++;
-    if (step >= labels.length) { if (singleWordMode) { finishPlayback(); return; } step = 0; wordIdx++; }
-    if (wordIdx >= entry.words.length) { finishPlayback(); }
-    else { playCurrentWord(); }
-  };
+  au.onended = next;
+  au.onerror = next;
   au.play();
+
+  function next() {
+    step++;
+    if (step>=labels.length) { if(single){done();return;} step=0; wIdx++; }
+    if (wIdx>=e.words.length) { done(); }
+    else { playWord(); }
+  }
 }
 
 function togglePlay() {
-  if (wordIdx > 0 && !paused && !singleWordMode) {
-    if (edgeAudio) edgeAudio.pause();
-    paused = true; setBtnState(false, true, false);
+  if (wIdx>0 && !paused && !single) {
+    if (curAudio) curAudio.pause();
+    paused=true; setBtns(false,true,false);
   } else if (paused) {
-    if (edgeAudio) edgeAudio.play();
-    paused = false; setBtnState(true, false, false);
+    if (curAudio) curAudio.play();
+    paused=false; setBtns(true,false,false);
   } else {
-    stopAudio(); wordIdx = 0; step = 0; paused = false; singleWordMode = false;
-    var eid = currentEntryId;
-    if (edgeAudioCache[eid]) {
-      setBtnState(true, false, false);
-      playCurrentWord();
-    } else if (edgeAudioLoading[eid]) {
-      setBtnState(false, false, true);  // loading
-      var tryPlay = function() {
-        if (edgeAudioCache[eid]) { setBtnState(true, false, false); playCurrentWord(); }
-        else if (edgeAudioLoading[eid]) { setTimeout(tryPlay, 200); }
-        else { setBtnState(false, false, false); }  // failed
-      };
-      setTimeout(tryPlay, 200);
-    } else {
-      // Not loaded and not loading — try loading now
-      loadEdgeAudio(eid);
-      setBtnState(false, false, true);
-      var tryPlay2 = function() {
-        if (edgeAudioCache[eid]) { setBtnState(true, false, false); playCurrentWord(); }
-        else if (edgeAudioLoading[eid]) { setTimeout(tryPlay2, 200); }
-        else { setBtnState(false, false, false); }
-      };
-      setTimeout(tryPlay2, 200);
-    }
+    stop(); wIdx=0; step=0; paused=false; single=false;
+    setBtns(true,false,false); playWord();
   }
 }
 
 function togglePause() {
-  if (paused) { if (edgeAudio) edgeAudio.play(); paused = false; setBtnState(true, false, false); }
-  else { if (edgeAudio) edgeAudio.pause(); paused = true; setBtnState(false, true, false); }
+  if (paused) { if (curAudio) curAudio.play(); paused=false; setBtns(true,false,false); }
+  else { if (curAudio) curAudio.pause(); paused=true; setBtns(false,true,false); }
 }
 
-function doRewind() { stopAudio(); wordIdx = 0; step = 0; paused = false; setBtnState(false, false, false); }
+function doRewind() { stop(); wIdx=0; step=0; paused=false; setBtns(false,false,false); }
 
 function skipWord() {
-  stopAudio(); step = 0; wordIdx++; paused = false; singleWordMode = false;
-  var entry = null;
-  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
-  if (!entry || wordIdx >= entry.words.length) { finishPlayback(); return; }
-  setBtnState(true, false, false); playCurrentWord();
+  stop(); step=0; wIdx++; paused=false; single=false;
+  var e = getE();
+  if (!e || wIdx>=e.words.length) { done(); return; }
+  setBtns(true,false,false); playWord();
 }
 
-function playSingleWord(wIdx) {
-  stopAudio(); wordIdx = wIdx; step = 0; paused = false; singleWordMode = true;
-  setBtnState(true, false, false); playCurrentWord();
+function playSingleW(w) {
+  stop(); wIdx=w; step=0; paused=false; single=true;
+  setBtns(true,false,false); playWord();
 }
 
-// ── Prefs (familiar/hard) ──
-function setPref(wIdx, act) {
-  var key = currentEntryId + '_' + wIdx, prefs = loadPrefs();
-  if (act === 'reset') delete prefs[key]; else prefs[key] = act;
-  savePrefs(prefs); updateBadges();
-  var entry = null;
-  for (var i = 0; i < ENTRIES.length; i++) { if (ENTRIES[i].id === currentEntryId) { entry = ENTRIES[i]; break; } }
-  if (entry) { var familiar = 0; for (var w = 0; w < entry.words.length; w++) { if (prefs[entry.id + '_' + w] === 'familiar') familiar++; } document.getElementById('groupStat').textContent = entry.words.length + '词 · ' + familiar + '熟'; }
-  var el = document.getElementById('ws' + wIdx);
-  if (el) setTimeout(function() { closeSwipe(el); }, 200);
+// ── Prefs ──
+function setPref(w, act) {
+  var key=entryId+'_'+w, p=prefs();
+  if (act==='reset') delete p[key]; else p[key]=act;
+  saveP(p); updateBadges();
+  var e=getE();
+  if (e) {
+    var fam=0;
+    for (var i=0; i<e.words.length; i++) if (p[e.id+'_'+i]==='familiar') fam++;
+    $('groupStat').textContent = e.words.length+'w · '+fam+'fam';
+  }
+  var el=$('ws'+w); if (el) setTimeout(function(){closeSw(el)},200);
 }
 
 // ── Swipe ──
-var swipeOpenEl = null, swipeCurrentEl = null, swipeStartX = 0, swipeStartY = 0, swipeStartTX = 0, wasSwipe = false;
-var SWIPE_WIDTH = 150;
-function closeSwipe(el) {
-  if (!el) el = swipeOpenEl;
-  if (el) { var wb = el.querySelector('.word-block'); if (wb) wb.style.transform = 'translateX(0)'; el.classList.remove('swiped'); }
-  if (swipeOpenEl === el || !el) swipeOpenEl = null;
+var swOpen=null, swCur=null, swX=0, swY=0, swTX=0, wasSw=false, SW_W=150;
+function closeSw(el) {
+  if (!el) el=swOpen;
+  if (el) { var wb=el.querySelector('.word-block'); if(wb)wb.style.transform='translateX(0)'; el.classList.remove('swiped'); }
+  if (swOpen===el||!el) swOpen=null;
 }
-document.addEventListener('touchstart', function(e) {
-  wasSwipe = false;
-  var swipe = e.target.closest('.word-swipe');
-  if (!swipe) { closeSwipe(); swipeCurrentEl = null; return; }
-  if (swipeOpenEl && swipeOpenEl !== swipe) closeSwipe(swipeOpenEl);
-  swipeCurrentEl = swipe;
-  swipeStartX = e.touches[0].clientX; swipeStartY = e.touches[0].clientY;
-  var wb = swipe.querySelector('.word-block'); swipeStartTX = 0;
-  if (wb) { var m = wb.style.transform.match(/-?[0-9.]+/); if (m) swipeStartTX = parseFloat(m[0]); }
-}, {passive: true});
-document.addEventListener('touchmove', function(e) {
-  if (!swipeCurrentEl) return;
-  var dx = e.touches[0].clientX - swipeStartX, dy = e.touches[0].clientY - swipeStartY;
-  if (Math.abs(dy) > Math.abs(dx)) { closeSwipe(swipeCurrentEl); return; }
-  if (Math.abs(dx) > 10) wasSwipe = true;
-  if (dx > 10) { closeSwipe(swipeCurrentEl); return; }
+document.addEventListener('touchstart',function(e){
+  wasSw=false;
+  var sw=e.target.closest('.word-swipe');
+  if (!sw){closeSw();swCur=null;return;}
+  if (swOpen&&swOpen!==sw)closeSw(swOpen);
+  swCur=sw; swX=e.touches[0].clientX; swY=e.touches[0].clientY;
+  var wb=sw.querySelector('.word-block'); swTX=0;
+  if(wb){var m=wb.style.transform.match(/-?[0-9.]+/); if(m)swTX=parseFloat(m[0])}
+},{passive:true});
+document.addEventListener('touchmove',function(e){
+  if(!swCur)return;
+  var dx=e.touches[0].clientX-swX, dy=e.touches[0].clientY-swY;
+  if(Math.abs(dy)>Math.abs(dx)){closeSw(swCur);return}
+  if(Math.abs(dx)>10)wasSw=true;
+  if(dx>10){closeSw(swCur);return}
   e.preventDefault();
-  var newTX = Math.max(-SWIPE_WIDTH, Math.min(0, swipeStartTX + dx));
-  var wb = swipeCurrentEl.querySelector('.word-block');
-  if (wb) { wb.style.transition = 'none'; wb.style.transform = 'translateX(' + newTX + 'px)'; }
-}, {passive: false});
-document.addEventListener('touchend', function() {
-  if (!swipeCurrentEl) return;
-  var wb = swipeCurrentEl.querySelector('.word-block');
-  if (!wb) { swipeCurrentEl = null; return; }
-  wb.style.transition = 'transform .25s ease';
-  var m = wb.style.transform.match(/-?[0-9.]+/), curTX = m ? parseFloat(m[0]) : 0;
-  if (Math.abs(curTX) > SWIPE_WIDTH * 0.35) { wb.style.transform = 'translateX(-' + SWIPE_WIDTH + 'px)'; swipeCurrentEl.classList.add('swiped'); swipeOpenEl = swipeCurrentEl; }
-  else { wb.style.transform = 'translateX(0)'; swipeCurrentEl.classList.remove('swiped'); swipeOpenEl = null; }
-  swipeCurrentEl = null;
+  var tx=Math.max(-SW_W,Math.min(0,swTX+dx));
+  var wb=swCur.querySelector('.word-block');
+  if(wb){wb.style.transition='none';wb.style.transform='translateX('+tx+'px)'}
+},{passive:false});
+document.addEventListener('touchend',function(){
+  if(!swCur)return;
+  var wb=swCur.querySelector('.word-block');
+  if(!wb){swCur=null;return}
+  wb.style.transition='transform .25s ease';
+  var m=wb.style.transform.match(/-?[0-9.]+/), tx=m?parseFloat(m[0]):0;
+  if(Math.abs(tx)>SW_W*.35){wb.style.transform='translateX(-'+SW_W+'px)';swCur.classList.add('swiped');swOpen=swCur}
+  else{wb.style.transform='translateX(0)';swCur.classList.remove('swiped');swOpen=null}
+  swCur=null;
 });
-document.addEventListener('click', function(e) {
-  var btn = e.target.closest('.ws-btn');
-  if (btn) { setPref(parseInt(btn.dataset.w), btn.dataset.act); return; }
-  if (!e.target.closest('.word-swipe')) closeSwipe();
-  if (!wasSwipe) {
-    var wb = e.target.closest('.word-block');
-    if (wb) {
-      var swipeEl = wb.closest('.word-swipe');
-      if (swipeEl && swipeEl.classList.contains('swiped')) { closeSwipe(swipeEl); }
-      else { var m = wb.id.match(/wb(\d+)/); if (m) playSingleWord(parseInt(m[1])); }
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.ws-btn');
+  if(btn){setPref(parseInt(btn.dataset.w),btn.dataset.act);return}
+  if(!e.target.closest('.word-swipe'))closeSw();
+  if(!wasSw){
+    var wb=e.target.closest('.word-block');
+    if(wb){
+      var swEl=wb.closest('.word-swipe');
+      if(swEl&&swEl.classList.contains('swiped')){closeSw(swEl)}
+      else{var m=wb.id.match(/wb(\d+)/);if(m)playSingleW(parseInt(m[1]))}
     }
   }
-  wasSwipe = false;
+  wasSw=false;
 });
 
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
 renderHome();
 </script>
