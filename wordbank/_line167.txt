@@ -1,1 +1,0 @@
-      html += '<div class="entry-item" onclick="showGroup('' + e.id + '')"><div><div class="entry-item-label">' + esc(e.label) + '</div><div class="entry-item-meta">' + e.words.length + '词' + (familiar > 0 ? ' · ' + familiar + '熟' : '') + '</div></div><button class="entry-item-del" onclick="deleteEntry('' + e.id + '',event)">✕</button></div>';
