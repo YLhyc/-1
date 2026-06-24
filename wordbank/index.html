@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KAOYAN WORDBANK</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -17,6 +20,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .entry-item-label{font-size:16px;font-weight:500}
 .entry-item-meta{font-size:12px;color:#86868b}
 .empty-msg{text-align:center;color:#86868b;padding:40px;font-size:14px}
+
+.entry-swipe{position:relative;overflow:hidden;border-radius:14px}
+.es-actions{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:stretch}
+.es-btn{min-width:56px;border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;padding:0 12px;-webkit-appearance:none;outline:none}
+.es-btn:active{filter:brightness(.85)}
+.es-pin{background:#007aff}
+.es-del{background:#ff3b30}
 
 .nav-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .nav-back{background:none;border:none;color:#007aff;font-size:16px;cursor:pointer;padding:6px 0}
@@ -65,7 +75,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div id="view-home">
   <div class="home-hero">WORD BANK</div>
-  <div class="home-sub">2026-06-24 15:35</div>
+  <div class="home-sub">2026-06-24 15:43</div>
   <div class="entry-list" id="entryList"></div>
   <div class="empty-msg" id="homeEmpty" style="display:none">暂无词单</div>
 </div>
@@ -111,7 +121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var ENTRIES = [{"id": "wb_2026-06-24_000001", "label": "测试单词", "date": "2026-06-24", "words": [{"en": "articulate", "cn": "清晰表达的；口齿伶俐的"}, {"en": "forthcoming", "cn": "即将发生的；乐于提供信息的"}, {"en": "susceptible", "cn": "易受影响的；敏感的"}, {"en": "conceivable", "cn": "可以想象的"}, {"en": "invariably", "cn": "总是；不变地"}, {"en": "chronic", "cn": "慢性的；长期的"}, {"en": "retrospect", "cn": "回顾；回想"}, {"en": "obscure", "cn": "模糊的；使费解"}, {"en": "negligible", "cn": "微不足道的"}, {"en": "rigorous", "cn": "严格的；严密的"}]}, {"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_OK = ["wb_2026-06-24_000001", "wb_2026-06-23_demo"];
-var TS = 1782286503;
+var TS = 1782287003;
 
 var entryId = null, wIdx = 0, step = 0, paused = false, single = false;
 var curAudio = null, nextAu = null;
@@ -131,6 +141,10 @@ function prefs() {
   try { return JSON.parse(localStorage.getItem('wb_prefs')||'{}'); } catch(e) { return {}; }
 }
 function saveP(obj) { localStorage.setItem('wb_prefs', JSON.stringify(obj)); }
+function getDeletedIds() { try { return JSON.parse(localStorage.getItem('wb_deleted')||'[]'); } catch(e) { return []; } }
+function getPinnedIds() { try { return JSON.parse(localStorage.getItem('wb_pinned')||'[]'); } catch(e) { return []; } }
+function saveDeleted(ids) { localStorage.setItem('wb_deleted', JSON.stringify(ids)); }
+function savePinned(ids) { localStorage.setItem('wb_pinned', JSON.stringify(ids)); }
 function getE() {
   for (var i=0; i<ENTRIES.length; i++) if (ENTRIES[i].id===entryId) return ENTRIES[i];
   return null;
@@ -186,15 +200,25 @@ function preloadAll(eid, n) {
 
 // ── Home ──
 function renderHome() {
-  if (ENTRIES.length===0) {
+  var deleted = getDeletedIds(), pinned = getPinnedIds();
+  // Filter & sort: remove deleted, pinned first
+  var list = ENTRIES.filter(function(e) { return deleted.indexOf(e.id) === -1; });
+  list.sort(function(a, b) {
+    var pa = pinned.indexOf(a.id), pb = pinned.indexOf(b.id);
+    if (pa >= 0 && pb < 0) return -1;
+    if (pb >= 0 && pa < 0) return 1;
+    if (pa >= 0 && pb >= 0) return pa - pb;
+    return 0;
+  });
+  if (list.length===0) {
     $('entryList').innerHTML=''; $('homeEmpty').style.display='block';
   } else {
     $('homeEmpty').style.display='none';
     var h='', p=prefs();
-    for (var i=0; i<ENTRIES.length; i++) {
-      var e = ENTRIES[i], fam=0;
+    for (var i=0; i<list.length; i++) {
+      var e = list[i], fam=0;
       for (var w=0; w<e.words.length; w++) if (p[e.id+'_'+w]==='familiar') fam++;
-      h += '<div class="entry-item" onclick="showGroup(\''+e.id+'\')"><div class="entry-item-info"><div class="entry-item-label">'+esc(e.label)+'</div><div class="entry-item-meta">'+e.words.length+'词'+(fam>0?' · '+fam+'熟':'')+'</div></div></div>';
+      h += '<div class="entry-swipe" id="es'+i+'"><div class="es-actions"><button class="es-btn es-pin" data-id="'+esc(e.id)+'" data-act="pin">置顶</button><button class="es-btn es-del" data-id="'+esc(e.id)+'" data-act="delete">删除</button></div><div class="entry-item" id="ei'+i+'" onclick="clickEntry(\''+e.id+'\')"><div class="entry-item-info"><div class="entry-item-label">'+esc(e.label)+'</div><div class="entry-item-meta">'+e.words.length+'词'+(fam>0?' · '+fam+'熟':'')+'</div></div></div></div>';
     }
     $('entryList').innerHTML = h;
   }
@@ -277,7 +301,7 @@ function blobAudio(eid, w, lang) {
   var url = preloaded[k] || mp3(eid, w, lang);
   var a = new Audio(url);
   a.preload = 'auto';
-  a.playbackRate = 1.2;
+  a.playbackRate = 1.4;
   return a;
 }
 
@@ -414,57 +438,97 @@ function setPref(w, act) {
   var el=$('ws'+w); if (el) setTimeout(function(){closeSw(el)},200);
 }
 
-// ── Swipe ──
-var swOpen=null, swCur=null, swX=0, swY=0, swTX=0, wasSw=false, SW_W=150;
+// ── Swipe (word + entry) ──
+var swOpen=null, swCur=null, swX=0, swY=0, swTX=0, wasSw=false, SW_W=150, swBlk=null;
 function closeSw(el) {
   if (!el) el=swOpen;
-  if (el) { var wb=el.querySelector('.word-block'); if(wb)wb.style.transform='translateX(0)'; el.classList.remove('swiped'); }
+  if (el) {
+    var b=el.querySelector('.word-block, .entry-item');
+    if(b) b.style.transform='translateX(0)';
+    el.classList.remove('swiped');
+  }
   if (swOpen===el||!el) swOpen=null;
 }
+
+function eventOnEntryView() {
+  return $('view-home').style.display !== 'none';
+}
+
 document.addEventListener('touchstart',function(e){
   wasSw=false;
-  var sw=e.target.closest('.word-swipe');
-  if (!sw){closeSw();swCur=null;return;}
-  if (swOpen&&swOpen!==sw)closeSw(swOpen);
-  swCur=sw; swX=e.touches[0].clientX; swY=e.touches[0].clientY;
-  var wb=sw.querySelector('.word-block'); swTX=0;
-  if(wb){var m=wb.style.transform.match(/-?[0-9.]+/); if(m)swTX=parseFloat(m[0])}
+  var sw = e.target.closest('.word-swipe') || e.target.closest('.entry-swipe');
+  if (!sw) { closeSw(); swCur=null; swBlk=null; return; }
+  if (swOpen && swOpen!==sw) closeSw(swOpen);
+  swCur = sw;
+  swBlk = sw.querySelector('.word-block') || sw.querySelector('.entry-item');
+  swX = e.touches[0].clientX; swY = e.touches[0].clientY;
+  swTX = 0;
+  if (swBlk) { var m=swBlk.style.transform.match(/-?[0-9.]+/); if(m) swTX=parseFloat(m[0]); }
 },{passive:true});
 document.addEventListener('touchmove',function(e){
   if(!swCur)return;
   var dx=e.touches[0].clientX-swX, dy=e.touches[0].clientY-swY;
   if(Math.abs(dy)>Math.abs(dx)){closeSw(swCur);return}
-  if(Math.abs(dx)>10)wasSw=true;
+  if(Math.abs(dx)>10) wasSw=true;
   if(dx>10){closeSw(swCur);return}
   e.preventDefault();
   var tx=Math.max(-SW_W,Math.min(0,swTX+dx));
-  var wb=swCur.querySelector('.word-block');
-  if(wb){wb.style.transition='none';wb.style.transform='translateX('+tx+'px)'}
+  if(swBlk){swBlk.style.transition='none';swBlk.style.transform='translateX('+tx+'px)'}
 },{passive:false});
 document.addEventListener('touchend',function(){
-  if(!swCur)return;
-  var wb=swCur.querySelector('.word-block');
-  if(!wb){swCur=null;return}
-  wb.style.transition='transform .25s ease';
-  var m=wb.style.transform.match(/-?[0-9.]+/), tx=m?parseFloat(m[0]):0;
-  if(Math.abs(tx)>SW_W*.35){wb.style.transform='translateX(-'+SW_W+'px)';swCur.classList.add('swiped');swOpen=swCur}
-  else{wb.style.transform='translateX(0)';swCur.classList.remove('swiped');swOpen=null}
-  swCur=null;
+  if(!swCur || !swBlk){swCur=null;swBlk=null;return}
+  swBlk.style.transition='transform .25s ease';
+  var m=swBlk.style.transform.match(/-?[0-9.]+/), tx=m?parseFloat(m[0]):0;
+  if(Math.abs(tx)>SW_W*.35){swBlk.style.transform='translateX(-'+SW_W+'px)';swCur.classList.add('swiped');swOpen=swCur}
+  else{swBlk.style.transform='translateX(0)';swCur.classList.remove('swiped');swOpen=null}
+  swCur=null; swBlk=null;
 });
 document.addEventListener('click',function(e){
-  var btn=e.target.closest('.ws-btn');
-  if(btn){setPref(parseInt(btn.dataset.w),btn.dataset.act);return}
-  if(!e.target.closest('.word-swipe'))closeSw();
-  if(!wasSw){
-    var wb=e.target.closest('.word-block');
-    if(wb){
-      var swEl=wb.closest('.word-swipe');
-      if(swEl&&swEl.classList.contains('swiped')){closeSw(swEl)}
-      else{var m=wb.id.match(/wb(\d+)/);if(m)playSingleW(parseInt(m[1]))}
+  // Word swipe action buttons
+  var wsBtn = e.target.closest('.ws-btn');
+  if (wsBtn) { setPref(parseInt(wsBtn.dataset.w), wsBtn.dataset.act); return; }
+  // Entry swipe action buttons
+  var esBtn = e.target.closest('.es-btn');
+  if (esBtn) { entryAction(esBtn.dataset.id, esBtn.dataset.act); return; }
+  // Close swipe if tapping outside
+  if (!e.target.closest('.word-swipe') && !e.target.closest('.entry-swipe')) closeSw();
+  if (!wasSw) {
+    var wb = e.target.closest('.word-block');
+    if (wb) {
+      var swEl = wb.closest('.word-swipe');
+      if (swEl && swEl.classList.contains('swiped')) { closeSw(swEl); }
+      else { var m=wb.id.match(/wb(\d+)/); if(m) playSingleW(parseInt(m[1])); }
     }
   }
-  wasSw=false;
+  wasSw = false;
 });
+
+// ── Entry actions ──
+function clickEntry(id) {
+  var es = document.querySelector('.entry-swipe.swiped');
+  if (es) { closeSw(es); }
+  else { showGroup(id); }
+}
+
+function entryAction(id, act) {
+  var label = '此操作';
+  if (act === 'delete') {
+    if (!confirm('确认删除此词单？
+（之后可通过导入恢复）')) return;
+    var del = getDeletedIds();
+    if (del.indexOf(id) < 0) del.push(id);
+    saveDeleted(del);
+    var pin = getPinnedIds().filter(function(x) { return x !== id; });
+    savePinned(pin);
+  } else if (act === 'pin') {
+    if (!confirm('确认置顶此词单？')) return;
+    var pin = getPinnedIds().filter(function(x) { return x !== id; });
+    pin.unshift(id);
+    savePinned(pin);
+  }
+  closeSw();
+  renderHome();
+}
 
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
