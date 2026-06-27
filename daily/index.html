@@ -236,6 +236,21 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
 .card-flip-btn { margin-top:12px; }
 .card-flip-btn .ra-btn { font-size:.85rem; padding:10px 24px; background:#7c3aed; border-color:#7c3aed; color:#fff; font-weight:600; }
 .card-back-content { font-size:.82rem; color:var(--text); line-height:1.6; text-align:left; width:100%; padding:4px 0; white-space:pre-line; }
+.card-blocks { width:100%; text-align:left; max-height:52vh; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:0 2px; }
+.cb-h { font-size:.83rem; font-weight:700; color:var(--text); margin:14px 0 4px; padding-bottom:3px; border-bottom:1.5px solid var(--border); }
+.cb-h:first-child { margin-top:2px; }
+.cb-p { font-size:.79rem; line-height:1.55; color:var(--text); padding:3px 0 3px 14px; position:relative; }
+.cb-p::before { content:'•'; position:absolute; left:0; color:var(--text2); font-weight:700; }
+.cb-e { font-size:.74rem; line-height:1.5; color:var(--text2); background:var(--bg); border-radius:8px; padding:8px 12px; margin:4px 0 8px 8px; border-left:3px solid var(--tree-line); }
+.cb-q { font-size:.78rem; line-height:1.5; color:var(--text2); font-style:italic; text-align:center; padding:10px 16px; margin:6px 0; border-left:3px solid #e87040; background:var(--bg); border-radius:0 8px 8px 0; }
+.cb-m { font-size:.74rem; line-height:1.45; background:#fef9f0; border:1.5px solid #f0d060; border-radius:10px; padding:9px 12px; margin:8px 0 4px; }
+@media (prefers-color-scheme: dark) { .cb-m { background:#2a2410; border-color:#5a4a20; } }
+.cb-m::before { content:'🧠 记忆：'; font-size:.7rem; font-weight:700; color:#c77d20; }
+.rq-sec { font-size:.72rem; font-weight:700; color:var(--text2); padding:12px 0 4px 2px; margin-top:2px; display:flex; align-items:center; gap:6px; }
+.rq-sec:first-child { margin-top:0; padding-top:0; }
+.rq-sec .rqs-icon { font-size:.9rem; }
+.rq-sec .rqs-count { font-weight:400; font-size:.68rem; opacity:.7; }
+#reviewBack { flex-direction:column; align-items:stretch; }
 .rating-bar { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; padding:0 16px 16px; }
 .rating-btn { padding:10px 4px; border-radius:12px; border:2px solid var(--border); background:var(--card); cursor:pointer; font-size:.8rem; font-weight:600; text-align:center; transition:all .12s; -webkit-tap-highlight-color:transparent; }
 .rating-btn:active { transform:scale(.95); }
@@ -1051,11 +1066,17 @@ function genCardFromTopic(subjId, dateStr, topicIdx) {
   var cardId = cardIdFromTopic(subjId, dateStr, topicIdx);
   if (cardExists(cardId)) return;
 
-  var pointsText = flattenPointsForCard(t.points || []);
+  // Build blocks from tree-structured points
+  var blocks = [];
+  if (t.points && t.points.length) {
+    blocks = blocksFromPoints(t.points);
+  } else if (t.summary) {
+    blocks = [{"t":"p","c": t.summary}];
+  }
 
   var card = {
     id: cardId, subject: subjId, date: dateStr, title: t.title, summary: t.summary || '',
-    points_text: pointsText,
+    blocks: blocks, points_text: flattenBlocks(blocks),
     difficulty: null, stability: null, fsrs_state: 'Learning',
     last_reviewed: null, next_review: null, reps: 0, lapses: 0,
     created_at: Date.now(), source: 'daily_report'
@@ -1063,6 +1084,28 @@ function genCardFromTopic(subjId, dateStr, topicIdx) {
   reviewCards[card.id] = card;
   saveReviewStore();
   renderReviewView();
+}
+
+function blocksFromPoints(points) {
+  var blocks = [];
+  function walk(pts) {
+    for (var i = 0; i < pts.length; i++) {
+      var hasKids = pts[i].children && pts[i].children.length > 0;
+      blocks.push({t: hasKids ? 'h' : 'p', c: pts[i].text});
+      if (hasKids) {
+        for (var j = 0; j < pts[i].children.length; j++) {
+          blocks.push({t: 'e', c: pts[i].children[j].text});
+        }
+      }
+    }
+  }
+  walk(points);
+  return blocks;
+}
+
+function flattenBlocks(blocks) {
+  if (!blocks || !blocks.length) return '';
+  return blocks.map(function(b) { return b.c; }).join('\n');
 }
 
 function flattenPointsForCard(points) {
@@ -1138,16 +1181,35 @@ function showNextCard() {
   badge.className = 'card-subject-badge badge-' + (card.subject === 'english' ? 'en' : card.subject === '807' ? '807' : '706');
 
   if (reviewSession.mode === 'quick') {
-    document.getElementById('reviewBackContent').textContent = card.points_text;
+    document.getElementById('reviewBackContent').innerHTML = '<div class="card-blocks">' + renderCardBlocks(card) + '</div>';
     document.getElementById('reviewFront').style.display = 'none';
     document.getElementById('reviewBack').style.display = 'flex';
   }
 }
 
+function renderCardBlocks(card) {
+  var blocks = card.blocks;
+  // Fallback for legacy cards without blocks
+  if (!blocks || !blocks.length) {
+    return '<div class="cb-p">' + escHtml(card.points_text || '') + '</div>';
+  }
+  var h = '';
+  for (var i = 0; i < blocks.length; i++) {
+    var b = blocks[i];
+    if (b.t === 'h') h += '<div class="cb-h">' + escHtml(b.c) + '</div>';
+    else if (b.t === 'p') h += '<div class="cb-p">' + escHtml(b.c) + '</div>';
+    else if (b.t === 'e') h += '<div class="cb-e">' + escHtml(b.c) + '</div>';
+    else if (b.t === 'q') h += '<div class="cb-q">' + escHtml(b.c) + '</div>';
+    else if (b.t === 'm') h += '<div class="cb-m">' + escHtml(b.c) + '</div>';
+    else h += '<div class="cb-p">' + escHtml(b.c) + '</div>';
+  }
+  return h;
+}
+
 function flipCard() {
   document.getElementById('reviewFront').style.display = 'none';
   document.getElementById('reviewBack').style.display = 'flex';
-  document.getElementById('reviewBackContent').textContent = reviewSession.currentCard.points_text;
+  document.getElementById('reviewBackContent').innerHTML = '<div class="card-blocks">' + renderCardBlocks(reviewSession.currentCard) + '</div>';
 }
 
 function rateCard(rating) {
@@ -1221,15 +1283,23 @@ function renderReviewView() {
     return fsrsCurrentR(reviewCards[a], now) - fsrsCurrentR(reviewCards[b], now);
   });
 
-  // Stats
+  // Stats — per-subject counts
   var doneToday = reviewHistory.filter(function(h) {
     return new Date(h.timestamp).toDateString() === new Date().toDateString();
   }).length;
+  var due706 = 0, due807 = 0, dueEn = 0, total706 = 0, total807 = 0, totalEn = 0;
+  for (var id in reviewCards) {
+    var s = reviewCards[id].subject;
+    if (s === '706') { total706++; if (fsrsIsDue(reviewCards[id], now)) due706++; }
+    else if (s === '807') { total807++; if (fsrsIsDue(reviewCards[id], now)) due807++; }
+    else { totalEn++; if (fsrsIsDue(reviewCards[id], now)) dueEn++; }
+  }
 
   document.getElementById('reviewStatsBar').innerHTML =
     '<div class="rev-stat due"><div class="rv">' + dueIds.length + '</div><div class="rl">待复习</div></div>' +
     '<div class="rev-stat done"><div class="rv">' + doneToday + '</div><div class="rl">今日已完成</div></div>' +
-    '<div class="rev-stat total"><div class="rv">' + Object.keys(reviewCards).length + '</div><div class="rl">总卡片</div></div>';
+    '<div class="rev-stat total"><div class="rv">' + Object.keys(reviewCards).length + '</div><div class="rl">总卡片</div></div>' +
+    '<div class="rev-stat" style="font-size:.62rem;padding:2px 0"><div style="color:var(--c706)">📜' + due706 + '</div><div style="color:var(--c807)">📖' + due807 + '</div><div style="color:var(--cen)">🔤' + dueEn + '</div></div>';
 
   // No cards state
   var noCards = Object.keys(reviewCards).length === 0;
@@ -1240,19 +1310,32 @@ function renderReviewView() {
 
   if (noCards) return;
 
-  // Queue
-  var qhtml = '';
-  for (var i = 0; i < Math.min(dueIds.length, 20); i++) {
-    var card = reviewCards[dueIds[i]];
-    var r = fsrsCurrentR(card, now);
-    var rpct = Math.round(r * 100);
-    var rcls = rpct < 60 ? 'r-low' : rpct < 80 ? 'r-mid' : 'r-high';
-    var badgeCls = card.subject === 'english' ? 'ben' : card.subject === '807' ? 'b807' : 'b706';
-    var meta = (card.reps || 0) + '次复习 · ' + fsrsIntervalText(card, now);
-    qhtml += '<div class="rq-item"><div class="rq-badge ' + badgeCls + '"></div>';
-    qhtml += '<div class="rq-info"><div class="rq-title">' + escHtml(card.title) + '</div><div class="rq-meta">' + meta + '</div></div>';
-    qhtml += '<div class="rq-r ' + rcls + '">' + rpct + '%</div></div>';
+  // Queue — grouped by subject
+  function renderQueueGroup(dueList, subject, label, icon) {
+    var groupCards = dueList.filter(function(cid) { return reviewCards[cid].subject === subject; });
+    if (groupCards.length === 0) return '';
+    var html = '<div class="rq-sec"><span class="rqs-icon">' + icon + '</span>' + label +
+      '<span class="rqs-count">' + groupCards.length + '张</span></div>';
+    for (var i = 0; i < Math.min(groupCards.length, 10); i++) {
+      var card = reviewCards[groupCards[i]];
+      var r = fsrsCurrentR(card, now);
+      var rpct = Math.round(r * 100);
+      var rcls = rpct < 60 ? 'r-low' : rpct < 80 ? 'r-mid' : 'r-high';
+      var badgeCls = card.subject === 'english' ? 'ben' : card.subject === '807' ? 'b807' : 'b706';
+      var meta = (card.reps || 0) + '次复习 · ' + fsrsIntervalText(card, now);
+      html += '<div class="rq-item"><div class="rq-badge ' + badgeCls + '"></div>';
+      html += '<div class="rq-info"><div class="rq-title">' + escHtml(card.title) + '</div><div class="rq-meta">' + meta + '</div></div>';
+      html += '<div class="rq-r ' + rcls + '">' + rpct + '%</div></div>';
+    }
+    if (groupCards.length > 10) {
+      html += '<div style="font-size:.68rem;color:var(--text2);padding:2px 0 8px 18px">还有 ' + (groupCards.length - 10) + ' 张...</div>';
+    }
+    return html;
   }
+
+  var qhtml = renderQueueGroup(dueIds, '706', '古代文学·汉语', '📜');
+  qhtml += renderQueueGroup(dueIds, '807', '现当代·评论', '📖');
+  qhtml += renderQueueGroup(dueIds, 'english', '英语一', '🔤');
   document.getElementById('reviewQueue').innerHTML = qhtml;
 
   // If manage panel open, refresh it
