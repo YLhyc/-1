@@ -1,8 +1,14 @@
 {
   "description": "每日报告索引 — 前端通过此文件发现可用的报告日期",
-  "last_updated": "2026-06-23T09:00:00",
+  "last_updated": "2026-06-25T23:30:00",
   "available_dates": [
     {
+      "date": "2026-06-25",
+      "has_706": false,
+      "has_807": true,
+      "has_english": false,
+      "note": "807陌生化+悖论/反讽+张力深度讲解+考场写作方法"
+    },
       "date": "2026-06-22",
       "has_706": true,
       "has_807": true,

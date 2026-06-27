@@ -9,6 +9,7 @@
 <title>考研每日晨报</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<script src="fsrs.js"></script>
 <style>
 :root {
   --bg: #f5f3ef; --card: #fff; --text: #2c2416; --text2: #6b6150;
@@ -197,6 +198,74 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
 .subject-view.active { display:block; }
 .home-view { display:none; }
 .home-view.active { display:block; }
+
+/* ====== REVIEW SCHEDULER ====== */
+.review-view { display:none; }
+.review-view.active { display:block; }
+.dc.rev { background: var(--card); border-left: 4px solid #7c3aed; }
+.dc.rev .pct { color: #7c3aed; }
+.dc.rev .bar { background: #7c3aed; }
+.rev-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+.rev-stat { background:var(--card); border-radius:var(--radius); padding:10px; text-align:center; box-shadow:var(--shadow); border:1px solid var(--border); }
+.rev-stat .rv { font-size:1.3rem; font-weight:700; }
+.rev-stat.due .rv { color:#7c3aed; }
+.rev-stat.done .rv { color:#5b8c3e; }
+.rev-stat.total .rv { color:var(--text); }
+.rev-stat .rl { font-size:.65rem; color:var(--text2); margin-top:2px; }
+.rqueue { margin-bottom:14px; }
+.rq-item { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); padding:12px 14px; margin-bottom:8px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:transform .12s; -webkit-tap-highlight-color:transparent; }
+.rq-item:active { transform:scale(.98); }
+.rq-item .rq-badge { width:10px; height:10px; border-radius:99px; flex-shrink:0; }
+.rq-badge.b706 { background:var(--c706); } .rq-badge.b807 { background:var(--c807); } .rq-badge.ben { background:var(--cen); }
+.rq-item .rq-info { flex:1; min-width:0; }
+.rq-item .rq-title { font-size:.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rq-item .rq-meta { font-size:.68rem; color:var(--text2); }
+.rq-item .rq-r { font-size:.8rem; font-weight:700; flex-shrink:0; }
+.rq-r.r-low { color:#c7533a; } .rq-r.r-mid { color:#e87040; } .rq-r.r-high { color:#5b8c3e; }
+.rq-btns { display:flex; gap:8px; margin-top:12px; }
+.rq-btns .ra-btn.start-btn { background:#7c3aed; border-color:#7c3aed; color:#fff; font-weight:600; font-size:.82rem; padding:10px 20px; }
+.review-panel { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); overflow:hidden; margin-bottom:14px; }
+.review-progress { text-align:center; padding:8px; font-size:.73rem; color:var(--text2); background:var(--bg); }
+.card-face { padding:20px 16px; text-align:center; min-height:180px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.card-subject-badge { font-size:.7rem; padding:3px 10px; border-radius:99px; margin-bottom:12px; display:inline-block; font-weight:600; }
+.card-subject-badge.badge-706 { background:var(--c706-l); color:var(--c706); }
+.card-subject-badge.badge-807 { background:var(--c807-l); color:var(--c807); }
+.card-subject-badge.badge-en { background:var(--cen-l); color:var(--cen); }
+.card-title { font-size:1.05rem; font-weight:700; margin-bottom:8px; line-height:1.4; }
+.card-summary { font-size:.82rem; color:var(--text2); line-height:1.5; margin-bottom:16px; }
+.card-flip-btn { margin-top:12px; }
+.card-flip-btn .ra-btn { font-size:.85rem; padding:10px 24px; background:#7c3aed; border-color:#7c3aed; color:#fff; font-weight:600; }
+.card-back-content { font-size:.82rem; color:var(--text); line-height:1.6; text-align:left; width:100%; padding:4px 0; white-space:pre-line; }
+.rating-bar { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; padding:0 16px 16px; }
+.rating-btn { padding:10px 4px; border-radius:12px; border:2px solid var(--border); background:var(--card); cursor:pointer; font-size:.8rem; font-weight:600; text-align:center; transition:all .12s; -webkit-tap-highlight-color:transparent; }
+.rating-btn:active { transform:scale(.95); }
+.rating-btn small { display:block; font-weight:400; font-size:.65rem; opacity:.7; }
+.rating-btn.r-again { border-color:#c7533a; color:#c7533a; } .rating-btn.r-again:active { background:#fce8ec; }
+.rating-btn.r-hard { border-color:#e87040; color:#e87040; } .rating-btn.r-hard:active { background:#fef0eb; }
+.rating-btn.r-good { border-color:#5b8c3e; color:#5b8c3e; } .rating-btn.r-good:active { background:#eef5e8; }
+.rating-btn.r-easy { border-color:#3a7ec7; color:#3a7ec7; } .rating-btn.r-easy:active { background:#e8f1fa; }
+.rev-done { text-align:center; padding:24px 16px; }
+.rev-done .icon { font-size:3rem; margin-bottom:8px; }
+.rev-done .msg { font-size:1rem; font-weight:700; margin-bottom:4px; }
+.rev-done .sub { font-size:.78rem; color:var(--text2); }
+.manage-panel { margin-top:10px; }
+.import-export-bar { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; align-items:center; }
+.import-export-bar select { font-size:.73rem; padding:6px 10px; border-radius:99px; border:1.5px solid var(--border); background:var(--card); color:var(--text); }
+.manage-item { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); padding:10px 14px; margin-bottom:6px; display:flex; align-items:center; gap:8px; font-size:.78rem; }
+.manage-item .mi-title { flex:1; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.manage-item .mi-meta { font-size:.68rem; color:var(--text2); flex-shrink:0; }
+.manage-item .mi-del { font-size:.7rem; padding:4px 10px; border-radius:99px; border:1px solid #c7533a; background:transparent; color:#c7533a; cursor:pointer; flex-shrink:0; -webkit-tap-highlight-color:transparent; }
+.gen-card-btn { font-size:.68rem; padding:3px 10px; border-radius:99px; border:1.5px solid #7c3aed; background:transparent; color:#7c3aed; cursor:pointer; margin-left:8px; flex-shrink:0; transition:all .12s; -webkit-tap-highlight-color:transparent; white-space:nowrap; }
+.gen-card-btn:active { transform:scale(.95); background:#7c3aed; color:#fff; }
+.gen-card-btn.has-card { opacity:.35; border-color:var(--border); color:var(--text2); }
+.sync-settings { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); padding:14px; margin-bottom:14px; }
+.sync-settings label { font-size:.78rem; font-weight:600; display:block; margin-bottom:4px; }
+.sync-settings input { width:100%; padding:8px 12px; border-radius:8px; border:1.5px solid var(--border); font-size:.78rem; background:var(--bg); color:var(--text); margin-bottom:8px; }
+.sync-settings .note { font-size:.68rem; color:var(--text2); margin-bottom:8px; }
+.sync-status { font-size:.73rem; padding:6px 10px; border-radius:99px; display:inline-block; }
+.sync-status.ok { background:#eef5e8; color:#5b8c3e; }
+.sync-status.err { background:#fce8ec; color:#c7533a; }
+.sync-status.syncing { background:#e8f1fa; color:#3a7ec7; }
 </style>
 </head>
 <body>
@@ -232,6 +301,81 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     <div class="sec-hdr"><h2>📅 复习记录</h2></div>
     <div class="date-accordion" id="subjAccordion"></div>
     <div class="loading" id="subjLoading"><div class="spinner"></div><p>加载中...</p></div>
+  </div>
+
+  <!-- ===== REVIEW VIEW ===== -->
+  <div class="review-view" id="reviewView">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr; 返回首页</button>
+      <span style="flex:1"></span>
+      <button class="back-btn" onclick="toggleReviewManage()" id="btnManage">⚙ 管理卡片</button>
+    </div>
+
+    <div class="rev-stats" id="reviewStatsBar"></div>
+
+    <div class="empty" id="reviewNoCards"><div class="eicon">📋</div><p>还没有复习卡片</p><p style="font-size:.75rem;color:var(--text2)">在每日报告中点击「+ 制卡」来创建</p></div>
+
+    <div class="sync-settings" id="syncSetup" style="display:none">
+      <label>☁ GitHub 同步设置</label>
+      <div class="note">粘贴 GitHub Fine-grained PAT，手机端复习后自动同步回电脑。<br>权限只需选择 <b>review_sync.json</b> 一个文件，权限设为 Read & Write。</div>
+      <input type="password" id="syncToken" placeholder="ghp_xxxxxxxxxxxx">
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="ra-btn" onclick="saveSyncToken()">💾 保存</button>
+        <button class="ra-btn" onclick="testSyncToken()">🔍 测试</button>
+        <span class="sync-status" id="syncStatus" style="display:none"></span>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><h2>📋 今日待复习</h2><span class="queue-count" id="queueCount" style="font-size:.75rem;color:var(--text2)"></span></div>
+    <div class="rqueue" id="reviewQueue"></div>
+
+    <div class="rq-btns" id="startBtnBar" style="display:none">
+      <button class="ra-btn start-btn" onclick="startReview()">▶ 开始复习</button>
+      <button class="ra-btn" onclick="quickReview()">⚡ 快速复习</button>
+    </div>
+
+    <!-- Card review panel -->
+    <div class="review-panel" id="reviewPanel" style="display:none">
+      <div class="review-progress" id="reviewProgress"></div>
+      <div class="card-face" id="reviewFront">
+        <span class="card-subject-badge" id="reviewBadge"></span>
+        <div class="card-title" id="reviewTitle"></div>
+        <div class="card-summary" id="reviewSummary"></div>
+        <div class="card-flip-btn"><button class="ra-btn" onclick="flipCard()">显示答案 → 评分</button></div>
+      </div>
+      <div class="card-face" id="reviewBack" style="display:none">
+        <div class="card-back-content" id="reviewBackContent"></div>
+        <div class="rating-bar">
+          <button class="rating-btn r-again" onclick="rateCard(1)">忘记<br><small>Again</small></button>
+          <button class="rating-btn r-hard" onclick="rateCard(2)">困难<br><small>Hard</small></button>
+          <button class="rating-btn r-good" onclick="rateCard(3)">正常<br><small>Good</small></button>
+          <button class="rating-btn r-easy" onclick="rateCard(4)">简单<br><small>Easy</small></button>
+        </div>
+      </div>
+      <div class="rev-done" id="reviewDone" style="display:none">
+        <div class="icon">🎉</div>
+        <div class="msg">今日复习完成！</div>
+        <div class="sub" id="reviewDoneStats"></div>
+      </div>
+    </div>
+
+    <!-- Card management panel -->
+    <div class="manage-panel" id="managePanel" style="display:none">
+      <div class="import-export-bar">
+        <button class="ra-btn" onclick="exportCards()">☁ 导出</button>
+        <button class="ra-btn" onclick="importCards()">📥 导入</button>
+        <select id="manageFilter" onchange="renderManage()">
+          <option value="all">全部科目</option>
+          <option value="706">706 古代文学·汉语</option>
+          <option value="807">807 现当代·评论</option>
+          <option value="english">英语一</option>
+        </select>
+        <button class="ra-btn" onclick="syncNow()" style="color:#3a7ec7">🔄 同步</button>
+        <button class="ra-btn" onclick="resetAllCards()" style="color:#c7533a">重置</button>
+      </div>
+      <div class="sec-hdr"><h2>全部卡片</h2></div>
+      <div class="manage-list" id="manageList"></div>
+    </div>
   </div>
 
   <div class="footer">每日自动生成 · 清晨朗读回顾 · <span class="dbg" onclick="showVoiceDebug()">语音调试</span></div>
@@ -421,78 +565,6 @@ function buildAccordion(containerId, filterSubject) {
     html += `</div></div>`;
   }
   c.innerHTML = html;
-}
-
-function renderSubjectReport(subjId, data, dateStr) {
-  const s = SUBJECTS.find(x => x.id === subjId);
-  const topics = data.topics || [];
-  const cs = subjId === 'english' ? 'en' : subjId;
-  const nc = subjId === 'english' ? 'nen' : (subjId === '807' ? 'n807' : 'n706');
-  const duration = data.audio_duration || '';
-
-  let h = `<div class="rmc subj-${cs}">`;
-  // Colorful top bar
-  h += `<div class="rmc-topbar">`;
-  h += `<span class="r-icon">${s.icon}</span>`;
-  h += `<span class="r-subj-name ${nc}">${data.subject_name || s.fullName}</span>`;
-  if (duration) h += `<span class="r-phase">${escHtml(duration)}</span>`;
-  h += `</div>`;
-
-  h += `<div class="rmc-content">`;
-
-  // One play button for entire subject
-  h += `<div style="padding:6px 0 10px">`;
-  h += `<button class="ra-btn" onclick="toggleSubjAudio(event,'${subjId}','${dateStr}')" id="btn_${subjId}_${dateStr.replace(/-/g,'')}">▶️ 朗读复习</button>`;
-  h += `</div>`;
-
-  // Topics
-  for (let i = 0; i < topics.length; i++) {
-    const t = topics[i];
-    const hasPoints = t.points && t.points.length > 0;
-    const tid = `t_${subjId}_${dateStr.replace(/-/g,'')}_${i}`;
-
-    h += `<div class="si"><div class="si-head">`;
-    h += `<span class="si-title">${escHtml(t.title)}</span>`;
-    h += `</div>`;
-
-    if (hasPoints) {
-      h += `<div class="view-toggle">`;
-      h += `<button class="on" onclick="switchView('${tid}','tree')">📋 层级</button>`;
-      h += `<button onclick="switchView('${tid}','map')">🗺️ 导图</button>`;
-      h += `</div>`;
-      h += `<div class="tree" id="${tid}_tree">${renderTree(t.points)}</div>`;
-      h += `<div class="mindmap-svg" id="${tid}_map">${renderMindMap(s.id, t.title, t.points)}</div>`;
-    } else if (t.summary) {
-      h += `<div class="si-body">${simpleMd(t.summary)}</div>`;
-    }
-    h += `</div>`;
-  }
-
-  // Quiz
-  if (data.quiz) {
-    h += `<div class="quiz-block"><div class="rb-label">📊 测验结果</div>`;
-    h += `<div class="qz">${data.quiz.correct}/${data.quiz.total} 正确 · ${data.quiz.accuracy}</div>`;
-    if (data.quiz.wrong_items) h += `<div style="font-size:.73rem;color:var(--text2)">错题：${data.quiz.wrong_items.map(w=>escHtml(w)).join('、')}</div>`;
-    h += `</div>`;
-  }
-
-  // Key takeaways
-  if (data.key_takeaways && data.key_takeaways.length) {
-    h += `<div class="rb recall"><div class="rb-label recall">🧠 必记要点</div><ul>${data.key_takeaways.map(r=>`<li>${escHtml(r)}</li>`).join('')}</ul></div>`;
-  }
-
-  // Weak points
-  if (data.weak_points && data.weak_points.length) {
-    h += `<div class="rb weak"><div class="rb-label weak">⚠️ 薄弱点</div><ul>${data.weak_points.map(w=>`<li>${escHtml(w)}</li>`).join('')}</ul></div>`;
-  }
-
-  // Tomorrow
-  if (data.tomorrow_note) {
-    h += `<div class="rb"><div class="rb-label plan">📅 明日</div><ul><li>${escHtml(data.tomorrow_note)}</li></ul></div>`;
-  }
-
-  h += `</div></div>`; // close rmc-content + rmc
-  return h;
 }
 
 function switchView(sid, mode) {
@@ -808,7 +880,604 @@ function simpleMd(s) {
 // Preload voices (iOS 需要异步加载)
 if ('speechSynthesis' in window) { speechSynthesis.getVoices(); }
 
-// ====== VOICE DEBUG ======
+// ====== REVIEW SYSTEM ======
+var reviewCards = {};
+var reviewHistory = [];
+var reviewSettings = { daily_new_cards: 10, max_reviews_per_day: 50, target_retention: 0.9 };
+var reviewSession = { active: false, queue: [], index: 0, currentCard: null, mode: 'full' };
+var STORE_KEY = 'kaoyan_review_cards';
+var HISTORY_KEY = 'kaoyan_review_history';
+var SETTINGS_KEY = 'kaoyan_review_settings';
+var SYNC_TOKEN_KEY = 'kaoyan_github_token';
+
+function loadReviewStore() {
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    reviewCards = raw ? JSON.parse(raw) : {};
+    raw = localStorage.getItem(HISTORY_KEY);
+    reviewHistory = raw ? JSON.parse(raw) : [];
+    raw = localStorage.getItem(SETTINGS_KEY);
+    if (raw) reviewSettings = JSON.parse(raw);
+  } catch(e) { reviewCards = {}; reviewHistory = []; }
+}
+function saveReviewStore() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(reviewCards)); } catch(e) {}
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(reviewHistory)); } catch(e) {}
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(reviewSettings)); } catch(e) {}
+  if (isLocalMode()) autoSaveToLocal();
+}
+
+// Check if running on localhost
+function isLocalMode() {
+  return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+}
+
+// Auto-save to review_sync.json via local server
+var _autoSaveTimer = null;
+function autoSaveToLocal() {
+  if (!isLocalMode()) return;
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer = setTimeout(function() {
+    fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cards: reviewCards, history: reviewHistory, settings: reviewSettings }) }).catch(function() {});
+  }, 500);
+}
+
+// Load review_sync.json from server
+async function loadSyncFromServer() {
+  if (!isLocalMode()) {
+    // Try from GitHub Pages (deployed JSON)
+    try {
+      var r = await fetch('./review_sync.json?t=' + Date.now());
+      if (r.ok) {
+        var data = await r.json();
+        if (data.cards) {
+          var merged = {};
+          // GitHub data as base
+          for (var id in data.cards) merged[id] = data.cards[id];
+          // Local overrides (keep newer reviews)
+          for (var id in reviewCards) {
+            var local = reviewCards[id];
+            var remote = merged[id];
+            if (!remote || (local.reps || 0) > (remote.reps || 0)) merged[id] = local;
+          }
+          reviewCards = merged;
+          if (data.history) reviewHistory = data.history;
+          if (data.settings) reviewSettings = data.settings;
+          saveReviewStore();
+        }
+      }
+    } catch(_) {}
+    return;
+  }
+  try {
+    var r = await fetch('/review_sync.json?t=' + Date.now());
+    if (r.ok) {
+      var data = await r.json();
+      if (data.cards) {
+        var merged = {};
+        for (var id in data.cards) merged[id] = data.cards[id];
+        for (var id in reviewCards) {
+          var local = reviewCards[id];
+          var remote = merged[id];
+          if (!remote || (local.reps || 0) > (remote.reps || 0)) merged[id] = local;
+        }
+        reviewCards = merged;
+        if (data.history) reviewHistory = data.history;
+        if (data.settings) reviewSettings = data.settings;
+        saveReviewStore();
+      }
+    }
+  } catch(_) {}
+}
+
+// GitHub API sync (phone -> GitHub)
+var GITHUB_API = 'https://api.github.com/repos/YLhyc/-1/contents/daily/review_sync.json';
+function getSyncToken() { return localStorage.getItem(SYNC_TOKEN_KEY) || ''; }
+
+function saveSyncToken() {
+  var tok = document.getElementById('syncToken').value.trim();
+  if (!tok) return;
+  localStorage.setItem(SYNC_TOKEN_KEY, tok);
+  setSyncStatus('ok', '已保存');
+}
+
+function testSyncToken() {
+  var tok = document.getElementById('syncToken').value.trim() || getSyncToken();
+  if (!tok) { setSyncStatus('err', '请先粘贴 PAT'); return; }
+  setSyncStatus('syncing', '测试中...');
+  fetch(GITHUB_API, { headers: { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github.v3+json' } })
+    .then(function(r) { setSyncStatus(r.ok ? 'ok' : 'err', r.ok ? '连接成功' : '连接失败 HTTP ' + r.status); })
+    .catch(function() { setSyncStatus('err', '网络错误'); });
+}
+
+function setSyncStatus(type, msg) {
+  var el = document.getElementById('syncStatus');
+  el.style.display = 'inline-block';
+  el.className = 'sync-status ' + type;
+  el.textContent = msg;
+}
+
+async function syncToGitHub() {
+  var tok = getSyncToken();
+  if (!tok) return;
+  try {
+    var content = JSON.stringify({ cards: reviewCards, history: reviewHistory, settings: reviewSettings }, null, 2);
+    // Get current SHA
+    var r = await fetch(GITHUB_API, { headers: { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github.v3+json' } });
+    var sha = null;
+    if (r.ok) {
+      var info = await r.json();
+      sha = info.sha;
+    }
+    // PUT
+    var body = JSON.stringify({ message: '同步复习卡片', content: btoa(unescape(encodeURIComponent(content))), sha: sha, branch: 'main' });
+    r = await fetch(GITHUB_API, { method: 'PUT', headers: { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: body });
+    if (r.ok) setSyncStatus('ok', '同步成功 ' + new Date().toLocaleTimeString());
+    else setSyncStatus('err', '同步失败 HTTP ' + r.status);
+  } catch(e) { setSyncStatus('err', '同步错误'); }
+}
+
+async function syncNow() {
+  if (isLocalMode()) {
+    setSyncStatus('syncing', '本地模式直接保存');
+    saveReviewStore();
+    setTimeout(function() { setSyncStatus('ok', '已保存到本地'); }, 500);
+    return;
+  }
+  var tok = getSyncToken();
+  if (!tok) {
+    document.getElementById('syncSetup').style.display = 'block';
+    setSyncStatus('err', '请先设置同步');
+    return;
+  }
+  setSyncStatus('syncing', '同步中...');
+  await syncToGitHub();
+}
+
+function cardIdFromTopic(subjId, dateStr, topicIdx) {
+  return 'card_' + subjId + '_' + dateStr.replace(/-/g, '') + '_t' + topicIdx;
+}
+
+function cardExists(cardId) { return !!reviewCards[cardId]; }
+
+function genCardFromTopic(subjId, dateStr, topicIdx) {
+  var dd = allReports[dateStr];
+  if (!dd) return;
+  var data = dd[subjId];
+  if (!data || !data.topics) return;
+  var t = data.topics[topicIdx];
+  if (!t) return;
+
+  var cardId = cardIdFromTopic(subjId, dateStr, topicIdx);
+  if (cardExists(cardId)) return;
+
+  var pointsText = flattenPointsForCard(t.points || []);
+
+  var card = {
+    id: cardId, subject: subjId, date: dateStr, title: t.title, summary: t.summary || '',
+    points_text: pointsText,
+    difficulty: null, stability: null, fsrs_state: 'Learning',
+    last_reviewed: null, next_review: null, reps: 0, lapses: 0,
+    created_at: Date.now(), source: 'daily_report'
+  };
+  reviewCards[card.id] = card;
+  saveReviewStore();
+  renderReviewView();
+}
+
+function flattenPointsForCard(points) {
+  var lines = [];
+  function walk(pts, indent) {
+    for (var i = 0; i < pts.length; i++) {
+      lines.push((indent ? '  '.repeat(indent) + '· ' : '') + pts[i].text);
+      if (pts[i].children && pts[i].children.length) walk(pts[i].children, indent + 1);
+    }
+  }
+  walk(points, 0);
+  return lines.join('\n');
+}
+
+// Review session
+function startReview(mode) {
+  mode = mode || 'full';
+  var now = Date.now();
+  var dueIds = [];
+  for (var id in reviewCards) {
+    if (fsrsIsDue(reviewCards[id], now)) dueIds.push(id);
+  }
+  dueIds.sort(function(a, b) {
+    return fsrsCurrentR(reviewCards[a], now) - fsrsCurrentR(reviewCards[b], now);
+  });
+  if (dueIds.length > reviewSettings.max_reviews_per_day) {
+    dueIds = dueIds.slice(0, reviewSettings.max_reviews_per_day);
+  }
+  if (dueIds.length === 0) {
+    document.getElementById('reviewPanel').style.display = 'block';
+    document.getElementById('reviewFront').style.display = 'none';
+    document.getElementById('reviewBack').style.display = 'none';
+    document.getElementById('reviewProgress').style.display = 'none';
+    document.getElementById('reviewDone').style.display = 'block';
+    document.getElementById('reviewDoneStats').textContent = '没有待复习的卡片，干得好！';
+    return;
+  }
+  reviewSession = { active: true, queue: dueIds, index: 0, currentCard: null, mode: mode };
+  document.getElementById('reviewPanel').style.display = 'block';
+  document.getElementById('reviewDone').style.display = 'none';
+  document.getElementById('reviewProgress').style.display = 'block';
+  showReviewProgress();
+  showNextCard();
+}
+
+function quickReview() { startReview('quick'); }
+
+function showReviewProgress() {
+  document.getElementById('reviewProgress').textContent = (reviewSession.index + 1) + ' / ' + reviewSession.queue.length;
+}
+
+function showNextCard() {
+  if (reviewSession.index >= reviewSession.queue.length) {
+    endReview();
+    return;
+  }
+  var cid = reviewSession.queue[reviewSession.index];
+  var card = reviewCards[cid];
+  reviewSession.currentCard = card;
+
+  document.getElementById('reviewFront').style.display = 'flex';
+  document.getElementById('reviewBack').style.display = 'none';
+  document.getElementById('reviewDone').style.display = 'none';
+  document.getElementById('reviewProgress').style.display = 'block';
+  showReviewProgress();
+
+  document.getElementById('reviewTitle').textContent = card.title;
+  document.getElementById('reviewSummary').textContent = card.summary || '';
+
+  var s = SUBJECTS.find(function(x) { return x.id === card.subject; });
+  var badge = document.getElementById('reviewBadge');
+  badge.textContent = (s ? s.icon : '') + ' ' + (card.subject === 'english' ? '英语一' : s ? s.name : card.subject);
+  badge.className = 'card-subject-badge badge-' + (card.subject === 'english' ? 'en' : card.subject === '807' ? '807' : '706');
+
+  if (reviewSession.mode === 'quick') {
+    document.getElementById('reviewBackContent').textContent = card.points_text;
+    document.getElementById('reviewFront').style.display = 'none';
+    document.getElementById('reviewBack').style.display = 'flex';
+  }
+}
+
+function flipCard() {
+  document.getElementById('reviewFront').style.display = 'none';
+  document.getElementById('reviewBack').style.display = 'flex';
+  document.getElementById('reviewBackContent').textContent = reviewSession.currentCard.points_text;
+}
+
+function rateCard(rating) {
+  var card = reviewSession.currentCard;
+  var now = Date.now();
+  var result;
+  if (!card.last_reviewed) {
+    result = fsrsInit(rating);
+    result.last_reviewed = now;
+    result.next_review = now + result.stability * 24 * 3600 * 1000;
+    result.reps = 1;
+    result.lapses = rating === 1 ? 1 : 0;
+  } else {
+    result = fsrsSchedule(card, rating, now);
+  }
+  card.difficulty = result.difficulty;
+  card.stability = result.stability;
+  card.fsrs_state = result.state;
+  card.last_reviewed = result.last_reviewed;
+  card.next_review = result.next_review;
+  card.reps = result.reps;
+  card.lapses = result.lapses;
+
+  reviewHistory.push({
+    card_id: card.id, rating: rating, timestamp: now,
+    retrievability_before: result.retrievability_before
+  });
+  saveReviewStore();
+  reviewSession.index++;
+  setTimeout(showNextCard, 250);
+}
+
+function endReview() {
+  var done = reviewSession.index;
+  reviewSession = { active: false, queue: [], index: 0, currentCard: null, mode: 'full' };
+  document.getElementById('reviewFront').style.display = 'none';
+  document.getElementById('reviewBack').style.display = 'none';
+  document.getElementById('reviewProgress').style.display = 'none';
+  document.getElementById('reviewDone').style.display = 'block';
+  document.getElementById('reviewDoneStats').textContent = '完成 ' + done + ' 张卡片';
+
+  // Auto-sync after review
+  if (!isLocalMode() && getSyncToken()) syncToGitHub();
+
+  setTimeout(function() {
+    document.getElementById('reviewPanel').style.display = 'none';
+    renderReviewView();
+  }, 1500);
+}
+
+// Review view rendering
+function goReview() {
+  document.getElementById('homeView').classList.remove('active');
+  document.getElementById('subjectView').classList.remove('active');
+  document.getElementById('reviewView').classList.add('active');
+  currentView = 'review'; currentSubject = '';
+
+  // Auto-pull sync data from server (local mode) or GitHub Pages
+  loadSyncFromServer().then(function() { renderReviewView(); });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderReviewView() {
+  var now = Date.now();
+  var dueIds = [];
+  for (var id in reviewCards) {
+    if (fsrsIsDue(reviewCards[id], now)) dueIds.push(id);
+  }
+  dueIds.sort(function(a, b) {
+    return fsrsCurrentR(reviewCards[a], now) - fsrsCurrentR(reviewCards[b], now);
+  });
+
+  // Stats
+  var doneToday = reviewHistory.filter(function(h) {
+    return new Date(h.timestamp).toDateString() === new Date().toDateString();
+  }).length;
+
+  document.getElementById('reviewStatsBar').innerHTML =
+    '<div class="rev-stat due"><div class="rv">' + dueIds.length + '</div><div class="rl">待复习</div></div>' +
+    '<div class="rev-stat done"><div class="rv">' + doneToday + '</div><div class="rl">今日已完成</div></div>' +
+    '<div class="rev-stat total"><div class="rv">' + Object.keys(reviewCards).length + '</div><div class="rl">总卡片</div></div>';
+
+  // No cards state
+  var noCards = Object.keys(reviewCards).length === 0;
+  document.getElementById('reviewNoCards').style.display = noCards ? 'block' : 'none';
+  document.getElementById('reviewQueue').style.display = noCards ? 'none' : 'block';
+  document.getElementById('startBtnBar').style.display = dueIds.length > 0 ? 'flex' : 'none';
+  document.getElementById('queueCount').textContent = '(' + dueIds.length + ')';
+
+  if (noCards) return;
+
+  // Queue
+  var qhtml = '';
+  for (var i = 0; i < Math.min(dueIds.length, 20); i++) {
+    var card = reviewCards[dueIds[i]];
+    var r = fsrsCurrentR(card, now);
+    var rpct = Math.round(r * 100);
+    var rcls = rpct < 60 ? 'r-low' : rpct < 80 ? 'r-mid' : 'r-high';
+    var badgeCls = card.subject === 'english' ? 'ben' : card.subject === '807' ? 'b807' : 'b706';
+    var meta = (card.reps || 0) + '次复习 · ' + fsrsIntervalText(card, now);
+    qhtml += '<div class="rq-item"><div class="rq-badge ' + badgeCls + '"></div>';
+    qhtml += '<div class="rq-info"><div class="rq-title">' + escHtml(card.title) + '</div><div class="rq-meta">' + meta + '</div></div>';
+    qhtml += '<div class="rq-r ' + rcls + '">' + rpct + '%</div></div>';
+  }
+  document.getElementById('reviewQueue').innerHTML = qhtml;
+
+  // If manage panel open, refresh it
+  var mp = document.getElementById('managePanel');
+  if (mp.style.display !== 'none') renderManage();
+}
+
+// Card generation buttons in reports
+function renderSubjectReport(subjId, data, dateStr) {
+  var s = SUBJECTS.find(function(x) { return x.id === subjId; });
+  var topics = data.topics || [];
+  var cs = subjId === 'english' ? 'en' : subjId;
+  var nc = subjId === 'english' ? 'nen' : (subjId === '807' ? 'n807' : 'n706');
+  var duration = data.audio_duration || '';
+
+  var h = '<div class="rmc subj-' + cs + '">';
+  h += '<div class="rmc-topbar">';
+  h += '<span class="r-icon">' + s.icon + '</span>';
+  h += '<span class="r-subj-name ' + nc + '">' + (data.subject_name || s.fullName) + '</span>';
+  if (duration) h += '<span class="r-phase">' + escHtml(duration) + '</span>';
+  h += '</div>';
+  h += '<div class="rmc-content">';
+  h += '<div style="padding:6px 0 10px">';
+  h += '<button class="ra-btn" onclick="toggleSubjAudio(event,\'' + subjId + '\',\'' + dateStr + '\')" id="btn_' + subjId + '_' + dateStr.replace(/-/g, '') + '">▶️ 朗读复习</button>';
+  h += '</div>';
+
+  for (var i = 0; i < topics.length; i++) {
+    var t = topics[i];
+    var hasPoints = t.points && t.points.length > 0;
+    var tid = 't_' + subjId + '_' + dateStr.replace(/-/g, '') + '_' + i;
+    var cid = cardIdFromTopic(subjId, dateStr, i);
+    var hasCard = cardExists(cid);
+
+    h += '<div class="si"><div class="si-head">';
+    h += '<span class="si-title">' + escHtml(t.title) + '</span>';
+    h += '<button class="gen-card-btn' + (hasCard ? ' has-card' : '') + '" onclick="event.stopPropagation();' + (hasCard ? '' : 'genCardFromTopic(\'' + subjId + '\',\'' + dateStr + '\',' + i + ')') + '">' + (hasCard ? '✓ 已制卡' : '+ 制卡') + '</button>';
+    h += '</div>';
+
+    if (hasPoints) {
+      h += '<div class="view-toggle">';
+      h += '<button class="on" onclick="switchView(\'' + tid + '\',\'tree\')">📋 层级</button>';
+      h += '<button onclick="switchView(\'' + tid + '\',\'map\')">🗺️ 导图</button>';
+      h += '</div>';
+      h += '<div class="tree" id="' + tid + '_tree">' + renderTree(t.points) + '</div>';
+      h += '<div class="mindmap-svg" id="' + tid + '_map">' + renderMindMap(s.id, t.title, t.points) + '</div>';
+    } else if (t.summary) {
+      h += '<div class="si-body">' + simpleMd(t.summary) + '</div>';
+    }
+    h += '</div>';
+  }
+
+  if (data.quiz) {
+    h += '<div class="quiz-block"><div class="rb-label">📊 测验结果</div>';
+    h += '<div class="qz">' + data.quiz.correct + '/' + data.quiz.total + ' 正确 · ' + data.quiz.accuracy + '</div>';
+    if (data.quiz.wrong_items) h += '<div style="font-size:.73rem;color:var(--text2)">错题：' + data.quiz.wrong_items.map(function(w) { return escHtml(w); }).join('、') + '</div>';
+    h += '</div>';
+  }
+  if (data.key_takeaways && data.key_takeaways.length) {
+    h += '<div class="rb recall"><div class="rb-label recall">🧠 必记要点</div><ul>' + data.key_takeaways.map(function(r) { return '<li>' + escHtml(r) + '</li>'; }).join('') + '</ul></div>';
+  }
+  if (data.weak_points && data.weak_points.length) {
+    h += '<div class="rb weak"><div class="rb-label weak">⚠️ 薄弱点</div><ul>' + data.weak_points.map(function(w) { return '<li>' + escHtml(w) + '</li>'; }).join('') + '</ul></div>';
+  }
+  if (data.tomorrow_note) {
+    h += '<div class="rb"><div class="rb-label plan">📅 明日</div><ul><li>' + escHtml(data.tomorrow_note) + '</li></ul></div>';
+  }
+
+  h += '</div></div>';
+  return h;
+}
+
+// Card management
+function toggleReviewManage() {
+  var mp = document.getElementById('managePanel');
+  var btn = document.getElementById('btnManage');
+  var show = mp.style.display === 'none' || !mp.style.display;
+  mp.style.display = show ? 'block' : 'none';
+  btn.textContent = show ? '⚙ 关闭管理' : '⚙ 管理卡片';
+
+  if (show && !isLocalMode() && !getSyncToken()) {
+    document.getElementById('syncSetup').style.display = 'block';
+  }
+  if (show) renderManage();
+}
+
+function renderManage() {
+  var filter = document.getElementById('manageFilter').value;
+  var cards = [];
+  for (var id in reviewCards) {
+    if (filter !== 'all' && reviewCards[id].subject !== filter) continue;
+    cards.push(reviewCards[id]);
+  }
+  cards.sort(function(a, b) { return (a.next_review || Infinity) - (b.next_review || Infinity); });
+
+  var h = '';
+  for (var i = 0; i < cards.length; i++) {
+    var c = cards[i];
+    var badgeCls = c.subject === 'english' ? 'ben' : c.subject === '807' ? 'b807' : 'b706';
+    var meta = (c.reps || 0) + '次复习 · ' + fsrsIntervalText(c, Date.now());
+    h += '<div class="manage-item">';
+    h += '<div class="rq-badge ' + badgeCls + '"></div>';
+    h += '<div class="mi-title">' + escHtml(c.title) + '</div>';
+    h += '<div class="mi-meta">' + meta + '</div>';
+    h += '<button class="mi-del" onclick="deleteCard(\'' + c.id + '\')">删除</button>';
+    h += '</div>';
+  }
+  if (cards.length === 0) h = '<div class="empty"><p>暂无卡片</p></div>';
+  document.getElementById('manageList').innerHTML = h;
+}
+
+function deleteCard(cardId) {
+  if (!confirm('删除这张卡片？')) return;
+  delete reviewCards[cardId];
+  saveReviewStore();
+  renderManage();
+  renderReviewView();
+}
+
+function resetAllCards() {
+  if (!confirm('确定删除全部复习卡片？此操作不可撤销。')) return;
+  reviewCards = {};
+  reviewHistory = [];
+  saveReviewStore();
+  renderManage();
+  renderReviewView();
+}
+
+// Export/import
+function exportCards() {
+  var blob = new Blob([JSON.stringify({ cards: reviewCards, history: reviewHistory, settings: reviewSettings }, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'kaoyan_review_backup_' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+}
+
+function importCards() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var data = JSON.parse(ev.target.result);
+        if (data.cards) {
+          var merged = {};
+          for (var id in data.cards) merged[id] = data.cards[id];
+          // Keep local cards that have more reviews
+          for (var id in reviewCards) {
+            var local = reviewCards[id];
+            var imported = merged[id];
+            if (!imported || (local.reps || 0) > (imported.reps || 0)) merged[id] = local;
+          }
+          reviewCards = merged;
+          if (data.history) reviewHistory = data.history;
+          if (data.settings) reviewSettings = data.settings;
+          saveReviewStore();
+          renderReviewView();
+          renderManage();
+          alert('导入完成：' + Object.keys(data.cards).length + ' 张卡片');
+        }
+      } catch(ex) { alert('导入失败：文件格式错误'); }
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  input.click();
+}
+
+// Update renderHome to include review card
+var _origRenderHome = renderHome;
+renderHome = function() {
+  _origRenderHome();
+
+  // Add review card to dashboard
+  var now = Date.now();
+  var dueCount = 0;
+  for (var id in reviewCards) {
+    if (fsrsIsDue(reviewCards[id], now)) dueCount++;
+  }
+  var totalCards = Object.keys(reviewCards).length;
+
+  var dash = document.getElementById('dashboard');
+  var dh = dash.innerHTML;
+  dh += '<div class="dc rev" onclick="goReview()">';
+  dh += '<div class="icon">📋</div><div class="name">复习调度</div>';
+  dh += '<div class="pct">' + (dueCount > 0 ? dueCount + '张' : '无') + '</div>';
+  dh += '<div class="info">' + totalCards + '张总 · 待复习</div>';
+  dh += '</div>';
+  dash.innerHTML = dh;
+  dash.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
+};
+
+// goHome also hides review view
+var _origGoHome = goHome;
+goHome = function() {
+  document.getElementById('reviewView').classList.remove('active');
+  document.getElementById('managePanel').style.display = 'none';
+  _origGoHome();
+};
+
+// Auto-load review_sync.json from GitHub Pages (phone) or local server (PC)
+document.addEventListener('DOMContentLoaded', function() {
+  loadReviewStore();
+  loadSyncFromServer();
+  // Auto-import prebuilt cards on first visit
+  tryAutoImportPrebuilt();
+});
+
+async function tryAutoImportPrebuilt() {
+  if (Object.keys(reviewCards).length > 0) return;  // Already has cards
+  try {
+    var r = await fetch('./prebuilt_cards.json?t=' + Date.now());
+    if (!r.ok) return;
+    var data = await r.json();
+    if (!data.cards) return;
+    for (var id in data.cards) {
+      data.cards[id].created_at = Date.now();
+    }
+    reviewCards = data.cards;
+    saveReviewStore();
+    console.log('预建卡片已导入: ' + Object.keys(data.cards).length + ' 张');
+  } catch(_) {}
+}
+</script>
 function showVoiceDebug() {
   var overlay = document.getElementById('dbgOverlay');
   overlay.classList.add('show');
