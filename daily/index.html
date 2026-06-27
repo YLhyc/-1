@@ -281,6 +281,31 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
 .sync-status.ok { background:#eef5e8; color:#5b8c3e; }
 .sync-status.err { background:#fce8ec; color:#c7533a; }
 .sync-status.syncing { background:#e8f1fa; color:#3a7ec7; }
+/* Dashboard */
+.dashboard-panel { margin-top:10px; }
+.dash-section { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); padding:14px; margin-bottom:12px; }
+.dash-sec-title { font-size:.78rem; font-weight:700; margin-bottom:10px; }
+.dash-legend { font-size:.68rem; color:var(--text2); text-align:center; margin-top:4px; }
+.heatmap { display:flex; flex-direction:column; gap:4px; }
+.heatmap-row { display:flex; align-items:center; gap:6px; font-size:.7rem; }
+.heatmap-label { width:60px; flex-shrink:0; text-align:right; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.heatmap-cells { display:flex; gap:4px; flex:1; }
+.heatmap-cell { height:20px; border-radius:3px; flex:1; min-width:20px; transition:background .3s; position:relative; }
+.heatmap-subj-hdr { font-size:.67rem; font-weight:700; color:var(--text2); margin:6px 0 2px 0; padding:2px 0 2px 66px; }
+.wk-item { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); font-size:.75rem; }
+.wk-item:last-child { border-bottom:none; }
+.wk-rank { font-weight:700; font-size:.85rem; width:22px; text-align:center; flex-shrink:0; }
+.wk-rank.wk-red { color:#c7533a; }
+.wk-rank.wk-orange { color:#e87040; }
+.wk-title { flex:1; font-weight:600; }
+.wk-r { font-size:.7rem; padding:2px 8px; border-radius:99px; font-weight:600; }
+.wk-r.red { background:#fce8ec; color:#c7533a; }
+.wk-r.orange { background:#fef0eb; color:#e87040; }
+.wk-r.yellow { background:#fef9f0; color:#c77d20; }
+.tag-filter-bar { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+.tag-chip { font-size:.68rem; padding:4px 12px; border-radius:99px; border:1.5px solid var(--border); background:var(--card); color:var(--text2); cursor:pointer; transition:all .12s; -webkit-tap-highlight-color:transparent; font-weight:500; }
+.tag-chip.active { background:#7c3aed; color:#fff; border-color:#7c3aed; font-weight:700; }
+.tag-chip:active { transform:scale(.95); }
 </style>
 </head>
 <body>
@@ -323,6 +348,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     <div class="back-bar">
       <button class="back-btn" onclick="goHome()">&larr; 返回首页</button>
       <span style="flex:1"></span>
+      <button class="back-btn" onclick="toggleDashboard()" id="btnDash" style="margin-right:4px">📊 仪表盘</button>
       <button class="back-btn" onclick="toggleReviewManage()" id="btnManage">⚙ 管理卡片</button>
     </div>
 
@@ -342,11 +368,34 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     </div>
 
     <div class="sec-hdr"><h2>📋 今日待复习</h2><span class="queue-count" id="queueCount" style="font-size:.75rem;color:var(--text2)"></span></div>
+    <div class="tag-filter-bar" id="tagFilterBar" style="display:none">
+      <button class="tag-chip active" onclick="setTagFilter('all')">全部</button>
+      <button class="tag-chip" onclick="setTagFilter('#必考')">#必考</button>
+      <button class="tag-chip" onclick="setTagFilter('#T0')">#T0</button>
+      <button class="tag-chip" onclick="setTagFilter('#重点')">#重点</button>
+    </div>
     <div class="rqueue" id="reviewQueue"></div>
 
     <div class="rq-btns" id="startBtnBar" style="display:none">
       <button class="ra-btn start-btn" onclick="startReview()">▶ 开始复习</button>
       <button class="ra-btn" onclick="quickReview()">⚡ 快速复习</button>
+    </div>
+
+    <!-- Memory dashboard -->
+    <div class="dashboard-panel" id="dashboardPanel" style="display:none">
+      <div class="dash-section">
+        <div class="dash-sec-title">📉 遗忘曲线（R值分布）</div>
+        <canvas id="forgettingCanvas" width="320" height="160" style="width:100%;max-width:500px;height:auto;border-radius:10px;background:var(--bg)"></canvas>
+        <div class="dash-legend" id="forgettingLegend"></div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-sec-title">🎯 科目掌握度热力图</div>
+        <div id="heatmapGrid"></div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-sec-title">⚠️ 考前最薄弱（R值最低10张）</div>
+        <div id="weakestList"></div>
+      </div>
     </div>
 
     <!-- Card review panel -->
@@ -900,6 +949,7 @@ var reviewCards = {};
 var reviewHistory = [];
 var reviewSettings = { daily_new_cards: 10, max_reviews_per_day: 50, target_retention: 0.9 };
 var reviewSession = { active: false, queue: [], index: 0, currentCard: null, mode: 'full' };
+var tagFilter = 'all';
 var STORE_KEY = 'kaoyan_review_cards';
 var HISTORY_KEY = 'kaoyan_review_history';
 var SETTINGS_KEY = 'kaoyan_review_settings';
@@ -1147,6 +1197,15 @@ function startReview(mode) {
   dueIds.sort(function(a, b) {
     return fsrsCurrentR(reviewCards[a], now) - fsrsCurrentR(reviewCards[b], now);
   });
+
+  // Apply tag filter
+  if (tagFilter !== 'all') {
+    dueIds = dueIds.filter(function(cid) {
+      var t = reviewCards[cid].tags;
+      return t && t.indexOf(tagFilter) !== -1;
+    });
+  }
+
   if (dueIds.length > reviewSettings.max_reviews_per_day) {
     dueIds = dueIds.slice(0, reviewSettings.max_reviews_per_day);
   }
@@ -1283,10 +1342,22 @@ function goReview() {
   document.getElementById('reviewView').classList.add('active');
   currentView = 'review'; currentSubject = '';
 
-  // Auto-pull sync data from server (local mode) or GitHub Pages
-  loadSyncFromServer().then(function() { renderReviewView(); });
+  // Auto-pull from GitHub (local mode) then merge
+  autoPullFromGitHub().then(function() {
+    return loadSyncFromServer();
+  }).then(function() { renderReviewView(); });
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setTagFilter(tag) {
+  tagFilter = tag;
+  // Update chip styles
+  var chips = document.querySelectorAll('.tag-chip');
+  for (var i = 0; i < chips.length; i++) {
+    chips[i].classList.toggle('active', chips[i].textContent === tag || (tag === 'all' && chips[i].textContent === '全部'));
+  }
+  renderReviewView();
 }
 
 function renderReviewView() {
@@ -1298,6 +1369,19 @@ function renderReviewView() {
   dueIds.sort(function(a, b) {
     return fsrsCurrentR(reviewCards[a], now) - fsrsCurrentR(reviewCards[b], now);
   });
+
+  // Apply tag filter
+  if (tagFilter !== 'all') {
+    dueIds = dueIds.filter(function(cid) {
+      var t = reviewCards[cid].tags;
+      return t && t.indexOf(tagFilter) !== -1;
+    });
+  }
+
+  // Show tag filter bar
+  var hasTags = false;
+  for (var id in reviewCards) { if (reviewCards[id].tags && reviewCards[id].tags.length) { hasTags = true; break; } }
+  document.getElementById('tagFilterBar').style.display = (hasTags && Object.keys(reviewCards).length > 0) ? 'flex' : 'none';
 
   // Stats — per-subject counts
   var doneToday = reviewHistory.filter(function(h) {
@@ -1556,13 +1640,184 @@ goHome = function() {
   _origGoHome();
 };
 
+// Auto-pull from GitHub (local mode only — calls server's git-pull endpoint)
+async function autoPullFromGitHub() {
+  if (!isLocalMode()) return;
+  try {
+    var r = await fetch('/api/git-pull', { method: 'POST' });
+    if (r.ok) {
+      var data = await r.json();
+      if (data.ok) console.log('git-pull:', data.output);
+    }
+  } catch(_) {}
+}
+
 // Auto-load review_sync.json from GitHub Pages (phone) or local server (PC)
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   loadReviewStore();
-  loadSyncFromServer();
+  await autoPullFromGitHub();
+  await loadSyncFromServer();
   // Auto-import prebuilt cards on first visit
   tryAutoImportPrebuilt();
 });
+
+// ── Memory Dashboard ──
+
+function toggleDashboard() {
+  var dp = document.getElementById('dashboardPanel');
+  var btn = document.getElementById('btnDash');
+  var show = dp.style.display === 'none' || !dp.style.display;
+  dp.style.display = show ? 'block' : 'none';
+  btn.style.fontWeight = show ? '700' : '400';
+  if (show) renderDashboard();
+}
+
+function renderDashboard() {
+  renderForgettingCurve();
+  renderHeatmap();
+  renderWeakest();
+}
+
+function renderForgettingCurve() {
+  var now = Date.now();
+  var cards = [];
+  for (var id in reviewCards) cards.push(reviewCards[id]);
+  if (cards.length === 0) return;
+
+  var bins = [0,0,0,0,0,0,0,0,0,0];
+  var labels = ['0','10','20','30','40','50','60','70','80','100'];
+  for (var i = 0; i < cards.length; i++) {
+    var r = fsrsCurrentR(cards[i], now);
+    var idx = Math.min(9, Math.floor(r * 10));
+    bins[idx]++;
+  }
+  var maxBin = Math.max.apply(null, bins) || 1;
+
+  var canvas = document.getElementById('forgettingCanvas');
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var w = canvas.clientWidth;
+  var h = 160;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  var barW = (w - 20) / 10 - 4;
+  var chartH = h - 28;
+
+  for (var i = 0; i < 10; i++) {
+    var barH = (bins[i] / maxBin) * chartH;
+    var x = 10 + i * (barW + 4);
+    var y = chartH - barH;
+    var ratio = i / 9;
+    var rv = Math.round(255 * ratio);
+    var gv = Math.round(255 * (1 - ratio));
+    ctx.fillStyle = 'rgb(' + rv + ',' + gv + ',80)';
+    ctx.fillRect(x, y, barW, barH);
+    ctx.fillStyle = '#888';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(labels[i], x + barW/2, h - 2);
+  }
+
+  var total = cards.length;
+  var lowR = cards.filter(function(c) { return fsrsCurrentR(c, now) < 0.5; }).length;
+  var midR = cards.filter(function(c) { var r = fsrsCurrentR(c, now); return r >= 0.5 && r < 0.8; }).length;
+  var highR = cards.filter(function(c) { return fsrsCurrentR(c, now) >= 0.8; }).length;
+  document.getElementById('forgettingLegend').innerHTML =
+    '<span style="color:#c7533a">🔴 ' + lowR + '张&lt;50%</span> &nbsp; ' +
+    '<span style="color:#c77d20">🟠 ' + midR + '张 50-80%</span> &nbsp; ' +
+    '<span style="color:#5b8c3e">🟢 ' + highR + '张 ≥80%</span>';
+}
+
+function renderHeatmap() {
+  var now = Date.now();
+
+  var groups706 = [
+    { label: '杜甫', match: /杜甫/ },
+    { label: '诗经', match: /诗经|六义|赋比兴/ },
+    { label: '史记', match: /史记|纪传体|互见法|实录|发愤著书/ },
+    { label: '红楼梦', match: /红楼梦|宝黛|大观园|判词/ },
+    { label: '庄子', match: /庄子|逍遥|齐物|养生|三言/ },
+    { label: '建安风骨', match: /建安|三曹|曹操|七子/ },
+    { label: '苏轼', match: /苏轼|以诗为词|旷达|赤壁赋/ },
+    { label: '柳永', match: /柳永|慢词|铺叙|雅俗/ },
+    { label: '屈原', match: /屈原|离骚|香草美人|风骚/ },
+    { label: '李白', match: /李白|豪放飘逸/ },
+    { label: '水浒·三国', match: /水浒|三国|类型化/ },
+    { label: '古代汉语', match: /宾[语话]|六书|古今字|通假|标点翻译|异体字|形声|假借/ },
+  ];
+  var groups807 = [
+    { label: '鲁迅', match: /鲁迅|狂人|阿Q|呐喊|彷徨|杂文/ },
+    { label: '曹禺·雷雨', match: /曹禺|雷雨|繁漪|三一律/ },
+    { label: '文研会社', match: /文[学研]|创造社/ },
+    { label: '五四', match: /五四|胡适|陈独秀|人的文学|文学革命/ },
+    { label: '朦胧诗', match: /朦胧|北岛|舒婷|顾城|今天/ },
+    { label: '讲话', match: /讲话|延安|工农兵|赵树理|解放区/ },
+  ];
+
+  var h = '';
+
+  function renderGroup(groups, subject, icon) {
+    var html = '<div class="heatmap-subj-hdr">' + icon + ' ' + (subject === '706' ? '古代文学·汉语' : '现当代·评论') + '</div>';
+    html += '<div class="heatmap">';
+    for (var g = 0; g < groups.length; g++) {
+      var grp = groups[g];
+      var matchedCards = [];
+      for (var id in reviewCards) {
+        var c = reviewCards[id];
+        if (c.subject === subject && grp.match.test(c.title)) matchedCards.push(c);
+      }
+      if (matchedCards.length === 0) {
+        html += '<div class="heatmap-row"><div class="heatmap-label">' + grp.label + '</div><div class="heatmap-cells"><div class="heatmap-cell" style="background:#ddd" title="无卡片"></div></div></div>';
+      } else {
+        html += '<div class="heatmap-row"><div class="heatmap-label">' + grp.label + '</div><div class="heatmap-cells">';
+        for (var j = 0; j < matchedCards.length; j++) {
+          var rr = fsrsCurrentR(matchedCards[j], now);
+          var rc = Math.round(220 * (1 - rr));
+          var gc = Math.round(200 * rr);
+          html += '<div class="heatmap-cell" style="background:rgb(' + rc + ',' + gc + ',60);flex:1" title="' + escHtml(matchedCards[j].title) + ': ' + Math.round(rr*100) + '%"></div>';
+        }
+        html += '</div></div>';
+      }
+    }
+    html += '</div>';
+    return html;
+  }
+
+  h += renderGroup(groups706, '706', '📜');
+  h += renderGroup(groups807, '807', '📖');
+
+  document.getElementById('heatmapGrid').innerHTML = h;
+}
+
+function renderWeakest() {
+  var now = Date.now();
+  var all = [];
+  for (var id in reviewCards) {
+    all.push({ card: reviewCards[id], r: fsrsCurrentR(reviewCards[id], now) });
+  }
+  all.sort(function(a, b) { return a.r - b.r; });
+  all = all.slice(0, 10);
+
+  var h = '';
+  for (var i = 0; i < all.length; i++) {
+    var item = all[i];
+    var rpct = Math.round(item.r * 100);
+    var rankCls = i < 3 ? 'wk-red' : i < 6 ? 'wk-orange' : '';
+    var rCls = rpct < 40 ? 'red' : rpct < 60 ? 'orange' : 'yellow';
+    var badgeCls = item.card.subject === '807' ? 'b807' : 'b706';
+    h += '<div class="wk-item">';
+    h += '<span class="wk-rank ' + rankCls + '">' + (i + 1) + '</span>';
+    h += '<span class="rq-badge ' + badgeCls + '" style="width:8px;height:8px"></span>';
+    h += '<span class="wk-title">' + escHtml(item.card.title) + '</span>';
+    h += '<span class="wk-r ' + rCls + '">' + rpct + '%</span>';
+    h += '</div>';
+  }
+  if (all.length === 0) h = '<div class="empty"><p>暂无卡片数据</p></div>';
+  document.getElementById('weakestList').innerHTML = h;
+}
 
 async function tryAutoImportPrebuilt() {
   if (Object.keys(reviewCards).length > 0) return;  // Already has cards
