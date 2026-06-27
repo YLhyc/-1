@@ -956,8 +956,8 @@ async function loadSyncFromServer() {
             if (!remote || (local.reps || 0) > (remote.reps || 0)) merged[id] = local;
           }
           reviewCards = merged;
-          if (data.history) reviewHistory = data.history;
-          if (data.settings) reviewSettings = data.settings;
+          mergeHistory(data.history || []);
+          if (data.settings && typeof data.settings.target_retention === 'number') reviewSettings = data.settings;
           saveReviewStore();
         }
       }
@@ -977,12 +977,28 @@ async function loadSyncFromServer() {
           if (!remote || (local.reps || 0) > (remote.reps || 0)) merged[id] = local;
         }
         reviewCards = merged;
-        if (data.history) reviewHistory = data.history;
-        if (data.settings) reviewSettings = data.settings;
+        mergeHistory(data.history || []);
+        if (data.settings && typeof data.settings.target_retention === 'number') reviewSettings = data.settings;
         saveReviewStore();
       }
     }
   } catch(_) {}
+}
+
+function mergeHistory(remoteHistory) {
+  var existing = {};
+  for (var i = 0; i < reviewHistory.length; i++) {
+    var h = reviewHistory[i];
+    existing[h.card_id + '_' + h.timestamp] = true;
+  }
+  for (var i = 0; i < remoteHistory.length; i++) {
+    var h = remoteHistory[i];
+    var key = h.card_id + '_' + h.timestamp;
+    if (!existing[key]) {
+      reviewHistory.push(h);
+      existing[key] = true;
+    }
+  }
 }
 
 // GitHub API sync (phone -> GitHub)
