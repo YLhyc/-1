@@ -1459,8 +1459,11 @@ function resetAllCards() {
   reviewCards = {};
   reviewHistory = [];
   saveReviewStore();
-  renderManage();
-  renderReviewView();
+  // Re-import prebuilt cards after reset
+  tryAutoImportPrebuilt().then(function() {
+    renderManage();
+    renderReviewView();
+  });
 }
 
 // Export/import
