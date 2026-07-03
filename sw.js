@@ -1,4 +1,4 @@
-const CACHE = 'kv-20260702-204204';
+const CACHE = 'kv-20260703-152937';
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
