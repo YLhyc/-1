@@ -1,7 +1,14 @@
 {
   "description": "每日报告索引 — 前端通过此文件发现可用的报告日期",
-  "last_updated": "2026-06-25T23:30:00",
+  "last_updated": "2026-07-05T23:59:00",
   "available_dates": [
+    {
+      "date": "2026-07-05",
+      "has_706": true,
+      "has_807": false,
+      "has_english": false,
+      "note": "706六书答题框架+标点翻译赵威后问齐使"
+    },
     {
       "date": "2026-06-25",
       "has_706": false,
