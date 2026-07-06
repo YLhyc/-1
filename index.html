@@ -203,7 +203,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-06 22:08</div>
+  <div class="home-sub">Build 2026-07-06 22:33</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -226,7 +226,7 @@
       <h2>红宝书</h2>
       <p>考研英语红宝书全词汇 · 6550词</p>
       <div class="card-stat">
-        <span>6550词</span>
+        <span>6549词</span>
         <span id="statHbDone"></span>
       </div>
     </div>
@@ -346,7 +346,7 @@ window.onerror = function(msg, url, line, col, err) {
 };
 // ═══════════ DATA ═══════════
 var VOCAB = [{"en": "rehearsal", "cn": "排练"}, {"en": "instruction", "cn": "教学/指导"}, {"en": "vocabulary", "cn": "词汇（量）"}, {"en": "sophisticated", "cn": "复杂的/精密的"}, {"en": "stimulate", "cn": "激发/刺激"}, {"en": "desert", "cn": "荒凉的（形容词）"}, {"en": "cliché", "cn": "陈词滥调"}, {"en": "description", "cn": "描写/描述"}, {"en": "omission", "cn": "遗漏/忽略"}, {"en": "casual", "cn": "随意的/不正式的"}, {"en": "preference", "cn": "偏好"}, {"en": "promote", "cn": "提升/促进"}, {"en": "literacy", "cn": "素养/读写能力"}, {"en": "identify with", "cn": "与…共情/认同"}, {"en": "literary", "cn": "文学的"}, {"en": "infer", "cn": "推断"}, {"en": "formidable", "cn": "令人生畏的/难对付的"}, {"en": "primary", "cn": "小学的/初级的"}, {"en": "reluctant", "cn": "不情愿的"}, {"en": "groundbreaking", "cn": "开创性的/突破性的"}, {"en": "commission", "cn": "委托/受托"}, {"en": "randomised", "cn": "随机的"}, {"en": "pedagogy", "cn": "教学法"}, {"en": "shipwreck", "cn": "船只失事/船难"}, {"en": "The Tempest", "cn": "《暴风雨》（莎剧）"}, {"en": "accompany", "cn": "伴随/配合"}, {"en": "rarer", "cn": "更罕见的（rare比较级）"}, {"en": "peer-reviewed", "cn": "同行评审的"}, {"en": "expansive", "cn": "开阔的/详尽的"}, {"en": "atmospheric", "cn": "大气的/大气状况的"}, {"en": "evident", "cn": "明显的"}, {"en": "resilient", "cn": "有韧性的/适应力强的"}, {"en": "embed", "cn": "嵌入/融入"}, {"en": "replicate", "cn": "复制/再现"}, {"en": "land a punch", "cn": "打出一拳（引申：引发轰动）"}, {"en": "scale", "cn": "规模/大小"}, {"en": "emission", "cn": "排放"}, {"en": "crisis", "cn": "危机"}, {"en": "suspicion", "cn": "怀疑"}, {"en": "satellite", "cn": "卫星"}, {"en": "operation", "cn": "运行/操作"}, {"en": "unremitting", "cn": "不懈的/不间断的"}, {"en": "mushroom", "cn": "迅速增长/如雨后春笋般涌现（v.）；蘑菇（n.）"}, {"en": "inform", "cn": "告知/通知"}, {"en": "ultimate", "cn": "最终的/根本的"}, {"en": "ultimately", "cn": "最终地/归根结底"}, {"en": "grave", "cn": "严重的/严峻的"}, {"en": "groundless", "cn": "毫无根据的"}, {"en": "interpretation", "cn": "解读/阐释"}, {"en": "interpret", "cn": "解读/阐释/口译"}, {"en": "demonstrate", "cn": "展示/证明/演示"}, {"en": "impetus", "cn": "推动力/动力"}, {"en": "ingenuity", "cn": "创造力/精巧"}, {"en": "illustrate", "cn": "说明/阐明（用例子或图表）"}, {"en": "urgent", "cn": "紧急的/紧迫的"}, {"en": "urgency", "cn": "紧迫性/紧急"}, {"en": "endeavour", "cn": "努力/事业（n.）；努力做（v.）"}, {"en": "foster", "cn": "培养/促进"}, {"en": "astonish", "cn": "使惊讶/使吃惊"}, {"en": "astonishingly", "cn": "令人惊讶地"}, {"en": "triumph", "cn": "胜利/巨大成功"}, {"en": "initiative", "cn": "倡议/主动性/新方案"}, {"en": "scale back", "cn": "缩减/缩小规模"}, {"en": "cut back", "cn": "削减/减少"}, {"en": "make the case", "cn": "说明理由/论证观点"}, {"en": "lend itself to", "cn": "适合/有助于"}, {"en": "energy-intensive", "cn": "能源密集型的"}, {"en": "labor-intensive", "cn": "劳动密集型的"}, {"en": "net-zero", "cn": "净零排放"}, {"en": "capital-intensive", "cn": "资本密集型的"}, {"en": "quality-oriented", "cn": "素质导向的（素质教育：quality-oriented education）"}];
-var HONGBAOSHU = null; var HB_COUNT = 6550; var HB_LOADING = false; var HB_CBS = [];
+var HONGBAOSHU = null; var HB_COUNT = 6549; var HB_LOADING = false; var HB_CBS = [];
 function loadHB(cb) {
   if (HONGBAOSHU) { if (cb) cb(); return; }
   if (cb) HB_CBS.push(cb);
@@ -368,7 +368,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783346900;
+var BUILD_TS = 1783348387;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -382,13 +382,13 @@ function prefsKey() { return currentDict === 'vocab' ? 'vv_prefs' : 'hb_prefs'; 
 function countsKey() { return currentDict === 'vocab' ? 'vv_counts' : 'hb_counts'; }
 
 function loadPrefs(dict) {
-  return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_prefs' : 'hb_prefs') || '{}');
+  try { return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_prefs' : 'hb_prefs') || '{}'); } catch(e) { return {}; }
 }
 function savePrefs(dict, obj) {
   localStorage.setItem(dict === 'vocab' ? 'vv_prefs' : dict === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs', JSON.stringify(obj));
 }
 function loadCounts(dict) {
-  return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_counts' : 'hb_counts') || '{}');
+  try { return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_counts' : 'hb_counts') || '{}'); } catch(e) { return {}; }
 }
 function saveCounts(dict, obj) {
   localStorage.setItem(dict === 'vocab' ? 'vv_counts' : dict === 'hongbaoshu' ? 'hb_counts' : 'vv_counts', JSON.stringify(obj));
@@ -420,8 +420,8 @@ function migrateDict(dict) {
   var lsC = dict === 'vocab' ? 'vv_counts' : 'hb_counts';
   var lsPBak = lsP + '_backup';
   var lsCBak = lsC + '_backup';
-  var oldP = JSON.parse(localStorage.getItem(lsP) || '{}');
-  var oldC = JSON.parse(localStorage.getItem(lsC) || '{}');
+  var oldP; try { oldP = JSON.parse(localStorage.getItem(lsP) || '{}'); } catch(e) { oldP = {}; }
+  var oldC; try { oldC = JSON.parse(localStorage.getItem(lsC) || '{}'); } catch(e) { oldC = {}; }
   var needsP = false, needsC = false;
   var newP = {}, newC = {};
   var words = getWords(dict);
@@ -458,18 +458,18 @@ function migrateDict(dict) {
 migrateDict('vocab');
 // Only load HB data if migration from numeric keys is needed
 (function() {
-  var hp = JSON.parse(localStorage.getItem('hb_prefs') || '{}');
+  var hp; try { hp = JSON.parse(localStorage.getItem('hb_prefs') || '{}'); } catch(e) { hp = {}; }
   for (var k in hp) { if (/^[0-9]+$/.test(k)) { loadHB(function() { migrateDict('hongbaoshu'); }); return; } }
   // Also migrate counts if needed
-  var hc = JSON.parse(localStorage.getItem('hb_counts') || '{}');
+  var hc; try { hc = JSON.parse(localStorage.getItem('hb_counts') || '{}'); } catch(e) { hc = {}; }
   for (var k in hc) { if (/^[0-9]+$/.test(k)) { loadHB(function() { migrateDict('hongbaoshu'); }); return; } }
 })();
 
 // Recovery: if prefs are empty but backup exists, offer restore
 function checkRecovery(dict) {
   var lsP = dict === 'vocab' ? 'vv_prefs' : 'hb_prefs';
-  var prefs = JSON.parse(localStorage.getItem(lsP) || '{}');
-  var bk = JSON.parse(localStorage.getItem(lsP + '_backup') || '{}');
+  var prefs; try { prefs = JSON.parse(localStorage.getItem(lsP) || '{}'); } catch(e) { prefs = {}; }
+  var bk; try { bk = JSON.parse(localStorage.getItem(lsP + '_backup') || '{}'); } catch(e) { bk = {}; }
   if (Object.keys(prefs).length === 0 && Object.keys(bk).length > 0) {
     return true;
   }
@@ -629,9 +629,9 @@ function updateHomeStats() {
   })();
   (function() {
     // UF stats
-    var ufPrefs = JSON.parse(localStorage.getItem('uf_prefs') || '{}');
-    var vvP = JSON.parse(localStorage.getItem('vv_prefs') || '{}');
-    var hbP = JSON.parse(localStorage.getItem('hb_prefs') || '{}');
+    var ufPrefs; try { ufPrefs = JSON.parse(localStorage.getItem('uf_prefs') || '{}'); } catch(e) { ufPrefs = {}; }
+    var vvP; try { vvP = JSON.parse(localStorage.getItem('vv_prefs') || '{}'); } catch(e) { vvP = {}; }
+    var hbP; try { hbP = JSON.parse(localStorage.getItem('hb_prefs') || '{}'); } catch(e) { hbP = {}; }
     var total = 0, veryHard = 0, removed = 0;
     for (var k in vvP) { if (vvP[k] === 'hard') total++; }
     for (var k in hbP) { if (hbP[k] === 'hard') total++; }
@@ -1492,6 +1492,8 @@ function directImportAll() {
       if (d === 'vocab' || d === 'hongbaoshu') {
         if (data.p) {
           var prefs = loadPrefs(d);
+          // Delete local keys not in import (propagates restore/unmark)
+          for (var k in prefs) { if (!(k in data.p)) delete prefs[k]; }
           for (var k in data.p) { prefs[k] = data.p[k]; }
           savePrefs(d, prefs);
         }
@@ -1503,6 +1505,8 @@ function directImportAll() {
       } else if (d === 'uf') {
         try {
           var uf = JSON.parse(localStorage.getItem('uf_prefs')||'{}');
+          // Delete local keys not in import (propagates restore/unmark)
+          for (var k in uf) { if (!(k in data)) delete uf[k]; }
           for (var k in data) { uf[k] = data[k]; }
           localStorage.setItem('uf_prefs', JSON.stringify(uf));
         } catch(e) {}
