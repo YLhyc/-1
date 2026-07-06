@@ -81,7 +81,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="nav-back" onclick="location.href='../'">← 首页</button>
     <span class="nav-title">红宝书</span>
   </div>
-  <div class="hero-sub">考研英语词汇 · 2026-07-06 20:47</div>
+  <div class="hero-sub">考研英语词汇 · 2026-07-06 22:08</div>
   <div class="jump-row">
     <input type="number" class="jump-input" id="jumpInput" placeholder="输入Unit编号 (1-219)…" min="1" max="219">
     <button class="jump-btn" onclick="jumpToUnit()">跳转</button>
@@ -111,7 +111,13 @@ var WORDS = [{"en": "radiate", "cn": "散发；流露；发出"}, {"en": "radian
 var UNIT_COUNT = 219;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
-var TS = 1783342075;
+var TS = 1783346900;
+
+// ── Word-based key ──
+function wordKey(u, g, w) {
+  var idx = u * UNIT_SIZE + g * GROUP_SIZE + w;
+  return idx < WORDS.length ? WORDS[idx].en : '_invalid_' + idx;
+}
 
 // ── State ──
 var curUnit = -1, curGroup = -1;
@@ -148,7 +154,7 @@ function renderUnits() {
   for (var u = 0; u < UNIT_COUNT; u++) {
     var ws = wordsInUnit(u), marked = 0, fam = 0;
     for (var w = 0; w < ws.length; w++) {
-      var k = String(u * UNIT_SIZE + w);
+      var k = ws[w].en;
       if (p[k] === 'familiar') { marked++; fam++; }
       else if (p[k]) marked++;
     }
@@ -176,8 +182,7 @@ function jumpToUnit() {
 function loadCounts() { return JSON.parse(localStorage.getItem('hb_counts') || '{}'); }
 function saveCounts(obj) { localStorage.setItem('hb_counts', JSON.stringify(obj)); }
 function updateCount(g, w) {
-  var gw = globalIdx(curUnit, g, w);
-  var cnt = (loadCounts()[String(gw)] || 0);
+  var cnt = (loadCounts()[wordKey(curUnit, g, w)] || 0);
   var el = document.querySelector('#wb' + g + '_' + w + ' .wb-count');
   if (el) el.textContent = cnt > 0 ? cnt : '';
 }
@@ -274,8 +279,7 @@ function renderGroups() {
     var gFam = 0;
     var gH = '';
     for (var w = 0; w < groupWords.length; w++) {
-      var gw = globalIdx(curUnit, g, w);
-      var pref = p[String(gw)];
+      var pref = p[wordKey(curUnit, g, w)];
       if (pref === 'familiar') { gFam++; totalFam++; }
       gH += '<div class="word-swipe" id="ws' + g + '_' + w + '">'
         + '<div class="ws-actions">'
@@ -310,7 +314,7 @@ function updateBadges() {
       var lw = w - g * GROUP_SIZE;
       var bd = document.querySelector('#wb' + g + '_' + lw + ' .wb-badge');
       if (!bd) continue;
-      var pref = p[String(globalIdx(curUnit, g, lw))];
+      var pref = p[wordKey(curUnit, g, lw)];
       bd.className = 'wb-badge'; bd.textContent = '';
       if (pref === 'familiar') { bd.classList.add('wb-familiar'); bd.textContent = '熟'; }
       else if (pref === 'hard') { bd.classList.add('wb-hard'); bd.textContent = '难'; }
@@ -330,7 +334,7 @@ function clearHl() {
 
 // ── Prefs ──
 function setPref(g, w, act) {
-  var key = String(globalIdx(curUnit, g, w)), p = prefs();
+  var key = wordKey(curUnit, g, w), p = prefs();
   if (act === 'reset') delete p[key]; else p[key] = act;
   savePrefs(p); updateBadges();
   var ws = wordsInUnit(curUnit);
@@ -339,7 +343,7 @@ function setPref(g, w, act) {
     var end = Math.min((gi+1) * GROUP_SIZE, ws.length);
     var fam = 0;
     for (var wi = gi * GROUP_SIZE; wi < end; wi++) {
-      if (p[String(globalIdx(curUnit, gi, wi - gi*GROUP_SIZE))] === 'familiar') fam++;
+      if (p[wordKey(curUnit, gi, wi - gi*GROUP_SIZE)] === 'familiar') fam++;
     }
     var gh = document.querySelector('#groupContainer .word-group:nth-child('+(gi+1)+') .group-stat');
     if (gh) gh.textContent = (end - gi*GROUP_SIZE) + '词 · ' + fam + '熟';
@@ -359,8 +363,7 @@ function loadAu(slot, url) {
 }
 
 function getWordLabels(w) {
-  var globalW = curUnit * UNIT_SIZE + curGroup * GROUP_SIZE + w;
-  var pf = prefs()[String(globalW)];
+  var pf = prefs()[wordKey(curUnit, curGroup, w)];
   if (pf === 'familiar') return {labels: ['英①','中①'], isENs: [true, false]};
   if (pf === 'hard') return {labels: ['英①','英②','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'], isENs: [true,true,false,false,true,false,true,false,true,false,true,false]};
   return {labels: ['英①','英②','中①','中②','英③','中③','英④','中④'], isENs: [true,true,false,false,true,false,true,false]};
@@ -402,6 +405,13 @@ function onSegEnd() {
   curAudio = au;
   au.playbackRate = 1.0;
   hl(curGroup, wIdx);
+
+  if (step === 0) {
+    var cnts = loadCounts();
+    cnts[wordKey(curUnit, curGroup, wIdx)] = (cnts[wordKey(curUnit, curGroup, wIdx)] || 0) + 1;
+    saveCounts(cnts);
+    updateCount(curGroup, wIdx);
+  }
 
   var segDone = false;
   function next() { if (!segDone) { segDone = true; onSegEnd(); } }
@@ -459,14 +469,14 @@ function playWord() {
 
   if (step === 0) {
     var cnts = loadCounts();
-    var kk = String(globalIdx(curUnit, curGroup, wIdx));
+    var kk = wordKey(curUnit, curGroup, wIdx);
     cnts[kk] = (cnts[kk] || 0) + 1;
     saveCounts(cnts);
     updateCount(curGroup, wIdx);
   }
 
   var segDone = false;
-  function next() { if (!segDone) { segDone = true; step++; onSegEnd(); } }
+  function next() { if (!segDone) { segDone = true; onSegEnd(); } }
   au.onended = function() {
     var nx = nextStepAfter(step, wIdx);
     if (!nx) { done(); return; }
@@ -552,6 +562,8 @@ var preloaded = {};
 var preloadDone = false;
 
 function preloadUnit(u) {
+  // Revoke old blob URLs to prevent memory leak
+  for (var k in preloaded) { URL.revokeObjectURL(preloaded[k]); }
   preloaded = {}; preloadDone = false;
   loadAudioBundle(u);
 }

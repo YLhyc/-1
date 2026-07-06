@@ -203,7 +203,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-06 20:47</div>
+  <div class="home-sub">Build 2026-07-06 22:08</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -368,7 +368,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783342075;
+var BUILD_TS = 1783346900;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -456,7 +456,14 @@ function migrateDict(dict) {
   }
 }
 migrateDict('vocab');
-loadHB(function() { migrateDict('hongbaoshu'); });
+// Only load HB data if migration from numeric keys is needed
+(function() {
+  var hp = JSON.parse(localStorage.getItem('hb_prefs') || '{}');
+  for (var k in hp) { if (/^[0-9]+$/.test(k)) { loadHB(function() { migrateDict('hongbaoshu'); }); return; } }
+  // Also migrate counts if needed
+  var hc = JSON.parse(localStorage.getItem('hb_counts') || '{}');
+  for (var k in hc) { if (/^[0-9]+$/.test(k)) { loadHB(function() { migrateDict('hongbaoshu'); }); return; } }
+})();
 
 // Recovery: if prefs are empty but backup exists, offer restore
 function checkRecovery(dict) {
@@ -1399,7 +1406,7 @@ function doImport() {
     var counts = loadCounts(syncMode);
     if (json.p) {
       for (var k in json.p) {
-        if (!prefs[k]) prefs[k] = json.p[k];
+        prefs[k] = json.p[k];
       }
     }
     if (json.c) {
@@ -1444,6 +1451,7 @@ function directExportAll() {
       all[d] = { p: loadPrefs(d), c: loadCounts(d) };
     });
     try { all['uf'] = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) { all['uf'] = {}; }
+    try { all['uf_counts'] = JSON.parse(localStorage.getItem('uf_counts')||'{}'); } catch(e) { all['uf_counts'] = {}; }
     var raw = JSON.stringify(all);
     var code = b64encode(raw);
     // Always show in textarea — most reliable on iOS
@@ -1484,7 +1492,7 @@ function directImportAll() {
       if (d === 'vocab' || d === 'hongbaoshu') {
         if (data.p) {
           var prefs = loadPrefs(d);
-          for (var k in data.p) { if (!prefs[k]) prefs[k] = data.p[k]; }
+          for (var k in data.p) { prefs[k] = data.p[k]; }
           savePrefs(d, prefs);
         }
         if (data.c) {
@@ -1495,8 +1503,14 @@ function directImportAll() {
       } else if (d === 'uf') {
         try {
           var uf = JSON.parse(localStorage.getItem('uf_prefs')||'{}');
-          for (var k in data) { if (!uf[k]) uf[k] = data[k]; }
+          for (var k in data) { uf[k] = data[k]; }
           localStorage.setItem('uf_prefs', JSON.stringify(uf));
+        } catch(e) {}
+      } else if (d === 'uf_counts') {
+        try {
+          var uc = JSON.parse(localStorage.getItem('uf_counts')||'{}');
+          for (var k in data) { if (data[k] > (uc[k]||0)) uc[k] = data[k]; }
+          localStorage.setItem('uf_counts', JSON.stringify(uc));
         } catch(e) {}
       }
     });
