@@ -303,7 +303,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-07 14:10</div>
+  <div class="home-sub">Build 2026-07-07 14:34</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -599,7 +599,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783404606;
+var BUILD_TS = 1783406093;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -742,15 +742,15 @@ function getStepInfo(dict, unitIdx, gIdx, wIdx) {
 
 // ═══════════ VIEW SWITCHING ═══════════
 function showView(name) {
-  document.getElementById('view-home').style.display = name === 'home' ? 'block' : 'none';
-  document.getElementById('view-units').style.display = name === 'units' ? 'block' : 'none';
-  document.getElementById('view-groups').style.display = name === 'groups' ? 'block' : 'none';
+  hideAllViews();
+  document.getElementById('view-' + name).style.display = 'block';
+  updateHomeStats();
 }
 
 function showHome() {
   stopAll();
   showView('home');
-  updateHomeStats();
+  updateMorningCard();
 }
 
 function openDict(dict) {
@@ -1881,19 +1881,21 @@ function updateMorningMeta(item, result) {
   var m = meta[key] || {};
   var now = Date.now();
   if (!m.firstAt) m.firstAt = now;
-  m.lastAt = now;
-  m.listens = (m.listens || 0) + 1;
   m.hardHits = m.hardHits || 0;
   m.familiarHits = m.familiarHits || 0;
   m.replayHits = m.replayHits || 0;
+  m.listens = m.listens || 0;
   m.lastResult = result;
-  if (result === 'hard') m.hardHits++;
-  if (result === 'familiar') m.familiarHits++;
-  if (result === 'replay') m.replayHits++;
-  var pref = item.source === 'vocab'
-    ? (function() { try { return JSON.parse(localStorage.getItem('vv_prefs')||'{}'); } catch(e) { return {}; } })()
-    : (function() { try { return JSON.parse(localStorage.getItem('hb_prefs')||'{}'); } catch(e) { return {}; } })();
-  m.nextDueAt = calcNextDueAt(m, pref[item.en]);
+  if (result === 'hard') { m.hardHits++; m.listens++; m.lastAt = now; }
+  else if (result === 'familiar') { m.familiarHits++; m.listens++; m.lastAt = now; }
+  else if (result === 'replay') { m.replayHits++; /* no listens++, no schedule change */ }
+  else { m.listens++; m.lastAt = now; }
+  if (result !== 'replay') {
+    var pref = item.source === 'vocab'
+      ? (function() { try { return JSON.parse(localStorage.getItem('vv_prefs')||'{}'); } catch(e) { return {}; } })()
+      : (function() { try { return JSON.parse(localStorage.getItem('hb_prefs')||'{}'); } catch(e) { return {}; } })();
+    m.nextDueAt = calcNextDueAt(m, pref[item.en]);
+  }
   meta[key] = m;
   saveMorningMeta(meta);
 }
@@ -1932,6 +1934,7 @@ function buildMorningCandidates() {
     var w = VOCAB[i];
     if (!w.en || !w.cn) continue;
     if (ufP['vocab_' + w.en] === 'removed') continue;
+    if (prefsV[w.en] === 'hidden') continue;
     candidates.push({
       source: 'vocab', key: 'vocab:' + w.en, en: w.en, cn: w.cn,
       idx: i, dict: 'vocab', reason: ''
@@ -1944,6 +1947,7 @@ function buildMorningCandidates() {
       var w = HONGBAOSHU[i];
       if (!w.en || !w.cn) continue;
       if (ufP['hb_' + w.en] === 'removed') continue;
+      if (prefsH[w.en] === 'hidden') continue;
       candidates.push({
         source: 'hb', key: 'hb:' + w.en, en: w.en, cn: w.cn,
         idx: i, dict: 'hongbaoshu', reason: ''
@@ -2000,7 +2004,20 @@ function buildMorningQueue() {
     }
     return arr;
   }
-  shuffle(due); shuffle(stale); shuffle(hard); shuffle(fresh); shuffle(other);
+  shuffle(due); shuffle(stale); shuffle(hard); shuffle(other);
+  // Fresh: sequential by source+idx (from cursor), not shuffled
+  fresh.sort(function(a, b) {
+    if (a.source !== b.source) return a.source === 'vocab' ? -1 : 1;
+    return a.idx - b.idx;
+  });
+  var cursor = loadMorningCursor();
+  var freshFromCursor = [], freshWrap = [];
+  for (var i = 0; i < fresh.length; i++) {
+    var minIdx = fresh[i].source === 'vocab' ? cursor.vocabNextIdx : cursor.hbNextIdx;
+    if (fresh[i].idx >= minIdx) freshFromCursor.push(fresh[i]);
+    else freshWrap.push(fresh[i]);
+  }
+  fresh = freshFromCursor.concat(freshWrap);
 
   var q = [];
   var quota = {
@@ -2047,6 +2064,15 @@ function buildMorningQueue() {
 
   morningQueue = q;
   morningQueueBuiltAt = Date.now();
+  // Advance cursor past fresh words included in queue
+  var maxVocab = cursor.vocabNextIdx, maxHb = cursor.hbNextIdx;
+  for (var i = 0; i < q.length; i++) {
+    if (q[i].reason === 'fresh') {
+      if (q[i].source === 'vocab' && q[i].idx >= maxVocab) maxVocab = q[i].idx + 1;
+      else if (q[i].source === 'hb' && q[i].idx >= maxHb) maxHb = q[i].idx + 1;
+    }
+  }
+  saveMorningCursor({ hbNextIdx: maxHb, vocabNextIdx: maxVocab });
   return q;
 }
 
@@ -2246,7 +2272,7 @@ function loadMorningVocabFile(fileIdx, cb) {
       _mVocabAudio[fileIdx] = words;
       cb(null);
     })
-    .catch(function() { cb('err'); });
+    .catch(function() { delete _mVocabLoading[fileIdx]; cb('err'); });
 }
 
 function loadMorningHbUnit(unitIdx, cb) {
@@ -2271,14 +2297,15 @@ function loadMorningHbUnit(unitIdx, cb) {
       _mHbAudio[unitIdx] = words;
       cb(null);
     })
-    .catch(function() { cb('err'); });
+    .catch(function() { delete _mHbLoading[unitIdx]; cb('err'); });
 }
 
 function ensureMorningAudio(item, cb) {
   if (item.source === 'vocab') {
-    var map = AUDIO_MAP[String(item.idx)];
-    if (!map) { cb('no_audio'); return; }
-    var fileIdx = map[0];
+    var gIdx = Math.floor(item.idx / GROUP_SIZE);
+    var gMap = AUDIO_MAP[String(gIdx)];
+    if (!gMap) { cb('no_audio'); return; }
+    var fileIdx = gMap[0];
     loadMorningVocabFile(fileIdx, function(err) {
       if (err) { cb('err'); return; }
       var file = _mVocabAudio[fileIdx];
@@ -2353,28 +2380,16 @@ function morningSegUrl(item, step) {
   var info = getMorningStepLabels(item);
   if (step >= info.labels.length) return null;
   var lang = info.isENs[step] ? 'en' : 'cn';
-  // Find the audio for this item
   if (item.source === 'vocab') {
-    var map = AUDIO_MAP[String(item.idx)];
-    if (!map) return null;
-    var fileIdx = map[0];
-    var file = _mVocabAudio[fileIdx];
-    if (!file) return null;
-    // For vocab, the audio is stored by group offset within the file
-    // The AUDIO_MAP maps global group idx → [fileIdx, offset_in_file]
-    var offsetInFile = map[1];
-    var wordInFile = offsetInFile + item.idx; // This needs to account for group structure
-    // Actually, let's find the word by searching within the group
-    // Simpler: find by iterating through the group
     var gIdx = Math.floor(item.idx / GROUP_SIZE);
     var wInGroup = item.idx % GROUP_SIZE;
     var gMap = AUDIO_MAP[String(gIdx)];
     if (!gMap) return null;
-    var file2 = _mVocabAudio[gMap[0]];
-    if (!file2) return null;
-    var offset2 = gMap[1] + wInGroup;
-    if (offset2 >= file2.length) return null;
-    return lang === 'en' ? file2[offset2].en_url : file2[offset2].cn_url;
+    var file = _mVocabAudio[gMap[0]];
+    if (!file) return null;
+    var offset = gMap[1] + wInGroup;
+    if (offset >= file.length) return null;
+    return lang === 'en' ? file[offset].en_url : file[offset].cn_url;
   } else {
     var unitIdx = Math.floor(item.idx / 30);
     var unit = _mHbAudio[unitIdx];
@@ -2441,27 +2456,11 @@ function playMorningCurrent() {
 
   ensureMorningAudio(item, function(err, fileOrUnit) {
     if (err) { skipMorningWord(); return; }
-    var url = morningSegUrl(item, morningStep);
-    if (!url) {
-      // No more steps for this word
-      morningSessionCompleted++;
-      updateMorningMeta(item, 'normal');
-      morningPos++;
-      morningStep = 0;
-      if (morningPos >= morningQueue.length) {
-        maybeExtendOrEnd();
-        return;
-      }
-      playMorningCurrent();
-      return;
-    }
 
-    var au = morningGetAu(morningSlot);
-    au.onended = function() {
-      morningStep++;
-      var nxUrl = morningSegUrl(item, morningStep);
-      if (!nxUrl) {
-        // Word complete
+    function playSegment() {
+      var url = morningSegUrl(item, morningStep);
+      if (!url) {
+        // Word complete — all segments done
         morningSessionCompleted++;
         updateMorningMeta(item, morningSingle ? 'replay' : 'normal');
         morningSingle = false;
@@ -2471,45 +2470,43 @@ function playMorningCurrent() {
           maybeExtendOrEnd();
           return;
         }
-        // Preload next word's first segment
-        var nextItem = morningQueue[morningPos];
-        ensureMorningAudio(nextItem, function() {
-          var nextUrl = morningSegUrl(nextItem, 0);
-          if (nextUrl) morningLoadAu(1 - morningSlot, nextUrl);
-        });
-        morningSlot = 1 - morningSlot;
         playMorningCurrent();
         return;
       }
-      // Next segment same word
-      morningLoadAu(1 - morningSlot, nxUrl);
-      morningSlot = 1 - morningSlot;
-      updateMorningPlayerUI();
-      morningGetAu(morningSlot).play().catch(function() {});
-    };
-    au.onerror = function() {
-      skipMorningWord();
-    };
-    morningLoadAu(morningSlot, url);
-    updateMorningPlayerUI();
-    au.play().catch(function() { skipMorningWord(); });
 
-    // Preload next segment
-    var nextStep = morningStep + 1;
-    var nextUrl = morningSegUrl(item, nextStep);
-    if (!nextUrl) {
-      // Preload next word
-      var nextIdx = morningPos + 1;
-      if (nextIdx < morningQueue.length) {
-        var nItem = morningQueue[nextIdx];
-        ensureMorningAudio(nItem, function() {
-          var nUrl = morningSegUrl(nItem, 0);
-          if (nUrl) morningLoadAu(1 - morningSlot, nUrl);
-        });
+      var au = morningGetAu(morningSlot);
+      au.onended = function() {
+        morningStep++;
+        morningSlot = 1 - morningSlot;
+        playSegment();
+      };
+      au.onerror = function() {
+        skipMorningWord();
+      };
+      morningLoadAu(morningSlot, url);
+      updateMorningPlayerUI();
+      au.play().catch(function() { skipMorningWord(); });
+
+      // Preload next segment into the OTHER slot
+      var otherSlot = 1 - morningSlot;
+      var nextStep = morningStep + 1;
+      var nextUrl = morningSegUrl(item, nextStep);
+      if (!nextUrl) {
+        // Last segment of this word — preload next word's first segment
+        var nextIdx = morningPos + 1;
+        if (nextIdx < morningQueue.length) {
+          var nItem = morningQueue[nextIdx];
+          ensureMorningAudio(nItem, function() {
+            var nUrl = morningSegUrl(nItem, 0);
+            if (nUrl) morningLoadAu(otherSlot, nUrl);
+          });
+        }
+      } else {
+        morningLoadAu(otherSlot, nextUrl);
       }
-    } else {
-      morningLoadAu(1 - morningSlot, nextUrl);
     }
+
+    playSegment();
   });
 }
 
@@ -2548,12 +2545,12 @@ function maybeExtendOrEnd() {
     }
   }
 
-  // Remove already-played words from extend
-  var playedKeys = {};
-  for (var p = 0; p < morningPos; p++) {
-    playedKeys[morningQueue[p].key] = true;
+  // Remove already-queued words (played + unplayed) from extend
+  var queueKeys = {};
+  for (var p = 0; p < morningQueue.length; p++) {
+    queueKeys[morningQueue[p].key] = true;
   }
-  extend = extend.filter(function(e) { return !playedKeys[e.key]; });
+  extend = extend.filter(function(e) { return !queueKeys[e.key]; });
 
   if (extend.length === 0) {
     endMorningSession();
@@ -2623,6 +2620,7 @@ function markMorningHard() {
     localStorage.setItem(prefsKey, JSON.stringify(prefs));
   } catch(e) {}
   morningSessionHard++;
+  morningSessionCompleted++;
   morningStopAudio();
   morningPos++;
   morningStep = 0;
@@ -2641,6 +2639,7 @@ function markMorningFamiliar() {
     localStorage.setItem(prefsKey, JSON.stringify(prefs));
   } catch(e) {}
   morningSessionFamiliar++;
+  morningSessionCompleted++;
   morningStopAudio();
   morningPos++;
   morningStep = 0;
@@ -2663,8 +2662,7 @@ function skipMorningWord() {
 
 function confirmEndMorning() {
   if (morningPlaying && !morningEnded) {
-    if (confirm('晨听还在进行中，是否结束本次晨听？
-已播放 ' + morningSessionCompleted + ' 词，点击"确定"结束并保存。')) {
+    if (confirm('晨听还在进行中，是否结束本次晨听？\n已播放 ' + morningSessionCompleted + ' 词，点击"确定"结束并保存。')) {
       endMorningSession('abandoned');
     }
   } else {
