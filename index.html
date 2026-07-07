@@ -303,7 +303,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-07 14:34</div>
+  <div class="home-sub">Build 2026-07-07 14:46</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -599,7 +599,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783406093;
+var BUILD_TS = 1783406819;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1875,6 +1875,17 @@ function getMorningMeta(item) {
   return meta[morningKey(item)] || null;
 }
 
+function advanceMorningCursor(item) {
+  if (item.reason !== 'fresh') return;
+  var cursor = loadMorningCursor();
+  if (item.source === 'vocab' && item.idx >= cursor.vocabNextIdx) {
+    cursor.vocabNextIdx = item.idx + 1;
+  } else if (item.source === 'hb' && item.idx >= cursor.hbNextIdx) {
+    cursor.hbNextIdx = item.idx + 1;
+  }
+  saveMorningCursor(cursor);
+}
+
 function updateMorningMeta(item, result) {
   var meta = loadMorningMeta();
   var key = morningKey(item);
@@ -1888,7 +1899,7 @@ function updateMorningMeta(item, result) {
   m.lastResult = result;
   if (result === 'hard') { m.hardHits++; m.listens++; m.lastAt = now; }
   else if (result === 'familiar') { m.familiarHits++; m.listens++; m.lastAt = now; }
-  else if (result === 'replay') { m.replayHits++; /* no listens++, no schedule change */ }
+  else if (result === 'replay') { /* no listens++, no schedule change; replayHits counted on button click */ }
   else { m.listens++; m.lastAt = now; }
   if (result !== 'replay') {
     var pref = item.source === 'vocab'
@@ -2064,15 +2075,6 @@ function buildMorningQueue() {
 
   morningQueue = q;
   morningQueueBuiltAt = Date.now();
-  // Advance cursor past fresh words included in queue
-  var maxVocab = cursor.vocabNextIdx, maxHb = cursor.hbNextIdx;
-  for (var i = 0; i < q.length; i++) {
-    if (q[i].reason === 'fresh') {
-      if (q[i].source === 'vocab' && q[i].idx >= maxVocab) maxVocab = q[i].idx + 1;
-      else if (q[i].source === 'hb' && q[i].idx >= maxHb) maxHb = q[i].idx + 1;
-    }
-  }
-  saveMorningCursor({ hbNextIdx: maxHb, vocabNextIdx: maxVocab });
   return q;
 }
 
@@ -2252,9 +2254,10 @@ var _mHbLoading = {};
 function loadMorningVocabFile(fileIdx, cb) {
   if (_mVocabAudio[fileIdx]) { cb(null); return; }
   if (_mVocabLoading[fileIdx]) {
-    // Poll until loaded
+    // Poll until loaded or failed
     var check = setInterval(function() {
       if (_mVocabAudio[fileIdx]) { clearInterval(check); cb(null); }
+      else if (!_mVocabLoading[fileIdx]) { clearInterval(check); cb('err'); }
     }, 100);
     return;
   }
@@ -2280,6 +2283,7 @@ function loadMorningHbUnit(unitIdx, cb) {
   if (_mHbLoading[unitIdx]) {
     var check = setInterval(function() {
       if (_mHbAudio[unitIdx]) { clearInterval(check); cb(null); }
+      else if (!_mHbLoading[unitIdx]) { clearInterval(check); cb('err'); }
     }, 100);
     return;
   }
@@ -2458,10 +2462,12 @@ function playMorningCurrent() {
     if (err) { skipMorningWord(); return; }
 
     function playSegment() {
+      if (!morningPlaying || morningPaused || morningEnded) return;
       var url = morningSegUrl(item, morningStep);
       if (!url) {
         // Word complete — all segments done
         morningSessionCompleted++;
+        advanceMorningCursor(item);
         updateMorningMeta(item, morningSingle ? 'replay' : 'normal');
         morningSingle = false;
         morningPos++;
@@ -2602,6 +2608,14 @@ function toggleMorningPause() {
 }
 
 function replayMorningWord() {
+  // Count replay intent immediately (user signaled this word needs more listening)
+  var item = morningQueue[morningPos];
+  var meta = loadMorningMeta();
+  var key = morningKey(item);
+  var m = meta[key] || {};
+  m.replayHits = (m.replayHits || 0) + 1;
+  meta[key] = m;
+  saveMorningMeta(meta);
   morningStopAudio();
   morningStep = 0;
   morningSingle = true;
@@ -2611,6 +2625,7 @@ function replayMorningWord() {
 function markMorningHard() {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
+  advanceMorningCursor(item);
   updateMorningMeta(item, 'hard');
   // Also write to old prefs
   var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
@@ -2631,6 +2646,7 @@ function markMorningHard() {
 function markMorningFamiliar() {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
+  advanceMorningCursor(item);
   updateMorningMeta(item, 'familiar');
   var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
   try {
@@ -2717,32 +2733,37 @@ function endMorningSession(status) {
   }
 }
 
-// ── Sync: update directExportAll / directImportAll ──
+// ── Sync: override directExportAll to include morning data inline ──
 var _origDirectExportAll = directExportAll;
 directExportAll = function() {
-  _origDirectExportAll();
-  // Append morning data to the textarea
-  setTimeout(function() {
-    try {
-      var ta = document.getElementById('directImportBox');
-      if (!ta || ta.style.display === 'none') return;
-      var textEl = document.getElementById('directImportText');
-      if (!textEl || !textEl.value) return;
-      var all;
-      try {
-        all = JSON.parse(b64decode(textEl.value));
-      } catch(e2) {
-        try { all = JSON.parse(textEl.value); } catch(e3) { return; }
-      }
-      try { all['morning'] = {
-        meta: JSON.parse(localStorage.getItem(MOR_KEYS.meta)||'{}'),
-        settings: JSON.parse(localStorage.getItem(MOR_KEYS.settings)||'{}'),
-        cursor: JSON.parse(localStorage.getItem(MOR_KEYS.cursor)||'{}'),
-        sessions: JSON.parse(localStorage.getItem(MOR_KEYS.sessions)||'[]')
-      }; } catch(e) {}
-      textEl.value = b64encode(JSON.stringify(all));
-    } catch(e) {}
-  }, 100);
+  try {
+    var all = {};
+    ['vocab','hongbaoshu'].forEach(function(d) {
+      all[d] = { p: loadPrefs(d), c: loadCounts(d) };
+    });
+    try { all['uf'] = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) { all['uf'] = {}; }
+    try { all['uf_counts'] = JSON.parse(localStorage.getItem('uf_counts')||'{}'); } catch(e) { all['uf_counts'] = {}; }
+    // Include morning data inline (before encoding, so clipboard gets it too)
+    try { all['morning'] = {
+      meta: JSON.parse(localStorage.getItem(MOR_KEYS.meta)||'{}'),
+      settings: JSON.parse(localStorage.getItem(MOR_KEYS.settings)||'{}'),
+      cursor: JSON.parse(localStorage.getItem(MOR_KEYS.cursor)||'{}'),
+      sessions: JSON.parse(localStorage.getItem(MOR_KEYS.sessions)||'[]')
+    }; } catch(e) {}
+    var raw = JSON.stringify(all);
+    var code = b64encode(raw);
+    var box = document.getElementById('directImportBox');
+    var ta = document.getElementById('directImportText');
+    box.style.display = 'block';
+    ta.value = code;
+    ta.focus();
+    ta.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).catch(function() {});
+    }
+  } catch(e) {
+    alert('导出失败: ' + e.message);
+  }
 };
 
 var _origDirectImportAll = directImportAll;
