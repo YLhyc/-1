@@ -303,7 +303,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-07 16:01</div>
+  <div class="home-sub">Build 2026-07-07 16:23</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -347,52 +347,8 @@
       <textarea id="directImportText" placeholder="在此粘贴之前导出的数据码…" style="width:100%;height:60px;font-size:11px;border:1px solid #ddd;border-radius:8px;padding:6px;"></textarea>
       <button style="background:#007aff;color:#fff;border:none;font-size:11px;cursor:pointer;padding:4px 12px;border-radius:4px;margin-top:4px;" onclick="directImportAll()">确认导入</button>
     </div>
-    <br><button style="background:none;border:1px solid #ddd;color:#999;font-size:10px;cursor:pointer;padding:2px 6px;border-radius:4px;" onclick="toggleDebug()">debug</button>
-    <pre id="debugInfo" style="display:none;text-align:left;font-size:10px;color:#666;margin-top:8px;padding:8px;background:#f0f0f0;border-radius:8px;max-height:200px;overflow:auto;"></pre>
   </div>
 </div>
-
-<!-- Auto status bar: always visible on page load -->
-<div id="statusBar" style="display:none;background:#fff3cd;color:#856404;padding:6px 12px;font-size:11px;text-align:center;border-bottom:1px solid #ffc107;"></div>
-
-<script>
-(function() {
-  var sb = document.getElementById('statusBar');
-  if (!sb) return;
-  var parts = [];
-  function check(k, label) {
-    var v = localStorage.getItem(k);
-    if (v) {
-      try { var o = JSON.parse(v); var n = Object.keys(o).length;
-        if (n > 0) parts.push(label + ':' + n + ' entries');
-      } catch(e) {}
-    }
-  }
-  check('vv_prefs','Vocab marks');
-  check('vv_prefs_backup','Vocab backup');
-  check('hb_prefs','HB marks');
-  check('hb_prefs_backup','HB backup');
-  check('uf_prefs','UF marks');
-  check('uf_prefs_backup','UF backup');
-  if (parts.length > 0) {
-    sb.innerHTML = 'DATA: ' + parts.join(' | ');
-    sb.style.display = 'block';
-  } else {
-    sb.innerHTML = 'NO DATA - <a href="javascript:void(0)" style="color:#856404;text-decoration:underline;font-weight:bold;" onclick="restoreAllBackups()">Click to restore backup</a>';
-    sb.style.display = 'block';
-    sb.style.background = '#f8d7da';
-    sb.style.color = '#721c24';
-    sb.style.borderColor = '#f5c6cb';
-  }
-})();
-function restoreAllBackups() {
-  ['vv_prefs','vv_counts','hb_prefs','hb_counts','uf_prefs','uf_counts'].forEach(function(k) {
-    var bk = localStorage.getItem(k + '_backup');
-    if (bk) localStorage.setItem(k, bk);
-  });
-  location.reload();
-}
-</script>
 
 <!-- ═══════════ UNIT SELECTOR ═══════════ -->
 <div id="view-units" style="display:none;">
@@ -570,10 +526,7 @@ function restoreAllBackups() {
 
 <script>
 window.onerror = function(msg, url, line, col, err) {
-  var el = document.createElement('div');
-  el.style.cssText = 'background:#ff3b30;color:#fff;padding:8px 12px;font-size:11px;position:fixed;top:0;left:0;right:0;z-index:99999;word-break:break-all;';
-  el.textContent = 'JS ERROR line ' + line + ': ' + msg;
-  document.body.insertBefore(el, document.body.firstChild);
+  try { console.error('App error:', msg, line, col, err); } catch(e) {}
 };
 // ═══════════ DATA ═══════════
 var VOCAB = [{"en": "rehearsal", "cn": "排练"}, {"en": "instruction", "cn": "教学/指导"}, {"en": "vocabulary", "cn": "词汇（量）"}, {"en": "sophisticated", "cn": "复杂的/精密的"}, {"en": "stimulate", "cn": "激发/刺激"}, {"en": "desert", "cn": "荒凉的（形容词）"}, {"en": "cliché", "cn": "陈词滥调"}, {"en": "description", "cn": "描写/描述"}, {"en": "omission", "cn": "遗漏/忽略"}, {"en": "casual", "cn": "随意的/不正式的"}, {"en": "preference", "cn": "偏好"}, {"en": "promote", "cn": "提升/促进"}, {"en": "literacy", "cn": "素养/读写能力"}, {"en": "identify with", "cn": "与…共情/认同"}, {"en": "literary", "cn": "文学的"}, {"en": "infer", "cn": "推断"}, {"en": "formidable", "cn": "令人生畏的/难对付的"}, {"en": "primary", "cn": "小学的/初级的"}, {"en": "reluctant", "cn": "不情愿的"}, {"en": "groundbreaking", "cn": "开创性的/突破性的"}, {"en": "commission", "cn": "委托/受托"}, {"en": "randomised", "cn": "随机的"}, {"en": "pedagogy", "cn": "教学法"}, {"en": "shipwreck", "cn": "船只失事/船难"}, {"en": "The Tempest", "cn": "《暴风雨》（莎剧）"}, {"en": "accompany", "cn": "伴随/配合"}, {"en": "rarer", "cn": "更罕见的（rare比较级）"}, {"en": "peer-reviewed", "cn": "同行评审的"}, {"en": "expansive", "cn": "开阔的/详尽的"}, {"en": "atmospheric", "cn": "大气的/大气状况的"}, {"en": "evident", "cn": "明显的"}, {"en": "resilient", "cn": "有韧性的/适应力强的"}, {"en": "embed", "cn": "嵌入/融入"}, {"en": "replicate", "cn": "复制/再现"}, {"en": "land a punch", "cn": "打出一拳（引申：引发轰动）"}, {"en": "scale", "cn": "规模/大小"}, {"en": "emission", "cn": "排放"}, {"en": "crisis", "cn": "危机"}, {"en": "suspicion", "cn": "怀疑"}, {"en": "satellite", "cn": "卫星"}, {"en": "operation", "cn": "运行/操作"}, {"en": "unremitting", "cn": "不懈的/不间断的"}, {"en": "mushroom", "cn": "迅速增长/如雨后春笋般涌现（v.）；蘑菇（n.）"}, {"en": "inform", "cn": "告知/通知"}, {"en": "ultimate", "cn": "最终的/根本的"}, {"en": "ultimately", "cn": "最终地/归根结底"}, {"en": "grave", "cn": "严重的/严峻的"}, {"en": "groundless", "cn": "毫无根据的"}, {"en": "interpretation", "cn": "解读/阐释"}, {"en": "interpret", "cn": "解读/阐释/口译"}, {"en": "demonstrate", "cn": "展示/证明/演示"}, {"en": "impetus", "cn": "推动力/动力"}, {"en": "ingenuity", "cn": "创造力/精巧"}, {"en": "illustrate", "cn": "说明/阐明（用例子或图表）"}, {"en": "urgent", "cn": "紧急的/紧迫的"}, {"en": "urgency", "cn": "紧迫性/紧急"}, {"en": "endeavour", "cn": "努力/事业（n.）；努力做（v.）"}, {"en": "foster", "cn": "培养/促进"}, {"en": "astonish", "cn": "使惊讶/使吃惊"}, {"en": "astonishingly", "cn": "令人惊讶地"}, {"en": "triumph", "cn": "胜利/巨大成功"}, {"en": "initiative", "cn": "倡议/主动性/新方案"}, {"en": "scale back", "cn": "缩减/缩小规模"}, {"en": "cut back", "cn": "削减/减少"}, {"en": "make the case", "cn": "说明理由/论证观点"}, {"en": "lend itself to", "cn": "适合/有助于"}, {"en": "energy-intensive", "cn": "能源密集型的"}, {"en": "labor-intensive", "cn": "劳动密集型的"}, {"en": "net-zero", "cn": "净零排放"}, {"en": "capital-intensive", "cn": "资本密集型的"}, {"en": "quality-oriented", "cn": "素质导向的（素质教育：quality-oriented education）"}];
@@ -599,7 +552,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783411319;
+var BUILD_TS = 1783412622;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1778,25 +1731,6 @@ function directImportAll() {
   el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 →</span>';
 })();
 updateHomeStats();
-
-// Debug: show localStorage state on homepage
-function toggleDebug() {
-  var el = document.getElementById('debugInfo');
-  if (el.style.display === 'none') {
-    var info = [];
-    ['vv_prefs','vv_counts','vv_prefs_backup','hb_prefs','hb_counts','hb_prefs_backup','uf_prefs','uf_counts','uf_prefs_backup'].forEach(function(k) {
-      var v = localStorage.getItem(k);
-      if (v) {
-        try { var o = JSON.parse(v); info.push(k + ': ' + Object.keys(o).length + ' entries, sample=' + JSON.stringify(o).substring(0,200)); }
-        catch(e) { info.push(k + ': (raw) ' + v.substring(0,100)); }
-      } else { info.push(k + ': (empty)'); }
-    });
-    el.textContent = info.join('\n');
-    el.style.display = 'block';
-  } else {
-    el.style.display = 'none';
-  }
-}
 
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
