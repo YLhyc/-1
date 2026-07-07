@@ -195,6 +195,106 @@
     font-size: 14px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
   .update-banner.show { display: block; animation: slideDown 0.3s ease; }
   @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
+  /* ── Morning Mode ── */
+  .morning-card {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+    border: 1px solid #ffc107;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .morning-card:active { opacity: 0.85; }
+  .morning-card .home-icon { font-size: 32px; margin-bottom: 4px; }
+  .morning-card .home-title { font-size: 17px; font-weight: 700; color: #1d1d1f; margin-bottom: 2px; }
+  .morning-card .home-subtitle { font-size: 12px; color: #86868b; margin-bottom: 6px; }
+  .morning-stats { font-size: 11px; color: #6b5e3e; line-height: 1.4; }
+  .morning-nav { display: flex; align-items: center; padding: 12px 16px; padding-top: calc(env(safe-area-inset-top) + 12px); background: #fff; border-bottom: 1px solid #e8e8ed; position: sticky; top: 0; z-index: 10; }
+  .morning-nav-title { flex: 1; text-align: center; font-size: 16px; font-weight: 700; }
+  .morning-nav-back { background: none; border: none; font-size: 24px; color: #007aff; cursor: pointer; padding: 0 8px; }
+  .morning-loading { text-align: center; padding: 60px 20px; }
+  .morning-loading .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #007aff; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .morning-loading-text { font-size: 14px; color: #86868b; }
+  .morning-error { text-align: center; padding: 60px 20px; }
+  .morning-error-text { font-size: 14px; color: #ff3b30; margin-bottom: 16px; }
+  .morning-error button { margin: 4px; padding: 10px 20px; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; }
+  .morning-error .btn-retry { background: #007aff; color: #fff; }
+  .morning-error .btn-home { background: #f0f0f0; color: #1d1d1f; }
+  .morning-error .btn-vocab-only { background: #34c759; color: #fff; }
+  .morning-home-section { padding: 20px 16px; }
+  .morning-home-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .morning-home-sub { font-size: 13px; color: #86868b; margin-bottom: 16px; }
+  .morning-home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .morning-home-stat { background: #f5f5f7; border-radius: 12px; padding: 12px; text-align: center; }
+  .morning-home-stat .mh-num { font-size: 24px; font-weight: 700; color: #1d1d1f; }
+  .morning-home-stat .mh-label { font-size: 11px; color: #86868b; margin-top: 2px; }
+  .morning-btn-row { display: flex; gap: 10px; margin-top: 16px; }
+  .morning-btn {
+    flex: 1; height: 48px; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 600; cursor: pointer;
+    -webkit-appearance: none; outline: none;
+  }
+  .morning-btn:active { opacity: 0.7; }
+  .morning-btn-primary { background: #ff9500; color: #fff; }
+  .morning-btn-secondary { background: #f0f0f0; color: #1d1d1f; }
+  .morning-btn-outline { background: none; border: 1px solid #ddd; color: #666; font-size: 12px; }
+  /* Queue view */
+  .morning-queue-section { margin-bottom: 16px; }
+  .morning-queue-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px; background: #f5f5f7; border-radius: 10px;
+    cursor: pointer; font-size: 14px; font-weight: 600;
+  }
+  .morning-queue-header .mq-count { font-size: 12px; color: #86868b; }
+  .morning-queue-list { padding: 4px 12px 0; }
+  .morning-queue-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+  }
+  .morning-queue-item .mq-en { font-weight: 600; }
+  .morning-queue-item .mq-cn { color: #86868b; font-size: 12px; margin-left: 8px; }
+  .morning-queue-item .mq-meta { font-size: 10px; color: #bbb; }
+  /* Player view */
+  .morning-player { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
+  .morning-player-top { padding: 12px 16px; border-bottom: 1px solid #e8e8ed; }
+  .morning-player-progress { font-size: 12px; color: #86868b; margin-bottom: 4px; }
+  .morning-player-bar { height: 3px; background: #e0e0e0; border-radius: 2px; overflow: hidden; }
+  .morning-player-bar-fill { height: 100%; background: #ff9500; transition: width 0.3s; border-radius: 2px; }
+  .morning-player-word { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+  .morning-player-word .mp-en { font-size: 32px; font-weight: 700; color: #1d1d1f; margin-bottom: 8px; }
+  .morning-player-word .mp-cn { font-size: 18px; color: #86868b; margin-bottom: 8px; }
+  .morning-player-word .mp-step-hint { font-size: 13px; color: #ff9500; font-weight: 500; }
+  .morning-player-word .mp-meta { font-size: 11px; color: #bbb; margin-top: 12px; }
+  .morning-player-controls { padding: 16px; padding-bottom: calc(env(safe-area-inset-bottom) + 16px); border-top: 1px solid #e8e8ed; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .morning-player-controls button {
+    height: 44px; border: none; border-radius: 10px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    -webkit-appearance: none; outline: none;
+  }
+  .morning-player-controls button:active { opacity: 0.7; }
+  .mp-btn-pause { background: #007aff; color: #fff; }
+  .mp-btn-replay { background: #f0f0f0; color: #1d1d1f; }
+  .mp-btn-hard { background: #ff3b30; color: #fff; }
+  .mp-btn-familiar { background: #34c759; color: #fff; }
+  .mp-btn-skip { background: #f0f0f0; color: #8e8e93; }
+  /* Summary view */
+  .morning-summary { text-align: center; padding: 40px 20px; }
+  .morning-summary .ms-icon { font-size: 48px; margin-bottom: 12px; }
+  .morning-summary .ms-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .morning-summary .ms-sub { font-size: 13px; color: #86868b; margin-bottom: 20px; }
+  .morning-summary-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .morning-summary-stat { background: #f5f5f7; border-radius: 12px; padding: 12px; }
+  .morning-summary-stat .ms-num { font-size: 22px; font-weight: 700; }
+  .morning-summary-stat .ms-label { font-size: 11px; color: #86868b; }
+  /* Bottom sticky */
+  .morning-start-sticky {
+    position: sticky; bottom: calc(env(safe-area-inset-bottom) + 12px);
+    margin: 8px 16px;
+  }
+  .morning-start-sticky .morning-btn { width: 100%; }
+
 </style>
 </head>
 <body>
@@ -203,7 +303,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-07 11:07</div>
+  <div class="home-sub">Build 2026-07-07 14:10</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -229,6 +329,13 @@
         <span>6549词</span>
         <span id="statHbDone"></span>
       </div>
+    </div>
+
+    <div class="home-card morning-card" onclick="openMorning()" id="morningCard">
+      <div class="home-icon">🌅</div>
+      <div class="home-title">今日晨听</div>
+      <div class="home-subtitle">25分钟 · 点击生成队列</div>
+      <div class="morning-stats" id="morningCardStats"></div>
     </div>
   </div>
   <div class="total-stat" id="homeSyncLink" style="margin-top:24px;">
@@ -337,6 +444,130 @@ function restoreAllBackups() {
   </div>
 </div>
 
+<!-- ═══════════ MORNING LOADING ═══════════ -->
+<div id="view-morning-loading" style="display:none;">
+  <div class="morning-nav">
+    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <span class="morning-nav-title">今日晨听</span>
+  </div>
+  <div class="morning-loading">
+    <div class="spinner"></div>
+    <div class="morning-loading-text">正在生成今日队列…</div>
+  </div>
+</div>
+
+<!-- ═══════════ MORNING ERROR ═══════════ -->
+<div id="view-morning-error" style="display:none;">
+  <div class="morning-nav">
+    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <span class="morning-nav-title">今日晨听</span>
+  </div>
+  <div class="morning-error">
+    <div class="morning-error-text" id="morningErrorText"></div>
+    <button class="btn-retry" onclick="openMorning()">重试</button>
+    <button class="btn-vocab-only" onclick="openMorningVocabOnly()" style="display:none;" id="btnVocabOnly">仅用生词本</button>
+    <button class="btn-home" onclick="showHome()">返回首页</button>
+  </div>
+</div>
+
+<!-- ═══════════ MORNING HOME ═══════════ -->
+<div id="view-morning-home" style="display:none;">
+  <div class="morning-nav">
+    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <span class="morning-nav-title">今日晨听</span>
+  </div>
+  <div class="morning-home-section">
+    <div class="morning-home-title">今日晨听</div>
+    <div class="morning-home-sub">预计 <span id="mhDuration">25</span> 分钟 · 队列 <span id="mhTotal">0</span> 词</div>
+    <div class="morning-home-grid">
+      <div class="morning-home-stat" style="border-left:3px solid #ff9500;">
+        <div class="mh-num" id="mhDue">0</div>
+        <div class="mh-label">快遗忘</div>
+      </div>
+      <div class="morning-home-stat" style="border-left:3px solid #ffcc00;">
+        <div class="mh-num" id="mhStale">0</div>
+        <div class="mh-label">很久没听</div>
+      </div>
+      <div class="morning-home-stat" style="border-left:3px solid #ff3b30;">
+        <div class="mh-num" id="mhHard">0</div>
+        <div class="mh-label">困难词</div>
+      </div>
+      <div class="morning-home-stat" style="border-left:3px solid #34c759;">
+        <div class="mh-num" id="mhFresh">0</div>
+        <div class="mh-label">新词推进</div>
+      </div>
+    </div>
+    <div class="morning-btn-row">
+      <button class="morning-btn morning-btn-primary" onclick="startMorning()">▶ 开始晨听</button>
+      <button class="morning-btn morning-btn-secondary" onclick="showMorningQueue()">查看队列</button>
+    </div>
+    <button class="morning-btn morning-btn-outline" onclick="refreshMorningQueue()" style="margin-top:8px;width:100%;">🔄 刷新队列</button>
+  </div>
+</div>
+
+<!-- ═══════════ MORNING QUEUE ═══════════ -->
+<div id="view-morning-queue" style="display:none;">
+  <div class="morning-nav">
+    <button class="morning-nav-back" onclick="showMorningHome()">← 返回</button>
+    <span class="morning-nav-title">今日队列</span>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid #e8e8ed;background:#fff;">
+    <div style="font-size:16px;font-weight:700;">队列 <span id="mqTotal">0</span> 词</div>
+    <div style="font-size:12px;color:#86868b;">预计 <span id="mqDuration">25</span> 分钟</div>
+  </div>
+  <div style="padding:8px 16px 120px;" id="morningQueueContent"></div>
+  <div class="morning-start-sticky">
+    <button class="morning-btn morning-btn-primary" onclick="startMorning()">▶ 开始晨听</button>
+  </div>
+</div>
+
+<!-- ═══════════ MORNING PLAYER ═══════════ -->
+<div id="view-morning-player" style="display:none;">
+  <div class="morning-player">
+    <div class="morning-player-top">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <button class="morning-nav-back" onclick="confirmEndMorning()" style="font-size:16px;padding:4px 8px;">✕ 结束</button>
+        <div class="morning-player-progress">第 <span id="mpIdx">0</span> / <span id="mpTotal">0</span> 词</div>
+        <div style="width:40px;"></div>
+      </div>
+      <div class="morning-player-bar"><div class="morning-player-bar-fill" id="mpBar" style="width:0%"></div></div>
+    </div>
+    <div class="morning-player-word">
+      <div class="mp-step-hint" id="mpStepHint"></div>
+      <div class="mp-en" id="mpEn"></div>
+      <div class="mp-cn" id="mpCn"></div>
+      <div class="mp-meta"><span id="mpSource"></span> · <span id="mpReason"></span></div>
+    </div>
+    <div class="morning-player-controls">
+      <button class="mp-btn-pause" id="mpBtnPause" onclick="toggleMorningPause()">⏯ 暂停</button>
+      <button class="mp-btn-replay" onclick="replayMorningWord()">🔄 再听</button>
+      <button class="mp-btn-hard" onclick="markMorningHard()">困难</button>
+      <button class="mp-btn-familiar" onclick="markMorningFamiliar()">熟了</button>
+      <button class="mp-btn-skip" onclick="skipMorningWord()">⏭ 跳过</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MORNING SUMMARY ═══════════ -->
+<div id="view-morning-summary" style="display:none;">
+  <div class="morning-nav">
+    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <span class="morning-nav-title">晨听完成</span>
+  </div>
+  <div class="morning-summary">
+    <div class="ms-icon">🌅</div>
+    <div class="ms-title" id="msTitle"></div>
+    <div class="ms-sub" id="msSub"></div>
+    <div class="morning-summary-stats">
+      <div class="morning-summary-stat"><div class="ms-num" id="msCompleted">0</div><div class="ms-label">已完成</div></div>
+      <div class="morning-summary-stat"><div class="ms-num" id="msHard">0</div><div class="ms-label">标记困难</div></div>
+      <div class="morning-summary-stat"><div class="ms-num" id="msFamiliar">0</div><div class="ms-label">标记熟了</div></div>
+      <div class="morning-summary-stat"><div class="ms-num" id="msSkipped">0</div><div class="ms-label">跳过</div></div>
+    </div>
+    <button class="morning-btn morning-btn-primary" onclick="showHome()" style="width:200px;">返回首页</button>
+  </div>
+</div>
+
 <script>
 window.onerror = function(msg, url, line, col, err) {
   var el = document.createElement('div');
@@ -368,7 +599,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783393628;
+var BUILD_TS = 1783404606;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1591,6 +1822,957 @@ if ('serviceWorker' in navigator) {
     if (!refreshing) { refreshing = true; location.reload(); }
   });
 }
+// ═══════════ MORNING MODE ═══════════
+var MOR_KEYS = {
+  meta: 'morning_meta_v1',
+  settings: 'morning_settings_v1',
+  cursor: 'morning_cursor_v1',
+  sessions: 'morning_sessions_v1'
+};
+
+// ── Data layer ──
+function loadMorningMeta() {
+  try { return JSON.parse(localStorage.getItem(MOR_KEYS.meta) || '{}'); } catch(e) { return {}; }
+}
+function saveMorningMeta(obj) {
+  try { localStorage.setItem(MOR_KEYS.meta, JSON.stringify(obj)); } catch(e) {}
+}
+function loadMorningSettings() {
+  try {
+    var s = JSON.parse(localStorage.getItem(MOR_KEYS.settings) || '{}');
+    s.durationMin = s.durationMin || 25;
+    s.mix = s.mix || { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 };
+    s.staleDays = s.staleDays || 14;
+    return s;
+  } catch(e) { return { durationMin: 25, mix: { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 }, staleDays: 14 }; }
+}
+function saveMorningSettings(obj) {
+  try { localStorage.setItem(MOR_KEYS.settings, JSON.stringify(obj)); } catch(e) {}
+}
+function loadMorningCursor() {
+  try { return JSON.parse(localStorage.getItem(MOR_KEYS.cursor) || '{"hbNextIdx":0,"vocabNextIdx":0}'); } catch(e) { return { hbNextIdx: 0, vocabNextIdx: 0 }; }
+}
+function saveMorningCursor(obj) {
+  obj.updatedAt = Date.now();
+  try { localStorage.setItem(MOR_KEYS.cursor, JSON.stringify(obj)); } catch(e) {}
+}
+function loadMorningSessions() {
+  try { return JSON.parse(localStorage.getItem(MOR_KEYS.sessions) || '[]'); } catch(e) { return []; }
+}
+function saveMorningSessions(arr) {
+  // Keep last 30 days
+  var cutoff = Date.now() - 30 * 86400000;
+  arr = arr.filter(function(s) { return s.startedAt > cutoff; });
+  try { localStorage.setItem(MOR_KEYS.sessions, JSON.stringify(arr)); } catch(e) {}
+}
+
+function morningKey(item) {
+  return item.source + ':' + item.en;
+}
+
+function getMorningMeta(item) {
+  var meta = loadMorningMeta();
+  return meta[morningKey(item)] || null;
+}
+
+function updateMorningMeta(item, result) {
+  var meta = loadMorningMeta();
+  var key = morningKey(item);
+  var m = meta[key] || {};
+  var now = Date.now();
+  if (!m.firstAt) m.firstAt = now;
+  m.lastAt = now;
+  m.listens = (m.listens || 0) + 1;
+  m.hardHits = m.hardHits || 0;
+  m.familiarHits = m.familiarHits || 0;
+  m.replayHits = m.replayHits || 0;
+  m.lastResult = result;
+  if (result === 'hard') m.hardHits++;
+  if (result === 'familiar') m.familiarHits++;
+  if (result === 'replay') m.replayHits++;
+  var pref = item.source === 'vocab'
+    ? (function() { try { return JSON.parse(localStorage.getItem('vv_prefs')||'{}'); } catch(e) { return {}; } })()
+    : (function() { try { return JSON.parse(localStorage.getItem('hb_prefs')||'{}'); } catch(e) { return {}; } })();
+  m.nextDueAt = calcNextDueAt(m, pref[item.en]);
+  meta[key] = m;
+  saveMorningMeta(meta);
+}
+
+function calcNextDueAt(meta, pref) {
+  var days = intervalDays(meta, pref);
+  return (meta.lastAt || Date.now()) + days * 86400000;
+}
+
+function intervalDays(meta, pref) {
+  if (pref === 'hard') return 1;
+  var n = meta.listens || 0;
+  if (n <= 0) return 0;
+  if (n === 1) return 1;
+  if (n === 2) return 3;
+  if (n === 3) return 7;
+  if (n === 4) return 14;
+  return 30;
+}
+
+// ── Queue generation ──
+var morningQueue = [];
+var morningQueueBuiltAt = 0;
+var morningSettings = null;
+
+function buildMorningCandidates() {
+  morningSettings = loadMorningSettings();
+  var candidates = [];
+  var prefsV, prefsH, ufP;
+  try { prefsV = JSON.parse(localStorage.getItem('vv_prefs')||'{}'); } catch(e) { prefsV = {}; }
+  try { prefsH = JSON.parse(localStorage.getItem('hb_prefs')||'{}'); } catch(e) { prefsH = {}; }
+  try { ufP = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) { ufP = {}; }
+
+  // Vocab words
+  for (var i = 0; i < VOCAB.length; i++) {
+    var w = VOCAB[i];
+    if (!w.en || !w.cn) continue;
+    if (ufP['vocab_' + w.en] === 'removed') continue;
+    candidates.push({
+      source: 'vocab', key: 'vocab:' + w.en, en: w.en, cn: w.cn,
+      idx: i, dict: 'vocab', reason: ''
+    });
+  }
+
+  // HB words
+  if (HONGBAOSHU) {
+    for (var i = 0; i < HONGBAOSHU.length; i++) {
+      var w = HONGBAOSHU[i];
+      if (!w.en || !w.cn) continue;
+      if (ufP['hb_' + w.en] === 'removed') continue;
+      candidates.push({
+        source: 'hb', key: 'hb:' + w.en, en: w.en, cn: w.cn,
+        idx: i, dict: 'hongbaoshu', reason: ''
+      });
+    }
+  }
+
+  var meta = loadMorningMeta();
+  var now = Date.now();
+  var staleThreshold = now - (morningSettings.staleDays || 14) * 86400000;
+
+  // Classify each candidate
+  for (var c = 0; c < candidates.length; c++) {
+    var item = candidates[c];
+    var m = meta[morningKey(item)];
+    var prefs = item.source === 'vocab' ? prefsV : prefsH;
+
+    if (prefs[item.en] === 'hard' || (m && m.hardHits > 0)) {
+      item.reason = 'hard';
+    } else if (m && m.nextDueAt && now >= m.nextDueAt) {
+      item.reason = 'due';
+    } else if (m && m.lastAt && m.lastAt < staleThreshold) {
+      item.reason = 'stale';
+    } else if (!m || m.listens === 0) {
+      item.reason = 'fresh';
+    }
+  }
+
+  return candidates;
+}
+
+function buildMorningQueue() {
+  var all = buildMorningCandidates();
+  morningSettings = loadMorningSettings();
+  var mix = morningSettings.mix || { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 };
+  var targetWords = Math.min(150, Math.max(60, morningSettings.durationMin * 5));
+
+  var due = [], stale = [], hard = [], fresh = [], other = [];
+  for (var i = 0; i < all.length; i++) {
+    switch (all[i].reason) {
+      case 'due': due.push(all[i]); break;
+      case 'stale': stale.push(all[i]); break;
+      case 'hard': hard.push(all[i]); break;
+      case 'fresh': fresh.push(all[i]); break;
+      default: other.push(all[i]); break;
+    }
+  }
+
+  // Shuffle within each category
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+  shuffle(due); shuffle(stale); shuffle(hard); shuffle(fresh); shuffle(other);
+
+  var q = [];
+  var quota = {
+    due: Math.ceil(targetWords * mix.due),
+    stale: Math.ceil(targetWords * mix.stale),
+    hard: Math.ceil(targetWords * mix.hard),
+    fresh: Math.ceil(targetWords * mix.fresh)
+  };
+
+  // Fill by priority: hard first, then due, stale, fresh
+  function take(src, n) {
+    var taken = src.splice(0, Math.min(n, src.length));
+    for (var i = 0; i < taken.length; i++) q.push(taken[i]);
+    return taken.length;
+  }
+
+  take(hard, quota.hard);
+  take(due, quota.due);
+  take(stale, quota.stale);
+  take(fresh, quota.fresh);
+
+  // Fill shortfall with remaining categories + other, in priority order
+  var fillOrder = [due, stale, hard, fresh, other];
+  while (q.length < targetWords) {
+    var added = false;
+    for (var f = 0; f < fillOrder.length; f++) {
+      if (fillOrder[f].length > 0) {
+        q.push(fillOrder[f].shift());
+        added = true;
+        break;
+      }
+    }
+    if (!added) break;
+  }
+
+  // Shuffle within each "batch" of 10 for variety
+  for (var b = 0; b < q.length; b += 10) {
+    var end = Math.min(b + 10, q.length);
+    for (var i = end - 1; i > b; i--) {
+      var j = b + Math.floor(Math.random() * (i - b + 1));
+      var tmp = q[i]; q[i] = q[j]; q[j] = tmp;
+    }
+  }
+
+  morningQueue = q;
+  morningQueueBuiltAt = Date.now();
+  return q;
+}
+
+function refreshMorningQueue() {
+  morningQueue = [];
+  morningQueueBuiltAt = 0;
+  buildMorningQueue();
+  showMorningHome();
+}
+
+function getMorningStats() {
+  var due = 0, stale = 0, hard = 0, fresh = 0;
+  for (var i = 0; i < morningQueue.length; i++) {
+    switch (morningQueue[i].reason) {
+      case 'due': due++; break;
+      case 'stale': stale++; break;
+      case 'hard': hard++; break;
+      case 'fresh': fresh++; break;
+    }
+  }
+  return { due: due, stale: stale, hard: hard, fresh: fresh, total: morningQueue.length };
+}
+
+// ── UI: View management ──
+function showMorningLoading() {
+  hideAllViews();
+  document.getElementById('view-morning-loading').style.display = 'block';
+}
+
+function hideAllViews() {
+  var views = ['view-home', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary'];
+  for (var i = 0; i < views.length; i++) {
+    var el = document.getElementById(views[i]);
+    if (el) el.style.display = 'none';
+  }
+}
+
+function showMorningError(msg, showVocabOnly) {
+  hideAllViews();
+  document.getElementById('view-morning-error').style.display = 'block';
+  document.getElementById('morningErrorText').textContent = msg;
+  document.getElementById('btnVocabOnly').style.display = showVocabOnly ? 'inline-block' : 'none';
+}
+
+function openMorning() {
+  showMorningLoading();
+  loadHB(function(err) {
+    if (err) {
+      showMorningError('红宝书数据加载失败，可先使用生词本晨听', true);
+      return;
+    }
+    // Check if we have a fresh cached queue
+    if (morningQueue.length > 0 && morningQueueBuiltAt > Date.now() - 600000) {
+      showMorningHome();
+      return;
+    }
+    try {
+      buildMorningQueue();
+      showMorningHome();
+    } catch(e) {
+      showMorningError('队列生成失败：' + (e.message || '未知错误'), false);
+    }
+  });
+}
+
+function openMorningVocabOnly() {
+  showMorningLoading();
+  // Use only vocab words (skip HB)
+  var saved = HONGBAOSHU;
+  HONGBAOSHU = [];
+  try {
+    buildMorningQueue();
+    HONGBAOSHU = saved;
+    showMorningHome();
+  } catch(e) {
+    HONGBAOSHU = saved;
+    showMorningError('队列生成失败：' + (e.message || '未知错误'), false);
+  }
+}
+
+function showMorningHome() {
+  hideAllViews();
+  document.getElementById('view-morning-home').style.display = 'block';
+  var stats = getMorningStats();
+  document.getElementById('mhTotal').textContent = stats.total;
+  document.getElementById('mhDue').textContent = stats.due;
+  document.getElementById('mhStale').textContent = stats.stale;
+  document.getElementById('mhHard').textContent = stats.hard;
+  document.getElementById('mhFresh').textContent = stats.fresh;
+  document.getElementById('mhDuration').textContent = morningSettings.durationMin;
+}
+
+function showMorningQueue() {
+  hideAllViews();
+  document.getElementById('view-morning-queue').style.display = 'block';
+  var stats = getMorningStats();
+  document.getElementById('mqTotal').textContent = stats.total;
+  document.getElementById('mqDuration').textContent = morningSettings.durationMin;
+  var groups = [
+    { key: 'due', label: '快遗忘', color: '#ff9500', words: [] },
+    { key: 'stale', label: '很久没听', color: '#ffcc00', words: [] },
+    { key: 'hard', label: '困难词', color: '#ff3b30', words: [] },
+    { key: 'fresh', label: '新词推进', color: '#34c759', words: [] }
+  ];
+  for (var i = 0; i < morningQueue.length; i++) {
+    for (var g = 0; g < groups.length; g++) {
+      if (morningQueue[i].reason === groups[g].key) groups[g].words.push(morningQueue[i]);
+    }
+  }
+  var h = '';
+  for (var g = 0; g < groups.length; g++) {
+    if (groups[g].words.length === 0) continue;
+    var grp = groups[g];
+    var showAll = grp.words.length <= 8;
+    h += '<div class="morning-queue-section">';
+    h += '<div class="morning-queue-header" onclick="toggleMQGroup(this)" data-group="' + grp.key + '" style="border-left:3px solid ' + grp.color + ';">';
+    h += '<span>' + grp.label + ' <span class="mq-count">' + grp.words.length + '词</span></span>';
+    h += '<span class="mq-count" id="mqToggle_' + grp.key + '">' + (showAll ? '' : '展开全部 ▸') + '</span>';
+    h += '</div>';
+    h += '<div class="morning-queue-list" id="mqList_' + grp.key + '" style="' + (showAll ? '' : 'display:none;') + '">';
+    var limit = showAll ? grp.words.length : 8;
+    for (var w = 0; w < grp.words.length; w++) {
+      var word = grp.words[w];
+      var srcLabel = word.source === 'vocab' ? '生词本' : '红宝书';
+      h += '<div class="morning-queue-item' + (w >= 8 && !showAll ? ' mq-hidden' : '') + '" data-group="' + grp.key + '">';
+      h += '<div><span class="mq-en">' + esc(word.en) + '</span><span class="mq-cn">' + esc(word.cn) + '</span></div>';
+      h += '<div class="mq-meta">' + srcLabel + '</div>';
+      h += '</div>';
+    }
+    h += '</div></div>';
+  }
+  document.getElementById('morningQueueContent').innerHTML = h;
+}
+
+function toggleMQGroup(el) {
+  var grp = el.getAttribute('data-group');
+  var list = document.getElementById('mqList_' + grp);
+  var toggle = document.getElementById('mqToggle_' + grp);
+  if (list.style.display === 'none') {
+    list.style.display = 'block';
+    if (toggle) toggle.textContent = '收起 ▴';
+  } else {
+    list.style.display = 'none';
+    if (toggle) toggle.textContent = '展开全部 ▸';
+  }
+}
+
+// ── Homepage card ──
+function updateMorningCard() {
+  var el = document.getElementById('morningCardStats');
+  if (!el) return;
+  // Lightweight — no HB loading
+  try {
+    var sessions = loadMorningSessions();
+    if (sessions.length > 0) {
+      var last = sessions[sessions.length - 1];
+      el.textContent = '上次晨听：' + last.date + ' ' + last.completed + '词';
+    } else {
+      el.textContent = '25分钟 · 点击生成队列';
+    }
+  } catch(e) { el.textContent = '25分钟 · 点击生成队列'; }
+}
+
+// ── Audio helpers ──
+function b64toBlobUrl(b64) {
+  var raw = atob(b64);
+  var bytes = new Uint8Array(raw.length);
+  for (var i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes], { type: 'audio/mpeg' }));
+}
+
+var _mVocabAudio = {};  // fileIdx → {words: [{en_url, cn_url}, ...]}
+var _mVocabLoading = {};
+var _mHbAudio = {};     // unitIdx → {words: [{en_url, cn_url}, ...]}
+var _mHbLoading = {};
+
+function loadMorningVocabFile(fileIdx, cb) {
+  if (_mVocabAudio[fileIdx]) { cb(null); return; }
+  if (_mVocabLoading[fileIdx]) {
+    // Poll until loaded
+    var check = setInterval(function() {
+      if (_mVocabAudio[fileIdx]) { clearInterval(check); cb(null); }
+    }, 100);
+    return;
+  }
+  _mVocabLoading[fileIdx] = true;
+  fetch('audio_g' + fileIdx + '.json?v=' + BUILD_TS)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var words = [];
+      for (var w = 0; w < data.words.length; w++) {
+        words.push({
+          en_url: data.words[w] ? b64toBlobUrl(data.words[w].en) : null,
+          cn_url: data.words[w] ? b64toBlobUrl(data.words[w].cn) : null
+        });
+      }
+      _mVocabAudio[fileIdx] = words;
+      cb(null);
+    })
+    .catch(function() { cb('err'); });
+}
+
+function loadMorningHbUnit(unitIdx, cb) {
+  if (_mHbAudio[unitIdx]) { cb(null); return; }
+  if (_mHbLoading[unitIdx]) {
+    var check = setInterval(function() {
+      if (_mHbAudio[unitIdx]) { clearInterval(check); cb(null); }
+    }, 100);
+    return;
+  }
+  _mHbLoading[unitIdx] = true;
+  fetch('hb/audio_unit' + unitIdx + '.json?v=' + BUILD_TS)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var words = [];
+      for (var w = 0; w < data.words.length; w++) {
+        words.push({
+          en_url: data.words[w] ? b64toBlobUrl(data.words[w].en) : null,
+          cn_url: data.words[w] ? b64toBlobUrl(data.words[w].cn) : null
+        });
+      }
+      _mHbAudio[unitIdx] = words;
+      cb(null);
+    })
+    .catch(function() { cb('err'); });
+}
+
+function ensureMorningAudio(item, cb) {
+  if (item.source === 'vocab') {
+    var map = AUDIO_MAP[String(item.idx)];
+    if (!map) { cb('no_audio'); return; }
+    var fileIdx = map[0];
+    loadMorningVocabFile(fileIdx, function(err) {
+      if (err) { cb('err'); return; }
+      var file = _mVocabAudio[fileIdx];
+      if (!file) { cb('err'); return; }
+      cb(null, file);
+    });
+  } else {
+    var unitIdx = Math.floor(item.idx / 30);
+    loadMorningHbUnit(unitIdx, function(err) {
+      if (err) { cb('err'); return; }
+      var unit = _mHbAudio[unitIdx];
+      if (!unit) { cb('err'); return; }
+      cb(null, unit);
+    });
+  }
+}
+
+function cleanupMorningAudioCache() {
+  for (var k in _mVocabAudio) {
+    var words = _mVocabAudio[k];
+    for (var w = 0; w < words.length; w++) {
+      if (words[w].en_url) URL.revokeObjectURL(words[w].en_url);
+      if (words[w].cn_url) URL.revokeObjectURL(words[w].cn_url);
+    }
+    delete _mVocabAudio[k];
+  }
+  for (var k in _mHbAudio) {
+    var words = _mHbAudio[k];
+    for (var w = 0; w < words.length; w++) {
+      if (words[w].en_url) URL.revokeObjectURL(words[w].en_url);
+      if (words[w].cn_url) URL.revokeObjectURL(words[w].cn_url);
+    }
+    delete _mHbAudio[k];
+  }
+  _mVocabLoading = {};
+  _mHbLoading = {};
+}
+
+// ── Playback engine ──
+var morningPaused = false;
+var morningPlaying = false;
+var morningPos = 0;       // index in morningQueue
+var morningStep = 0;      // current step within word
+var morningSlot = 0;      // 0 or 1 (AB-slot)
+var morningAuA = null;
+var morningAuB = null;
+var morningAuUrlA = null;
+var morningAuUrlB = null;
+var morningSingle = false; // true when replaying a single word
+var morningSessionStart = 0;
+var morningSessionHard = 0;
+var morningSessionFamiliar = 0;
+var morningSessionSkipped = 0;
+var morningSessionCompleted = 0;
+var morningEnded = false;
+var morningMaxWords = 180;
+
+function getMorningStepLabels(item) {
+  var pref;
+  try {
+    var prefs = item.source === 'vocab'
+      ? JSON.parse(localStorage.getItem('vv_prefs')||'{}')
+      : JSON.parse(localStorage.getItem('hb_prefs')||'{}');
+    pref = prefs[item.en];
+  } catch(e) { pref = null; }
+  if (pref === 'familiar') return { labels: ['英①','中①'], isENs: [true, false] };
+  if (pref === 'hard') return { labels: ['英①','英②','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'], isENs: [true,true,false,false,true,false,true,false,true,false,true,false] };
+  return { labels: ['英①','英②','中①','中②','英③','中③','英④','中④'], isENs: [true,true,false,false,true,false,true,false] };
+}
+
+function morningSegUrl(item, step) {
+  var info = getMorningStepLabels(item);
+  if (step >= info.labels.length) return null;
+  var lang = info.isENs[step] ? 'en' : 'cn';
+  // Find the audio for this item
+  if (item.source === 'vocab') {
+    var map = AUDIO_MAP[String(item.idx)];
+    if (!map) return null;
+    var fileIdx = map[0];
+    var file = _mVocabAudio[fileIdx];
+    if (!file) return null;
+    // For vocab, the audio is stored by group offset within the file
+    // The AUDIO_MAP maps global group idx → [fileIdx, offset_in_file]
+    var offsetInFile = map[1];
+    var wordInFile = offsetInFile + item.idx; // This needs to account for group structure
+    // Actually, let's find the word by searching within the group
+    // Simpler: find by iterating through the group
+    var gIdx = Math.floor(item.idx / GROUP_SIZE);
+    var wInGroup = item.idx % GROUP_SIZE;
+    var gMap = AUDIO_MAP[String(gIdx)];
+    if (!gMap) return null;
+    var file2 = _mVocabAudio[gMap[0]];
+    if (!file2) return null;
+    var offset2 = gMap[1] + wInGroup;
+    if (offset2 >= file2.length) return null;
+    return lang === 'en' ? file2[offset2].en_url : file2[offset2].cn_url;
+  } else {
+    var unitIdx = Math.floor(item.idx / 30);
+    var unit = _mHbAudio[unitIdx];
+    if (!unit) return null;
+    var wInUnit = item.idx % 30;
+    if (wInUnit >= unit.length) return null;
+    return lang === 'en' ? unit[wInUnit].en_url : unit[wInUnit].cn_url;
+  }
+}
+
+function morningGetAu(slot) {
+  if (slot === 0) {
+    if (!morningAuA) { morningAuA = new Audio(); morningAuA.preload = 'auto'; }
+    return morningAuA;
+  }
+  if (!morningAuB) { morningAuB = new Audio(); morningAuB.preload = 'auto'; }
+  return morningAuB;
+}
+
+function morningLoadAu(slot, url) {
+  var au = morningGetAu(slot);
+  if (slot === 0) morningAuUrlA = url;
+  else morningAuUrlB = url;
+  au.src = url;
+  au.load();
+}
+
+function morningStopAudio() {
+  [morningAuA, morningAuB].forEach(function(au) {
+    if (au) { au.onended = null; au.onerror = null; au.pause(); au.removeAttribute('src'); }
+  });
+  morningAuUrlA = null;
+  morningAuUrlB = null;
+}
+
+function updateMorningPlayerUI() {
+  if (morningPos >= morningQueue.length) return;
+  var item = morningQueue[morningPos];
+  var info = getMorningStepLabels(item);
+  document.getElementById('mpIdx').textContent = morningPos + 1;
+  document.getElementById('mpTotal').textContent = morningQueue.length;
+  document.getElementById('mpEn').textContent = item.en;
+  document.getElementById('mpCn').textContent = item.cn;
+  if (morningStep < info.labels.length) {
+    document.getElementById('mpStepHint').textContent = info.labels[morningStep];
+  } else {
+    document.getElementById('mpStepHint').textContent = '';
+  }
+  var srcLabel = item.source === 'vocab' ? '生词本' : '红宝书';
+  var reasonLabel = { due: '快遗忘', stale: '很久没听', hard: '困难', fresh: '新词' }[item.reason] || '';
+  document.getElementById('mpSource').textContent = srcLabel;
+  document.getElementById('mpReason').textContent = reasonLabel;
+  var pct = Math.round((morningPos) / morningQueue.length * 100);
+  document.getElementById('mpBar').style.width = pct + '%';
+}
+
+function playMorningCurrent() {
+  if (morningPos >= morningQueue.length) {
+    endMorningSession();
+    return;
+  }
+  var item = morningQueue[morningPos];
+  updateMorningPlayerUI();
+
+  ensureMorningAudio(item, function(err, fileOrUnit) {
+    if (err) { skipMorningWord(); return; }
+    var url = morningSegUrl(item, morningStep);
+    if (!url) {
+      // No more steps for this word
+      morningSessionCompleted++;
+      updateMorningMeta(item, 'normal');
+      morningPos++;
+      morningStep = 0;
+      if (morningPos >= morningQueue.length) {
+        maybeExtendOrEnd();
+        return;
+      }
+      playMorningCurrent();
+      return;
+    }
+
+    var au = morningGetAu(morningSlot);
+    au.onended = function() {
+      morningStep++;
+      var nxUrl = morningSegUrl(item, morningStep);
+      if (!nxUrl) {
+        // Word complete
+        morningSessionCompleted++;
+        updateMorningMeta(item, morningSingle ? 'replay' : 'normal');
+        morningSingle = false;
+        morningPos++;
+        morningStep = 0;
+        if (morningPos >= morningQueue.length) {
+          maybeExtendOrEnd();
+          return;
+        }
+        // Preload next word's first segment
+        var nextItem = morningQueue[morningPos];
+        ensureMorningAudio(nextItem, function() {
+          var nextUrl = morningSegUrl(nextItem, 0);
+          if (nextUrl) morningLoadAu(1 - morningSlot, nextUrl);
+        });
+        morningSlot = 1 - morningSlot;
+        playMorningCurrent();
+        return;
+      }
+      // Next segment same word
+      morningLoadAu(1 - morningSlot, nxUrl);
+      morningSlot = 1 - morningSlot;
+      updateMorningPlayerUI();
+      morningGetAu(morningSlot).play().catch(function() {});
+    };
+    au.onerror = function() {
+      skipMorningWord();
+    };
+    morningLoadAu(morningSlot, url);
+    updateMorningPlayerUI();
+    au.play().catch(function() { skipMorningWord(); });
+
+    // Preload next segment
+    var nextStep = morningStep + 1;
+    var nextUrl = morningSegUrl(item, nextStep);
+    if (!nextUrl) {
+      // Preload next word
+      var nextIdx = morningPos + 1;
+      if (nextIdx < morningQueue.length) {
+        var nItem = morningQueue[nextIdx];
+        ensureMorningAudio(nItem, function() {
+          var nUrl = morningSegUrl(nItem, 0);
+          if (nUrl) morningLoadAu(1 - morningSlot, nUrl);
+        });
+      }
+    } else {
+      morningLoadAu(1 - morningSlot, nextUrl);
+    }
+  });
+}
+
+function maybeExtendOrEnd() {
+  var elapsed = Date.now() - morningSessionStart;
+  var targetMs = morningSettings.durationMin * 60 * 1000;
+  if (elapsed >= targetMs * 0.9 || morningSessionCompleted >= morningMaxWords) {
+    endMorningSession();
+    return;
+  }
+  // Extend queue
+  var all = buildMorningCandidates();
+  var meta = loadMorningMeta();
+  var extend = [];
+  // Priority: hard words from this session, then due, then stale, then fresh
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].reason === 'hard') extend.push(all[i]);
+    if (extend.length >= 20) break;
+  }
+  if (extend.length < 20) {
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].reason === 'due') extend.push(all[i]);
+      if (extend.length >= 20) break;
+    }
+  }
+  if (extend.length < 20) {
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].reason === 'stale') extend.push(all[i]);
+      if (extend.length >= 20) break;
+    }
+  }
+  if (extend.length < 20) {
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].reason === 'fresh') extend.push(all[i]);
+      if (extend.length >= 20) break;
+    }
+  }
+
+  // Remove already-played words from extend
+  var playedKeys = {};
+  for (var p = 0; p < morningPos; p++) {
+    playedKeys[morningQueue[p].key] = true;
+  }
+  extend = extend.filter(function(e) { return !playedKeys[e.key]; });
+
+  if (extend.length === 0) {
+    endMorningSession();
+    return;
+  }
+
+  // Add extend to queue
+  for (var e = 0; e < Math.min(20, extend.length); e++) {
+    morningQueue.push(extend[e]);
+  }
+  updateMorningPlayerUI();
+  playMorningCurrent();
+}
+
+function startMorning() {
+  if (morningQueue.length === 0) { buildMorningQueue(); }
+  if (morningQueue.length === 0) { alert('队列为空，请先生成队列'); return; }
+  morningPos = 0;
+  morningStep = 0;
+  morningSlot = 0;
+  morningPaused = false;
+  morningPlaying = true;
+  morningSingle = false;
+  morningEnded = false;
+  morningSessionStart = Date.now();
+  morningSessionHard = 0;
+  morningSessionFamiliar = 0;
+  morningSessionSkipped = 0;
+  morningSessionCompleted = 0;
+  hideAllViews();
+  document.getElementById('view-morning-player').style.display = 'block';
+  document.getElementById('mpTotal').textContent = morningQueue.length;
+  document.getElementById('mpBtnPause').textContent = '⏯ 暂停';
+  playMorningCurrent();
+}
+
+function toggleMorningPause() {
+  if (!morningPlaying) return;
+  var au = morningGetAu(morningSlot);
+  if (morningPaused) {
+    au.play();
+    morningPaused = false;
+    document.getElementById('mpBtnPause').textContent = '⏯ 暂停';
+  } else {
+    au.pause();
+    morningPaused = true;
+    document.getElementById('mpBtnPause').textContent = '▶ 继续';
+  }
+}
+
+function replayMorningWord() {
+  morningStopAudio();
+  morningStep = 0;
+  morningSingle = true;
+  playMorningCurrent();
+}
+
+function markMorningHard() {
+  if (morningPos >= morningQueue.length) return;
+  var item = morningQueue[morningPos];
+  updateMorningMeta(item, 'hard');
+  // Also write to old prefs
+  var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
+  try {
+    var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
+    prefs[item.en] = 'hard';
+    localStorage.setItem(prefsKey, JSON.stringify(prefs));
+  } catch(e) {}
+  morningSessionHard++;
+  morningStopAudio();
+  morningPos++;
+  morningStep = 0;
+  morningSingle = false;
+  playMorningCurrent();
+}
+
+function markMorningFamiliar() {
+  if (morningPos >= morningQueue.length) return;
+  var item = morningQueue[morningPos];
+  updateMorningMeta(item, 'familiar');
+  var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
+  try {
+    var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
+    prefs[item.en] = 'familiar';
+    localStorage.setItem(prefsKey, JSON.stringify(prefs));
+  } catch(e) {}
+  morningSessionFamiliar++;
+  morningStopAudio();
+  morningPos++;
+  morningStep = 0;
+  morningSingle = false;
+  playMorningCurrent();
+}
+
+function skipMorningWord() {
+  morningSessionSkipped++;
+  morningStopAudio();
+  morningPos++;
+  morningStep = 0;
+  morningSingle = false;
+  if (morningPos >= morningQueue.length) {
+    maybeExtendOrEnd();
+    return;
+  }
+  playMorningCurrent();
+}
+
+function confirmEndMorning() {
+  if (morningPlaying && !morningEnded) {
+    if (confirm('晨听还在进行中，是否结束本次晨听？
+已播放 ' + morningSessionCompleted + ' 词，点击"确定"结束并保存。')) {
+      endMorningSession('abandoned');
+    }
+  } else {
+    endMorningSession('abandoned');
+  }
+}
+
+function endMorningSession(status) {
+  morningStopAudio();
+  morningPlaying = false;
+  morningEnded = true;
+  cleanupMorningAudioCache();
+
+  status = status || 'completed';
+  var sessions = loadMorningSessions();
+  var now = new Date();
+  var dateStr = now.getFullYear() + '-' +
+    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0');
+  sessions.push({
+    date: dateStr,
+    startedAt: morningSessionStart,
+    endedAt: Date.now(),
+    planned: morningQueue.length,
+    completed: morningSessionCompleted,
+    durationMin: morningSettings.durationMin,
+    elapsedMs: Date.now() - morningSessionStart,
+    status: status,
+    dueCount: getMorningStats().due,
+    staleCount: getMorningStats().stale,
+    hardCount: morningSessionHard,
+    freshCount: getMorningStats().fresh
+  });
+  saveMorningSessions(sessions);
+
+  hideAllViews();
+  document.getElementById('view-morning-summary').style.display = 'block';
+  document.getElementById('msCompleted').textContent = morningSessionCompleted;
+  document.getElementById('msHard').textContent = morningSessionHard;
+  document.getElementById('msFamiliar').textContent = morningSessionFamiliar;
+  document.getElementById('msSkipped').textContent = morningSessionSkipped;
+  if (status === 'abandoned') {
+    document.getElementById('msTitle').textContent = '晨听已暂停';
+    document.getElementById('msSub').textContent = '本次未完成，已播放 ' + morningSessionCompleted + ' 词';
+  } else if (morningSessionCompleted >= morningMaxWords) {
+    document.getElementById('msTitle').textContent = '今日晨听完成';
+    document.getElementById('msSub').textContent = '已达上限 ' + morningMaxWords + ' 词';
+  } else {
+    document.getElementById('msTitle').textContent = '今日晨听完成';
+    var min = Math.round((Date.now() - morningSessionStart) / 60000);
+    document.getElementById('msSub').textContent = '用时约 ' + min + ' 分钟 · ' + morningSessionCompleted + ' 词';
+  }
+}
+
+// ── Sync: update directExportAll / directImportAll ──
+var _origDirectExportAll = directExportAll;
+directExportAll = function() {
+  _origDirectExportAll();
+  // Append morning data to the textarea
+  setTimeout(function() {
+    try {
+      var ta = document.getElementById('directImportBox');
+      if (!ta || ta.style.display === 'none') return;
+      var textEl = document.getElementById('directImportText');
+      if (!textEl || !textEl.value) return;
+      var all;
+      try {
+        all = JSON.parse(b64decode(textEl.value));
+      } catch(e2) {
+        try { all = JSON.parse(textEl.value); } catch(e3) { return; }
+      }
+      try { all['morning'] = {
+        meta: JSON.parse(localStorage.getItem(MOR_KEYS.meta)||'{}'),
+        settings: JSON.parse(localStorage.getItem(MOR_KEYS.settings)||'{}'),
+        cursor: JSON.parse(localStorage.getItem(MOR_KEYS.cursor)||'{}'),
+        sessions: JSON.parse(localStorage.getItem(MOR_KEYS.sessions)||'[]')
+      }; } catch(e) {}
+      textEl.value = b64encode(JSON.stringify(all));
+    } catch(e) {}
+  }, 100);
+};
+
+var _origDirectImportAll = directImportAll;
+directImportAll = function() {
+  // Patch to also handle morning data
+  var textEl = document.getElementById('directImportText');
+  var code = textEl ? textEl.value.trim() : '';
+  if (!code) { _origDirectImportAll(); return; }
+  try {
+    var all;
+    try { all = JSON.parse(b64decode(code)); } catch(e2) {
+      try { all = JSON.parse(code); } catch(e3) { _origDirectImportAll(); return; }
+    }
+    if (all.morning) {
+      try {
+        if (all.morning.meta) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
+        if (all.morning.settings) localStorage.setItem(MOR_KEYS.settings, JSON.stringify(all.morning.settings));
+        if (all.morning.cursor) localStorage.setItem(MOR_KEYS.cursor, JSON.stringify(all.morning.cursor));
+        if (all.morning.sessions) localStorage.setItem(MOR_KEYS.sessions, JSON.stringify(all.morning.sessions));
+      } catch(e) {}
+    }
+  } catch(e) {}
+  _origDirectImportAll();
+};
+
+// ── Init morning card on homepage ──
+updateMorningCard();
+
 </script>
 </body>
 </html>
