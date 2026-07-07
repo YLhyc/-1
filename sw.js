@@ -1,4 +1,4 @@
-const CACHE = 'kv-20260706-230716';
+const CACHE = 'kv-20260707-110706';
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
@@ -11,7 +11,7 @@ self.addEventListener('fetch', e => {
   if (u.pathname.endsWith('.json') || u.pathname.includes('/daily/')) {
     e.respondWith(
       fetch(e.request).then(r => {
-        if (!r.ok) return caches.match(e.request);
+        if (!r.ok) return r;
         if (isSameOrigin && u.search.indexOf('t=') === -1) {
           const c = r.clone(); caches.open(CACHE).then(ca => ca.put(e.request, c));
         }

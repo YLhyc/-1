@@ -203,7 +203,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-06 23:07</div>
+  <div class="home-sub">Build 2026-07-07 11:07</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -368,7 +368,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783350436;
+var BUILD_TS = 1783393628;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -635,11 +635,15 @@ function updateHomeStats() {
     var total = 0, veryHard = 0, removed = 0;
     for (var k in vvP) { if (vvP[k] === 'hard') total++; }
     for (var k in hbP) { if (hbP[k] === 'hard') total++; }
+    // Only count uf_prefs keys still in source dicts (skip orphans)
+    var ufWordKeys = {};
+    for (var k in vvP) { if (vvP[k] === 'hard') ufWordKeys['vocab_' + k] = true; }
+    for (var k in hbP) { if (hbP[k] === 'hard') ufWordKeys['hb_' + k] = true; }
     for (var k in ufPrefs) {
-      if (ufPrefs[k] === 'removed') removed++;
-      if (ufPrefs[k] === 'very_hard') veryHard++;
+      if (ufPrefs[k] === 'removed' && ufWordKeys[k]) removed++;
+      if (ufPrefs[k] === 'very_hard' && ufWordKeys[k]) veryHard++;
     }
-    var active = total - removed;
+    var active = Math.max(0, total - removed);
     var elT = document.getElementById('statUfTotal');
     var elH = document.getElementById('statUfHard');
     if (elT) elT.textContent = active + '词';
