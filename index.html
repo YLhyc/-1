@@ -126,6 +126,41 @@
   .wb-badge.wb-hard { display: inline; background: #ffe0cc; color: #cc6600; }
   .wb-badge.wb-hidden { display: inline; background: #ffe0e0; color: #cc0000; }
   .word-block.hidden-word { opacity: 0.35; }
+  /* Vocab card mode */
+  .vocab-card-shell { min-height: calc(100vh - 150px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 4px 24px; }
+  .vocab-card-progress { font-size: 12px; color: #8e8e93; margin-bottom: 12px; }
+  .vocab-card-stage { width: 100%; display: flex; justify-content: center; perspective: 900px; }
+  .vocab-card {
+    width: min(86vw, 420px); min-height: 430px; background: #fff; border-radius: 28px;
+    padding: 34px 28px; box-shadow: 0 18px 50px rgba(0,0,0,0.13);
+    border: 10px solid rgba(255,255,255,0.76); transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    touch-action: pan-y; position: relative; overflow: hidden;
+  }
+  .vocab-card::before, .vocab-card::after { position: absolute; top: 18px; padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; opacity: 0; transition: opacity 0.15s; }
+  .vocab-card::before { content: '熟了'; left: 18px; background: #e3f8e8; color: #1b8f3a; }
+  .vocab-card::after { content: '不熟'; right: 18px; background: #fff0df; color: #d86b00; }
+  .vocab-card.swipe-left { border-color: rgba(52,199,89,0.35); box-shadow: 0 18px 50px rgba(52,199,89,0.20); }
+  .vocab-card.swipe-left::before { opacity: 1; }
+  .vocab-card.swipe-right { border-color: rgba(255,149,0,0.38); box-shadow: 0 18px 50px rgba(255,149,0,0.20); }
+  .vocab-card.swipe-right::after { opacity: 1; }
+  .vc-word { font-size: 42px; line-height: 1.08; font-weight: 900; letter-spacing: -0.8px; color: #4a4a4d; margin-bottom: 12px; }
+  .vc-cn { font-size: 21px; line-height: 1.35; font-weight: 700; color: #707074; margin-bottom: 26px; }
+  .vc-example-en { font-size: 21px; line-height: 1.45; font-weight: 750; font-style: italic; color: #777; margin-bottom: 10px; }
+  .vc-example-cn { font-size: 19px; line-height: 1.45; font-weight: 700; color: #aaa; margin-bottom: 28px; }
+  .vc-meta { margin-top: auto; font-size: 13px; line-height: 1.45; color: #b0b0b5; }
+  .vc-status { margin-top: 12px; height: 22px; font-size: 14px; font-weight: 700; color: #8e8e93; text-align: center; }
+  .vc-status.familiar { color: #1b8f3a; }
+  .vc-status.hard { color: #d86b00; }
+  .vocab-card-controls { display: flex; justify-content: center; gap: 24px; margin-top: 28px; }
+  .vc-btn {
+    width: 68px; height: 68px; border-radius: 50%; border: 1px solid #dedee3; background: rgba(255,255,255,0.72);
+    color: #707074; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04); -webkit-appearance: none; cursor: pointer;
+  }
+  .vc-btn:active { transform: scale(0.96); }
+  .vc-btn-main { width: 78px; height: 78px; font-size: 26px; }
+  .vc-btn:disabled { opacity: 0.32; }
+  .vc-hint { margin-top: 12px; font-size: 12px; color: #b0b0b5; text-align: center; }
   .loading { display: none; text-align: center; padding: 8px; color: #86868b; font-size: 12px; margin-bottom: 8px; }
   .loading.show { display: block; }
   .spinner {
@@ -322,7 +357,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-08 13:10</div>
+  <div class="home-sub">Build 2026-07-08 14:04</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -576,7 +611,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783487410;
+var BUILD_TS = 1783490663;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -871,6 +906,10 @@ function updateHomeStats() {
 // ═══════════ GROUP RENDERING ═══════════
 function renderGroups() {
   var dict = currentDict;
+  if (dict === 'vocab') {
+    renderVocabCardMode();
+    return;
+  }
   var words = getUnitWords(dict, currentUnit);
   var showHidden = document.getElementById('showHiddenToggleG').checked;
   var prefs = loadPrefs(dict);
@@ -945,6 +984,271 @@ function renderGroups() {
   if (dict === 'vocab' && HAS_VOCAB_AUDIO) {
     preloadUnitAudio();
   }
+}
+
+var vocabCardIdx = 0;
+var vocabCardPlaying = false;
+var vocabCardTouchX = 0, vocabCardTouchY = 0, vocabCardDragging = false;
+var vocabCardStepInfo = null;
+
+function getVocabCardEntries() {
+  var words = getUnitWords('vocab', currentUnit);
+  var prefs = loadPrefs('vocab');
+  var showHidden = document.getElementById('showHiddenToggleG') && document.getElementById('showHiddenToggleG').checked;
+  var entries = [];
+  for (var i = 0; i < words.length; i++) {
+    var gw = currentUnit * UNIT_SIZE + i;
+    var pref = prefs[prefKey('vocab', gw)];
+    if (pref === 'hidden' && !showHidden) continue;
+    entries.push({ item: words[i], localIdx: i, pref: pref || '' });
+  }
+  return entries;
+}
+
+function renderVocabCardMode() {
+  var container = document.getElementById('groupContainer');
+  var entries = getVocabCardEntries();
+  var words = entries.map(function(e) { return e.item; });
+  if (!words.length) {
+    container.innerHTML = '<div class="empty-msg">本单元没有可显示的生词<br><span style="font-size:12px;">可打开“显示已隐藏的词”查看</span></div>';
+    return;
+  }
+  if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
+  container.innerHTML = ''
+    + '<div class="vocab-card-shell">'
+    + '  <div class="vocab-card-progress"><span id="vcIdx">1</span> / <span id="vcTotal">' + words.length + '</span></div>'
+    + '  <div class="vocab-card-stage">'
+    + '    <div class="vocab-card" id="vocabCard">'
+    + '      <div class="vc-word" id="vcWord"></div>'
+    + '      <div class="vc-cn" id="vcCn"></div>'
+    + '      <div class="vc-example-en" id="vcEx"></div>'
+    + '      <div class="vc-example-cn" id="vcExCn"></div>'
+    + '      <div class="vc-meta" id="vcMeta"></div>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="vc-status" id="vcStatus"></div>'
+    + '  <div class="vocab-card-controls">'
+    + '    <button class="vc-btn" id="vcPrev" onclick="vocabCardPrev()">‹</button>'
+    + '    <button class="vc-btn vc-btn-main" id="vcPlay" onclick="vocabCardTogglePlay()">▶</button>'
+    + '    <button class="vc-btn" id="vcNext" onclick="vocabCardNext(true)">›</button>'
+    + '  </div>'
+    + '  <div class="vc-hint">左划标熟 · 右划标不熟 · 不划默认</div>'
+    + '</div>';
+  preloadUnitAudio();
+  updateVocabCardUI();
+  bindVocabCardSwipe();
+}
+
+function vocabCardCurrentEntry() {
+  return getVocabCardEntries()[vocabCardIdx] || null;
+}
+function vocabCardLocalToGW(localIdx) {
+  return currentUnit * UNIT_SIZE + localIdx;
+}
+function vocabCardCurrentWord() {
+  var e = vocabCardCurrentEntry();
+  return e ? e.item : null;
+}
+function vocabCardCurrentPref() {
+  var e = vocabCardCurrentEntry();
+  if (!e) return '';
+  var gw = vocabCardLocalToGW(e.localIdx);
+  return loadPrefs('vocab')[prefKey('vocab', gw)] || '';
+}
+
+function updateVocabCardUI() {
+  var entries = getVocabCardEntries();
+  if (!entries.length) return;
+  if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
+  var item = entries[vocabCardIdx].item;
+  document.getElementById('vcIdx').textContent = vocabCardIdx + 1;
+  document.getElementById('vcTotal').textContent = entries.length;
+  document.getElementById('vcWord').textContent = item.en;
+  document.getElementById('vcCn').textContent = item.cn;
+  var ex = document.getElementById('vcEx');
+  var exCn = document.getElementById('vcExCn');
+  ex.textContent = item.ex || '';
+  ex.style.display = item.ex ? 'block' : 'none';
+  exCn.textContent = item.ex_cn || '';
+  exCn.style.display = item.ex_cn ? 'block' : 'none';
+  var pref = vocabCardCurrentPref();
+  var status = document.getElementById('vcStatus');
+  status.className = 'vc-status';
+  if (pref === 'familiar') { status.textContent = '已标记：熟了'; status.classList.add('familiar'); }
+  else if (pref === 'hard') { status.textContent = '已标记：不熟'; status.classList.add('hard'); }
+  else { status.textContent = ''; }
+  var cnts = loadCounts('vocab');
+  var entry = vocabCardCurrentEntry();
+  if (!entry) return;
+  var gw = vocabCardLocalToGW(entry.localIdx);
+  var cnt = cnts[prefKey('vocab', gw)] || 0;
+  var localIdx = entries[vocabCardIdx].localIdx;
+  var si = vocabCardStepInfo || getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
+  var stepLabel = vocabCardPlaying ? (' · ' + (si.labels[step] || '')) : '';
+  document.getElementById('vcMeta').textContent = '播放 ' + cnt + ' 次' + stepLabel;
+  document.getElementById('vcPrev').disabled = vocabCardIdx <= 0;
+  document.getElementById('vcNext').disabled = vocabCardIdx >= entries.length - 1;
+  document.getElementById('vcPlay').textContent = vocabCardPlaying ? (paused ? '▶' : 'Ⅱ') : '▶';
+  var card = document.getElementById('vocabCard');
+  if (card) { card.style.transform = 'translateX(0) rotate(0deg)'; card.classList.remove('swipe-left','swipe-right'); }
+}
+
+function vocabCardSegUrl(entryIdx, st) {
+  var entry = getVocabCardEntries()[entryIdx];
+  if (!entry) return null;
+  var localIdx = entry.localIdx;
+  var gw = vocabCardLocalToGW(localIdx);
+  var si = vocabCardStepInfo || getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
+  var isEN = si.isEN.indexOf(st) !== -1;
+  var lang = isEN ? 'en' : 'cn';
+  return preloaded[String(gw) + '_' + lang];
+}
+
+function vocabCardEnsureAudio(entryIdx, cb) {
+  var entry = getVocabCardEntries()[entryIdx];
+  if (!entry) { cb('err'); return; }
+  var gg = Math.floor(vocabCardLocalToGW(entry.localIdx) / GROUP_SIZE);
+  var af = getAudioFile(gg);
+  waitForAudioFile(af.fileIdx, cb);
+}
+
+function vocabCardStartCurrent() {
+  var entries = getVocabCardEntries();
+  if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) { vocabCardStop(false); return; }
+  vocabCardPlaying = true;
+  paused = false;
+  step = 0;
+  var localIdx = entries[vocabCardIdx].localIdx;
+  currentGroup = Math.floor(localIdx / GROUP_SIZE);
+  wordIdx = localIdx % GROUP_SIZE;
+  singleWordMode = false;
+  vocabCardStepInfo = getStepInfo('vocab', currentUnit, currentGroup, wordIdx);
+  updateVocabCardUI();
+  vocabCardEnsureAudio(vocabCardIdx, function(err) {
+    if (err || !vocabCardPlaying) { vocabCardStop(false); return; }
+    vocabCardPlaySegment();
+  });
+}
+
+function vocabCardPlaySegment() {
+  if (!vocabCardPlaying || paused) return;
+  var entries = getVocabCardEntries();
+  if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) { vocabCardStop(false); return; }
+  var localIdx = entries[vocabCardIdx].localIdx;
+  var si = vocabCardStepInfo || getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
+  if (step >= si.labels.length) { vocabCardAutoNext(); return; }
+  var url = vocabCardSegUrl(vocabCardIdx, step);
+  if (!url) { step++; vocabCardPlaySegment(); return; }
+  if (step === 0) {
+    var gw = vocabCardLocalToGW(localIdx);
+    var key = prefKey('vocab', gw);
+    var counts = loadCounts('vocab');
+    counts[key] = (counts[key] || 0) + 1;
+    saveCounts('vocab', counts);
+  }
+  updateVocabCardUI();
+  loadAu(0, url);
+  var au = getAu(0);
+  au.onended = function() { if (!vocabCardPlaying) return; step++; vocabCardPlaySegment(); };
+  au.onerror = function() { if (!vocabCardPlaying) return; step++; vocabCardPlaySegment(); };
+  var p = au.play();
+  if (p !== undefined) { p.catch(function() { if (!vocabCardPlaying) return; step++; vocabCardPlaySegment(); }); }
+}
+
+function vocabCardAutoNext() {
+  if (vocabCardIdx + 1 >= getVocabCardEntries().length) { vocabCardStop(false); return; }
+  vocabCardIdx++;
+  vocabCardStartCurrent();
+}
+
+function vocabCardTogglePlay() {
+  if (!vocabCardPlaying) { vocabCardStartCurrent(); return; }
+  if (paused) {
+    var au = getAu(0);
+    if (au && au.src) au.play();
+    paused = false;
+  } else {
+    var au = getAu(0);
+    if (au) au.pause();
+    paused = true;
+  }
+  updateVocabCardUI();
+}
+
+function vocabCardStop(resetPlaying) {
+  if (auA) { auA.onended=null; auA.onerror=null; auA.pause(); auA.removeAttribute('src'); }
+  if (auB) { auB.onended=null; auB.onerror=null; auB.pause(); auB.removeAttribute('src'); }
+  auUrlA = null; auUrlB = null;
+  vocabCardPlaying = false;
+  paused = false;
+  step = 0;
+  currentGroup = -1;
+  wordIdx = 0;
+  vocabCardStepInfo = null;
+  if (resetPlaying !== false) updateVocabCardUI();
+  else updateVocabCardUI();
+}
+
+function vocabCardNext(manual) {
+  var wasPlaying = vocabCardPlaying && !paused;
+  vocabCardStop(true);
+  var entries = getVocabCardEntries();
+  if (vocabCardIdx < entries.length - 1) vocabCardIdx++;
+  updateVocabCardUI();
+  if (wasPlaying) vocabCardStartCurrent();
+}
+
+function vocabCardPrev() {
+  var wasPlaying = vocabCardPlaying && !paused;
+  vocabCardStop(true);
+  if (vocabCardIdx > 0) vocabCardIdx--;
+  updateVocabCardUI();
+  if (wasPlaying) vocabCardStartCurrent();
+}
+
+function vocabCardSetPref(act) {
+  var entry = vocabCardCurrentEntry();
+  if (!entry) return;
+  var gw = vocabCardLocalToGW(entry.localIdx);
+  var key = prefKey('vocab', gw);
+  var prefs = loadPrefs('vocab');
+  prefs[key] = act;
+  savePrefs('vocab', prefs);
+  updateHomeStats();
+  updateVocabCardUI();
+}
+
+function bindVocabCardSwipe() {
+  var card = document.getElementById('vocabCard');
+  if (!card) return;
+  card.ontouchstart = function(e) {
+    vocabCardDragging = true;
+    vocabCardTouchX = e.touches[0].clientX;
+    vocabCardTouchY = e.touches[0].clientY;
+    card.style.transition = 'none';
+  };
+  card.ontouchmove = function(e) {
+    if (!vocabCardDragging) return;
+    var dx = e.touches[0].clientX - vocabCardTouchX;
+    var dy = e.touches[0].clientY - vocabCardTouchY;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 18) return;
+    e.preventDefault();
+    var limited = Math.max(-120, Math.min(120, dx));
+    card.style.transform = 'translateX(' + limited + 'px) rotate(' + (limited / 18) + 'deg)';
+    card.classList.toggle('swipe-left', limited < -70);
+    card.classList.toggle('swipe-right', limited > 70);
+  };
+  card.ontouchend = function(e) {
+    if (!vocabCardDragging) return;
+    vocabCardDragging = false;
+    var changed = e.changedTouches && e.changedTouches[0];
+    var dx = changed ? changed.clientX - vocabCardTouchX : 0;
+    card.style.transition = 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease';
+    if (dx < -80) vocabCardSetPref('familiar');
+    else if (dx > 80) vocabCardSetPref('hard');
+    card.style.transform = 'translateX(0) rotate(0deg)';
+    card.classList.remove('swipe-left','swipe-right');
+  };
 }
 
 function escapeHTML(s) {
@@ -1134,6 +1438,8 @@ function stopAll() {
   if (auB) { auB.onended=null; auB.onerror=null; auB.pause(); auB.removeAttribute('src'); }
   auUrlA = null; auUrlB = null;
   if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
+  vocabCardPlaying = false;
+  vocabCardStepInfo = null;
   clearHighlight();
   var gc = unitGroupCount();
   for (var i = 0; i < gc; i++) setBtnState(i, false, false, false);
