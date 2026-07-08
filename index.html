@@ -267,7 +267,7 @@
   .morning-player-word .mp-cn { font-size: 18px; color: #86868b; margin-bottom: 8px; }
   .morning-player-word .mp-step-hint { font-size: 13px; color: #ff9500; font-weight: 500; }
   .morning-player-word .mp-meta { font-size: 11px; color: #bbb; margin-top: 12px; }
-  .morning-player-controls { padding: 16px; padding-bottom: calc(env(safe-area-inset-bottom) + 16px); border-top: 1px solid #e8e8ed; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .morning-player-controls { padding: 16px; padding-bottom: calc(env(safe-area-inset-bottom) + 16px); border-top: 1px solid #e8e8ed; display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
   .morning-player-controls button {
     height: 44px; border: none; border-radius: 10px;
     font-size: 12px; font-weight: 600; cursor: pointer;
@@ -276,9 +276,12 @@
   .morning-player-controls button:active { opacity: 0.7; }
   .mp-btn-pause { background: #007aff; color: #fff; }
   .mp-btn-replay { background: #f0f0f0; color: #1d1d1f; }
+  .mp-btn-prev { background: #f0f0f0; color: #1d1d1f; }
   .mp-btn-hard { background: #ff3b30; color: #fff; }
   .mp-btn-familiar { background: #34c759; color: #fff; }
   .mp-btn-skip { background: #f0f0f0; color: #8e8e93; }
+  .mp-btn-hard.active { box-shadow: 0 0 0 3px rgba(255,59,48,0.22); transform: scale(0.98); }
+  .mp-btn-familiar.active { box-shadow: 0 0 0 3px rgba(52,199,89,0.22); transform: scale(0.98); }
   /* Summary view */
   .morning-summary { text-align: center; padding: 40px 20px; }
   .morning-summary .ms-icon { font-size: 48px; margin-bottom: 12px; }
@@ -315,7 +318,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-07 16:43</div>
+  <div class="home-sub">Build 2026-07-08 09:36</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -507,11 +510,12 @@
       <div class="mp-meta"><span id="mpSource"></span> · <span id="mpReason"></span></div>
     </div>
     <div class="morning-player-controls">
-      <button class="mp-btn-pause" id="mpBtnPause" onclick="toggleMorningPause()">⏯ 暂停</button>
-      <button class="mp-btn-replay" onclick="replayMorningWord()">🔄 再听</button>
-      <button class="mp-btn-hard" onclick="markMorningHard()">困难</button>
-      <button class="mp-btn-familiar" onclick="markMorningFamiliar()">熟了</button>
-      <button class="mp-btn-skip" onclick="skipMorningWord()">⏭ 跳过</button>
+      <button class="mp-btn-pause" id="mpBtnPause" onclick="toggleMorningPause()">暂停</button>
+      <button class="mp-btn-replay" onclick="replayMorningWord()">再听</button>
+      <button class="mp-btn-prev" onclick="prevMorningWord()" id="mpBtnPrev">上个</button>
+      <button class="mp-btn-hard" id="mpBtnHard" onclick="markMorningHard()">困难</button>
+      <button class="mp-btn-familiar" id="mpBtnFamiliar" onclick="markMorningFamiliar()">熟了</button>
+      <button class="mp-btn-skip" onclick="skipMorningWord()">跳过</button>
     </div>
   </div>
 </div>
@@ -564,7 +568,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783413785;
+var BUILD_TS = 1783474603;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2084,6 +2088,11 @@ function buildMorningQueue() {
   }
 
   morningQueue = q;
+  for (var i = 0; i < q.length; i++) {
+    q[i].morningRating = null;
+    q[i].morningCompleted = false;
+    q[i].morningSkipped = false;
+  }
   morningQueueBuiltAt = Date.now();
   return q;
 }
@@ -2458,6 +2467,18 @@ function updateMorningPlayerUI() {
   document.getElementById('mpReason').textContent = reasonLabel;
   var pct = Math.round((morningPos) / morningQueue.length * 100);
   document.getElementById('mpBar').style.width = pct + '%';
+  updateMorningRatingUI();
+}
+
+function updateMorningRatingUI() {
+  var item = morningQueue[morningPos];
+  var hardBtn = document.getElementById('mpBtnHard');
+  var familiarBtn = document.getElementById('mpBtnFamiliar');
+  if (!item || !hardBtn || !familiarBtn) return;
+  hardBtn.classList.toggle('active', item.morningRating === 'hard');
+  familiarBtn.classList.toggle('active', item.morningRating === 'familiar');
+  hardBtn.textContent = item.morningRating === 'hard' ? '✓ 困难' : '困难';
+  familiarBtn.textContent = item.morningRating === 'familiar' ? '✓ 熟了' : '熟了';
 }
 
 function playMorningCurrent() {
@@ -2476,9 +2497,19 @@ function playMorningCurrent() {
       var url = morningSegUrl(item, morningStep);
       if (!url) {
         // Word complete — all segments done
-        morningSessionCompleted++;
-        advanceMorningCursor(item);
-        updateMorningMeta(item, morningSingle ? 'replay' : 'normal');
+        if (!item.morningCompleted) {
+          item.morningCompleted = true;
+          morningSessionCompleted++;
+          advanceMorningCursor(item);
+          if (item.morningRating === 'hard') {
+            morningSessionHard++;
+          } else if (item.morningRating === 'familiar') {
+            morningSessionFamiliar++;
+          }
+          if (!item.morningRating) {
+            updateMorningMeta(item, morningSingle ? 'replay' : 'normal');
+          }
+        }
         morningSingle = false;
         morningPos++;
         morningStep = 0;
@@ -2599,7 +2630,7 @@ function startMorning() {
   hideAllViews();
   document.getElementById('view-morning-player').style.display = 'block';
   document.getElementById('mpTotal').textContent = morningQueue.length;
-  document.getElementById('mpBtnPause').textContent = '⏯ 暂停';
+  document.getElementById('mpBtnPause').textContent = '暂停';
   playMorningCurrent();
 }
 
@@ -2609,12 +2640,26 @@ function toggleMorningPause() {
   if (morningPaused) {
     au.play();
     morningPaused = false;
-    document.getElementById('mpBtnPause').textContent = '⏯ 暂停';
+    document.getElementById('mpBtnPause').textContent = '暂停';
   } else {
     au.pause();
     morningPaused = true;
     document.getElementById('mpBtnPause').textContent = '▶ 继续';
   }
+}
+
+function prevMorningWord() {
+  if (!morningPlaying) return;
+  if (morningPos <= 0) return;
+  morningStopAudio();
+  morningPos--;
+  morningStep = 0;
+  morningSingle = false;
+  morningPaused = false;
+  var pauseBtn = document.getElementById('mpBtnPause');
+  if (pauseBtn) pauseBtn.textContent = '暂停';
+  updateMorningPlayerUI();
+  playMorningCurrent();
 }
 
 function replayMorningWord() {
@@ -2632,49 +2677,35 @@ function replayMorningWord() {
   playMorningCurrent();
 }
 
-function markMorningHard() {
+function setMorningCurrentRating(rating) {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
-  advanceMorningCursor(item);
-  updateMorningMeta(item, 'hard');
-  // Also write to old prefs
+  item.morningRating = rating;
+  updateMorningMeta(item, rating);
+  // Sync to old prefs for hb/uf interop
   var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
   try {
     var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
-    prefs[item.en] = 'hard';
+    prefs[item.en] = rating;
     localStorage.setItem(prefsKey, JSON.stringify(prefs));
   } catch(e) {}
-  morningSessionHard++;
-  morningSessionCompleted++;
-  morningStopAudio();
-  morningPos++;
-  morningStep = 0;
-  morningSingle = false;
-  playMorningCurrent();
+  updateMorningRatingUI();
+}
+
+function markMorningHard() {
+  setMorningCurrentRating('hard');
 }
 
 function markMorningFamiliar() {
-  if (morningPos >= morningQueue.length) return;
-  var item = morningQueue[morningPos];
-  advanceMorningCursor(item);
-  updateMorningMeta(item, 'familiar');
-  var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
-  try {
-    var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
-    prefs[item.en] = 'familiar';
-    localStorage.setItem(prefsKey, JSON.stringify(prefs));
-  } catch(e) {}
-  morningSessionFamiliar++;
-  morningSessionCompleted++;
-  morningStopAudio();
-  morningPos++;
-  morningStep = 0;
-  morningSingle = false;
-  playMorningCurrent();
+  setMorningCurrentRating('familiar');
 }
 
 function skipMorningWord() {
-  morningSessionSkipped++;
+  var item = morningQueue[morningPos];
+  if (item && !item.morningSkipped) {
+    item.morningSkipped = true;
+    morningSessionSkipped++;
+  }
   morningStopAudio();
   morningPos++;
   morningStep = 0;
