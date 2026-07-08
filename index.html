@@ -148,9 +148,11 @@
   .vc-example-en { font-size: 21px; line-height: 1.45; font-weight: 750; font-style: italic; color: #777; margin-bottom: 10px; }
   .vc-example-cn { font-size: 19px; line-height: 1.45; font-weight: 700; color: #aaa; margin-bottom: 28px; }
   .vc-meta { margin-top: auto; font-size: 13px; line-height: 1.45; color: #b0b0b5; }
-  .vc-status { margin-top: 12px; height: 22px; font-size: 14px; font-weight: 700; color: #8e8e93; text-align: center; }
+  .vc-status { margin-top: 12px; min-height: 24px; font-size: 14px; font-weight: 700; color: #8e8e93; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .vc-status.familiar { color: #1b8f3a; }
   .vc-status.hard { color: #d86b00; }
+  .vc-undo { border: none; border-radius: 999px; background: #f2f2f7; color: #6e6e73; font-size: 12px; font-weight: 800; padding: 4px 10px; -webkit-appearance: none; cursor: pointer; }
+  .vc-undo:active { opacity: 0.72; }
   .vocab-card-controls { display: flex; justify-content: center; gap: 24px; margin-top: 28px; }
   .vc-btn {
     width: 68px; height: 68px; border-radius: 50%; border: 1px solid #dedee3; background: rgba(255,255,255,0.72);
@@ -357,7 +359,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-08 14:04</div>
+  <div class="home-sub">Build 2026-07-08 14:13</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -611,7 +613,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783490663;
+var BUILD_TS = 1783491234;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1074,8 +1076,14 @@ function updateVocabCardUI() {
   var pref = vocabCardCurrentPref();
   var status = document.getElementById('vcStatus');
   status.className = 'vc-status';
-  if (pref === 'familiar') { status.textContent = '已标记：熟了'; status.classList.add('familiar'); }
-  else if (pref === 'hard') { status.textContent = '已标记：不熟'; status.classList.add('hard'); }
+  if (pref === 'familiar') {
+    status.classList.add('familiar');
+    status.innerHTML = '<span>已标记：熟了</span><button class="vc-undo" onclick="vocabCardUndoPref(event)">撤销</button>';
+  }
+  else if (pref === 'hard') {
+    status.classList.add('hard');
+    status.innerHTML = '<span>已标记：不熟</span><button class="vc-undo" onclick="vocabCardUndoPref(event)">撤销</button>';
+  }
   else { status.textContent = ''; }
   var cnts = loadCounts('vocab');
   var entry = vocabCardCurrentEntry();
@@ -1213,6 +1221,19 @@ function vocabCardSetPref(act) {
   var key = prefKey('vocab', gw);
   var prefs = loadPrefs('vocab');
   prefs[key] = act;
+  savePrefs('vocab', prefs);
+  updateHomeStats();
+  updateVocabCardUI();
+}
+
+function vocabCardUndoPref(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  var entry = vocabCardCurrentEntry();
+  if (!entry) return;
+  var gw = vocabCardLocalToGW(entry.localIdx);
+  var key = prefKey('vocab', gw);
+  var prefs = loadPrefs('vocab');
+  delete prefs[key];
   savePrefs('vocab', prefs);
   updateHomeStats();
   updateVocabCardUI();
