@@ -319,7 +319,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-08 10:03</div>
+  <div class="home-sub">Build 2026-07-08 11:20</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -569,7 +569,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783476236;
+var BUILD_TS = 1783480830;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2401,27 +2401,41 @@ function getMorningStepLabels(item) {
       : JSON.parse(localStorage.getItem('hb_prefs')||'{}');
     pref = prefs[item.en];
   } catch(e) { pref = null; }
-  var hasEx = !!(item.ex); // only vocab items can have examples
-  var labels, langs;
+
+  var hasEx = item.source === 'vocab' && !!item.ex;
+  var hasExCn = item.source === 'vocab' && !!item.ex_cn;
+  var labels = [];
+  var langs = [];
+  function add(label, lang) { labels.push(label); langs.push(lang); }
+
   if (pref === 'familiar') {
-    labels = ['英①','中①'];
-    langs = ['en','cn'];
+    add('英①', 'en');
+    add('中①', 'cn');
   } else if (pref === 'hard') {
-    if (hasEx) {
-      labels = ['例英','英①','英②','例中','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'];
-      langs = ['ex','en','en','ex_cn','cn','cn','en','cn','en','cn','en','cn','en','cn'];
-    } else {
-      labels = ['英①','英②','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'];
-      langs = ['en','en','cn','cn','en','cn','en','cn','en','cn','en','cn'];
-    }
+    if (hasEx) add('例英', 'ex');
+    add('英①', 'en');
+    add('英②', 'en');
+    if (hasExCn) add('例中', 'ex_cn');
+    add('中①', 'cn');
+    add('中②', 'cn');
+    add('英③', 'en');
+    add('中③', 'cn');
+    add('英④', 'en');
+    add('中④', 'cn');
+    add('英⑤', 'en');
+    add('中⑤', 'cn');
+    add('英⑥', 'en');
+    add('中⑥', 'cn');
   } else {
-    if (hasEx) {
-      labels = ['例英','英①','英②','中①','中②','英③','中③','英④','中④'];
-      langs = ['ex','en','en','cn','cn','en','cn','en','cn'];
-    } else {
-      labels = ['英①','英②','中①','中②','英③','中③','英④','中④'];
-      langs = ['en','en','cn','cn','en','cn','en','cn'];
-    }
+    if (hasEx) add('例英', 'ex');
+    add('英①', 'en');
+    add('英②', 'en');
+    add('中①', 'cn');
+    add('中②', 'cn');
+    add('英③', 'en');
+    add('中③', 'cn');
+    add('英④', 'en');
+    add('中④', 'cn');
   }
   return { labels: labels, langs: langs };
 }
@@ -2523,13 +2537,21 @@ function playMorningCurrent() {
 
   ensureMorningAudio(item, function(err, fileOrUnit) {
     if (token !== _morningPlayToken) return;
+    if (item !== morningQueue[morningPos]) return;
     if (err) { skipMorningWord(); return; }
 
     function playSegment() {
+      if (token !== _morningPlayToken) return;
+      if (item !== morningQueue[morningPos]) return;
       if (!morningPlaying || morningPaused || morningEnded) return;
       var url = morningSegUrl(item, morningStep);
       if (!url) {
-        // Word complete — all segments done
+        var stepInfo = getMorningStepLabels(item);
+        if (morningStep < stepInfo.labels.length) {
+          morningStep++;
+          playSegment();
+          return;
+        }
         if (!item.morningCompleted) {
           item.morningCompleted = true;
           morningSessionCompleted++;
@@ -2556,27 +2578,35 @@ function playMorningCurrent() {
 
       var au = morningGetAu(morningSlot);
       au.onended = function() {
+        if (token !== _morningPlayToken) return;
+        if (item !== morningQueue[morningPos]) return;
         morningStep++;
         morningSlot = 1 - morningSlot;
         playSegment();
       };
       au.onerror = function() {
+        if (token !== _morningPlayToken) return;
+        if (item !== morningQueue[morningPos]) return;
         skipMorningWord();
       };
       morningLoadAu(morningSlot, url);
       updateMorningPlayerUI();
-      au.play().catch(function() { skipMorningWord(); });
+      au.play().catch(function() {
+        if (token !== _morningPlayToken) return;
+        if (item !== morningQueue[morningPos]) return;
+        skipMorningWord();
+      });
 
-      // Preload next segment into the OTHER slot
       var otherSlot = 1 - morningSlot;
       var nextStep = morningStep + 1;
       var nextUrl = morningSegUrl(item, nextStep);
       if (!nextUrl) {
-        // Last segment of this word — preload next word's first segment
         var nextIdx = morningPos + 1;
         if (nextIdx < morningQueue.length) {
           var nItem = morningQueue[nextIdx];
           ensureMorningAudio(nItem, function() {
+            if (token !== _morningPlayToken) return;
+            if (item !== morningQueue[morningPos]) return;
             var nUrl = morningSegUrl(nItem, 0);
             if (nUrl) morningLoadAu(otherSlot, nUrl);
           });
@@ -2715,17 +2745,37 @@ function replayMorningWord() {
 
 function commitMorningRatingIdempotent(item, oldRating, newRating) {
   if (oldRating === newRating) return;
-  if (oldRating) {
-    // Undo old rating: decrement hit counter, don't touch listens/schedule
-    var meta = loadMorningMeta();
-    var key = morningKey(item);
-    var m = meta[key] || {};
-    if (oldRating === 'hard') m.hardHits = Math.max(0, (m.hardHits || 0) - 1);
-    else if (oldRating === 'familiar') m.familiarHits = Math.max(0, (m.familiarHits || 0) - 1);
-    saveMorningMeta(meta);
+
+  var meta = loadMorningMeta();
+  var key = morningKey(item);
+  var m = meta[key] || {};
+  var now = Date.now();
+
+  if (!m.firstAt) m.firstAt = now;
+  m.hardHits = m.hardHits || 0;
+  m.familiarHits = m.familiarHits || 0;
+  m.replayHits = m.replayHits || 0;
+  m.listens = m.listens || 0;
+
+  if (oldRating === 'hard') {
+    m.hardHits = Math.max(0, m.hardHits - 1);
+  } else if (oldRating === 'familiar') {
+    m.familiarHits = Math.max(0, m.familiarHits - 1);
+  } else {
+    m.listens++;
   }
-  // Write new rating (increments normally)
-  updateMorningMeta(item, newRating);
+
+  if (newRating === 'hard') {
+    m.hardHits++;
+  } else if (newRating === 'familiar') {
+    m.familiarHits++;
+  }
+
+  m.lastResult = newRating;
+  m.lastAt = now;
+  m.nextDueAt = calcNextDueAt(m, newRating);
+  meta[key] = m;
+  saveMorningMeta(meta);
 }
 
 function setMorningCurrentRating(rating) {
