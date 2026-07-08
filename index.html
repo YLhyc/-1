@@ -277,6 +277,7 @@
   .mp-btn-pause { background: #007aff; color: #fff; }
   .mp-btn-replay { background: #f0f0f0; color: #1d1d1f; }
   .mp-btn-prev { background: #f0f0f0; color: #1d1d1f; }
+  .mp-btn-prev:disabled { opacity: 0.35; }
   .mp-btn-hard { background: #ff3b30; color: #fff; }
   .mp-btn-familiar { background: #34c759; color: #fff; }
   .mp-btn-skip { background: #f0f0f0; color: #8e8e93; }
@@ -318,7 +319,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-08 09:36</div>
+  <div class="home-sub">Build 2026-07-08 10:03</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -568,7 +569,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783474603;
+var BUILD_TS = 1783476236;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1962,6 +1963,7 @@ function buildMorningCandidates() {
     if (prefsV[w.en] === 'hidden') continue;
     candidates.push({
       source: 'vocab', key: 'vocab:' + w.en, en: w.en, cn: w.cn,
+      ex: w.ex || null, ex_cn: w.ex_cn || null,
       idx: i, dict: 'vocab', reason: ''
     });
   }
@@ -2288,7 +2290,9 @@ function loadMorningVocabFile(fileIdx, cb) {
       for (var w = 0; w < data.words.length; w++) {
         words.push({
           en_url: data.words[w] ? b64toBlobUrl(data.words[w].en) : null,
-          cn_url: data.words[w] ? b64toBlobUrl(data.words[w].cn) : null
+          cn_url: data.words[w] ? b64toBlobUrl(data.words[w].cn) : null,
+          ex_url: data.words[w] && data.words[w].ex ? b64toBlobUrl(data.words[w].ex) : null,
+          ex_cn_url: data.words[w] && data.words[w].ex_cn ? b64toBlobUrl(data.words[w].ex_cn) : null
         });
       }
       _mVocabAudio[fileIdx] = words;
@@ -2352,6 +2356,8 @@ function cleanupMorningAudioCache() {
     for (var w = 0; w < words.length; w++) {
       if (words[w].en_url) URL.revokeObjectURL(words[w].en_url);
       if (words[w].cn_url) URL.revokeObjectURL(words[w].cn_url);
+      if (words[w].ex_url) URL.revokeObjectURL(words[w].ex_url);
+      if (words[w].ex_cn_url) URL.revokeObjectURL(words[w].ex_cn_url);
     }
     delete _mVocabAudio[k];
   }
@@ -2370,6 +2376,7 @@ function cleanupMorningAudioCache() {
 // ── Playback engine ──
 var morningPaused = false;
 var morningPlaying = false;
+var _morningPlayToken = 0; // prevents stale async callbacks
 var morningPos = 0;       // index in morningQueue
 var morningStep = 0;      // current step within word
 var morningSlot = 0;      // 0 or 1 (AB-slot)
@@ -2394,15 +2401,35 @@ function getMorningStepLabels(item) {
       : JSON.parse(localStorage.getItem('hb_prefs')||'{}');
     pref = prefs[item.en];
   } catch(e) { pref = null; }
-  if (pref === 'familiar') return { labels: ['英①','中①'], isENs: [true, false] };
-  if (pref === 'hard') return { labels: ['英①','英②','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'], isENs: [true,true,false,false,true,false,true,false,true,false,true,false] };
-  return { labels: ['英①','英②','中①','中②','英③','中③','英④','中④'], isENs: [true,true,false,false,true,false,true,false] };
+  var hasEx = !!(item.ex); // only vocab items can have examples
+  var labels, langs;
+  if (pref === 'familiar') {
+    labels = ['英①','中①'];
+    langs = ['en','cn'];
+  } else if (pref === 'hard') {
+    if (hasEx) {
+      labels = ['例英','英①','英②','例中','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'];
+      langs = ['ex','en','en','ex_cn','cn','cn','en','cn','en','cn','en','cn','en','cn'];
+    } else {
+      labels = ['英①','英②','中①','中②','英③','中③','英④','中④','英⑤','中⑤','英⑥','中⑥'];
+      langs = ['en','en','cn','cn','en','cn','en','cn','en','cn','en','cn'];
+    }
+  } else {
+    if (hasEx) {
+      labels = ['例英','英①','英②','中①','中②','英③','中③','英④','中④'];
+      langs = ['ex','en','en','cn','cn','en','cn','en','cn'];
+    } else {
+      labels = ['英①','英②','中①','中②','英③','中③','英④','中④'];
+      langs = ['en','en','cn','cn','en','cn','en','cn'];
+    }
+  }
+  return { labels: labels, langs: langs };
 }
 
 function morningSegUrl(item, step) {
   var info = getMorningStepLabels(item);
   if (step >= info.labels.length) return null;
-  var lang = info.isENs[step] ? 'en' : 'cn';
+  var lang = info.langs[step];
   if (item.source === 'vocab') {
     var gIdx = Math.floor(item.idx / GROUP_SIZE);
     var wInGroup = item.idx % GROUP_SIZE;
@@ -2412,6 +2439,8 @@ function morningSegUrl(item, step) {
     if (!file) return null;
     var offset = gMap[1] + wInGroup;
     if (offset >= file.length) return null;
+    if (lang === 'ex') return file[offset].ex_url || null;
+    if (lang === 'ex_cn') return file[offset].ex_cn_url || null;
     return lang === 'en' ? file[offset].en_url : file[offset].cn_url;
   } else {
     var unitIdx = Math.floor(item.idx / 30);
@@ -2467,6 +2496,7 @@ function updateMorningPlayerUI() {
   document.getElementById('mpReason').textContent = reasonLabel;
   var pct = Math.round((morningPos) / morningQueue.length * 100);
   document.getElementById('mpBar').style.width = pct + '%';
+  document.getElementById('mpBtnPrev').disabled = (morningPos <= 0);
   updateMorningRatingUI();
 }
 
@@ -2486,10 +2516,13 @@ function playMorningCurrent() {
     endMorningSession();
     return;
   }
+  _morningPlayToken++;
+  var token = _morningPlayToken;
   var item = morningQueue[morningPos];
   updateMorningPlayerUI();
 
   ensureMorningAudio(item, function(err, fileOrUnit) {
+    if (token !== _morningPlayToken) return;
     if (err) { skipMorningWord(); return; }
 
     function playSegment() {
@@ -2622,6 +2655,7 @@ function startMorning() {
   morningPlaying = true;
   morningSingle = false;
   morningEnded = false;
+  _morningPlayToken = 0;
   morningSessionStart = Date.now();
   morningSessionHard = 0;
   morningSessionFamiliar = 0;
@@ -2651,6 +2685,7 @@ function toggleMorningPause() {
 function prevMorningWord() {
   if (!morningPlaying) return;
   if (morningPos <= 0) return;
+  _morningPlayToken++;
   morningStopAudio();
   morningPos--;
   morningStep = 0;
@@ -2671,17 +2706,34 @@ function replayMorningWord() {
   m.replayHits = (m.replayHits || 0) + 1;
   meta[key] = m;
   saveMorningMeta(meta);
+  _morningPlayToken++;
   morningStopAudio();
   morningStep = 0;
   morningSingle = true;
   playMorningCurrent();
 }
 
+function commitMorningRatingIdempotent(item, oldRating, newRating) {
+  if (oldRating === newRating) return;
+  if (oldRating) {
+    // Undo old rating: decrement hit counter, don't touch listens/schedule
+    var meta = loadMorningMeta();
+    var key = morningKey(item);
+    var m = meta[key] || {};
+    if (oldRating === 'hard') m.hardHits = Math.max(0, (m.hardHits || 0) - 1);
+    else if (oldRating === 'familiar') m.familiarHits = Math.max(0, (m.familiarHits || 0) - 1);
+    saveMorningMeta(meta);
+  }
+  // Write new rating (increments normally)
+  updateMorningMeta(item, newRating);
+}
+
 function setMorningCurrentRating(rating) {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
+  if (item.morningRating === rating) return; // idempotent
+  commitMorningRatingIdempotent(item, item.morningRating, rating);
   item.morningRating = rating;
-  updateMorningMeta(item, rating);
   // Sync to old prefs for hb/uf interop
   var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
   try {
@@ -2706,6 +2758,7 @@ function skipMorningWord() {
     item.morningSkipped = true;
     morningSessionSkipped++;
   }
+  _morningPlayToken++;
   morningStopAudio();
   morningPos++;
   morningStep = 0;
@@ -2731,6 +2784,13 @@ function endMorningSession(status) {
   morningStopAudio();
   morningPlaying = false;
   morningEnded = true;
+  // Recalculate hard/familiar from queue final state
+  morningSessionHard = 0;
+  morningSessionFamiliar = 0;
+  for (var i = 0; i < morningQueue.length; i++) {
+    if (morningQueue[i].morningRating === 'hard') morningSessionHard++;
+    else if (morningQueue[i].morningRating === 'familiar') morningSessionFamiliar++;
+  }
   cleanupMorningAudioCache();
 
   status = status || 'completed';
