@@ -265,6 +265,9 @@
   .morning-player-word { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
   .morning-player-word .mp-en { font-size: 32px; font-weight: 700; color: #1d1d1f; margin-bottom: 8px; }
   .morning-player-word .mp-cn { font-size: 18px; color: #86868b; margin-bottom: 8px; }
+  .morning-player-word .mp-example { max-width: 92%; margin: 10px auto 4px; padding: 10px 12px; border-radius: 12px; background: #f5f5f7; text-align: left; display: none; }
+  .morning-player-word .mp-example-en { font-size: 15px; line-height: 1.45; color: #1d1d1f; margin-bottom: 4px; }
+  .morning-player-word .mp-example-cn { font-size: 13px; line-height: 1.45; color: #6e6e73; }
   .morning-player-word .mp-step-hint { font-size: 13px; color: #ff9500; font-weight: 500; }
   .morning-player-word .mp-meta { font-size: 11px; color: #bbb; margin-top: 12px; }
   .morning-player-controls { padding: 16px; padding-bottom: calc(env(safe-area-inset-bottom) + 16px); border-top: 1px solid #e8e8ed; display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
@@ -319,7 +322,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-08 11:20</div>
+  <div class="home-sub">Build 2026-07-08 12:34</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -508,6 +511,10 @@
       <div class="mp-step-hint" id="mpStepHint"></div>
       <div class="mp-en" id="mpEn"></div>
       <div class="mp-cn" id="mpCn"></div>
+      <div class="mp-example" id="mpExampleBox">
+        <div class="mp-example-en" id="mpExampleEn"></div>
+        <div class="mp-example-cn" id="mpExampleCn"></div>
+      </div>
       <div class="mp-meta"><span id="mpSource"></span> · <span id="mpReason"></span></div>
     </div>
     <div class="morning-player-controls">
@@ -569,7 +576,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783480830;
+var BUILD_TS = 1783485280;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2499,6 +2506,22 @@ function updateMorningPlayerUI() {
   document.getElementById('mpTotal').textContent = morningQueue.length;
   document.getElementById('mpEn').textContent = item.en;
   document.getElementById('mpCn').textContent = item.cn;
+  var exBox = document.getElementById('mpExampleBox');
+  var exEn = document.getElementById('mpExampleEn');
+  var exCn = document.getElementById('mpExampleCn');
+  if (exBox && exEn && exCn) {
+    if (item.ex || item.ex_cn) {
+      exBox.style.display = 'block';
+      exEn.textContent = item.ex || '';
+      exEn.style.display = item.ex ? 'block' : 'none';
+      exCn.textContent = item.ex_cn || '';
+      exCn.style.display = item.ex_cn ? 'block' : 'none';
+    } else {
+      exBox.style.display = 'none';
+      exEn.textContent = '';
+      exCn.textContent = '';
+    }
+  }
   if (morningStep < info.labels.length) {
     document.getElementById('mpStepHint').textContent = info.labels[morningStep];
   } else {
