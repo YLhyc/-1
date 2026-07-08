@@ -225,6 +225,19 @@
   .sync-tab { font-size: 12px; color: #86868b; margin-bottom: 10px; }
   .sync-tab span { cursor: pointer; padding: 2px 8px; border-radius: 6px; }
   .sync-tab span.active { background: #e8f0fe; color: #007aff; font-weight: 600; }
+  .backup-card { width: 340px; max-width: calc(100vw - 32px); text-align: left; }
+  .backup-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #1d1d1f; }
+  .backup-desc { font-size: 12px; color: #6e6e73; line-height: 1.5; margin-bottom: 14px; }
+  .backup-status { background: #f5f5f7; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #3a3a3c; line-height: 1.6; margin-bottom: 12px; }
+  .backup-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .backup-action { height: 42px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
+  .backup-export { background: #34c759; color: #fff; }
+  .backup-import { background: #007aff; color: #fff; }
+  .backup-restore { background: #fff3cd; color: #8a5a00; border: 1px solid #ffe08a; grid-column: 1 / -1; }
+  .backup-textarea { width: 100%; height: 84px; border: 1px solid #d2d2d7; border-radius: 10px; padding: 9px; font-size: 12px; resize: none; -webkit-appearance: none; }
+  .backup-msg { min-height: 18px; font-size: 11px; margin-top: 8px; color: #6e6e73; }
+  .backup-msg.ok { color: #248a3d; }
+  .backup-msg.err { color: #d70015; }
   /* ── Update banner ── */
   .update-banner { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     background: #007aff; color: #fff; text-align: center; padding: 10px 16px;
@@ -343,7 +356,7 @@
 </head>
 <body>
 <div class="update-banner" id="updateBanner" onclick="location.reload()">🔄 有新版本，点击更新</div>
-<div class="update-banner" id="exportReminder" style="display:none;background:#e8f5e9;color:#2e7d32;" onclick="document.getElementById('directExportAllBtn').scrollIntoView({behavior:'smooth'})">💾 已超过7天未备份学习数据，点击前往导出</div>
+<div class="update-banner" id="exportReminder" style="display:none;background:#e8f5e9;color:#2e7d32;" onclick="openBackupCenter()">💾 已超过7天未备份学习数据，点击备份</div>
 
 <!-- ═══════════ DIAGNOSTIC OVERLAY ═══════════ -->
 <div id="diagOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;overflow:auto;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
@@ -359,7 +372,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-08 14:13</div>
+  <div class="home-sub">Build 2026-07-08 16:39</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -396,13 +409,7 @@
   </div>
   <div class="total-stat" id="homeSyncLink" style="margin-top:24px;">
     <button style="background:none;border:none;color:#007aff;font-size:14px;cursor:pointer;padding:4px 8px;" onclick="toggleSyncPanel()">☁ 跨设备/跨模式同步</button>
-    <br>
-    <button id="directExportAllBtn" style="background:#34c759;color:#fff;border:none;font-size:11px;cursor:pointer;padding:4px 10px;border-radius:4px;margin:4px 2px;" onclick="directExportAll()">📤 导出所有数据</button>
-    <button style="background:#007aff;color:#fff;border:none;font-size:11px;cursor:pointer;padding:4px 10px;border-radius:4px;margin:4px 2px;" onclick="toggleDirectImport()">📥 导入</button>
-    <div id="directImportBox" style="display:none;margin-top:6px;">
-      <textarea id="directImportText" placeholder="在此粘贴之前导出的数据码…" style="width:100%;height:60px;font-size:11px;border:1px solid #ddd;border-radius:8px;padding:6px;"></textarea>
-      <button style="background:#007aff;color:#fff;border:none;font-size:11px;cursor:pointer;padding:4px 12px;border-radius:4px;margin-top:4px;" onclick="directImportAll()">确认导入</button>
-    </div>
+    <button id="directExportAllBtn" style="background:none;border:none;color:#34c759;font-size:14px;cursor:pointer;padding:4px 8px;" onclick="openBackupCenter()">💾 学习记录备份</button>
   </div>
 </div>
 
@@ -434,6 +441,24 @@
     <label for="showHiddenToggleG">显示已隐藏的词</label>
   </div>
   <div id="groupContainer"></div>
+</div>
+
+<!-- ═══════════ BACKUP CENTER ═══════════ -->
+<div class="sync-modal" id="backupModal">
+  <div class="sync-modal-bg" onclick="closeBackupCenter()"></div>
+  <div class="sync-modal-card backup-card">
+    <div class="backup-title">学习记录备份</div>
+    <div class="backup-desc">保存生词本、红宝书、不熟词和晨读记录。导入会覆盖当前记录，导入前会自动保存一份临时备份。</div>
+    <div class="backup-status" id="backupStatus"></div>
+    <div class="backup-actions">
+      <button class="backup-action backup-export" onclick="directExportAll()">导出备份</button>
+      <button class="backup-action backup-import" onclick="directImportAll()">导入恢复</button>
+      <button class="backup-action backup-restore" id="restorePreImportBtn" onclick="restorePreImportBackup()" style="display:none;">恢复导入前备份</button>
+    </div>
+    <textarea class="backup-textarea" id="directImportText" placeholder="导出后这里会出现备份码；导入时也粘贴到这里"></textarea>
+    <div class="backup-msg" id="backupMsg"></div>
+    <button class="sync-close" onclick="closeBackupCenter()">关闭</button>
+  </div>
 </div>
 
 <!-- ═══════════ SYNC MODAL (always visible) ═══════════ -->
@@ -613,7 +638,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783491234;
+var BUILD_TS = 1783499963;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1985,89 +2010,221 @@ function b64decode(str) {
   }).join(''));
 }
 
+var BACKUP_APP_ID = 'kaoyan-english-review';
+var BACKUP_VERSION = 2;
+var PRE_IMPORT_BACKUP_KEY = 'learning_pre_import_backup_v1';
+var PRE_IMPORT_BACKUP_TS_KEY = 'learning_pre_import_backup_ts';
+
+function safeJsonFromStorage(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch(e) { return fallback; }
+}
+
+function isPlainObject(obj) {
+  return !!obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+function createLearningBackup() {
+  var all = {};
+  ['vocab','hongbaoshu'].forEach(function(d) {
+    all[d] = { p: loadPrefs(d), c: loadCounts(d) };
+  });
+  all.uf = safeJsonFromStorage('uf_prefs', {});
+  all.uf_counts = safeJsonFromStorage('uf_counts', {});
+  all.morning = {
+    meta: safeJsonFromStorage(MOR_KEYS.meta, {}),
+    settings: safeJsonFromStorage(MOR_KEYS.settings, {}),
+    cursor: safeJsonFromStorage(MOR_KEYS.cursor, {}),
+    sessions: safeJsonFromStorage(MOR_KEYS.sessions, [])
+  };
+  return {
+    app: BACKUP_APP_ID,
+    v: BACKUP_VERSION,
+    exportedAt: new Date().toISOString(),
+    exportedAtMs: Date.now(),
+    data: all
+  };
+}
+
+function normalizeBackupPayload(payload) {
+  if (!isPlainObject(payload)) throw new Error('备份格式不是对象');
+  if (payload.app === BACKUP_APP_ID && payload.data) return payload.data;
+  return payload; // Compatible with older all-data export codes.
+}
+
+function validateDictBackup(name, data) {
+  if (!isPlainObject(data)) throw new Error(name + ' 数据缺失');
+  if (data.p && !isPlainObject(data.p)) throw new Error(name + ' 标记格式错误');
+  if (data.c && !isPlainObject(data.c)) throw new Error(name + ' 次数格式错误');
+  if (data.p) {
+    for (var k in data.p) {
+      if (['familiar','hard','hidden'].indexOf(data.p[k]) === -1) throw new Error(name + ' 标记值无效');
+    }
+  }
+  if (data.c) {
+    for (var ck in data.c) {
+      var n = Number(data.c[ck]);
+      if (!isFinite(n) || n < 0) throw new Error(name + ' 次数值无效');
+    }
+  }
+}
+
+function validateLearningBackup(all) {
+  if (!isPlainObject(all)) throw new Error('备份数据格式错误');
+  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning) throw new Error('没有找到可恢复的学习记录');
+  validateDictBackup('生词本', all.vocab || {});
+  validateDictBackup('红宝书', all.hongbaoshu || {});
+  if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
+  if (all.uf_counts && !isPlainObject(all.uf_counts)) throw new Error('不熟词次数格式错误');
+  if (all.morning) {
+    if (!isPlainObject(all.morning)) throw new Error('晨读数据格式错误');
+    if (all.morning.sessions && !Array.isArray(all.morning.sessions)) throw new Error('晨读记录格式错误');
+  }
+}
+
+function parseLearningBackupCode(code) {
+  if (!code) throw new Error('请先粘贴备份码');
+  var payload;
+  try { payload = JSON.parse(b64decode(code)); } catch(e2) {
+    payload = JSON.parse(code);
+  }
+  var all = normalizeBackupPayload(payload);
+  validateLearningBackup(all);
+  return all;
+}
+
+function applyLearningBackup(all) {
+  ['vocab','hongbaoshu'].forEach(function(d) {
+    var data = all[d] || {};
+    savePrefs(d, isPlainObject(data.p) ? data.p : {});
+    saveCounts(d, isPlainObject(data.c) ? data.c : {});
+  });
+  localStorage.setItem('uf_prefs', JSON.stringify(isPlainObject(all.uf) ? all.uf : {}));
+  localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
+  if (all.morning && isPlainObject(all.morning)) {
+    if (isPlainObject(all.morning.meta)) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
+    if (isPlainObject(all.morning.settings)) localStorage.setItem(MOR_KEYS.settings, JSON.stringify(all.morning.settings));
+    if (isPlainObject(all.morning.cursor)) localStorage.setItem(MOR_KEYS.cursor, JSON.stringify(all.morning.cursor));
+    if (Array.isArray(all.morning.sessions)) localStorage.setItem(MOR_KEYS.sessions, JSON.stringify(all.morning.sessions));
+  }
+}
+
+function savePreImportBackup() {
+  var snapshot = createLearningBackup();
+  localStorage.setItem(PRE_IMPORT_BACKUP_KEY, JSON.stringify(snapshot));
+  localStorage.setItem(PRE_IMPORT_BACKUP_TS_KEY, String(Date.now()));
+}
+
+function showBackupMsg(text, cls) {
+  var msg = document.getElementById('backupMsg');
+  if (msg) { msg.textContent = text; msg.className = 'backup-msg ' + (cls || ''); }
+}
+
+function formatLocalTime(ms) {
+  var d = new Date(Number(ms));
+  if (!isFinite(d.getTime())) return '未知时间';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function countObject(obj) {
+  return isPlainObject(obj) ? Object.keys(obj).length : 0;
+}
+
+function updateBackupStatus() {
+  var status = document.getElementById('backupStatus');
+  if (!status) return;
+  var last = localStorage.getItem('last_export_ts');
+  var lastText = last ? formatLocalTime(last) : '还没有备份';
+  var backup = createLearningBackup().data;
+  var morningCount = backup.morning && Array.isArray(backup.morning.sessions) ? backup.morning.sessions.length : 0;
+  status.innerHTML =
+    '上次备份：' + lastText + '<br>' +
+    '当前记录：生词本 ' + countObject(backup.vocab.p) + '，红宝书 ' + countObject(backup.hongbaoshu.p) +
+    '，不熟词 ' + countObject(backup.uf) + '，晨读 ' + morningCount + ' 次';
+  var restoreBtn = document.getElementById('restorePreImportBtn');
+  if (restoreBtn) restoreBtn.style.display = localStorage.getItem(PRE_IMPORT_BACKUP_KEY) ? 'block' : 'none';
+}
+
+function openBackupCenter() {
+  var modal = document.getElementById('backupModal');
+  if (modal) modal.classList.add('show');
+  updateBackupStatus();
+  showBackupMsg('', '');
+}
+
+function closeBackupCenter() {
+  var modal = document.getElementById('backupModal');
+  if (modal) modal.classList.remove('show');
+}
+
 function directExportAll() {
   try {
-    var all = {};
-    ['vocab','hongbaoshu'].forEach(function(d) {
-      all[d] = { p: loadPrefs(d), c: loadCounts(d) };
-    });
-    try { all['uf'] = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) { all['uf'] = {}; }
-    try { all['uf_counts'] = JSON.parse(localStorage.getItem('uf_counts')||'{}'); } catch(e) { all['uf_counts'] = {}; }
-    var raw = JSON.stringify(all);
+    openBackupCenter();
+    var snapshot = createLearningBackup();
+    var raw = JSON.stringify(snapshot);
     var code = b64encode(raw);
-    // Always show in textarea — most reliable on iOS
-    var box = document.getElementById('directImportBox');
     var ta = document.getElementById('directImportText');
-    box.style.display = 'block';
     ta.value = code;
     ta.focus();
     ta.select();
-    // Try clipboard as bonus
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(code).catch(function() {});
+      navigator.clipboard.writeText(code).then(function() {
+        showBackupMsg('已生成并复制备份码，也可以手动复制上方内容', 'ok');
+      }).catch(function() {
+        showBackupMsg('已生成备份码，请手动复制保存', 'ok');
+      });
+    } else {
+      showBackupMsg('已生成备份码，请手动复制保存', 'ok');
     }
+    localStorage.setItem('last_export_ts', Date.now());
+    var reminder = document.getElementById('exportReminder');
+    if (reminder) reminder.style.display = 'none';
+    updateBackupStatus();
   } catch(e) {
-    alert('导出失败: ' + e.message);
+    showBackupMsg('导出失败：' + e.message, 'err');
   }
 }
 
 function toggleDirectImport() {
-  var box = document.getElementById('directImportBox');
-  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  openBackupCenter();
+  var ta = document.getElementById('directImportText');
+  if (ta) ta.focus();
 }
 
 function directImportAll() {
   try {
-    var code = document.getElementById('directImportText').value.trim();
-    if (!code) { alert('请先粘贴数据码'); return; }
-    var all;
-    try { all = JSON.parse(b64decode(code)); } catch(e2) {
-      // Maybe it's raw JSON
-      try { all = JSON.parse(code); } catch(e3) {
-        alert('数据码无效：' + e3.message);
-        return;
-      }
-    }
-    Object.keys(all).forEach(function(d) {
-      var data = all[d];
-      if (d === 'vocab' || d === 'hongbaoshu') {
-        if (data.p) {
-          var prefs = loadPrefs(d);
-          // Delete local keys not in import (propagates restore/unmark)
-          for (var k in prefs) { if (!(k in data.p)) delete prefs[k]; }
-          for (var k in data.p) { prefs[k] = data.p[k]; }
-          savePrefs(d, prefs);
-        }
-        if (data.c) {
-          var counts = loadCounts(d);
-          for (var k in data.c) { if (data.c[k] > (counts[k]||0)) counts[k] = data.c[k]; }
-          saveCounts(d, counts);
-        }
-      } else if (d === 'uf') {
-        try {
-          var uf = JSON.parse(localStorage.getItem('uf_prefs')||'{}');
-          // Delete local keys not in import (propagates restore/unmark)
-          for (var k in uf) { if (!(k in data)) delete uf[k]; }
-          for (var k in data) { uf[k] = data[k]; }
-          localStorage.setItem('uf_prefs', JSON.stringify(uf));
-        } catch(e) {}
-      } else if (d === 'uf_counts') {
-        try {
-          var uc = JSON.parse(localStorage.getItem('uf_counts')||'{}');
-          for (var k in data) { if (data[k] > (uc[k]||0)) uc[k] = data[k]; }
-          localStorage.setItem('uf_counts', JSON.stringify(uc));
-        } catch(e) {}
-      }
-    });
+    var ta = document.getElementById('directImportText');
+    var all = parseLearningBackupCode(ta ? ta.value.trim() : '');
+    if (!confirm('导入会覆盖当前学习记录。继续前会自动保存一份导入前备份，确定导入吗？')) return;
+    savePreImportBackup();
+    applyLearningBackup(all);
     updateBadges();
     updateAllCounts();
     updateHomeStats();
-    alert('导入成功！刷新页面...');
-    document.getElementById('directImportBox').style.display = 'none';
-    document.getElementById('directImportText').value = '';
-    setTimeout(function() { location.reload(); }, 500);
+    updateBackupStatus();
+    showBackupMsg('导入成功，已自动保存导入前备份。即将刷新页面...', 'ok');
+    if (ta) ta.value = '';
+    setTimeout(function() { location.reload(); }, 800);
   } catch(e) {
-    alert('导入失败: ' + e.message);
+    showBackupMsg('导入失败：' + e.message, 'err');
+  }
+}
+
+function restorePreImportBackup() {
+  try {
+    var raw = localStorage.getItem(PRE_IMPORT_BACKUP_KEY);
+    if (!raw) { showBackupMsg('没有找到导入前备份', 'err'); return; }
+    var snapshot = JSON.parse(raw);
+    var all = normalizeBackupPayload(snapshot);
+    validateLearningBackup(all);
+    applyLearningBackup(all);
+    updateBadges();
+    updateAllCounts();
+    updateHomeStats();
+    updateBackupStatus();
+    showBackupMsg('已恢复导入前备份，即将刷新页面...', 'ok');
+    setTimeout(function() { location.reload(); }, 800);
+  } catch(e) {
+    showBackupMsg('恢复失败：' + e.message, 'err');
   }
 }
 
@@ -2093,6 +2250,8 @@ function showDiagnostic() {
   } else {
     lines.push('Last export: never');
   }
+  var pib = localStorage.getItem(PRE_IMPORT_BACKUP_TS_KEY);
+  lines.push('Pre-import backup: ' + (pib ? formatLocalTime(pib) : 'none'));
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     lines.push('SW: active');
   } else if ('serviceWorker' in navigator) {
@@ -2123,14 +2282,16 @@ function showDiagnostic() {
 
 // ═══════════ EXPORT REMINDER ═══════════
 function checkExportReminder() {
+  var el = document.getElementById('exportReminder');
+  if (!el) return;
   var last = localStorage.getItem('last_export_ts');
   if (!last) {
-    document.getElementById('exportReminder').style.display = 'block';
+    el.style.display = 'block';
     return;
   }
   var days = (Date.now() - parseInt(last)) / 86400000;
   if (days > 7) {
-    document.getElementById('exportReminder').style.display = 'block';
+    el.style.display = 'block';
   }
 }
 
@@ -3233,64 +3394,6 @@ function endMorningSession(status) {
     document.getElementById('msSub').textContent = '用时约 ' + min + ' 分钟 · ' + morningSessionCompleted + ' 词';
   }
 }
-
-// ── Sync: override directExportAll to include morning data inline ──
-var _origDirectExportAll = directExportAll;
-directExportAll = function() {
-  try {
-    var all = {};
-    ['vocab','hongbaoshu'].forEach(function(d) {
-      all[d] = { p: loadPrefs(d), c: loadCounts(d) };
-    });
-    try { all['uf'] = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) { all['uf'] = {}; }
-    try { all['uf_counts'] = JSON.parse(localStorage.getItem('uf_counts')||'{}'); } catch(e) { all['uf_counts'] = {}; }
-    // Include morning data inline (before encoding, so clipboard gets it too)
-    try { all['morning'] = {
-      meta: JSON.parse(localStorage.getItem(MOR_KEYS.meta)||'{}'),
-      settings: JSON.parse(localStorage.getItem(MOR_KEYS.settings)||'{}'),
-      cursor: JSON.parse(localStorage.getItem(MOR_KEYS.cursor)||'{}'),
-      sessions: JSON.parse(localStorage.getItem(MOR_KEYS.sessions)||'[]')
-    }; } catch(e) {}
-    var raw = JSON.stringify(all);
-    var code = b64encode(raw);
-    var box = document.getElementById('directImportBox');
-    var ta = document.getElementById('directImportText');
-    box.style.display = 'block';
-    ta.value = code;
-    ta.focus();
-    ta.select();
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(code).catch(function() {});
-    }
-    localStorage.setItem('last_export_ts', Date.now());
-    document.getElementById('exportReminder').style.display = 'none';
-  } catch(e) {
-    alert('导出失败: ' + e.message);
-  }
-};
-
-var _origDirectImportAll = directImportAll;
-directImportAll = function() {
-  // Patch to also handle morning data
-  var textEl = document.getElementById('directImportText');
-  var code = textEl ? textEl.value.trim() : '';
-  if (!code) { _origDirectImportAll(); return; }
-  try {
-    var all;
-    try { all = JSON.parse(b64decode(code)); } catch(e2) {
-      try { all = JSON.parse(code); } catch(e3) { _origDirectImportAll(); return; }
-    }
-    if (all.morning) {
-      try {
-        if (all.morning.meta) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
-        if (all.morning.settings) localStorage.setItem(MOR_KEYS.settings, JSON.stringify(all.morning.settings));
-        if (all.morning.cursor) localStorage.setItem(MOR_KEYS.cursor, JSON.stringify(all.morning.cursor));
-        if (all.morning.sessions) localStorage.setItem(MOR_KEYS.sessions, JSON.stringify(all.morning.sessions));
-      } catch(e) {}
-    }
-  } catch(e) {}
-  _origDirectImportAll();
-};
 
 // ── Init morning card on homepage ──
 updateMorningCard();
