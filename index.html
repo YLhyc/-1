@@ -312,13 +312,13 @@
   .morning-player-progress { font-size: 12px; color: #86868b; margin-bottom: 4px; }
   .morning-player-bar { height: 3px; background: #e0e0e0; border-radius: 2px; overflow: hidden; }
   .morning-player-bar-fill { height: 100%; background: #ff9500; transition: width 0.3s; border-radius: 2px; }
-  .morning-card-shell { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 4px 24px; overflow: hidden; }
+  .morning-card-shell { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0 16px; overflow: hidden; }
   .morning-card-stage { width: 100%; display: flex; justify-content: center; perspective: 900px; }
   .morning-player-card {
-    width: 88%; max-width: 400px; background: #fff;
+    box-sizing: border-box; width: calc(100% - 24px); max-width: 520px; min-height: 52vh; max-height: 62vh; background: #fff;
     border: 2px solid #e8e8ed; border-radius: 24px;
-    padding: 40px 24px; text-align: center; position: relative;
-    touch-action: pan-y; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;
+    padding: 36px 22px; text-align: center; position: relative;
+    touch-action: pan-y; overflow-y: auto; transition: border-color 0.2s, box-shadow 0.2s;
     -webkit-user-select: none; user-select: none;
   }
   .morning-player-card::before, .morning-player-card::after { position: absolute; top: 18px; padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; opacity: 0; transition: opacity 0.15s; }
@@ -329,11 +329,11 @@
   .morning-player-card.swipe-right { border-color: rgba(255,149,0,0.38); box-shadow: 0 18px 50px rgba(255,149,0,0.20); }
   .morning-player-card.swipe-right::after { opacity: 1; }
   .morning-player-card .mc-step-hint { font-size: 13px; color: #ff9500; font-weight: 500; margin-bottom: 12px; }
-  .morning-player-card .mc-en { font-size: 32px; font-weight: 700; color: #1d1d1f; margin-bottom: 6px; }
-  .morning-player-card .mc-cn { font-size: 18px; color: #86868b; margin-bottom: 10px; }
-  .morning-player-card .mc-example { margin: 8px 0 4px; padding: 10px 12px; border-radius: 12px; background: #f5f5f7; text-align: left; display: none; }
-  .morning-player-card .mc-example-en { font-size: 15px; line-height: 1.45; color: #1d1d1f; margin-bottom: 4px; }
-  .morning-player-card .mc-example-cn { font-size: 13px; line-height: 1.45; color: #6e6e73; }
+  .morning-player-card .mc-en { font-size: 36px; font-weight: 700; color: #1d1d1f; margin-bottom: 8px; overflow-wrap: anywhere; }
+  .morning-player-card .mc-cn { font-size: 20px; color: #86868b; margin-bottom: 14px; }
+  .morning-player-card .mc-example { margin: 12px 0 6px; padding: 14px; border-radius: 12px; background: #f5f5f7; text-align: left; display: none; }
+  .morning-player-card .mc-example-en { font-size: 16px; line-height: 1.55; color: #1d1d1f; margin-bottom: 7px; }
+  .morning-player-card .mc-example-cn { font-size: 14px; line-height: 1.55; color: #6e6e73; }
   .morning-player-card .mc-meta { font-size: 11px; color: #bbb; margin-top: 12px; }
   .morning-player-card .mc-rating { font-size: 13px; margin-top: 10px; }
   .morning-player-card .mc-undo { margin-left: 8px; font-size: 12px; color: #007aff; background: none; border: none; cursor: pointer; }
@@ -401,7 +401,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-10 13:46</div>
+  <div class="home-sub">Build 2026-07-10 14:05</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -685,7 +685,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783662413;
+var BUILD_TS = 1783663529;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
