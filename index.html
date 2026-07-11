@@ -225,7 +225,7 @@
   .sync-tab { font-size: 12px; color: #86868b; margin-bottom: 10px; }
   .sync-tab span { cursor: pointer; padding: 2px 8px; border-radius: 6px; }
   .sync-tab span.active { background: #e8f0fe; color: #007aff; font-weight: 600; }
-  .backup-card { width: 340px; max-width: calc(100vw - 32px); text-align: left; }
+  .backup-card { width: 340px; max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); top: 50%; overflow-y: auto; overscroll-behavior: contain; text-align: left; }
   .backup-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #1d1d1f; }
   .backup-desc { font-size: 12px; color: #6e6e73; line-height: 1.5; margin-bottom: 14px; }
   .backup-status { background: #f5f5f7; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #3a3a3c; line-height: 1.6; margin-bottom: 12px; }
@@ -238,6 +238,21 @@
   .backup-msg { min-height: 18px; font-size: 11px; margin-top: 8px; color: #6e6e73; }
   .backup-msg.ok { color: #248a3d; }
   .backup-msg.err { color: #d70015; }
+  .github-backup { border-top: 1px solid #e5e5ea; margin-top: 12px; padding-top: 12px; }
+  .github-backup-title { font-size: 14px; font-weight: 700; color: #1d1d1f; margin-bottom: 4px; }
+  .github-backup-desc { font-size: 11px; color: #6e6e73; line-height: 1.5; margin-bottom: 9px; }
+  .github-backup-input { width: 100%; height: 38px; border: 1px solid #d2d2d7; border-radius: 8px; padding: 0 10px; font-size: 12px; margin-bottom: 7px; -webkit-appearance: none; }
+  .github-backup-toggle { display: flex; align-items: center; gap: 7px; min-height: 32px; font-size: 12px; color: #3a3a3c; }
+  .github-backup-toggle input { width: 18px; height: 18px; }
+  .github-backup-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 7px; }
+  .github-backup-btn { height: 40px; border: none; border-radius: 9px; font-size: 12px; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
+  .github-backup-btn:disabled { opacity: 0.55; cursor: default; }
+  .github-backup-upload { background: #24292f; color: #fff; }
+  .github-backup-download { background: #eef2f6; color: #24292f; }
+  .github-backup-disconnect { grid-column: 1 / -1; height: 34px; background: transparent; color: #8e8e93; }
+  .github-backup-status { min-height: 18px; font-size: 11px; line-height: 1.45; color: #6e6e73; margin-top: 7px; overflow-wrap: anywhere; }
+  .github-backup-status.ok { color: #248a3d; }
+  .github-backup-status.err { color: #d70015; }
   /* ── Update banner ── */
   .update-banner { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     background: #007aff; color: #fff; text-align: center; padding: 10px 16px;
@@ -380,6 +395,33 @@
   .mr-priority-tag.hard { background: #ffe5e5; color: #d32f2f; }
   .mr-priority-tag.stale { background: #fff9e5; color: #b8860b; }
   .mr-priority-tag.due { background: #fff3e0; color: #e65100; }
+  /* Learning progress */
+  .progress-page { padding: 16px; padding-bottom: 40px; }
+  .progress-page h3 { font-size: 18px; margin: 22px 0 10px; }
+  .progress-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .progress-summary-item { background: #f5f5f7; border-radius: 12px; padding: 13px 10px; text-align: center; }
+  .progress-summary-num { font-size: 24px; font-weight: 750; color: #1d1d1f; }
+  .progress-summary-label { margin-top: 3px; font-size: 11px; color: #6e6e73; }
+  .progress-panel { background: #f9f9fb; border: 1px solid #eeeeF2; border-radius: 12px; padding: 13px; }
+  .progress-panel-title { font-size: 14px; font-weight: 700; color: #3a3a3c; margin-bottom: 8px; }
+  .progress-panel-sub { font-size: 11px; color: #86868b; margin-top: 7px; }
+  .progress-heatmap { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 13px); grid-template-columns: repeat(12, 1fr); gap: 4px; }
+  .progress-heat { border-radius: 3px; background: #e8e8ed; min-width: 0; }
+  .progress-heat.l1 { background: #b9d9ff; }
+  .progress-heat.l2 { background: #72b5f8; }
+  .progress-heat.l3 { background: #1683ed; }
+  .progress-chart { height: 132px; width: 100%; display: block; }
+  .progress-bars { height: 146px; display: flex; align-items: end; gap: 5px; padding-top: 8px; border-bottom: 1px solid #e2e2e7; }
+  .progress-bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 4px; }
+  .progress-bar-stack { width: 100%; max-width: 18px; min-height: 2px; display: flex; flex-direction: column-reverse; overflow: hidden; border-radius: 5px 5px 2px 2px; background: #e8e8ed; }
+  .progress-bar-vocab { background: #1683ed; }
+  .progress-bar-hb { background: #6db3f6; }
+  .progress-bar-uf { background: #ff9f0a; }
+  .progress-bar-label { font-size: 9px; color: #8e8e93; white-space: nowrap; }
+  .progress-source-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .progress-source { border-radius: 10px; padding: 10px 8px; text-align: center; background: #f5f5f7; }
+  .progress-source-num { font-size: 19px; font-weight: 700; color: #1d1d1f; }
+  .progress-source-label { margin-top: 3px; font-size: 10px; color: #6e6e73; }
 
 </style>
 </head>
@@ -401,7 +443,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-10 15:14</div>
+  <div class="home-sub">Build 2026-07-11 16:23</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -435,6 +477,11 @@
       <div class="home-subtitle" id="morningCardSub">25分钟 · 点击生成队列</div>
       <div class="morning-stats" id="morningCardStats"></div>
       <div style="margin-top:6px;font-size:11px;color:#86868b;">轻点进入 · 回顾入口在晨读页底部</div>
+    </div>
+    <div class="home-card" onclick="showProgress()">
+      <h2>学习进度</h2>
+      <p>播放次数、每日活动和复习趋势</p>
+      <div class="card-stat"><span id="statProgressToday">今日 0 次</span><span id="statProgressTotal">累计 0 次</span></div>
     </div>
   </div>
   <div class="total-stat" id="homeSyncLink" style="margin-top:24px;">
@@ -487,6 +534,19 @@
     </div>
     <textarea class="backup-textarea" id="directImportText" placeholder="导出后这里会出现备份码；导入时也粘贴到这里"></textarea>
     <div class="backup-msg" id="backupMsg"></div>
+    <div class="github-backup">
+      <div class="github-backup-title">GitHub 私有云备份</div>
+      <div class="github-backup-desc">使用仅含 Gist 权限的 GitHub Token。Token 只保存在当前设备，不会写入导出文件或项目源码。</div>
+      <input class="github-backup-input" id="githubTokenInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="GitHub Token（仅需 gist 权限）">
+      <input class="github-backup-input" id="githubGistInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Gist ID（首次备份可留空）">
+      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked>学习记录变化后自动备份（最多每 6 小时一次）</label>
+      <div class="github-backup-actions">
+        <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即备份</button>
+        <button class="github-backup-btn github-backup-download" id="githubRestoreBtn" onclick="githubRestoreNow()">云端恢复</button>
+        <button class="github-backup-btn github-backup-disconnect" id="githubDisconnectBtn" onclick="disconnectGithubBackup()">清除本机 GitHub 配置</button>
+      </div>
+      <div class="github-backup-status" id="githubBackupStatus"></div>
+    </div>
     <button class="sync-close" onclick="closeBackupCenter()">关闭</button>
   </div>
 </div>
@@ -657,6 +717,16 @@
   <div class="morning-review" id="morningReviewContent"></div>
 </div>
 
+<!-- ═══════════ LEARNING PROGRESS ═══════════ -->
+<div id="view-progress" style="display:none;">
+  <div class="morning-nav">
+    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <span class="morning-nav-title">学习进度</span>
+  </div>
+  <div class="progress-page" id="progressContent"></div>
+</div>
+
+
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -685,7 +755,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783667694;
+var BUILD_TS = 1783758238;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -703,12 +773,14 @@ function loadPrefs(dict) {
 }
 function savePrefs(dict, obj) {
   localStorage.setItem(dict === 'vocab' ? 'vv_prefs' : dict === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs', JSON.stringify(obj));
+  localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
 }
 function loadCounts(dict) {
   try { return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_counts' : 'hb_counts') || '{}'); } catch(e) { return {}; }
 }
 function saveCounts(dict, obj) {
   localStorage.setItem(dict === 'vocab' ? 'vv_counts' : dict === 'hongbaoshu' ? 'hb_counts' : 'vv_counts', JSON.stringify(obj));
+  localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
 }
 
 // ═══════════ WORDS ═══════════
@@ -975,6 +1047,7 @@ function updateHomeStats() {
     var el = document.getElementById('statHbDone');
     if (el) el.textContent = (played > 0 ? '已学' + played : '') + (familiar > 0 ? ' ' + familiar + '熟' : '');
   })();
+  updateProgressHomeStats();
 }
 
 // ═══════════ GROUP RENDERING ═══════════
@@ -1130,6 +1203,17 @@ function vocabCardCurrentPref() {
   return loadPrefs('vocab')[prefKey('vocab', gw)] || '';
 }
 
+function getVocabCardStepInfo(entry) {
+  var localIdx = entry.localIdx;
+  var base = getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
+  var labels = base.labels.slice();
+  var langs = [];
+  for (var i = 0; i < base.labels.length; i++) langs.push(base.isEN.indexOf(i) !== -1 ? 'en' : 'cn');
+  if (entry.item.ex) { labels.push('例英'); langs.push('ex'); }
+  if (entry.item.ex_cn) { labels.push('例中'); langs.push('ex_cn'); }
+  return { labels: labels, langs: langs };
+}
+
 function updateVocabCardUI() {
   var entries = getVocabCardEntries();
   if (!entries.length) return;
@@ -1163,7 +1247,7 @@ function updateVocabCardUI() {
   var gw = vocabCardLocalToGW(entry.localIdx);
   var cnt = cnts[prefKey('vocab', gw)] || 0;
   var localIdx = entries[vocabCardIdx].localIdx;
-  var si = vocabCardStepInfo || getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
+  var si = vocabCardStepInfo || getVocabCardStepInfo(entry);
   var stepLabel = vocabCardPlaying ? (' · ' + (si.labels[step] || '')) : '';
   document.getElementById('vcMeta').textContent = '播放 ' + cnt + ' 次' + stepLabel;
   document.getElementById('vcPrev').disabled = vocabCardIdx <= 0;
@@ -1178,9 +1262,8 @@ function vocabCardSegUrl(entryIdx, st) {
   if (!entry) return null;
   var localIdx = entry.localIdx;
   var gw = vocabCardLocalToGW(localIdx);
-  var si = vocabCardStepInfo || getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
-  var isEN = si.isEN.indexOf(st) !== -1;
-  var lang = isEN ? 'en' : 'cn';
+  var si = vocabCardStepInfo || getVocabCardStepInfo(entry);
+  var lang = si.langs[st] || 'en';
   return preloaded[String(gw) + '_' + lang];
 }
 
@@ -1202,7 +1285,7 @@ function vocabCardStartCurrent() {
   currentGroup = Math.floor(localIdx / GROUP_SIZE);
   wordIdx = localIdx % GROUP_SIZE;
   singleWordMode = false;
-  vocabCardStepInfo = getStepInfo('vocab', currentUnit, currentGroup, wordIdx);
+  vocabCardStepInfo = getVocabCardStepInfo(entries[vocabCardIdx]);
   updateVocabCardUI();
   vocabCardEnsureAudio(vocabCardIdx, function(err) {
     if (err || !vocabCardPlaying) { vocabCardStop(false); return; }
@@ -1215,7 +1298,7 @@ function vocabCardPlaySegment() {
   var entries = getVocabCardEntries();
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) { vocabCardStop(false); return; }
   var localIdx = entries[vocabCardIdx].localIdx;
-  var si = vocabCardStepInfo || getStepInfo('vocab', currentUnit, Math.floor(localIdx / GROUP_SIZE), localIdx % GROUP_SIZE);
+  var si = vocabCardStepInfo || getVocabCardStepInfo(entries[vocabCardIdx]);
   if (step >= si.labels.length) { vocabCardAutoNext(); return; }
   var url = vocabCardSegUrl(vocabCardIdx, step);
   if (!url) { step++; vocabCardPlaySegment(); return; }
@@ -1225,6 +1308,7 @@ function vocabCardPlaySegment() {
     var counts = loadCounts('vocab');
     counts[key] = (counts[key] || 0) + 1;
     saveCounts('vocab', counts);
+    recordLearningActivity('vocab', entries[vocabCardIdx].item.en, 'vocab_card');
   }
   updateVocabCardUI();
   loadAu(0, url);
@@ -1400,6 +1484,8 @@ function fetchAudioFile(fileIdx) {
           if (srcIdx < data.words.length && data.words[srcIdx]) {
             preloaded[String(gwi) + '_en'] = base64ToBlobUrl(data.words[srcIdx].en);
             preloaded[String(gwi) + '_cn'] = base64ToBlobUrl(data.words[srcIdx].cn);
+            if (data.words[srcIdx].ex) preloaded[String(gwi) + '_ex'] = base64ToBlobUrl(data.words[srcIdx].ex);
+            if (data.words[srcIdx].ex_cn) preloaded[String(gwi) + '_ex_cn'] = base64ToBlobUrl(data.words[srcIdx].ex_cn);
           }
         }
       }
@@ -1580,6 +1666,7 @@ function vocabOnSegEnd() {
     counts[key] = (counts[key] || 0) + 1;
     saveCounts(currentDict, counts);
     updateCount(currentGroup, wordIdx);
+    if (words[wordIdx]) recordLearningActivity(currentDict === 'vocab' ? 'vocab' : 'hb', words[wordIdx].en, currentDict === 'vocab' ? 'vocab_group' : 'hb_group');
   }
 
   var segDone = false;
@@ -2058,9 +2145,21 @@ function b64decode(str) {
 }
 
 var BACKUP_APP_ID = 'kaoyan-english-review';
-var BACKUP_VERSION = 2;
+var BACKUP_VERSION = 3;
 var PRE_IMPORT_BACKUP_KEY = 'learning_pre_import_backup_v1';
 var PRE_IMPORT_BACKUP_TS_KEY = 'learning_pre_import_backup_ts';
+var ACTIVITY_KEY = 'learning_activity_v1';
+var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
+var GITHUB_BACKUP_CONFIG_KEY = 'github_backup_config_v1';
+var GITHUB_BACKUP_LAST_KEY = 'github_backup_last_v1';
+var GITHUB_BACKUP_ERROR_KEY = 'github_backup_error_v1';
+var GITHUB_BACKUP_FILE = 'kaoyan-english-review-backup.json';
+var GITHUB_BACKUP_INTERVAL_MS = 6 * 60 * 60 * 1000;
+
+function localDayKey(ts) {
+  var d = new Date(ts || Date.now());
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
 
 function safeJsonFromStorage(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch(e) { return fallback; }
@@ -2070,6 +2169,36 @@ function isPlainObject(obj) {
   return !!obj && typeof obj === 'object' && !Array.isArray(obj);
 }
 
+function loadLearningActivity() {
+  return safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
+}
+function saveLearningActivity(activity) {
+  var days = activity && isPlainObject(activity.days) ? activity.days : {};
+  var cutoff = Date.now() - 90 * 86400000;
+  Object.keys(days).forEach(function(day) {
+    var ts = new Date(day + 'T00:00:00').getTime();
+    if (!isFinite(ts) || ts < cutoff) delete days[day];
+  });
+  localStorage.setItem(ACTIVITY_KEY, JSON.stringify({ days: days }));
+}
+function recordLearningActivity(source, en, mode) {
+  if (!source || !en) return;
+  var activity = loadLearningActivity();
+  if (!isPlainObject(activity.days)) activity.days = {};
+  var day = localDayKey();
+  var bucket = activity.days[day] || { words: {}, modes: {}, updatedAt: 0 };
+  if (!isPlainObject(bucket.words)) bucket.words = {};
+  if (!isPlainObject(bucket.modes)) bucket.modes = {};
+  var key = source + ':' + en;
+  bucket.words[key] = (bucket.words[key] || 0) + 1;
+  mode = mode || source;
+  bucket.modes[mode] = (bucket.modes[mode] || 0) + 1;
+  bucket.updatedAt = Date.now();
+  activity.days[day] = bucket;
+  saveLearningActivity(activity);
+  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+}
+
 function createLearningBackup() {
   var all = {};
   ['vocab','hongbaoshu'].forEach(function(d) {
@@ -2077,6 +2206,7 @@ function createLearningBackup() {
   });
   all.uf = safeJsonFromStorage('uf_prefs', {});
   all.uf_counts = safeJsonFromStorage('uf_counts', {});
+  all.activity = safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
   all.morning = {
     meta: safeJsonFromStorage(MOR_KEYS.meta, {}),
     settings: safeJsonFromStorage(MOR_KEYS.settings, {}),
@@ -2123,6 +2253,7 @@ function validateLearningBackup(all) {
   validateDictBackup('红宝书', all.hongbaoshu || {});
   if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
   if (all.uf_counts && !isPlainObject(all.uf_counts)) throw new Error('不熟词次数格式错误');
+  if (all.activity && !isPlainObject(all.activity)) throw new Error('学习活动记录格式错误');
   if (all.morning) {
     if (!isPlainObject(all.morning)) throw new Error('晨读数据格式错误');
     if (all.morning.sessions && !Array.isArray(all.morning.sessions)) throw new Error('晨读记录格式错误');
@@ -2149,6 +2280,7 @@ function applyLearningBackup(all) {
   });
   localStorage.setItem('uf_prefs', JSON.stringify(isPlainObject(all.uf) ? all.uf : {}));
   localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
+  if (isPlainObject(all.activity)) localStorage.setItem(ACTIVITY_KEY, JSON.stringify(all.activity));
   if (all.morning && isPlainObject(all.morning)) {
     if (isPlainObject(all.morning.meta)) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
     if (isPlainObject(all.morning.settings)) localStorage.setItem(MOR_KEYS.settings, JSON.stringify(all.morning.settings));
@@ -2198,7 +2330,359 @@ function openBackupCenter() {
   var modal = document.getElementById('backupModal');
   if (modal) modal.classList.add('show');
   updateBackupStatus();
+  updateGithubBackupUI();
   showBackupMsg('', '');
+}
+
+function loadGithubBackupConfig() {
+  var config = safeJsonFromStorage(GITHUB_BACKUP_CONFIG_KEY, {});
+  return isPlainObject(config) ? config : {};
+}
+
+function normalizeGistId(value) {
+  var text = String(value || '').trim();
+  if (!text) return '';
+  var match = text.match(/gist[.]github[.]com[/](?:[^/]+[/])?([a-f0-9]+)/i);
+  return match ? match[1] : text.replace(/^.*[/]/, '').replace(/[^a-f0-9]/gi, '');
+}
+
+function saveGithubBackupConfig(config) {
+  localStorage.setItem(GITHUB_BACKUP_CONFIG_KEY, JSON.stringify({
+    token: String(config.token || '').trim(),
+    gistId: normalizeGistId(config.gistId),
+    auto: config.auto !== false
+  }));
+}
+
+function readGithubBackupForm() {
+  var current = loadGithubBackupConfig();
+  var tokenEl = document.getElementById('githubTokenInput');
+  var gistEl = document.getElementById('githubGistInput');
+  var autoEl = document.getElementById('githubAutoBackup');
+  return {
+    token: tokenEl ? tokenEl.value.trim() : String(current.token || '').trim(),
+    gistId: normalizeGistId(gistEl ? gistEl.value : current.gistId),
+    auto: autoEl ? !!autoEl.checked : current.auto !== false
+  };
+}
+
+function showGithubBackupStatus(text, cls) {
+  var el = document.getElementById('githubBackupStatus');
+  if (el) { el.textContent = text || ''; el.className = 'github-backup-status ' + (cls || ''); }
+}
+
+function setGithubBackupBusy(busy) {
+  ['githubUploadBtn','githubRestoreBtn','githubDisconnectBtn'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.disabled = !!busy;
+  });
+}
+
+function githubApiRequest(url, options, token) {
+  var opts = options || {};
+  var headers = opts.headers || {};
+  headers.Accept = 'application/vnd.github+json';
+  headers.Authorization = 'Bearer ' + token;
+  headers['X-GitHub-Api-Version'] = '2022-11-28';
+  if (opts.body) headers['Content-Type'] = 'application/json';
+  opts.headers = headers;
+  return fetch(url, opts).then(function(response) {
+    return response.text().then(function(text) {
+      var data = {};
+      if (text) {
+        try { data = JSON.parse(text); } catch(e) { data = { raw: text }; }
+      }
+      if (!response.ok) {
+        var message = data && data.message ? data.message : ('HTTP ' + response.status);
+        throw new Error(message);
+      }
+      return data;
+    });
+  });
+}
+
+function uploadGithubBackup(config) {
+  var snapshot = createLearningBackup();
+  var body = {
+    description: '考研英语复习助手学习记录备份',
+    public: false,
+    files: {}
+  };
+  body.files[GITHUB_BACKUP_FILE] = { content: JSON.stringify(snapshot) };
+  var url = 'https://api.github.com/gists' + (config.gistId ? '/' + encodeURIComponent(config.gistId) : '');
+  return githubApiRequest(url, {
+    method: config.gistId ? 'PATCH' : 'POST',
+    body: JSON.stringify(body)
+  }, config.token).then(function(data) {
+    if (!config.gistId && data && data.id) config.gistId = data.id;
+    if (!config.gistId) throw new Error('GitHub 未返回 Gist ID');
+    saveGithubBackupConfig(config);
+    localStorage.setItem(GITHUB_BACKUP_LAST_KEY, String(Date.now()));
+    localStorage.removeItem(ACTIVITY_DIRTY_KEY);
+    localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+    return config;
+  });
+}
+
+function downloadGithubBackup(config) {
+  var url = 'https://api.github.com/gists/' + encodeURIComponent(config.gistId);
+  return githubApiRequest(url, { method: 'GET' }, config.token).then(function(data) {
+    var files = data && data.files ? data.files : {};
+    var file = files[GITHUB_BACKUP_FILE];
+    if (!file) {
+      Object.keys(files).some(function(name) {
+        if (/[.]json$/i.test(name)) { file = files[name]; return true; }
+        return false;
+      });
+    }
+    if (!file) throw new Error('Gist 中没有找到学习记录备份文件');
+    if (file.truncated && file.raw_url) {
+      return githubApiRequest(file.raw_url, { method: 'GET' }, config.token).then(function(raw) {
+        return typeof raw === 'string' ? raw : (raw.raw || JSON.stringify(raw));
+      });
+    }
+    return file.content || '';
+  }).then(function(content) {
+    var payload = typeof content === 'string' ? JSON.parse(content) : content;
+    var all = normalizeBackupPayload(payload);
+    validateLearningBackup(all);
+    return all;
+  });
+}
+
+function updateGithubBackupUI() {
+  var config = loadGithubBackupConfig();
+  var tokenEl = document.getElementById('githubTokenInput');
+  var gistEl = document.getElementById('githubGistInput');
+  var autoEl = document.getElementById('githubAutoBackup');
+  if (tokenEl) tokenEl.value = config.token || '';
+  if (gistEl) gistEl.value = config.gistId || '';
+  if (autoEl) autoEl.checked = config.auto !== false;
+  var last = localStorage.getItem(GITHUB_BACKUP_LAST_KEY);
+  var error = localStorage.getItem(GITHUB_BACKUP_ERROR_KEY);
+  if (error) {
+    showGithubBackupStatus('上次自动备份失败：' + error, 'err');
+  } else if (config.gistId && last) {
+    showGithubBackupStatus('已连接私有 Gist · 上次备份 ' + formatLocalTime(last), 'ok');
+  } else if (config.token) {
+    showGithubBackupStatus('Token 已保存在本机。首次备份将创建私有 Gist。', '');
+  } else {
+    showGithubBackupStatus('未配置云备份，本地导出和恢复仍可正常使用。', '');
+  }
+}
+
+function githubBackupNow() {
+  var config = readGithubBackupForm();
+  if (!config.token) { showGithubBackupStatus('请先填写仅含 gist 权限的 GitHub Token。', 'err'); return; }
+  saveGithubBackupConfig(config);
+  setGithubBackupBusy(true);
+  showGithubBackupStatus('正在上传私有备份…', '');
+  uploadGithubBackup(config).then(function(saved) {
+    var gistEl = document.getElementById('githubGistInput');
+    if (gistEl) gistEl.value = saved.gistId;
+    setGithubBackupBusy(false);
+    updateGithubBackupUI();
+    showGithubBackupStatus('云备份完成 · ' + formatLocalTime(Date.now()), 'ok');
+  }).catch(function(error) {
+    setGithubBackupBusy(false);
+    showGithubBackupStatus('备份失败：' + error.message, 'err');
+  });
+}
+
+function githubRestoreNow() {
+  var config = readGithubBackupForm();
+  if (!config.token || !config.gistId) { showGithubBackupStatus('云端恢复需要 GitHub Token 和 Gist ID。', 'err'); return; }
+  saveGithubBackupConfig(config);
+  setGithubBackupBusy(true);
+  showGithubBackupStatus('正在读取云端备份…', '');
+  downloadGithubBackup(config).then(function(all) {
+    setGithubBackupBusy(false);
+    if (!confirm('云端恢复会覆盖当前学习记录。继续前会自动保存一份本地临时备份，确定恢复吗？')) return;
+    savePreImportBackup();
+    applyLearningBackup(all);
+    localStorage.setItem(GITHUB_BACKUP_LAST_KEY, String(Date.now()));
+    localStorage.removeItem(ACTIVITY_DIRTY_KEY);
+    localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+    showGithubBackupStatus('云端恢复成功，即将刷新页面…', 'ok');
+    setTimeout(function() { location.reload(); }, 800);
+  }).catch(function(error) {
+    setGithubBackupBusy(false);
+    showGithubBackupStatus('恢复失败：' + error.message, 'err');
+  });
+}
+
+function disconnectGithubBackup() {
+  if (!loadGithubBackupConfig().token) { updateGithubBackupUI(); return; }
+  if (!confirm('只清除当前设备保存的 Token 和 Gist ID，不会删除 GitHub 上的 Gist。确定继续吗？')) return;
+  localStorage.removeItem(GITHUB_BACKUP_CONFIG_KEY);
+  localStorage.removeItem(GITHUB_BACKUP_LAST_KEY);
+  localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+  updateGithubBackupUI();
+}
+
+function maybeAutoGithubBackup() {
+  var config = loadGithubBackupConfig();
+  if (!config.auto || !config.token || !config.gistId) return;
+  var dirty = Number(localStorage.getItem(ACTIVITY_DIRTY_KEY) || 0);
+  var last = Number(localStorage.getItem(GITHUB_BACKUP_LAST_KEY) || 0);
+  if (!dirty || dirty <= last) {
+    if (dirty) localStorage.removeItem(ACTIVITY_DIRTY_KEY);
+    return;
+  }
+  if (last && Date.now() - last < GITHUB_BACKUP_INTERVAL_MS) return;
+  uploadGithubBackup(config).catch(function(error) {
+    localStorage.setItem(GITHUB_BACKUP_ERROR_KEY, error.message || String(error));
+  });
+}
+
+function progressDayAt(offset) {
+  var d = new Date();
+  d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() - offset);
+  return localDayKey(d.getTime());
+}
+
+function progressCountValues(obj) {
+  var total = 0;
+  if (!isPlainObject(obj)) return total;
+  Object.keys(obj).forEach(function(key) {
+    var value = Number(obj[key]);
+    if (isFinite(value) && value > 0) total += value;
+  });
+  return total;
+}
+
+function progressActivityForDay(activity, day) {
+  var bucket = activity && activity.days && isPlainObject(activity.days[day]) ? activity.days[day] : {};
+  var words = isPlainObject(bucket.words) ? bucket.words : {};
+  var result = { total: 0, unique: 0, vocab: 0, hb: 0, uf: 0, vocabUnique: 0, hbUnique: 0, ufUnique: 0 };
+  Object.keys(words).forEach(function(key) {
+    var value = Number(words[key]) || 0;
+    if (value <= 0) return;
+    result.total += value;
+    result.unique++;
+    var source = key.split(':')[0];
+    if (source === 'vocab') { result.vocab += value; result.vocabUnique++; }
+    else if (source === 'hb' || source === 'hongbaoshu') { result.hb += value; result.hbUnique++; }
+    else if (source === 'uf') { result.uf += value; result.ufUnique++; }
+  });
+  return result;
+}
+
+function progressTotals() {
+  var uf = safeJsonFromStorage('uf_counts', {});
+  return {
+    vocab: progressCountValues(loadCounts('vocab')),
+    hb: progressCountValues(loadCounts('hongbaoshu')),
+    uf: progressCountValues(uf)
+  };
+}
+
+function updateProgressHomeStats() {
+  var activity = loadLearningActivity();
+  var today = progressActivityForDay(activity, progressDayAt(0));
+  var totals = progressTotals();
+  var todayEl = document.getElementById('statProgressToday');
+  var totalEl = document.getElementById('statProgressTotal');
+  if (todayEl) todayEl.textContent = '今日 ' + today.total + ' 次';
+  if (totalEl) totalEl.textContent = '累计 ' + (totals.vocab + totals.hb + totals.uf) + ' 次';
+}
+
+function progressLineSvg(days) {
+  var max = 0;
+  for (var i = 0; i < days.length; i++) if (days[i].cumulative > max) max = days[i].cumulative;
+  max = Math.max(1, max);
+  var points = [];
+  for (var i = 0; i < days.length; i++) {
+    var x = days.length === 1 ? 0 : (i / (days.length - 1)) * 100;
+    var y = 92 - (days[i].cumulative / max) * 80;
+    points.push(x.toFixed(2) + ',' + y.toFixed(2));
+  }
+  var area = '0,92 ' + points.join(' ') + ' 100,92';
+  return '<svg class="progress-chart" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="近30日累计播放次数">'
+    + '<line x1="0" y1="92" x2="100" y2="92" stroke="#e2e2e7" stroke-width="1"/>'
+    + '<line x1="0" y1="52" x2="100" y2="52" stroke="#ededf1" stroke-width="1"/>'
+    + '<polygon points="' + area + '" fill="#1683ed" opacity="0.14"/>'
+    + '<polyline points="' + points.join(' ') + '" fill="none" stroke="#1683ed" stroke-width="2.5" vector-effect="non-scaling-stroke"/>'
+    + '</svg>';
+}
+
+function progressShortDay(day) {
+  return Number(day.slice(5, 7)) + '/' + Number(day.slice(8, 10));
+}
+
+function showProgress() {
+  hideAllViews();
+  document.getElementById('view-progress').style.display = 'block';
+  var container = document.getElementById('progressContent');
+  if (!container) return;
+  var activity = loadLearningActivity();
+  var totals = progressTotals();
+  var today = progressActivityForDay(activity, progressDayAt(0));
+  var activeDays = 0;
+  Object.keys(activity.days || {}).forEach(function(day) {
+    if (progressActivityForDay(activity, day).total > 0) activeDays++;
+  });
+  var days = [];
+  var running = 0;
+  for (var i = 29; i >= 0; i--) {
+    var day = progressDayAt(i);
+    var stat = progressActivityForDay(activity, day);
+    running += stat.total;
+    stat.day = day;
+    stat.cumulative = running;
+    days.push(stat);
+  }
+  var sessions = loadMorningSessions();
+  var morningMin = 0, morningDays = {};
+  var cutoff = Date.now() - 29 * 86400000;
+  for (var s = 0; s < sessions.length; s++) {
+    if (sessions[s].startedAt >= cutoff) {
+      morningMin += (sessions[s].elapsedMs || 0);
+      morningDays[localDayKey(sessions[s].startedAt)] = true;
+    }
+  }
+  var recent = days.slice(-14);
+  var maxRecent = 1;
+  for (var r = 0; r < recent.length; r++) maxRecent = Math.max(maxRecent, recent[r].total);
+  var heat = '';
+  for (var h = 83; h >= 0; h--) {
+    var heatDay = progressDayAt(h);
+    var heatStat = progressActivityForDay(activity, heatDay);
+    var level = heatStat.total >= 10 ? 'l3' : heatStat.total >= 4 ? 'l2' : heatStat.total > 0 ? 'l1' : '';
+    heat += '<span class="progress-heat ' + level + '" title="' + heatDay + '：' + heatStat.total + ' 次播放"></span>';
+  }
+  var bars = '';
+  for (var b = 0; b < recent.length; b++) {
+    var d = recent[b];
+    var height = Math.max(d.total > 0 ? 3 : 0, d.total / maxRecent * 100);
+    var vocabH = d.total ? d.vocab / d.total * 100 : 0;
+    var hbH = d.total ? d.hb / d.total * 100 : 0;
+    var ufH = d.total ? d.uf / d.total * 100 : 0;
+    bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次">'
+      + '<div class="progress-bar-stack" style="height:' + height.toFixed(1) + '%">'
+      + '<i class="progress-bar-vocab" style="height:' + vocabH.toFixed(1) + '%"></i>'
+      + '<i class="progress-bar-hb" style="height:' + hbH.toFixed(1) + '%"></i>'
+      + '<i class="progress-bar-uf" style="height:' + ufH.toFixed(1) + '%"></i></div>'
+      + '<span class="progress-bar-label">' + (b % 3 === 0 || b === recent.length - 1 ? progressShortDay(d.day) : '') + '</span></div>';
+  }
+  var totalPlays = totals.vocab + totals.hb + totals.uf;
+  var html = '';
+  html += '<div class="progress-summary">';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + activeDays + '</div><div class="progress-summary-label">记录学习天数</div></div>';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.unique + '</div><div class="progress-summary-label">今日听词</div></div>';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.total + '</div><div class="progress-summary-label">今日播放</div></div>';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + totalPlays + '</div><div class="progress-summary-label">累计播放</div></div>';
+  html += '</div>';
+  html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天播放次数越多</div></div>';
+  html += '<h3>近30日累计播放</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次播放</div></div>';
+  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub"><span style="color:#1683ed">■ 生词本</span>　<span style="color:#6db3f6">■ 红宝书</span>　<span style="color:#ff9f0a">■ 不熟词</span></div></div>';
+  html += '<h3>各词库累计播放</h3><div class="progress-source-grid">';
+  html += '<div class="progress-source"><div class="progress-source-num">' + totals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
+  html += '<div class="progress-source"><div class="progress-source-num">' + totals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
+  html += '<div class="progress-source"><div class="progress-source-num">' + totals.uf + '</div><div class="progress-source-label">不熟词</div></div></div>';
+  html += '<div class="progress-panel" style="margin-top:18px"><div class="progress-panel-title">晨读完成</div><div class="progress-panel-sub">近30日 ' + Object.keys(morningDays).length + ' 天 · ' + Math.round(morningMin / 60000) + ' 分钟。晨读详情与优先复习词仍可在“今日晨听”内查看。</div></div>';
+  container.innerHTML = html;
 }
 
 function closeBackupCenter() {
@@ -2359,6 +2843,7 @@ function checkExportReminder() {
 })();
 updateHomeStats();
 checkExportReminder();
+maybeAutoGithubBackup();
 
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
@@ -2559,6 +3044,7 @@ function updateMorningMeta(item, result) {
   // Also record daily completion (not for replay)
   if (result !== 'replay') {
     recordMorningDaily(item, true);
+    recordLearningActivity(item.source, item.en, 'morning');
   }
 }
 
@@ -2789,7 +3275,7 @@ function showMorningLoading() {
 }
 
 function hideAllViews() {
-  var views = ['view-home', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review'];
+  var views = ['view-home', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
   for (var i = 0; i < views.length; i++) {
     var el = document.getElementById(views[i]);
     if (el) el.style.display = 'none';
