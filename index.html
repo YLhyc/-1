@@ -163,6 +163,10 @@
   .vc-btn-main { width: 78px; height: 78px; font-size: 26px; }
   .vc-btn:disabled { opacity: 0.32; }
   .vc-hint { margin-top: 12px; font-size: 12px; color: #b0b0b5; text-align: center; }
+  .study-mode { display:flex; gap:4px; background:#f0f0f5; border-radius:10px; padding:3px; margin:0 0 12px; }
+  .study-mode button { flex:1; border:0; border-radius:8px; padding:8px; background:transparent; color:#6e6e73; font-weight:700; }
+  .study-mode button.active { background:#fff; color:#007aff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .recite-hidden { display:none; }
   .loading { display: none; text-align: center; padding: 8px; color: #86868b; font-size: 12px; margin-bottom: 8px; }
   .loading.show { display: block; }
   .spinner {
@@ -443,7 +447,7 @@
 <!-- ═══════════ HOME ═══════════ -->
 <div id="view-home">
   <div class="home-hero">考研英语单词</div>
-  <div class="home-sub">Build 2026-07-11 16:23</div>
+  <div class="home-sub">Build 2026-07-12 10:32</div>
   <div class="home-mode" id="homeMode"></div>
   <div class="home-cards">
     <div class="home-card" onclick="openDict('vocab')">
@@ -755,7 +759,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783758238;
+var BUILD_TS = 1783823546;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -940,6 +944,7 @@ function showUnits(dictBack) {
 function showGroups(unitIdx) {
   currentUnit = unitIdx;
   stopAll();
+  if (currentDict === 'vocab') { vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false; }
   showView('groups');
   var w = getWords(currentDict);
   var start = unitIdx * UNIT_SIZE + 1;
@@ -1137,6 +1142,8 @@ var vocabCardIdx = 0;
 var vocabCardPlaying = false;
 var vocabCardTouchX = 0, vocabCardTouchY = 0, vocabCardDragging = false;
 var vocabCardStepInfo = null;
+var vocabStudyMode = localStorage.getItem('vocab_study_mode_v1') || 'listen';
+var vocabReciteShown = false, vocabReciteUndo = null, vocabReciteDone = false;
 
 function getVocabCardEntries() {
   var words = getUnitWords('vocab', currentUnit);
@@ -1161,8 +1168,10 @@ function renderVocabCardMode() {
     return;
   }
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
+  if (vocabStudyMode === 'recite') { renderVocabRecite(entries); return; }
   container.innerHTML = ''
     + '<div class="vocab-card-shell">'
+    + '<div class="study-mode"><button class="active">聆听</button><button onclick="setVocabStudyMode(&quot;recite&quot;)">背诵</button></div>'
     + '  <div class="vocab-card-progress"><span id="vcIdx">1</span> / <span id="vcTotal">' + words.length + '</span></div>'
     + '  <div class="vocab-card-stage">'
     + '    <div class="vocab-card" id="vocabCard">'
@@ -1202,6 +1211,18 @@ function vocabCardCurrentPref() {
   var gw = vocabCardLocalToGW(e.localIdx);
   return loadPrefs('vocab')[prefKey('vocab', gw)] || '';
 }
+
+function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false; localStorage.setItem('vocab_study_mode_v1',mode); renderVocabCardMode(); }
+function renderVocabRecite(entries) {
+  var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
+  if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
+  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-example-en">'+escapeHTML(w.ex||'')+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div><div class="vc-example-cn'+hidden+'" id="vcExCn">'+escapeHTML(w.ex_cn||'')+'</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="vc-hint">左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  bindVocabReciteSwipe();
+}
+function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var a=document.getElementById('vcCn'),b=document.getElementById('vcExCn');if(a)a.classList.remove('recite-hidden');if(b)b.classList.remove('recite-hidden');haptic(8);}
+function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var p=loadPrefs('vocab'),k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),old=p[k];p[k]=familiar?'familiar':'hard';savePrefs('vocab',p);var review=rateReview('vocab',e.item.en,familiar);recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,key:k,old:old,en:e.item.en,review:review,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
+function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;var p=loadPrefs('vocab');if(u.old)p[u.key]=u.old;else delete p[u.key];savePrefs('vocab',p);undoReview('vocab',u.en,u.review);undoLearningActivity('vocab',u.en,'vocab_recite');vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
+function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard'),x=0,y=0,dragging=false;if(!card)return;card.ontouchstart=function(e){dragging=true;x=e.touches[0].clientX;y=e.touches[0].clientY;card.style.transition='none'};card.ontouchmove=function(e){if(!dragging)return;var dx=e.touches[0].clientX-x,dy=e.touches[0].clientY-y;if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>18)return;if(Math.abs(dx)>12)vocabReciteShow();e.preventDefault();var limited=Math.max(-120,Math.min(120,dx));card.style.transform='translateX('+limited+'px) rotate('+(limited/18)+'deg)';card.classList.toggle('swipe-left',limited<-70);card.classList.toggle('swipe-right',limited>70)};card.ontouchend=function(e){if(!dragging)return;dragging=false;var changed=e.changedTouches&&e.changedTouches[0],dx=changed?changed.clientX-x:0;card.style.transition='transform .18s ease, box-shadow .18s ease, border-color .18s ease';if(dx<-80)vocabReciteRate(true);else if(dx>80)vocabReciteRate(false);else {card.style.transform='translateX(0) rotate(0deg)';card.classList.remove('swipe-left','swipe-right')}}}
 
 function getVocabCardStepInfo(entry) {
   var localIdx = entry.localIdx;
@@ -1354,6 +1375,7 @@ function vocabCardStop(resetPlaying) {
 }
 
 function vocabCardNext(manual) {
+  if (manual) haptic(10);
   var wasPlaying = vocabCardPlaying && !paused;
   vocabCardStop(true);
   var entries = getVocabCardEntries();
@@ -1363,6 +1385,7 @@ function vocabCardNext(manual) {
 }
 
 function vocabCardPrev() {
+  haptic(10);
   var wasPlaying = vocabCardPlaying && !paused;
   vocabCardStop(true);
   if (vocabCardIdx > 0) vocabCardIdx--;
@@ -1378,6 +1401,7 @@ function vocabCardSetPref(act) {
   var prefs = loadPrefs('vocab');
   prefs[key] = act;
   savePrefs('vocab', prefs);
+  haptic(18);
   updateHomeStats();
   updateVocabCardUI();
 }
@@ -1620,7 +1644,7 @@ function stopAll() {
   vocabCardPlaying = false;
   vocabCardStepInfo = null;
   clearHighlight();
-  var gc = unitGroupCount();
+  var gc = currentDict && currentUnit >= 0 ? unitGroupCount() : 0;
   for (var i = 0; i < gc; i++) setBtnState(i, false, false, false);
   currentGroup = -1; wordIdx = 0; step = 0; paused = false; singleWordMode = false;
 }
@@ -2145,7 +2169,7 @@ function b64decode(str) {
 }
 
 var BACKUP_APP_ID = 'kaoyan-english-review';
-var BACKUP_VERSION = 3;
+var BACKUP_VERSION = 4;
 var PRE_IMPORT_BACKUP_KEY = 'learning_pre_import_backup_v1';
 var PRE_IMPORT_BACKUP_TS_KEY = 'learning_pre_import_backup_ts';
 var ACTIVITY_KEY = 'learning_activity_v1';
@@ -2198,6 +2222,37 @@ function recordLearningActivity(source, en, mode) {
   saveLearningActivity(activity);
   localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
 }
+function undoLearningActivity(source, en, mode) {
+  var activity = loadLearningActivity(), day = localDayKey(), bucket = activity.days && activity.days[day], key = source + ':' + en;
+  if (!bucket || !bucket.words || !bucket.words[key]) return;
+  bucket.words[key]--;
+  if (bucket.words[key] <= 0) delete bucket.words[key];
+  if (bucket.modes && bucket.modes[mode]) { bucket.modes[mode]--; if (bucket.modes[mode] <= 0) delete bucket.modes[mode]; }
+  bucket.updatedAt = Date.now();
+  if (!Object.keys(bucket.words).length) delete activity.days[day];
+  saveLearningActivity(activity);
+  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+}
+
+var REVIEW_META_KEY = 'review_meta_v1';
+function haptic(ms) { try { if (navigator.vibrate) navigator.vibrate(ms || 12); } catch(e) {} }
+function loadReviewMeta() { return safeJsonFromStorage(REVIEW_META_KEY, {}); }
+function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta)); }
+function rateReview(source, en, familiar) {
+  var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
+  var next = { streak: old.streak || 0, lapses: old.lapses || 0, intervalDays: old.intervalDays || 0 };
+  if (familiar) {
+    next.streak++;
+    next.intervalDays = [1,3,7,14,30,60][Math.min(next.streak - 1, 5)];
+  } else { next.streak = 0; next.lapses++; next.intervalDays = 1; }
+  next.lastReviewAt = Date.now(); next.nextDueAt = Date.now() + next.intervalDays * 86400000;
+  meta[key] = next; saveReviewMeta(meta); return old;
+}
+function undoReview(source, en, old) {
+  var meta = loadReviewMeta(), key = source + ':' + en;
+  if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
+  saveReviewMeta(meta);
+}
 
 function createLearningBackup() {
   var all = {};
@@ -2207,6 +2262,7 @@ function createLearningBackup() {
   all.uf = safeJsonFromStorage('uf_prefs', {});
   all.uf_counts = safeJsonFromStorage('uf_counts', {});
   all.activity = safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
+  all.review = safeJsonFromStorage(REVIEW_META_KEY, {});
   all.morning = {
     meta: safeJsonFromStorage(MOR_KEYS.meta, {}),
     settings: safeJsonFromStorage(MOR_KEYS.settings, {}),
@@ -2248,12 +2304,13 @@ function validateDictBackup(name, data) {
 
 function validateLearningBackup(all) {
   if (!isPlainObject(all)) throw new Error('备份数据格式错误');
-  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning) throw new Error('没有找到可恢复的学习记录');
+  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review) throw new Error('没有找到可恢复的学习记录');
   validateDictBackup('生词本', all.vocab || {});
   validateDictBackup('红宝书', all.hongbaoshu || {});
   if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
   if (all.uf_counts && !isPlainObject(all.uf_counts)) throw new Error('不熟词次数格式错误');
   if (all.activity && !isPlainObject(all.activity)) throw new Error('学习活动记录格式错误');
+  if (all.review && !isPlainObject(all.review)) throw new Error('复习状态格式错误');
   if (all.morning) {
     if (!isPlainObject(all.morning)) throw new Error('晨读数据格式错误');
     if (all.morning.sessions && !Array.isArray(all.morning.sessions)) throw new Error('晨读记录格式错误');
@@ -2281,6 +2338,7 @@ function applyLearningBackup(all) {
   localStorage.setItem('uf_prefs', JSON.stringify(isPlainObject(all.uf) ? all.uf : {}));
   localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
   if (isPlainObject(all.activity)) localStorage.setItem(ACTIVITY_KEY, JSON.stringify(all.activity));
+  if (isPlainObject(all.review)) localStorage.setItem(REVIEW_META_KEY, JSON.stringify(all.review));
   if (all.morning && isPlainObject(all.morning)) {
     if (isPlainObject(all.morning.meta)) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
     if (isPlainObject(all.morning.settings)) localStorage.setItem(MOR_KEYS.settings, JSON.stringify(all.morning.settings));
