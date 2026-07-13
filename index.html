@@ -645,9 +645,9 @@
     <div class="github-backup">
       <div class="github-backup-title">GitHub 私有云备份</div>
       <div class="github-backup-desc">使用仅含 Gist 权限的 GitHub Token。Token 只保存在当前设备，不会写入导出文件或项目源码。</div>
-      <input class="github-backup-input" id="githubTokenInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="GitHub Token（仅需 gist 权限）">
-      <input class="github-backup-input" id="githubGistInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Gist ID（首次备份可留空）">
-      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked>学习记录变化后自动备份（最多每 6 小时一次）</label>
+      <input class="github-backup-input" id="githubGistInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="已有备份时先填 Gist ID（没有可留空）" onchange="githubBackupConfigChanged()">
+      <input class="github-backup-input" id="githubTokenInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="GitHub Token（仅需 gist 权限）" onchange="githubBackupConfigChanged()">
+      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked onchange="githubBackupConfigChanged()">全自动备份（首次自动创建，之后最多每 6 小时更新）</label>
       <div class="github-backup-actions">
         <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即备份</button>
         <button class="github-backup-btn github-backup-download" id="githubRestoreBtn" onclick="githubRestoreNow()">云端恢复</button>
@@ -857,8 +857,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260713-192950"></script>
-<script src="audio-cache.js?v=20260713-192950"></script>
+<script src="review-core.js?v=20260713-201123"></script>
+<script src="audio-cache.js?v=20260713-201123"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -887,7 +887,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783942190;
+var BUILD_TS = 1783944684;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2686,6 +2686,8 @@ var GITHUB_BACKUP_LAST_KEY = 'github_backup_last_v1';
 var GITHUB_BACKUP_ERROR_KEY = 'github_backup_error_v1';
 var GITHUB_BACKUP_FILE = 'kaoyan-english-review-backup.json';
 var GITHUB_BACKUP_INTERVAL_MS = 6 * 60 * 60 * 1000;
+var GITHUB_BACKUP_POLL_MS = 5 * 60 * 1000;
+var githubAutoBackupPromise = null;
 
 function localDayKey(ts) {
   var d = new Date(ts || Date.now());
@@ -2906,6 +2908,18 @@ function readGithubBackupForm() {
   };
 }
 
+function githubBackupConfigChanged() {
+  var config = readGithubBackupForm();
+  saveGithubBackupConfig(config);
+  localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+  if (config.auto && config.token && !config.gistId) {
+    showGithubBackupStatus('正在自动创建首份私有备份…', '');
+    return maybeAutoGithubBackup();
+  }
+  updateGithubBackupUI();
+  return Promise.resolve(config);
+}
+
 function showGithubBackupStatus(text, cls) {
   var el = document.getElementById('githubBackupStatus');
   if (el) { el.textContent = text || ''; el.className = 'github-backup-status ' + (cls || ''); }
@@ -3005,7 +3019,7 @@ function updateGithubBackupUI() {
   } else if (config.gistId && last) {
     showGithubBackupStatus('已连接私有 Gist · 上次备份 ' + formatLocalTime(last), 'ok');
   } else if (config.token) {
-    showGithubBackupStatus('Token 已保存在本机。首次备份将创建私有 Gist。', '');
+    showGithubBackupStatus(config.auto ? 'Token 已保存，将自动创建首份私有备份。' : 'Token 已保存，自动备份当前已关闭。', '');
   } else {
     showGithubBackupStatus('未配置云备份，本地导出和恢复仍可正常使用。', '');
   }
@@ -3062,17 +3076,37 @@ function disconnectGithubBackup() {
 
 function maybeAutoGithubBackup() {
   var config = loadGithubBackupConfig();
-  if (!config.auto || !config.token || !config.gistId) return;
+  if (!config.auto || !config.token) return Promise.resolve(null);
+  if (githubAutoBackupPromise) return githubAutoBackupPromise;
+  var isInitial = !config.gistId;
   var dirty = Number(localStorage.getItem(ACTIVITY_DIRTY_KEY) || 0);
   var last = Number(localStorage.getItem(GITHUB_BACKUP_LAST_KEY) || 0);
-  if (!dirty || dirty <= last) {
+  if (!isInitial && (!dirty || dirty <= last)) {
     if (dirty) localStorage.removeItem(ACTIVITY_DIRTY_KEY);
-    return;
+    return Promise.resolve(null);
   }
-  if (last && Date.now() - last < GITHUB_BACKUP_INTERVAL_MS) return;
-  uploadGithubBackup(config).catch(function(error) {
+  if (!isInitial && last && Date.now() - last < GITHUB_BACKUP_INTERVAL_MS) return Promise.resolve(null);
+  if (isInitial) {
+    setGithubBackupBusy(true);
+    showGithubBackupStatus('正在自动创建首份私有备份…', '');
+  }
+  githubAutoBackupPromise = uploadGithubBackup(config).then(function(saved) {
+    if (isInitial) {
+      setGithubBackupBusy(false);
+      updateGithubBackupUI();
+      showGithubBackupStatus('首份云备份已自动创建 · ' + formatLocalTime(Date.now()), 'ok');
+    }
+    return saved;
+  }).catch(function(error) {
+    if (isInitial) setGithubBackupBusy(false);
     localStorage.setItem(GITHUB_BACKUP_ERROR_KEY, error.message || String(error));
+    showGithubBackupStatus('自动备份失败：' + (error.message || String(error)), 'err');
+    return null;
+  }).then(function(result) {
+    githubAutoBackupPromise = null;
+    return result;
   });
+  return githubAutoBackupPromise;
 }
 
 function progressDayAt(offset) {
@@ -3394,6 +3428,11 @@ function checkExportReminder() {
 updateHomeStats();
 checkExportReminder();
 maybeAutoGithubBackup();
+setInterval(maybeAutoGithubBackup, GITHUB_BACKUP_POLL_MS);
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) maybeAutoGithubBackup();
+});
+window.addEventListener('online', maybeAutoGithubBackup);
 
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
