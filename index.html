@@ -43,6 +43,10 @@
   .today-title { max-width:300px; font-size:31px; line-height:1.15; letter-spacing:0; margin-bottom:8px; }
   .today-sub { color:#587087; font-size:14px; line-height:1.5; margin-bottom:18px; }
   .today-task { position:relative; overflow:hidden; background:rgba(255,255,255,.92); border:1px solid rgba(255,255,255,.9); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(46,100,148,.13); cursor:pointer; }
+  .today-task + .today-task { margin-top:12px; }
+  .today-task.recall-task { background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(242,249,255,.95)); }
+  .today-task.recall-task .today-task-label { color:#2b7b52; }
+  .today-task.recall-task .task-button { background:#1f6c47; }
   .today-task::after { content:''; position:absolute; width:120px; height:120px; right:-42px; top:-52px; border:1px solid rgba(45,133,211,.18); border-radius:50%; box-shadow:0 0 0 20px rgba(45,133,211,.05); }
   .today-task-label { color:#3a82bd; font-size:12px; font-weight:750; margin-bottom:8px; }
   .today-task-title { font-size:24px; line-height:1.18; margin-bottom:5px; }
@@ -506,12 +510,20 @@
     <div class="today-task-meta" id="morningCardStats"></div>
     <button class="task-button" onclick="event.stopPropagation();openMorning()">开始今日学习</button>
   </section>
-  <div class="app-section-title"><h2>继续学习</h2><span>词库</span></div>
+  <section class="today-task recall-task" onclick="openTodayRecite()" id="todayReciteHomeCard">
+    <div class="today-task-label">主动回忆</div>
+    <div class="today-task-title">今日背诵</div>
+    <div class="today-task-meta" id="todayReciteCardSub">跨词库整理今天该背的词</div>
+    <button class="task-button" onclick="event.stopPropagation();openTodayRecite()">开始背诵</button>
+  </section>
+  <div class="app-section-title"><h2>继续学习</h2><span>上次位置</span></div>
+  <div class="source-list" id="resumeCard"></div>
+  <div class="app-section-title"><h2>词库</h2><span>按 Unit 推进新词</span></div>
   <div class="source-list">
     <button class="source-row" onclick="openDict('vocab')">
       <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">110 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
-    <button class="source-row" onclick="openDict('hongbaoshu')">
+    <button class="source-row" onclick="openRedBook()">
       <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · <span id="statHbDone">从 Unit 开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="showReview()">
@@ -534,7 +546,7 @@
   <div class="library-hero"><div class="library-hero-num">110 <span style="font-size:15px;font-weight:650">个生词</span></div><div class="library-hero-text">来自真题阅读中的生词与短语</div></div>
   <div class="library-card">
     <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="openDict('hongbaoshu')"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow">›</span></button>
   </div>
   <div class="app-section-title"><h2>复习池</h2><span>从难词回收</span></div>
   <div class="library-card"><button class="source-row" onclick="showReview()"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow">›</span></button></div>
@@ -546,6 +558,12 @@
   <div class="app-page-head"><div><h1>到期复习</h1><p>按照你的上次评分安排下一次回顾。</p></div></div>
   <div class="review-hero"><div class="review-hero-num" id="reviewDueCount">0</div><div class="review-hero-text">个单词需要回顾</div></div>
   <div class="review-list" id="reviewList"></div>
+</div>
+
+<!-- ═══════════ TODAY RECITE ═══════════ -->
+<div id="view-today-recite" class="app-page" style="display:none;">
+  <div class="nav-bar"><button class="nav-back" onclick="showHome()">← 今日</button><span class="nav-title">今日背诵</span></div>
+  <div id="todayReciteContainer"></div>
 </div>
 
 <!-- ═══════════ UNIT SELECTOR ═══════════ -->
@@ -817,7 +835,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783922262;
+var BUILD_TS = 1783924170;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -981,7 +999,11 @@ function showHome() {
   stopAll();
   showView('home');
   updateMorningCard();
+  updateTodayReciteCard();
+  renderResumeCard();
 }
+
+function openRedBook() { location.href = 'hb/'; }
 
 function showLibrary() {
   stopAll();
@@ -1000,6 +1022,34 @@ function getDueReviewItems() {
   });
   items.sort(function(a, b) { return a.dueAt - b.dueAt; });
   return items;
+}
+
+var LEARNING_RESUME_KEY = 'learning_resume_v1';
+function saveLearningResume(source, unitIdx, mode, itemIdx) {
+  if (unitIdx < 0) return;
+  localStorage.setItem(LEARNING_RESUME_KEY, JSON.stringify({
+    source: source, unitIdx: unitIdx, mode: mode || 'listen', itemIdx: Math.max(0, itemIdx || 0), updatedAt: Date.now()
+  }));
+}
+function loadLearningResume() {
+  var r = safeJsonFromStorage(LEARNING_RESUME_KEY, null);
+  return r && (r.source === 'vocab' || r.source === 'hongbaoshu') && Number.isFinite(r.unitIdx) ? r : null;
+}
+function renderResumeCard() {
+  var c = document.getElementById('resumeCard'); if (!c) return;
+  var r = loadLearningResume();
+  if (!r) {
+    c.innerHTML = '<button class="source-row" onclick="showLibrary()"><span class="source-mark">›</span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow">›</span></button>';
+    return;
+  }
+  var isHb = r.source === 'hongbaoshu', title = isHb ? '继续红宝书' : '继续生词本', mode = r.mode === 'recite' ? '背诵' : '聆听';
+  c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow">›</span></button>';
+}
+function continueLearning() {
+  var r = loadLearningResume(); if (!r) { showLibrary(); return; }
+  if (r.source === 'hongbaoshu') { location.href = 'hb/?resume=1'; return; }
+  currentDict = 'vocab'; vocabStudyMode = r.mode === 'recite' ? 'recite' : 'listen'; showGroups(r.unitIdx);
+  vocabCardIdx = Math.max(0, r.itemIdx || 0); vocabReciteDone = false; renderGroups();
 }
 
 function reviewSourceLabel(source) {
@@ -1023,6 +1073,63 @@ function showReview() {
     html += '<div class="review-item"><div class="source-mark ' + (item.source === 'vocab' ? '' : 'green') + '">' + (item.source === 'vocab' ? 'A' : 'R') + '</div><div class="review-word">' + escapeHTML(item.en) + '<div class="review-source">' + reviewSourceLabel(item.source) + (item.lapses ? ' · 遗忘 ' + item.lapses + ' 次' : '') + '</div></div><div class="review-due">' + due + '</div><button class="review-go" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="openDueReviewFromButton(this)">复习</button></div>';
   }
   container.innerHTML = html;
+}
+
+var todayReciteItems = [], todayReciteIdx = 0, todayReciteShown = false, todayReciteUndo = null, todayReciteDone = false;
+function todayReciteWord(source, en) {
+  var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []);
+  for (var i = 0; i < words.length; i++) if (words[i].en === en) return { item: words[i], index: i };
+  return null;
+}
+function buildTodayReciteItems() {
+  var out = [], seen = {};
+  function add(source, en, kind, dueAt, lapses) {
+    var found = todayReciteWord(source, en); if (!found) return;
+    var key = source + ':' + en; if (seen[key]) return; seen[key] = true;
+    out.push({ source: source, en: en, item: found.item, index: found.index, kind: kind, dueAt: dueAt || 0, lapses: lapses || 0 });
+  }
+  getDueReviewItems().forEach(function(d) { add(d.source, d.en, 'due', d.dueAt, d.lapses); });
+  [{ source: 'vocab', prefs: loadPrefs('vocab'), words: VOCAB }, { source: 'hongbaoshu', prefs: loadPrefs('hongbaoshu'), words: HONGBAOSHU || [] }].forEach(function(dict) {
+    for (var i = 0; i < dict.words.length; i++) if (dict.prefs[dict.words[i].en] === 'hard') add(dict.source, dict.words[i].en, 'hard');
+  });
+  out.sort(function(a, b) { if (a.kind !== b.kind) return a.kind === 'due' ? -1 : 1; return (a.dueAt || 0) - (b.dueAt || 0); });
+  return out.slice(0, 30);
+}
+function updateTodayReciteCard() {
+  var el = document.getElementById('todayReciteCardSub'); if (!el) return;
+  var due = getDueReviewItems();
+  el.textContent = due.length ? due.length + ' 个到期词，跨 Unit 直接背' : '暂时没有到期词，可用它回收不熟词';
+}
+function openTodayRecite() {
+  function start() { stopAll(); todayReciteItems = buildTodayReciteItems(); todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; showView('today-recite'); renderTodayRecite(); }
+  if (!HONGBAOSHU) loadHB(function(err) { if (err) { alert('红宝书数据加载失败，请稍后重试'); return; } start(); }); else start();
+}
+function renderTodayRecite() {
+  var c = document.getElementById('todayReciteContainer'); if (!c) return;
+  if (!todayReciteItems.length) { c.innerHTML = '<div class="review-empty">今天没有到期或不熟词。<br>继续推进新词，下一次评分后会自动进入这里。</div><button class="task-button" onclick="continueLearning()">继续学习</button>'; return; }
+  if (todayReciteDone) { c.innerHTML = '<div class="vocab-card-shell"><div class="empty-msg">今日背诵已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button></div></div>'; return; }
+  if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
+  var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = todayReciteShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书', tag = entry.kind === 'due' ? '到期复习' : '不熟词';
+  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-example-en">' + escapeHTML(w.ex || '') + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div><div class="vc-example-cn' + hidden + '" id="todayReciteExCn">' + escapeHTML(w.ex_cn || '') + '</div><div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="vc-hint">左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  bindTodayReciteSwipe();
+}
+function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; ['todayReciteCn','todayReciteExCn'].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.remove('recite-hidden'); }); haptic(8); }
+function todayReciteRate(familiar) {
+  var entry = todayReciteItems[todayReciteIdx]; if (!entry) return;
+  var prefs = loadPrefs(entry.source), key = prefKey(entry.source, entry.index), old = prefs[key]; prefs[key] = familiar ? 'familiar' : 'hard'; savePrefs(entry.source, prefs);
+  var review = rateReview(entry.source, entry.en, familiar), activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab';
+  recordLearningActivity(activitySource, entry.en, 'today_recite'); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, old: old, review: review, activitySource: activitySource };
+  haptic(18); if (todayReciteIdx < todayReciteItems.length - 1) todayReciteIdx++; else todayReciteDone = true; todayReciteShown = false; updateHomeStats(); renderTodayRecite();
+}
+function todayReciteUndoLast() {
+  var u = todayReciteUndo; if (!u) return; var prefs = loadPrefs(u.entry.source); if (u.old) prefs[u.key] = u.old; else delete prefs[u.key]; savePrefs(u.entry.source, prefs);
+  undoReview(u.entry.source, u.entry.en, u.review); undoLearningActivity(u.activitySource, u.entry.en, 'today_recite'); todayReciteIdx = u.idx; todayReciteDone = false; todayReciteShown = false; todayReciteUndo = null; haptic(10); updateHomeStats(); renderTodayRecite();
+}
+function bindTodayReciteSwipe() {
+  var card = document.getElementById('todayReciteCard'), x = 0, y = 0, dragging = false; if (!card) return;
+  card.ontouchstart = function(e) { dragging = true; x = e.touches[0].clientX; y = e.touches[0].clientY; card.style.transition = 'none'; };
+  card.ontouchmove = function(e) { if (!dragging) return; var dx = e.touches[0].clientX - x, dy = e.touches[0].clientY - y; if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 18) return; if (Math.abs(dx) > 12) todayReciteShow(); e.preventDefault(); var n = Math.max(-120, Math.min(120, dx)); card.style.transform = 'translateX(' + n + 'px) rotate(' + (n / 18) + 'deg)'; card.classList.toggle('swipe-left', n < -70); card.classList.toggle('swipe-right', n > 70); };
+  card.ontouchend = function(e) { if (!dragging) return; dragging = false; var changed = e.changedTouches && e.changedTouches[0], dx = changed ? changed.clientX - x : 0; card.style.transition = 'transform .18s ease, box-shadow .18s ease, border-color .18s ease'; if (dx < -80) todayReciteRate(true); else if (dx > 80) todayReciteRate(false); else { card.style.transform = 'translateX(0) rotate(0deg)'; card.classList.remove('swipe-left','swipe-right'); } };
 }
 
 function openDueReviewFromButton(button) {
@@ -1070,7 +1177,7 @@ function showUnits(dictBack) {
 function showGroups(unitIdx) {
   currentUnit = unitIdx;
   stopAll();
-  if (currentDict === 'vocab') { vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false; }
+  if (currentDict === 'vocab') { vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false; saveLearningResume('vocab', unitIdx, vocabStudyMode, 0); }
   showView('groups');
   var w = getWords(currentDict);
   var start = unitIdx * UNIT_SIZE + 1;
@@ -1301,6 +1408,7 @@ function renderVocabCardMode() {
     return;
   }
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
+  saveLearningResume('vocab', currentUnit, vocabStudyMode, vocabCardIdx);
   if (vocabStudyMode === 'recite') { renderVocabRecite(entries); return; }
   container.innerHTML = ''
     + '<div class="vocab-card-shell">'
@@ -1345,7 +1453,7 @@ function vocabCardCurrentPref() {
   return loadPrefs('vocab')[prefKey('vocab', gw)] || '';
 }
 
-function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false; localStorage.setItem('vocab_study_mode_v1',mode); renderVocabCardMode(); }
+function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false; localStorage.setItem('vocab_study_mode_v1',mode); saveLearningResume('vocab', currentUnit, mode, vocabCardIdx); renderVocabCardMode(); }
 function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
@@ -3498,7 +3606,7 @@ function showMorningLoading() {
 }
 
 function hideAllViews() {
-  var views = ['view-home', 'view-library', 'view-review', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
+  var views = ['view-home', 'view-library', 'view-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
   for (var i = 0; i < views.length; i++) {
     var el = document.getElementById(views[i]);
     if (el) el.style.display = 'none';

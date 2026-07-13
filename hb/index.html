@@ -101,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="nav-back" onclick="location.href='../'">← 首页</button>
     <span class="nav-title">红宝书</span>
   </div>
-  <div class="hero-sub">考研英语词汇 · 2026-07-13 13:57</div>
+  <div class="hero-sub">考研英语词汇 · 2026-07-13 14:29</div>
   <div class="jump-row">
     <input type="number" class="jump-input" id="jumpInput" placeholder="输入Unit编号 (1-219)…" min="1" max="219">
     <button class="jump-btn" onclick="jumpToUnit()">跳转</button>
@@ -131,7 +131,7 @@ var WORDS = [{"en": "radiate", "cn": "散发；流露；发出"}, {"en": "radian
 var UNIT_COUNT = 219;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
-var TS = 1783922262;
+var TS = 1783924170;
 
 // ── Word-based key ──
 function wordKey(u, g, w) {
@@ -146,6 +146,14 @@ var curAudio = null;
 var auA = null, auB = null, curSlot = 0, auUrlA = null, auUrlB = null;
 var hbStudyMode = localStorage.getItem('hb_study_mode_v1') || 'listen';
 var hbReciteIdx = 0, hbReciteShown = false, hbReciteUndo = null, hbReciteDone = false;
+
+function saveHbResume() {
+  if (curUnit < 0) return;
+  localStorage.setItem('learning_resume_v1', JSON.stringify({
+    source: 'hongbaoshu', unitIdx: curUnit, mode: hbStudyMode,
+    itemIdx: hbStudyMode === 'recite' ? hbReciteIdx : 0, updatedAt: Date.now()
+  }));
+}
 
 function $(id) { return document.getElementById(id); }
 function showView(v) {
@@ -325,6 +333,7 @@ function mp3Url(globalW, lang) {
 function openUnit(u) {
   stop(); curUnit = u; curGroup = -1; wIdx = 0; step = 0; paused = false; single = false;
   hbReciteIdx = 0; hbReciteShown = false; hbReciteUndo = null; hbReciteDone = false;
+  saveHbResume();
   showView('groups');
   var ws = wordsInUnit(u);
   var start = u * UNIT_SIZE + 1;
@@ -386,6 +395,7 @@ function renderGroups() {
 function setHbStudyMode(mode) {
   stop(); hbStudyMode = mode; hbReciteShown = false; hbReciteDone = false;
   localStorage.setItem('hb_study_mode_v1', mode);
+  saveHbResume();
   renderGroups();
 }
 function getHbReciteWords() { return wordsInUnit(curUnit); }
@@ -393,6 +403,7 @@ function renderHbRecite() {
   var words = getHbReciteWords(), c = $('groupContainer');
   if (!words.length) { c.innerHTML = '<div class="study-mode"><button onclick="setHbStudyMode(\'listen\')">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元没有可背诵的单词</div>'; return; }
   if (hbReciteIdx < 0 || hbReciteIdx >= words.length) hbReciteIdx = 0;
+  saveHbResume();
   if (hbReciteDone) {
     c.innerHTML = '<div class="hb-recite-shell"><div class="study-mode"><button onclick="setHbStudyMode(\'listen\')">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="hb-recite-controls"><button class="hb-recite-btn" onclick="hbReciteUndoLast()"' + (hbReciteUndo ? '' : ' disabled') + '>↶</button></div></div>';
     return;
@@ -759,7 +770,16 @@ document.addEventListener('click', function(e){
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ── Init ──
-renderUnits();
+function restoreHbResume() {
+  if (location.search.indexOf('resume=1') < 0) return false;
+  var r; try { r = JSON.parse(localStorage.getItem('learning_resume_v1') || '{}'); } catch(e) { return false; }
+  if (!r || r.source !== 'hongbaoshu' || !Number.isFinite(r.unitIdx) || r.unitIdx < 0 || r.unitIdx >= UNIT_COUNT) return false;
+  hbStudyMode = r.mode === 'recite' ? 'recite' : 'listen';
+  openUnit(r.unitIdx);
+  if (hbStudyMode === 'recite') { hbReciteIdx = Math.max(0, Number(r.itemIdx) || 0); hbReciteDone = false; renderGroups(); }
+  return true;
+}
+if (!restoreHbResume()) renderUnits();
 </script>
 </body>
 </html>
