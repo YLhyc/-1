@@ -68,6 +68,11 @@
   .recite-summary-num { font-size:23px; font-weight:800; }
   .recite-summary-label { color:#71869a; font-size:11px; margin-top:3px; }
   .daily-review-note { margin:12px 0 18px; padding:11px 12px; border-radius:10px; background:#edf7f1; color:#37634c; font-size:12px; line-height:1.5; }
+  .recite-rate-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .recite-rate-btn { min-height:46px; border:0; border-radius:11px; font-size:14px; font-weight:800; cursor:pointer; }
+  .recite-rate-familiar { background:#e5f7ec; color:#247a44; }
+  .recite-rate-hard { background:#fff1df; color:#a86513; }
+  .recite-rate-btn:active { transform:scale(.98); filter:brightness(.97); }
   .source-list { border:1px solid rgba(216,229,241,.92); border-radius:14px; overflow:hidden; background:rgba(255,255,255,.82); }
   .source-row { width:100%; min-height:72px; padding:12px 14px; border:0; border-bottom:1px solid #e8eff5; background:transparent; display:flex; align-items:center; gap:12px; text-align:left; color:#172232; cursor:pointer; }
   .source-row:last-child { border-bottom:0; }
@@ -850,8 +855,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260713-163503"></script>
-<script src="audio-cache.js?v=20260713-163503"></script>
+<script src="review-core.js?v=20260713-165404"></script>
+<script src="audio-cache.js?v=20260713-165404"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -880,7 +885,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783931703;
+var BUILD_TS = 1783932845;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1308,7 +1313,7 @@ function renderTodayRecite() {
   }
   if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
   var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = todayReciteShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书', tag = todayRecitePracticeOnly ? '再背练习' : (entry.kind === 'due' ? '到期复习' : '不熟词');
-  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-example-en">' + escapeHTML(w.ex || '') + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div><div class="vc-example-cn' + hidden + '" id="todayReciteExCn">' + escapeHTML(w.ex_cn || '') + '</div><div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="vc-hint">左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
+  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-example-en">' + escapeHTML(w.ex || '') + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div><div class="vc-example-cn' + hidden + '" id="todayReciteExCn">' + escapeHTML(w.ex_cn || '') + '</div><div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
   bindTodayReciteSwipe();
 }
 function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; ['todayReciteCn','todayReciteExCn'].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.remove('recite-hidden'); }); haptic(8); }
@@ -1348,7 +1353,25 @@ function openDueReview(source, en) {
     var index = -1;
     for (var i = 0; i < words.length; i++) if (words[i].en === en) { index = i; break; }
     if (index < 0) { showReview(); return; }
-    currentDict = source; currentUnit = Math.floor(index / UNIT_SIZE); showGroups(currentUnit);
+    var unit = Math.floor(index / UNIT_SIZE), localIndex = index % UNIT_SIZE;
+    if (source === 'hongbaoshu') {
+      location.href = 'hb/?unit=' + unit + '&mode=recite&item=' + localIndex;
+      return;
+    }
+    currentDict = 'vocab';
+    showGroups(unit);
+    vocabStudyMode = 'recite'; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+    var entries = getVocabCardEntries(), cardIndex = -1;
+    for (var j = 0; j < entries.length; j++) if (entries[j].localIdx === localIndex) { cardIndex = j; break; }
+    if (cardIndex < 0) {
+      var toggle = document.getElementById('showHiddenToggleG'); if (toggle) toggle.checked = true;
+      entries = getVocabCardEntries();
+      for (var k = 0; k < entries.length; k++) if (entries[k].localIdx === localIndex) { cardIndex = k; break; }
+    }
+    vocabCardIdx = Math.max(0, cardIndex);
+    localStorage.setItem('vocab_study_mode_v1', 'recite');
+    saveLearningResume('vocab', unit, 'recite', vocabCardIdx);
+    renderVocabCardMode();
   }
   if (source === 'hongbaoshu' && !HONGBAOSHU) {
     loadHB(function(err) { if (err) { location.href = 'uf/'; return; } openAt(HONGBAOSHU); });
@@ -1668,7 +1691,7 @@ function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; voc
 function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
-  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-example-en">'+escapeHTML(w.ex||'')+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div><div class="vc-example-cn'+hidden+'" id="vcExCn">'+escapeHTML(w.ex_cn||'')+'</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="vc-hint">左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-example-en">'+escapeHTML(w.ex||'')+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div><div class="vc-example-cn'+hidden+'" id="vcExCn">'+escapeHTML(w.ex_cn||'')+'</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var a=document.getElementById('vcCn'),b=document.getElementById('vcExCn');if(a)a.classList.remove('recite-hidden');if(b)b.classList.remove('recite-hidden');haptic(8);}
