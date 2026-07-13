@@ -71,6 +71,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-skipword{flex:1.2;background:#f0f0f5;color:#1d1d1f}.btn-group-row{gap:6px;margin-top:8px}.btn-group-row .btn{height:34px;font-size:12px;border-radius:9px}.btn-rewind{flex:1;background:#f0f0f5;color:#1d1d1f}
 .btn-prev{flex:1;background:#f0f0f5;color:#1d1d1f}
 .btn:disabled{opacity:.35;pointer-events:none}
+
+/* Study mode */
+.study-mode{display:flex;gap:6px;margin:2px 0 12px;padding:4px;background:#ececf1;border-radius:11px}
+.study-mode button{flex:1;border:0;border-radius:8px;background:transparent;color:#6b6b72;padding:8px 10px;font-size:13px;font-weight:700;-webkit-appearance:none}
+.study-mode button.active{background:#fff;color:#007aff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.hb-recite-shell{max-width:520px;margin:0 auto}
+.hb-recite-progress{text-align:center;color:#86868b;font-size:13px;margin:3px 0 10px}
+.hb-recite-stage{min-height:320px;display:flex;align-items:stretch}
+.hb-recite-card{width:100%;background:#fff;border:1px solid #e6e6eb;border-radius:16px;padding:28px 22px;box-shadow:0 4px 14px rgba(0,0,0,.06);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;touch-action:pan-y;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.hb-recite-card.swipe-left{border-color:#34c759;box-shadow:0 8px 18px rgba(52,199,89,.18)}
+.hb-recite-card.swipe-right{border-color:#ff9500;box-shadow:0 8px 18px rgba(255,149,0,.18)}
+.hb-recite-en{font-size:30px;font-weight:800;line-height:1.2;overflow-wrap:anywhere}
+.hb-recite-cn{font-size:17px;line-height:1.55;color:#505057}
+.hb-recite-hidden{display:none}
+.hb-recite-controls{display:flex;justify-content:center;gap:12px;margin-top:14px}
+.hb-recite-btn{width:58px;height:52px;border:0;border-radius:11px;background:#e9e9ee;color:#1d1d1f;font-size:18px;font-weight:700;-webkit-appearance:none}
+.hb-recite-btn:disabled{opacity:.32}
+.hb-recite-show{width:88px;background:#007aff;color:#fff;font-size:15px}
+.hb-recite-hint{text-align:center;margin-top:12px;color:#86868b;font-size:12px}
+.empty-msg{text-align:center;background:#fff;border-radius:14px;padding:34px 18px;color:#86868b}
 </style>
 </head>
 <body>
@@ -81,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="nav-back" onclick="location.href='../'">← 首页</button>
     <span class="nav-title">红宝书</span>
   </div>
-  <div class="hero-sub">考研英语词汇 · 2026-07-12 11:48</div>
+  <div class="hero-sub">考研英语词汇 · 2026-07-13 13:04</div>
   <div class="jump-row">
     <input type="number" class="jump-input" id="jumpInput" placeholder="输入Unit编号 (1-219)…" min="1" max="219">
     <button class="jump-btn" onclick="jumpToUnit()">跳转</button>
@@ -111,7 +131,7 @@ var WORDS = [{"en": "radiate", "cn": "散发；流露；发出"}, {"en": "radian
 var UNIT_COUNT = 219;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
-var TS = 1783828119;
+var TS = 1783919051;
 
 // ── Word-based key ──
 function wordKey(u, g, w) {
@@ -124,6 +144,8 @@ var curUnit = -1, curGroup = -1;
 var wIdx = 0, step = 0, paused = false, single = false;
 var curAudio = null;
 var auA = null, auB = null, curSlot = 0, auUrlA = null, auUrlB = null;
+var hbStudyMode = localStorage.getItem('hb_study_mode_v1') || 'listen';
+var hbReciteIdx = 0, hbReciteShown = false, hbReciteUndo = null, hbReciteDone = false;
 
 function $(id) { return document.getElementById(id); }
 function showView(v) {
@@ -204,6 +226,36 @@ function recordLearningActivity(en, mode) {
   localStorage.setItem('learning_activity_v1', JSON.stringify(activity));
   localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
 }
+function undoLearningActivity(en, mode) {
+  if (!en) return;
+  var activity; try { activity = JSON.parse(localStorage.getItem('learning_activity_v1') || '{"days":{}}'); } catch(e) { return; }
+  var d = new Date(), day = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  var bucket = activity.days && activity.days[day], key = 'hb:' + en;
+  if (!bucket || !bucket.words || !bucket.words[key]) return;
+  bucket.words[key]--;
+  if (bucket.words[key] <= 0) delete bucket.words[key];
+  if (bucket.modes && bucket.modes[mode]) { bucket.modes[mode]--; if (bucket.modes[mode] <= 0) delete bucket.modes[mode]; }
+  bucket.updatedAt = Date.now();
+  if (!Object.keys(bucket.words).length) delete activity.days[day];
+  localStorage.setItem('learning_activity_v1', JSON.stringify(activity));
+  localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
+}
+function haptic(ms) { try { if (navigator.vibrate) navigator.vibrate(ms || 12); } catch(e) {} }
+function loadReviewMeta() { try { return JSON.parse(localStorage.getItem('review_meta_v1') || '{}'); } catch(e) { return {}; } }
+function saveReviewMeta(meta) { localStorage.setItem('review_meta_v1', JSON.stringify(meta)); }
+function rateReview(source, en, familiar) {
+  var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
+  var next = { streak: old.streak || 0, lapses: old.lapses || 0, intervalDays: old.intervalDays || 0 };
+  if (familiar) { next.streak++; next.intervalDays = [1,3,7,14,30,60][Math.min(next.streak - 1, 5)]; }
+  else { next.streak = 0; next.lapses++; next.intervalDays = 1; }
+  next.lastReviewAt = Date.now(); next.nextDueAt = Date.now() + next.intervalDays * 86400000;
+  meta[key] = next; saveReviewMeta(meta); return old;
+}
+function undoReview(source, en, old) {
+  var meta = loadReviewMeta(), key = source + ':' + en;
+  if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
+  saveReviewMeta(meta);
+}
 function updateCount(g, w) {
   var cnt = (loadCounts()[wordKey(curUnit, g, w)] || 0);
   var el = document.querySelector('#wb' + g + '_' + w + ' .wb-count');
@@ -272,6 +324,7 @@ function mp3Url(globalW, lang) {
 // ── Group rendering ──
 function openUnit(u) {
   stop(); curUnit = u; curGroup = -1; wIdx = 0; step = 0; paused = false; single = false;
+  hbReciteIdx = 0; hbReciteShown = false; hbReciteUndo = null; hbReciteDone = false;
   showView('groups');
   var ws = wordsInUnit(u);
   var start = u * UNIT_SIZE + 1;
@@ -294,9 +347,10 @@ function prevUnit() {
 }
 
 function renderGroups() {
+  if (hbStudyMode === 'recite') { renderHbRecite(); return; }
   var ws = wordsInUnit(curUnit);
   var p = prefs();
-  var groups = Math.ceil(ws.length / GROUP_SIZE), h = '', totalFam = 0;
+  var groups = Math.ceil(ws.length / GROUP_SIZE), h = '<div class="study-mode"><button class="active">聆听</button><button onclick="setHbStudyMode(\'recite\')">背诵</button></div>', totalFam = 0;
   for (var g = 0; g < groups; g++) {
     var start = g * GROUP_SIZE, end = Math.min(start + GROUP_SIZE, ws.length);
     var groupWords = ws.slice(start, end);
@@ -327,6 +381,65 @@ function renderGroups() {
   }
   $('groupContainer').innerHTML = h;
   updateBadges();
+}
+
+function setHbStudyMode(mode) {
+  stop(); hbStudyMode = mode; hbReciteShown = false; hbReciteDone = false;
+  localStorage.setItem('hb_study_mode_v1', mode);
+  renderGroups();
+}
+function getHbReciteWords() { return wordsInUnit(curUnit); }
+function renderHbRecite() {
+  var words = getHbReciteWords(), c = $('groupContainer');
+  if (!words.length) { c.innerHTML = '<div class="study-mode"><button onclick="setHbStudyMode(\'listen\')">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元没有可背诵的单词</div>'; return; }
+  if (hbReciteIdx < 0 || hbReciteIdx >= words.length) hbReciteIdx = 0;
+  if (hbReciteDone) {
+    c.innerHTML = '<div class="hb-recite-shell"><div class="study-mode"><button onclick="setHbStudyMode(\'listen\')">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="hb-recite-controls"><button class="hb-recite-btn" onclick="hbReciteUndoLast()"' + (hbReciteUndo ? '' : ' disabled') + '>↶</button></div></div>';
+    return;
+  }
+  var word = words[hbReciteIdx], hidden = hbReciteShown ? '' : ' hb-recite-hidden';
+  c.innerHTML = '<div class="hb-recite-shell"><div class="study-mode"><button onclick="setHbStudyMode(\'listen\')">聆听</button><button class="active">背诵</button></div><div class="hb-recite-progress">' + (hbReciteIdx + 1) + ' / ' + words.length + '</div><div class="hb-recite-stage"><div class="hb-recite-card" id="hbReciteCard"><div class="hb-recite-en">' + esc(word.en) + '</div><div class="hb-recite-cn' + hidden + '" id="hbReciteCn">' + esc(word.cn) + '</div></div></div><div class="hb-recite-controls"><button class="hb-recite-btn" onclick="hbReciteUndoLast()"' + (hbReciteUndo ? '' : ' disabled') + '>↶</button><button class="hb-recite-btn hb-recite-show" onclick="hbReciteShow()">显示</button></div><div class="hb-recite-hint">左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  bindHbReciteSwipe();
+}
+function hbReciteShow() {
+  if (hbReciteShown) return;
+  hbReciteShown = true; var el = $('hbReciteCn'); if (el) el.classList.remove('hb-recite-hidden'); haptic(8);
+}
+function hbReciteRate(familiar) {
+  var words = getHbReciteWords(), word = words[hbReciteIdx]; if (!word) return;
+  var p = prefs(), old = p[word.en]; p[word.en] = familiar ? 'familiar' : 'hard'; savePrefs(p);
+  var review = rateReview('hongbaoshu', word.en, familiar);
+  recordLearningActivity(word.en, 'hb_recite');
+  hbReciteUndo = { idx: hbReciteIdx, en: word.en, old: old, review: review };
+  haptic(18);
+  if (hbReciteIdx < words.length - 1) hbReciteIdx++; else hbReciteDone = true;
+  hbReciteShown = false; renderHbRecite();
+}
+function hbReciteUndoLast() {
+  var u = hbReciteUndo; if (!u) return;
+  var p = prefs(); if (u.old) p[u.en] = u.old; else delete p[u.en]; savePrefs(p);
+  undoReview('hongbaoshu', u.en, u.review); undoLearningActivity(u.en, 'hb_recite');
+  hbReciteIdx = u.idx; hbReciteDone = false; hbReciteShown = false; hbReciteUndo = null; haptic(10); renderHbRecite();
+}
+function bindHbReciteSwipe() {
+  var card = $('hbReciteCard'), x = 0, y = 0, dragging = false; if (!card) return;
+  card.ontouchstart = function(e) { dragging = true; x = e.touches[0].clientX; y = e.touches[0].clientY; card.style.transition = 'none'; };
+  card.ontouchmove = function(e) {
+    if (!dragging) return;
+    var dx = e.touches[0].clientX - x, dy = e.touches[0].clientY - y;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 18) return;
+    if (Math.abs(dx) > 12) hbReciteShow();
+    e.preventDefault(); var limited = Math.max(-120, Math.min(120, dx));
+    card.style.transform = 'translateX(' + limited + 'px) rotate(' + (limited / 18) + 'deg)';
+    card.classList.toggle('swipe-left', limited < -70); card.classList.toggle('swipe-right', limited > 70);
+  };
+  card.ontouchend = function(e) {
+    if (!dragging) return; dragging = false;
+    var changed = e.changedTouches && e.changedTouches[0], dx = changed ? changed.clientX - x : 0;
+    card.style.transition = 'transform .18s ease, box-shadow .18s ease, border-color .18s ease';
+    if (dx < -80) hbReciteRate(true); else if (dx > 80) hbReciteRate(false);
+    else { card.style.transform = 'translateX(0) rotate(0deg)'; card.classList.remove('swipe-left','swipe-right'); }
+  };
 }
 
 function updateBadges() {
