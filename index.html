@@ -817,7 +817,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783920889;
+var BUILD_TS = 1783922262;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3797,12 +3797,19 @@ function getMorningStepLabels(item) {
   var isFamiliar = pref === 'familiar';
 
   if (pref === 'hard') {
-    // Hard: en, cn, ex_en, ex_cn, en, cn (6 steps)
+    // Hard: keep the full round, then add en/cn/en/cn for reinforcement.
+    // This is 10 steps for Red Book and 12 for vocab entries with examples.
     add('英①', 'en', 1.0);
-    add('中①', 'cn', 1.0);
-    if (hasEx) { add('例英', 'ex', 0.82); add('例中', 'ex_cn', 0.90); }
     add('英②', 'en', 1.0);
+    add('中①', 'cn', 1.0);
     add('中②', 'cn', 1.0);
+    if (hasEx) { add('例英', 'ex', 0.82); add('例中', 'ex_cn', 0.90); }
+    add('英③', 'en', 1.0);
+    add('中③', 'cn', 1.0);
+    add('英④', 'en', 1.0);
+    add('中④', 'cn', 1.0);
+    add('英⑤', 'en', 1.0);
+    add('中⑤', 'cn', 1.0);
   } else if (heardYesterday && heardDayBefore && isFamiliar) {
     // Heard both yesterday and day before AND marked familiar: shortest
     // en, cn only; examples still shown on card
