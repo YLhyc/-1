@@ -53,6 +53,21 @@
   .today-task-meta { position:relative; z-index:1; color:#60778c; font-size:13px; line-height:1.55; min-height:20px; }
   .task-button { position:relative; z-index:1; width:100%; height:48px; margin-top:18px; border:0; border-radius:12px; background:#18344f; color:#fff; font-size:15px; font-weight:750; cursor:pointer; }
   .task-button:active { transform:scale(.985); }
+  .recite-setup { max-width:540px; margin:18px auto 0; padding:22px; border:1px solid rgba(216,229,241,.94); border-radius:16px; background:rgba(255,255,255,.9); box-shadow:0 10px 28px rgba(46,100,148,.1); }
+  .recite-setup h2 { font-size:22px; margin-bottom:6px; }
+  .recite-setup p { color:#61798f; font-size:13px; line-height:1.55; }
+  .recite-limit-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:18px 0 8px; }
+  .recite-limit { height:48px; border:1px solid #d8e5f1; border-radius:11px; background:#f7fbff; color:#34516d; font-weight:750; cursor:pointer; }
+  .recite-limit.active { color:#fff; background:#1f6c47; border-color:#1f6c47; }
+  .recite-availability { color:#71869a; font-size:12px; text-align:center; margin-top:7px; }
+  .recite-summary { max-width:540px; margin:18px auto 0; padding:24px 20px; border-radius:16px; background:rgba(255,255,255,.92); text-align:center; box-shadow:0 10px 28px rgba(46,100,148,.1); }
+  .recite-summary h2 { font-size:23px; margin-bottom:5px; }
+  .recite-summary-sub { color:#60778c; font-size:13px; margin-bottom:17px; }
+  .recite-summary-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:14px; }
+  .recite-summary-stat { padding:13px 8px; border-radius:11px; background:#f2f7fb; }
+  .recite-summary-num { font-size:23px; font-weight:800; }
+  .recite-summary-label { color:#71869a; font-size:11px; margin-top:3px; }
+  .daily-review-note { margin:12px 0 18px; padding:11px 12px; border-radius:10px; background:#edf7f1; color:#37634c; font-size:12px; line-height:1.5; }
   .source-list { border:1px solid rgba(216,229,241,.92); border-radius:14px; overflow:hidden; background:rgba(255,255,255,.82); }
   .source-row { width:100%; min-height:72px; padding:12px 14px; border:0; border-bottom:1px solid #e8eff5; background:transparent; display:flex; align-items:center; gap:12px; text-align:left; color:#172232; cursor:pointer; }
   .source-row:last-child { border-bottom:0; }
@@ -279,6 +294,12 @@
   .sync-tab { font-size: 12px; color: #86868b; margin-bottom: 10px; }
   .sync-tab span { cursor: pointer; padding: 2px 8px; border-radius: 6px; }
   .sync-tab span.active { background: #e8f0fe; color: #007aff; font-weight: 600; }
+  .cache-card { width:340px; max-width:calc(100vw - 32px); top:50%; text-align:left; }
+  .cache-limit-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0; }
+  .cache-limit-btn { height:40px; border:1px solid #d8e5f1; border-radius:9px; background:#f7fbff; color:#34516d; font-weight:700; }
+  .cache-limit-btn.active { background:#1676d2; border-color:#1676d2; color:#fff; }
+  .cache-status { padding:11px 12px; border-radius:10px; background:#f5f7fa; color:#44596d; font-size:12px; line-height:1.65; }
+  .cache-clear { width:100%; height:42px; margin-top:10px; border:0; border-radius:10px; background:#fff1f0; color:#b5443b; font-weight:700; }
   .backup-card { width: 340px; max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); top: 50%; overflow-y: auto; overscroll-behavior: contain; text-align: left; }
   .backup-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #1d1d1f; }
   .backup-desc { font-size: 12px; color: #6e6e73; line-height: 1.5; margin-bottom: 14px; }
@@ -536,7 +557,7 @@
     <div class="home-metric"><div class="home-metric-num" id="homeTodayValue">0</div><div class="home-metric-label">今日学习</div></div>
     <div class="home-metric"><div class="home-metric-num" id="homeDueValue">0</div><div class="home-metric-label">到期复习</div></div>
   </div>
-  <div class="home-actions"><button class="home-link" onclick="toggleSyncPanel()">跨设备同步</button><button class="home-link" onclick="openBackupCenter()">学习记录备份</button></div>
+  <div class="home-actions"><button class="home-link" onclick="toggleSyncPanel()">跨设备同步</button><button class="home-link" onclick="openBackupCenter()">学习记录备份</button><button class="home-link" onclick="openCacheManager()">离线缓存</button></div>
 </div>
 
 <!-- ═══════════ LIBRARY ═══════════ -->
@@ -644,6 +665,23 @@
     </div>
     <div class="sync-msg" id="syncMsg"></div>
     <button class="sync-close" onclick="toggleSyncPanel()">关闭</button>
+  </div>
+</div>
+
+<!-- ═══════════ AUDIO CACHE MANAGER ═══════════ -->
+<div class="sync-modal" id="cacheModal">
+  <div class="sync-modal-bg" onclick="closeCacheManager()"></div>
+  <div class="sync-modal-card cache-card">
+    <div class="sync-title">离线音频缓存</div>
+    <div class="sync-desc" style="text-align:left;">自动保留最近使用的音频包。清理只删除离线音频，不会删除熟练度、背诵记录或备份配置。</div>
+    <div class="cache-limit-grid">
+      <button class="cache-limit-btn" data-limit="5" onclick="setAudioCacheLimit(5)">5 个</button>
+      <button class="cache-limit-btn" data-limit="10" onclick="setAudioCacheLimit(10)">10 个</button>
+      <button class="cache-limit-btn" data-limit="20" onclick="setAudioCacheLimit(20)">20 个</button>
+    </div>
+    <div class="cache-status" id="cacheStatus">正在读取缓存…</div>
+    <button class="cache-clear" onclick="clearAudioCache()">清理全部离线音频</button>
+    <button class="sync-close" onclick="closeCacheManager()">关闭</button>
   </div>
 </div>
 
@@ -780,6 +818,7 @@
       <div class="morning-summary-stat"><div class="ms-num" id="msFamiliar">0</div><div class="ms-label">标记熟了</div></div>
       <div class="morning-summary-stat"><div class="ms-num" id="msSkipped">0</div><div class="ms-label">跳过</div></div>
     </div>
+    <div class="daily-review-note" id="msNextDue"></div>
     <button class="morning-btn morning-btn-primary" onclick="showHome()" style="width:200px;">返回首页</button>
   </div>
 </div>
@@ -807,6 +846,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
+<script src="review-core.js?v=20260713-150828"></script>
+<script src="audio-cache.js?v=20260713-150828"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -835,7 +876,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783924170;
+var BUILD_TS = 1783926508;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1012,16 +1053,7 @@ function showLibrary() {
 }
 
 function getDueReviewItems() {
-  var meta = loadReviewMeta(), now = Date.now(), items = [];
-  Object.keys(meta).forEach(function(key) {
-    var entry = meta[key];
-    if (!entry || !entry.nextDueAt || entry.nextDueAt > now) return;
-    var split = key.indexOf(':');
-    if (split < 1) return;
-    items.push({ source: key.slice(0, split), en: key.slice(split + 1), dueAt: entry.nextDueAt, lapses: Number(entry.lapses) || 0 });
-  });
-  items.sort(function(a, b) { return a.dueAt - b.dueAt; });
-  return items;
+  return ReviewCore.getDueReviewItems();
 }
 
 var LEARNING_RESUME_KEY = 'learning_resume_v1';
@@ -1075,7 +1107,54 @@ function showReview() {
   container.innerHTML = html;
 }
 
-var todayReciteItems = [], todayReciteIdx = 0, todayReciteShown = false, todayReciteUndo = null, todayReciteDone = false;
+var TODAY_RECITE_SETTINGS_KEY = 'today_recite_settings_v1';
+var TODAY_RECITE_DAILY_KEY = 'today_recite_daily_v1';
+var todayRecitePool = [], todayReciteItems = [], todayReciteIdx = 0, todayReciteShown = false, todayReciteUndo = null, todayReciteDone = false, todayReciteStarted = false;
+var todayReciteStats = null, todayReciteCompletionId = '';
+function loadTodayReciteSettings() {
+  var s = safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30 });
+  if ([20,30,50,60].indexOf(Number(s.limit)) < 0) s.limit = 30;
+  return s;
+}
+function saveTodayReciteLimit(limit) {
+  limit = Number(limit); if ([20,30,50,60].indexOf(limit) < 0) limit = 30;
+  localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify({ limit: limit }));
+  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  return limit;
+}
+function loadTodayReciteDaily() {
+  var data = safeJsonFromStorage(TODAY_RECITE_DAILY_KEY, { days: {} });
+  if (!data || !isPlainObject(data.days)) data = { days: {} };
+  return data;
+}
+function saveTodayReciteDaily(data) {
+  var cutoff = Date.now() - 90 * 86400000;
+  Object.keys(data.days || {}).forEach(function(day) {
+    var ts = new Date(day + 'T00:00:00').getTime();
+    if (!isFinite(ts) || ts < cutoff) delete data.days[day];
+  });
+  localStorage.setItem(TODAY_RECITE_DAILY_KEY, JSON.stringify(data));
+  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+}
+function getTodayReciteDayStats() {
+  var data = loadTodayReciteDaily(), sessions = data.days[localDayKey()] || [], out = { completed: 0, familiar: 0, hard: 0, sessions: sessions.length };
+  sessions.forEach(function(s) { out.completed += Number(s.completed) || 0; out.familiar += Number(s.familiar) || 0; out.hard += Number(s.hard) || 0; });
+  return out;
+}
+function saveTodayReciteCompletion() {
+  if (todayReciteCompletionId || !todayReciteStats) return;
+  var data = loadTodayReciteDaily(), day = localDayKey(), sessions = data.days[day] || [];
+  todayReciteCompletionId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7);
+  sessions.push({ id: todayReciteCompletionId, endedAt: Date.now(), target: todayReciteStats.target, planned: todayReciteItems.length, completed: todayReciteStats.familiar + todayReciteStats.hard, familiar: todayReciteStats.familiar, hard: todayReciteStats.hard, due: todayReciteStats.due });
+  data.days[day] = sessions.slice(-12); saveTodayReciteDaily(data);
+}
+function removeTodayReciteCompletion() {
+  if (!todayReciteCompletionId) return;
+  var data = loadTodayReciteDaily(), day = localDayKey(), sessions = data.days[day] || [];
+  data.days[day] = sessions.filter(function(s) { return s.id !== todayReciteCompletionId; });
+  if (!data.days[day].length) delete data.days[day];
+  saveTodayReciteDaily(data); todayReciteCompletionId = '';
+}
 function todayReciteWord(source, en) {
   var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []);
   for (var i = 0; i < words.length; i++) if (words[i].en === en) return { item: words[i], index: i };
@@ -1093,21 +1172,43 @@ function buildTodayReciteItems() {
     for (var i = 0; i < dict.words.length; i++) if (dict.prefs[dict.words[i].en] === 'hard') add(dict.source, dict.words[i].en, 'hard');
   });
   out.sort(function(a, b) { if (a.kind !== b.kind) return a.kind === 'due' ? -1 : 1; return (a.dueAt || 0) - (b.dueAt || 0); });
-  return out.slice(0, 30);
+  return out;
 }
 function updateTodayReciteCard() {
   var el = document.getElementById('todayReciteCardSub'); if (!el) return;
-  var due = getDueReviewItems();
-  el.textContent = due.length ? due.length + ' 个到期词，跨 Unit 直接背' : '暂时没有到期词，可用它回收不熟词';
+  var due = getDueReviewItems(), day = getTodayReciteDayStats();
+  var base = due.length ? due.length + ' 个到期词，跨 Unit 直接背' : '暂时没有到期词，可用它回收不熟词';
+  el.textContent = day.completed ? '今天已背 ' + day.completed + ' 词 · ' + base : base;
 }
 function openTodayRecite() {
-  function start() { stopAll(); todayReciteItems = buildTodayReciteItems(); todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; showView('today-recite'); renderTodayRecite(); }
+  function start() { stopAll(); todayRecitePool = buildTodayReciteItems(); todayReciteItems = []; todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; todayReciteStarted = false; todayReciteStats = null; todayReciteCompletionId = ''; showView('today-recite'); renderTodayRecite(); }
   if (!HONGBAOSHU) loadHB(function(err) { if (err) { alert('红宝书数据加载失败，请稍后重试'); return; } start(); }); else start();
+}
+function chooseTodayReciteLimit(limit) { saveTodayReciteLimit(limit); renderTodayRecite(); }
+function startTodayRecite() {
+  var limit = loadTodayReciteSettings().limit;
+  todayReciteItems = todayRecitePool.slice(0, limit);
+  todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; todayReciteStarted = true; todayReciteCompletionId = '';
+  var due = 0; todayReciteItems.forEach(function(item) { if (item.kind === 'due') due++; });
+  todayReciteStats = { target: limit, familiar: 0, hard: 0, due: due, startedAt: Date.now() };
+  renderTodayRecite();
 }
 function renderTodayRecite() {
   var c = document.getElementById('todayReciteContainer'); if (!c) return;
-  if (!todayReciteItems.length) { c.innerHTML = '<div class="review-empty">今天没有到期或不熟词。<br>继续推进新词，下一次评分后会自动进入这里。</div><button class="task-button" onclick="continueLearning()">继续学习</button>'; return; }
-  if (todayReciteDone) { c.innerHTML = '<div class="vocab-card-shell"><div class="empty-msg">今日背诵已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button></div></div>'; return; }
+  if (!todayReciteStarted) {
+    if (!todayRecitePool.length) { c.innerHTML = '<div class="review-empty">今天没有到期或不熟词。<br>继续推进新词，下一次评分后会自动进入这里。</div><button class="task-button" onclick="continueLearning()">继续学习</button>'; return; }
+    var selected = loadTodayReciteSettings().limit, choices = [20,30,50,60], buttons = '';
+    choices.forEach(function(n) { buttons += '<button class="recite-limit' + (selected === n ? ' active' : '') + '" onclick="chooseTodayReciteLimit(' + n + ')">' + n + '</button>'; });
+    var planned = Math.min(selected, todayRecitePool.length);
+    c.innerHTML = '<div class="recite-setup"><h2>选择今天的背诵量</h2><p>先安排到期词，再补入已标记的不熟词。选择会保留到下次。</p><div class="recite-limit-grid">' + buttons + '</div><div class="recite-availability">当前可复习 ' + todayRecitePool.length + ' 词，本次将安排 ' + planned + ' 词</div><button class="task-button" onclick="startTodayRecite()">开始背诵 ' + planned + ' 词</button></div>';
+    return;
+  }
+  if (!todayReciteItems.length) { c.innerHTML = '<div class="review-empty">当前没有可背诵的单词。</div>'; return; }
+  if (todayReciteDone) {
+    var day = getTodayReciteDayStats(), upcoming = ReviewCore.upcomingReviewCount(24);
+    c.innerHTML = '<div class="recite-summary"><h2>今日背诵已完成</h2><div class="recite-summary-sub">本次 ' + todayReciteItems.length + ' 词 · 今天累计 ' + day.completed + ' 词</div><div class="recite-summary-grid"><div class="recite-summary-stat"><div class="recite-summary-num">' + todayReciteStats.familiar + '</div><div class="recite-summary-label">本次熟悉</div></div><div class="recite-summary-stat"><div class="recite-summary-num">' + todayReciteStats.hard + '</div><div class="recite-summary-label">本次不熟悉</div></div><div class="recite-summary-stat"><div class="recite-summary-num">' + todayReciteStats.due + '</div><div class="recite-summary-label">其中到期词</div></div><div class="recite-summary-stat"><div class="recite-summary-num">' + upcoming + '</div><div class="recite-summary-label">未来24小时到期</div></div></div><div class="daily-review-note">今天累计：熟悉 ' + day.familiar + ' · 不熟悉 ' + day.hard + ' · 完成 ' + day.sessions + ' 轮</div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="showHome()">完成</button></div></div>';
+    return;
+  }
   if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
   var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = todayReciteShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书', tag = entry.kind === 'due' ? '到期复习' : '不熟词';
   c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-example-en">' + escapeHTML(w.ex || '') + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div><div class="vc-example-cn' + hidden + '" id="todayReciteExCn">' + escapeHTML(w.ex_cn || '') + '</div><div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="vc-hint">左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
@@ -1118,12 +1219,13 @@ function todayReciteRate(familiar) {
   var entry = todayReciteItems[todayReciteIdx]; if (!entry) return;
   var prefs = loadPrefs(entry.source), key = prefKey(entry.source, entry.index), old = prefs[key]; prefs[key] = familiar ? 'familiar' : 'hard'; savePrefs(entry.source, prefs);
   var review = rateReview(entry.source, entry.en, familiar), activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab';
-  recordLearningActivity(activitySource, entry.en, 'today_recite'); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, old: old, review: review, activitySource: activitySource };
-  haptic(18); if (todayReciteIdx < todayReciteItems.length - 1) todayReciteIdx++; else todayReciteDone = true; todayReciteShown = false; updateHomeStats(); renderTodayRecite();
+  recordLearningActivity(activitySource, entry.en, 'today_recite'); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, old: old, review: review, activitySource: activitySource, familiar: familiar };
+  if (familiar) todayReciteStats.familiar++; else todayReciteStats.hard++;
+  haptic(18); if (todayReciteIdx < todayReciteItems.length - 1) todayReciteIdx++; else { todayReciteDone = true; saveTodayReciteCompletion(); } todayReciteShown = false; updateHomeStats(); renderTodayRecite();
 }
 function todayReciteUndoLast() {
   var u = todayReciteUndo; if (!u) return; var prefs = loadPrefs(u.entry.source); if (u.old) prefs[u.key] = u.old; else delete prefs[u.key]; savePrefs(u.entry.source, prefs);
-  undoReview(u.entry.source, u.entry.en, u.review); undoLearningActivity(u.activitySource, u.entry.en, 'today_recite'); todayReciteIdx = u.idx; todayReciteDone = false; todayReciteShown = false; todayReciteUndo = null; haptic(10); updateHomeStats(); renderTodayRecite();
+  undoReview(u.entry.source, u.entry.en, u.review); undoLearningActivity(u.activitySource, u.entry.en, 'today_recite'); removeTodayReciteCompletion(); if (u.familiar) todayReciteStats.familiar = Math.max(0, todayReciteStats.familiar - 1); else todayReciteStats.hard = Math.max(0, todayReciteStats.hard - 1); todayReciteIdx = u.idx; todayReciteDone = false; todayReciteShown = false; todayReciteUndo = null; haptic(10); updateHomeStats(); renderTodayRecite();
 }
 function bindTodayReciteSwipe() {
   var card = document.getElementById('todayReciteCard'), x = 0, y = 0, dragging = false; if (!card) return;
@@ -1734,9 +1836,11 @@ function fetchAudioFile(fileIdx) {
   if (audioFilesLoaded[fileIdx] === true || audioFilesLoaded[fileIdx] === 'loading') return;
   audioFilesLoaded[fileIdx] = 'loading';
 
-  fetch('audio_g' + fileIdx + '.json?v=' + BUILD_TS)
+  var audioUrl = 'audio_g' + fileIdx + '.json?v=' + BUILD_TS;
+  fetch(audioUrl)
     .then(function(r) { return r.json(); })
     .then(function(data) {
+      if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
       audioFilesLoaded[fileIdx] = true;
       var totalGlobalGroups = Math.ceil(VOCAB.length / GROUP_SIZE);
       for (var gg = 0; gg < totalGlobalGroups; gg++) {
@@ -2340,6 +2444,34 @@ function toggleSyncPanel() {
   document.getElementById('syncMsg').className = 'sync-msg';
 }
 
+function formatStorageBytes(bytes) {
+  bytes = Number(bytes) || 0;
+  if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+  return (bytes / 1024 / 1024).toFixed(bytes < 100 * 1024 * 1024 ? 1 : 0) + ' MB';
+}
+function refreshCacheManager() {
+  var status = document.getElementById('cacheStatus'); if (!status || !window.AudioCacheManager) return;
+  var limit = AudioCacheManager.getLimit();
+  document.querySelectorAll('.cache-limit-btn').forEach(function(btn) { btn.classList.toggle('active', Number(btn.getAttribute('data-limit')) === limit); });
+  status.textContent = '正在读取缓存…';
+  AudioCacheManager.stats().then(function(info) {
+    var storage = info.usage ? '当前站点共占用约 ' + formatStorageBytes(info.usage) : '设备未提供占用空间估算';
+    status.textContent = '已缓存 ' + info.count + ' 个音频包 · 自动上限 ' + info.limit + ' 个\n' + storage;
+    status.style.whiteSpace = 'pre-line';
+  }).catch(function() { status.textContent = '暂时无法读取缓存状态'; });
+}
+function openCacheManager() {
+  var modal = document.getElementById('cacheModal'); if (modal) modal.classList.add('show');
+  refreshCacheManager();
+}
+function closeCacheManager() { var modal = document.getElementById('cacheModal'); if (modal) modal.classList.remove('show'); }
+function setAudioCacheLimit(limit) { if (!window.AudioCacheManager) return; AudioCacheManager.setLimit(limit); refreshCacheManager(); }
+function clearAudioCache() {
+  if (!window.AudioCacheManager) return;
+  var status = document.getElementById('cacheStatus'); if (status) status.textContent = '正在清理音频缓存…';
+  AudioCacheManager.clearAudio().then(function(result) { refreshCacheManager(); setTimeout(function() { var el = document.getElementById('cacheStatus'); if (el && result.count) el.textContent += '\n本次已清理 ' + result.count + ' 个音频包。'; }, 100); });
+}
+
 function doExport() {
   var prefs = loadPrefs(syncMode);
   var counts = loadCounts(syncMode);
@@ -2410,7 +2542,7 @@ function b64decode(str) {
 }
 
 var BACKUP_APP_ID = 'kaoyan-english-review';
-var BACKUP_VERSION = 4;
+var BACKUP_VERSION = 5;
 var PRE_IMPORT_BACKUP_KEY = 'learning_pre_import_backup_v1';
 var PRE_IMPORT_BACKUP_TS_KEY = 'learning_pre_import_backup_ts';
 var ACTIVITY_KEY = 'learning_activity_v1';
@@ -2435,65 +2567,24 @@ function isPlainObject(obj) {
 }
 
 function loadLearningActivity() {
-  return safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
+  return ReviewCore.loadLearningActivity();
 }
 function saveLearningActivity(activity) {
-  var days = activity && isPlainObject(activity.days) ? activity.days : {};
-  var cutoff = Date.now() - 90 * 86400000;
-  Object.keys(days).forEach(function(day) {
-    var ts = new Date(day + 'T00:00:00').getTime();
-    if (!isFinite(ts) || ts < cutoff) delete days[day];
-  });
-  localStorage.setItem(ACTIVITY_KEY, JSON.stringify({ days: days }));
+  ReviewCore.saveLearningActivity(activity);
 }
 function recordLearningActivity(source, en, mode) {
-  if (!source || !en) return;
-  var activity = loadLearningActivity();
-  if (!isPlainObject(activity.days)) activity.days = {};
-  var day = localDayKey();
-  var bucket = activity.days[day] || { words: {}, modes: {}, updatedAt: 0 };
-  if (!isPlainObject(bucket.words)) bucket.words = {};
-  if (!isPlainObject(bucket.modes)) bucket.modes = {};
-  var key = source + ':' + en;
-  bucket.words[key] = (bucket.words[key] || 0) + 1;
-  mode = mode || source;
-  bucket.modes[mode] = (bucket.modes[mode] || 0) + 1;
-  bucket.updatedAt = Date.now();
-  activity.days[day] = bucket;
-  saveLearningActivity(activity);
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  ReviewCore.recordLearningActivity(source, en, mode);
 }
 function undoLearningActivity(source, en, mode) {
-  var activity = loadLearningActivity(), day = localDayKey(), bucket = activity.days && activity.days[day], key = source + ':' + en;
-  if (!bucket || !bucket.words || !bucket.words[key]) return;
-  bucket.words[key]--;
-  if (bucket.words[key] <= 0) delete bucket.words[key];
-  if (bucket.modes && bucket.modes[mode]) { bucket.modes[mode]--; if (bucket.modes[mode] <= 0) delete bucket.modes[mode]; }
-  bucket.updatedAt = Date.now();
-  if (!Object.keys(bucket.words).length) delete activity.days[day];
-  saveLearningActivity(activity);
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  ReviewCore.undoLearningActivity(source, en, mode);
 }
 
 var REVIEW_META_KEY = 'review_meta_v1';
 function haptic(ms) { try { if (navigator.vibrate) navigator.vibrate(ms || 12); } catch(e) {} }
-function loadReviewMeta() { return safeJsonFromStorage(REVIEW_META_KEY, {}); }
-function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta)); }
-function rateReview(source, en, familiar) {
-  var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
-  var next = { streak: old.streak || 0, lapses: old.lapses || 0, intervalDays: old.intervalDays || 0 };
-  if (familiar) {
-    next.streak++;
-    next.intervalDays = [1,3,7,14,30,60][Math.min(next.streak - 1, 5)];
-  } else { next.streak = 0; next.lapses++; next.intervalDays = 1; }
-  next.lastReviewAt = Date.now(); next.nextDueAt = Date.now() + next.intervalDays * 86400000;
-  meta[key] = next; saveReviewMeta(meta); return old;
-}
-function undoReview(source, en, old) {
-  var meta = loadReviewMeta(), key = source + ':' + en;
-  if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
-  saveReviewMeta(meta);
-}
+function loadReviewMeta() { return ReviewCore.loadReviewMeta(); }
+function saveReviewMeta(meta) { ReviewCore.saveReviewMeta(meta); }
+function rateReview(source, en, familiar) { return ReviewCore.rateReview(source, en, familiar); }
+function undoReview(source, en, old) { ReviewCore.undoReview(source, en, old); }
 
 function createLearningBackup() {
   var all = {};
@@ -2504,6 +2595,10 @@ function createLearningBackup() {
   all.uf_counts = safeJsonFromStorage('uf_counts', {});
   all.activity = safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
   all.review = safeJsonFromStorage(REVIEW_META_KEY, {});
+  all.todayRecite = {
+    settings: safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30 }),
+    daily: safeJsonFromStorage(TODAY_RECITE_DAILY_KEY, { days: {} })
+  };
   all.morning = {
     meta: safeJsonFromStorage(MOR_KEYS.meta, {}),
     settings: safeJsonFromStorage(MOR_KEYS.settings, {}),
@@ -2552,6 +2647,11 @@ function validateLearningBackup(all) {
   if (all.uf_counts && !isPlainObject(all.uf_counts)) throw new Error('不熟词次数格式错误');
   if (all.activity && !isPlainObject(all.activity)) throw new Error('学习活动记录格式错误');
   if (all.review && !isPlainObject(all.review)) throw new Error('复习状态格式错误');
+  if (all.todayRecite) {
+    if (!isPlainObject(all.todayRecite)) throw new Error('今日背诵数据格式错误');
+    if (all.todayRecite.settings && !isPlainObject(all.todayRecite.settings)) throw new Error('今日背诵设置格式错误');
+    if (all.todayRecite.daily && !isPlainObject(all.todayRecite.daily)) throw new Error('今日背诵记录格式错误');
+  }
   if (all.morning) {
     if (!isPlainObject(all.morning)) throw new Error('晨读数据格式错误');
     if (all.morning.sessions && !Array.isArray(all.morning.sessions)) throw new Error('晨读记录格式错误');
@@ -2580,6 +2680,10 @@ function applyLearningBackup(all) {
   localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
   if (isPlainObject(all.activity)) localStorage.setItem(ACTIVITY_KEY, JSON.stringify(all.activity));
   if (isPlainObject(all.review)) localStorage.setItem(REVIEW_META_KEY, JSON.stringify(all.review));
+  if (all.todayRecite && isPlainObject(all.todayRecite)) {
+    if (isPlainObject(all.todayRecite.settings)) localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify(all.todayRecite.settings));
+    if (isPlainObject(all.todayRecite.daily)) localStorage.setItem(TODAY_RECITE_DAILY_KEY, JSON.stringify(all.todayRecite.daily));
+  }
   if (all.morning && isPlainObject(all.morning)) {
     if (isPlainObject(all.morning.meta)) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
     if (isPlainObject(all.morning.settings)) localStorage.setItem(MOR_KEYS.settings, JSON.stringify(all.morning.settings));
@@ -3774,9 +3878,11 @@ function loadMorningVocabFile(fileIdx, cb) {
     return;
   }
   _mVocabLoading[fileIdx] = true;
-  fetch('audio_g' + fileIdx + '.json?v=' + BUILD_TS)
+  var audioUrl = 'audio_g' + fileIdx + '.json?v=' + BUILD_TS;
+  fetch(audioUrl)
     .then(function(r) { return r.json(); })
     .then(function(data) {
+      if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
       var words = [];
       for (var w = 0; w < data.words.length; w++) {
         words.push({
@@ -3802,9 +3908,11 @@ function loadMorningHbUnit(unitIdx, cb) {
     return;
   }
   _mHbLoading[unitIdx] = true;
-  fetch('hb/audio_unit' + unitIdx + '.json?v=' + BUILD_TS)
+  var audioUrl = 'hb/audio_unit' + unitIdx + '.json?v=' + BUILD_TS;
+  fetch(audioUrl)
     .then(function(r) { return r.json(); })
     .then(function(data) {
+      if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
       var words = [];
       for (var w = 0; w < data.words.length; w++) {
         words.push({
@@ -4493,6 +4601,8 @@ function endMorningSession(status) {
     document.getElementById('msTitle').textContent = '今日晨听完成';
     document.getElementById('msSub').textContent = '用时约 ' + min + ' 分钟 · ' + morningSessionCompleted + ' 词';
   }
+  var nextDue = ReviewCore.upcomingReviewCount(24), reciteDay = getTodayReciteDayStats();
+  document.getElementById('msNextDue').textContent = '今日复盘：已背诵 ' + reciteDay.completed + ' 词；未来24小时预计 ' + nextDue + ' 词到期。';
 }
 
 // ── Morning Review Page ──
