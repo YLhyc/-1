@@ -539,7 +539,7 @@
   </section>
   <div class="app-section-title"><h2>继续学习</h2><span>上次位置</span></div>
   <div class="source-list" id="resumeCard"></div>
-  <div class="app-section-title"><h2>词库</h2><span>按 Unit 推进新词</span></div>
+  <div class="app-section-title"><h2>词库</h2><span>学习与复习入口</span></div>
   <div class="source-list">
     <button class="source-row" onclick="openDict('vocab')">
       <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">110 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
@@ -547,8 +547,11 @@
     <button class="source-row" onclick="openRedBook()">
       <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · <span id="statHbDone">从 Unit 开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
+    <button class="source-row" onclick="location.href='uf/'">
+      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 聆听与背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+    </button>
     <button class="source-row" onclick="showReview()">
-      <span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta"><span id="statUfTotal">0 词</span><span id="statUfHard"></span></span><span class="source-bar"><i id="homeReviewBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按间隔安排</span></span><span class="source-arrow">›</span>
     </button>
   </div>
   <div class="app-section-title"><h2>本周节奏</h2><span>真实学习记录</span></div>
@@ -568,6 +571,7 @@
   <div class="library-card">
     <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow">›</span></button>
     <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和背诵</span></span><span class="source-arrow">›</span></button>
   </div>
   <div class="app-section-title"><h2>复习池</h2><span>从难词回收</span></div>
   <div class="library-card"><button class="source-row" onclick="showReview()"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow">›</span></button></div>
@@ -846,8 +850,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260713-155316"></script>
-<script src="audio-cache.js?v=20260713-155316"></script>
+<script src="review-core.js?v=20260713-163503"></script>
+<script src="audio-cache.js?v=20260713-163503"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -876,7 +880,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783929197;
+var BUILD_TS = 1783931703;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1477,12 +1481,14 @@ function updateHomeStats() {
       if (ufPrefs[k] === 'very_hard' && ufWordKeys[k]) veryHard++;
     }
     var active = Math.max(0, total - removed);
-    var elT = document.getElementById('statUfTotal');
-    var elH = document.getElementById('statUfHard');
+    var elT = document.getElementById('statHardTotal');
+    var elH = document.getElementById('statHardMeta');
+    var libraryHard = document.getElementById('libraryHardCount');
     if (elT) elT.textContent = active + '词';
     if (elH) elH.textContent = (veryHard > 0 ? ' · ' + veryHard + '很难' : '') + (removed > 0 ? ' · ' + removed + '已移除' : '');
-    var reviewBar = document.getElementById('homeReviewBar');
-    if (reviewBar) reviewBar.style.width = Math.min(100, active / Math.max(1, VOCAB.length) * 100) + '%';
+    if (libraryHard) libraryHard.textContent = active + '词';
+    var hardBar = document.getElementById('homeHardBar');
+    if (hardBar) hardBar.style.width = Math.min(100, active / Math.max(1, VOCAB.length) * 100) + '%';
   })();
   (function() {
     var prefs = loadPrefs('hongbaoshu');
@@ -1495,6 +1501,8 @@ function updateHomeStats() {
     var hbBar = document.getElementById('homeHbBar');
     if (hbBar) hbBar.style.width = Math.min(100, total ? familiar / total * 100 : 0) + '%';
   })();
+  var dueTotal = document.getElementById('statDueTotal');
+  if (dueTotal) dueTotal.textContent = getDueReviewItems().length + '词';
   updateProgressHomeStats();
 }
 
