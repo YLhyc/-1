@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#1d1d1f">
+<meta name="apple-mobile-web-app-title" content="Words">
+<meta name="theme-color" content="#277fbd">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.svg">
-<title>考研英语词汇</title>
+<link rel="icon" href="icons/words-card-stack.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/words-180.png">
+<title>Words</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -522,7 +524,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand">考研英语单词</div>
+    <div class="app-brand">Words</div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -855,8 +857,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260713-165404"></script>
-<script src="audio-cache.js?v=20260713-165404"></script>
+<script src="review-core.js?v=20260713-174400"></script>
+<script src="audio-cache.js?v=20260713-174400"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -885,7 +887,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783932845;
+var BUILD_TS = 1783935841;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 

@@ -1,22 +1,22 @@
 {
-  "name": "考研英语词汇",
-  "short_name": "考研词汇",
+  "name": "Words",
+  "short_name": "Words",
   "description": "考研英语生词本 · 分组朗读 · 标记熟/不熟 · 跨设备同步",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#f5f5f7",
-  "theme_color": "#1d1d1f",
+  "background_color": "#dceeff",
+  "theme_color": "#277fbd",
   "icons": [
     {
-      "src": "icons/icon-192.svg",
+      "src": "icons/words-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icons/icon-512.svg",
+      "src": "icons/words-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

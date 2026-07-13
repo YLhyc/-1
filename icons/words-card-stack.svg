@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="background" x1="80" y1="50" x2="920" y2="960" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D8EEFF"/>
+      <stop offset="1" stop-color="#2783C2"/>
+    </linearGradient>
+    <filter id="card-shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="26" stdDeviation="28" flood-color="#185477" flood-opacity=".22"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#background)"/>
+  <g filter="url(#card-shadow)">
+    <rect x="260" y="190" width="530" height="620" rx="92" fill="#BEDFF4" transform="rotate(9 525 500)"/>
+    <rect x="205" y="213" width="530" height="620" rx="92" fill="#E7F5FF" transform="rotate(-7 470 523)"/>
+    <rect x="247" y="207" width="530" height="620" rx="92" fill="#FFFFFF"/>
+  </g>
+  <path d="M356 405L445 659L512 502L580 659L669 405" fill="none" stroke="#227DB9" stroke-width="61" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="354" y="706" width="316" height="30" rx="15" fill="#D9EAF5"/>
+  <circle cx="712" cy="282" r="39" fill="#FFD36E"/>
+</svg>
