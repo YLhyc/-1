@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">Cards 四级卡环图标</title>
+  <rect width="256" height="256" fill="#f5f4ee"/>
+  <rect x="52" y="43" width="152" height="170" rx="31" fill="#141413"/>
+  <rect x="68" y="59" width="120" height="138" rx="20" fill="#fffefa"/>
+  <path d="M89 93h78M89 120h52" stroke="#141413" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="139" cy="158" r="28" fill="none" stroke="#ded8cd" stroke-width="13"/>
+  <path d="M139 130a28 28 0 0 1 28 28" fill="none" stroke="#da7756" stroke-width="13" stroke-linecap="round"/>
+  <path d="M167 158a28 28 0 0 1-28 28" fill="none" stroke="#da7756" stroke-width="13" stroke-linecap="round"/>
+  <path d="M139 186a28 28 0 0 1-28-28" fill="none" stroke="#00a949" stroke-width="13" stroke-linecap="round"/>
+  <path d="M111 158a28 28 0 0 1 28-28" fill="none" stroke="#00c853" stroke-width="13" stroke-linecap="round"/>
+</svg>

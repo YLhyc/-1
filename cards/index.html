@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f4ee">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Cards">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/app.css">
+  <title>Cards</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <button class="brand" type="button" data-route="home" aria-label="返回 Cards 首页">
+        <img src="assets/icon.svg" alt="">
+        <span>Cards</span>
+      </button>
+      <div class="header-actions">
+        <span class="save-state" id="saveState">本地已保存</span>
+        <button class="icon-button" id="themeButton" type="button" aria-label="切换深浅主题">◐</button>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <section class="page active" id="page-home" data-page="home">
+        <article class="today-hero">
+          <div class="eyebrow">LOCAL FIRST · OFFLINE READY</div>
+          <h1>把学过的内容<br>真正留下来。</h1>
+          <p>每天选择一个科目，用回忆模式优先复习到期和不熟悉的知识点；约 45 分钟，随时停下也能接着学。</p>
+          <button class="primary-button" id="resumeButton" type="button">进入今日复习</button>
+        </article>
+
+        <div class="section-heading">
+          <div><span class="kicker">SUBJECTS</span><h2>选择科目</h2></div>
+          <span class="section-meta" id="cardCount">载入中</span>
+        </div>
+        <div class="subject-list" id="subjectList"></div>
+      </section>
+
+      <section class="page" id="page-today" data-page="today">
+        <button class="back-button" type="button" data-route="home">← 返回首页</button>
+        <span class="kicker">TODAY · 45 MIN TARGET</span><h1>今日复习</h1>
+        <p class="page-description">一次只选一个科目。系统优先安排已到期、完全记不得和模糊的内容，最长不超过 60 分钟。</p>
+        <div class="today-subjects" id="todaySubjectList"></div>
+      </section>
+
+      <section class="page" id="page-subject" data-page="subject">
+        <button class="back-button" type="button" data-route="home">← 返回科目</button>
+        <div class="page-title-row">
+          <div><span class="kicker" id="subjectCode">706</span><h1 id="subjectTitle">中国古代文学与古代汉语</h1></div>
+          <span class="mastery-ring mastery-large" id="subjectRing" data-level="0" aria-label="尚未评估"></span>
+        </div>
+        <p class="page-description">按知识结构进入章节专题，熟悉度会随每次复习评价即时更新。</p>
+        <div class="topic-list" id="topicList"></div>
+      </section>
+
+      <section class="page" id="page-topic" data-page="topic">
+        <button class="back-button" type="button" id="backToSubject">← 返回专题</button>
+        <div class="page-title-row compact">
+          <div><span class="kicker" id="topicPath">706 / 古代文学</span><h1 id="topicTitle">《红楼梦》</h1></div>
+        </div>
+        <p class="page-description">默认按知识结构排列。点击标题进入结构化长卡。</p>
+        <div class="topic-toolbar">
+          <span id="topicCardCount">0 张卡</span>
+          <button class="secondary-button" id="sortCardsButton" type="button">知识结构顺序</button>
+        </div>
+        <div class="card-title-list" id="cardTitleList"></div>
+      </section>
+
+      <section class="page card-page" id="page-card" data-page="card">
+        <button class="back-button" type="button" id="backFromCard">← 返回标题列表</button>
+        <div class="review-toolbar" id="reviewToolbar">
+          <div class="mode-switch" aria-label="学习模式">
+            <button type="button" data-mode="recall">回忆模式</button>
+            <button type="button" data-mode="memorize">背诵模式</button>
+          </div>
+          <span id="reviewMeta">自由浏览</span>
+        </div>
+        <div class="review-progress" id="reviewProgress" hidden><span></span></div>
+        <article id="cardArticle" aria-live="polite"></article>
+        <section class="recall-controls" id="recallControls" hidden>
+          <button class="hint-button" id="hintButton" type="button">给我一点提示</button>
+          <button class="primary-button reveal-button" id="revealButton" type="button">查看答案</button>
+          <div class="rating-panel" id="ratingPanel" hidden>
+            <p>这次回忆得怎么样？</p>
+            <div class="rating-grid">
+              <button type="button" data-rating="forgot"><strong>完全记不得</strong><small>10 分钟后再见</small></button>
+              <button type="button" data-rating="fuzzy"><strong>模糊</strong><small>较快再次复习</small></button>
+              <button type="button" data-rating="familiar"><strong>基本熟悉</strong><small>正常延后</small></button>
+              <button type="button" data-rating="mastered"><strong>完全熟悉</strong><small>更久后再见</small></button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-search" data-page="search">
+        <span class="kicker">GLOBAL SEARCH</span><h1>搜索</h1>
+        <p class="page-description">搜索标题、核心结论、分论点、例证与考场表述。</p>
+        <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="输入知识点"></label>
+        <div class="filter-row" id="searchFilters"><button class="active" data-filter="all">全部</button><button data-filter="706">706</button><button data-filter="807">807</button><button data-filter="politics">政治</button><button data-filter="weak">不熟悉</button></div>
+        <div class="card-title-list search-results" id="searchResults"><div class="empty-state">输入关键词开始搜索</div></div>
+      </section>
+
+      <section class="page" id="page-stats" data-page="stats">
+        <span class="kicker">LOCAL ACTIVITY</span><h1>统计</h1>
+        <p class="page-description">只统计页面可见且近期有操作的有效复习时间。</p>
+        <div class="stats-grid">
+          <article><strong id="statsTodayCards">0</strong><span>今日复习卡片</span></article>
+          <article><strong id="statsTodayTime">0 分</strong><span>今日有效时间</span></article>
+          <article><strong id="statsStreak">0 天</strong><span>连续复习</span></article>
+          <article><strong id="statsDue">0</strong><span>当前到期卡片</span></article>
+        </div>
+        <div class="chart-panel"><h2>熟悉程度</h2><div id="masteryChart"></div></div>
+      </section>
+
+      <section class="page" id="page-settings" data-page="settings">
+        <span class="kicker">PREFERENCES & DATA</span><h1>设置</h1>
+        <div class="settings-panel">
+          <div class="setting-row">
+            <div><strong>深色主题</strong><small>独立于系统主题</small></div>
+            <button class="toggle" id="themeToggle" type="button" aria-pressed="false"><span></span></button>
+          </div>
+          <div class="setting-row">
+            <div><strong>回收站</strong><small>删除的卡片可恢复到原专题和位置</small></div>
+            <button class="secondary-button" id="trashButton" type="button">查看</button>
+          </div>
+          <div class="setting-row">
+            <div><strong>导出本地数据</strong><small>包含卡片、专题、事件、会话与设置</small></div>
+            <button class="secondary-button" id="exportButton" type="button">导出</button>
+          </div>
+          <div class="setting-row">
+            <div><strong>导入数据</strong><small>导入前自动创建安全备份</small></div>
+            <button class="secondary-button" id="importButton" type="button">选择文件</button>
+            <input id="importFile" type="file" accept="application/json" hidden>
+          </div>
+          <div class="sync-settings">
+            <div class="sync-heading"><div><strong>安全同步</strong><small id="syncStatus">尚未配置</small></div><span class="status-dot" id="syncStatusDot"></span></div>
+            <label>服务地址<input id="syncUrl" type="url" inputmode="url" autocomplete="url" placeholder="https://sync.example.com"></label>
+            <label>设备密钥<input id="syncKey" type="password" autocomplete="new-password" placeholder="已保存时可留空"></label>
+            <div class="sync-actions"><button class="secondary-button" id="saveSyncButton" type="button">保存配置</button><button class="primary-button" id="syncNowButton" type="button">立即同步</button></div>
+            <button class="sync-restore-button" id="restoreSyncButton" type="button">从同步快照恢复</button>
+          </div>
+          <div class="setting-row">
+            <div><strong>离线应用壳</strong><small id="offlineStatus">检查中</small></div>
+            <span class="status-dot"></span>
+          </div>
+          <div class="setting-row no-border">
+            <div><strong>数据版本</strong><small>IndexedDB schema</small></div>
+            <code>v1</code>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-trash" data-page="trash">
+        <button class="back-button" type="button" data-route="settings">← 返回设置</button>
+        <span class="kicker">RECOVERABLE</span><h1>回收站</h1>
+        <p class="page-description">恢复后回到原科目、专题和知识结构位置。</p>
+        <div class="trash-list" id="trashList"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要导航">
+      <button class="active" type="button" data-route="home"><span>⌂</span><em>首页</em></button>
+      <button type="button" data-route="search"><span>⌕</span><em>搜索</em></button>
+      <button type="button" data-route="stats"><span>⌁</span><em>统计</em></button>
+      <button type="button" data-route="settings"><span>⚙</span><em>设置</em></button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <dialog id="cardEditor" class="card-editor">
+    <form method="dialog" id="cardEditorForm">
+      <div class="dialog-head"><div><span class="kicker">LOCAL EDIT</span><h2>编辑知识卡</h2></div><button id="closeCardEditor" type="button" aria-label="关闭">×</button></div>
+      <label>标题<input name="title" required></label>
+      <label>回忆问题<textarea name="prompt" required></textarea></label>
+      <label>核心结论<textarea name="summary" required></textarea></label>
+      <label>考场表述<textarea name="exam_wording"></textarea></label>
+      <label>移动到专题<select name="topic_id"></select></label>
+      <div class="dialog-actions"><button class="secondary-button" id="cancelCardEditor" type="button">取消</button><button class="primary-button" id="saveCardButton" type="submit">保存修改</button></div>
+    </form>
+  </dialog>
+  <script src="js/db.js" defer></script>
+  <script src="js/sync.js" defer></script>
+  <script src="js/sample-data.js" defer></script>
+  <script src="js/scheduler.js" defer></script>
+  <script src="js/timer.js" defer></script>
+  <script src="js/render.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
