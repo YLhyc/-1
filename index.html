@@ -859,8 +859,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260714-223213"></script>
-<script src="audio-cache.js?v=20260714-223213"></script>
+<script src="review-core.js?v=20260714-231220"></script>
+<script src="audio-cache.js?v=20260714-231220"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -889,7 +889,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1784039536;
+var BUILD_TS = 1784041940;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3457,7 +3457,7 @@ window.addEventListener('online', function() { setTimeout(maybeAutoGithubBackup,
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
   var swUrl = 'sw.js?v=' + BUILD_TS;
-  navigator.serviceWorker.register(swUrl).then(function(reg) {
+  navigator.serviceWorker.register(swUrl, { updateViaCache: 'none' }).then(function(reg) {
     // Force update check on every page load
     reg.update();
     // Periodic check every 30 min for long-lived PWA sessions

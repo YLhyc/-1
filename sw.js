@@ -1,24 +1,48 @@
-const CACHE = 'kv-20260714-223213';
+const CACHE = 'kv-20260714-231220';
 const APP_SHELL = [
   './',
   'index.html',
-  'review-core.js?v=20260714-223213',
-  'audio-cache.js?v=20260714-223213',
+  'review-core.js?v=20260714-231220',
+  'audio-cache.js?v=20260714-231220',
   'manifest.json',
   'icons/words-180.png',
   'icons/words-192.png',
   'icons/words-512.png'
 ];
+function cacheAppShell() {
+  return caches.open(CACHE).then(cache =>
+    Promise.all(APP_SHELL.map(url => cache.add(url).catch(() => null)))
+  );
+}
+function matchNavigation(request) {
+  return caches.open(CACHE)
+    .then(cache => cache.match(request)
+      .then(cached => cached || cache.match('./'))
+      .then(cached => cached || cache.match('index.html')))
+    .then(cached => cached || caches.match(request))
+    .then(cached => cached || caches.match('./'))
+    .then(cached => cached || caches.match('index.html'));
+}
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then(cache => cache.addAll(APP_SHELL))
-      .catch(() => null)
+    cacheAppShell()
       .then(() => self.skipWaiting())
   );
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(cache => Promise.all([
+        cache.match('./'),
+        cache.match('index.html'),
+        cache.match('review-core.js?v=20260714-231220'),
+        cache.match('audio-cache.js?v=20260714-231220')
+      ]))
+      .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3]
+        ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
+        : null)
+      .then(() => self.clients.claim())
+  );
 });
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
@@ -59,9 +83,9 @@ self.addEventListener('fetch', e => {
     });
     e.waitUntil(networkPromise.then(() => null, () => null));
     e.respondWith(
-      caches.match(e.request)
+      matchNavigation(e.request)
         .then(cached => cached || networkPromise)
-        .catch(() => caches.match('./'))
+        .catch(() => matchNavigation(e.request))
         .then(response => response || new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }))
     );
   } else {
