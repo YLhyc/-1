@@ -70,7 +70,7 @@
   .recite-summary-num { font-size:23px; font-weight:800; }
   .recite-summary-label { color:#71869a; font-size:11px; margin-top:3px; }
   .daily-review-note { margin:12px 0 18px; padding:11px 12px; border-radius:10px; background:#edf7f1; color:#37634c; font-size:12px; line-height:1.5; }
-  .recite-rate-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .recite-rate-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; width:min(86vw,420px); margin-top:12px; }
   .recite-rate-btn { min-height:46px; border:0; border-radius:11px; font-size:14px; font-weight:800; cursor:pointer; }
   .recite-rate-familiar { background:#e5f7ec; color:#247a44; }
   .recite-rate-hard { background:#fff1df; color:#a86513; }
@@ -857,8 +857,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260714-141939"></script>
-<script src="audio-cache.js?v=20260714-141939"></script>
+<script src="review-core.js?v=20260714-145009"></script>
+<script src="audio-cache.js?v=20260714-145009"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -887,7 +887,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1784009980;
+var BUILD_TS = 1784011810;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
