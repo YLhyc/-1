@@ -857,8 +857,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260713-201123"></script>
-<script src="audio-cache.js?v=20260713-201123"></script>
+<script src="review-core.js?v=20260714-141939"></script>
+<script src="audio-cache.js?v=20260714-141939"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -887,7 +887,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1783944684;
+var BUILD_TS = 1784009980;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2861,7 +2861,7 @@ function updateBackupStatus() {
   var backup = createLearningBackup().data;
   var morningCount = backup.morning && Array.isArray(backup.morning.sessions) ? backup.morning.sessions.length : 0;
   status.innerHTML =
-    '上次备份：' + lastText + '<br>' +
+    '上次本地导出：' + lastText + '<br>' +
     '当前记录：生词本 ' + countObject(backup.vocab.p) + '，红宝书 ' + countObject(backup.hongbaoshu.p) +
     '，不熟词 ' + countObject(backup.uf) + '，晨读 ' + morningCount + ' 次';
   var restoreBtn = document.getElementById('restorePreImportBtn');
@@ -3017,7 +3017,7 @@ function updateGithubBackupUI() {
   if (error) {
     showGithubBackupStatus('上次自动备份失败：' + error, 'err');
   } else if (config.gistId && last) {
-    showGithubBackupStatus('已连接私有 Gist · 上次备份 ' + formatLocalTime(last), 'ok');
+    showGithubBackupStatus('云备份已连接 · 上次云备份 ' + formatLocalTime(last), 'ok');
   } else if (config.token) {
     showGithubBackupStatus(config.auto ? 'Token 已保存，将自动创建首份私有备份。' : 'Token 已保存，自动备份当前已关闭。', '');
   } else {
