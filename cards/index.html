@@ -67,7 +67,10 @@
         <p class="page-description">默认按知识结构排列。点击标题进入结构化长卡。</p>
         <div class="topic-toolbar">
           <span id="topicCardCount">0 张卡</span>
-          <button class="secondary-button" id="sortCardsButton" type="button">知识结构顺序</button>
+          <div class="topic-actions">
+            <button class="secondary-button" id="sortCardsButton" type="button">知识结构顺序</button>
+            <button class="primary-button" id="reviewTopicButton" type="button">复习本专题</button>
+          </div>
         </div>
         <div class="card-title-list" id="cardTitleList"></div>
       </section>
@@ -88,6 +91,7 @@
           <button class="primary-button reveal-button" id="revealButton" type="button">查看答案</button>
           <div class="rating-panel" id="ratingPanel" hidden>
             <p>这次回忆得怎么样？</p>
+            <small class="rating-recommendation" id="ratingRecommendation"></small>
             <div class="rating-grid">
               <button type="button" data-rating="forgot"><strong>完全记不得</strong><small>10 分钟后再见</small></button>
               <button type="button" data-rating="fuzzy"><strong>模糊</strong><small>较快再次复习</small></button>
@@ -116,6 +120,9 @@
           <article><strong id="statsDue">0</strong><span>当前到期卡片</span></article>
         </div>
         <div class="chart-panel"><h2>熟悉程度</h2><div id="masteryChart"></div></div>
+        <div class="chart-panel"><h2>今日分科复习</h2><div id="subjectStats"></div></div>
+        <div class="chart-panel"><div class="chart-title-row"><h2>最近 7 天</h2><span id="trend30Summary">近 30 天 0 张</span></div><div class="trend-chart" id="trendChart"></div></div>
+        <div class="chart-panel"><h2>专题掌握进度</h2><div class="topic-mastery-list" id="topicMastery"></div></div>
       </section>
 
       <section class="page" id="page-settings" data-page="settings">

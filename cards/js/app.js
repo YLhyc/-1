@@ -35,6 +35,8 @@
   function masteryLevel(card) { return CardsRender.masteryInfo(card.schedule && card.schedule.mastery).level; }
   function averageLevel(cards) { const rated = cards.map(masteryLevel).filter(Boolean); return rated.length ? Math.round(rated.reduce((a,b)=>a+b,0)/rated.length) : 0; }
   function elapsedLabel(seconds) { const mins = Math.floor(seconds / 60); const secs = Math.round(seconds % 60); return mins ? `${mins}:${String(secs).padStart(2,'0')}` : `${secs}秒`; }
+  function localDateKey(value) { const date=value?new Date(value):new Date(); return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
+  function recommendedRating() { if(state.hintLevel<=0)return'mastered';if(state.hintLevel===1)return'familiar';if(state.hintLevel===2)return'fuzzy';return'forgot'; }
 
   function refreshDerivedViews() {
     renderHome();
@@ -64,7 +66,8 @@
     $('#cardCount').textContent = `${state.cards.length} 张本地卡`;
     $$('#subjectList [data-subject]').forEach(button => button.onclick = () => openSubject(button.dataset.subject));
     const active = state.session && state.session.status === 'active';
-    $('#resumeButton').textContent = active ? `继续今日复习 · ${subjectLabels[state.session.subject][0]}` : '进入今日复习';
+    const activeTopic = active && state.session.kind === 'topic' ? state.topics.find(topic=>topic.id===state.session.topic_id) : null;
+    $('#resumeButton').textContent = active ? activeTopic ? `继续专题复习 · ${activeTopic.title}` : `继续今日复习 · ${subjectLabels[state.session.subject][0]}` : '进入今日复习';
   }
 
   function renderToday() {
@@ -94,6 +97,17 @@
     state.session = { id: uid('session'), subject, card_ids: queue.ids, current_index: 0, reviewed_card_ids: [], seconds: 0, started_at: now, updated_at: now, status: 'active', estimated_seconds: queue.estimated_seconds };
     await CardsDB.put('sessions', state.session); await CardsDB.setSetting('active_review_session', state.session);
     openCard(queue.ids[0], 0, { session: true });
+  }
+
+  async function startTopicReview() {
+    const topic=state.currentTopic;if(!topic)return;
+    if(state.session&&state.session.status==='active'){
+      if(state.session.kind==='topic'&&state.session.topic_id===topic.id){const index=Math.min(state.session.current_index||0,state.session.card_ids.length-1),saved=state.session.current_card_state,restore=saved&&saved.card_id===state.session.card_ids[index]?saved:null;return openCard(state.session.card_ids[index],restore?restore.scroll_y:0,{session:true,restore});}
+      showToast('已有未完成复习，请先继续或完成当前进度');return;
+    }
+    const queue=CardsScheduler.buildTopicQueue(state.cards,topic.id);if(!queue.ids.length){showToast('这个专题还没有可复习卡片');return;}
+    const now=new Date().toISOString();state.session={id:uid('session'),kind:'topic',topic_id:topic.id,subject:topic.subject,card_ids:queue.ids,current_index:0,reviewed_card_ids:[],seconds:0,started_at:now,updated_at:now,status:'active',estimated_seconds:queue.estimated_seconds};
+    await CardsDB.put('sessions',state.session);await CardsDB.setSetting('active_review_session',state.session);openCard(queue.ids[0],0,{session:true});
   }
 
   function openSubject(subject) {
@@ -130,7 +144,7 @@
   function renderTopicCards() {
     let cards = state.cards.filter(card => card.topic_id === state.currentTopic.id);
     cards.sort(state.sortByMastery ? (a,b)=>masteryLevel(a)-masteryLevel(b)||a.order-b.order : (a,b)=>a.order-b.order);
-    $('#topicCardCount').textContent = `${cards.length} 张卡`; $('#sortCardsButton').textContent = state.sortByMastery ? '最不熟悉优先' : '知识结构顺序';
+    $('#topicCardCount').textContent = `${cards.length} 张卡`; $('#sortCardsButton').textContent = state.sortByMastery ? '最不熟悉优先' : '知识结构顺序'; $('#reviewTopicButton').disabled=!cards.length;
     $('#cardTitleList').innerHTML = cards.map(CardsRender.cardTitleRow).join('') || '<div class="empty-state">该专题还没有卡片</div>'; bindCardRows('#cardTitleList');
   }
 
@@ -151,6 +165,9 @@
     $$('.mode-switch button').forEach(button => button.classList.toggle('active', button.dataset.mode === state.cardMode));
     const recall = state.cardMode === 'recall'; $('#recallControls').hidden = !recall; $('#hintButton').hidden = state.revealed || state.hintLevel >= (state.currentCard.hints || []).length;
     $('#revealButton').hidden = state.revealed; $('#ratingPanel').hidden = !state.revealed;
+    const recommendation=recall&&state.revealed?recommendedRating():null;
+    $$('.rating-grid [data-rating]').forEach(button=>button.classList.toggle('recommended',button.dataset.rating===recommendation));
+    $('#ratingRecommendation').textContent=recommendation?`根据提示使用情况，建议：${CardsScheduler.ratings[recommendation].label}（可手动修改）`:'';
     if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(state.currentCard.id)) {
       const index = state.session.current_index + 1, total = state.session.card_ids.length;
       $('#reviewMeta').textContent = `${index} / ${total} · ${elapsedLabel(state.timer ? state.timer.getSeconds() : state.session.seconds)}`;
@@ -194,7 +211,7 @@
         await pauseTimer({ persist: false }); await persistSession();
         await CardsSync.enqueue('session_completed', state.session.id, { session: state.session });
         await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: { id:'active_review_session', value:null, updated_at:new Date().toISOString() } });
-        showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`); state.session = null; renderHome(); navigate('today'); return;
+        const completedSession=state.session;showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`); state.session = null; renderHome(); if(completedSession.kind==='topic'&&completedSession.topic_id)openTopic(completedSession.topic_id);else navigate('today'); return;
       }
       state.session.current_card_state = null; await persistSession();
       refreshDerivedViews(); return openCard(state.session.card_ids[state.session.current_index], 0, { session: true });
@@ -229,13 +246,19 @@
   async function renderStats() {
     const events = await CardsDB.getAll('review_events'), sessions = await CardsDB.getAll('sessions');
     const ratingEvents = events.filter(e => e.rating);
-    const today = new Date().toISOString().slice(0,10), todayEvents = ratingEvents.filter(e => String(e.reviewed_at).slice(0,10) === today), todaySessions = sessions.filter(s => String(s.started_at).slice(0,10) === today);
+    const today = localDateKey(), todayEvents = ratingEvents.filter(e => localDateKey(e.reviewed_at) === today), todaySessions = sessions.filter(s => localDateKey(s.started_at) === today);
     $('#statsTodayCards').textContent = todayEvents.length; $('#statsTodayTime').textContent = `${Math.round(todaySessions.reduce((sum,s)=>sum+Number(s.seconds||0),0)/60)} 分`;
-    const dates = [...new Set(ratingEvents.map(e=>String(e.reviewed_at).slice(0,10)))].sort().reverse(); let streak = 0, cursor = new Date();
-    while (dates.includes(cursor.toISOString().slice(0,10))) { streak++; cursor.setDate(cursor.getDate()-1); }
+    const dates = new Set(ratingEvents.map(e=>localDateKey(e.reviewed_at))); let streak = 0, cursor = new Date();
+    while (dates.has(localDateKey(cursor))) { streak++; cursor.setDate(cursor.getDate()-1); }
     $('#statsStreak').textContent = `${streak} 天`; $('#statsDue').textContent = state.cards.filter(card=>CardsScheduler.isDue(card)).length;
     const groups = ['unrated','forgot','fuzzy','familiar','mastered'].map(key=>({ key, label:CardsRender.masteryInfo(key).label, count:state.cards.filter(c=>(c.schedule&&c.schedule.mastery||'unrated')===key).length }));
     $('#masteryChart').innerHTML = groups.map(g=>`<div class="chart-row"><span>${g.label}</span><i><b style="width:${state.cards.length ? g.count/state.cards.length*100 : 0}%"></b></i><em>${g.count}</em></div>`).join('');
+    $('#subjectStats').innerHTML=Object.keys(subjectLabels).map(subject=>{const count=todayEvents.filter(event=>event.subject===subject).length,seconds=todaySessions.filter(session=>session.subject===subject).reduce((sum,session)=>sum+Number(session.seconds||0),0);return`<div class="chart-row"><span>${subject==='politics'?'政治':subject}</span><i><b style="width:${todayEvents.length?count/todayEvents.length*100:0}%"></b></i><em>${count}张 · ${Math.round(seconds/60)}分</em></div>`;}).join('');
+    const recentDays=Array.from({length:7},(_,index)=>{const date=new Date();date.setDate(date.getDate()-(6-index));const key=localDateKey(date),count=ratingEvents.filter(event=>localDateKey(event.reviewed_at)===key).length;return{key,count,label:`${date.getMonth()+1}/${date.getDate()}`};}),maxDay=Math.max(1,...recentDays.map(day=>day.count));
+    $('#trendChart').innerHTML=recentDays.map(day=>`<div class="trend-day"><i><b style="height:${Math.max(3,day.count/maxDay*100)}%"></b></i><strong>${day.count}</strong><small>${day.label}</small></div>`).join('');
+    const thirtyStart=new Date();thirtyStart.setHours(0,0,0,0);thirtyStart.setDate(thirtyStart.getDate()-29);const thirtyEvents=ratingEvents.filter(event=>new Date(event.reviewed_at)>=thirtyStart);$('#trend30Summary').textContent=`近 30 天 ${thirtyEvents.length} 张`;
+    const topics=state.topics.slice().sort((a,b)=>String(a.subject).localeCompare(String(b.subject))||a.order-b.order);
+    $('#topicMastery').innerHTML=topics.map(topic=>{const cards=state.cards.filter(card=>card.topic_id===topic.id),rated=cards.filter(card=>masteryLevel(card)>0),raw=cards.length?cards.reduce((sum,card)=>sum+masteryLevel(card),0)/(cards.length*4):0,percent=Math.round(raw*100);return`<div class="topic-mastery-row"><span><strong>${CardsRender.escapeHtml(topic.title)}</strong><small>${CardsRender.escapeHtml(topic.subject==='politics'?'政治':topic.subject)} · ${rated.length}/${cards.length} 已评估</small></span><em>${percent}%</em><i><b style="width:${percent}%"></b></i></div>`;}).join('')||'<div class="empty-state">暂无专题数据</div>';
   }
 
   function openEditor(card) {
@@ -303,8 +326,9 @@
     $$('[data-route]').forEach(button => button.onclick = () => navigate(button.dataset.route));
     $('#resumeButton').onclick = () => state.session && state.session.status==='active' ? startDailyReview(state.session.subject) : navigate('today');
     $('#backToSubject').onclick = () => openSubject(state.currentSubject);
-    $('#backFromCard').onclick = async () => { await saveResumePosition(window.scrollY); if (state.reviewingSession && state.session && state.session.status==='active') navigate('today'); else if (state.currentTopic) openTopic(state.currentTopic.id); else openSubject(state.currentSubject); };
+    $('#backFromCard').onclick = async () => { await saveResumePosition(window.scrollY); if (state.reviewingSession && state.session && state.session.status==='active') { if(state.session.kind==='topic'&&state.session.topic_id)openTopic(state.session.topic_id);else navigate('today'); } else if (state.currentTopic) openTopic(state.currentTopic.id); else openSubject(state.currentSubject); };
     $('#sortCardsButton').onclick = () => { state.sortByMastery=!state.sortByMastery; renderTopicCards(); };
+    $('#reviewTopicButton').onclick = startTopicReview;
     $$('.mode-switch button').forEach(button => button.onclick = () => { state.cardMode=button.dataset.mode; state.revealed=state.cardMode==='memorize'; state.hintLevel=0; renderCard(); saveResumePosition(window.scrollY); });
     $('#hintButton').onclick = () => { state.hintLevel=Math.min((state.currentCard.hints||[]).length,state.hintLevel+1); renderCard(); saveResumePosition(window.scrollY); };
     $('#revealButton').onclick = () => { state.revealed=true; renderCard(); saveResumePosition(window.scrollY); };

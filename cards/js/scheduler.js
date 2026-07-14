@@ -107,6 +107,20 @@
       .map(card => ({ card, priority: priority(card, now), seconds: clamp(Number(card.schedule && card.schedule.average_seconds || 75), 30, 420) }))
       .sort((a,b) => b.priority - a.priority || new Date(a.card.schedule.due_at || 0) - new Date(b.card.schedule.due_at || 0) || a.card.order - b.card.order);
 
+    return packQueue(candidates, config);
+  }
+
+  function buildTopicQueue(cards, topicId, options) {
+    const config = { targetSeconds: 2700, hardLimitSeconds: 3600, now: new Date(), ...(options || {}) };
+    const now = config.now instanceof Date ? config.now : new Date(config.now);
+    const candidates = cards
+      .filter(card => card.topic_id === topicId)
+      .map(card => ({ card, priority: priority(card, now), seconds: clamp(Number(card.schedule && card.schedule.average_seconds || 75), 30, 420) }))
+      .sort((a,b) => b.priority - a.priority || a.card.order - b.card.order);
+    return packQueue(candidates, config);
+  }
+
+  function packQueue(candidates, config) {
     const queue = [];
     let seconds = 0;
     for (const item of candidates) {
@@ -130,5 +144,5 @@
     return `${Math.round(diff / DAY_MS)}天后`;
   }
 
-  window.CardsScheduler = { ratings, rate, buildQueue, isDue, retrievability, formatDue };
+  window.CardsScheduler = { ratings, rate, buildQueue, buildTopicQueue, isDue, retrievability, formatDue };
 })();
