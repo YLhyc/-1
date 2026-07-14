@@ -545,7 +545,9 @@
     <button class="task-button" id="todayReciteCardButton" onclick="event.stopPropagation();openTodayRecite()">开始背诵</button>
   </section>
   <div class="app-section-title"><h2>继续学习</h2><span>上次位置</span></div>
-  <div class="source-list" id="resumeCard"></div>
+  <div class="source-list" id="resumeCard">
+    <button class="source-row" onclick="showLibrary()"><span class="source-mark">›</span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow">›</span></button>
+  </div>
   <div class="app-section-title"><h2>词库</h2><span>学习与复习入口</span></div>
   <div class="source-list">
     <button class="source-row" onclick="openDict('vocab')">
@@ -857,8 +859,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260714-151126"></script>
-<script src="audio-cache.js?v=20260714-151126"></script>
+<script src="review-core.js?v=20260714-223213"></script>
+<script src="audio-cache.js?v=20260714-223213"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -887,7 +889,7 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1784013086;
+var BUILD_TS = 1784039536;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1050,9 +1052,7 @@ function setAppTab(view) {
 function showHome() {
   stopAll();
   showView('home');
-  updateMorningCard();
-  updateTodayReciteCard();
-  renderResumeCard();
+  refreshHomeDynamicUI();
 }
 
 function openRedBook() { location.href = 'hb/'; }
@@ -1087,6 +1087,22 @@ function renderResumeCard() {
   }
   var isHb = r.source === 'hongbaoshu', title = isHb ? '继续红宝书' : '继续生词本', mode = r.mode === 'recite' ? '背诵' : '聆听';
   c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow">›</span></button>';
+}
+var homeRefreshTimer = 0;
+function refreshHomeDynamicUI() {
+  renderResumeCard();
+  updateTodayReciteCard();
+  if (typeof updateMorningCard === 'function') updateMorningCard();
+  updateHomeStats();
+}
+function scheduleHomeDynamicRefresh() {
+  if (homeRefreshTimer) clearTimeout(homeRefreshTimer);
+  homeRefreshTimer = setTimeout(function() {
+    homeRefreshTimer = 0;
+    var home = document.getElementById('view-home');
+    if (!home || home.style.display === 'none') return;
+    refreshHomeDynamicUI();
+  }, 0);
 }
 function continueLearning() {
   var r = loadLearningResume(); if (!r) { showLibrary(); return; }
@@ -3425,15 +3441,18 @@ function checkExportReminder() {
   }
   el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 →</span>';
 })();
-updateHomeStats();
-renderResumeCard();
 checkExportReminder();
-maybeAutoGithubBackup();
+setTimeout(maybeAutoGithubBackup, 1200);
 setInterval(maybeAutoGithubBackup, GITHUB_BACKUP_POLL_MS);
 document.addEventListener('visibilitychange', function() {
-  if (!document.hidden) maybeAutoGithubBackup();
+  if (!document.hidden) {
+    scheduleHomeDynamicRefresh();
+    setTimeout(maybeAutoGithubBackup, 500);
+  }
 });
-window.addEventListener('online', maybeAutoGithubBackup);
+window.addEventListener('pageshow', scheduleHomeDynamicRefresh);
+window.addEventListener('focus', scheduleHomeDynamicRefresh);
+window.addEventListener('online', function() { setTimeout(maybeAutoGithubBackup, 500); });
 
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
@@ -4929,8 +4948,8 @@ function escHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// ── Init morning card on homepage ──
-updateMorningCard();
+// ── Init all dynamic homepage cards after every renderer is available ──
+refreshHomeDynamicUI();
 
 </script>
 </body>
