@@ -1,9 +1,9 @@
-const CACHE = 'kv-20260714-231220';
+const CACHE = 'kv-20260714-234345';
 const APP_SHELL = [
   './',
   'index.html',
-  'review-core.js?v=20260714-231220',
-  'audio-cache.js?v=20260714-231220',
+  'review-core.js?v=20260714-234345',
+  'audio-cache.js?v=20260714-234345',
   'manifest.json',
   'icons/words-180.png',
   'icons/words-192.png',
@@ -35,8 +35,8 @@ self.addEventListener('activate', e => {
       .then(cache => Promise.all([
         cache.match('./'),
         cache.match('index.html'),
-        cache.match('review-core.js?v=20260714-231220'),
-        cache.match('audio-cache.js?v=20260714-231220')
+        cache.match('review-core.js?v=20260714-234345'),
+        cache.match('audio-cache.js?v=20260714-234345')
       ]))
       .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3]
         ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
@@ -98,4 +98,9 @@ self.addEventListener('fetch', e => {
     );
   }
 });
-self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipWaiting(); });
+self.addEventListener('message', e => {
+  if (e.data === 'skipWaiting') self.skipWaiting();
+  if (e.data && e.data.type === 'getVersion' && e.ports && e.ports[0]) {
+    e.ports[0].postMessage({ cache: CACHE });
+  }
+});

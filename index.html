@@ -25,6 +25,10 @@
   .app-page { max-width: 640px; margin: 0 auto; }
   .app-topbar { display:flex; justify-content:space-between; align-items:center; min-height:42px; margin-bottom:18px; }
   .app-brand { font-size:16px; font-weight:750; letter-spacing:0; }
+  .app-brand-stack { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
+  .app-version { border:0; padding:0; background:transparent; color:#668097; font-size:10px; line-height:1.25; text-align:left; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .app-version.ok { color:#2b7b52; }
+  .app-version.stale { color:#b45f24; font-weight:700; }
   .app-tools { display:flex; gap:6px; }
   .app-icon-btn { width:36px; height:36px; border:1px solid rgba(255,255,255,.7); border-radius:10px; background:rgba(255,255,255,.56); color:#27415c; font-size:18px; cursor:pointer; }
   .app-icon-btn:active { transform:scale(.96); }
@@ -524,7 +528,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand">Words</div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260714-234345 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -859,8 +863,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260714-231220"></script>
-<script src="audio-cache.js?v=20260714-231220"></script>
+<script src="review-core.js?v=20260714-234345"></script>
+<script src="audio-cache.js?v=20260714-234345"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -889,9 +893,51 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var BUILD_TS = 1784041940;
+var APP_BUILD_ID = "20260714-234345";
+var BUILD_TS = 1784043826;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
+
+function updateAppVersionBadge() {
+  var el = document.getElementById('appVersionBadge');
+  if (!el) return;
+  var base = '版本 ' + APP_BUILD_ID;
+  el.classList.remove('ok', 'stale');
+  if (!('serviceWorker' in navigator)) { el.textContent = base + ' · 无缓存支持'; return; }
+  el.textContent = base + ' · 检查缓存…';
+  var settled = false;
+  var timer = setTimeout(function() {
+    if (settled) return;
+    settled = true;
+    el.textContent = base + ' · 缓存未响应（可能为旧版）';
+    el.classList.add('stale');
+  }, 1800);
+  navigator.serviceWorker.ready.then(function(reg) {
+    if (settled) return;
+    var worker = navigator.serviceWorker.controller || reg.active;
+    if (!worker || typeof MessageChannel === 'undefined') {
+      settled = true; clearTimeout(timer);
+      el.textContent = base + ' · 缓存尚未接管';
+      el.classList.add('stale');
+      return;
+    }
+    var channel = new MessageChannel();
+    channel.port1.onmessage = function(event) {
+      if (settled) return;
+      settled = true; clearTimeout(timer);
+      var cacheVersion = event.data && event.data.cache ? String(event.data.cache).replace(/^kv-/, '') : '未知';
+      var current = cacheVersion === APP_BUILD_ID;
+      el.textContent = base + ' · 缓存 ' + cacheVersion + (current ? '' : '（旧版）');
+      el.classList.add(current ? 'ok' : 'stale');
+    };
+    worker.postMessage({ type: 'getVersion' }, [channel.port2]);
+  }).catch(function() {
+    if (settled) return;
+    settled = true; clearTimeout(timer);
+    el.textContent = base + ' · 缓存检测失败';
+    el.classList.add('stale');
+  });
+}
 
 // ═══════════ STATE ═══════════
 var currentDict = null;   // 'vocab' | 'hongbaoshu'
@@ -4950,6 +4996,7 @@ function escHtml(str) {
 
 // ── Init all dynamic homepage cards after every renderer is available ──
 refreshHomeDynamicUI();
+updateAppVersionBadge();
 
 </script>
 </body>
