@@ -512,7 +512,6 @@
 </head>
 <body>
 <div class="update-banner" id="updateBanner" onclick="location.reload()">🔄 有新版本，点击更新</div>
-<div class="update-banner" id="exportReminder" style="display:none;background:#e8f5e9;color:#2e7d32;" onclick="openBackupCenter()">💾 已超过7天未备份学习数据，点击备份</div>
 
 <!-- ═══════════ DIAGNOSTIC OVERLAY ═══════════ -->
 <div id="diagOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;overflow:auto;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
@@ -528,7 +527,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260715-103836 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260715-105502 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -863,8 +862,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260715-103836"></script>
-<script src="audio-cache.js?v=20260715-103836"></script>
+<script src="review-core.js?v=20260715-105502"></script>
+<script src="audio-cache.js?v=20260715-105502"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -893,8 +892,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260715-103836";
-var BUILD_TS = 1784083123;
+var APP_BUILD_ID = "20260715-105502";
+var BUILD_TS = 1784084102;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3356,8 +3355,6 @@ function directExportAll() {
       showBackupMsg('已生成备份码，请手动复制保存', 'ok');
     }
     localStorage.setItem('last_export_ts', Date.now());
-    var reminder = document.getElementById('exportReminder');
-    if (reminder) reminder.style.display = 'none';
     updateBackupStatus();
   } catch(e) {
     showBackupMsg('导出失败：' + e.message, 'err');
@@ -3462,21 +3459,6 @@ function showDiagnostic() {
   }
 })();
 
-// ═══════════ EXPORT REMINDER ═══════════
-function checkExportReminder() {
-  var el = document.getElementById('exportReminder');
-  if (!el) return;
-  var last = localStorage.getItem('last_export_ts');
-  if (!last) {
-    el.style.display = 'block';
-    return;
-  }
-  var days = (Date.now() - parseInt(last)) / 86400000;
-  if (days > 7) {
-    el.style.display = 'block';
-  }
-}
-
 // ═══════════ INIT ═══════════
 (function() {
   var el = document.getElementById('homeMode');
@@ -3487,7 +3469,6 @@ function checkExportReminder() {
   }
   el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 →</span>';
 })();
-checkExportReminder();
 setTimeout(maybeAutoGithubBackup, 1200);
 setInterval(maybeAutoGithubBackup, GITHUB_BACKUP_POLL_MS);
 document.addEventListener('visibilitychange', function() {
