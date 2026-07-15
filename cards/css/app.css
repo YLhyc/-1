@@ -152,6 +152,15 @@ h2 { margin: 3px 0 0; font-size: 21px; letter-spacing: -.025em; }
 .card-title-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 13px; padding: 15px 16px; cursor: pointer; text-align: left; }
 .card-title-copy strong { display: block; margin-bottom: 6px; font-size: 16px; line-height: 1.4; }
 .card-title-copy small { font-size: 10px; line-height: 1.45; }
+.answer-type-card, .answer-type-row { --answer-type-color: var(--muted); }
+.answer-type-quick { --answer-type-color: #b65745; }
+.answer-type-term { --answer-type-color: #477b78; }
+.answer-type-short { --answer-type-color: #75894b; }
+.answer-type-essay { --answer-type-color: var(--accent); }
+.answer-type-ticket { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 5px 9px; border-radius: 9px; background: color-mix(in srgb,var(--answer-type-color) 12%,var(--paper)); color: var(--answer-type-color); font: 800 10px/1 var(--mono); letter-spacing: .025em; }
+.answer-type-ticket > span { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.card-title-copy .answer-type-ticket { margin-bottom: 9px; }
+.answer-type-row .card-title-row { border-left: 5px solid var(--answer-type-color); padding-left: 14px; }
 .swipe-row { position: relative; isolation: isolate; overflow: hidden; border-radius: 20px; background: var(--accent-soft); }
 .swipe-actions { position: absolute; z-index: 0; inset: 0 0 0 auto; display: flex; justify-content: end; background: var(--accent-soft); pointer-events: none; }
 .swipe-actions button { width: 64px; border: 0; background: transparent; color: var(--accent-deep); font-size: 12px; font-weight: 750; }
@@ -168,8 +177,10 @@ h2 { margin: 3px 0 0; font-size: 21px; letter-spacing: -.025em; }
 .review-progress { height: 4px; margin: 0 2px 13px; overflow: hidden; border-radius: 9px; background: var(--line); }
 .review-progress span { display: block; height: 100%; background: var(--accent); transition: width .2s; }
 .knowledge-card { border: 1px solid var(--line); border-radius: 27px; background: var(--paper); box-shadow: var(--shadow); overflow: hidden; }
+.knowledge-card.answer-type-card { border-left: 5px solid var(--answer-type-color); }
 .card-cover { padding: 22px 21px 20px; border-bottom: 1px solid var(--line); background: linear-gradient(145deg, color-mix(in srgb,var(--accent) 9%,var(--paper)), var(--paper) 62%); }
 .card-path { color: var(--accent-deep); font: 750 10px/1.4 var(--mono); letter-spacing: .035em; }
+.card-cover > .answer-type-ticket { margin-top: 11px; }
 .card-title-line { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: start; gap: 15px; margin-top: 14px; }
 .card-title-line h1 { margin: 0; font-size: clamp(28px, 8vw, 38px); }
 .card-prompt { margin: 17px 0 0; padding: 14px 15px; border-left: 4px solid var(--accent); border-radius: 5px 14px 14px 5px; background: color-mix(in srgb,var(--accent) 8%,var(--paper)); line-height: 1.65; }
@@ -210,10 +221,15 @@ details.fold summary { display: flex; justify-content: space-between; gap: 12px;
 details.fold summary::-webkit-details-marker { display: none; }
 details.fold summary::after { content: "+"; color: var(--accent); font: 700 18px/1 var(--mono); }
 details.fold[open] summary::after { content: "−"; }
+.exam-fold { border-left: 3px solid var(--answer-type-color) !important; }
+.exam-fold summary > span { color: var(--answer-type-color); font: 700 10px/1.3 var(--mono); }
+.exam-fold summary::after { color: var(--answer-type-color) !important; }
 .fold-content { padding: 0 15px 16px; color: color-mix(in srgb,var(--ink) 84%,var(--muted)); line-height: 1.78; }
 .exam-answer { padding-top: 2px; }
 .exam-paragraph { margin: 0; text-align: justify; text-justify: inter-ideograph; }
 .exam-paragraph + .exam-paragraph { margin-top: 13px; }
+.logic-strip { border-left: 3px solid var(--accent); padding-left: 14px; }
+.logic-strip p { margin: 7px 0 0; color: var(--muted); line-height: 1.75; }
 .source-line { color: var(--muted); font: 600 9px/1.65 var(--mono); word-break: break-all; }
 .source-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .source-tags span { padding: 3px 6px; border-radius: 7px; background: color-mix(in srgb,var(--accent) 8%,var(--paper)); color: var(--accent-deep); word-break: normal; }

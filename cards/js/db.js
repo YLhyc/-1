@@ -116,27 +116,40 @@
       pending_events: 0
     });
     if (seed.exam_wording_version) await setSetting('seed_exam_wording_version', seed.exam_wording_version);
+    if (seed.content_version) await setSetting('seed_content_version', seed.content_version);
     return true;
   }
 
-  async function upgradeSeedExamWording(seed) {
-    const version = String(seed && seed.exam_wording_version || '');
-    if (!version || await getSetting('seed_exam_wording_version', '') === version) return 0;
+  async function upgradeSeedContent(seed) {
+    const version = String(seed && seed.content_version || seed && seed.exam_wording_version || '');
+    if (!version || await getSetting('seed_content_version', '') === version) return 0;
+    const currentContentVersion = await getSetting('seed_content_version', '');
+    const currentExamVersion = await getSetting('seed_exam_wording_version', '');
+    const trustedReplace = (seed.replace_content_versions || []).includes(currentContentVersion)
+      || (seed.replace_exam_wording_versions || []).includes(currentExamVersion);
     const [cards, events] = await Promise.all([getAll('cards'), getAll('review_events')]);
     const localById = new Map(cards.map(card => [card.id, card]));
-    const userManaged = new Set(events
-      .filter(event => ['edited', 'moved', 'restored'].includes(event.action))
+    const userEdited = new Set(events
+      .filter(event => ['edited', 'restored'].includes(event.action))
       .map(event => event.card_id));
+    const userMoved = new Set(events.filter(event => event.action === 'moved').map(event => event.card_id));
     const updates = [];
     for (const released of seed.cards || []) {
       const local = localById.get(released.id);
       const releasedAnswer = String(released.exam_wording || '').trim();
       const localAnswer = String(local && local.exam_wording || '').trim();
-      if (!local || userManaged.has(local.id) || releasedAnswer.length < 120 || localAnswer.length >= 120) continue;
-      updates.push({ ...local, exam_wording: released.exam_wording });
+      if (!local || userEdited.has(local.id)) continue;
+      if (!trustedReplace && (releasedAnswer.length < 80 || localAnswer.length >= 120)) continue;
+      const updated = { ...released, schedule: local.schedule, revision: local.revision };
+      if (userMoved.has(local.id)) {
+        updated.subject = local.subject; updated.module = local.module;
+        updated.topic_id = local.topic_id; updated.order = local.order;
+      }
+      updates.push(updated);
     }
     await putMany('cards', updates);
-    await setSetting('seed_exam_wording_version', version);
+    await setSetting('seed_content_version', version);
+    await setSetting('seed_exam_wording_version', seed.exam_wording_version || version);
     return updates.length;
   }
 
@@ -212,7 +225,7 @@
     getSetting,
     setSetting,
     seedIfEmpty,
-    upgradeSeedExamWording,
+    upgradeSeedContent,
     exportSnapshot,
     importSnapshot,
     saveResume

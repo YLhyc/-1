@@ -40,6 +40,22 @@
     return `<span class="mastery-ring ${extraClass || ''}" data-level="${info.level}" style="--level:${info.level}" aria-label="${info.label}" title="${info.label}"></span>`;
   }
 
+  const answerTypes = {
+    quick: { label: '易混提醒', className: 'answer-type-quick' },
+    term: { label: '概念表述', className: 'answer-type-term' },
+    short_answer: { label: '简答题', className: 'answer-type-short' },
+    essay: { label: '论述题', className: 'answer-type-essay' }
+  };
+
+  function answerTypeInfo(value) {
+    return answerTypes[value] || { label: '待判定题型', className: 'answer-type-unrated' };
+  }
+
+  function answerTypeTicket(value) {
+    const info = answerTypeInfo(value);
+    return `<span class="answer-type-ticket"><span aria-hidden="true"></span>${info.label}</span>`;
+  }
+
   function outlineItem(item) {
     const children = item.children && item.children.length
       ? `<ul class="outline-children">${item.children.map(child => `<li><strong>${richText(child.heading)}</strong>：${richText(child.text)}</li>`).join('')}</ul>`
@@ -52,8 +68,13 @@
     const examples = card.examples && card.examples.length
       ? `<section class="content-section"><div class="content-label">理解与例证</div><div class="example-list">${card.examples.map(text => `<p class="example-item">${richText(text)}</p>`).join('')}</div></section>`
       : '';
+    const answerType = answerTypeInfo(card.exam_answer_type);
+    const logicLabels = { parallel: '并列', progressive: '递进', causal: '因果', contrast: '对比', process: '过程', total_sub: '总分' };
+    const logic = card.outline_logic
+      ? `<section class="content-section logic-strip"><div class="content-label">知识逻辑 · ${logicLabels[card.outline_logic.type] || '结构'}</div><p>${richText(card.outline_logic.description)}</p></section>`
+      : '';
     const exam = card.exam_wording
-      ? `<section class="content-section"><details class="fold"><summary>考场表述 <span class="rich-muted">完整答案 · 默认折叠</span></summary><div class="fold-content exam-answer">${richParagraphs(card.exam_wording)}</div></details></section>`
+      ? `<section class="content-section"><details class="fold exam-fold"><summary>规范答案 <span>${answerType.label} · 默认折叠</span></summary><div class="fold-content exam-answer">${richParagraphs(card.exam_wording)}</div></details></section>`
       : '';
     const hints = card.hints && card.hints.length
       ? `<section class="content-section"><details class="fold"><summary>渐进提示 <span class="rich-muted">${card.hints.length} 级</span></summary><div class="fold-content">${card.hints.map(h => `<p><strong>提示 ${h.level}</strong> · ${richText(h.text)}</p>`).join('')}</div></details></section>`
@@ -65,15 +86,17 @@
     const recallHints = config.mode === 'recall' && !config.revealed
       ? `<div class="progressive-hints">${visibleHints.map(h => `<p><strong>提示 ${h.level}</strong>${richText(h.text)}</p>`).join('') || '<p class="hint-empty">先独立回忆；想不起来时再逐级展开提示。</p>'}</div>` : '';
     return `
-      <div class="knowledge-card">
+      <div class="knowledge-card answer-type-card ${answerType.className}">
         <header class="card-cover">
           <div class="card-path">${escapeHtml(path)}</div>
+          ${answerTypeTicket(card.exam_answer_type)}
           <div class="card-title-line"><h1>${escapeHtml(card.title)}</h1>${ring(card.schedule && card.schedule.mastery)}</div>
           <div class="card-prompt"><span>RECALL PROMPT</span>${richText(card.prompt)}</div>
           ${recallHints}
         </header>
         <div class="card-body ${config.mode === 'recall' && !config.revealed ? 'answer-concealed' : ''}">
-          <section class="content-section"><div class="content-label">核心结论</div><p class="lead-text">${richText(card.summary)}</p></section>
+          <section class="content-section"><div class="content-label">简要答案</div><p class="lead-text">${richText(card.summary)}</p></section>
+          ${logic}
           <section class="content-section"><div class="content-label">知识主干</div><div class="outline-list">${(card.outline || []).map(outlineItem).join('')}</div></section>
           ${examples}
           ${hints}
@@ -97,8 +120,9 @@
 
   function cardTitleRow(card) {
     const info = masteryInfo(card.schedule && card.schedule.mastery);
+    const answerType = answerTypeInfo(card.exam_answer_type);
     const due = window.CardsScheduler ? CardsScheduler.formatDue(card.schedule && card.schedule.due_at) : '暂未安排';
-    return `<div class="swipe-row" data-row-card="${escapeHtml(card.id)}"><div class="swipe-actions"><button data-action="edit" data-id="${escapeHtml(card.id)}">编辑</button><button data-action="move" data-id="${escapeHtml(card.id)}">移动</button><button class="delete" data-action="delete" data-id="${escapeHtml(card.id)}">删除</button></div><button class="card-title-row swipe-content" type="button" data-card="${escapeHtml(card.id)}"><span class="card-title-copy"><strong>${escapeHtml(card.title)}</strong><small>${info.label} · ${due}</small></span>${ring(card.schedule && card.schedule.mastery)}</button></div>`;
+    return `<div class="swipe-row answer-type-row ${answerType.className}" data-row-card="${escapeHtml(card.id)}"><div class="swipe-actions"><button data-action="edit" data-id="${escapeHtml(card.id)}">编辑</button><button data-action="move" data-id="${escapeHtml(card.id)}">移动</button><button class="delete" data-action="delete" data-id="${escapeHtml(card.id)}">删除</button></div><button class="card-title-row swipe-content" type="button" data-card="${escapeHtml(card.id)}"><span class="card-title-copy">${answerTypeTicket(card.exam_answer_type)}<strong>${escapeHtml(card.title)}</strong><small>${info.label} · ${due}</small></span>${ring(card.schedule && card.schedule.mastery)}</button></div>`;
   }
 
   window.CardsRender = { escapeHtml, richText, masteryInfo, ring, cardArticle, subjectRow, topicRow, cardTitleRow };
