@@ -365,7 +365,15 @@
       if(status.configured&&navigator.onLine)runSync(false);
     }catch(error){console.error('Cards foreground refresh failed',error);}
   }
+  async function consumePairingLink(){
+    const encoded=new URLSearchParams(location.hash.replace(/^#/, '')).get('pair');if(!encoded)return false;
+    try{
+      const normalized=encoded.replace(/-/g,'+').replace(/_/g,'/'),padding='='.repeat((4-normalized.length%4)%4),bytes=Uint8Array.from(atob(normalized+padding),char=>char.charCodeAt(0)),pairing=JSON.parse(new TextDecoder().decode(bytes));
+      if(!pairing||typeof pairing.url!=='string'||typeof pairing.key!=='string')throw new Error('配对信息不完整');
+      await CardsSync.configure(pairing.url,pairing.key);history.replaceState(null,'',`${location.pathname}${location.search}`);return true;
+    }catch(error){history.replaceState(null,'',`${location.pathname}${location.search}`);throw new Error(`同步配对失败：${error.message||error}`);}
+  }
   async function registerServiceWorker(){if(!('serviceWorker'in navigator)||location.protocol==='file:'){$('#offlineStatus').textContent=location.protocol==='file:'?'请通过本地服务器验证离线缓存':'当前浏览器不支持';return;}try{await navigator.serviceWorker.register('./service-worker.js');$('#offlineStatus').textContent='应用壳已注册，可离线启动';}catch(error){$('#offlineStatus').textContent='注册失败，请检查控制台';}}
-  async function init(){try{await CardsDB.open();await CardsDB.seedIfEmpty(CardsSeed);state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
+  async function init(){try{await CardsDB.open();await CardsDB.seedIfEmpty(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
   document.addEventListener('DOMContentLoaded',init);
 })();
