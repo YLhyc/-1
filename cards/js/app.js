@@ -52,7 +52,7 @@
     $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === route));
     const primaryRoute = ['home','today','subject','topic','card'].includes(route) ? 'home' : route === 'trash' ? 'settings' : route;
     $$('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.route === primaryRoute));
-    window.scrollTo(0, 0);
+    $('#mainContent').scrollTo(0, 0);
     if (route === 'home') renderHome();
     if (route === 'today') renderToday();
     if (route === 'stats') renderStats();
@@ -165,7 +165,7 @@
     state.revealed = restored && typeof restored.revealed === 'boolean' ? restored.revealed : !sessionMode;
     state.hintLevel = restored ? Number(restored.hint_level || 0) : 0; state.cardStartedAt = Date.now();
     renderCard(); navigate('card'); startTimer(); state.cardStartedSeconds = state.timer ? state.timer.getSeconds() : 0; await saveResumePosition(restoreScroll || 0);
-    requestAnimationFrame(() => window.scrollTo(0, restoreScroll || 0));
+    requestAnimationFrame(() => $('#mainContent').scrollTo(0, restoreScroll || 0));
   }
   function renderCard() {
     $('#cardArticle').innerHTML = CardsRender.cardArticle(state.currentCard, state.currentTopic, { mode: state.cardMode, revealed: state.revealed, hintLevel: state.hintLevel });
@@ -237,6 +237,9 @@
     if (state.session) await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: await CardsDB.get('settings', 'active_review_session') });
     setSaveState('本地已保存');
   }
+  async function returnFromCard(){await saveResumePosition($('#mainContent').scrollTop);if(state.reviewingSession&&state.session&&state.session.status==='active'){if(state.session.kind==='topic'&&state.session.topic_id)openTopic(state.session.topic_id);else navigate('today');}else if(state.currentTopic)openTopic(state.currentTopic.id);else openSubject(state.currentSubject);}
+  function canEdgeBack(){return ['today','subject','topic','card','trash'].includes(state.route);}
+  async function edgeBack(){if(state.route==='card')return returnFromCard();if(state.route==='topic')return openSubject(state.currentSubject);if(state.route==='subject'||state.route==='today')return navigate('home');if(state.route==='trash')return navigate('settings');}
 
   function renderSearch(query) {
     const normalized = query.trim().toLowerCase(); if (!normalized) { $('#searchResults').innerHTML = '<div class="empty-state">输入关键词开始搜索</div>'; return; }
@@ -333,12 +336,12 @@
     $$('[data-route]').forEach(button => button.onclick = () => navigate(button.dataset.route));
     $('#resumeButton').onclick = () => state.session && state.session.status==='active' ? startDailyReview(state.session.subject) : navigate('today');
     $('#backToSubject').onclick = () => openSubject(state.currentSubject);
-    $('#backFromCard').onclick = async () => { await saveResumePosition(window.scrollY); if (state.reviewingSession && state.session && state.session.status==='active') { if(state.session.kind==='topic'&&state.session.topic_id)openTopic(state.session.topic_id);else navigate('today'); } else if (state.currentTopic) openTopic(state.currentTopic.id); else openSubject(state.currentSubject); };
+    $('#backFromCard').onclick = returnFromCard;
     $('#sortCardsButton').onclick = () => { state.sortByMastery=!state.sortByMastery; renderTopicCards(); };
     $('#reviewTopicButton').onclick = startTopicReview;
-    $$('.mode-switch button').forEach(button => button.onclick = () => { state.cardMode=button.dataset.mode; state.revealed=state.cardMode==='memorize'; state.hintLevel=0; renderCard(); saveResumePosition(window.scrollY); });
-    $('#hintButton').onclick = () => { state.hintLevel=Math.min((state.currentCard.hints||[]).length,state.hintLevel+1); renderCard(); saveResumePosition(window.scrollY); };
-    $('#revealButton').onclick = () => { state.revealed=true; renderCard(); saveResumePosition(window.scrollY); };
+    $$('.mode-switch button').forEach(button => button.onclick = () => { state.cardMode=button.dataset.mode; state.revealed=state.cardMode==='memorize'; state.hintLevel=0; renderCard(); saveResumePosition($('#mainContent').scrollTop); });
+    $('#hintButton').onclick = () => { state.hintLevel=Math.min((state.currentCard.hints||[]).length,state.hintLevel+1); renderCard(); saveResumePosition($('#mainContent').scrollTop); };
+    $('#revealButton').onclick = () => { state.revealed=true; renderCard(); saveResumePosition($('#mainContent').scrollTop); };
     $$('.rating-grid [data-rating]').forEach(button => button.onclick = () => rateCurrent(button.dataset.rating));
     $('#searchInput').oninput = event => renderSearch(event.target.value);
     $$('#searchFilters button').forEach(button => button.onclick = () => { state.searchFilter=button.dataset.filter; $$('#searchFilters button').forEach(b=>b.classList.toggle('active',b===button)); renderSearch($('#searchInput').value); });
@@ -352,12 +355,17 @@
   $('#syncNowButton').onclick=()=>runSync(true);
   $('#copySyncPairButton').onclick=async()=>{try{if(!state.pairingTransfer)throw new Error('请重新扫描一次本机配对二维码');await navigator.clipboard.writeText(state.pairingTransfer);showToast('配对信息已复制，请打开主屏幕 Cards 导入');}catch(error){showToast(error.message||'复制失败，请检查剪贴板权限');}};
   $('#pasteSyncPairButton').onclick=async()=>{try{const value=(await navigator.clipboard.readText()).trim(),encoded=value.startsWith('cards-pair:')?value.slice(11):new URLSearchParams(value.replace(/^#/, '')).get('pair');if(!encoded)throw new Error('剪贴板中没有 Cards 配对信息');const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);$('#syncUrl').value=pairing.url;$('#syncKey').value='';try{await navigator.clipboard.writeText('');}catch(error){}await renderSyncStatus();showToast('主屏幕 Cards 已完成配对');runSync(false);}catch(error){showToast(error.message||'导入配对失败');}};
-  $('#restoreSyncButton').onclick=async()=>{if(!window.confirm('恢复前会自动保留本地备份。确定使用同步快照替换当前卡片、专题和回收站吗？'))return;try{const result=await CardsSync.restoreSnapshot();await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`);}catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}finally{await renderSyncStatus();}};
+    $('#restoreSyncButton').onclick=async()=>{if(!window.confirm('恢复前会自动保留本地备份。确定使用同步快照替换当前卡片、专题和回收站吗？'))return;try{const result=await CardsSync.restoreSnapshot();await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`);}catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}finally{await renderSyncStatus();}};
+    const main=$('#mainContent'),indicator=$('#edgeBackIndicator');let edgeStart=null;
+    main.addEventListener('touchstart',event=>{const touch=event.touches[0];edgeStart=canEdgeBack()&&touch.clientX<=28?{x:touch.clientX,y:touch.clientY}:null;},{passive:true});
+    main.addEventListener('touchmove',event=>{if(!edgeStart)return;const touch=event.touches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y;if(dx>10&&dx>Math.abs(dy)*1.15){event.preventDefault();indicator.classList.add('active');}},{passive:false});
+    main.addEventListener('touchend',event=>{if(!edgeStart)return;const touch=event.changedTouches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,complete=dx>=72&&dx>Math.abs(dy)*1.2;edgeStart=null;indicator.classList.remove('active');if(complete)edgeBack();},{passive:true});
+    main.addEventListener('touchcancel',()=>{edgeStart=null;indicator.classList.remove('active');},{passive:true});
     window.addEventListener('cards-sync-status',renderSyncStatus);
     window.addEventListener('cards-sync-applied',async()=>{await loadState();await setTheme(await CardsDB.getSetting('theme',document.body.classList.contains('dark')?'dark':'light'),false);await renderSyncStatus();});
     window.addEventListener('online',()=>runSync(false));
-    window.addEventListener('scroll',()=>{if(state.route!=='card'||!state.currentCard)return;clearTimeout(state.scrollSaveTimer);state.scrollSaveTimer=setTimeout(()=>saveResumePosition(window.scrollY),450);},{passive:true});
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){if(state.route==='card')saveResumePosition(window.scrollY);pauseTimer();}else{if(state.route==='card')startTimer();refreshOnForeground();}});
+    $('#mainContent').addEventListener('scroll',()=>{if(state.route!=='card'||!state.currentCard)return;clearTimeout(state.scrollSaveTimer);state.scrollSaveTimer=setTimeout(()=>saveResumePosition($('#mainContent').scrollTop),450);},{passive:true});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){if(state.route==='card')saveResumePosition($('#mainContent').scrollTop);pauseTimer();}else{if(state.route==='card')startTimer();refreshOnForeground();}});
     window.addEventListener('pageshow',refreshOnForeground);
     window.addEventListener('focus',refreshOnForeground);
   }
