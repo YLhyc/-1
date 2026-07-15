@@ -1,9 +1,9 @@
-const CACHE = 'kv-20260715-105502';
+const CACHE = 'kv-20260715-113410';
 const APP_SHELL = [
   './',
   'index.html',
-  'review-core.js?v=20260715-105502',
-  'audio-cache.js?v=20260715-105502',
+  'review-core.js?v=20260715-113410',
+  'audio-cache.js?v=20260715-113410',
   'manifest.json',
   'icons/words-180.png',
   'icons/words-192.png',
@@ -35,8 +35,8 @@ self.addEventListener('activate', e => {
       .then(cache => Promise.all([
         cache.match('./'),
         cache.match('index.html'),
-        cache.match('review-core.js?v=20260715-105502'),
-        cache.match('audio-cache.js?v=20260715-105502')
+        cache.match('review-core.js?v=20260715-113410'),
+        cache.match('audio-cache.js?v=20260715-113410')
       ]))
       .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3]
         ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
