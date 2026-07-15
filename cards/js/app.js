@@ -50,7 +50,8 @@
     if (state.route === 'card' && route !== 'card') pauseTimer();
     state.route = route;
     $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === route));
-    $$('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.route === route));
+    const primaryRoute = ['home','today','subject','topic','card'].includes(route) ? 'home' : route === 'trash' ? 'settings' : route;
+    $$('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.route === primaryRoute));
     window.scrollTo(0, 0);
     if (route === 'home') renderHome();
     if (route === 'today') renderToday();
@@ -76,7 +77,7 @@
       const queue = CardsScheduler.buildQueue(state.cards, subject);
       const active = activeSubject === subject;
       const minutes = Math.max(1, Math.round(queue.estimated_seconds / 60));
-      return `<button class="today-subject ${active ? 'active-session' : ''}" data-today-subject="${subject}"><span><strong>${subjectLabels[subject][0]}</strong><small>${active ? '有未完成进度 · 点击继续' : `${queue.due_count} 张待复习 · 预计 ${minutes} 分钟`}</small></span><em>${active ? '继续' : '开始'} →</em></button>`;
+      return `<button class="today-subject ${active ? 'active-session' : ''}" data-today-subject="${subject}"><span><strong>${subjectLabels[subject][0]}</strong><small>${active ? '有未完成进度 · 点击继续' : `${queue.due_count} 张待复习 · 预计 ${minutes} 分钟`}</small></span><em>${active ? '继续' : '开始'}</em></button>`;
     }).join('');
     $$('[data-today-subject]').forEach(button => button.onclick = () => startDailyReview(button.dataset.todaySubject));
   }
@@ -120,7 +121,7 @@
   }
   function openTopic(topicId) {
     state.currentTopic = state.topics.find(topic => topic.id === topicId); if (!state.currentTopic) return;
-    state.currentSubject = state.currentTopic.subject; $('#topicPath').textContent = `${state.currentTopic.subject} / ${state.currentTopic.module}`; $('#topicTitle').textContent = state.currentTopic.title;
+    state.currentSubject = state.currentTopic.subject; $('#topicPath').textContent = `${state.currentTopic.subject} / ${state.currentTopic.module}`; $('#topicTitle').textContent = state.currentTopic.title; $('#topicParentLabel').textContent = `${state.currentTopic.module}专题`; $('#topicParentMeta').textContent = state.currentTopic.subject === 'politics' ? 'POLITICS' : state.currentTopic.subject;
     renderTopicCards(); navigate('topic');
   }
   function bindCardRows(container) {
@@ -156,6 +157,9 @@
     state.currentCard = card; state.currentTopic = state.topics.find(topic => topic.id === card.topic_id) || state.currentTopic; state.currentSubject = card.subject;
     const sessionMode = options && options.session;
     state.reviewingSession = Boolean(sessionMode);
+    const dailySession = state.reviewingSession && state.session && state.session.kind !== 'topic';
+    $('#cardParentLabel').textContent = dailySession ? '今日复习' : state.currentTopic ? state.currentTopic.title : '专题卡片';
+    $('#cardParentMeta').textContent = dailySession ? 'TODAY' : card.subject === 'politics' ? 'POLITICS' : card.subject;
     const restored = options && options.restore;
     state.cardMode = restored && restored.mode ? restored.mode : sessionMode ? 'recall' : 'memorize';
     state.revealed = restored && typeof restored.revealed === 'boolean' ? restored.revealed : !sessionMode;

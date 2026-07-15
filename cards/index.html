@@ -43,14 +43,14 @@
       </section>
 
       <section class="page" id="page-today" data-page="today">
-        <button class="back-button" type="button" data-route="home">← 返回首页</button>
+        <div class="context-return-bar"><button class="context-return" type="button" data-route="home"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6 10v10h12V10M10 20v-6h4v6"/></svg></span><strong>Cards 首页</strong></button><small>TODAY</small></div>
         <span class="kicker">TODAY · 45 MIN TARGET</span><h1>今日复习</h1>
         <p class="page-description">一次只选一个科目。系统优先安排已到期、完全记不得和模糊的内容，最长不超过 60 分钟。</p>
         <div class="today-subjects" id="todaySubjectList"></div>
       </section>
 
       <section class="page" id="page-subject" data-page="subject">
-        <button class="back-button" type="button" data-route="home">← 返回科目</button>
+        <div class="context-return-bar"><button class="context-return" type="button" data-route="home"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="5" rx="1"/><rect x="14" y="15" width="7" height="5" rx="1"/></svg></span><strong>科目目录</strong></button><small>SUBJECTS</small></div>
         <div class="page-title-row">
           <div><span class="kicker" id="subjectCode">706</span><h1 id="subjectTitle">中国古代文学与古代汉语</h1></div>
           <span class="mastery-ring mastery-large" id="subjectRing" data-level="0" aria-label="尚未评估"></span>
@@ -60,7 +60,7 @@
       </section>
 
       <section class="page" id="page-topic" data-page="topic">
-        <button class="back-button" type="button" id="backToSubject">← 返回专题</button>
+        <div class="context-return-bar"><button class="context-return" type="button" id="backToSubject"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h6"/></svg></span><strong id="topicParentLabel">专题目录</strong></button><small id="topicParentMeta">SUBJECT</small></div>
         <div class="page-title-row compact">
           <div><span class="kicker" id="topicPath">706 / 古代文学</span><h1 id="topicTitle">《红楼梦》</h1></div>
         </div>
@@ -76,7 +76,7 @@
       </section>
 
       <section class="page card-page" id="page-card" data-page="card">
-        <button class="back-button" type="button" id="backFromCard">← 返回标题列表</button>
+        <div class="context-return-bar"><button class="context-return" type="button" id="backFromCard"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h5"/></svg></span><strong id="cardParentLabel">专题卡片</strong></button><small id="cardParentMeta">CARD</small></div>
         <div class="review-toolbar" id="reviewToolbar">
           <div class="mode-switch" aria-label="学习模式">
             <button type="button" data-mode="recall">回忆模式</button>
@@ -166,7 +166,7 @@
       </section>
 
       <section class="page" id="page-trash" data-page="trash">
-        <button class="back-button" type="button" data-route="settings">← 返回设置</button>
+        <div class="context-return-bar"><button class="context-return" type="button" data-route="settings"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg></span><strong>设置</strong></button><small>DATA</small></div>
         <span class="kicker">RECOVERABLE</span><h1>回收站</h1>
         <p class="page-description">恢复后回到原科目、专题和知识结构位置。</p>
         <div class="trash-list" id="trashList"></div>
@@ -174,10 +174,10 @@
     </main>
 
     <nav class="bottom-nav" aria-label="主要导航">
-      <button class="active" type="button" data-route="home"><span>⌂</span><em>首页</em></button>
-      <button type="button" data-route="search"><span>⌕</span><em>搜索</em></button>
-      <button type="button" data-route="stats"><span>⌁</span><em>统计</em></button>
-      <button type="button" data-route="settings"><span>⚙</span><em>设置</em></button>
+      <button class="active" type="button" data-route="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3l8.5 7.5M5.5 9v11h13V9M9.5 20v-6h5v6"/></svg><em>首页</em></button>
+      <button type="button" data-route="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><em>搜索</em></button>
+      <button type="button" data-route="stats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10m6 10V4m6 16v-7m5 7H2"/></svg><em>统计</em></button>
+      <button type="button" data-route="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg><em>设置</em></button>
     </nav>
   </div>
 
