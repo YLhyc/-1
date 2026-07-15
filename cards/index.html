@@ -150,6 +150,8 @@
             <label>服务地址<input id="syncUrl" type="url" inputmode="url" autocomplete="url" placeholder="https://sync.example.com"></label>
             <label>设备密钥<input id="syncKey" type="password" autocomplete="new-password" placeholder="已保存时可留空"></label>
             <div class="sync-actions"><button class="secondary-button" id="saveSyncButton" type="button">保存配置</button><button class="primary-button" id="syncNowButton" type="button">立即同步</button></div>
+            <small class="sync-pair-help">iPhone 主屏幕与 Safari 配置隔离时，先在 Safari 复制配对信息，再到主屏幕 Cards 导入。</small>
+            <div class="sync-actions"><button class="secondary-button" id="copySyncPairButton" type="button">复制配对信息</button><button class="secondary-button" id="pasteSyncPairButton" type="button">从剪贴板导入</button></div>
             <button class="sync-restore-button" id="restoreSyncButton" type="button">从同步快照恢复</button>
           </div>
           <div class="setting-row">

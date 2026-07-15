@@ -11,7 +11,7 @@
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
     cardMode: 'memorize', revealed: true, hintLevel: 0, searchFilter: 'all',
     session: null, reviewingSession: false, timer: null, cardStartedAt: 0, cardStartedSeconds: 0, editorCard: null,
-    deviceId: null, syncing: false, lastForegroundRefreshAt: 0
+    deviceId: null, syncing: false, lastForegroundRefreshAt: 0, pairingTransfer: null
   };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
@@ -341,9 +341,11 @@
     const toggleTheme=()=>setTheme(document.body.classList.contains('dark')?'light':'dark',true); $('#themeButton').onclick=toggleTheme; $('#themeToggle').onclick=toggleTheme;
     $('#exportButton').onclick=async()=>{downloadJson(await CardsDB.exportSnapshot());showToast('本地数据已导出');}; $('#importButton').onclick=()=>$('#importFile').click();
     $('#importFile').onchange=async event=>{const file=event.target.files[0];if(!file)return;try{await CardsDB.importSnapshot(JSON.parse(await file.text()));await loadState();showToast('导入完成，导入前备份已保留');navigate('home');}catch(error){showToast(error.message||'导入失败');}finally{event.target.value='';}};
-    $('#saveSyncButton').onclick=async()=>{try{await CardsSync.configure($('#syncUrl').value.trim(),$('#syncKey').value);$('#syncKey').value='';await renderSyncStatus();showToast('同步配置已保存');}catch(error){showToast(error.message||'配置无效');}};
-    $('#syncNowButton').onclick=()=>runSync(true);
-    $('#restoreSyncButton').onclick=async()=>{if(!window.confirm('恢复前会自动保留本地备份。确定使用同步快照替换当前卡片、专题和回收站吗？'))return;try{const result=await CardsSync.restoreSnapshot();await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`);}catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}finally{await renderSyncStatus();}};
+  $('#saveSyncButton').onclick=async()=>{try{await CardsSync.configure($('#syncUrl').value.trim(),$('#syncKey').value);$('#syncKey').value='';await renderSyncStatus();showToast('同步配置已保存');}catch(error){showToast(error.message||'配置无效');}};
+  $('#syncNowButton').onclick=()=>runSync(true);
+  $('#copySyncPairButton').onclick=async()=>{try{if(!state.pairingTransfer)throw new Error('请重新扫描一次本机配对二维码');await navigator.clipboard.writeText(state.pairingTransfer);showToast('配对信息已复制，请打开主屏幕 Cards 导入');}catch(error){showToast(error.message||'复制失败，请检查剪贴板权限');}};
+  $('#pasteSyncPairButton').onclick=async()=>{try{const value=(await navigator.clipboard.readText()).trim(),encoded=value.startsWith('cards-pair:')?value.slice(11):new URLSearchParams(value.replace(/^#/, '')).get('pair');if(!encoded)throw new Error('剪贴板中没有 Cards 配对信息');const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);$('#syncUrl').value=pairing.url;$('#syncKey').value='';try{await navigator.clipboard.writeText('');}catch(error){}await renderSyncStatus();showToast('主屏幕 Cards 已完成配对');runSync(false);}catch(error){showToast(error.message||'导入配对失败');}};
+  $('#restoreSyncButton').onclick=async()=>{if(!window.confirm('恢复前会自动保留本地备份。确定使用同步快照替换当前卡片、专题和回收站吗？'))return;try{const result=await CardsSync.restoreSnapshot();await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`);}catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}finally{await renderSyncStatus();}};
     window.addEventListener('cards-sync-status',renderSyncStatus);
     window.addEventListener('cards-sync-applied',async()=>{await loadState();await setTheme(await CardsDB.getSetting('theme',document.body.classList.contains('dark')?'dark':'light'),false);await renderSyncStatus();});
     window.addEventListener('online',()=>runSync(false));
@@ -365,13 +367,11 @@
       if(status.configured&&navigator.onLine)runSync(false);
     }catch(error){console.error('Cards foreground refresh failed',error);}
   }
+  function decodePairing(encoded){const normalized=encoded.replace(/-/g,'+').replace(/_/g,'/'),padding='='.repeat((4-normalized.length%4)%4),bytes=Uint8Array.from(atob(normalized+padding),char=>char.charCodeAt(0)),pairing=JSON.parse(new TextDecoder().decode(bytes));if(!pairing||typeof pairing.url!=='string'||typeof pairing.key!=='string')throw new Error('配对信息不完整');return pairing;}
   async function consumePairingLink(){
     const encoded=new URLSearchParams(location.hash.replace(/^#/, '')).get('pair');if(!encoded)return false;
-    try{
-      const normalized=encoded.replace(/-/g,'+').replace(/_/g,'/'),padding='='.repeat((4-normalized.length%4)%4),bytes=Uint8Array.from(atob(normalized+padding),char=>char.charCodeAt(0)),pairing=JSON.parse(new TextDecoder().decode(bytes));
-      if(!pairing||typeof pairing.url!=='string'||typeof pairing.key!=='string')throw new Error('配对信息不完整');
-      await CardsSync.configure(pairing.url,pairing.key);history.replaceState(null,'',`${location.pathname}${location.search}`);return true;
-    }catch(error){history.replaceState(null,'',`${location.pathname}${location.search}`);throw new Error(`同步配对失败：${error.message||error}`);}
+    try{const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);state.pairingTransfer=`cards-pair:${encoded}`;history.replaceState(null,'',`${location.pathname}${location.search}`);return true;}
+    catch(error){history.replaceState(null,'',`${location.pathname}${location.search}`);throw new Error(`同步配对失败：${error.message||error}`);}
   }
   async function registerServiceWorker(){if(!('serviceWorker'in navigator)||location.protocol==='file:'){$('#offlineStatus').textContent=location.protocol==='file:'?'请通过本地服务器验证离线缓存':'当前浏览器不支持';return;}try{await navigator.serviceWorker.register('./service-worker.js');$('#offlineStatus').textContent='应用壳已注册，可离线启动';}catch(error){$('#offlineStatus').textContent='注册失败，请检查控制台';}}
   async function init(){try{await CardsDB.open();await CardsDB.seedIfEmpty(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}

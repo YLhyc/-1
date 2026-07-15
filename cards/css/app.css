@@ -266,6 +266,7 @@ details.fold[open] summary::after { content: "−"; }
 .sync-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .sync-actions button { width: 100%; }
 .sync-actions button:disabled { cursor: wait; opacity: .55; }
+.sync-pair-help { color: var(--muted); font-size: 10px; line-height: 1.6; }
 .sync-restore-button { justify-self: start; padding: 2px 0; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
 .toggle { width: 48px; height: 28px; padding: 3px; border: 0; border-radius: 99px; background: color-mix(in srgb,var(--ink) 17%,transparent); cursor: pointer; }
 .toggle span { display: block; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .18s ease; }
