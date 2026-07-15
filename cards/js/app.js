@@ -132,9 +132,10 @@
     });
     $$(`${container} [data-action]`).forEach(button => button.onclick = event => { event.stopPropagation(); manageCard(button.dataset.action, button.dataset.id); });
     $$(`${container} .swipe-row`).forEach(row => {
-      let startX = 0, startY = 0;
-      row.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
+      let startX = 0, startY = 0, edgeReserved = false;
+      row.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; edgeReserved = startX <= 28 || startX >= window.innerWidth - 28; }, { passive: true });
       row.addEventListener('touchend', e => {
+        if (edgeReserved) { edgeReserved = false; return; }
         const delta = startX - e.changedTouches[0].clientX, vertical = startY - e.changedTouches[0].clientY;
         if (Math.abs(delta) <= 45 || Math.abs(delta) <= Math.abs(vertical) * 1.2) return;
         if (delta > 0) { $$(`${container} .swipe-row.swiped`).forEach(item => { if (item !== row) item.classList.remove('swiped'); }); row.classList.add('swiped'); }
@@ -142,7 +143,7 @@
         row.dataset.suppressClick = 'true';
         setTimeout(() => { delete row.dataset.suppressClick; }, 450);
       });
-      row.addEventListener('touchcancel', () => { startX = 0; startY = 0; }, { passive: true });
+      row.addEventListener('touchcancel', () => { startX = 0; startY = 0; edgeReserved = false; }, { passive: true });
     });
   }
   function renderTopicCards() {
@@ -357,10 +358,10 @@
   $('#pasteSyncPairButton').onclick=async()=>{try{const value=(await navigator.clipboard.readText()).trim(),encoded=value.startsWith('cards-pair:')?value.slice(11):new URLSearchParams(value.replace(/^#/, '')).get('pair');if(!encoded)throw new Error('剪贴板中没有 Cards 配对信息');const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);$('#syncUrl').value=pairing.url;$('#syncKey').value='';try{await navigator.clipboard.writeText('');}catch(error){}await renderSyncStatus();showToast('主屏幕 Cards 已完成配对');runSync(false);}catch(error){showToast(error.message||'导入配对失败');}};
     $('#restoreSyncButton').onclick=async()=>{if(!window.confirm('恢复前会自动保留本地备份。确定使用同步快照替换当前卡片、专题和回收站吗？'))return;try{const result=await CardsSync.restoreSnapshot();await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`);}catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}finally{await renderSyncStatus();}};
     const main=$('#mainContent'),indicator=$('#edgeBackIndicator');let edgeStart=null;
-    main.addEventListener('touchstart',event=>{const touch=event.touches[0];edgeStart=canEdgeBack()&&touch.clientX<=28?{x:touch.clientX,y:touch.clientY}:null;},{passive:true});
-    main.addEventListener('touchmove',event=>{if(!edgeStart)return;const touch=event.touches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y;if(dx>10&&dx>Math.abs(dy)*1.15){event.preventDefault();indicator.classList.add('active');}},{passive:false});
-    main.addEventListener('touchend',event=>{if(!edgeStart)return;const touch=event.changedTouches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,complete=dx>=72&&dx>Math.abs(dy)*1.2;edgeStart=null;indicator.classList.remove('active');if(complete)edgeBack();},{passive:true});
-    main.addEventListener('touchcancel',()=>{edgeStart=null;indicator.classList.remove('active');},{passive:true});
+    main.addEventListener('touchstart',event=>{const touch=event.touches[0],side=touch.clientX<=28?'left':touch.clientX>=window.innerWidth-28?'right':null;edgeStart=canEdgeBack()&&side?{x:touch.clientX,y:touch.clientY,side}:null;indicator.classList.toggle('from-right',Boolean(edgeStart&&side==='right'));},{passive:true});
+    main.addEventListener('touchmove',event=>{if(!edgeStart)return;const touch=event.touches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,progress=edgeStart.side==='left'?dx:-dx;if(progress>10&&progress>Math.abs(dy)*1.15){event.preventDefault();indicator.classList.add('active');}},{passive:false});
+    main.addEventListener('touchend',event=>{if(!edgeStart)return;const touch=event.changedTouches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,progress=edgeStart.side==='left'?dx:-dx,complete=progress>=72&&progress>Math.abs(dy)*1.2;edgeStart=null;indicator.classList.remove('active','from-right');if(complete)edgeBack();},{passive:true});
+    main.addEventListener('touchcancel',()=>{edgeStart=null;indicator.classList.remove('active','from-right');},{passive:true});
     window.addEventListener('cards-sync-status',renderSyncStatus);
     window.addEventListener('cards-sync-applied',async()=>{await loadState();await setTheme(await CardsDB.getSetting('theme',document.body.classList.contains('dark')?'dark':'light'),false);await renderSyncStatus();});
     window.addEventListener('online',()=>runSync(false));
