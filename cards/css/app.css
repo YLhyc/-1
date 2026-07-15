@@ -211,6 +211,9 @@ details.fold summary::-webkit-details-marker { display: none; }
 details.fold summary::after { content: "+"; color: var(--accent); font: 700 18px/1 var(--mono); }
 details.fold[open] summary::after { content: "−"; }
 .fold-content { padding: 0 15px 16px; color: color-mix(in srgb,var(--ink) 84%,var(--muted)); line-height: 1.78; }
+.exam-answer { padding-top: 2px; }
+.exam-paragraph { margin: 0; text-align: justify; text-justify: inter-ideograph; }
+.exam-paragraph + .exam-paragraph { margin-top: 13px; }
 .source-line { color: var(--muted); font: 600 9px/1.65 var(--mono); word-break: break-all; }
 .source-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .source-tags span { padding: 3px 6px; border-radius: 7px; background: color-mix(in srgb,var(--accent) 8%,var(--paper)); color: var(--accent-deep); word-break: normal; }

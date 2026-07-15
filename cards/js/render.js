@@ -26,6 +26,11 @@
     return safe;
   }
 
+  function richParagraphs(value) {
+    return String(value || '').split(/\n\s*\n/).map(item => item.trim()).filter(Boolean)
+      .map(item => `<p class="exam-paragraph">${richText(item).replace(/\n/g, '<br>')}</p>`).join('');
+  }
+
   function masteryInfo(value) {
     return mastery[value] || mastery.unrated;
   }
@@ -48,7 +53,7 @@
       ? `<section class="content-section"><div class="content-label">理解与例证</div><div class="example-list">${card.examples.map(text => `<p class="example-item">${richText(text)}</p>`).join('')}</div></section>`
       : '';
     const exam = card.exam_wording
-      ? `<section class="content-section"><details class="fold"><summary>考场表述 <span class="rich-muted">默认折叠</span></summary><div class="fold-content">${richText(card.exam_wording)}</div></details></section>`
+      ? `<section class="content-section"><details class="fold"><summary>考场表述 <span class="rich-muted">完整答案 · 默认折叠</span></summary><div class="fold-content exam-answer">${richParagraphs(card.exam_wording)}</div></details></section>`
       : '';
     const hints = card.hints && card.hints.length
       ? `<section class="content-section"><details class="fold"><summary>渐进提示 <span class="rich-muted">${card.hints.length} 级</span></summary><div class="fold-content">${card.hints.map(h => `<p><strong>提示 ${h.level}</strong> · ${richText(h.text)}</p>`).join('')}</div></details></section>`

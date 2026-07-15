@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cards-shell-v6-c68fd455e36a';
+const CACHE_NAME = 'cards-shell-v6-1ab0eab4fc8b';
 const APP_SHELL = [
   './',
   './index.html',
