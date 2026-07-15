@@ -1,6 +1,7 @@
 (function () {
   'use strict';
   window.CardsSeed = {
+  "exam_wording_version": "a380b6dab3b5",
   "topics": [
     {
       "id": "topic_706_0309c7b5c10a",
