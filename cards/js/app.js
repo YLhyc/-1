@@ -131,14 +131,17 @@
     });
     $$(`${container} [data-action]`).forEach(button => button.onclick = event => { event.stopPropagation(); manageCard(button.dataset.action, button.dataset.id); });
     $$(`${container} .swipe-row`).forEach(row => {
-      let startX = 0;
-      row.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      let startX = 0, startY = 0;
+      row.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
       row.addEventListener('touchend', e => {
-        const delta = startX - e.changedTouches[0].clientX;
-        if (Math.abs(delta) <= 45) return;
-        row.classList.toggle('swiped', delta > 0); row.dataset.suppressClick = 'true';
+        const delta = startX - e.changedTouches[0].clientX, vertical = startY - e.changedTouches[0].clientY;
+        if (Math.abs(delta) <= 45 || Math.abs(delta) <= Math.abs(vertical) * 1.2) return;
+        if (delta > 0) { $$(`${container} .swipe-row.swiped`).forEach(item => { if (item !== row) item.classList.remove('swiped'); }); row.classList.add('swiped'); }
+        else row.classList.remove('swiped');
+        row.dataset.suppressClick = 'true';
         setTimeout(() => { delete row.dataset.suppressClick; }, 450);
       });
+      row.addEventListener('touchcancel', () => { startX = 0; startY = 0; }, { passive: true });
     });
   }
   function renderTopicCards() {

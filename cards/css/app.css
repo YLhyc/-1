@@ -141,11 +141,11 @@ h2 { margin: 3px 0 0; font-size: 21px; letter-spacing: -.025em; }
 .card-title-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 13px; padding: 15px 16px; cursor: pointer; text-align: left; }
 .card-title-copy strong { display: block; margin-bottom: 6px; font-size: 16px; line-height: 1.4; }
 .card-title-copy small { font-size: 10px; line-height: 1.45; }
-.swipe-row { position: relative; overflow: hidden; border-radius: 20px; }
-.swipe-actions { position: absolute; z-index: 2; inset: 0 0 0 auto; display: flex; justify-content: end; background: var(--accent-soft); pointer-events: none; }
+.swipe-row { position: relative; isolation: isolate; overflow: hidden; border-radius: 20px; background: var(--accent-soft); }
+.swipe-actions { position: absolute; z-index: 0; inset: 0 0 0 auto; display: flex; justify-content: end; background: var(--accent-soft); pointer-events: none; }
 .swipe-actions button { width: 64px; border: 0; background: transparent; color: var(--accent-deep); font-size: 12px; font-weight: 750; }
 .swipe-actions button.delete { background: var(--danger); color: #fff; }
-.swipe-content { position: relative; z-index: 1; transition: transform .2s ease; }
+.swipe-content { position: relative; z-index: 1; background: var(--paper); transition: transform .2s ease; }
 .swipe-row.swiped .swipe-actions { pointer-events: auto; }
 .swipe-row.swiped .swipe-content { transform: translateX(-192px); }
 
