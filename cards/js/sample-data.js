@@ -2,7 +2,7 @@
   'use strict';
   window.CardsSeed = {
   "exam_wording_version": "cefc5ba5869e",
-  "content_version": "a5001526fd43",
+  "content_version": "ee9597ef20f0",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -545,35 +545,48 @@
         "created_at": "2026-07-14T14:29:14+08:00"
       },
       "schedule": {
-        "mastery": "unrated",
-        "state": "new",
-        "due_at": "2026-07-20T00:00:00+08:00",
-        "last_reviewed_at": null,
-        "reps": 0,
+        "average_seconds": 28,
+        "difficulty": 4.8,
+        "due_at": "2026-07-19T06:31:27.370Z",
         "lapses": 0,
-        "difficulty": null,
-        "stability": null,
-        "average_seconds": 75
+        "last_reviewed_at": "2026-07-16T06:31:27.370Z",
+        "mastery": "familiar",
+        "reps": 1,
+        "stability": 3,
+        "state": "review"
       },
       "revision": {
-        "version": 3,
-        "updated_at": "2026-07-15T15:27:36+08:00",
-        "device_id": "assistant-706"
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-16T06:31:27.370Z",
+        "version": 4
       }
     },
     {
+      "exam_answer_type": "term",
+      "exam_wording": "通假是本有本字而在特定语境中临时借用同音或音近字；假借则是词义本来存在但没有专用字形，依声借用现成字，属于造字和用字史上的更根本关系。\n\n首先，{{accent|通假字}}：本来有本字，古文中因书写习惯或语境临时借用音同、音近字，通常受具体语境限制。\n\n其次，{{accent|假借字}}：本无专用字形，依声托事借用已有字表示词义；同音假借不是“本无其义”。\n\n最后，{{accent|考场流程}}：先问本来有没有本字，再看是否受语境限制；材料和教材例证优先，陌生字组只作暂定判断。\n\n综上，概念辨析既要给出准确界定，也要说明==相互边界和判断依据==，不能只凭字面相似作结论。",
+      "examples": [
+        "“说—悦”要看具体教材与语境，不能把所有同音字都判为普通通假。"
+      ],
+      "hints": [
+        {
+          "kind": "structure",
+          "level": 1,
+          "text": "先分本字有无。"
+        },
+        {
+          "kind": "keywords",
+          "level": 2,
+          "text": "关键词：临时借用／依声托事。"
+        },
+        {
+          "kind": "starter",
+          "level": 3,
+          "text": "最后补一句：古今字与通假字在学术表述上可能有交叉，但答题需说明判断角度。"
+        }
+      ],
       "id": "card_706_3c4da4c933d44d21",
-      "subject": "706",
       "module": "古代汉语",
-      "topic_id": "topic_706_5057032ab808",
       "order": 20,
-      "title": "通假字与假借字的区别",
-      "prompt": "通假字和假借字都涉及音借，为什么不能混为一谈？",
-      "summary": "{{accent|通假是本有本字而在特定语境中临时借用同音或音近字}}；假借则是词义本来存在但没有专用字形，依声借用现成字，属于造字和用字史上的更根本关系。",
-      "outline_logic": {
-        "type": "contrast",
-        "description": "以{{accent|通假字、假借字、考场流程}}为对照维度，先分别界定，再比较边界并形成判断。"
-      },
       "outline": [
         {
           "heading": "通假字",
@@ -588,28 +601,36 @@
           "text": "先问本来有没有本字，再看是否受语境限制；材料和教材例证优先，陌生字组只作暂定判断。"
         }
       ],
-      "examples": [
-        "“说—悦”要看具体教材与语境，不能把所有同音字都判为普通通假。"
-      ],
-      "hints": [
-        {
-          "level": 1,
-          "kind": "structure",
-          "text": "先分本字有无。"
-        },
-        {
-          "level": 2,
-          "kind": "keywords",
-          "text": "关键词：临时借用／依声托事。"
-        },
-        {
-          "level": 3,
-          "kind": "starter",
-          "text": "最后补一句：古今字与通假字在学术表述上可能有交叉，但答题需说明判断角度。"
-        }
-      ],
-      "exam_answer_type": "term",
-      "exam_wording": "通假是本有本字而在特定语境中临时借用同音或音近字；假借则是词义本来存在但没有专用字形，依声借用现成字，属于造字和用字史上的更根本关系。\n\n首先，{{accent|通假字}}：本来有本字，古文中因书写习惯或语境临时借用音同、音近字，通常受具体语境限制。\n\n其次，{{accent|假借字}}：本无专用字形，依声托事借用已有字表示词义；同音假借不是“本无其义”。\n\n最后，{{accent|考场流程}}：先问本来有没有本字，再看是否受语境限制；材料和教材例证优先，陌生字组只作暂定判断。\n\n综上，概念辨析既要给出准确界定，也要说明==相互边界和判断依据==，不能只凭字面相似作结论。",
+      "outline_logic": {
+        "description": "以{{accent|通假字、假借字、考场流程}}为对照维度，先分别界定，再比较边界并形成判断。",
+        "type": "contrast"
+      },
+      "prompt": "通假字和假借字都涉及音借，二者在本字是否存在、借用性质和形成层次上有何区别？",
+      "revision": {
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-16T06:36:08.417Z",
+        "version": 4
+      },
+      "schedule": {
+        "average_seconds": 75,
+        "difficulty": null,
+        "due_at": "2026-07-20T00:00:00+08:00",
+        "lapses": 0,
+        "last_reviewed_at": null,
+        "mastery": "unrated",
+        "reps": 0,
+        "stability": null,
+        "state": "new"
+      },
+      "source": {
+        "assistant": "history_import",
+        "created_at": "2026-07-14T14:29:14+08:00",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/古今字/古今字_异体字_通假字_假借字辨析.md",
+        "session_id": "history-706-2026-07-11",
+        "study_date": "2026-07-11"
+      },
+      "subject": "706",
+      "summary": "{{accent|通假是本有本字而在特定语境中临时借用同音或音近字}}；假借则是词义本来存在但没有专用字形，依声借用现成字，属于造字和用字史上的更根本关系。",
       "tags": [
         "通假字",
         "假借字",
@@ -617,29 +638,8 @@
         "历史导入",
         "尚未评估"
       ],
-      "source": {
-        "assistant": "history_import",
-        "study_date": "2026-07-11",
-        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/古今字/古今字_异体字_通假字_假借字辨析.md",
-        "session_id": "history-706-2026-07-11",
-        "created_at": "2026-07-14T14:29:14+08:00"
-      },
-      "schedule": {
-        "mastery": "unrated",
-        "state": "new",
-        "due_at": "2026-07-20T00:00:00+08:00",
-        "last_reviewed_at": null,
-        "reps": 0,
-        "lapses": 0,
-        "difficulty": null,
-        "stability": null,
-        "average_seconds": 75
-      },
-      "revision": {
-        "version": 3,
-        "updated_at": "2026-07-15T15:27:36+08:00",
-        "device_id": "assistant-706"
-      }
+      "title": "通假字与假借字的区别",
+      "topic_id": "topic_706_5057032ab808"
     },
     {
       "id": "card_706_c1ad69c1c56816e1",
@@ -2805,86 +2805,6 @@
       }
     },
     {
-      "id": "card_politics_356679a94c1f1f00",
-      "subject": "politics",
-      "module": "马原",
-      "topic_id": "topic_politics_9a290f0fa9d7",
-      "order": 20,
-      "title": "物质、运动与相对静止",
-      "prompt": "物质和运动、运动和静止是什么关系？",
-      "summary": "{{accent|运动是物质的根本属性和存在方式}}，物质不能脱离运动，运动也不能脱离物质承担者；相对静止是一定条件下的稳定状态，运动与静止相互依存，不能把静止理解为绝对不动。",
-      "outline_logic": {
-        "type": "total_sub",
-        "description": "先给出总判断，再从{{accent|物质与运动、相对静止、辩证关系}}逐项展开，最后回到整体评价。"
-      },
-      "outline": [
-        {
-          "heading": "物质与运动",
-          "text": "没有脱离运动的物质，也没有无物质承担者的运动；把运动看成独立精神容易走向唯心主义。"
-        },
-        {
-          "heading": "相对静止",
-          "text": "事物在一定条件下空间位置暂时不变，或根本性质暂时保持稳定。"
-        },
-        {
-          "heading": "辩证关系",
-          "text": "运动是绝对的，静止是相对的；相对静止为认识、区分和实践提供稳定条件。"
-        }
-      ],
-      "examples": [
-        "行驶列车中相对座位静止、相对站台运动，可说明参照条件。"
-      ],
-      "hints": [
-        {
-          "level": 1,
-          "kind": "structure",
-          "text": "先定义运动。"
-        },
-        {
-          "level": 2,
-          "kind": "keywords",
-          "text": "关键词：根本属性—相对静止。"
-        },
-        {
-          "level": 3,
-          "kind": "starter",
-          "text": "最后说明绝对运动和相对静止统一。"
-        }
-      ],
-      "exam_answer_type": "short_answer",
-      "exam_wording": "运动是物质的根本属性和存在方式，物质不能脱离运动，运动也不能脱离物质承担者；{{accent|相对静止}}是一定条件下的稳定状态，运动与静止相互依存，不能把静止理解为绝对不动。\n\n首先，从{{accent|物质与运动}}来看，没有脱离运动的物质，也没有无物质承担者的运动；把运动看成独立精神容易走向唯心主义。\n\n其次，从{{accent|相对静止}}来看，事物在一定条件下空间位置暂时不变，或根本性质暂时保持稳定。\n\n最后，从{{accent|辩证关系}}来看，运动是绝对的，静止是相对的；{{accent|相对静止}}为认识、区分和实践提供稳定条件。\n\n例如，行驶列车中相对座位静止、相对站台运动，可说明参照条件。\n\n综上，上述层面构成了从概念界定、关系分析到方法论意义的完整逻辑。只有把三者贯通起来，才能准确把握这一原理，并避免割裂、静止和片面化的理解。",
-      "tags": [
-        "政治",
-        "运动和静止",
-        "物质观",
-        "历史导入",
-        "尚未评估"
-      ],
-      "source": {
-        "assistant": "history_import",
-        "study_date": "2026-07-13",
-        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/03_物质观.md",
-        "session_id": "history-politics-2026-07-13",
-        "created_at": "2026-07-14T14:29:19+08:00"
-      },
-      "schedule": {
-        "mastery": "unrated",
-        "state": "new",
-        "due_at": "2026-07-16T00:00:00+08:00",
-        "last_reviewed_at": null,
-        "reps": 0,
-        "lapses": 0,
-        "difficulty": null,
-        "stability": null,
-        "average_seconds": 75
-      },
-      "revision": {
-        "version": 3,
-        "updated_at": "2026-07-15T15:27:37+08:00",
-        "device_id": "assistant-politics"
-      }
-    },
-    {
       "id": "card_politics_64ec0ef20b5e7333",
       "subject": "politics",
       "module": "马原",
@@ -3187,6 +3107,86 @@
         "updated_at": "2026-07-15T15:27:37+08:00",
         "device_id": "assistant-politics"
       }
+    },
+    {
+      "exam_answer_type": "short_answer",
+      "exam_wording": "运动是物质的根本属性和存在方式，物质不能脱离运动，运动也不能脱离物质承担者；{{accent|相对静止}}是一定条件下的稳定状态，运动与静止相互依存，不能把静止理解为绝对不动。\n\n首先，从{{accent|物质与运动}}来看，没有脱离运动的物质，也没有无物质承担者的运动；把运动看成独立精神容易走向唯心主义。\n\n其次，从{{accent|相对静止}}来看，事物在一定条件下空间位置暂时不变，或根本性质暂时保持稳定。\n\n最后，从{{accent|辩证关系}}来看，运动是绝对的，静止是相对的；{{accent|相对静止}}为认识、区分和实践提供稳定条件。\n\n例如，行驶列车中相对座位静止、相对站台运动，可说明参照条件。\n\n综上，上述层面构成了从概念界定、关系分析到方法论意义的完整逻辑。只有把三者贯通起来，才能准确把握这一原理，并避免割裂、静止和片面化的理解。",
+      "examples": [
+        "行驶列车中相对座位静止、相对站台运动，可说明参照条件。"
+      ],
+      "hints": [
+        {
+          "kind": "structure",
+          "level": 1,
+          "text": "先定义运动。"
+        },
+        {
+          "kind": "keywords",
+          "level": 2,
+          "text": "关键词：根本属性—相对静止。"
+        },
+        {
+          "kind": "starter",
+          "level": 3,
+          "text": "最后说明绝对运动和相对静止统一。"
+        }
+      ],
+      "id": "card_politics_356679a94c1f1f00",
+      "module": "马原·唯物论",
+      "order": 20,
+      "outline": [
+        {
+          "heading": "物质与运动",
+          "text": "没有脱离运动的物质，也没有无物质承担者的运动；把运动看成独立精神容易走向唯心主义。"
+        },
+        {
+          "heading": "相对静止",
+          "text": "事物在一定条件下空间位置暂时不变，或根本性质暂时保持稳定。"
+        },
+        {
+          "heading": "辩证关系",
+          "text": "运动是绝对的，静止是相对的；相对静止为认识、区分和实践提供稳定条件。"
+        }
+      ],
+      "outline_logic": {
+        "description": "先给出总判断，再从{{accent|物质与运动、相对静止、辩证关系}}逐项展开，最后回到整体评价。",
+        "type": "total_sub"
+      },
+      "prompt": "物质和运动、运动和静止是什么关系？",
+      "revision": {
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-16T06:45:48.850Z",
+        "version": 5
+      },
+      "schedule": {
+        "average_seconds": 75,
+        "difficulty": null,
+        "due_at": "2026-07-16T00:00:00+08:00",
+        "lapses": 0,
+        "last_reviewed_at": null,
+        "mastery": "unrated",
+        "reps": 0,
+        "stability": null,
+        "state": "new"
+      },
+      "source": {
+        "assistant": "history_import",
+        "created_at": "2026-07-14T14:29:19+08:00",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/03_物质观.md",
+        "session_id": "history-politics-2026-07-13",
+        "study_date": "2026-07-13"
+      },
+      "subject": "politics",
+      "summary": "{{accent|运动是物质的根本属性和存在方式}}，物质不能脱离运动，运动也不能脱离物质承担者；相对静止是一定条件下的稳定状态，运动与静止相互依存，不能把静止理解为绝对不动。",
+      "tags": [
+        "政治",
+        "运动和静止",
+        "物质观",
+        "历史导入",
+        "尚未评估"
+      ],
+      "title": "物质、运动与相对静止",
+      "topic_id": "topic_politics_material_motion"
     }
   ]
 };

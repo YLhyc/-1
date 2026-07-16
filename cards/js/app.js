@@ -6,12 +6,13 @@
     '807': ['现当代文学与评论写作', '现当代文学 · 评论写作'],
     politics: ['思想政治理论', '马原 · 毛中特 · 史纲 · 思修']
   };
+  const syncRetryIntervalMs = Number(window.CARDS_SYNC_RETRY_INTERVAL_MS || 15000);
   const state = {
     cards: [], topics: [], currentSubject: '706', currentTopic: null, currentCard: null,
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
     cardMode: 'memorize', revealed: true, hintLevel: 0, searchFilter: 'all',
     session: null, reviewingSession: false, timer: null, cardStartedAt: 0, cardStartedSeconds: 0, editorCard: null,
-    deviceId: null, syncing: false, lastForegroundRefreshAt: 0, pairingTransfer: null
+    deviceId: null, syncing: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null
   };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
@@ -333,6 +334,19 @@
       state.syncing = false; $('#syncNowButton').disabled = false; await renderSyncStatus();
     }
   }
+  async function retryPendingSync() {
+    if (document.visibilityState !== 'visible' || state.syncing || navigator.onLine === false) return;
+    try {
+      const status = await CardsSync.status();
+      if (status.configured && (status.pending > 0 || status.last_error)) runSync(false);
+    } catch (error) {
+      console.error('Cards sync retry check failed', error);
+    }
+  }
+  function startSyncRetryWatch() {
+    clearInterval(state.syncRetryTimer);
+    state.syncRetryTimer = setInterval(retryPendingSync, syncRetryIntervalMs);
+  }
   function bindEvents() {
     $$('[data-route]').forEach(button => button.onclick = () => navigate(button.dataset.route));
     $('#resumeButton').onclick = () => state.session && state.session.status==='active' ? startDailyReview(state.session.subject) : navigate('today');
@@ -390,6 +404,6 @@
     catch(error){history.replaceState(null,'',`${location.pathname}${location.search}`);throw new Error(`同步配对失败：${error.message||error}`);}
   }
   async function registerServiceWorker(){if(!('serviceWorker'in navigator)||location.protocol==='file:'){$('#offlineStatus').textContent=location.protocol==='file:'?'请通过本地服务器验证离线缓存':'当前浏览器不支持';return;}try{await navigator.serviceWorker.register('./service-worker.js');$('#offlineStatus').textContent='应用壳已注册，可离线启动';}catch(error){$('#offlineStatus').textContent='注册失败，请检查控制台';}}
-  async function init(){try{await CardsDB.open();const seeded=await CardsDB.seedIfEmpty(CardsSeed);if(!seeded)await CardsDB.upgradeSeedContent(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
+  async function init(){try{await CardsDB.open();const seeded=await CardsDB.seedIfEmpty(CardsSeed);if(!seeded)await CardsDB.upgradeSeedContent(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();startSyncRetryWatch();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
   document.addEventListener('DOMContentLoaded',init);
 })();
