@@ -12,7 +12,7 @@
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
     cardMode: 'memorize', revealed: true, hintLevel: 0, searchFilter: 'all',
     session: null, reviewingSession: false, timer: null, cardStartedAt: 0, cardStartedSeconds: 0, editorCard: null,
-    deviceId: null, syncing: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null
+    deviceId: null, syncing: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null, activeConflict: null
   };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
@@ -58,6 +58,7 @@
     if (route === 'today') renderToday();
     if (route === 'stats') renderStats();
     if (route === 'trash') renderTrash();
+    if (route === 'settings') renderSnapshotHistory(false);
   }
 
   function renderHome() {
@@ -320,6 +321,81 @@
     $('#syncStatus').textContent = parts.join(' · ');
     $('#syncStatusDot').classList.toggle('error', Boolean(status.last_error || status.conflicts));
     $('#syncStatusDot').classList.toggle('ready', Boolean(status.configured && !status.last_error && !status.conflicts));
+    await renderDiagnostics(status);
+  }
+  function diagnosticTime(value) { return value ? new Date(value).toLocaleString() : '—'; }
+  async function renderDiagnostics(existingStatus) {
+    const status = existingStatus || await CardsSync.status();
+    const releaseId = String(window.CardsSeed && CardsSeed.release_id || 'development');
+    const contentVersion = String(window.CardsSeed && CardsSeed.content_version || 'local-seed');
+    const cacheKeys = 'caches' in window ? await caches.keys() : [];
+    const shell = cacheKeys.find(key => key.startsWith('cards-shell-')) || '未注册';
+    const shellMatches = releaseId === 'development' || shell.endsWith(releaseId);
+    $('#releaseId').textContent = releaseId;
+    $('#contentVersion').textContent = contentVersion;
+    $('#serviceWorkerVersion').textContent = shell;
+    $('#syncCursor').textContent = status.cursor || '0';
+    $('#syncPending').textContent = String(status.pending || 0);
+    $('#syncConflicts').textContent = String(status.conflicts || 0);
+    $('#syncLastSuccess').textContent = diagnosticTime(status.last_synced_at);
+    $('#syncLastAttempt').textContent = diagnosticTime(status.last_attempt_at);
+    $('#syncDeviceId').textContent = status.device_id || '—';
+    $('#updateState').textContent = shellMatches ? '已是当前发布版本' : '应用壳正在后台更新，关闭后重新打开即可生效';
+    $('#syncLastError').hidden = !status.last_error;
+    $('#syncLastError').textContent = status.last_error ? `最近错误：${status.last_error}` : '';
+    await renderConflicts();
+  }
+  function conflictVersion(card) {
+    const field = (label, value) => `<div class="conflict-version-field"><b>${label}</b><p>${CardsRender.escapeHtml(String(value || '—'))}</p></div>`;
+    return field('标题', card && card.title) + field('回忆问题', card && card.prompt) + field('核心结论', card && card.summary) + field('考场表述', card && card.exam_wording);
+  }
+  async function renderConflicts() {
+    const conflicts = await CardsSync.listConflicts();
+    $('#conflictSummary').textContent = conflicts.length ? `${conflicts.length} 个冲突待处理` : '没有待处理冲突';
+    $('#conflictStatusDot').classList.toggle('error', conflicts.length > 0);
+    $('#conflictStatusDot').classList.toggle('ready', conflicts.length === 0);
+    $('#conflictList').innerHTML = conflicts.map(conflict => `<article class="conflict-row"><span><strong>${CardsRender.escapeHtml(conflict.local && conflict.local.title || conflict.remote && conflict.remote.title || conflict.card_id)}</strong><small>${new Date(conflict.detected_at).toLocaleString()} · revision ${Number(conflict.local&&conflict.local.revision&&conflict.local.revision.version||0)} / ${Number(conflict.remote&&conflict.remote.revision&&conflict.remote.revision.version||0)}</small></span><button class="secondary-button" data-conflict="${CardsRender.escapeHtml(conflict.id)}">处理</button></article>`).join('') || '<div class="empty-state compact">两台设备同时编辑同一张卡时，会在这里保留双方版本。</div>';
+    $$('[data-conflict]').forEach(button => button.onclick = () => openConflict(button.dataset.conflict));
+  }
+  async function renderSnapshotHistory(showErrors = true) {
+    const container = $('#snapshotHistoryList');
+    const status = await CardsSync.status();
+    if (!status.configured) { container.innerHTML = '<small class="sync-pair-help">配置安全同步后可查看历史快照。</small>'; return; }
+    try {
+      container.innerHTML = '<small class="sync-pair-help">正在读取历史快照…</small>';
+      const snapshots = await CardsSync.listSnapshots();
+      container.innerHTML = snapshots.length ? `<div class="snapshot-list">${snapshots.map(item => `<article class="snapshot-row"><span><strong>${new Date(item.created_at).toLocaleString()}</strong><small>${Number(item.card_count||0)} 卡 · ${Number(item.topic_count||0)} 专题 · 游标 ${CardsRender.escapeHtml(String(item.cursor||0))}</small></span><button class="secondary-button" data-snapshot-id="${Number(item.id)}">恢复</button></article>`).join('')}</div>` : '<small class="sync-pair-help">云端还没有历史快照。</small>';
+      $$('[data-snapshot-id]').forEach(button => button.onclick = () => restoreCloudSnapshot(Number(button.dataset.snapshotId)));
+    } catch (error) {
+      container.innerHTML = '<small class="diagnostics-error">历史快照读取失败，可稍后重试。</small>';
+      if (showErrors) showToast(error.message || '历史快照读取失败');
+    }
+  }
+  async function restoreCloudSnapshot(snapshotId = null) {
+    const label = snapshotId === null ? '最新快照' : '所选历史快照';
+    if (!window.confirm(`恢复前会自动保留本地备份。确定使用${label}替换当前卡片、专题和回收站吗？`)) return;
+    try { const result=await CardsSync.restoreSnapshot(snapshotId);await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`); }
+    catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}
+    finally{await renderSyncStatus();}
+  }
+  async function openConflict(id) {
+    const conflict = (await CardsSync.listConflicts()).find(item => item.id === id);
+    if (!conflict) return renderConflicts();
+    state.activeConflict = conflict;
+    $('#conflictTitle').textContent = conflict.local && conflict.local.title || conflict.remote && conflict.remote.title || '处理正文冲突';
+    $('#conflictLocal').innerHTML = conflictVersion(conflict.local);
+    $('#conflictRemote').innerHTML = conflictVersion(conflict.remote);
+    const form = $('#conflictMergeForm'), source = conflict.local || conflict.remote;
+    ['title','prompt','summary','exam_wording'].forEach(name => form.elements[name].value = source && source[name] || '');
+    $('#conflictResolver').showModal();
+  }
+  async function finishConflict(selected, resolution) {
+    if (!state.activeConflict) return;
+    const resolved = await CardsSync.resolveConflict(state.activeConflict.id, selected, resolution);
+    const index = state.cards.findIndex(card => card.id === resolved.id);
+    if (index >= 0) state.cards[index] = resolved; else state.cards.push(resolved);
+    state.activeConflict = null; $('#conflictResolver').close(); await refreshDerivedViews(); await renderSyncStatus(); showToast('冲突已解决并等待同步');
+    if (navigator.onLine) runSync(false);
   }
   async function runSync(showResult) {
     if (state.syncing) return;
@@ -367,12 +443,18 @@
     $('#exportButton').onclick=async()=>{downloadJson(await CardsDB.exportSnapshot());showToast('本地数据已导出');}; $('#importButton').onclick=()=>$('#importFile').click();
     $('#importFile').onchange=async event=>{const file=event.target.files[0];if(!file)return;try{await CardsDB.importSnapshot(JSON.parse(await file.text()));await loadState();showToast('导入完成，导入前备份已保留');navigate('home');}catch(error){showToast(error.message||'导入失败');}finally{event.target.value='';}};
   $('#saveSyncButton').onclick=async()=>{try{await CardsSync.configure($('#syncUrl').value.trim(),$('#syncKey').value);$('#syncKey').value='';await renderSyncStatus();showToast('同步配置已保存');}catch(error){showToast(error.message||'配置无效');}};
-  $('#syncNowButton').onclick=()=>runSync(true);
+    $('#syncNowButton').onclick=()=>runSync(true);
+  $('#refreshDiagnosticsButton').onclick=()=>renderDiagnostics().then(()=>showToast('诊断状态已刷新'));
+  $('#closeConflictResolver').onclick=()=>{state.activeConflict=null;$('#conflictResolver').close();};
+  $('#keepLocalConflict').onclick=()=>state.activeConflict&&finishConflict(state.activeConflict.local,'local');
+  $('#keepRemoteConflict').onclick=()=>state.activeConflict&&finishConflict(state.activeConflict.remote,'remote');
+  $('#conflictMergeForm').onsubmit=event=>{event.preventDefault();if(!state.activeConflict)return;const data=new FormData(event.currentTarget),merged={...state.activeConflict.local,title:data.get('title'),prompt:data.get('prompt'),summary:data.get('summary'),exam_wording:data.get('exam_wording')};finishConflict(merged,'merged');};
   $('#copySyncPairButton').onclick=async()=>{try{if(!state.pairingTransfer)throw new Error('请重新扫描一次本机配对二维码');await navigator.clipboard.writeText(state.pairingTransfer);showToast('配对信息已复制，请打开主屏幕 Cards 导入');}catch(error){showToast(error.message||'复制失败，请检查剪贴板权限');}};
   $('#pasteSyncPairButton').onclick=async()=>{try{const value=(await navigator.clipboard.readText()).trim(),encoded=value.startsWith('cards-pair:')?value.slice(11):new URLSearchParams(value.replace(/^#/, '')).get('pair');if(!encoded)throw new Error('剪贴板中没有 Cards 配对信息');const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);$('#syncUrl').value=pairing.url;$('#syncKey').value='';try{await navigator.clipboard.writeText('');}catch(error){}await renderSyncStatus();showToast('主屏幕 Cards 已完成配对');runSync(false);}catch(error){showToast(error.message||'导入配对失败');}};
-    $('#restoreSyncButton').onclick=async()=>{if(!window.confirm('恢复前会自动保留本地备份。确定使用同步快照替换当前卡片、专题和回收站吗？'))return;try{const result=await CardsSync.restoreSnapshot();await loadState();showToast(`已从快照恢复 ${result.cards} 张卡`);}catch(error){await CardsSync.recordError(error);showToast(error.message||'快照恢复失败');}finally{await renderSyncStatus();}};
+    $('#restoreSyncButton').onclick=()=>restoreCloudSnapshot(null);
+    $('#refreshSnapshotsButton').onclick=()=>renderSnapshotHistory(true);
     const main=$('#mainContent'),indicator=$('#edgeBackIndicator');let edgeStart=null;
-    main.addEventListener('touchstart',event=>{const touch=event.touches[0],side=touch.clientX<=28?'left':touch.clientX>=window.innerWidth-28?'right':null;edgeStart=canEdgeBack()&&side?{x:touch.clientX,y:touch.clientY,side}:null;indicator.classList.toggle('from-right',Boolean(edgeStart&&side==='right'));},{passive:true});
+    main.addEventListener('touchstart',event=>{const touch=event.touches[0],bounds=main.getBoundingClientRect(),side=touch.clientX<=bounds.left+28?'left':touch.clientX>=bounds.right-28?'right':null;edgeStart=canEdgeBack()&&side?{x:touch.clientX,y:touch.clientY,side}:null;indicator.classList.toggle('from-right',Boolean(edgeStart&&side==='right'));},{passive:true});
     main.addEventListener('touchmove',event=>{if(!edgeStart)return;const touch=event.touches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,progress=edgeStart.side==='left'?dx:-dx;if(progress>10&&progress>Math.abs(dy)*1.15){event.preventDefault();indicator.classList.add('active');}},{passive:false});
     main.addEventListener('touchend',event=>{if(!edgeStart)return;const touch=event.changedTouches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,progress=edgeStart.side==='left'?dx:-dx,complete=progress>=72&&progress>Math.abs(dy)*1.2;edgeStart=null;indicator.classList.remove('active','from-right');if(complete)edgeBack();},{passive:true});
     main.addEventListener('touchcancel',()=>{edgeStart=null;indicator.classList.remove('active','from-right');},{passive:true});

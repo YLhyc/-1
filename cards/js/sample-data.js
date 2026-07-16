@@ -225,20 +225,20 @@
         "created_at": "2026-07-14T14:29:12+08:00"
       },
       "schedule": {
-        "mastery": "unrated",
-        "state": "new",
-        "due_at": "2026-07-14T00:00:00+08:00",
-        "last_reviewed_at": null,
-        "reps": 0,
+        "average_seconds": 900,
+        "difficulty": 5.45,
+        "due_at": "2026-07-17T08:36:57.779Z",
         "lapses": 0,
-        "difficulty": null,
-        "stability": null,
-        "average_seconds": 75
+        "last_reviewed_at": "2026-07-16T08:36:57.779Z",
+        "mastery": "fuzzy",
+        "reps": 1,
+        "stability": 1,
+        "state": "review"
       },
       "revision": {
-        "version": 3,
-        "updated_at": "2026-07-15T15:27:35+08:00",
-        "device_id": "assistant-706"
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-16T08:36:57.779Z",
+        "version": 4
       }
     },
     {
@@ -3021,20 +3021,20 @@
         "created_at": "2026-07-14T14:39:09+08:00"
       },
       "schedule": {
-        "mastery": "unrated",
-        "state": "new",
-        "due_at": "2026-07-14T14:39:09+08:00",
-        "last_reviewed_at": null,
-        "reps": 0,
+        "average_seconds": 37,
+        "difficulty": 4.8,
+        "due_at": "2026-07-19T06:54:01.901Z",
         "lapses": 0,
-        "difficulty": null,
-        "stability": null,
-        "average_seconds": 75
+        "last_reviewed_at": "2026-07-16T06:54:01.901Z",
+        "mastery": "familiar",
+        "reps": 1,
+        "stability": 3,
+        "state": "review"
       },
       "revision": {
-        "version": 3,
-        "updated_at": "2026-07-15T15:27:37+08:00",
-        "device_id": "assistant-politics"
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-16T06:54:01.901Z",
+        "version": 4
       }
     },
     {
@@ -3092,20 +3092,20 @@
         "created_at": "2026-07-14T14:39:09+08:00"
       },
       "schedule": {
-        "mastery": "unrated",
-        "state": "new",
-        "due_at": "2026-07-14T14:39:09+08:00",
-        "last_reviewed_at": null,
-        "reps": 0,
+        "average_seconds": 25,
+        "difficulty": 4.8,
+        "due_at": "2026-07-19T07:20:58.320Z",
         "lapses": 0,
-        "difficulty": null,
-        "stability": null,
-        "average_seconds": 75
+        "last_reviewed_at": "2026-07-16T07:20:58.320Z",
+        "mastery": "familiar",
+        "reps": 1,
+        "stability": 3,
+        "state": "review"
       },
       "revision": {
-        "version": 3,
-        "updated_at": "2026-07-15T15:27:37+08:00",
-        "device_id": "assistant-politics"
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-16T07:20:58.320Z",
+        "version": 4
       }
     },
     {
@@ -3188,6 +3188,7 @@
       "title": "物质、运动与相对静止",
       "topic_id": "topic_politics_material_motion"
     }
-  ]
+  ],
+  "release_id": "8bfabda65184"
 };
 })();

@@ -153,6 +153,29 @@
             <small class="sync-pair-help">iPhone 主屏幕与 Safari 配置隔离时，先在 Safari 复制配对信息，再到主屏幕 Cards 导入。</small>
             <div class="sync-actions"><button class="secondary-button" id="copySyncPairButton" type="button">复制配对信息</button><button class="secondary-button" id="pasteSyncPairButton" type="button">从剪贴板导入</button></div>
             <button class="sync-restore-button" id="restoreSyncButton" type="button">从同步快照恢复</button>
+            <div class="snapshot-history">
+              <div class="snapshot-heading"><strong>历史快照</strong><button class="sync-restore-button" id="refreshSnapshotsButton" type="button">刷新列表</button></div>
+              <div id="snapshotHistoryList"><small class="sync-pair-help">点击刷新查看最近 14 个云端版本。</small></div>
+            </div>
+          </div>
+          <div class="diagnostics-panel">
+            <div class="diagnostics-heading"><div><strong>版本与同步诊断</strong><small id="updateState">正在读取应用状态</small></div><button class="secondary-button" id="refreshDiagnosticsButton" type="button">刷新</button></div>
+            <dl class="diagnostics-grid">
+              <div><dt>发布版本</dt><dd id="releaseId">—</dd></div>
+              <div><dt>应用壳</dt><dd id="serviceWorkerVersion">—</dd></div>
+              <div><dt>数据内容</dt><dd id="contentVersion">—</dd></div>
+              <div><dt>远端游标</dt><dd id="syncCursor">—</dd></div>
+              <div><dt>待上传</dt><dd id="syncPending">0</dd></div>
+              <div><dt>冲突</dt><dd id="syncConflicts">0</dd></div>
+              <div><dt>最近成功</dt><dd id="syncLastSuccess">—</dd></div>
+              <div><dt>最近尝试</dt><dd id="syncLastAttempt">—</dd></div>
+            </dl>
+            <small class="diagnostics-device">设备 ID <code id="syncDeviceId">—</code></small>
+            <small class="diagnostics-error" id="syncLastError" hidden></small>
+          </div>
+          <div class="conflicts-panel">
+            <div class="diagnostics-heading"><div><strong>正文冲突</strong><small id="conflictSummary">没有待处理冲突</small></div><span class="status-dot ready" id="conflictStatusDot"></span></div>
+            <div class="conflict-list" id="conflictList"><div class="empty-state compact">两台设备同时编辑同一张卡时，会在这里保留双方版本。</div></div>
           </div>
           <div class="setting-row">
             <div><strong>离线应用壳</strong><small id="offlineStatus">检查中</small></div>
@@ -194,6 +217,25 @@
       <label>移动到专题<select name="topic_id"></select></label>
       <div class="dialog-actions"><button class="secondary-button" id="cancelCardEditor" type="button">取消</button><button class="primary-button" id="saveCardButton" type="submit">保存修改</button></div>
     </form>
+  </dialog>
+  <dialog id="conflictResolver" class="card-editor conflict-resolver">
+    <div class="conflict-dialog-body">
+      <div class="dialog-head"><div><span class="kicker">CONFLICT REVIEW</span><h2 id="conflictTitle">处理正文冲突</h2></div><button id="closeConflictResolver" type="button" aria-label="关闭">×</button></div>
+      <p class="conflict-help">选择任一完整版本，或在下方手动合并。系统会保留较新的复习调度，并生成新的 revision。</p>
+      <div class="conflict-compare">
+        <article><span>本机版本</span><div id="conflictLocal"></div><button class="secondary-button" id="keepLocalConflict" type="button">保留本机版本</button></article>
+        <article><span>远端版本</span><div id="conflictRemote"></div><button class="secondary-button" id="keepRemoteConflict" type="button">采用远端版本</button></article>
+      </div>
+      <details class="conflict-merge"><summary>手动合并内容</summary>
+        <form id="conflictMergeForm">
+          <label>标题<input name="title" required></label>
+          <label>回忆问题<textarea name="prompt" required></textarea></label>
+          <label>核心结论<textarea name="summary" required></textarea></label>
+          <label>考场表述<textarea name="exam_wording"></textarea></label>
+          <button class="primary-button" type="submit">保存合并版本</button>
+        </form>
+      </details>
+    </div>
   </dialog>
   <script src="js/db.js" defer></script>
   <script src="js/sync.js" defer></script>

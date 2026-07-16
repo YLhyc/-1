@@ -241,11 +241,20 @@
     return { pushed, merged, conflicts: meta.conflicts, pending: meta.pending_events.length, last_synced_at: meta.last_synced_at };
   }
 
-  async function restoreSnapshot() {
+  async function listSnapshots() {
     const config = await getConfig();
     if (!config || !config.url || !config.key) throw new Error('请先配置同步服务');
     const meta = await getMeta();
-    const result = await signedFetch(config, meta, 'GET', '/v1/snapshot');
+    const result = await signedFetch(config, meta, 'GET', '/v1/snapshots?limit=14');
+    return Array.isArray(result.snapshots) ? result.snapshots : [];
+  }
+
+  async function restoreSnapshot(snapshotId = null) {
+    const config = await getConfig();
+    if (!config || !config.url || !config.key) throw new Error('请先配置同步服务');
+    const meta = await getMeta();
+    const target = snapshotId === null ? '/v1/snapshot' : `/v1/snapshot?id=${encodeURIComponent(snapshotId)}`;
+    const result = await signedFetch(config, meta, 'GET', target);
     const snapshot = result.snapshot;
     if (!snapshot || snapshot.format !== 'cards-sync-snapshot' || snapshot.version !== 1) throw new Error('同步服务没有有效快照');
     if (!['cards', 'topics', 'tombstones'].every(key => Array.isArray(snapshot[key]))) throw new Error('同步快照不完整');
@@ -268,6 +277,7 @@
       configured: Boolean(config && config.url && config.key), url: config && config.url,
       device_id: meta.device_id, cursor: meta.cursor, pending: meta.pending_events.length,
       last_synced_at: meta.last_synced_at || null, last_error: meta.last_error || null,
+      last_attempt_at: meta.last_attempt_at || null,
       conflicts: Number(meta.conflicts || 0)
     };
   }
@@ -280,5 +290,35 @@
     window.dispatchEvent(new CustomEvent('cards-sync-status'));
   }
 
-  window.CardsSync = { configure, enqueue, syncNow, restoreSnapshot, status, recordError, canonicalJson };
+  async function listConflicts() {
+    return (await CardsDB.getAll('sync_state'))
+      .filter(item => String(item.id || '').startsWith('conflict_') && item.status === 'unresolved')
+      .sort((left, right) => String(right.detected_at || '').localeCompare(String(left.detected_at || '')));
+  }
+
+  async function resolveConflict(conflictId, selectedCard, resolution) {
+    const conflict = await CardsDB.get('sync_state', conflictId);
+    if (!conflict || conflict.status !== 'unresolved') throw new Error('冲突已经处理或不存在');
+    if (!selectedCard || selectedCard.id !== conflict.card_id) throw new Error('冲突版本与卡片不一致');
+    const meta = await getMeta();
+    const localVersion = Number(conflict.local && conflict.local.revision && conflict.local.revision.version || 0);
+    const remoteVersion = Number(conflict.remote && conflict.remote.revision && conflict.remote.revision.version || 0);
+    const localTime = String(conflict.local && conflict.local.schedule && conflict.local.schedule.last_reviewed_at || '');
+    const remoteTime = String(conflict.remote && conflict.remote.schedule && conflict.remote.schedule.last_reviewed_at || '');
+    const schedule = remoteTime > localTime ? conflict.remote.schedule : conflict.local.schedule;
+    const baseRevision = Math.max(localVersion, remoteVersion);
+    const resolved = {
+      ...selectedCard,
+      schedule: schedule || selectedCard.schedule,
+      revision: { version: baseRevision + 1, updated_at: new Date().toISOString(), device_id: meta.device_id }
+    };
+    await CardsDB.put('cards', resolved);
+    await CardsDB.put('sync_state', { ...conflict, status: 'resolved', resolution, resolved_at: new Date().toISOString(), resolved_revision: resolved.revision.version });
+    await enqueue('card_updated', resolved.id, { card: resolved, topic: await CardsDB.get('topics', resolved.topic_id) }, baseRevision);
+    await CardsDB.update('sync_state', META_ID, current => ({ ...current, conflicts: Math.max(0, Number(current.conflicts || 0) - 1) }));
+    window.dispatchEvent(new CustomEvent('cards-sync-status'));
+    return resolved;
+  }
+
+  window.CardsSync = { configure, enqueue, syncNow, listSnapshots, restoreSnapshot, status, recordError, listConflicts, resolveConflict, canonicalJson };
 })();
