@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Words">
-<meta name="theme-color" content="#277fbd">
+<meta name="theme-color" content="#086fa9">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/words-card-stack.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/words-180.png">
@@ -15,14 +15,15 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(180deg, #dceeff 0, #eef7ff 230px, #f7fafc 480px); color: #172232;
+    background: linear-gradient(180deg, #d9f2ff 0, #eaf7ff 260px, #f7fafc 560px); color: #10283a;
     padding: 16px 16px 104px;
     padding-top: calc(env(safe-area-inset-top) + 16px);
     -webkit-tap-highlight-color: transparent; user-select: none;
   }
   button { font: inherit; }
   /* ── App shell ── */
-  .app-page { max-width: 640px; margin: 0 auto; }
+  .app-page { max-width: 640px; margin: 0 auto; animation:app-page-in .22s cubic-bezier(.22,.8,.24,1); }
+  @keyframes app-page-in { from { opacity:.45; transform:translateX(10px); } to { opacity:1; transform:none; } }
   .app-topbar { display:flex; justify-content:space-between; align-items:center; min-height:42px; margin-bottom:18px; }
   .app-brand { font-size:16px; font-weight:750; letter-spacing:0; }
   .app-brand-stack { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
@@ -30,13 +31,17 @@
   .app-version.ok { color:#2b7b52; }
   .app-version.stale { color:#b45f24; font-weight:700; }
   .app-tools { display:flex; gap:6px; }
-  .app-icon-btn { width:36px; height:36px; border:1px solid rgba(255,255,255,.7); border-radius:10px; background:rgba(255,255,255,.56); color:#27415c; font-size:18px; cursor:pointer; }
+  .app-icon-btn { width:39px; height:39px; border:0; border-radius:50%; background:rgba(255,255,255,.78); color:#145f87; box-shadow:0 4px 14px rgba(21,85,120,.08); font-size:19px; cursor:pointer; }
   .app-icon-btn:active { transform:scale(.96); }
-  .app-tabbar { position:fixed; left:12px; right:12px; bottom:calc(env(safe-area-inset-bottom) + 10px); z-index:80; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:616px; margin:auto; padding:6px; border:1px solid rgba(255,255,255,.72); border-radius:16px; background:rgba(236,246,255,.86); box-shadow:0 10px 30px rgba(42,92,137,.18); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
-  .app-tabbar.hidden { display:none; }
-  .app-tab { min-height:50px; border:0; border-radius:10px; background:transparent; color:#6d7d8e; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:11px; }
-  .app-tab-symbol { height:17px; font-size:16px; line-height:16px; }
-  .app-tab.active { background:rgba(255,255,255,.88); color:#1676d2; font-weight:750; box-shadow:0 1px 5px rgba(46,100,148,.1); }
+  .app-tabbar { position:fixed; left:18px; right:18px; bottom:calc(env(safe-area-inset-bottom) + 10px); z-index:80; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:604px; margin:auto; padding:8px 7px 11px; border:1px solid rgba(255,255,255,.8); border-radius:28px; background:rgba(255,255,255,.9); box-shadow:0 15px 38px rgba(18,70,103,.16); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); transition:transform .24s ease,opacity .2s ease; }
+  .app-tabbar.hidden { transform:translateY(calc(100% + env(safe-area-inset-bottom) + 24px)); opacity:0; pointer-events:none; }
+  .app-tab { min-height:50px; border:0; background:transparent; color:#708696; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:11px; }
+  .app-tab-symbol { width:32px; height:28px; border-radius:999px; display:grid; place-items:center; font-size:16px; line-height:16px; transition:width .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease; }
+  .app-tab.active { color:#0876b8; font-weight:750; }
+  .app-tab.active .app-tab-symbol { width:49px; color:#fff; background:linear-gradient(135deg,#0878b9,#21a285); box-shadow:0 7px 18px rgba(8,120,185,.22); }
+  .app-edge-back { position:fixed; left:-18px; top:44%; z-index:9999; width:40px; height:78px; border-radius:0 40px 40px 0; display:grid; place-items:center; background:rgba(7,118,185,.2); color:#075f92; opacity:0; transform:translateX(-12px); transition:opacity .16s ease,transform .16s ease; pointer-events:none; }
+  .app-edge-back.show { opacity:1; transform:none; }
+  .app-edge-back span { margin-left:12px; font-size:27px; }
   .app-section-title { margin:26px 0 10px; display:flex; align-items:baseline; justify-content:space-between; }
   .app-section-title h2 { font-size:18px; letter-spacing:0; }
   .app-section-title span { font-size:12px; color:#688097; }
@@ -48,16 +53,21 @@
   .today-kicker { color:#3479b4; font-size:13px; font-weight:700; margin-bottom:8px; }
   .today-title { max-width:300px; font-size:31px; line-height:1.15; letter-spacing:0; margin-bottom:8px; }
   .today-sub { color:#587087; font-size:14px; line-height:1.5; margin-bottom:18px; }
-  .today-task { position:relative; overflow:hidden; background:rgba(255,255,255,.92); border:1px solid rgba(255,255,255,.9); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(46,100,148,.13); cursor:pointer; }
+  .today-task { position:relative; overflow:hidden; background:rgba(255,255,255,.9); border:1px solid rgba(255,255,255,.92); border-radius:22px; padding:21px; box-shadow:0 12px 32px rgba(28,91,132,.12); cursor:pointer; }
   .today-task + .today-task { margin-top:12px; }
   .today-task.recall-task { background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(242,249,255,.95)); }
   .today-task.recall-task .today-task-label { color:#2b7b52; }
   .today-task.recall-task .task-button { background:#1f6c47; }
-  .today-task::after { content:''; position:absolute; width:120px; height:120px; right:-42px; top:-52px; border:1px solid rgba(45,133,211,.18); border-radius:50%; box-shadow:0 0 0 20px rgba(45,133,211,.05); }
+  .today-task::after { display:none; }
+  #morningHomeCard { padding:24px; border:0; border-radius:30px; background:linear-gradient(150deg,#086ca6,#1298c9 72%,#25a27d); color:#fff; box-shadow:0 20px 50px rgba(8,100,154,.21); }
+  #morningHomeCard .today-task-label { color:rgba(255,255,255,.78); }
+  #morningHomeCard .today-task-title { font-size:26px; }
+  #morningHomeCard .today-task-meta { color:rgba(255,255,255,.76); }
+  #morningHomeCard .task-button { background:#fff; color:#075d91; }
   .today-task-label { color:#3a82bd; font-size:12px; font-weight:750; margin-bottom:8px; }
   .today-task-title { font-size:24px; line-height:1.18; margin-bottom:5px; }
   .today-task-meta { position:relative; z-index:1; color:#60778c; font-size:13px; line-height:1.55; min-height:20px; }
-  .task-button { position:relative; z-index:1; width:100%; height:48px; margin-top:18px; border:0; border-radius:12px; background:#18344f; color:#fff; font-size:15px; font-weight:750; cursor:pointer; }
+  .task-button { position:relative; z-index:1; width:100%; height:49px; margin-top:18px; border:0; border-radius:16px; background:#18344f; color:#fff; font-size:15px; font-weight:750; cursor:pointer; }
   .task-button:active { transform:scale(.985); }
   .recite-setup { max-width:540px; margin:18px auto 0; padding:22px; border:1px solid rgba(216,229,241,.94); border-radius:16px; background:rgba(255,255,255,.9); box-shadow:0 10px 28px rgba(46,100,148,.1); }
   .recite-setup h2 { font-size:22px; margin-bottom:6px; }
@@ -79,8 +89,8 @@
   .recite-rate-familiar { background:#e5f7ec; color:#247a44; }
   .recite-rate-hard { background:#fff1df; color:#a86513; }
   .recite-rate-btn:active { transform:scale(.98); filter:brightness(.97); }
-  .source-list { border:1px solid rgba(216,229,241,.92); border-radius:14px; overflow:hidden; background:rgba(255,255,255,.82); }
-  .source-row { width:100%; min-height:72px; padding:12px 14px; border:0; border-bottom:1px solid #e8eff5; background:transparent; display:flex; align-items:center; gap:12px; text-align:left; color:#172232; cursor:pointer; }
+  .source-list { border:1px solid rgba(216,229,241,.82); border-radius:22px; overflow:hidden; background:rgba(255,255,255,.86); }
+  .source-row { width:100%; min-height:74px; padding:12px 14px; border:0; border-bottom:1px solid #e8eff5; background:transparent; display:flex; align-items:center; gap:12px; text-align:left; color:#10283a; cursor:pointer; }
   .source-row:last-child { border-bottom:0; }
   .source-row:active { background:#f1f8ff; }
   .source-mark { width:36px; height:36px; flex:none; border-radius:10px; display:grid; place-items:center; color:#1f6dac; background:#e3f1ff; font-size:16px; font-weight:800; }
@@ -99,10 +109,10 @@
   .home-actions { display:flex; justify-content:center; gap:16px; margin:20px 0 6px; }
   .home-link { border:0; background:transparent; color:#397eb9; font-size:12px; cursor:pointer; padding:6px; }
   /* ── Library and review ── */
-  .library-hero, .review-hero { padding:18px; border:1px solid rgba(255,255,255,.86); border-radius:16px; background:rgba(255,255,255,.78); box-shadow:0 8px 24px rgba(46,100,148,.08); }
+  .library-hero, .review-hero { padding:20px; border:0; border-radius:25px; background:linear-gradient(135deg,#075f92,#1492bc 68%,#25a17c); color:#fff; box-shadow:0 16px 36px rgba(8,95,145,.16); }
   .library-hero-num, .review-hero-num { font-size:28px; font-weight:800; }
-  .library-hero-text, .review-hero-text { margin-top:4px; color:#61798f; font-size:13px; }
-  .library-card { margin-top:12px; background:rgba(255,255,255,.88); border:1px solid rgba(216,229,241,.94); border-radius:14px; overflow:hidden; }
+  .library-hero-text, .review-hero-text { margin-top:4px; color:rgba(255,255,255,.75); font-size:13px; }
+  .library-card { margin-top:12px; background:rgba(255,255,255,.9); border:1px solid rgba(216,229,241,.82); border-radius:22px; overflow:hidden; }
   .library-card .source-row { min-height:82px; }
   .review-list { margin-top:12px; border-radius:14px; overflow:hidden; background:rgba(255,255,255,.88); border:1px solid rgba(216,229,241,.94); }
   .review-item { display:flex; align-items:center; gap:10px; padding:13px 14px; border-bottom:1px solid #e8eff5; }
@@ -113,12 +123,12 @@
   .review-go { border:0; border-radius:8px; background:#e7f2ff; color:#2873b2; padding:7px 9px; font-size:12px; font-weight:700; cursor:pointer; }
   .review-empty { padding:36px 18px; text-align:center; color:#6e8397; font-size:13px; line-height:1.7; }
   /* ── Nav bar ── */
-  .nav-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .nav-bar { position:sticky; top:calc(env(safe-area-inset-top) * -1 - 16px); z-index:50; display:grid; grid-template-columns:minmax(72px,1fr) minmax(0,2fr) minmax(72px,1fr); align-items:center; min-height:52px; margin:-16px -16px 18px; padding:16px 16px 8px; background:rgba(225,244,255,.84); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
   .nav-back {
-    background: none; border: none; color: #007aff; font-size: 16px; cursor: pointer;
+    justify-self:start; background:none; border:none; color:#0878bd; font-size:15px; font-weight:700; cursor:pointer;
     padding: 6px 0; white-space: nowrap;
   }
-  .nav-title { font-size: 17px; font-weight: 600; }
+  .nav-title { overflow:hidden; font-size:16px; font-weight:750; text-align:center; white-space:nowrap; text-overflow:ellipsis; }
   .nav-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
   .nav-icon {
     background: none; border: none; font-size: 18px; cursor: pointer;
@@ -530,7 +540,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260715-113410 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260717-145831 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -602,14 +612,14 @@
 
 <!-- ═══════════ TODAY RECITE ═══════════ -->
 <div id="view-today-recite" class="app-page" style="display:none;">
-  <div class="nav-bar"><button class="nav-back" onclick="showHome()">← 今日</button><span class="nav-title">今日背诵</span></div>
+  <div class="nav-bar"><button class="nav-back" onclick="appBackTo('home')">‹ 今日</button><span class="nav-title">今日背诵</span></div>
   <div id="todayReciteContainer"></div>
 </div>
 
 <!-- ═══════════ UNIT SELECTOR ═══════════ -->
 <div id="view-units" class="app-page" style="display:none;">
   <div class="nav-bar">
-    <button class="nav-back" onclick="showLibrary()">← 词库</button>
+    <button class="nav-back" onclick="appBackTo('library')">‹ 词库</button>
     <span class="nav-title" id="unitDictTitle"></span>
   </div>
   <div class="jump-row">
@@ -626,7 +636,7 @@
 <!-- ═══════════ WORD GROUPS ═══════════ -->
 <div id="view-groups" class="app-page" style="display:none;">
   <div class="nav-bar">
-    <button class="nav-back" onclick="showUnits()">← Unit列表</button>
+    <button class="nav-back" onclick="appBackTo('units')">‹ Unit列表</button>
     <span class="nav-title" id="groupTitle"></span>
   </div>
   <div class="toggle-row">
@@ -858,6 +868,7 @@
   <div class="progress-page" id="progressContent"></div>
 </div>
 
+<div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
 <nav class="app-tabbar" id="appTabbar" aria-label="主导航">
   <button class="app-tab active" data-tab="home" onclick="showHome()"><span class="app-tab-symbol">⌂</span><span>今日</span></button>
   <button class="app-tab" data-tab="library" onclick="showLibrary()"><span class="app-tab-symbol">▤</span><span>词库</span></button>
@@ -865,8 +876,8 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260715-113410"></script>
-<script src="audio-cache.js?v=20260715-113410"></script>
+<script src="review-core.js?v=20260717-145831"></script>
+<script src="audio-cache.js?v=20260717-145831"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -895,8 +906,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260715-113410";
-var BUILD_TS = 1784086451;
+var APP_BUILD_ID = "20260717-145831";
+var BUILD_TS = 1784271517;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1081,11 +1092,43 @@ function getStepInfo(dict, unitIdx, gIdx, wIdx) {
 }
 
 // ═══════════ VIEW SWITCHING ═══════════
-function showView(name) {
+var activeViewName = 'home';
+var appViewDepth = 0;
+var appNavigationReady = false;
+function isRootAppView(name) { return name === 'home' || name === 'library' || name === 'review' || name === 'progress'; }
+function showView(name, options) {
+  var opts = options || {};
+  var previous = activeViewName;
   hideAllViews();
   document.getElementById('view-' + name).style.display = 'block';
+  activeViewName = name;
   setAppTab(name);
   updateHomeStats();
+  if (appNavigationReady && previous !== name && !opts.fromHistory && window.history && window.history.replaceState) {
+    if (isRootAppView(name)) {
+      appViewDepth = 0;
+      window.history.replaceState({ wordsView:name, wordsDepth:0 }, '', location.href);
+    } else {
+      appViewDepth += 1;
+      window.history.pushState({ wordsView:name, wordsDepth:appViewDepth }, '', location.href);
+    }
+  }
+  if (window.scrollTo) window.scrollTo(0, 0);
+}
+
+function appBackTo(fallback) {
+  if (appViewDepth > 0 && window.history && window.history.back) { window.history.back(); return; }
+  if (fallback === 'home') showHome();
+  else if (fallback === 'library') showLibrary();
+  else if (fallback === 'units') showUnits();
+}
+
+function restoreAppViewFromHistory(state) {
+  var target = state && state.wordsView ? state.wordsView : 'home';
+  appViewDepth = state && Number(state.wordsDepth) > 0 ? Number(state.wordsDepth) : 0;
+  stopAll();
+  showView(target, { fromHistory:true });
+  if (target === 'home') refreshHomeDynamicUI();
 }
 
 function setAppTab(view) {
@@ -1406,7 +1449,7 @@ function todayReciteUndoLast() {
 }
 function bindTodayReciteSwipe() {
   var card = document.getElementById('todayReciteCard'), x = 0, y = 0, dragging = false; if (!card) return;
-  card.ontouchstart = function(e) { dragging = true; x = e.touches[0].clientX; y = e.touches[0].clientY; card.style.transition = 'none'; };
+  card.ontouchstart = function(e) { if (e.touches[0].clientX <= 24) { dragging = false; return; } dragging = true; x = e.touches[0].clientX; y = e.touches[0].clientY; card.style.transition = 'none'; };
   card.ontouchmove = function(e) { if (!dragging) return; var dx = e.touches[0].clientX - x, dy = e.touches[0].clientY - y; if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 18) return; if (Math.abs(dx) > 12) todayReciteShow(); e.preventDefault(); var n = Math.max(-120, Math.min(120, dx)); card.style.transform = 'translateX(' + n + 'px) rotate(' + (n / 18) + 'deg)'; card.classList.toggle('swipe-left', n < -70); card.classList.toggle('swipe-right', n > 70); };
   card.ontouchend = function(e) { if (!dragging) return; dragging = false; var changed = e.changedTouches && e.changedTouches[0], dx = changed ? changed.clientX - x : 0; card.style.transition = 'transform .18s ease, box-shadow .18s ease, border-color .18s ease'; if (dx < -80) todayReciteRate(true); else if (dx > 80) todayReciteRate(false); else { card.style.transform = 'translateX(0) rotate(0deg)'; card.classList.remove('swipe-left','swipe-right'); } };
 }
@@ -1764,7 +1807,7 @@ function renderVocabRecite(entries) {
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var a=document.getElementById('vcCn'),b=document.getElementById('vcExCn');if(a)a.classList.remove('recite-hidden');if(b)b.classList.remove('recite-hidden');haptic(8);}
 function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var p=loadPrefs('vocab'),k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),old=p[k];p[k]=familiar?'familiar':'hard';savePrefs('vocab',p);var review=rateReview('vocab',e.item.en,familiar);showScheduleFeedback((familiar?'已标记熟悉 · ':'已标记不熟悉 · ')+reviewScheduleText('vocab',e.item.en));recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,key:k,old:old,en:e.item.en,review:review,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
 function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;var p=loadPrefs('vocab');if(u.old)p[u.key]=u.old;else delete p[u.key];savePrefs('vocab',p);undoReview('vocab',u.en,u.review);undoLearningActivity('vocab',u.en,'vocab_recite');hideScheduleFeedback();vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
-function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard'),x=0,y=0,dragging=false;if(!card)return;card.ontouchstart=function(e){dragging=true;x=e.touches[0].clientX;y=e.touches[0].clientY;card.style.transition='none'};card.ontouchmove=function(e){if(!dragging)return;var dx=e.touches[0].clientX-x,dy=e.touches[0].clientY-y;if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>18)return;if(Math.abs(dx)>12)vocabReciteShow();e.preventDefault();var limited=Math.max(-120,Math.min(120,dx));card.style.transform='translateX('+limited+'px) rotate('+(limited/18)+'deg)';card.classList.toggle('swipe-left',limited<-70);card.classList.toggle('swipe-right',limited>70)};card.ontouchend=function(e){if(!dragging)return;dragging=false;var changed=e.changedTouches&&e.changedTouches[0],dx=changed?changed.clientX-x:0;card.style.transition='transform .18s ease, box-shadow .18s ease, border-color .18s ease';if(dx<-80)vocabReciteRate(true);else if(dx>80)vocabReciteRate(false);else {card.style.transform='translateX(0) rotate(0deg)';card.classList.remove('swipe-left','swipe-right')}}}
+function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard'),x=0,y=0,dragging=false;if(!card)return;card.ontouchstart=function(e){if(e.touches[0].clientX<=24){dragging=false;return}dragging=true;x=e.touches[0].clientX;y=e.touches[0].clientY;card.style.transition='none'};card.ontouchmove=function(e){if(!dragging)return;var dx=e.touches[0].clientX-x,dy=e.touches[0].clientY-y;if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>18)return;if(Math.abs(dx)>12)vocabReciteShow();e.preventDefault();var limited=Math.max(-120,Math.min(120,dx));card.style.transform='translateX('+limited+'px) rotate('+(limited/18)+'deg)';card.classList.toggle('swipe-left',limited<-70);card.classList.toggle('swipe-right',limited>70)};card.ontouchend=function(e){if(!dragging)return;dragging=false;var changed=e.changedTouches&&e.changedTouches[0],dx=changed?changed.clientX-x:0;card.style.transition='transform .18s ease, box-shadow .18s ease, border-color .18s ease';if(dx<-80)vocabReciteRate(true);else if(dx>80)vocabReciteRate(false);else {card.style.transform='translateX(0) rotate(0deg)';card.classList.remove('swipe-left','swipe-right')}}}
 
 function getVocabCardStepInfo(entry) {
   var localIdx = entry.localIdx;
@@ -1965,6 +2008,7 @@ function bindVocabCardSwipe() {
   var card = document.getElementById('vocabCard');
   if (!card) return;
   card.ontouchstart = function(e) {
+    if (e.touches[0].clientX <= 24) { vocabCardDragging = false; return; }
     vocabCardDragging = true;
     vocabCardTouchX = e.touches[0].clientX;
     vocabCardTouchY = e.touches[0].clientY;
@@ -2491,6 +2535,7 @@ function closeSwipe(el) {
 
 document.addEventListener('touchstart', function(e) {
   wasSwipe = false;
+  if (e.touches[0].clientX <= 24) { swipeCurrentEl = null; return; }
   var swipe = e.target.closest('.word-swipe');
   if (!swipe) { closeSwipe(); swipeCurrentEl = null; return; }
   if (swipeOpenEl && swipeOpenEl !== swipe) closeSwipe(swipeOpenEl);
@@ -4792,6 +4837,7 @@ function bindMorningCardSwipe() {
   var card = document.getElementById('morningPlayerCard');
   if (!card) return;
   card.addEventListener('touchstart', function(e) {
+    if (e.touches[0].clientX <= 24) { mcDragging = false; return; }
     mcDragging = true;
     mcTouchX = e.touches[0].clientX;
     mcTouchY = e.touches[0].clientY;
@@ -5055,6 +5101,46 @@ function escHtml(str) {
 }
 
 // ── Init all dynamic homepage cards after every renderer is available ──
+function bindAppNavigation() {
+  if (!window.history || !window.history.replaceState) return;
+  window.history.replaceState({ wordsView:'home', wordsDepth:0 }, '', location.href);
+  appNavigationReady = true;
+  window.addEventListener('popstate', function(e) { restoreAppViewFromHistory(e.state || { wordsView:'home', wordsDepth:0 }); });
+  var start = null, active = false, view = null, indicator = document.getElementById('appEdgeBack');
+  document.addEventListener('touchstart', function(e) {
+    if (appViewDepth <= 0 || !e.touches || e.touches.length !== 1) return;
+    var t = e.touches[0];
+    if (t.clientX > 22) return;
+    start = { x:t.clientX, y:t.clientY, dx:0 };
+    active = false;
+    view = document.getElementById('view-' + activeViewName);
+  }, { passive:true, capture:true });
+  document.addEventListener('touchmove', function(e) {
+    if (!start || !e.touches || !e.touches[0]) return;
+    var t = e.touches[0], dx = Math.max(0, t.clientX - start.x), dy = Math.abs(t.clientY - start.y);
+    start.dx = dx;
+    if (dy > dx || dx < 10) return;
+    active = true;
+    e.preventDefault();
+    if (indicator) indicator.classList.add('show');
+    if (view) { view.style.transition = 'none'; view.style.transform = 'translateX(' + Math.min(dx, 130) + 'px)'; }
+  }, { passive:false, capture:true });
+  document.addEventListener('touchend', function() {
+    if (!start) return;
+    var goBack = active && start.dx > 72;
+    if (indicator) indicator.classList.remove('show');
+    if (view) { view.style.transition = ''; view.style.transform = ''; }
+    start = null; active = false; view = null;
+    if (goBack) window.history.back();
+  }, { passive:true, capture:true });
+  document.addEventListener('touchcancel', function() {
+    if (indicator) indicator.classList.remove('show');
+    if (view) { view.style.transition = ''; view.style.transform = ''; }
+    start = null; active = false; view = null;
+  }, { passive:true, capture:true });
+}
+
+bindAppNavigation();
 refreshHomeDynamicUI();
 updateAppVersionBadge();
 
