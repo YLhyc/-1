@@ -1,10 +1,17 @@
-const CACHE = 'kv-20260717-145831';
+const CACHE = 'kv-20260717-233306';
 const APP_SHELL = [
   './',
   'index.html',
-  'review-core.js?v=20260717-145831',
-  'audio-cache.js?v=20260717-145831',
+  'review-core.js?v=20260717-233306',
+  'audio-cache.js?v=20260717-233306',
+  'ui-motion.js?v=20260717-233306',
   'manifest.json',
+  'hb/',
+  'hb/index.html',
+  'uf/',
+  'uf/index.html',
+  'wordbank/',
+  'wordbank/index.html',
   'icons/words-180.png',
   'icons/words-192.png',
   'icons/words-512.png'
@@ -35,10 +42,11 @@ self.addEventListener('activate', e => {
       .then(cache => Promise.all([
         cache.match('./'),
         cache.match('index.html'),
-        cache.match('review-core.js?v=20260717-145831'),
-        cache.match('audio-cache.js?v=20260717-145831')
+        cache.match('review-core.js?v=20260717-233306'),
+        cache.match('audio-cache.js?v=20260717-233306'),
+        cache.match('ui-motion.js?v=20260717-233306')
       ]))
-      .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3]
+      .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3] && shell[4]
         ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
         : null)
       .then(() => self.clients.claim())

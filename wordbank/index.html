@@ -21,7 +21,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .es-btn:active{filter:brightness(.85)}
 .es-pin{background:#007aff}
 .es-del{background:#ff3b30}
-.entry-item{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;transition:transform .25s ease;position:relative;z-index:1}
+.entry-item{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;transition:transform .2s cubic-bezier(.23,1,.32,1);position:relative;z-index:1}
 .entry-item-info{flex:1}
 .entry-item-label{font-size:16px;font-weight:500}
 .entry-item-meta{font-size:12px;color:#86868b}
@@ -61,7 +61,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ws-familiar{background:#34c759}
 .ws-hard{background:#ff9500}
 .ws-reset{background:#8e8e93}
-.word-block{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#f9f9fb;transition:transform .25s ease,background .2s;position:relative;z-index:1}
+.word-block{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#f9f9fb;transition:transform .2s cubic-bezier(.23,1,.32,1);position:relative;z-index:1}
 .word-block.active{background:#d4f5d4}
 .wb-en{font-weight:700;font-size:16px;color:#1d1d1f;flex:1}
 .word-block.active .wb-en{color:#0a6e0a}
@@ -75,7 +75,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .btn-row{display:flex;gap:7px;align-items:center}
 .btn-row-top{margin-bottom:8px}
-.btn{height:40px;border:none;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all .15s;-webkit-appearance:none;outline:none}
+.btn{height:40px;border:none;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:transform .16s cubic-bezier(.23,1,.32,1),opacity .12s cubic-bezier(.23,1,.32,1),background-color .16s cubic-bezier(.23,1,.32,1);-webkit-appearance:none;outline:none}
 .btn:active{opacity:.7;transform:scale(.97)}
 .btn-play{flex:3;background:#007aff;color:#fff}
 .btn-play.playing{background:#ff9500}
@@ -85,6 +85,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn svg{width:17px;height:17px;pointer-events:none}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn-label{white-space:nowrap}
+:root{--ease-out:cubic-bezier(.23,1,.32,1);--deep:#07536a;--ocean:#057a9d;--mint:#44b892;--ink:#102a36;--muted:#5f747d;--canvas:#e5f1f5;--glass:rgba(243,251,252,.62);--glass-line:rgba(255,255,255,.76);--surface:#fbfdfe}
+body{background:var(--canvas);color:var(--ink);padding-top:calc(env(safe-area-inset-top) + 16px);padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+button:focus-visible{outline:3px solid rgba(5,122,157,.32);outline-offset:2px}
+.nav-bar{position:sticky;top:calc(-16px - env(safe-area-inset-top));z-index:60;min-height:58px;margin:-16px -16px 18px;padding:calc(16px + env(safe-area-inset-top)) 16px 10px;background:var(--glass);border-bottom:1px solid var(--glass-line);backdrop-filter:blur(28px) saturate(155%);-webkit-backdrop-filter:blur(28px) saturate(155%)}
+.nav-back{color:var(--ocean);font-weight:750}.nav-title{color:var(--ink);font-weight:780}
+.entry-item,.recycle-item,.word-group{background:var(--surface);border:1px solid rgba(92,132,145,.12);box-shadow:0 12px 34px rgba(12,66,84,.09)}
+.entry-item,.entry-swipe{border-radius:20px}.word-group{border-radius:24px}
+.recycle-restore,.btn-play{background:var(--deep)}
+.word-block,.entry-item{transition:transform .2s var(--ease-out)}
+.app-edge-back{position:fixed;left:-18px;top:44%;z-index:9999;width:40px;height:78px;border-radius:0 40px 40px 0;display:grid;place-items:center;background:rgba(230,247,249,.74);color:var(--deep);opacity:0;transform:translateX(-12px);transition:opacity .16s var(--ease-out),transform .16s var(--ease-out);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);pointer-events:none}.app-edge-back.show{opacity:1;transform:none}.app-edge-back span{margin-left:12px;font-size:27px}
+@media(prefers-reduced-motion:reduce){.btn,.word-block,.entry-item,.app-edge-back{transition:opacity .16s ease!important;transform:none!important}}
+@media(prefers-reduced-transparency:reduce){.nav-bar,.app-edge-back{background:#f7fbfc;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(prefers-contrast:more){.nav-bar,.entry-item,.recycle-item,.word-group{border-color:#31515e}}
 </style>
 </head>
 <body>
@@ -92,7 +105,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div id="view-home" style="display:block">
   <div class="home-top">
     <div class="home-top-spacer"></div>
-    <div style="flex:1"><div class="home-hero">WORD BANK</div><div class="home-sub">2026-07-17 15:01</div></div>
+    <div style="flex:1"><div class="home-hero">WORD BANK</div><div class="home-sub">2026-07-17 23:33</div></div>
     <button class="recycle-btn" id="recycleBtn" onclick="showRecycle()">🗑</button>
   </div>
   <div class="entry-list" id="entryList"></div>
@@ -147,10 +160,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+<div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
+<script src="../ui-motion.js?v=1784302390"></script>
 <script>
 var ENTRIES = [{"id": "wb_2026-06-24_202400", "label": "6月24日真题单词", "date": "2026-06-24", "words": [{"en": "supplement", "cn": "补充；增补"}, {"en": "column", "cn": "专栏；列；圆柱"}, {"en": "query", "cn": "询问；查询"}, {"en": "visual", "cn": "视觉的；可视的"}, {"en": "analogies", "cn": "类比；类比法"}, {"en": "envision", "cn": "想象；设想"}, {"en": "confusing", "cn": "令人困惑的"}, {"en": "field", "cn": "领域；学科领域"}, {"en": "fondness", "cn": "喜爱；爱好"}, {"en": "coincidence", "cn": "巧合"}, {"en": "eluded", "cn": "逃避；使困惑"}, {"en": "encompasses", "cn": "包含；涵盖"}, {"en": "specified", "cn": "明确指出的；指定的"}, {"en": "neurology", "cn": "神经学"}, {"en": "genetics", "cn": "遗传学"}, {"en": "computer science", "cn": "计算机科学"}, {"en": "primarily", "cn": "主要地"}, {"en": "chronological", "cn": "按时间顺序的"}, {"en": "statistical", "cn": "统计的；统计学的"}, {"en": "analytical", "cn": "分析的"}, {"en": "verbal", "cn": "言语的；口头的"}, {"en": "components", "cn": "组成部分；组件"}, {"en": "critical", "cn": "关键的；批判的"}, {"en": "negatively", "cn": "负面地；消极地"}, {"en": "correlated", "cn": "相关的；关联的"}, {"en": "toiled", "cn": "辛苦劳作；苦干"}]}, {"id": "wb_2026-06-24_201900", "label": "第二次测试", "date": "2026-06-24", "words": [{"en": "abandon", "cn": "放弃；遗弃"}, {"en": "brilliant", "cn": "杰出的；明亮的"}, {"en": "comprehensive", "cn": "全面的；综合的"}, {"en": "deteriorate", "cn": "恶化；退化"}, {"en": "elaborate", "cn": "精心制作的；详细阐述"}, {"en": "fluctuate", "cn": "波动；起伏"}, {"en": "gratitude", "cn": "感激；感谢"}, {"en": "hypothesis", "cn": "假说；假设"}, {"en": "illuminate", "cn": "照亮；阐明"}, {"en": "justify", "cn": "证明…正确；为…辩护"}, {"en": "keen", "cn": "热切的；敏锐的"}, {"en": "liability", "cn": "责任；负债"}, {"en": "manifest", "cn": "明显的；表明；显示"}, {"en": "notorious", "cn": "臭名昭著的"}, {"en": "obstacle", "cn": "障碍；妨碍"}, {"en": "prejudice", "cn": "偏见；损害"}, {"en": "reconcile", "cn": "调和；使和解"}, {"en": "scrutiny", "cn": "仔细审查；监督"}, {"en": "testimony", "cn": "证词；证明"}, {"en": "undermine", "cn": "逐渐削弱；暗中破坏"}]}, {"id": "wb_2026-06-24_000001", "label": "测试单词", "date": "2026-06-24", "words": [{"en": "articulate", "cn": "清晰表达的；口齿伶俐的"}, {"en": "forthcoming", "cn": "即将发生的；乐于提供信息的"}, {"en": "susceptible", "cn": "易受影响的；敏感的"}, {"en": "conceivable", "cn": "可以想象的"}, {"en": "invariably", "cn": "总是；不变地"}, {"en": "chronic", "cn": "慢性的；长期的"}, {"en": "retrospect", "cn": "回顾；回想"}, {"en": "obscure", "cn": "模糊的；使费解"}, {"en": "negligible", "cn": "微不足道的"}, {"en": "rigorous", "cn": "严格的；严密的"}]}, {"id": "wb_2026-06-23_demo", "label": "6.23单词", "date": "2026-06-23", "words": [{"en": "noteworthy", "cn": "值得注意的；显著的"}, {"en": "quirk", "cn": "怪事，奇特之处；怪癖"}, {"en": "elite", "cn": "精英的；杰出的"}, {"en": "account for", "cn": "解释；说明…的原因"}, {"en": "pronounced", "cn": "明显的，显著的"}, {"en": "astrological", "cn": "占星的；占星学的"}, {"en": "confer", "cn": "赋予；授予"}, {"en": "stamina", "cn": "耐力，持久力"}, {"en": "conceive", "cn": "受孕；构思，设想"}, {"en": "random", "cn": "随机的；随意的"}, {"en": "digit span", "cn": "数字记忆广度"}, {"en": "cognitive", "cn": "认知的"}, {"en": "intuitive", "cn": "直觉的"}, {"en": "exhibit", "cn": "展现，表现；展出"}, {"en": "swamped", "cn": "被淹没；掩盖，压倒"}, {"en": "encodes", "cn": "编码；解读信息"}, {"en": "deliberate practice", "cn": "刻意练习"}, {"en": "entails", "cn": "需要；包含；意味着"}, {"en": "pursuits", "cn": "追求；事业，领域"}, {"en": "achievers", "cn": "成功者，成绩优异者"}, {"en": "overrated", "cn": "被高估的，评价过高的"}, {"en": "confine", "cn": "限制；禁闭；边界"}, {"en": "confirm", "cn": "确认；证实"}, {"en": "conflict", "cn": "冲突；矛盾；斗争"}, {"en": "configuration", "cn": "配置；构造；布局"}, {"en": "trait", "cn": "特征；特质"}, {"en": "violence", "cn": "暴力；猛烈"}, {"en": "violent", "cn": "暴力的；猛烈的"}, {"en": "virtual", "cn": "虚拟的；实际上的"}, {"en": "appliance", "cn": "家用电器；器具"}, {"en": "discriminate", "cn": "歧视；区分"}, {"en": "estimate", "cn": "估计；估算；估价"}, {"en": "ethnic", "cn": "种族的；民族的"}, {"en": "miserable", "cn": "痛苦的；悲惨的；糟糕的"}, {"en": "misery", "cn": "痛苦；苦难；悲惨"}, {"en": "negotiate", "cn": "谈判；协商；顺利通过"}, {"en": "outline", "cn": "轮廓；大纲；概述"}, {"en": "outlook", "cn": "前景；观点；展望"}, {"en": "practitioner", "cn": "从业者；执业医师"}, {"en": "preach", "cn": "宣扬；布道；说教"}, {"en": "precede", "cn": "在…之前；领先"}, {"en": "precise", "cn": "精确的；准确的"}, {"en": "precaution", "cn": "预防；防备；预防措施"}, {"en": "precedent", "cn": "先例；惯例"}, {"en": "preceding", "cn": "先前的；在前的"}, {"en": "precision", "cn": "精确；精度"}, {"en": "stretch", "cn": "伸展；延伸；一段距离/时间"}]}];
 var AUDIO_OK = ["wb_2026-06-24_202400", "wb_2026-06-24_201900", "wb_2026-06-24_000001", "wb_2026-06-23_demo"];
-var TS = 1784271698;
+var TS = 1784302390;
 
 var entryId = null, wIdx = 0, step = 0, paused = false, single = false;
 var curAudio = null;
@@ -184,10 +199,18 @@ function getE() {
 }
 
 function $(id) { return document.getElementById(id); }
-function showView(v) {
+var wbActiveView='home',wbDepth=0,wbNavReady=false,wbRestoring=false;
+function showView(v, options) {
+  var previous=wbActiveView,opts=options||{};
   $('view-home').style.display = v==='home'?'block':'none';
   $('view-recycle').style.display = v==='recycle'?'block':'none';
   $('view-group').style.display = v==='group'?'block':'none';
+  wbActiveView=v;
+  if(wbNavReady&&previous!==v&&!opts.fromHistory&&!wbRestoring){
+    if(v==='home'){wbDepth=0;history.replaceState({wbView:v,wbDepth:0},'',location.href);}
+    else{wbDepth++;history.pushState({wbView:v,wbDepth:wbDepth,entryId:entryId},'',location.href);}
+  }
+  if(scrollTo)scrollTo(0,0);
 }
 function stop() {
   if (auA) { auA.onended=null; auA.onerror=null; auA.pause(); auA.removeAttribute('src'); }
@@ -195,7 +218,7 @@ function stop() {
   auUrlA = null; auUrlB = null;
   curAudio = null;
 }
-function showHome() { stop(); showView('home'); renderHome(); }
+function showHome() { if(wbNavReady&&wbDepth>0&&!wbRestoring){history.back();return;}stop(); showView('home'); renderHome(); }
 
 function showGroup(id) {
   stop(); entryId = id;
@@ -560,37 +583,8 @@ function closeSw(el) {
   if (swOpen===el||!el) swOpen=null;
 }
 
-document.addEventListener('touchstart',function(e){
-  wasSw=false;
-  var sw = e.target.closest('.word-swipe') || e.target.closest('.entry-swipe');
-  if (!sw) { closeSw(); swCur=null; swBlk=null; return; }
-  if (swOpen && swOpen!==sw) closeSw(swOpen);
-  swCur = sw;
-  swType = sw.classList.contains('entry-swipe') ? 'entry' : 'word';
-  swBlk = swType === 'entry' ? sw.querySelector('.entry-item') : sw.querySelector('.word-block');
-  swW = swType === 'entry' ? 80 : 150;
-  swX = e.touches[0].clientX; swY = e.touches[0].clientY;
-  swTX = 0;
-  if (swBlk) { var m=swBlk.style.transform.match(/-?[0-9.]+/); if(m) swTX=parseFloat(m[0]); }
-},{passive:true});
-document.addEventListener('touchmove',function(e){
-  if(!swCur)return;
-  var dx=e.touches[0].clientX-swX, dy=e.touches[0].clientY-swY;
-  if(Math.abs(dy)>Math.abs(dx)){closeSw(swCur);return}
-  if(Math.abs(dx)>10) wasSw=true;
-  if(dx>10){closeSw(swCur);return}
-  e.preventDefault();
-  var tx=Math.max(-swW,Math.min(0,swTX+dx));
-  if(swBlk){swBlk.style.transition='none';swBlk.style.transform='translateX('+tx+'px)'}
-},{passive:false});
-document.addEventListener('touchend',function(){
-  if(!swCur || !swBlk){swCur=null;swBlk=null;return}
-  swBlk.style.transition='transform .25s ease';
-  var m=swBlk.style.transform.match(/-?[0-9.]+/), tx=m?parseFloat(m[0]):0;
-  if(Math.abs(tx)>swW*.35){swBlk.style.transform='translateX(-'+swW+'px)';swCur.classList.add('swiped');swOpen=swCur}
-  else{swBlk.style.transform='translateX(0)';swCur.classList.remove('swiped');swOpen=null}
-  swCur=null; swBlk=null; swType="";
-});
+WordsMotion.bindRevealList({root:document,itemSelector:'.word-swipe',contentSelector:'.word-block',width:150,edgeReserve:22});
+WordsMotion.bindRevealList({root:document,itemSelector:'.entry-swipe',contentSelector:'.entry-item',width:80,edgeReserve:22});
 document.addEventListener('click',function(e){
   // Close swipe if tapping outside
   if (!e.target.closest('.word-swipe') && !e.target.closest('.entry-swipe')) closeSw();
@@ -632,6 +626,12 @@ function entryAction(id, act) {
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
 renderHome();
+function initWordbankNavigation(){
+  if(!history||!history.replaceState)return;history.replaceState({wbView:'home',wbDepth:0},'',location.href);wbNavReady=true;
+  addEventListener('popstate',function(e){var s=e.state||{wbView:'home',wbDepth:0};wbRestoring=true;wbDepth=Number(s.wbDepth)||0;if(s.wbView==='group'&&s.entryId){showGroup(s.entryId);}else if(s.wbView==='recycle'){showRecycle();}else{stop();showView('home',{fromHistory:true});renderHome();}wbRestoring=false;});
+  WordsMotion.installEdgeBack({edge:22,indicator:$('appEdgeBack'),canGoBack:function(){return wbDepth>0},getSurface:function(){return $('view-'+wbActiveView)},onBack:function(){history.back()}});
+}
+initWordbankNavigation();
 </script>
 </body>
 </html>

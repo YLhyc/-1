@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Words">
-<meta name="theme-color" content="#086fa9">
+<meta name="theme-color" content="#07536a">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/words-card-stack.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/words-180.png">
@@ -22,8 +22,7 @@
   }
   button { font: inherit; }
   /* ── App shell ── */
-  .app-page { max-width: 640px; margin: 0 auto; animation:app-page-in .22s cubic-bezier(.22,.8,.24,1); }
-  @keyframes app-page-in { from { opacity:.45; transform:translateX(10px); } to { opacity:1; transform:none; } }
+  .app-page { max-width: 640px; margin: 0 auto; }
   .app-topbar { display:flex; justify-content:space-between; align-items:center; min-height:42px; margin-bottom:18px; }
   .app-brand { font-size:16px; font-weight:750; letter-spacing:0; }
   .app-brand-stack { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
@@ -33,13 +32,13 @@
   .app-tools { display:flex; gap:6px; }
   .app-icon-btn { width:39px; height:39px; border:0; border-radius:50%; background:rgba(255,255,255,.78); color:#145f87; box-shadow:0 4px 14px rgba(21,85,120,.08); font-size:19px; cursor:pointer; }
   .app-icon-btn:active { transform:scale(.96); }
-  .app-tabbar { position:fixed; left:18px; right:18px; bottom:calc(env(safe-area-inset-bottom) + 10px); z-index:80; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:604px; margin:auto; padding:8px 7px 11px; border:1px solid rgba(255,255,255,.8); border-radius:28px; background:rgba(255,255,255,.9); box-shadow:0 15px 38px rgba(18,70,103,.16); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); transition:transform .24s ease,opacity .2s ease; }
+  .app-tabbar { position:fixed; left:18px; right:18px; bottom:calc(env(safe-area-inset-bottom) + 10px); z-index:80; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:604px; margin:auto; padding:8px 7px 11px; border:1px solid rgba(255,255,255,.8); border-radius:28px; background:rgba(255,255,255,.9); box-shadow:0 15px 38px rgba(18,70,103,.16); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); transition:transform .24s cubic-bezier(.32,.72,0,1),opacity .16s cubic-bezier(.23,1,.32,1); }
   .app-tabbar.hidden { transform:translateY(calc(100% + env(safe-area-inset-bottom) + 24px)); opacity:0; pointer-events:none; }
   .app-tab { min-height:50px; border:0; background:transparent; color:#708696; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:11px; }
-  .app-tab-symbol { width:32px; height:28px; border-radius:999px; display:grid; place-items:center; font-size:16px; line-height:16px; transition:width .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease; }
+  .app-tab-symbol { width:32px; height:28px; border-radius:14px; display:grid; place-items:center; font-size:16px; line-height:16px; transition:transform .16s cubic-bezier(.23,1,.32,1); }
   .app-tab.active { color:#0876b8; font-weight:750; }
-  .app-tab.active .app-tab-symbol { width:49px; color:#fff; background:linear-gradient(135deg,#0878b9,#21a285); box-shadow:0 7px 18px rgba(8,120,185,.22); }
-  .app-edge-back { position:fixed; left:-18px; top:44%; z-index:9999; width:40px; height:78px; border-radius:0 40px 40px 0; display:grid; place-items:center; background:rgba(7,118,185,.2); color:#075f92; opacity:0; transform:translateX(-12px); transition:opacity .16s ease,transform .16s ease; pointer-events:none; }
+  .app-tab.active .app-tab-symbol { color:#fff; background:#057a9d; box-shadow:0 7px 18px rgba(5,122,157,.22); transform:translateY(-1px); }
+  .app-edge-back { position:fixed; left:-18px; top:44%; z-index:9999; width:40px; height:78px; border-radius:0 40px 40px 0; display:grid; place-items:center; background:rgba(7,118,185,.2); color:#075f92; opacity:0; transform:translateX(-12px); transition:opacity .16s cubic-bezier(.23,1,.32,1),transform .16s cubic-bezier(.23,1,.32,1); pointer-events:none; }
   .app-edge-back.show { opacity:1; transform:none; }
   .app-edge-back span { margin-left:12px; font-size:27px; }
   .app-section-title { margin:26px 0 10px; display:flex; align-items:baseline; justify-content:space-between; }
@@ -189,7 +188,7 @@
   .word-block {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px; border-radius: 10px;
-    background: #f9f9fb; transition: transform 0.25s ease, background 0.2s;
+    background: #f9f9fb; transition: transform .2s cubic-bezier(.23,1,.32,1);
     position: relative; z-index: 1;
   }
   .word-block.active { background: #d4f5d4; }
@@ -219,7 +218,7 @@
   .vocab-card {
     width: min(86vw, 420px); min-height: 430px; background: #fff; border-radius: 28px;
     padding: 34px 28px; box-shadow: 0 18px 50px rgba(0,0,0,0.13);
-    border: 10px solid rgba(255,255,255,0.76); transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    border: 10px solid rgba(255,255,255,0.76);
     touch-action: pan-y; position: relative; overflow: hidden; text-align: center;
   }
   .vocab-card::before, .vocab-card::after { position: absolute; top: 18px; padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; opacity: 0; transition: opacity 0.15s; }
@@ -267,7 +266,7 @@
     height: 46px; border: none; border-radius: 12px;
     font-size: 15px; font-weight: 600; cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 6px;
-    transition: all 0.15s; -webkit-appearance: none; outline: none;
+    transition: transform .16s cubic-bezier(.23,1,.32,1), opacity .12s cubic-bezier(.23,1,.32,1), background-color .16s cubic-bezier(.23,1,.32,1); -webkit-appearance: none; outline: none;
   }
   .btn:active { opacity: 0.7; transform: scale(0.97); }
   .btn-play { flex: 2; background: #007aff; color: #fff; }
@@ -353,8 +352,7 @@
   .update-banner { display: none; position: relative; z-index: 200; max-width:616px; margin:0 auto 10px;
     background: #007aff; color: #fff; text-align: center; padding:10px 14px; border-radius:10px;
     font-size:13px; cursor: pointer; box-shadow:0 6px 18px rgba(37,96,145,.16); }
-  .update-banner.show { display: block; animation: slideDown 0.3s ease; }
-  @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+  .update-banner.show { display: block; }
 
   /* ── Morning Mode ── */
   .morning-home-card {
@@ -417,14 +415,14 @@
   .morning-queue-item .mq-cn { color: #86868b; font-size: 12px; margin-left: 8px; }
   .morning-queue-item .mq-meta { font-size: 10px; color: #bbb; }
   .morning-queue-item .mq-reason { display:inline-block; margin-left:6px; padding:2px 6px; border-radius:999px; background:#eef6fd; color:#426a8e; font-weight:700; }
-  .schedule-feedback { position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom) + 82px); transform:translateX(-50%); z-index:99998; width:max-content; max-width:calc(100vw - 32px); padding:10px 14px; border-radius:12px; background:rgba(24,52,79,.94); color:#fff; box-shadow:0 10px 28px rgba(16,44,70,.24); font-size:13px; line-height:1.45; text-align:center; pointer-events:none; opacity:0; transition:opacity .18s ease, transform .18s ease; }
+  .schedule-feedback { position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom) + 82px); transform:translateX(-50%); z-index:99998; width:max-content; max-width:calc(100vw - 32px); padding:10px 14px; border-radius:12px; background:rgba(24,52,79,.94); color:#fff; box-shadow:0 10px 28px rgba(16,44,70,.24); font-size:13px; line-height:1.45; text-align:center; pointer-events:none; opacity:0; transition:opacity .18s cubic-bezier(.23,1,.32,1),transform .18s cubic-bezier(.23,1,.32,1); }
   .schedule-feedback.show { opacity:1; transform:translateX(-50%) translateY(-4px); }
   /* Player view — card UI */
   .morning-player { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
   .morning-player-top { padding: 12px 16px; border-bottom: 1px solid #e8e8ed; }
   .morning-player-progress { font-size: 12px; color: #86868b; margin-bottom: 4px; }
   .morning-player-bar { height: 3px; background: #e0e0e0; border-radius: 2px; overflow: hidden; }
-  .morning-player-bar-fill { height: 100%; background: #ff9500; transition: width 0.3s; border-radius: 2px; }
+  .morning-player-bar-fill { height: 100%; background: #ff9500; border-radius: 2px; }
   .morning-card-shell { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0 16px; overflow: hidden; }
   .morning-card-stage { width: 100%; display: flex; justify-content: center; perspective: 900px; }
   .morning-player-card {
@@ -521,6 +519,63 @@
   .progress-source-num { font-size: 19px; font-weight: 700; color: #1d1d1f; }
   .progress-source-label { margin-top: 3px; font-size: 10px; color: #6e6e73; }
 
+  /* 02-C Double Crystal: glass is reserved for floating navigation layers. */
+  :root {
+    --ease-out:cubic-bezier(.23,1,.32,1);
+    --ease-in-out:cubic-bezier(.77,0,.175,1);
+    --ease-drawer:cubic-bezier(.32,.72,0,1);
+    --deep:#07536a; --ocean:#057a9d; --mint:#44b892;
+    --ink:#102a36; --muted:#5f747d; --canvas:#e5f1f5;
+    --glass:rgba(243,251,252,.62); --glass-strong:rgba(252,254,255,.84);
+    --glass-line:rgba(255,255,255,.76); --surface:#fbfdfe;
+  }
+  body { background:var(--canvas); color:var(--ink); }
+  button, [role="button"] { letter-spacing:0; }
+  button:focus-visible, input:focus-visible { outline:3px solid rgba(5,122,157,.32); outline-offset:2px; }
+  .app-topbar {
+    position:sticky; top:calc(-16px - env(safe-area-inset-top)); z-index:50;
+    margin:-16px -16px 18px; padding:calc(16px + env(safe-area-inset-top)) 16px 12px;
+    background:var(--glass); border-bottom:1px solid var(--glass-line);
+    backdrop-filter:blur(28px) saturate(155%); -webkit-backdrop-filter:blur(28px) saturate(155%);
+  }
+  .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
+  .app-tabbar {
+    left:24px; right:24px; bottom:calc(env(safe-area-inset-bottom) + 16px); max-width:592px;
+    min-height:78px; padding:7px 7px 10px; border-radius:28px;
+    background:var(--glass); border-color:var(--glass-line);
+    box-shadow:0 22px 58px rgba(12,66,84,.16);
+    backdrop-filter:blur(36px) saturate(170%); -webkit-backdrop-filter:blur(36px) saturate(170%);
+    transition:transform .24s var(--ease-drawer),opacity .16s var(--ease-out);
+  }
+  .app-tab { min-height:56px; border-radius:20px; color:#59717b; }
+  .app-tab.active { color:var(--deep); }
+  .app-edge-back { background:rgba(230,247,249,.74); color:var(--deep); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); transition:opacity .16s var(--ease-out),transform .16s var(--ease-out); }
+  .today-task, .source-list, .library-card, .review-list, .group-card, .vocab-card, .recite-setup, .recite-summary { background:var(--surface); border-color:rgba(92,132,145,.12); }
+  #morningHomeCard, .library-hero, .review-hero { background:var(--deep); border-radius:28px; }
+  #morningHomeCard { box-shadow:0 20px 48px rgba(7,83,106,.22); }
+  .today-task, .source-list, .library-card { border-radius:24px; }
+  .nav-bar {
+    background:var(--glass); border-bottom:1px solid var(--glass-line);
+    backdrop-filter:blur(28px) saturate(155%); -webkit-backdrop-filter:blur(28px) saturate(155%);
+  }
+  .nav-back, .home-link { color:var(--ocean); }
+  .task-button, .btn-play, .jump-btn { background:var(--deep); }
+  .vocab-card, .morning-player-card { touch-action:pan-y; will-change:transform; }
+  .word-block { transition:transform .2s var(--ease-out); }
+  .btn:active, .task-button:active, .app-icon-btn:active, .unit-btn:active, .vc-btn:active { transition-duration:.1s; }
+  @media (prefers-reduced-motion:reduce) {
+    .app-tabbar, .app-edge-back, .app-tab-symbol, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn { transition:opacity .16s ease !important; }
+    .app-tabbar.hidden { opacity:0; transform:none; }
+    .app-tab.active .app-tab-symbol, button:active { transform:none !important; }
+    .spinner, .morning-loading .spinner { animation-duration:1.2s; }
+  }
+  @media (prefers-reduced-transparency:reduce) {
+    .app-topbar, .app-tabbar, .nav-bar, .app-edge-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  }
+  @media (prefers-contrast:more) {
+    .app-topbar, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list { border-color:#31515e; }
+    .app-tab, .app-section-title span, .today-sub, .source-meta { color:#40545d; }
+  }
 </style>
 </head>
 <body>
@@ -540,7 +595,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260717-145831 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260717-233306 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -876,8 +931,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260717-145831"></script>
-<script src="audio-cache.js?v=20260717-145831"></script>
+<script src="review-core.js?v=20260717-233306"></script>
+<script src="audio-cache.js?v=20260717-233306"></script>
+<script src="ui-motion.js?v=20260717-233306"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -906,8 +962,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260717-145831";
-var BUILD_TS = 1784271517;
+var APP_BUILD_ID = "20260717-233306";
+var BUILD_TS = 1784302386;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1448,10 +1504,8 @@ function todayReciteUndoLast() {
   undoLearningActivity(u.activitySource, u.entry.en, u.activityMode || 'today_recite'); removeTodayReciteCompletion(); hideScheduleFeedback(); if (u.familiar) todayReciteStats.familiar = Math.max(0, todayReciteStats.familiar - 1); else todayReciteStats.hard = Math.max(0, todayReciteStats.hard - 1); todayReciteIdx = u.idx; todayReciteDone = false; todayReciteShown = false; todayReciteUndo = null; saveTodayReciteSession(); haptic(10); updateHomeStats(); renderTodayRecite();
 }
 function bindTodayReciteSwipe() {
-  var card = document.getElementById('todayReciteCard'), x = 0, y = 0, dragging = false; if (!card) return;
-  card.ontouchstart = function(e) { if (e.touches[0].clientX <= 24) { dragging = false; return; } dragging = true; x = e.touches[0].clientX; y = e.touches[0].clientY; card.style.transition = 'none'; };
-  card.ontouchmove = function(e) { if (!dragging) return; var dx = e.touches[0].clientX - x, dy = e.touches[0].clientY - y; if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 18) return; if (Math.abs(dx) > 12) todayReciteShow(); e.preventDefault(); var n = Math.max(-120, Math.min(120, dx)); card.style.transform = 'translateX(' + n + 'px) rotate(' + (n / 18) + 'deg)'; card.classList.toggle('swipe-left', n < -70); card.classList.toggle('swipe-right', n > 70); };
-  card.ontouchend = function(e) { if (!dragging) return; dragging = false; var changed = e.changedTouches && e.changedTouches[0], dx = changed ? changed.clientX - x : 0; card.style.transition = 'transform .18s ease, box-shadow .18s ease, border-color .18s ease'; if (dx < -80) todayReciteRate(true); else if (dx > 80) todayReciteRate(false); else { card.style.transform = 'translateX(0) rotate(0deg)'; card.classList.remove('swipe-left','swipe-right'); } };
+  var card = document.getElementById('todayReciteCard'); if (!card) return;
+  WordsMotion.bindCardSwipe(card, { edgeReserve:22, onReveal:todayReciteShow, onLeft:function(){todayReciteRate(true);}, onRight:function(){todayReciteRate(false);} });
 }
 
 function openDueReviewFromButton(button) {
@@ -1807,7 +1861,7 @@ function renderVocabRecite(entries) {
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var a=document.getElementById('vcCn'),b=document.getElementById('vcExCn');if(a)a.classList.remove('recite-hidden');if(b)b.classList.remove('recite-hidden');haptic(8);}
 function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var p=loadPrefs('vocab'),k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),old=p[k];p[k]=familiar?'familiar':'hard';savePrefs('vocab',p);var review=rateReview('vocab',e.item.en,familiar);showScheduleFeedback((familiar?'已标记熟悉 · ':'已标记不熟悉 · ')+reviewScheduleText('vocab',e.item.en));recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,key:k,old:old,en:e.item.en,review:review,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
 function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;var p=loadPrefs('vocab');if(u.old)p[u.key]=u.old;else delete p[u.key];savePrefs('vocab',p);undoReview('vocab',u.en,u.review);undoLearningActivity('vocab',u.en,'vocab_recite');hideScheduleFeedback();vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
-function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard'),x=0,y=0,dragging=false;if(!card)return;card.ontouchstart=function(e){if(e.touches[0].clientX<=24){dragging=false;return}dragging=true;x=e.touches[0].clientX;y=e.touches[0].clientY;card.style.transition='none'};card.ontouchmove=function(e){if(!dragging)return;var dx=e.touches[0].clientX-x,dy=e.touches[0].clientY-y;if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>18)return;if(Math.abs(dx)>12)vocabReciteShow();e.preventDefault();var limited=Math.max(-120,Math.min(120,dx));card.style.transform='translateX('+limited+'px) rotate('+(limited/18)+'deg)';card.classList.toggle('swipe-left',limited<-70);card.classList.toggle('swipe-right',limited>70)};card.ontouchend=function(e){if(!dragging)return;dragging=false;var changed=e.changedTouches&&e.changedTouches[0],dx=changed?changed.clientX-x:0;card.style.transition='transform .18s ease, box-shadow .18s ease, border-color .18s ease';if(dx<-80)vocabReciteRate(true);else if(dx>80)vocabReciteRate(false);else {card.style.transform='translateX(0) rotate(0deg)';card.classList.remove('swipe-left','swipe-right')}}}
+function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard');if(!card)return;WordsMotion.bindCardSwipe(card,{edgeReserve:22,onReveal:vocabReciteShow,onLeft:function(){vocabReciteRate(true)},onRight:function(){vocabReciteRate(false)}})}
 
 function getVocabCardStepInfo(entry) {
   var localIdx = entry.localIdx;
@@ -2007,35 +2061,11 @@ function vocabCardUndoPref(e) {
 function bindVocabCardSwipe() {
   var card = document.getElementById('vocabCard');
   if (!card) return;
-  card.ontouchstart = function(e) {
-    if (e.touches[0].clientX <= 24) { vocabCardDragging = false; return; }
-    vocabCardDragging = true;
-    vocabCardTouchX = e.touches[0].clientX;
-    vocabCardTouchY = e.touches[0].clientY;
-    card.style.transition = 'none';
-  };
-  card.ontouchmove = function(e) {
-    if (!vocabCardDragging) return;
-    var dx = e.touches[0].clientX - vocabCardTouchX;
-    var dy = e.touches[0].clientY - vocabCardTouchY;
-    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 18) return;
-    e.preventDefault();
-    var limited = Math.max(-120, Math.min(120, dx));
-    card.style.transform = 'translateX(' + limited + 'px) rotate(' + (limited / 18) + 'deg)';
-    card.classList.toggle('swipe-left', limited < -70);
-    card.classList.toggle('swipe-right', limited > 70);
-  };
-  card.ontouchend = function(e) {
-    if (!vocabCardDragging) return;
-    vocabCardDragging = false;
-    var changed = e.changedTouches && e.changedTouches[0];
-    var dx = changed ? changed.clientX - vocabCardTouchX : 0;
-    card.style.transition = 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease';
-    if (dx < -80) vocabCardSetPref('familiar');
-    else if (dx > 80) vocabCardSetPref('hard');
-    card.style.transform = 'translateX(0) rotate(0deg)';
-    card.classList.remove('swipe-left','swipe-right');
-  };
+  WordsMotion.bindCardSwipe(card, {
+    edgeReserve:22,
+    onLeft:function(){vocabCardSetPref('familiar');card.style.transform='';},
+    onRight:function(){vocabCardSetPref('hard');card.style.transform='';}
+  });
 }
 
 function escapeHTML(s) {
@@ -2533,55 +2563,7 @@ function closeSwipe(el) {
   if (swipeOpenEl === el || !el) swipeOpenEl = null;
 }
 
-document.addEventListener('touchstart', function(e) {
-  wasSwipe = false;
-  if (e.touches[0].clientX <= 24) { swipeCurrentEl = null; return; }
-  var swipe = e.target.closest('.word-swipe');
-  if (!swipe) { closeSwipe(); swipeCurrentEl = null; return; }
-  if (swipeOpenEl && swipeOpenEl !== swipe) closeSwipe(swipeOpenEl);
-  swipeCurrentEl = swipe;
-  swipeStartX = e.touches[0].clientX;
-  swipeStartY = e.touches[0].clientY;
-  var wb = swipe.querySelector('.word-block');
-  swipeStartTX = 0;
-  if (wb) {
-    var m = wb.style.transform.match(/-?[0-9.]+/);
-    if (m) swipeStartTX = parseFloat(m[0]);
-  }
-}, { passive: true });
-
-document.addEventListener('touchmove', function(e) {
-  if (!swipeCurrentEl) return;
-  var dx = e.touches[0].clientX - swipeStartX;
-  var dy = e.touches[0].clientY - swipeStartY;
-  if (Math.abs(dy) > Math.abs(dx)) { closeSwipe(swipeCurrentEl); return; }
-  if (Math.abs(dx) > 10) wasSwipe = true;
-  if (dx > 10) { closeSwipe(swipeCurrentEl); return; }
-  e.preventDefault();
-  var newTX = swipeStartTX + dx;
-  newTX = Math.max(-SWIPE_WIDTH, Math.min(0, newTX));
-  var wb = swipeCurrentEl.querySelector('.word-block');
-  if (wb) { wb.style.transition = 'none'; wb.style.transform = 'translateX(' + newTX + 'px)'; }
-}, { passive: false });
-
-document.addEventListener('touchend', function() {
-  if (!swipeCurrentEl) return;
-  var wb = swipeCurrentEl.querySelector('.word-block');
-  if (!wb) { swipeCurrentEl = null; return; }
-  wb.style.transition = 'transform 0.25s ease';
-  var m = wb.style.transform.match(/-?[0-9.]+/);
-  var curTX = m ? parseFloat(m[0]) : 0;
-  if (Math.abs(curTX) > SWIPE_WIDTH * 0.35) {
-    wb.style.transform = 'translateX(-' + SWIPE_WIDTH + 'px)';
-    swipeCurrentEl.classList.add('swiped');
-    swipeOpenEl = swipeCurrentEl;
-  } else {
-    wb.style.transform = 'translateX(0)';
-    swipeCurrentEl.classList.remove('swiped');
-    swipeOpenEl = null;
-  }
-  swipeCurrentEl = null;
-});
+WordsMotion.bindRevealList({root:document,itemSelector:'.word-swipe',contentSelector:'.word-block',width:SWIPE_WIDTH,edgeReserve:22});
 
 // ═══════════ CLICK HANDLERS ═══════════
 document.addEventListener('click', function(e) {
@@ -4836,31 +4818,10 @@ var mcTouchX = 0, mcTouchY = 0, mcDragging = false;
 function bindMorningCardSwipe() {
   var card = document.getElementById('morningPlayerCard');
   if (!card) return;
-  card.addEventListener('touchstart', function(e) {
-    if (e.touches[0].clientX <= 24) { mcDragging = false; return; }
-    mcDragging = true;
-    mcTouchX = e.touches[0].clientX;
-    mcTouchY = e.touches[0].clientY;
-  }, { passive: true });
-  card.addEventListener('touchmove', function(e) {
-    if (!mcDragging) return;
-    var dx = e.touches[0].clientX - mcTouchX;
-    var dy = e.touches[0].clientY - mcTouchY;
-    if (Math.abs(dy) > Math.abs(dx) * 1.3) { mcDragging = false; card.style.transform = ''; card.classList.remove('swipe-left','swipe-right'); return; }
-    var limited = Math.max(-120, Math.min(120, dx));
-    card.style.transform = 'translateX(' + limited + 'px) rotate(' + (limited * 0.05) + 'deg)';
-    card.classList.toggle('swipe-left', limited < -70);
-    card.classList.toggle('swipe-right', limited > 70);
-  }, { passive: true });
-  card.addEventListener('touchend', function(e) {
-    if (!mcDragging) return;
-    mcDragging = false;
-    var changed = e.changedTouches[0];
-    var dx = changed ? changed.clientX - mcTouchX : 0;
-    if (dx < -80) markMorningFamiliar();
-    else if (dx > 80) markMorningHard();
-    card.style.transform = 'translateX(0) rotate(0deg)';
-    card.classList.remove('swipe-left','swipe-right');
+  WordsMotion.bindCardSwipe(card, {
+    edgeReserve:22,
+    onLeft:function(){markMorningFamiliar();card.style.transform='';},
+    onRight:function(){markMorningHard();card.style.transform='';}
   });
 }
 
@@ -5106,38 +5067,13 @@ function bindAppNavigation() {
   window.history.replaceState({ wordsView:'home', wordsDepth:0 }, '', location.href);
   appNavigationReady = true;
   window.addEventListener('popstate', function(e) { restoreAppViewFromHistory(e.state || { wordsView:'home', wordsDepth:0 }); });
-  var start = null, active = false, view = null, indicator = document.getElementById('appEdgeBack');
-  document.addEventListener('touchstart', function(e) {
-    if (appViewDepth <= 0 || !e.touches || e.touches.length !== 1) return;
-    var t = e.touches[0];
-    if (t.clientX > 22) return;
-    start = { x:t.clientX, y:t.clientY, dx:0 };
-    active = false;
-    view = document.getElementById('view-' + activeViewName);
-  }, { passive:true, capture:true });
-  document.addEventListener('touchmove', function(e) {
-    if (!start || !e.touches || !e.touches[0]) return;
-    var t = e.touches[0], dx = Math.max(0, t.clientX - start.x), dy = Math.abs(t.clientY - start.y);
-    start.dx = dx;
-    if (dy > dx || dx < 10) return;
-    active = true;
-    e.preventDefault();
-    if (indicator) indicator.classList.add('show');
-    if (view) { view.style.transition = 'none'; view.style.transform = 'translateX(' + Math.min(dx, 130) + 'px)'; }
-  }, { passive:false, capture:true });
-  document.addEventListener('touchend', function() {
-    if (!start) return;
-    var goBack = active && start.dx > 72;
-    if (indicator) indicator.classList.remove('show');
-    if (view) { view.style.transition = ''; view.style.transform = ''; }
-    start = null; active = false; view = null;
-    if (goBack) window.history.back();
-  }, { passive:true, capture:true });
-  document.addEventListener('touchcancel', function() {
-    if (indicator) indicator.classList.remove('show');
-    if (view) { view.style.transition = ''; view.style.transform = ''; }
-    start = null; active = false; view = null;
-  }, { passive:true, capture:true });
+  WordsMotion.installEdgeBack({
+    edge:22,
+    indicator:document.getElementById('appEdgeBack'),
+    canGoBack:function(){return appViewDepth>0;},
+    getSurface:function(){return document.getElementById('view-'+activeViewName);},
+    onBack:function(){window.history.back();}
+  });
 }
 
 bindAppNavigation();
