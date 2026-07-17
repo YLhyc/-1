@@ -17,6 +17,12 @@
   --shadow: 0 16px 44px rgba(62, 45, 35, .10);
   --mono: "JetBrainsMono NFM", ui-monospace, SFMono-Regular, Consolas, monospace;
   --serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, "Noto Serif SC", serif;
+  --motion-press: 120ms;
+  --motion-ui: 220ms;
+  --motion-dialog: 260ms;
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+  --ease-drawer: cubic-bezier(.32, .72, 0, 1);
   color-scheme: light;
 }
 
@@ -51,10 +57,12 @@ body {
   color: var(--ink);
   font-family: var(--serif);
   -webkit-font-smoothing: antialiased;
-  transition: background .2s ease, color .2s ease;
+  transition: background var(--motion-ui) var(--ease-out), color var(--motion-ui) var(--ease-out);
 }
 button, input, textarea, select { font: inherit; }
 button { color: inherit; }
+button:not(:disabled) { transition: transform var(--motion-press) var(--ease-out); }
+button:not(:disabled):active { transform: scale(.97); }
 
 .app-shell {
   display: grid;
@@ -91,9 +99,9 @@ button { color: inherit; }
 .icon-button { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); cursor: pointer; }
 
 main { width: 100%; min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: none; padding: 21px 16px 10px; -webkit-overflow-scrolling: touch; scrollbar-gutter: stable; }
-.page { display: none; min-width: 0; animation: page-in .18s ease; }
+.page { display: none; min-width: 0; animation: page-in var(--motion-ui) var(--ease-out); }
 .page.active { display: block; }
-@keyframes page-in { from { opacity: .35; transform: translateY(4px); } }
+@keyframes page-in { from { opacity: .35; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
 h1, h2, h3, p { overflow-wrap: anywhere; }
 h1 { margin: 4px 0 9px; font-size: clamp(30px, 8vw, 39px); line-height: 1.08; letter-spacing: -.045em; }
@@ -168,7 +176,7 @@ h2 { margin: 3px 0 0; font-size: 21px; letter-spacing: -.025em; }
 .swipe-actions { position: absolute; z-index: 0; inset: 0 0 0 auto; display: flex; justify-content: end; background: var(--accent-soft); pointer-events: none; }
 .swipe-actions button { width: 64px; border: 0; background: transparent; color: var(--accent-deep); font-size: 12px; font-weight: 750; }
 .swipe-actions button.delete { background: var(--danger); color: #fff; }
-.swipe-content { position: relative; z-index: 1; background: var(--paper); transition: transform .2s ease; }
+.swipe-content { position: relative; z-index: 1; background: var(--paper); transition: transform var(--motion-ui) var(--ease-out); }
 .swipe-row.swiped .swipe-actions { pointer-events: auto; }
 .swipe-row.swiped .swipe-content { transform: translateX(-192px); }
 
@@ -179,7 +187,11 @@ h2 { margin: 3px 0 0; font-size: 21px; letter-spacing: -.025em; }
 .mode-switch button.active { background: var(--ink); color: var(--surface); }
 .session-pause-button { flex: 0 0 auto; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--accent-deep); cursor: pointer; font-size: 10px; font-weight: 750; }
 .review-progress { height: 4px; margin: 0 2px 13px; overflow: hidden; border-radius: 9px; background: var(--line); }
-.review-progress span { display: block; height: 100%; background: var(--accent); transition: width .2s; }
+.review-progress span { display: block; height: 100%; background: var(--accent); transition: width var(--motion-ui) var(--ease-out); }
+#cardArticle.card-leaving { pointer-events: none; animation: card-leave 180ms var(--ease-in-out) both; }
+#cardArticle.card-entering { animation: card-enter var(--motion-ui) var(--ease-out) both; }
+@keyframes card-leave { to { opacity: 0; transform: translateX(-18px) scale(.99); } }
+@keyframes card-enter { from { opacity: 0; transform: translateX(18px) scale(.99); } to { opacity: 1; transform: translateX(0) scale(1); } }
 .knowledge-card { border: 1px solid var(--line); border-radius: 27px; background: var(--paper); box-shadow: var(--shadow); overflow: hidden; }
 .knowledge-card.answer-type-card { border-left: 5px solid var(--answer-type-color); }
 .card-cover { padding: 22px 21px 20px; border-bottom: 1px solid var(--line); background: linear-gradient(145deg, color-mix(in srgb,var(--accent) 9%,var(--paper)), var(--paper) 62%); }
@@ -249,6 +261,9 @@ details.fold[open] summary::after { content: "−"; }
 .rating-grid button[data-rating="forgot"] { border-color: color-mix(in srgb,var(--danger) 50%,var(--line)); }
 .rating-grid button[data-rating="mastered"] { border-color: color-mix(in srgb,var(--success) 50%,var(--line)); }
 .rating-grid button.recommended { outline: 2px solid var(--accent); outline-offset: 1px; background: color-mix(in srgb,var(--accent) 8%,var(--paper)); }
+.rating-grid button.committing { border-color: var(--accent); background: color-mix(in srgb,var(--accent) 12%,var(--paper)); }
+.rating-panel:not([hidden]) { animation: rating-in var(--motion-ui) var(--ease-out) both; }
+@keyframes rating-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
 .search-box { display: flex; align-items: center; gap: 9px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); }
 .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); }
@@ -356,7 +371,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .conflict-merge input, .conflict-merge textarea { width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); }
 .conflict-merge textarea { min-height: 76px; resize: vertical; }
 .toggle { width: 48px; height: 28px; padding: 3px; border: 0; border-radius: 99px; background: color-mix(in srgb,var(--ink) 17%,transparent); cursor: pointer; }
-.toggle span { display: block; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .18s ease; }
+.toggle span { display: block; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform var(--motion-ui) var(--ease-out); }
 .toggle[aria-pressed="true"] { background: var(--accent); }
 .toggle[aria-pressed="true"] span { transform: translateX(20px); }
 .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 5px var(--success-soft); }
@@ -368,6 +383,10 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .trash-list small { margin-top: 5px; color: var(--muted); font: 600 10px var(--mono); }
 .card-editor { width: min(520px,calc(100% - 24px)); max-height: 88vh; padding: 0; border: 1px solid var(--line); border-radius: 24px; background: var(--paper); color: var(--ink); box-shadow: var(--shadow); }
 .card-editor::backdrop { background: rgba(20,20,19,.46); backdrop-filter: blur(3px); }
+.card-editor[open] { animation: dialog-in var(--motion-dialog) var(--ease-drawer) both; }
+.card-editor[open]::backdrop { animation: backdrop-in var(--motion-ui) var(--ease-out) both; }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 .card-editor form { display: grid; gap: 13px; padding: 20px; }
 .dialog-head { display: flex; justify-content: space-between; align-items: start; }
 .dialog-head h2 { margin-top: 5px; }
@@ -384,13 +403,13 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .bottom-nav button.active { background: var(--accent-soft); color: var(--accent-deep); font-weight: 750; }
 .bottom-nav button.active svg { stroke-width: 2.2; }
 
-.edge-back-indicator { position: fixed; z-index: 45; top: 48%; left: max(0px,calc(50% - 280px)); display: grid; place-items: center; width: 25px; height: 56px; border: 1px solid color-mix(in srgb,var(--accent) 28%,var(--line)); border-left: 0; border-radius: 0 28px 28px 0; background: color-mix(in srgb,var(--accent-soft) 92%,transparent); opacity: 0; pointer-events: none; transform: translate(-105%,-50%) scaleX(.72); transform-origin: left center; transition: opacity .12s ease,transform .16s ease; }
+.edge-back-indicator { position: fixed; z-index: 45; top: 48%; left: max(0px,calc(50% - 280px)); display: grid; place-items: center; width: 25px; height: 56px; border: 1px solid color-mix(in srgb,var(--accent) 28%,var(--line)); border-left: 0; border-radius: 0 28px 28px 0; background: color-mix(in srgb,var(--accent-soft) 92%,transparent); opacity: 0; pointer-events: none; transform: translate(-105%,-50%) scaleX(.72); transform-origin: left center; transition: opacity 120ms var(--ease-out),transform 160ms var(--ease-out); }
 .edge-back-indicator span { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-deep); }
 .edge-back-indicator.active { opacity: 1; transform: translate(0,-50%) scaleX(1); }
 .edge-back-indicator.from-right { right: max(0px,calc(50% - 280px)); left: auto; border-right: 0; border-left: 1px solid color-mix(in srgb,var(--accent) 28%,var(--line)); border-radius: 28px 0 0 28px; transform: translate(105%,-50%) scaleX(.72); transform-origin: right center; }
 .edge-back-indicator.from-right.active { transform: translate(0,-50%) scaleX(1); }
 
-.toast { position: fixed; z-index: 60; left: 50%; bottom: calc(112px + env(safe-area-inset-bottom)); max-width: calc(100% - 30px); padding: 11px 15px; border-radius: 13px; background: var(--ink); color: var(--surface); opacity: 0; pointer-events: none; transform: translate(-50%, 12px); transition: .2s ease; box-shadow: var(--shadow); font-size: 13px; text-align: center; }
+.toast { position: fixed; z-index: 60; left: 50%; bottom: calc(112px + env(safe-area-inset-bottom)); max-width: calc(100% - 30px); padding: 11px 15px; border-radius: 13px; background: var(--ink); color: var(--surface); opacity: 0; pointer-events: none; transform: translate(-50%, 12px); transition: opacity var(--motion-ui) var(--ease-out), transform var(--motion-ui) var(--ease-out); box-shadow: var(--shadow); font-size: 13px; text-align: center; }
 .toast.show { opacity: 1; transform: translate(-50%,0); }
 
 @media (max-width: 390px) {

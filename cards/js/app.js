@@ -218,7 +218,7 @@
     state.cardMode = restored && restored.mode ? restored.mode : sessionMode ? 'recall' : 'memorize';
     state.revealed = restored && typeof restored.revealed === 'boolean' ? restored.revealed : !sessionMode;
     state.hintLevel = restored ? Number(restored.hint_level || 0) : 0; state.cardStartedAt = Date.now(); state.freeElapsed = 0;
-    renderCard(); navigate('card'); startTimer(); state.cardStartedSeconds = state.timer ? state.timer.getSeconds() : 0; await saveResumePosition(restoreScroll || 0);
+    renderCard(); navigate('card'); if (options && options.animateEntry) playCardEnter(); startTimer(); state.cardStartedSeconds = state.timer ? state.timer.getSeconds() : 0; await saveResumePosition(restoreScroll || 0);
     requestAnimationFrame(() => $('#mainContent').scrollTo(0, restoreScroll || 0));
   }
   function renderCard() {
@@ -235,6 +235,27 @@
       $('#reviewMeta').textContent = `${index} / ${total} · ${elapsedLabel(state.timer ? state.timer.getSeconds() : state.session.seconds)}`;
       $('#reviewProgress').hidden = false; $('#reviewProgress span').style.width = `${(index - 1) / total * 100}%`;
     } else { $('#reviewMeta').textContent = '自由浏览'; $('#reviewProgress').hidden = true; }
+  }
+
+  function reducedMotionPreferred() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  async function playCardExit() {
+    const article = $('#cardArticle');
+    if (!article || reducedMotionPreferred()) return;
+    article.classList.remove('card-entering');
+    article.classList.add('card-leaving');
+    const animation = article.getAnimations().find(item => item.animationName === 'card-leave');
+    if (animation) await animation.finished.catch(() => {});
+    article.classList.remove('card-leaving');
+  }
+  function playCardEnter() {
+    const article = $('#cardArticle');
+    if (!article || reducedMotionPreferred()) return;
+    article.classList.remove('card-entering');
+    requestAnimationFrame(() => {
+      article.classList.add('card-entering');
+      const animation = article.getAnimations().find(item => item.animationName === 'card-enter');
+      if (animation) animation.finished.catch(() => {}).finally(() => article.classList.remove('card-entering'));
+    });
   }
 
   function startTimer() {
@@ -263,6 +284,8 @@
     if (state.ratingInProgress || !state.currentCard) return;
     state.ratingInProgress = true;
     $$('.rating-grid [data-rating]').forEach(button => { button.disabled = true; });
+    const committingButton = $(`.rating-grid [data-rating="${rating}"]`);
+    if (committingButton) committingButton.classList.add('committing');
     try {
       await pauseTimer();
       const activeElapsed = state.reviewingSession && state.session ? state.session.seconds - state.cardStartedSeconds : state.freeElapsed;
@@ -288,15 +311,15 @@
           await pauseTimer({ persist: false }); await persistSession();
           await CardsSync.enqueue('session_completed', state.session.id, { session: state.session });
           await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: { id:'active_review_session', value:null, updated_at:new Date().toISOString() } });
-          const completedSession=state.session;showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`); state.session = null; renderHome(); if(completedSession.kind==='topic'&&completedSession.topic_id)openTopic(completedSession.topic_id);else navigate('today'); return;
+          const completedSession=state.session;showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`);await playCardExit();state.session = null; renderHome(); if(completedSession.kind==='topic'&&completedSession.topic_id)openTopic(completedSession.topic_id);else navigate('today'); return;
         }
         state.session.current_card_state = null; await persistSession();
-        refreshDerivedViews(); return openCard(state.session.card_ids[state.session.current_index], 0, { session: true });
+        await playCardExit();refreshDerivedViews();return openCard(state.session.card_ids[state.session.current_index],0,{session:true,animateEntry:true});
       }
       showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); state.freeElapsed=0;state.cardStartedAt=Date.now();await refreshDerivedViews(); renderCard(); startTimer();
     } finally {
       state.ratingInProgress = false;
-      $$('.rating-grid [data-rating]').forEach(button => { button.disabled = false; });
+      $$('.rating-grid [data-rating]').forEach(button => { button.disabled = false; button.classList.remove('committing'); });
     }
   }
 
