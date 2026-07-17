@@ -12,7 +12,7 @@
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
     cardMode: 'memorize', revealed: true, hintLevel: 0, searchFilter: 'all',
     session: null, reviewingSession: false, timer: null, cardStartedAt: 0, cardStartedSeconds: 0, editorCard: null,
-    deviceId: null, syncing: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null, activeConflict: null
+    deviceId: null, syncing: false, ratingInProgress: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null, activeConflict: null
   };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
@@ -34,7 +34,7 @@
     }
   }
   function masteryLevel(card) { return CardsRender.masteryInfo(card.schedule && card.schedule.mastery).level; }
-  function averageLevel(cards) { const rated = cards.map(masteryLevel).filter(Boolean); return rated.length ? Math.round(rated.reduce((a,b)=>a+b,0)/rated.length) : 0; }
+  function averageLevel(cards) { return cards.length ? Math.round(cards.reduce((sum, card) => sum + masteryLevel(card), 0) / cards.length) : 0; }
   function elapsedLabel(seconds) { const mins = Math.floor(seconds / 60); const secs = Math.round(seconds % 60); return mins ? `${mins}:${String(secs).padStart(2,'0')}` : `${secs}秒`; }
   function localDateKey(value) { const date=value?new Date(value):new Date(); return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
   function recommendedRating() { if(state.hintLevel<=0)return'mastered';if(state.hintLevel===1)return'familiar';if(state.hintLevel===2)return'fuzzy';return'forgot'; }
@@ -78,7 +78,7 @@
     $('#todaySubjectList').innerHTML = Object.keys(subjectLabels).map(subject => {
       const queue = CardsScheduler.buildQueue(state.cards, subject);
       const active = activeSubject === subject;
-      const minutes = Math.max(1, Math.round(queue.estimated_seconds / 60));
+      const minutes = queue.ids.length ? Math.max(1, Math.round(queue.estimated_seconds / 60)) : 0;
       return `<button class="today-subject ${active ? 'active-session' : ''}" data-today-subject="${subject}"><span><strong>${subjectLabels[subject][0]}</strong><small>${active ? '有未完成进度 · 点击继续' : `${queue.due_count} 张待复习 · 预计 ${minutes} 分钟`}</small></span><em>${active ? '继续' : '开始'}</em></button>`;
     }).join('');
     $$('[data-today-subject]').forEach(button => button.onclick = () => startDailyReview(button.dataset.todaySubject));
@@ -176,7 +176,7 @@
     const recall = state.cardMode === 'recall'; $('#recallControls').hidden = !recall; $('#hintButton').hidden = state.revealed || state.hintLevel >= (state.currentCard.hints || []).length;
     $('#revealButton').hidden = state.revealed; $('#ratingPanel').hidden = !state.revealed;
     const recommendation=recall&&state.revealed?recommendedRating():null;
-    $$('.rating-grid [data-rating]').forEach(button=>button.classList.toggle('recommended',button.dataset.rating===recommendation));
+    $$('.rating-grid [data-rating]').forEach(button=>{button.classList.toggle('recommended',button.dataset.rating===recommendation);button.disabled=state.ratingInProgress;});
     $('#ratingRecommendation').textContent=recommendation?`根据提示使用情况，建议：${CardsScheduler.ratings[recommendation].label}（可手动修改）`:'';
     if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(state.currentCard.id)) {
       const index = state.session.current_index + 1, total = state.session.card_ids.length;
@@ -203,30 +203,38 @@
     await CardsDB.setSetting('active_review_session', state.session.status === 'active' ? state.session : null);
   }
   async function rateCurrent(rating) {
-    const activeElapsed = state.timer ? state.timer.getSeconds() - state.cardStartedSeconds : 0;
-    const elapsed = Math.max(10, state.reviewingSession ? activeElapsed : Math.round((Date.now() - state.cardStartedAt) / 1000));
-    const baseRevision = Number(state.currentCard.revision && state.currentCard.revision.version || 0);
-    const updated = CardsScheduler.rate(state.currentCard, rating, new Date(), elapsed);
-    updated.revision.device_id = state.deviceId;
-    await CardsDB.put('cards', updated);
-    state.cards[state.cards.findIndex(card => card.id === updated.id)] = updated; state.currentCard = updated;
-    const reviewEvent = { event_id: uid('review'), card_id: updated.id, subject: updated.subject, rating, elapsed_seconds: elapsed, reviewed_at: updated.schedule.last_reviewed_at, session_id: state.reviewingSession && state.session && state.session.status === 'active' ? state.session.id : null, next_due_at: updated.schedule.due_at };
-    await CardsDB.put('review_events', reviewEvent);
-    await CardsSync.enqueue('review_rated', updated.id, { card: updated, review_event: reviewEvent }, baseRevision);
-    if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(updated.id)) {
-      if (!state.session.reviewed_card_ids.includes(updated.id)) state.session.reviewed_card_ids.push(updated.id);
-      state.session.current_index += 1;
-      if (state.session.current_index >= state.session.card_ids.length) {
-        state.session.status = 'completed'; state.session.completed_at = new Date().toISOString(); state.session.current_card_state = null;
-        await pauseTimer({ persist: false }); await persistSession();
-        await CardsSync.enqueue('session_completed', state.session.id, { session: state.session });
-        await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: { id:'active_review_session', value:null, updated_at:new Date().toISOString() } });
-        const completedSession=state.session;showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`); state.session = null; renderHome(); if(completedSession.kind==='topic'&&completedSession.topic_id)openTopic(completedSession.topic_id);else navigate('today'); return;
+    if (state.ratingInProgress || !state.currentCard) return;
+    state.ratingInProgress = true;
+    $$('.rating-grid [data-rating]').forEach(button => { button.disabled = true; });
+    try {
+      const activeElapsed = state.timer ? state.timer.getSeconds() - state.cardStartedSeconds : 0;
+      const elapsed = Math.max(10, state.reviewingSession ? activeElapsed : Math.round((Date.now() - state.cardStartedAt) / 1000));
+      const baseRevision = Number(state.currentCard.revision && state.currentCard.revision.version || 0);
+      const updated = CardsScheduler.rate(state.currentCard, rating, new Date(), elapsed);
+      updated.revision.device_id = state.deviceId;
+      await CardsDB.put('cards', updated);
+      state.cards[state.cards.findIndex(card => card.id === updated.id)] = updated; state.currentCard = updated;
+      const reviewEvent = { event_id: uid('review'), card_id: updated.id, subject: updated.subject, rating, elapsed_seconds: elapsed, reviewed_at: updated.schedule.last_reviewed_at, session_id: state.reviewingSession && state.session && state.session.status === 'active' ? state.session.id : null, next_due_at: updated.schedule.due_at };
+      await CardsDB.put('review_events', reviewEvent);
+      await CardsSync.enqueue('review_rated', updated.id, { card: updated, review_event: reviewEvent }, baseRevision);
+      if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(updated.id)) {
+        if (!state.session.reviewed_card_ids.includes(updated.id)) state.session.reviewed_card_ids.push(updated.id);
+        state.session.current_index += 1;
+        if (state.session.current_index >= state.session.card_ids.length) {
+          state.session.status = 'completed'; state.session.completed_at = new Date().toISOString(); state.session.current_card_state = null;
+          await pauseTimer({ persist: false }); await persistSession();
+          await CardsSync.enqueue('session_completed', state.session.id, { session: state.session });
+          await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: { id:'active_review_session', value:null, updated_at:new Date().toISOString() } });
+          const completedSession=state.session;showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`); state.session = null; renderHome(); if(completedSession.kind==='topic'&&completedSession.topic_id)openTopic(completedSession.topic_id);else navigate('today'); return;
+        }
+        state.session.current_card_state = null; await persistSession();
+        refreshDerivedViews(); return openCard(state.session.card_ids[state.session.current_index], 0, { session: true });
       }
-      state.session.current_card_state = null; await persistSession();
-      refreshDerivedViews(); return openCard(state.session.card_ids[state.session.current_index], 0, { session: true });
+      showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); await refreshDerivedViews(); renderCard();
+    } finally {
+      state.ratingInProgress = false;
+      $$('.rating-grid [data-rating]').forEach(button => { button.disabled = false; });
     }
-    showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); await refreshDerivedViews(); renderCard();
   }
 
   async function saveResumePosition(scrollY) {
@@ -262,6 +270,7 @@
     const today = localDateKey(), todayEvents = ratingEvents.filter(e => localDateKey(e.reviewed_at) === today), todaySessions = sessions.filter(s => localDateKey(s.started_at) === today);
     $('#statsTodayCards').textContent = todayEvents.length; $('#statsTodayTime').textContent = `${Math.round(todaySessions.reduce((sum,s)=>sum+Number(s.seconds||0),0)/60)} 分`;
     const dates = new Set(ratingEvents.map(e=>localDateKey(e.reviewed_at))); let streak = 0, cursor = new Date();
+    if (!dates.has(localDateKey(cursor))) cursor.setDate(cursor.getDate()-1);
     while (dates.has(localDateKey(cursor))) { streak++; cursor.setDate(cursor.getDate()-1); }
     $('#statsStreak').textContent = `${streak} 天`; $('#statsDue').textContent = state.cards.filter(card=>CardsScheduler.isDue(card)).length;
     const groups = ['unrated','forgot','fuzzy','familiar','mastered'].map(key=>({ key, label:CardsRender.masteryInfo(key).label, count:state.cards.filter(c=>(c.schedule&&c.schedule.mastery||'unrated')===key).length }));

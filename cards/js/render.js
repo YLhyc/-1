@@ -113,7 +113,7 @@
   }
 
   function topicRow(topic, cards) {
-    const levels = cards.map(c => masteryInfo(c.schedule && c.schedule.mastery).level).filter(Boolean);
+    const levels = cards.map(c => masteryInfo(c.schedule && c.schedule.mastery).level);
     const level = levels.length ? Math.round(levels.reduce((a,b) => a+b, 0) / levels.length) : 0;
     return `<button class="topic-row" type="button" data-topic="${escapeHtml(topic.id)}"><span><strong>${escapeHtml(topic.module)} · ${escapeHtml(topic.title)}</strong><p>${escapeHtml(topic.description || '')}<br>${cards.length} 张卡</p></span>${ring(level === 0 ? 'unrated' : ['unrated','forgot','fuzzy','familiar','mastered'][level])}</button>`;
   }

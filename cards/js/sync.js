@@ -3,6 +3,8 @@
 
   const META_ID = 'sync_meta';
   const CONFIG_ID = 'sync_config';
+  const configuredTimeout = Number(window.CARDS_SYNC_TIMEOUT_MS || 20000);
+  const REQUEST_TIMEOUT_MS = Number.isFinite(configuredTimeout) && configuredTimeout > 0 ? configuredTimeout : 20000;
 
   function uid(prefix) {
     const random = crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '') : `${Date.now()}${Math.random().toString(36).slice(2)}`;
@@ -52,12 +54,16 @@
   }
 
   async function configure(url, rawKey) {
-    let normalized;
+    let parsed;
     try {
-      normalized = new URL(url).toString().replace(/\/$/, '');
+      parsed = new URL(url);
     } catch (error) {
       throw new Error('同步服务地址无效');
     }
+    if (parsed.username || parsed.password || parsed.search || parsed.hash || !['', '/'].includes(parsed.pathname)) {
+      throw new Error('同步服务地址必须是独立的服务根地址');
+    }
+    const normalized = parsed.origin;
     if (!/^https:/.test(normalized) && !/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?/.test(normalized)) {
       throw new Error('同步服务必须使用 HTTPS');
     }
@@ -98,14 +104,25 @@
     const bodyDigest = hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(body)));
     const message = [meta.device_id, method, target, timestamp, nonce, bodyDigest].join('\n');
     const signature = hex(await crypto.subtle.sign('HMAC', config.key, new TextEncoder().encode(message)));
-    const response = await fetch(config.url + target, {
-      method,
-      headers: {
-        'Content-Type': 'application/json', 'X-Cards-Device': meta.device_id,
-        'X-Cards-Timestamp': timestamp, 'X-Cards-Nonce': nonce, 'X-Cards-Signature': signature
-      },
-      body: method === 'POST' ? body : undefined
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    let response;
+    try {
+      response = await fetch(config.url + target, {
+        method,
+        headers: {
+          'Content-Type': 'application/json', 'X-Cards-Device': meta.device_id,
+          'X-Cards-Timestamp': timestamp, 'X-Cards-Nonce': nonce, 'X-Cards-Signature': signature
+        },
+        body: method === 'POST' ? body : undefined,
+        signal: controller.signal
+      });
+    } catch (error) {
+      if (error && error.name === 'AbortError') throw new Error('同步请求超时，请检查网络后重试');
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
     let result;
     try { result = await response.json(); } catch (error) { result = {}; }
     if (!response.ok || !result.ok) throw new Error(result.error || `同步服务返回 ${response.status}`);
@@ -199,7 +216,10 @@
   async function syncNow() {
     const config = await getConfig();
     if (!config || !config.url || !config.key) throw new Error('请先配置同步服务');
+    const attemptAt = new Date().toISOString();
     const meta = await getMeta();
+    await CardsDB.update('sync_state', META_ID, current => ({ ...current, last_attempt_at: attemptAt }));
+    meta.last_attempt_at = attemptAt;
     const pending = meta.pending_events.slice();
     let pushed = 0;
     if (pending.length) {
@@ -233,6 +253,7 @@
       cursor: meta.cursor,
       applied_event_ids: Array.from(new Set([...(current.applied_event_ids || []), ...appliedIds])).slice(-5000),
       last_synced_at: meta.last_synced_at,
+      last_attempt_at: attemptAt,
       last_error: null,
       conflicts: meta.conflicts
     }));

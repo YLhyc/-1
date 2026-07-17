@@ -105,18 +105,29 @@
   }
 
   async function seedIfEmpty(seed) {
-    const cards = await getAll('cards');
-    if (cards.length) return false;
-    await putMany('topics', seed.topics || []);
-    await putMany('cards', seed.cards || []);
-    await put('sync_state', {
+    const [cards, topics, tombstones, initialized] = await Promise.all([
+      getAll('cards'), getAll('topics'), getAll('tombstones'), get('sync_state', 'local_meta')
+    ]);
+    // An empty card store can be intentional after deleting every card. Tombstones and
+    // the initialization marker must therefore prevent the release seed from reviving data.
+    if (cards.length || topics.length || tombstones.length || initialized) return false;
+    const db = await open();
+    const tx = db.transaction(['cards', 'topics', 'sync_state', 'settings'], 'readwrite');
+    const topicStore = tx.objectStore('topics');
+    const cardStore = tx.objectStore('cards');
+    (seed.topics || []).forEach(topic => topicStore.put(topic));
+    (seed.cards || []).forEach(card => cardStore.put(card));
+    tx.objectStore('sync_state').put({
       id: 'local_meta',
       schema_version: DB_VERSION,
       seeded_at: new Date().toISOString(),
       pending_events: 0
     });
-    if (seed.exam_wording_version) await setSetting('seed_exam_wording_version', seed.exam_wording_version);
-    if (seed.content_version) await setSetting('seed_content_version', seed.content_version);
+    const settings = tx.objectStore('settings');
+    const now = new Date().toISOString();
+    if (seed.exam_wording_version) settings.put({ id: 'seed_exam_wording_version', value: seed.exam_wording_version, updated_at: now });
+    if (seed.content_version) settings.put({ id: 'seed_content_version', value: seed.content_version, updated_at: now });
+    await transactionDone(tx);
     return true;
   }
 
@@ -176,6 +187,22 @@
     if (!Array.isArray(snapshot.stores.cards) || !Array.isArray(snapshot.stores.topics)) {
       throw new Error('数据文件缺少卡片或专题。');
     }
+    const keyPaths = {
+      cards: 'id', topics: 'id', review_events: 'event_id', sessions: 'id',
+      tombstones: 'card_id', settings: 'id'
+    };
+    for (const [storeName, keyPath] of Object.entries(keyPaths)) {
+      const rows = snapshot.stores[storeName];
+      if (rows === undefined) continue;
+      if (!Array.isArray(rows)) throw new Error(`数据文件中的 ${storeName} 不是有效列表。`);
+      const keys = new Set();
+      for (const row of rows) {
+        const key = row && row[keyPath];
+        if (typeof key !== 'string' || !key.trim()) throw new Error(`数据文件中的 ${storeName} 缺少 ${keyPath}。`);
+        if (keys.has(key)) throw new Error(`数据文件中的 ${storeName} 存在重复 ${keyPath}。`);
+        keys.add(key);
+      }
+    }
   }
 
   async function importSnapshot(snapshot) {
@@ -188,13 +215,15 @@
       snapshot: backup
     });
 
-    const db = await open();
     const importedStores = STORES.filter(name => name !== 'sync_state' && Array.isArray(snapshot.stores[name]));
-    for (const storeName of importedStores) {
-      const tx = db.transaction(storeName, 'readwrite');
-      const store = tx.objectStore(storeName);
-      store.clear();
-      snapshot.stores[storeName].forEach(value => store.put(value));
+    if (importedStores.length) {
+      const db = await open();
+      const tx = db.transaction(importedStores, 'readwrite');
+      for (const storeName of importedStores) {
+        const store = tx.objectStore(storeName);
+        store.clear();
+        snapshot.stores[storeName].forEach(value => store.put(value));
+      }
       await transactionDone(tx);
     }
     await put('sync_state', {
