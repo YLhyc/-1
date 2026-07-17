@@ -59,7 +59,8 @@
       due = new Date(now.getTime() + intervalDays * DAY_MS);
     }
     const reps = Number(previous.reps || 0) + 1;
-    const oldAverage = Number(previous.average_seconds || 0);
+    const rawAverage = Number(previous.average_seconds || 0);
+    const oldAverage = rawAverage >= 900 && Number(previous.reps || 0) <= 1 ? 75 : clamp(rawAverage, 0, 420);
     const observed = clamp(Number(elapsedSeconds || oldAverage || 75), 10, 900);
     const averageSeconds = reps === 1 ? observed : oldAverage * 0.7 + observed * 0.3;
     return {
@@ -99,12 +100,18 @@
     return !dueAt || new Date(dueAt).getTime() <= now.getTime();
   }
 
+  function estimatedSeconds(card) {
+    const value = Number(card.schedule && card.schedule.average_seconds || 75);
+    if (value >= 900 && Number(card.schedule && card.schedule.reps || 0) <= 1) return 75;
+    return clamp(value, 30, 420);
+  }
+
   function buildQueue(cards, subject, options) {
     const config = { targetSeconds: 2700, hardLimitSeconds: 3600, now: new Date(), ...(options || {}) };
     const now = config.now instanceof Date ? config.now : new Date(config.now);
     const candidates = cards
       .filter(card => card.subject === subject && isDue(card, now))
-      .map(card => ({ card, priority: priority(card, now), seconds: clamp(Number(card.schedule && card.schedule.average_seconds || 75), 30, 420) }))
+      .map(card => ({ card, priority: priority(card, now), seconds: estimatedSeconds(card) }))
       .sort((a,b) => b.priority - a.priority || new Date(a.card.schedule.due_at || 0) - new Date(b.card.schedule.due_at || 0) || a.card.order - b.card.order);
 
     return packQueue(candidates, config);
@@ -115,7 +122,7 @@
     const now = config.now instanceof Date ? config.now : new Date(config.now);
     const candidates = cards
       .filter(card => card.topic_id === topicId)
-      .map(card => ({ card, priority: priority(card, now), seconds: clamp(Number(card.schedule && card.schedule.average_seconds || 75), 30, 420) }))
+      .map(card => ({ card, priority: priority(card, now), seconds: estimatedSeconds(card) }))
       .sort((a,b) => b.priority - a.priority || a.card.order - b.card.order);
     return packQueue(candidates, config);
   }

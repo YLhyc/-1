@@ -44,8 +44,14 @@
 
       <section class="page" id="page-today" data-page="today">
         <div class="context-return-bar"><button class="context-return" type="button" data-route="home"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5M6 10v10h12V10M10 20v-6h4v6"/></svg></span><strong>Cards 首页</strong></button><small>TODAY</small></div>
-        <span class="kicker">TODAY · 45 MIN TARGET</span><h1>今日复习</h1>
-        <p class="page-description">一次只选一个科目。系统优先安排已到期、完全记不得和模糊的内容，最长不超过 60 分钟。</p>
+        <span class="kicker">TODAY · FLEXIBLE SESSION</span><h1>今日复习</h1>
+        <p class="page-description">选择这次可用的时间，再进入一个科目。未完成进度可暂停，之后可继续或切换科目。</p>
+        <div class="duration-picker" id="reviewDurationPicker" role="group" aria-label="本次复习时长">
+          <button type="button" data-review-minutes="5">5 分钟</button>
+          <button type="button" data-review-minutes="10">10 分钟</button>
+          <button type="button" data-review-minutes="20">20 分钟</button>
+          <button type="button" data-review-minutes="45">完整</button>
+        </div>
         <div class="today-subjects" id="todaySubjectList"></div>
       </section>
 
@@ -78,11 +84,12 @@
       <section class="page card-page" id="page-card" data-page="card">
         <div class="context-return-bar"><button class="context-return" type="button" id="backFromCard"><span class="context-return-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h5"/></svg></span><strong id="cardParentLabel">专题卡片</strong></button><small id="cardParentMeta">CARD</small></div>
         <div class="review-toolbar" id="reviewToolbar">
-          <div class="mode-switch" aria-label="学习模式">
-            <button type="button" data-mode="recall">回忆模式</button>
-            <button type="button" data-mode="memorize">背诵模式</button>
+          <div class="mode-switch" role="group" aria-label="学习模式">
+            <button type="button" data-mode="recall" aria-pressed="false">回忆模式</button>
+            <button type="button" data-mode="memorize" aria-pressed="true">背诵模式</button>
           </div>
           <span id="reviewMeta">自由浏览</span>
+          <button class="session-pause-button" id="pauseSessionButton" type="button" hidden>暂停本次</button>
         </div>
         <div class="review-progress" id="reviewProgress" hidden><span></span></div>
         <article id="cardArticle" aria-live="polite"></article>
@@ -106,7 +113,10 @@
         <span class="kicker">GLOBAL SEARCH</span><h1>搜索</h1>
         <p class="page-description">搜索标题、核心结论、分论点、例证与考场表述。</p>
         <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="输入知识点"></label>
-        <div class="filter-row" id="searchFilters"><button class="active" data-filter="all">全部</button><button data-filter="706">706</button><button data-filter="807">807</button><button data-filter="politics">政治</button><button data-filter="weak">不熟悉</button></div>
+        <div class="filter-stack">
+          <div class="filter-row" id="searchSubjectFilters" role="group" aria-label="按科目筛选"><button class="active" data-subject-filter="all" aria-pressed="true">全部科目</button><button data-subject-filter="706" aria-pressed="false">706</button><button data-subject-filter="807" aria-pressed="false">807</button><button data-subject-filter="politics" aria-pressed="false">政治</button></div>
+          <div class="filter-row" id="searchMasteryFilters" role="group" aria-label="按熟悉度筛选"><button class="active" data-mastery-filter="all" aria-pressed="true">全部状态</button><button data-mastery-filter="weak" aria-pressed="false">不熟悉</button><button data-mastery-filter="strong" aria-pressed="false">已熟悉</button></div>
+        </div>
         <div class="card-title-list search-results" id="searchResults"><div class="empty-state">输入关键词开始搜索</div></div>
       </section>
 
@@ -199,7 +209,7 @@
     <div class="edge-back-indicator" id="edgeBackIndicator" aria-hidden="true"><span></span></div>
 
     <nav class="bottom-nav" aria-label="主要导航">
-      <button class="active" type="button" data-route="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3l8.5 7.5M5.5 9v11h13V9M9.5 20v-6h5v6"/></svg><em>首页</em></button>
+      <button class="active" type="button" data-route="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3l8.5 7.5M5.5 9v11h13V9M9.5 20v-6h5v6"/></svg><em>首页</em></button>
       <button type="button" data-route="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><em>搜索</em></button>
       <button type="button" data-route="stats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10m6 10V4m6 16v-7m5 7H2"/></svg><em>统计</em></button>
       <button type="button" data-route="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg><em>设置</em></button>

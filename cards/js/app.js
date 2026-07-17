@@ -10,8 +10,9 @@
   const state = {
     cards: [], topics: [], currentSubject: '706', currentTopic: null, currentCard: null,
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
-    cardMode: 'memorize', revealed: true, hintLevel: 0, searchFilter: 'all',
-    session: null, reviewingSession: false, timer: null, cardStartedAt: 0, cardStartedSeconds: 0, editorCard: null,
+    cardMode: 'memorize', revealed: true, hintLevel: 0, searchSubjectFilter: 'all', searchMasteryFilter: 'all',
+    session: null, pausedSessions: {}, reviewDurationMinutes: 10, reviewingSession: false, timer: null,
+    cardStartedAt: 0, cardStartedSeconds: 0, freeElapsed: 0, editorCard: null,
     deviceId: null, syncing: false, ratingInProgress: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null, activeConflict: null
   };
   const $ = selector => document.querySelector(selector);
@@ -52,7 +53,11 @@
     state.route = route;
     $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === route));
     const primaryRoute = ['home','today','subject','topic','card'].includes(route) ? 'home' : route === 'trash' ? 'settings' : route;
-    $$('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.route === primaryRoute));
+    $$('.bottom-nav button').forEach(button => {
+      const active = button.dataset.route === primaryRoute;
+      button.classList.toggle('active', active);
+      if (active) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
+    });
     $('#mainContent').scrollTo(0, 0);
     if (route === 'home') renderHome();
     if (route === 'today') renderToday();
@@ -75,29 +80,74 @@
 
   function renderToday() {
     const activeSubject = state.session && state.session.status === 'active' ? state.session.subject : null;
+    $$('#reviewDurationPicker [data-review-minutes]').forEach(button => {
+      const active = Number(button.dataset.reviewMinutes) === state.reviewDurationMinutes;
+      button.classList.toggle('active', active); button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
     $('#todaySubjectList').innerHTML = Object.keys(subjectLabels).map(subject => {
-      const queue = CardsScheduler.buildQueue(state.cards, subject);
+      const queue = CardsScheduler.buildQueue(state.cards, subject, reviewQueueOptions());
       const active = activeSubject === subject;
+      const paused = Boolean(state.pausedSessions[sessionKey({ subject })]);
       const minutes = queue.ids.length ? Math.max(1, Math.round(queue.estimated_seconds / 60)) : 0;
-      return `<button class="today-subject ${active ? 'active-session' : ''}" data-today-subject="${subject}"><span><strong>${subjectLabels[subject][0]}</strong><small>${active ? '有未完成进度 · 点击继续' : `${queue.due_count} 张待复习 · 预计 ${minutes} 分钟`}</small></span><em>${active ? '继续' : '开始'}</em></button>`;
+      const status = active ? '正在进行 · 点击继续' : paused ? '已暂停 · 点击继续' : `${queue.due_count} 张待复习 · 本次约 ${minutes} 分钟`;
+      return `<button class="today-subject ${active || paused ? 'active-session' : ''}" data-today-subject="${subject}"><span><strong>${subjectLabels[subject][0]}</strong><small>${status}</small></span><em>${active || paused ? '继续' : '开始'}</em></button>`;
     }).join('');
     $$('[data-today-subject]').forEach(button => button.onclick = () => startDailyReview(button.dataset.todaySubject));
   }
 
+  function sessionKey(session) { return session && session.kind === 'topic' ? `topic:${session.topic_id}` : `daily:${session && session.subject}`; }
+  function reviewQueueOptions() {
+    const targetSeconds = state.reviewDurationMinutes * 60;
+    return { targetSeconds, hardLimitSeconds: state.reviewDurationMinutes >= 45 ? 3600 : Math.max(targetSeconds, 420) };
+  }
+  async function persistPausedSessions() {
+    const setting = await CardsDB.setSetting('paused_review_sessions', state.pausedSessions);
+    await CardsSync.enqueue('setting_changed', 'paused_review_sessions', { setting });
+  }
+  async function pauseActiveSession() {
+    if (!state.session || state.session.status !== 'active') return null;
+    await pauseTimer({ persist: false });
+    const paused = { ...state.session, status: 'paused', updated_at: new Date().toISOString() };
+    await CardsDB.put('sessions', paused);
+    state.pausedSessions[sessionKey(paused)] = paused;
+    state.session = null; state.reviewingSession = false;
+    const activeSetting = await CardsDB.setSetting('active_review_session', null);
+    await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: activeSetting });
+    await persistPausedSessions();
+    return paused;
+  }
+  async function activatePausedSession(key) {
+    const paused = state.pausedSessions[key]; if (!paused) return null;
+    delete state.pausedSessions[key];
+    state.session = { ...paused, status: 'active', updated_at: new Date().toISOString() };
+    await CardsDB.put('sessions', state.session);
+    const activeSetting = await CardsDB.setSetting('active_review_session', state.session);
+    await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: activeSetting });
+    await persistPausedSessions();
+    return state.session;
+  }
+  function resumeActiveSession() {
+    if(!state.session||state.session.status!=='active'||!state.session.card_ids.length)return navigate('today');
+    const index=Math.min(state.session.current_index||0,state.session.card_ids.length-1),saved=state.session.current_card_state;
+    const restore=saved&&saved.card_id===state.session.card_ids[index]?saved:null;
+    return openCard(state.session.card_ids[index],restore?restore.scroll_y:0,{session:true,restore});
+  }
+
   async function startDailyReview(subject) {
-    if (state.session && state.session.status === 'active' && state.session.subject !== subject) {
-      showToast(`请先完成或继续 ${subjectLabels[state.session.subject][0]} 的复习`); return;
+    if (state.session && state.session.status === 'active' && (state.session.subject !== subject || state.session.kind === 'topic')) {
+      await pauseActiveSession(); showToast('已暂停上一科，可稍后继续');
     }
-    if (state.session && state.session.status === 'active' && state.session.subject === subject && state.session.card_ids.length) {
-      const index = Math.min(state.session.current_index || 0, state.session.card_ids.length - 1);
-      const saved = state.session.current_card_state;
-      const restore = saved && saved.card_id === state.session.card_ids[index] ? saved : null;
-      return openCard(state.session.card_ids[index], restore ? restore.scroll_y : 0, { session: true, restore });
+    if (state.session && state.session.status === 'active' && state.session.subject === subject && state.session.card_ids.length) return resumeActiveSession();
+    const paused = await activatePausedSession(sessionKey({ subject }));
+    if (paused && paused.card_ids.length) {
+      const index = Math.min(paused.current_index || 0, paused.card_ids.length - 1), saved = paused.current_card_state;
+      const restore = saved && saved.card_id === paused.card_ids[index] ? saved : null;
+      return openCard(paused.card_ids[index], restore ? restore.scroll_y : 0, { session: true, restore });
     }
-    const queue = CardsScheduler.buildQueue(state.cards, subject);
+    const queue = CardsScheduler.buildQueue(state.cards, subject, reviewQueueOptions());
     if (!queue.ids.length) { showToast('这个科目目前没有到期卡片'); return; }
     const now = new Date().toISOString();
-    state.session = { id: uid('session'), subject, card_ids: queue.ids, current_index: 0, reviewed_card_ids: [], seconds: 0, started_at: now, updated_at: now, status: 'active', estimated_seconds: queue.estimated_seconds };
+    state.session = { id: uid('session'), subject, card_ids: queue.ids, current_index: 0, reviewed_card_ids: [], seconds: 0, started_at: now, updated_at: now, status: 'active', estimated_seconds: queue.estimated_seconds, target_minutes: state.reviewDurationMinutes };
     await CardsDB.put('sessions', state.session); await CardsDB.setSetting('active_review_session', state.session);
     openCard(queue.ids[0], 0, { session: true });
   }
@@ -106,10 +156,11 @@
     const topic=state.currentTopic;if(!topic)return;
     if(state.session&&state.session.status==='active'){
       if(state.session.kind==='topic'&&state.session.topic_id===topic.id){const index=Math.min(state.session.current_index||0,state.session.card_ids.length-1),saved=state.session.current_card_state,restore=saved&&saved.card_id===state.session.card_ids[index]?saved:null;return openCard(state.session.card_ids[index],restore?restore.scroll_y:0,{session:true,restore});}
-      showToast('已有未完成复习，请先继续或完成当前进度');return;
+      await pauseActiveSession();showToast('已暂停上一组复习，可稍后继续');
     }
-    const queue=CardsScheduler.buildTopicQueue(state.cards,topic.id);if(!queue.ids.length){showToast('这个专题还没有可复习卡片');return;}
-    const now=new Date().toISOString();state.session={id:uid('session'),kind:'topic',topic_id:topic.id,subject:topic.subject,card_ids:queue.ids,current_index:0,reviewed_card_ids:[],seconds:0,started_at:now,updated_at:now,status:'active',estimated_seconds:queue.estimated_seconds};
+    const paused=await activatePausedSession(sessionKey({kind:'topic',topic_id:topic.id}));if(paused&&paused.card_ids.length){const index=Math.min(paused.current_index||0,paused.card_ids.length-1),saved=paused.current_card_state,restore=saved&&saved.card_id===paused.card_ids[index]?saved:null;return openCard(paused.card_ids[index],restore?restore.scroll_y:0,{session:true,restore});}
+    const queue=CardsScheduler.buildTopicQueue(state.cards,topic.id,reviewQueueOptions());if(!queue.ids.length){showToast('这个专题还没有可复习卡片');return;}
+    const now=new Date().toISOString();state.session={id:uid('session'),kind:'topic',topic_id:topic.id,subject:topic.subject,card_ids:queue.ids,current_index:0,reviewed_card_ids:[],seconds:0,started_at:now,updated_at:now,status:'active',estimated_seconds:queue.estimated_seconds,target_minutes:state.reviewDurationMinutes};
     await CardsDB.put('sessions',state.session);await CardsDB.setSetting('active_review_session',state.session);openCard(queue.ids[0],0,{session:true});
   }
 
@@ -151,7 +202,7 @@
   function renderTopicCards() {
     let cards = state.cards.filter(card => card.topic_id === state.currentTopic.id);
     cards.sort(state.sortByMastery ? (a,b)=>masteryLevel(a)-masteryLevel(b)||a.order-b.order : (a,b)=>a.order-b.order);
-    $('#topicCardCount').textContent = `${cards.length} 张卡`; $('#sortCardsButton').textContent = state.sortByMastery ? '最不熟悉优先' : '知识结构顺序'; $('#reviewTopicButton').disabled=!cards.length;
+    $('#topicCardCount').textContent = `${cards.length} 张卡`; $('#sortCardsButton').textContent = state.sortByMastery ? '最不熟悉优先' : '知识结构顺序'; $('#sortCardsButton').setAttribute('aria-pressed', state.sortByMastery ? 'true' : 'false'); $('#reviewTopicButton').disabled=!cards.length;
     $('#cardTitleList').innerHTML = cards.map(CardsRender.cardTitleRow).join('') || '<div class="empty-state">该专题还没有卡片</div>'; bindCardRows('#cardTitleList');
   }
 
@@ -166,18 +217,19 @@
     const restored = options && options.restore;
     state.cardMode = restored && restored.mode ? restored.mode : sessionMode ? 'recall' : 'memorize';
     state.revealed = restored && typeof restored.revealed === 'boolean' ? restored.revealed : !sessionMode;
-    state.hintLevel = restored ? Number(restored.hint_level || 0) : 0; state.cardStartedAt = Date.now();
+    state.hintLevel = restored ? Number(restored.hint_level || 0) : 0; state.cardStartedAt = Date.now(); state.freeElapsed = 0;
     renderCard(); navigate('card'); startTimer(); state.cardStartedSeconds = state.timer ? state.timer.getSeconds() : 0; await saveResumePosition(restoreScroll || 0);
     requestAnimationFrame(() => $('#mainContent').scrollTo(0, restoreScroll || 0));
   }
   function renderCard() {
     $('#cardArticle').innerHTML = CardsRender.cardArticle(state.currentCard, state.currentTopic, { mode: state.cardMode, revealed: state.revealed, hintLevel: state.hintLevel });
-    $$('.mode-switch button').forEach(button => button.classList.toggle('active', button.dataset.mode === state.cardMode));
+    $$('.mode-switch button').forEach(button => { const active=button.dataset.mode===state.cardMode;button.classList.toggle('active',active);button.setAttribute('aria-pressed',active?'true':'false'); });
     const recall = state.cardMode === 'recall'; $('#recallControls').hidden = !recall; $('#hintButton').hidden = state.revealed || state.hintLevel >= (state.currentCard.hints || []).length;
     $('#revealButton').hidden = state.revealed; $('#ratingPanel').hidden = !state.revealed;
     const recommendation=recall&&state.revealed?recommendedRating():null;
     $$('.rating-grid [data-rating]').forEach(button=>{button.classList.toggle('recommended',button.dataset.rating===recommendation);button.disabled=state.ratingInProgress;});
     $('#ratingRecommendation').textContent=recommendation?`根据提示使用情况，建议：${CardsScheduler.ratings[recommendation].label}（可手动修改）`:'';
+    $('#pauseSessionButton').hidden = !(state.reviewingSession && state.session && state.session.status === 'active');
     if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(state.currentCard.id)) {
       const index = state.session.current_index + 1, total = state.session.card_ids.length;
       $('#reviewMeta').textContent = `${index} / ${total} · ${elapsedLabel(state.timer ? state.timer.getSeconds() : state.session.seconds)}`;
@@ -186,17 +238,22 @@
   }
 
   function startTimer() {
-    if (!state.reviewingSession || !state.session || state.session.status !== 'active' || state.route !== 'card' || document.visibilityState !== 'visible' || state.timer) return;
-    state.timer = new CardsTimer.ActivityTimer({ initialSeconds: state.session.seconds || 0, onTick: seconds => {
-      state.session.seconds = Math.round(seconds); $('#reviewMeta').textContent = `${state.session.current_index + 1} / ${state.session.card_ids.length} · ${elapsedLabel(seconds)}`;
-      if (Math.round(seconds) % 15 === 0) persistSession();
+    if (!state.currentCard || state.route !== 'card' || document.visibilityState !== 'visible' || state.timer) return;
+    const sessionActive = state.reviewingSession && state.session && state.session.status === 'active';
+    const initialSeconds = sessionActive ? state.session.seconds || 0 : state.freeElapsed || 0;
+    state.timer = new CardsTimer.ActivityTimer({ initialSeconds, onTick: seconds => {
+      if (sessionActive) {
+        state.session.seconds = Math.round(seconds); $('#reviewMeta').textContent = `${state.session.current_index + 1} / ${state.session.card_ids.length} · ${elapsedLabel(seconds)}`;
+        if (Math.round(seconds) % 15 === 0) persistSession();
+      } else state.freeElapsed = Math.round(seconds);
     }}); state.timer.start();
   }
   async function pauseTimer(options) {
     if (!state.timer) return;
     const timer = state.timer; state.timer = null;
-    if (state.session) state.session.seconds = timer.stop();
-    if (!options || options.persist !== false) await persistSession();
+    const seconds = timer.stop();
+    if (state.reviewingSession && state.session) state.session.seconds = seconds; else state.freeElapsed = seconds;
+    if (state.reviewingSession && (!options || options.persist !== false)) await persistSession();
   }
   async function persistSession() {
     if (!state.session) return; state.session.updated_at = new Date().toISOString(); await CardsDB.put('sessions', state.session);
@@ -207,8 +264,9 @@
     state.ratingInProgress = true;
     $$('.rating-grid [data-rating]').forEach(button => { button.disabled = true; });
     try {
-      const activeElapsed = state.timer ? state.timer.getSeconds() - state.cardStartedSeconds : 0;
-      const elapsed = Math.max(10, state.reviewingSession ? activeElapsed : Math.round((Date.now() - state.cardStartedAt) / 1000));
+      await pauseTimer();
+      const activeElapsed = state.reviewingSession && state.session ? state.session.seconds - state.cardStartedSeconds : state.freeElapsed;
+      const elapsed = Math.max(10, Math.round(activeElapsed));
       const baseRevision = Number(state.currentCard.revision && state.currentCard.revision.version || 0);
       const updated = CardsScheduler.rate(state.currentCard, rating, new Date(), elapsed);
       updated.revision.device_id = state.deviceId;
@@ -217,6 +275,11 @@
       const reviewEvent = { event_id: uid('review'), card_id: updated.id, subject: updated.subject, rating, elapsed_seconds: elapsed, reviewed_at: updated.schedule.last_reviewed_at, session_id: state.reviewingSession && state.session && state.session.status === 'active' ? state.session.id : null, next_due_at: updated.schedule.due_at };
       await CardsDB.put('review_events', reviewEvent);
       await CardsSync.enqueue('review_rated', updated.id, { card: updated, review_event: reviewEvent }, baseRevision);
+      if (!state.reviewingSession) {
+        const now = new Date().toISOString();
+        const freeSession = { id:uid('session'), kind:'free', subject:updated.subject, card_ids:[updated.id], current_index:1, reviewed_card_ids:[updated.id], seconds:elapsed, started_at:new Date(state.cardStartedAt).toISOString(), updated_at:now, completed_at:now, status:'completed' };
+        await CardsDB.put('sessions', freeSession); await CardsSync.enqueue('session_completed', freeSession.id, { session:freeSession });
+      }
       if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(updated.id)) {
         if (!state.session.reviewed_card_ids.includes(updated.id)) state.session.reviewed_card_ids.push(updated.id);
         state.session.current_index += 1;
@@ -230,7 +293,7 @@
         state.session.current_card_state = null; await persistSession();
         refreshDerivedViews(); return openCard(state.session.card_ids[state.session.current_index], 0, { session: true });
       }
-      showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); await refreshDerivedViews(); renderCard();
+      showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); state.freeElapsed=0;state.cardStartedAt=Date.now();await refreshDerivedViews(); renderCard(); startTimer();
     } finally {
       state.ratingInProgress = false;
       $$('.rating-grid [data-rating]').forEach(button => { button.disabled = false; });
@@ -249,14 +312,21 @@
     setSaveState('本地已保存');
   }
   async function returnFromCard(){await saveResumePosition($('#mainContent').scrollTop);if(state.reviewingSession&&state.session&&state.session.status==='active'){if(state.session.kind==='topic'&&state.session.topic_id)openTopic(state.session.topic_id);else navigate('today');}else if(state.currentTopic)openTopic(state.currentTopic.id);else openSubject(state.currentSubject);}
+  async function pauseCurrentSessionAndExit(){
+    if(!state.session||state.session.status!=='active')return;
+    const paused=await pauseActiveSession();showToast('本次进度已暂停');renderHome();
+    if(paused&&paused.kind==='topic'&&paused.topic_id)openTopic(paused.topic_id);else navigate('today');
+  }
   function canEdgeBack(){return ['today','subject','topic','card','trash'].includes(state.route);}
   async function edgeBack(){if(state.route==='card')return returnFromCard();if(state.route==='topic')return openSubject(state.currentSubject);if(state.route==='subject'||state.route==='today')return navigate('home');if(state.route==='trash')return navigate('settings');}
 
   function renderSearch(query) {
     const normalized = query.trim().toLowerCase(); if (!normalized) { $('#searchResults').innerHTML = '<div class="empty-state">输入关键词开始搜索</div>'; return; }
     const results = state.cards.filter(card => {
-      if (state.searchFilter !== 'all' && state.searchFilter !== 'weak' && card.subject !== state.searchFilter) return false;
-      if (state.searchFilter === 'weak' && !['unrated','forgot','fuzzy'].includes(card.schedule && card.schedule.mastery)) return false;
+      if (state.searchSubjectFilter !== 'all' && card.subject !== state.searchSubjectFilter) return false;
+      const mastery = card.schedule && card.schedule.mastery || 'unrated';
+      if (state.searchMasteryFilter === 'weak' && !['unrated','forgot','fuzzy'].includes(mastery)) return false;
+      if (state.searchMasteryFilter === 'strong' && !['familiar','mastered'].includes(mastery)) return false;
       const topic = state.topics.find(item => item.id === card.topic_id);
       const outline = (card.outline||[]).flatMap(item=>[item.heading,item.text,...(item.children||[]).flatMap(child=>[child.heading,child.text])]);
       return [card.title,card.prompt,card.summary,card.exam_wording,...outline,...(card.examples||[]),...(card.tags||[]),topic&&topic.title].filter(Boolean).join(' ').toLowerCase().includes(normalized);
@@ -267,15 +337,16 @@
   async function renderStats() {
     const events = await CardsDB.getAll('review_events'), sessions = await CardsDB.getAll('sessions');
     const ratingEvents = events.filter(e => e.rating);
-    const today = localDateKey(), todayEvents = ratingEvents.filter(e => localDateKey(e.reviewed_at) === today), todaySessions = sessions.filter(s => localDateKey(s.started_at) === today);
-    $('#statsTodayCards').textContent = todayEvents.length; $('#statsTodayTime').textContent = `${Math.round(todaySessions.reduce((sum,s)=>sum+Number(s.seconds||0),0)/60)} 分`;
+    const today = localDateKey(), todayEvents = ratingEvents.filter(e => localDateKey(e.reviewed_at) === today), todaySessions = sessions.filter(s => localDateKey(s.completed_at||s.updated_at||s.started_at) === today);
+    const todayUniqueCards = new Set(todayEvents.map(event=>event.card_id)).size;
+    $('#statsTodayCards').textContent = todayUniqueCards; $('#statsTodayTime').textContent = `${Math.round(todaySessions.reduce((sum,s)=>sum+Number(s.seconds||0),0)/60)} 分`;
     const dates = new Set(ratingEvents.map(e=>localDateKey(e.reviewed_at))); let streak = 0, cursor = new Date();
     if (!dates.has(localDateKey(cursor))) cursor.setDate(cursor.getDate()-1);
     while (dates.has(localDateKey(cursor))) { streak++; cursor.setDate(cursor.getDate()-1); }
     $('#statsStreak').textContent = `${streak} 天`; $('#statsDue').textContent = state.cards.filter(card=>CardsScheduler.isDue(card)).length;
     const groups = ['unrated','forgot','fuzzy','familiar','mastered'].map(key=>({ key, label:CardsRender.masteryInfo(key).label, count:state.cards.filter(c=>(c.schedule&&c.schedule.mastery||'unrated')===key).length }));
     $('#masteryChart').innerHTML = groups.map(g=>`<div class="chart-row"><span>${g.label}</span><i><b style="width:${state.cards.length ? g.count/state.cards.length*100 : 0}%"></b></i><em>${g.count}</em></div>`).join('');
-    $('#subjectStats').innerHTML=Object.keys(subjectLabels).map(subject=>{const count=todayEvents.filter(event=>event.subject===subject).length,seconds=todaySessions.filter(session=>session.subject===subject).reduce((sum,session)=>sum+Number(session.seconds||0),0);return`<div class="chart-row"><span>${subject==='politics'?'政治':subject}</span><i><b style="width:${todayEvents.length?count/todayEvents.length*100:0}%"></b></i><em>${count}张 · ${Math.round(seconds/60)}分</em></div>`;}).join('');
+    $('#subjectStats').innerHTML=Object.keys(subjectLabels).map(subject=>{const subjectEvents=todayEvents.filter(event=>event.subject===subject),count=new Set(subjectEvents.map(event=>event.card_id)).size,seconds=todaySessions.filter(session=>session.subject===subject).reduce((sum,session)=>sum+Number(session.seconds||0),0);return`<div class="chart-row"><span>${subject==='politics'?'政治':subject}</span><i><b style="width:${todayUniqueCards?count/todayUniqueCards*100:0}%"></b></i><em>${count}张 · ${Math.round(seconds/60)}分</em></div>`;}).join('');
     const recentDays=Array.from({length:7},(_,index)=>{const date=new Date();date.setDate(date.getDate()-(6-index));const key=localDateKey(date),count=ratingEvents.filter(event=>localDateKey(event.reviewed_at)===key).length;return{key,count,label:`${date.getMonth()+1}/${date.getDate()}`};}),maxDay=Math.max(1,...recentDays.map(day=>day.count));
     $('#trendChart').innerHTML=recentDays.map(day=>`<div class="trend-day"><i><b style="height:${Math.max(3,day.count/maxDay*100)}%"></b></i><strong>${day.count}</strong><small>${day.label}</small></div>`).join('');
     const thirtyStart=new Date();thirtyStart.setHours(0,0,0,0);thirtyStart.setDate(thirtyStart.getDate()-29);const thirtyEvents=ratingEvents.filter(event=>new Date(event.reviewed_at)>=thirtyStart);$('#trend30Summary').textContent=`近 30 天 ${thirtyEvents.length} 张`;
@@ -434,17 +505,22 @@
   }
   function bindEvents() {
     $$('[data-route]').forEach(button => button.onclick = () => navigate(button.dataset.route));
-    $('#resumeButton').onclick = () => state.session && state.session.status==='active' ? startDailyReview(state.session.subject) : navigate('today');
+    $('#resumeButton').onclick = () => state.session && state.session.status==='active' ? resumeActiveSession() : navigate('today');
     $('#backToSubject').onclick = () => openSubject(state.currentSubject);
     $('#backFromCard').onclick = returnFromCard;
     $('#sortCardsButton').onclick = () => { state.sortByMastery=!state.sortByMastery; renderTopicCards(); };
     $('#reviewTopicButton').onclick = startTopicReview;
+    $('#pauseSessionButton').onclick = pauseCurrentSessionAndExit;
+    $$('#reviewDurationPicker [data-review-minutes]').forEach(button => button.onclick = async () => {
+      state.reviewDurationMinutes=Number(button.dataset.reviewMinutes);renderToday();const setting=await CardsDB.setSetting('review_duration_minutes',state.reviewDurationMinutes);await CardsSync.enqueue('setting_changed','review_duration_minutes',{setting});
+    });
     $$('.mode-switch button').forEach(button => button.onclick = () => { state.cardMode=button.dataset.mode; state.revealed=state.cardMode==='memorize'; state.hintLevel=0; renderCard(); saveResumePosition($('#mainContent').scrollTop); });
     $('#hintButton').onclick = () => { state.hintLevel=Math.min((state.currentCard.hints||[]).length,state.hintLevel+1); renderCard(); saveResumePosition($('#mainContent').scrollTop); };
     $('#revealButton').onclick = () => { state.revealed=true; renderCard(); saveResumePosition($('#mainContent').scrollTop); };
     $$('.rating-grid [data-rating]').forEach(button => button.onclick = () => rateCurrent(button.dataset.rating));
     $('#searchInput').oninput = event => renderSearch(event.target.value);
-    $$('#searchFilters button').forEach(button => button.onclick = () => { state.searchFilter=button.dataset.filter; $$('#searchFilters button').forEach(b=>b.classList.toggle('active',b===button)); renderSearch($('#searchInput').value); });
+    $$('#searchSubjectFilters [data-subject-filter]').forEach(button => button.onclick = () => { state.searchSubjectFilter=button.dataset.subjectFilter;$$('#searchSubjectFilters button').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active?'true':'false');});renderSearch($('#searchInput').value); });
+    $$('#searchMasteryFilters [data-mastery-filter]').forEach(button => button.onclick = () => { state.searchMasteryFilter=button.dataset.masteryFilter;$$('#searchMasteryFilters button').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active?'true':'false');});renderSearch($('#searchInput').value); });
     $('#trashButton').onclick = () => navigate('trash');
     $('#cardEditorForm').addEventListener('submit', async event => { event.preventDefault(); if (!state.editorCard) return; const data=new FormData(event.currentTarget), topic=state.topics.find(item=>item.id===data.get('topic_id')), action=state.editorCard.topic_id===data.get('topic_id')?'edited':'moved', eventType=action==='moved'?'card_moved':'card_updated', baseRevision=Number(state.editorCard.revision&&state.editorCard.revision.version||0), updated={...state.editorCard,title:data.get('title'),prompt:data.get('prompt'),summary:data.get('summary'),exam_wording:data.get('exam_wording'),topic_id:data.get('topic_id'),module:topic?topic.module:state.editorCard.module,revision:{...(state.editorCard.revision||{}),version:baseRevision+1,updated_at:new Date().toISOString(),device_id:state.deviceId}}; await CardsDB.put('cards',updated); state.cards[state.cards.findIndex(c=>c.id===updated.id)]=updated; if(state.currentCard&&state.currentCard.id===updated.id)state.currentCard=updated; await CardsDB.put('review_events',{event_id:uid('manage'),card_id:updated.id,action,subject:updated.subject,topic_id:updated.topic_id,reviewed_at:new Date().toISOString()}); await CardsSync.enqueue(eventType, updated.id, {card:updated,topic}, baseRevision); state.editorCard=null; $('#cardEditor').close(); await refreshDerivedViews(); showToast('知识卡已保存'); });
     const closeEditor=()=>{state.editorCard=null;$('#cardEditor').close();}; $('#closeCardEditor').onclick=closeEditor; $('#cancelCardEditor').onclick=closeEditor;
@@ -475,7 +551,7 @@
     window.addEventListener('pageshow',refreshOnForeground);
     window.addEventListener('focus',refreshOnForeground);
   }
-  async function loadState() { state.cards=await CardsDB.getAll('cards'); state.topics=await CardsDB.getAll('topics'); state.resume=await CardsDB.getSetting('resume_position',null); state.session=await CardsDB.getSetting('active_review_session',null); renderHome(); }
+  async function loadState() { state.cards=await CardsDB.getAll('cards'); state.topics=await CardsDB.getAll('topics'); state.resume=await CardsDB.getSetting('resume_position',null); state.session=await CardsDB.getSetting('active_review_session',null); state.pausedSessions=await CardsDB.getSetting('paused_review_sessions',{});state.reviewDurationMinutes=Number(await CardsDB.getSetting('review_duration_minutes',10))||10;renderHome(); }
   async function refreshOnForeground(){
     if(document.visibilityState!=='visible')return;
     const now=Date.now();if(now-state.lastForegroundRefreshAt<500)return;state.lastForegroundRefreshAt=now;
