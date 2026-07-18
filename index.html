@@ -608,7 +608,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-105228 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-152730 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -641,10 +641,10 @@
       <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · <span id="statHbDone">从 Unit 开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="location.href='uf/'">
-      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 聆听与背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="showReview()">
-      <span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按间隔安排</span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">主动到期</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按主动背诵间隔安排</span></span><span class="source-arrow">›</span>
     </button>
   </div>
   <div class="app-section-title"><h2>本周节奏</h2><span>真实学习记录</span></div>
@@ -944,9 +944,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260718-105228"></script>
-<script src="audio-cache.js?v=20260718-105228"></script>
-<script src="ui-motion.js?v=20260718-105228"></script>
+<script src="review-core.js?v=20260718-152730"></script>
+<script src="audio-cache.js?v=20260718-152730"></script>
+<script src="ui-motion.js?v=20260718-152730"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -975,8 +975,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260718-105228";
-var BUILD_TS = 1784343149;
+var APP_BUILD_ID = "20260718-152730";
+var BUILD_TS = 1784359651;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1384,7 +1384,7 @@ function saveTodayReciteSession() {
   if (todayReciteUndo) {
     undo = {
       idx: todayReciteUndo.idx, entry: packTodayReciteEntry(todayReciteUndo.entry), key: todayReciteUndo.key || '',
-      old: todayReciteUndo.old || null, review: todayReciteUndo.review || {}, activitySource: todayReciteUndo.activitySource,
+      state: todayReciteUndo.state || null, activitySource: todayReciteUndo.activitySource,
       activityMode: todayReciteUndo.activityMode, familiar: !!todayReciteUndo.familiar, practiceOnly: !!todayReciteUndo.practiceOnly
     };
   }
@@ -1406,7 +1406,12 @@ function restoreTodayReciteSession() {
   if (session.undo && session.undo.entry) {
     var undoEntry = hydrateTodayReciteEntry(session.undo.entry);
     if (undoEntry) {
-      todayReciteUndo = { idx: session.undo.idx, entry: undoEntry, key: session.undo.key, old: session.undo.old, review: session.undo.review || {}, activitySource: session.undo.activitySource, activityMode: session.undo.activityMode, familiar: !!session.undo.familiar, practiceOnly: !!session.undo.practiceOnly };
+      var restoredState = session.undo.state || {
+        source: undoEntry.source, en: undoEntry.en, hadPref: !!session.undo.old,
+        oldPref: session.undo.old || null, oldReview: session.undo.review || {},
+        reviewApplied: true, familiar: !!session.undo.familiar, mode: 'recite'
+      };
+      todayReciteUndo = { idx: session.undo.idx, entry: undoEntry, key: session.undo.key, state: restoredState, activitySource: session.undo.activitySource, activityMode: session.undo.activityMode, familiar: !!session.undo.familiar, practiceOnly: !!session.undo.practiceOnly };
     }
   }
   return true;
@@ -1431,6 +1436,18 @@ function buildTodayReciteItems(includeRated) {
   out.sort(function(a, b) { if (a.kind !== b.kind) return a.kind === 'due' ? -1 : 1; return (a.dueAt || 0) - (b.dueAt || 0); });
   return out;
 }
+function countHardReciteItems() {
+  var total = 0;
+  [['vocab', VOCAB], ['hongbaoshu', HONGBAOSHU || []]].forEach(function(dict) {
+    var prefs = loadPrefs(dict[0]), words = dict[1];
+    if (words.length) {
+      for (var i = 0; i < words.length; i++) if (prefs[words[i].en] === 'hard') total++;
+    } else {
+      Object.keys(prefs).forEach(function(en) { if (prefs[en] === 'hard') total++; });
+    }
+  });
+  return total;
+}
 function updateTodayReciteCard() {
   var el = document.getElementById('todayReciteCardSub'); if (!el) return;
   var button = document.getElementById('todayReciteCardButton');
@@ -1442,8 +1459,8 @@ function updateTodayReciteCard() {
     return;
   }
   if (button) button.textContent = '开始背诵';
-  var due = getDueReviewItems(), day = getTodayReciteDayStats();
-  var base = due.length ? due.length + ' 个到期词，跨 Unit 直接背' : '暂时没有到期词，可用它回收不熟词';
+  var due = getDueReviewItems(), hard = countHardReciteItems(), day = getTodayReciteDayStats();
+  var base = '到期 ' + due.length + ' 词 · 不熟 ' + hard + ' 词';
   el.textContent = day.completed ? '今天已背 ' + day.completed + ' 词 · ' + base : base;
 }
 function openTodayRecite() {
@@ -1498,22 +1515,22 @@ function renderTodayRecite() {
 function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; ['todayReciteCn','todayReciteExCn'].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.remove('recite-hidden'); }); haptic(8); }
 function todayReciteRate(familiar) {
   var entry = todayReciteItems[todayReciteIdx]; if (!entry) return;
-  var key = '', old = null, review = {}, activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab';
+  var key = '', activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab', state = null;
   if (!todayRecitePracticeOnly) {
-    var prefs = loadPrefs(entry.source); key = prefKey(entry.source, entry.index); old = prefs[key]; prefs[key] = familiar ? 'familiar' : 'hard'; savePrefs(entry.source, prefs);
-    review = rateReview(entry.source, entry.en, familiar); markTodayReciteRated(entry, 1);
-    showScheduleFeedback((familiar ? '已标记熟悉 · ' : '已标记不熟悉 · ') + reviewScheduleText(entry.source, entry.en));
+    key = prefKey(entry.source, entry.index);
+    state = ReviewCore.applyRating(entry.source, entry.en, familiar, 'recite');
+    markTodayReciteRated(entry, 1);
+    showRatingFeedback(entry.source, entry.en, familiar, 'recite');
   }
   var activityMode = todayRecitePracticeOnly ? 'today_recite_repeat' : 'today_recite';
-  recordLearningActivity(activitySource, entry.en, activityMode); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, old: old, review: review, activitySource: activitySource, activityMode: activityMode, familiar: familiar, practiceOnly: todayRecitePracticeOnly };
+  recordLearningActivity(activitySource, entry.en, activityMode); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, state: state, activitySource: activitySource, activityMode: activityMode, familiar: familiar, practiceOnly: todayRecitePracticeOnly };
   if (familiar) todayReciteStats.familiar++; else todayReciteStats.hard++;
   haptic(18); if (todayReciteIdx < todayReciteItems.length - 1) { todayReciteIdx++; saveTodayReciteSession(); } else { todayReciteDone = true; saveTodayReciteCompletion(); clearTodayReciteSession(); } todayReciteShown = false; updateHomeStats(); renderTodayRecite();
 }
 function todayReciteUndoLast() {
   var u = todayReciteUndo; if (!u) return;
   if (!u.practiceOnly) {
-    var prefs = loadPrefs(u.entry.source); if (u.old) prefs[u.key] = u.old; else delete prefs[u.key]; savePrefs(u.entry.source, prefs);
-    undoReview(u.entry.source, u.entry.en, u.review); markTodayReciteRated(u.entry, -1);
+    ReviewCore.undoRating(u.state); markTodayReciteRated(u.entry, -1);
   }
   undoLearningActivity(u.activitySource, u.entry.en, u.activityMode || 'today_recite'); removeTodayReciteCompletion(); hideScheduleFeedback(); if (u.familiar) todayReciteStats.familiar = Math.max(0, todayReciteStats.familiar - 1); else todayReciteStats.hard = Math.max(0, todayReciteStats.hard - 1); todayReciteIdx = u.idx; todayReciteDone = false; todayReciteShown = false; todayReciteUndo = null; saveTodayReciteSession(); haptic(10); updateHomeStats(); renderTodayRecite();
 }
@@ -1873,8 +1890,8 @@ function renderVocabRecite(entries) {
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var a=document.getElementById('vcCn'),b=document.getElementById('vcExCn');if(a)a.classList.remove('recite-hidden');if(b)b.classList.remove('recite-hidden');haptic(8);}
-function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var p=loadPrefs('vocab'),k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),old=p[k];p[k]=familiar?'familiar':'hard';savePrefs('vocab',p);var review=rateReview('vocab',e.item.en,familiar);showScheduleFeedback((familiar?'已标记熟悉 · ':'已标记不熟悉 · ')+reviewScheduleText('vocab',e.item.en));recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,key:k,old:old,en:e.item.en,review:review,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
-function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;var p=loadPrefs('vocab');if(u.old)p[u.key]=u.old;else delete p[u.key];savePrefs('vocab',p);undoReview('vocab',u.en,u.review);undoLearningActivity('vocab',u.en,'vocab_recite');hideScheduleFeedback();vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
+function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),state=ReviewCore.applyRating('vocab',e.item.en,familiar,'recite');showRatingFeedback('vocab',e.item.en,familiar,'recite');recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,state:state,en:e.item.en,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
+function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;ReviewCore.undoRating(u.state);undoLearningActivity('vocab',u.en,'vocab_recite');hideScheduleFeedback();vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
 function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard');if(!card)return;WordsMotion.bindCardSwipe(card,{edgeReserve:22,onReveal:vocabReciteShow,onLeft:function(){vocabReciteRate(true)},onRight:function(){vocabReciteRate(false)}})}
 
 function getVocabCardStepInfo(entry) {
@@ -2051,9 +2068,8 @@ function vocabCardSetPref(act) {
   if (!entry) return;
   var gw = vocabCardLocalToGW(entry.localIdx);
   var key = prefKey('vocab', gw);
-  var prefs = loadPrefs('vocab');
-  prefs[key] = act;
-  savePrefs('vocab', prefs);
+  ReviewCore.applyRating('vocab', key, act === 'familiar', 'listen');
+  showRatingFeedback('vocab', key, act === 'familiar', 'listen');
   haptic(18);
   updateHomeStats();
   updateVocabCardUI();
@@ -2611,13 +2627,11 @@ document.addEventListener('click', function(e) {
 function setPref(gIdx, wIdx, act) {
   var globalIdx = getGlobalIdx(gIdx, wIdx);
   var key = prefKey(currentDict, globalIdx);
-  var prefs = loadPrefs(currentDict);
   if (act === 'reset') {
-    delete prefs[key];
-  } else {
-    prefs[key] = act;
+    var prefs = loadPrefs(currentDict); delete prefs[key]; savePrefs(currentDict, prefs);
+  } else if (act === 'familiar' || act === 'hard') {
+    ReviewCore.applyRating(currentDict, key, act === 'familiar', 'listen');
   }
-  savePrefs(currentDict, prefs);
   updateBadges();
   updateAllCounts();
   var el = document.getElementById('ws' + gIdx + '_' + wIdx);
@@ -2842,6 +2856,16 @@ function showScheduleFeedback(text) {
 function reviewScheduleText(source, en) {
   var meta = loadReviewMeta(), entry = meta[source + ':' + en];
   return entry && entry.intervalDays ? '下次背诵：' + entry.intervalDays + '天后' : '';
+}
+function showRatingFeedback(source, en, familiar, mode) {
+  var parts = [familiar ? '已标记熟悉' : '已标记不熟悉'];
+  if (familiar) parts.push('晨听：熟悉节奏');
+  else parts.push('晨听：困难强化轮', '今日背诵：已加入');
+  if (mode === 'recite') {
+    var schedule = reviewScheduleText(source === 'hb' ? 'hongbaoshu' : source, en);
+    if (schedule) parts.push(schedule);
+  }
+  showScheduleFeedback(parts.join(' · '));
 }
 function hideScheduleFeedback() {
   var el = document.getElementById('scheduleFeedback'); if (el) el.classList.remove('show');
@@ -3750,7 +3774,7 @@ function updateMorningMeta(item, result) {
     rateReview(reviewSourceForMorning(item), item.en, result === 'familiar');
   }
   if (result === 'familiar' || result === 'hard') {
-    var feedback = (result === 'familiar' ? '已标记熟悉' : '已标记不熟悉') + ' · 下次晨听：' + intervalDays(m, pref[item.en]) + '天后';
+    var feedback = (result === 'familiar' ? '已标记熟悉' : '已标记不熟悉') + ' · 晨听：' + (result === 'familiar' ? '熟悉节奏' : '困难强化轮') + ' · 下次晨听：' + intervalDays(m, pref[item.en]) + '天后';
     if (item.reviewDue) feedback += ' · ' + reviewScheduleText(reviewSourceForMorning(item), item.en);
     showScheduleFeedback(feedback);
   }
@@ -4833,14 +4857,18 @@ function undoMorningRating() {
   var item = morningQueue[morningPos];
   if (!item || !item.morningRating || !item.morningPrefCaptured) return;
   item.morningRating = null;
-  var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
-  try {
-    var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
-    if (item.morningHadPrefBeforeRating) prefs[item.en] = item.morningPrefBeforeRating;
-    else delete prefs[item.en];
-    localStorage.setItem(prefsKey, JSON.stringify(prefs));
-  } catch(e) {}
+  if (item.morningRatingState) ReviewCore.undoRating(item.morningRatingState);
+  else {
+    var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
+    try {
+      var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
+      if (item.morningHadPrefBeforeRating) prefs[item.en] = item.morningPrefBeforeRating;
+      else delete prefs[item.en];
+      localStorage.setItem(prefsKey, JSON.stringify(prefs));
+    } catch(e) {}
+  }
   item.morningPrefCaptured = false;
+  item.morningRatingState = null;
   item.morningPlaybackRating = null;
   morningRatingRestartPending = null;
   updateMorningRatingUI();
@@ -4867,17 +4895,14 @@ function setMorningCurrentRating(rating) {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
   if (item.morningRating === rating) return;
-  var prefsKey = item.source === 'vocab' ? 'vv_prefs' : 'hb_prefs';
-  try {
-    var prefs = JSON.parse(localStorage.getItem(prefsKey) || '{}');
-    if (!item.morningPrefCaptured) {
-      item.morningHadPrefBeforeRating = Object.prototype.hasOwnProperty.call(prefs, item.en);
-      item.morningPrefBeforeRating = prefs[item.en] || null;
-      item.morningPrefCaptured = true;
-    }
-    prefs[item.en] = rating;
-    localStorage.setItem(prefsKey, JSON.stringify(prefs));
-  } catch(e) {}
+  var source = item.source === 'hb' ? 'hongbaoshu' : 'vocab';
+  var state = ReviewCore.applyRating(source, item.en, rating === 'familiar', 'morning');
+  if (!item.morningPrefCaptured) {
+    item.morningHadPrefBeforeRating = state.hadPref;
+    item.morningPrefBeforeRating = state.oldPref;
+    item.morningRatingState = state;
+    item.morningPrefCaptured = true;
+  }
   item.morningRating = rating;
   updateMorningRatingUI();
   if (rating === 'hard') {

@@ -16,6 +16,40 @@
   }
   function loadReviewMeta() { return safeJson(REVIEW_META_KEY, {}); }
   function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta || {})); }
+  function reviewSource(source) {
+    return source === 'hb' ? 'hongbaoshu' : source;
+  }
+  function preferenceStorageKey(source) {
+    return reviewSource(source) === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs';
+  }
+  function applyRating(source, en, familiar, mode, options) {
+    var storageKey = preferenceStorageKey(source), prefs = safeJson(storageKey, {});
+    var hadPref = Object.prototype.hasOwnProperty.call(prefs, en);
+    var oldPref = hadPref ? prefs[en] : null;
+    prefs[en] = familiar ? 'familiar' : 'hard';
+    localStorage.setItem(storageKey, JSON.stringify(prefs));
+    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    var opts = options || {}, oldReview = null, reviewApplied = false;
+    if (mode === 'recite' || (mode === 'morning' && opts.reviewDue)) {
+      oldReview = rateReview(reviewSource(source), en, familiar);
+      reviewApplied = true;
+    }
+    return {
+      source: reviewSource(source), en: en, hadPref: hadPref, oldPref: oldPref,
+      oldReview: oldReview, reviewApplied: reviewApplied, familiar: !!familiar,
+      mode: mode || 'listen'
+    };
+  }
+  function undoRating(state) {
+    if (!state || !state.en) return;
+    var storageKey = preferenceStorageKey(state.source), prefs = safeJson(storageKey, {});
+    if (state.hadPref) prefs[state.en] = state.oldPref;
+    else delete prefs[state.en];
+    if (Object.keys(prefs).length) localStorage.setItem(storageKey, JSON.stringify(prefs));
+    else localStorage.removeItem(storageKey);
+    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (state.reviewApplied) undoReview(state.source, state.en, state.oldReview || {});
+  }
   function rateReview(source, en, familiar) {
     var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
     var next = { streak: old.streak || 0, lapses: old.lapses || 0, intervalDays: old.intervalDays || 0 };
@@ -34,7 +68,7 @@
   function undoReview(source, en, old) {
     var meta = loadReviewMeta(), key = source + ':' + en;
     if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
-    saveReviewMeta(meta);
+    if (Object.keys(meta).length) saveReviewMeta(meta); else localStorage.removeItem(REVIEW_META_KEY);
   }
   function getDueReviewItems(now) {
     var meta = loadReviewMeta(), at = now || Date.now(), items = [];
@@ -107,6 +141,10 @@
     localDayKey: localDayKey,
     loadReviewMeta: loadReviewMeta,
     saveReviewMeta: saveReviewMeta,
+    reviewSource: reviewSource,
+    preferenceStorageKey: preferenceStorageKey,
+    applyRating: applyRating,
+    undoRating: undoRating,
     rateReview: rateReview,
     undoReview: undoReview,
     getDueReviewItems: getDueReviewItems,
