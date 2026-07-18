@@ -55,10 +55,17 @@
     var opts = options || {}, drag = null, revealCalled = false;
     el.style.touchAction = 'pan-y';
     function resetClasses() { el.classList.remove(opts.leftClass || 'swipe-left', opts.rightClass || 'swipe-right'); }
+    function settleHome() {
+      resetClasses();
+      el.style.transition = reduceMotion ? 'none' : 'transform .18s cubic-bezier(.23,1,.32,1)';
+      setX(el, 0, true);
+      setTimeout(function() { if (!drag) el.style.transition = ''; }, 180);
+    }
     function down(e) {
       if (!e.isPrimary || drag || e.button > 0 || e.clientX <= (opts.edgeReserve == null ? 22 : opts.edgeReserve)) return;
       var current = stop(el); setX(el, current, true); revealCalled = false;
-      drag = { id:e.pointerId, startX:e.clientX-current, startY:e.clientY, axis:'', x:current, history:[{x:e.clientX,t:performance.now()}] };
+      el.style.transition = 'none';
+      drag = { id:e.pointerId, startX:e.clientX-current, startY:e.clientY, axis:'', x:current };
     }
     function move(e) {
       if (!drag || e.pointerId !== drag.id) return;
@@ -69,26 +76,22 @@
       }
       if (drag.axis !== 'x') return;
       e.preventDefault();
-      var limit = opts.limit || Math.min(132, el.getBoundingClientRect().width * .38), x = rubber(dx, limit, .5);
-      drag.x = x; drag.history.push({x:e.clientX,t:performance.now()}); if (drag.history.length > 8) drag.history.shift();
+      var limit = opts.limit || 120, x = Math.max(-limit, Math.min(limit, dx));
+      drag.x = x;
       if (!revealCalled && Math.abs(x) > 12) { revealCalled = true; if (opts.onReveal) opts.onReveal(); }
       setX(el, x, true);
-      var cue = opts.cue || Math.min(70, limit * .58);
+      var cue = opts.cue || 70;
       el.classList.toggle(opts.leftClass || 'swipe-left', x < -cue); el.classList.toggle(opts.rightClass || 'swipe-right', x > cue);
     }
     function finish(e) {
       if (!drag || e.pointerId !== drag.id) return;
       var active = drag; drag = null;
-      if (active.axis !== 'x') { resetClasses(); spring(el, 0, 0, {rotate:true}); return; }
-      var baseWidth = el.offsetWidth || el.getBoundingClientRect().width;
-      var v = velocity(active.history), threshold = Math.min(88, baseWidth * .24);
-      var commit = Math.abs(active.x) >= threshold || (Math.abs(v) >= .45 && Math.sign(v) === Math.sign(active.x));
-      if (!commit) { resetClasses(); spring(el, 0, v, {rotate:true}); return; }
-      var left = active.x < 0, target = (left ? -1 : 1) * (baseWidth + 72);
-      spring(el, target, v, { rotate:true, onRest:function() {
-        resetClasses();
-        if (left && opts.onLeft) opts.onLeft(); else if (!left && opts.onRight) opts.onRight();
-      }});
+      if (e.type === 'pointercancel' || active.axis !== 'x') { settleHome(); return; }
+      var threshold = opts.threshold || 80;
+      if (Math.abs(active.x) < threshold) { settleHome(); return; }
+      var left = active.x < 0;
+      resetClasses(); el.style.transition = 'none'; setX(el, 0, true);
+      if (left && opts.onLeft) opts.onLeft(); else if (!left && opts.onRight) opts.onRight();
     }
     el.addEventListener('pointerdown', down);
     el.addEventListener('pointermove', move, {passive:false});
