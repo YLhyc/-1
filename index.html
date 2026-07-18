@@ -595,7 +595,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-082846 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-090533 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -931,9 +931,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260718-082846"></script>
-<script src="audio-cache.js?v=20260718-082846"></script>
-<script src="ui-motion.js?v=20260718-082846"></script>
+<script src="review-core.js?v=20260718-090533"></script>
+<script src="audio-cache.js?v=20260718-090533"></script>
+<script src="ui-motion.js?v=20260718-090533"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -962,8 +962,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260718-082846";
-var BUILD_TS = 1784334526;
+var APP_BUILD_ID = "20260718-090533";
+var BUILD_TS = 1784336733;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3522,13 +3522,16 @@ function showDiagnostic() {
 setTimeout(maybeAutoGithubBackup, 1200);
 setInterval(maybeAutoGithubBackup, GITHUB_BACKUP_POLL_MS);
 document.addEventListener('visibilitychange', function() {
-  if (!document.hidden) {
+  if (document.hidden) {
+    pauseMorningForBackground();
+  } else {
+    syncMorningPlayback();
     scheduleHomeDynamicRefresh();
     setTimeout(maybeAutoGithubBackup, 500);
   }
 });
-window.addEventListener('pageshow', scheduleHomeDynamicRefresh);
-window.addEventListener('focus', scheduleHomeDynamicRefresh);
+window.addEventListener('pageshow', function() { syncMorningPlayback(); scheduleHomeDynamicRefresh(); });
+window.addEventListener('focus', function() { syncMorningPlayback(); scheduleHomeDynamicRefresh(); });
 window.addEventListener('online', function() { setTimeout(maybeAutoGithubBackup, 500); });
 
 // ═══════════ Service Worker ═══════════
@@ -4269,6 +4272,10 @@ var morningAuUrlA = null;
 var morningAuUrlB = null;
 var morningSingle = false; // true when replaying a single word
 var morningRatingRestartPending = null; // familiar waits for the current segment to finish
+var morningRatingAppendPending = null; // hard rating appends reinforcement after the current plan
+var morningDisplayStepInfo = null; // exact plan currently represented by the UI
+var morningCurrentAudioUrl = null; // source URL for the segment the UI says is active
+var morningCurrentAudioToken = 0;
 var morningSessionStart = 0;
 var morningSessionHard = 0;
 var morningSessionFamiliar = 0;
@@ -4346,7 +4353,7 @@ function getMorningStepLabels(item) {
 }
 
 function morningSegUrl(item, step) {
-  var info = getMorningStepLabels(item);
+  var info = arguments.length > 2 && arguments[2] ? arguments[2] : getMorningStepLabels(item);
   if (step >= info.labels.length) return null;
   var lang = info.langs[step];
   if (item.source === 'vocab') {
@@ -4369,6 +4376,16 @@ function morningSegUrl(item, step) {
     if (wInUnit >= unit.length) return null;
     return lang === 'en' ? unit[wInUnit].en_url : unit[wInUnit].cn_url;
   }
+}
+
+function getMorningHardAppendInfo(item, baseInfo) {
+  var fullInfo = getMorningStepLabels(item);
+  var start = Math.min(baseInfo.labels.length, fullInfo.labels.length);
+  return {
+    labels: fullInfo.labels.slice(start),
+    langs: fullInfo.langs.slice(start),
+    rates: fullInfo.rates.slice(start)
+  };
 }
 
 function morningGetAu(slot) {
@@ -4394,12 +4411,14 @@ function morningStopAudio() {
   });
   morningAuUrlA = null;
   morningAuUrlB = null;
+  morningCurrentAudioUrl = null;
+  morningCurrentAudioToken = 0;
 }
 
 function updateMorningPlayerUI() {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
-  var info = getMorningStepLabels(item);
+  var info = morningDisplayStepInfo || getMorningStepLabels(item);
   document.getElementById('mpIdx').textContent = morningPos + 1;
   document.getElementById('mpTotal').textContent = morningQueue.length;
   // Elapsed time
@@ -4456,6 +4475,33 @@ function updateMorningRatingUI() {
   if (card) { card.style.transform = 'translateX(0) rotate(0deg)'; card.classList.remove('swipe-left','swipe-right'); }
 }
 
+function finishMorningCurrentWord(item) {
+  if (!item.morningCompleted) {
+    item.morningCompleted = true;
+    morningSessionCompleted++;
+    advanceMorningCursor(item);
+    if (item.morningRating === 'hard') morningSessionHard++;
+    else if (item.morningRating === 'familiar') morningSessionFamiliar++;
+    updateMorningMeta(item, morningSingle ? 'replay' : (item.morningRating || 'normal'));
+  }
+  morningSingle = false;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
+  morningPos++;
+  morningStep = 0;
+  var elapsed2 = Date.now() - morningSessionStart;
+  var budgetMs2 = morningSettings.durationMin * 60 * 1000;
+  if (elapsed2 >= budgetMs2) { endMorningSession('timeout'); return; }
+  if (morningPos >= morningQueue.length) { maybeExtendOrEnd(); return; }
+  playMorningCurrent();
+}
+
+function skipMorningCurrentForFamiliar(item) {
+  _morningPlayToken++;
+  morningStopAudio();
+  finishMorningCurrentWord(item);
+}
+
 function playMorningCurrent() {
   if (morningPos >= morningQueue.length) {
     endMorningSession();
@@ -4475,6 +4521,7 @@ function playMorningCurrent() {
   _morningPlayToken++;
   var token = _morningPlayToken;
   var item = morningQueue[morningPos];
+  morningDisplayStepInfo = getMorningStepLabels(item);
   updateMorningPlayerUI();
 
   ensureMorningAudio(item, function(err, fileOrUnit) {
@@ -4482,62 +4529,44 @@ function playMorningCurrent() {
     if (item !== morningQueue[morningPos]) return;
     if (err) { skipMorningWord(); return; }
 
-    var stepInfo = getMorningStepLabels(item);
+    var stepInfo = morningDisplayStepInfo || getMorningStepLabels(item);
+    var extraStepInfo = null;
 
     function playSegment() {
       if (token !== _morningPlayToken) return;
       if (item !== morningQueue[morningPos]) return;
       if (!morningPlaying || morningPaused || morningEnded) return;
-      var url = morningSegUrl(item, morningStep);
+      var activeStepInfo = extraStepInfo || stepInfo;
+      morningDisplayStepInfo = activeStepInfo;
+      var url = morningSegUrl(item, morningStep, activeStepInfo);
       if (!url) {
-        if (morningStep < stepInfo.labels.length) {
+        if (morningStep < activeStepInfo.labels.length) {
           morningStep++;
           playSegment();
           return;
         }
-        if (!item.morningCompleted) {
-          item.morningCompleted = true;
-          morningSessionCompleted++;
-          advanceMorningCursor(item);
-          if (item.morningRating === 'hard') {
-            morningSessionHard++;
-          } else if (item.morningRating === 'familiar') {
-            morningSessionFamiliar++;
-          }
-          updateMorningMeta(item, morningSingle ? 'replay' : (item.morningRating || 'normal'));
-        }
-        morningSingle = false;
-        morningPos++;
-        morningStep = 0;
-
-        // Check time budget after each word completes
-        var elapsed2 = Date.now() - morningSessionStart;
-        var budgetMs2 = morningSettings.durationMin * 60 * 1000;
-        if (elapsed2 >= budgetMs2) {
-          endMorningSession('timeout');
+        if (!extraStepInfo && morningRatingAppendPending === item) {
+          extraStepInfo = getMorningHardAppendInfo(item, stepInfo);
+          morningRatingAppendPending = null;
+          morningStep = 0;
+          morningDisplayStepInfo = extraStepInfo;
+          playSegment();
           return;
         }
-        if (morningPos >= morningQueue.length) {
-          maybeExtendOrEnd();
-          return;
-        }
-        playMorningCurrent();
+        finishMorningCurrentWord(item);
         return;
       }
 
-      var stepRate = (stepInfo.rates && stepInfo.rates[morningStep]) ? stepInfo.rates[morningStep] : 1.0;
+      var stepRate = (activeStepInfo.rates && activeStepInfo.rates[morningStep]) ? activeStepInfo.rates[morningStep] : 1.0;
       var au = morningGetAu(morningSlot);
       // Set playbackRate for this segment, reset to 1.0 when done
       au.playbackRate = stepRate;
       au.onended = function() {
         if (token !== _morningPlayToken) return;
         if (item !== morningQueue[morningPos]) return;
+        if (document.hidden) { morningPaused = true; return; }
         // Reset rate after example segment to prevent carrying over
         au.playbackRate = 1.0;
-        if (morningRatingRestartPending === item) {
-          restartMorningWordForRating();
-          return;
-        }
         morningStep++;
         morningSlot = 1 - morningSlot;
         playSegment();
@@ -4545,9 +4574,12 @@ function playMorningCurrent() {
       au.onerror = function() {
         if (token !== _morningPlayToken) return;
         if (item !== morningQueue[morningPos]) return;
+        if (document.hidden) { morningPaused = true; return; }
         au.playbackRate = 1.0;
         skipMorningWord();
       };
+      morningCurrentAudioUrl = url;
+      morningCurrentAudioToken = token;
       morningLoadAu(morningSlot, url);
       updateMorningPlayerUI();
       au.play().catch(function() {
@@ -4560,7 +4592,7 @@ function playMorningCurrent() {
       // Preload next segment in other slot
       var otherSlot = 1 - morningSlot;
       var nextStep = morningStep + 1;
-      var nextUrl = morningSegUrl(item, nextStep);
+      var nextUrl = morningSegUrl(item, nextStep, activeStepInfo);
       if (!nextUrl) {
         var nextIdx = morningPos + 1;
         if (nextIdx < morningQueue.length) {
@@ -4651,6 +4683,10 @@ function startMorning() {
   morningPlaying = true;
   morningSingle = false;
   morningRatingRestartPending = null;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
+  morningCurrentAudioUrl = null;
+  morningCurrentAudioToken = 0;
   morningEnded = false;
   _morningPlayToken = 0;
   morningSessionStart = Date.now();
@@ -4675,14 +4711,41 @@ function startMorning() {
   playMorningCurrent();
 }
 
+function pauseMorningForBackground() {
+  if (!morningPlaying || morningEnded || morningPaused) return;
+  var au = morningGetAu(morningSlot);
+  if (au) au.pause();
+  morningPaused = true;
+  var btn = document.getElementById('mpBtnPlay');
+  if (btn) btn.textContent = '▶';
+  updateMorningPlayerUI();
+}
+
+function syncMorningPlayback() {
+  if (!morningPlaying || morningEnded || morningPaused || morningPos >= morningQueue.length) return;
+  var item = morningQueue[morningPos];
+  var info = morningDisplayStepInfo || getMorningStepLabels(item);
+  var expected = morningSegUrl(item, morningStep, info);
+  var au = morningGetAu(morningSlot);
+  var loaded = morningSlot === 0 ? morningAuUrlA : morningAuUrlB;
+  updateMorningPlayerUI();
+  if (!expected || loaded !== expected || morningCurrentAudioUrl !== expected || morningCurrentAudioToken !== _morningPlayToken) {
+    _morningPlayToken++;
+    morningStopAudio();
+    playMorningCurrent();
+    return;
+  }
+  au.play().catch(function() {});
+}
+
 function toggleMorningPause() {
   if (!morningPlaying) return;
   var au = morningGetAu(morningSlot);
   var btn = document.getElementById('mpBtnPlay');
   if (morningPaused) {
-    au.play();
     morningPaused = false;
     if (btn) btn.textContent = 'Ⅱ';
+    syncMorningPlayback();
   } else {
     au.pause();
     morningPaused = true;
@@ -4699,6 +4762,8 @@ function prevMorningWord() {
   morningStep = 0;
   morningSingle = false;
   morningRatingRestartPending = null;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
   morningPaused = false;
   var btn = document.getElementById('mpBtnPlay');
   if (btn) btn.textContent = 'Ⅱ';
@@ -4720,6 +4785,8 @@ function nextMorningWord() {
   morningStep = 0;
   morningSingle = false;
   morningRatingRestartPending = null;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
   morningPaused = false;
   var btn = document.getElementById('mpBtnPlay');
   if (btn) btn.textContent = 'Ⅱ';
@@ -4739,6 +4806,8 @@ function replayMorningWord() {
   morningStopAudio();
   morningStep = 0;
   morningRatingRestartPending = null;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
   // Restarting before the first completion still counts as one completed review.
   morningSingle = false;
   // Don't change paused state for replay
@@ -4766,6 +4835,8 @@ function undoMorningRating() {
 
 function restartMorningWordForRating() {
   morningRatingRestartPending = null;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
   _morningPlayToken++;
   morningStopAudio();
   morningStep = 0;
@@ -4794,14 +4865,14 @@ function setMorningCurrentRating(rating) {
     localStorage.setItem(prefsKey, JSON.stringify(prefs));
   } catch(e) {}
   item.morningRating = rating;
-  item.morningPlaybackRating = rating;
   updateMorningRatingUI();
   if (rating === 'hard') {
-    // Hard is immediate: stop this segment and replay the complete reinforced round.
-    restartMorningWordForRating();
+    // Hard keeps the current plan intact and appends only the extra reinforcement.
+    morningRatingAppendPending = item;
   } else {
-    // Familiar lets the audible segment finish, then restarts as en + cn only.
-    morningRatingRestartPending = item;
+    // Familiar completes this word immediately and moves to the next one.
+    morningRatingAppendPending = null;
+    skipMorningCurrentForFamiliar(item);
   }
 }
 
@@ -4837,6 +4908,8 @@ function skipMorningWord() {
   morningStep = 0;
   morningSingle = false;
   morningRatingRestartPending = null;
+  morningRatingAppendPending = null;
+  morningDisplayStepInfo = null;
   if (morningPos >= morningQueue.length) {
     maybeExtendOrEnd();
     return;
