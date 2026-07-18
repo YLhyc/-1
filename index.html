@@ -608,7 +608,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-152730 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-174359 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -944,9 +944,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260718-152730"></script>
-<script src="audio-cache.js?v=20260718-152730"></script>
-<script src="ui-motion.js?v=20260718-152730"></script>
+<script src="review-core.js?v=20260718-174359"></script>
+<script src="audio-cache.js?v=20260718-174359"></script>
+<script src="ui-motion.js?v=20260718-174359"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -975,8 +975,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260718-152730";
-var BUILD_TS = 1784359651;
+var APP_BUILD_ID = "20260718-174359";
+var BUILD_TS = 1784367839;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1298,6 +1298,7 @@ function showReview() {
 var TODAY_RECITE_SETTINGS_KEY = 'today_recite_settings_v1';
 var TODAY_RECITE_DAILY_KEY = 'today_recite_daily_v1';
 var TODAY_RECITE_SESSION_KEY = 'today_recite_session_v1';
+var TODAY_RECITE_ROTATION_KEY = 'today_recite_rotation_v1';
 var todayRecitePool = [], todayReciteItems = [], todayReciteIdx = 0, todayReciteShown = false, todayReciteUndo = null, todayReciteDone = false, todayReciteStarted = false;
 var todayReciteStats = null, todayReciteCompletionId = '', todayRecitePracticeOnly = false;
 function loadTodayReciteSettings() {
@@ -1310,6 +1311,16 @@ function saveTodayReciteLimit(limit) {
   localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify({ limit: limit }));
   localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
   return limit;
+}
+function loadTodayReciteRotation() {
+  var state = safeJsonFromStorage(TODAY_RECITE_ROTATION_KEY, { cursor: 0 });
+  if (!state || !Number.isFinite(Number(state.cursor)) || Number(state.cursor) < 0) state = { cursor: 0 };
+  state.cursor = Math.floor(Number(state.cursor));
+  return state;
+}
+function saveTodayReciteRotation(state) {
+  localStorage.setItem(TODAY_RECITE_ROTATION_KEY, JSON.stringify({ cursor: Math.max(0, Math.floor(Number(state && state.cursor) || 0)), updatedAt: Date.now() }));
+  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
 }
 function loadTodayReciteDaily() {
   var data = safeJsonFromStorage(TODAY_RECITE_DAILY_KEY, { days: {}, rated: {} });
@@ -1436,6 +1447,42 @@ function buildTodayReciteItems(includeRated) {
   out.sort(function(a, b) { if (a.kind !== b.kind) return a.kind === 'due' ? -1 : 1; return (a.dueAt || 0) - (b.dueAt || 0); });
   return out;
 }
+function selectTodayReciteItems(pool, limit) {
+  limit = Math.max(1, Number(limit) || 30);
+  var due = pool.filter(function(item) { return item.kind === 'due'; });
+  var hard = pool.filter(function(item) { return item.kind === 'hard'; });
+  var rotation = loadTodayReciteRotation();
+  if (hard.length) {
+    var cursor = rotation.cursor % hard.length;
+    hard = hard.slice(cursor).concat(hard.slice(0, cursor));
+  }
+  // Keep a quarter of the daily task available for hard words when both pools exist.
+  var hardQuota = due.length && hard.length ? Math.min(hard.length, Math.max(1, Math.floor(limit * 0.25))) : Math.min(hard.length, limit);
+  var selected = [];
+  var dueTake = Math.min(due.length, limit - hardQuota);
+  selected = selected.concat(due.slice(0, dueTake));
+  selected = selected.concat(hard.slice(0, hardQuota));
+  var remaining = limit - selected.length;
+  if (remaining > 0) selected = selected.concat(due.slice(dueTake, dueTake + remaining));
+  remaining = limit - selected.length;
+  if (remaining > 0) selected = selected.concat(hard.slice(hardQuota, hardQuota + remaining));
+  var selectedHard = selected.filter(function(item) { return item.kind === 'hard'; }).length;
+  if (selectedHard && hard.length) saveTodayReciteRotation({ cursor: (rotation.cursor + selectedHard) % hard.length });
+  return selected;
+}
+function todayRecitePoolStats(pool) {
+  var out = { total: pool.length, due: 0, hard: 0 };
+  pool.forEach(function(item) { if (item.kind === 'due') out.due++; else if (item.kind === 'hard') out.hard++; });
+  return out;
+}
+function todayReciteBacklogText(pool, limit) {
+  var stats = todayRecitePoolStats(pool), planned = Math.min(Math.max(1, Number(limit) || 30), stats.total);
+  var days = stats.total ? Math.ceil(stats.total / Math.max(1, planned)) : 0;
+  var text = '当前待处理 ' + stats.total + ' 词（到期 ' + stats.due + ' · 不熟 ' + stats.hard + '）· 今日安排 ' + planned + ' 词';
+  if (days > 1) text += ' · 按当前数量约 ' + days + ' 天清完';
+  if (stats.hard > planned) text += ' · 不熟词超过今日容量，将按轮换顺延';
+  return text;
+}
 function countHardReciteItems() {
   var total = 0;
   [['vocab', VOCAB], ['hongbaoshu', HONGBAOSHU || []]].forEach(function(dict) {
@@ -1470,7 +1517,7 @@ function openTodayRecite() {
 function chooseTodayReciteLimit(limit) { saveTodayReciteLimit(limit); renderTodayRecite(); }
 function startTodayRecite() {
   var limit = loadTodayReciteSettings().limit;
-  todayReciteItems = todayRecitePool.slice(0, limit);
+  todayReciteItems = selectTodayReciteItems(todayRecitePool, limit);
   todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; todayReciteStarted = true; todayRecitePracticeOnly = false; todayReciteCompletionId = '';
   var due = 0; todayReciteItems.forEach(function(item) { if (item.kind === 'due') due++; });
   todayReciteStats = { id: Date.now().toString(36), target: limit, familiar: 0, hard: 0, due: due, startedAt: Date.now() };
@@ -1496,7 +1543,7 @@ function renderTodayRecite() {
     var selected = loadTodayReciteSettings().limit, choices = [20,30,50,60], buttons = '';
     choices.forEach(function(n) { buttons += '<button class="recite-limit' + (selected === n ? ' active' : '') + '" onclick="chooseTodayReciteLimit(' + n + ')">' + n + '</button>'; });
     var planned = Math.min(selected, todayRecitePool.length);
-    c.innerHTML = '<div class="recite-setup"><h2>选择今天的背诵量</h2><p>先安排到期词，再补入已标记的不熟词。选择会保留到下次。</p><div class="recite-limit-grid">' + buttons + '</div><div class="recite-availability">当前可复习 ' + todayRecitePool.length + ' 词，本次将安排 ' + planned + ' 词</div><button class="task-button" onclick="startTodayRecite()">开始背诵 ' + planned + ' 词</button></div>';
+    c.innerHTML = '<div class="recite-setup"><h2>选择今天的背诵量</h2><p>到期词优先，同时保留不熟词轮换名额，避免困难词长期排不到。</p><div class="recite-limit-grid">' + buttons + '</div><div class="recite-availability">' + todayReciteBacklogText(todayRecitePool, selected) + '</div><button class="task-button" onclick="startTodayRecite()">开始背诵 ' + planned + ' 词</button></div>';
     return;
   }
   if (!todayReciteItems.length) { c.innerHTML = '<div class="review-empty">当前没有可背诵的单词。</div>'; return; }
@@ -2883,7 +2930,8 @@ function createLearningBackup() {
   all.todayRecite = {
     settings: safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30 }),
     daily: safeJsonFromStorage(TODAY_RECITE_DAILY_KEY, { days: {}, rated: {} }),
-    session: safeJsonFromStorage(TODAY_RECITE_SESSION_KEY, null)
+    session: safeJsonFromStorage(TODAY_RECITE_SESSION_KEY, null),
+    rotation: safeJsonFromStorage(TODAY_RECITE_ROTATION_KEY, { cursor: 0 })
   };
   all.morning = {
     meta: safeJsonFromStorage(MOR_KEYS.meta, {}),
@@ -2938,6 +2986,7 @@ function validateLearningBackup(all) {
     if (all.todayRecite.settings && !isPlainObject(all.todayRecite.settings)) throw new Error('今日背诵设置格式错误');
     if (all.todayRecite.daily && !isPlainObject(all.todayRecite.daily)) throw new Error('今日背诵记录格式错误');
     if (all.todayRecite.session && !isPlainObject(all.todayRecite.session)) throw new Error('今日背诵中断进度格式错误');
+    if (all.todayRecite.rotation && (!isPlainObject(all.todayRecite.rotation) || !isFinite(Number(all.todayRecite.rotation.cursor)) || Number(all.todayRecite.rotation.cursor) < 0)) throw new Error('今日背诵轮换状态格式错误');
   }
   if (all.morning) {
     if (!isPlainObject(all.morning)) throw new Error('晨读数据格式错误');
@@ -2971,6 +3020,7 @@ function applyLearningBackup(all) {
     if (isPlainObject(all.todayRecite.settings)) localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify(all.todayRecite.settings));
     if (isPlainObject(all.todayRecite.daily)) localStorage.setItem(TODAY_RECITE_DAILY_KEY, JSON.stringify(all.todayRecite.daily));
     if (isPlainObject(all.todayRecite.session)) localStorage.setItem(TODAY_RECITE_SESSION_KEY, JSON.stringify(all.todayRecite.session)); else localStorage.removeItem(TODAY_RECITE_SESSION_KEY);
+    if (isPlainObject(all.todayRecite.rotation)) localStorage.setItem(TODAY_RECITE_ROTATION_KEY, JSON.stringify(all.todayRecite.rotation));
   }
   if (all.morning && isPlainObject(all.morning)) {
     if (isPlainObject(all.morning.meta)) localStorage.setItem(MOR_KEYS.meta, JSON.stringify(all.morning.meta));
