@@ -53,7 +53,8 @@
   function bindCardSwipe(el, options) {
     if (!el || !global.PointerEvent) return function() {};
     var opts = options || {}, drag = null, revealCalled = false;
-    el.style.touchAction = 'pan-y';
+    el.style.touchAction = opts.touchAction || 'pan-y';
+    el.style.userSelect = 'none';
     function resetClasses() { el.classList.remove(opts.leftClass || 'swipe-left', opts.rightClass || 'swipe-right'); }
     function settleHome() {
       resetClasses();
@@ -65,18 +66,19 @@
       if (!e.isPrimary || drag || e.button > 0 || e.clientX <= (opts.edgeReserve == null ? 22 : opts.edgeReserve)) return;
       var current = stop(el); setX(el, current, true); revealCalled = false;
       el.style.transition = 'none';
-      drag = { id:e.pointerId, startX:e.clientX-current, startY:e.clientY, axis:'', x:current };
+      drag = { id:e.pointerId, pointerStartX:e.clientX, pointerStartY:e.clientY, originX:current, axis:'', x:current, captured:false };
+      try { el.setPointerCapture(e.pointerId); drag.captured = true; } catch(err) {}
     }
     function move(e) {
       if (!drag || e.pointerId !== drag.id) return;
-      var dx = e.clientX - drag.startX, dy = e.clientY - drag.startY;
-      if (!drag.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= 9) {
-        drag.axis = Math.abs(dx) > Math.abs(dy) * 1.08 ? 'x' : 'y';
-        if (drag.axis === 'x') { try { el.setPointerCapture(e.pointerId); } catch(err) {} }
+      var rawDx = e.clientX - drag.pointerStartX, rawDy = e.clientY - drag.pointerStartY;
+      if (!drag.axis && Math.max(Math.abs(rawDx), Math.abs(rawDy)) >= 6) {
+        drag.axis = Math.abs(rawDx) > Math.abs(rawDy) * 1.05 ? 'x' : 'y';
+        if (drag.axis === 'x') e.preventDefault();
       }
       if (drag.axis !== 'x') return;
       e.preventDefault();
-      var limit = opts.limit || 120, x = Math.max(-limit, Math.min(limit, dx));
+      var limit = opts.limit || 120, x = Math.max(-limit, Math.min(limit, drag.originX + rawDx));
       drag.x = x;
       if (!revealCalled && Math.abs(x) > 12) { revealCalled = true; if (opts.onReveal) opts.onReveal(); }
       setX(el, x, true);
@@ -86,6 +88,7 @@
     function finish(e) {
       if (!drag || e.pointerId !== drag.id) return;
       var active = drag; drag = null;
+      if (active.captured) { try { el.releasePointerCapture(e.pointerId); } catch(err) {} }
       if (e.type === 'pointercancel' || active.axis !== 'x') { settleHome(); return; }
       var threshold = opts.threshold || 80;
       if (Math.abs(active.x) < threshold) { settleHome(); return; }

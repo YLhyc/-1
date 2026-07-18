@@ -608,7 +608,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.0 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.1 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -944,9 +944,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.0.0"></script>
-<script src="audio-cache.js?v=1.0.0"></script>
-<script src="ui-motion.js?v=1.0.0"></script>
+<script src="review-core.js?v=1.0.1"></script>
+<script src="audio-cache.js?v=1.0.1"></script>
+<script src="ui-motion.js?v=1.0.1"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -975,8 +975,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.0.0";
-var BUILD_TS = 1784374916;
+var APP_BUILD_ID = "1.0.1";
+var BUILD_TS = 1784384355;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
