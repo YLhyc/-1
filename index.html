@@ -13,16 +13,29 @@
 <title>Words</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { width:100%; height:100%; overflow:hidden; background:#e5f1f5; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(180deg, #d9f2ff 0, #eaf7ff 260px, #f7fafc 560px); color: #10283a;
-    padding: 16px 16px 104px;
-    padding-top: calc(env(safe-area-inset-top) + 16px);
+    width:100%; height:100%; overflow:hidden;
     -webkit-tap-highlight-color: transparent; user-select: none;
   }
   button { font: inherit; }
   /* ── App shell ── */
-  .app-page { max-width: 640px; margin: 0 auto; }
+  .app-page {
+    width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
+    padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 104px);
+    overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
+    -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
+  }
+  #view-today-recite, #view-units, #view-groups { padding-bottom:calc(env(safe-area-inset-bottom) + 8px); }
+  #view-groups .vocab-card-shell { padding-bottom:18px; }
+  .morning-view {
+    width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
+    overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
+    -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
+  }
+  #view-morning-player { max-width:none; overflow:hidden; }
   .app-topbar { display:flex; justify-content:space-between; align-items:center; min-height:42px; margin-bottom:18px; }
   .app-brand { font-size:16px; font-weight:750; letter-spacing:0; }
   .app-brand-stack { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
@@ -418,7 +431,7 @@
   .schedule-feedback { position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom) + 82px); transform:translateX(-50%); z-index:99998; width:max-content; max-width:calc(100vw - 32px); padding:10px 14px; border-radius:12px; background:rgba(24,52,79,.94); color:#fff; box-shadow:0 10px 28px rgba(16,44,70,.24); font-size:13px; line-height:1.45; text-align:center; pointer-events:none; opacity:0; transition:opacity .18s cubic-bezier(.23,1,.32,1),transform .18s cubic-bezier(.23,1,.32,1); }
   .schedule-feedback.show { opacity:1; transform:translateX(-50%) translateY(-4px); }
   /* Player view — card UI */
-  .morning-player { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
+  .morning-player { display: flex; flex-direction: column; height: 100vh; height:100dvh; padding-top: env(safe-area-inset-top); }
   .morning-player-top { padding: 12px 16px; border-bottom: 1px solid #e8e8ed; }
   .morning-player-progress { font-size: 12px; color: #86868b; margin-bottom: 4px; }
   .morning-player-bar { height: 3px; background: #e0e0e0; border-radius: 2px; overflow: hidden; }
@@ -595,7 +608,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-090533 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 20260718-105228 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -770,7 +783,7 @@
 </div>
 
 <!-- ═══════════ MORNING LOADING ═══════════ -->
-<div id="view-morning-loading" style="display:none;">
+<div id="view-morning-loading" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" onclick="showHome()">← 首页</button>
     <span class="morning-nav-title">今日晨听</span>
@@ -782,7 +795,7 @@
 </div>
 
 <!-- ═══════════ MORNING ERROR ═══════════ -->
-<div id="view-morning-error" style="display:none;">
+<div id="view-morning-error" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" onclick="showHome()">← 首页</button>
     <span class="morning-nav-title">今日晨听</span>
@@ -796,7 +809,7 @@
 </div>
 
 <!-- ═══════════ MORNING HOME ═══════════ -->
-<div id="view-morning-home" style="display:none;">
+<div id="view-morning-home" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" onclick="showHome()">← 首页</button>
     <span class="morning-nav-title">今日晨听</span>
@@ -832,7 +845,7 @@
 </div>
 
 <!-- ═══════════ MORNING QUEUE ═══════════ -->
-<div id="view-morning-queue" style="display:none;">
+<div id="view-morning-queue" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" onclick="showMorningHome()">← 返回</button>
     <span class="morning-nav-title">今日队列</span>
@@ -848,7 +861,7 @@
 </div>
 
 <!-- ═══════════ MORNING PLAYER (card UI) ═══════════ -->
-<div id="view-morning-player" style="display:none;">
+<div id="view-morning-player" class="morning-view" style="display:none;">
   <div class="morning-player">
     <div class="morning-player-top">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -887,7 +900,7 @@
 </div>
 
 <!-- ═══════════ MORNING SUMMARY ═══════════ -->
-<div id="view-morning-summary" style="display:none;">
+<div id="view-morning-summary" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" onclick="showHome()">← 首页</button>
     <span class="morning-nav-title">晨听完成</span>
@@ -908,7 +921,7 @@
 </div>
 
 <!-- ═══════════ MORNING REVIEW ═══════════ -->
-<div id="view-morning-review" style="display:none;">
+<div id="view-morning-review" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" onclick="showMorningHome()">← 返回</button>
     <span class="morning-nav-title">晨读回顾</span>
@@ -931,9 +944,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol">▥</span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=20260718-090533"></script>
-<script src="audio-cache.js?v=20260718-090533"></script>
-<script src="ui-motion.js?v=20260718-090533"></script>
+<script src="review-core.js?v=20260718-105228"></script>
+<script src="audio-cache.js?v=20260718-105228"></script>
+<script src="ui-motion.js?v=20260718-105228"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -962,8 +975,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "20260718-090533";
-var BUILD_TS = 1784336733;
+var APP_BUILD_ID = "20260718-105228";
+var BUILD_TS = 1784343149;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1156,7 +1169,9 @@ function showView(name, options) {
   var opts = options || {};
   var previous = activeViewName;
   hideAllViews();
-  document.getElementById('view-' + name).style.display = 'block';
+  var view = document.getElementById('view-' + name);
+  view.style.display = 'block';
+  view.scrollTop = 0;
   activeViewName = name;
   setAppTab(name);
   updateHomeStats();
@@ -1169,7 +1184,6 @@ function showView(name, options) {
       window.history.pushState({ wordsView:name, wordsDepth:appViewDepth }, '', location.href);
     }
   }
-  if (window.scrollTo) window.scrollTo(0, 0);
 }
 
 function appBackTo(fallback) {
@@ -3994,7 +4008,7 @@ function hideAllViews() {
   var views = ['view-home', 'view-library', 'view-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
   for (var i = 0; i < views.length; i++) {
     var el = document.getElementById(views[i]);
-    if (el) el.style.display = 'none';
+    if (el) { el.style.display = 'none'; el.scrollTop = 0; }
   }
   var nav = document.getElementById('appTabbar');
   if (nav) nav.classList.add('hidden');
