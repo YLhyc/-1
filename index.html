@@ -24,7 +24,7 @@
   /* ── App shell ── */
   .app-page {
     width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
-    padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 88px);
+    padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 104px);
     overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
     -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
   }
@@ -592,19 +592,24 @@
   .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
   .app-tabbar {
     left:15px; right:15px; bottom:0; max-width:640px;
-    height:calc(64px + env(safe-area-inset-bottom));
-    min-height:calc(64px + env(safe-area-inset-bottom));
-    padding:5px 6px env(safe-area-inset-bottom); border-radius:999px;
+    height:64px; min-height:64px; padding:5px 6px; border-radius:999px;
+    overflow:visible;
     background:var(--glass); border-color:var(--glass-line);
     box-shadow:0 22px 58px rgba(12,66,84,.16);
     backdrop-filter:blur(36px) saturate(170%); -webkit-backdrop-filter:blur(36px) saturate(170%);
     transition:transform .24s var(--ease-drawer),opacity .16s var(--ease-out);
   }
-  .app-tab { height:52px; min-height:52px; align-self:start; border-radius:999px; color:#59717b; }
+  .app-tabbar::after {
+    content:''; position:absolute; z-index:0; left:-1px; right:-1px; top:calc(100% - 1px);
+    height:env(safe-area-inset-bottom); pointer-events:none;
+    background:var(--glass); border-left:1px solid var(--glass-line); border-right:1px solid var(--glass-line);
+    backdrop-filter:blur(36px) saturate(170%); -webkit-backdrop-filter:blur(36px) saturate(170%);
+  }
+  .app-tab { min-height:52px; border-radius:999px; color:#59717b; }
   .app-tab.active { color:var(--ocean); }
   .app-tab:active { transform:scale(.97); }
   .app-tab-indicator {
-    position:absolute; z-index:0; top:5px; bottom:calc(env(safe-area-inset-bottom) + 5px); left:0; height:auto; width:0; border-radius:999px;
+    position:absolute; z-index:0; top:5px; bottom:5px; left:0; height:auto; width:0; border-radius:999px;
     pointer-events:none; background:#e1f6f8; box-shadow:inset 0 1px rgba(255,255,255,.82);
     transform:translateX(0); transition:transform .42s var(--ease-drawer),opacity .18s ease;
   }
@@ -656,7 +661,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.8 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.9 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -993,9 +998,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.0.8"></script>
-<script src="audio-cache.js?v=1.0.8"></script>
-<script src="ui-motion.js?v=1.0.8"></script>
+<script src="review-core.js?v=1.0.9"></script>
+<script src="audio-cache.js?v=1.0.9"></script>
+<script src="ui-motion.js?v=1.0.9"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1024,8 +1029,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.0.8";
-var BUILD_TS = 1784440155;
+var APP_BUILD_ID = "1.0.9";
+var BUILD_TS = 1784441427;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
