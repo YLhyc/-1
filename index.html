@@ -557,12 +557,14 @@
   .progress-heat.l2 { background: #72b5f8; }
   .progress-heat.l3 { background: #1683ed; }
   .progress-chart { height: 132px; width: 100%; display: block; }
-  .progress-bars { height: 146px; display: flex; align-items: end; gap: 5px; padding-top: 8px; border-bottom: 1px solid #e2e2e7; }
-  .progress-bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 4px; }
-  .progress-bar-stack { width: 100%; max-width: 14px; min-height: 2px; overflow: hidden; border-radius: 7px 7px 3px 3px; background: #e9f0f4; box-shadow: inset 0 0 0 1px rgba(8,83,106,.04); }
+  .progress-bars { height: 146px; display: flex; align-items: stretch; gap: 5px; padding: 8px 0 0; border-bottom: 1px solid #e2e2e7; }
+  .progress-bar-col { position: relative; flex: 1; min-width: 0; height: 100%; }
+  .progress-bar-stack { position: absolute; left: 50%; bottom: 23px; width: 100%; max-width: 14px; min-height: 2px; overflow: visible; border-radius: 7px 7px 3px 3px; background: #e9f0f4; box-shadow: inset 0 0 0 1px rgba(8,83,106,.04); transform: translateX(-50%); }
   .progress-bar-total { display:block; width:100%; height:100%; min-height:2px; border-radius:inherit; background:#84b7c7; }
   .progress-bar-total.today { background:#07536a; box-shadow:0 3px 9px rgba(7,83,106,.24); }
-  .progress-bar-label { font-size: 9px; color: #8e8e93; white-space: nowrap; }
+  .progress-bar-value { position:absolute; left:50%; top:-15px; transform:translateX(-50%); color:#527580; font-size:8px; font-weight:750; line-height:1; white-space:nowrap; }
+  .progress-bar-total.today + .progress-bar-value { color:#07536a; }
+  .progress-bar-label { position:absolute; left:0; right:0; bottom:1px; height:16px; font-size:9px; line-height:16px; color:#8e8e93; text-align:center; white-space:nowrap; }
   .progress-source-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .progress-source { border-radius: 10px; padding: 10px 8px; text-align: center; background: #f5f5f7; }
   .progress-source-num { font-size: 19px; font-weight: 700; color: #1d1d1f; }
@@ -589,18 +591,18 @@
   }
   .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
   .app-tabbar {
-    left:15px; right:15px; bottom:calc(env(safe-area-inset-bottom) + 15px); max-width:640px;
-    min-height:70px; padding:6px 6px 8px; border-radius:22px;
+    left:15px; right:15px; bottom:15px; max-width:640px;
+    min-height:70px; padding:5px 6px calc(5px + env(safe-area-inset-bottom)); border-radius:999px;
     background:var(--glass); border-color:var(--glass-line);
     box-shadow:0 22px 58px rgba(12,66,84,.16);
     backdrop-filter:blur(36px) saturate(170%); -webkit-backdrop-filter:blur(36px) saturate(170%);
     transition:transform .24s var(--ease-drawer),opacity .16s var(--ease-out);
   }
-  .app-tab { min-height:56px; border-radius:16px; color:#59717b; }
+  .app-tab { min-height:56px; border-radius:999px; color:#59717b; }
   .app-tab.active { color:var(--ocean); }
   .app-tab:active { transform:scale(.97); }
   .app-tab-indicator {
-    position:absolute; z-index:0; top:5px; left:0; height:58px; width:0; border-radius:16px;
+    position:absolute; z-index:0; top:5px; bottom:5px; left:0; height:auto; width:0; border-radius:999px;
     pointer-events:none; background:#e1f6f8; box-shadow:inset 0 1px rgba(255,255,255,.82);
     transform:translateX(0); transition:transform .42s var(--ease-drawer),opacity .18s ease;
   }
@@ -652,7 +654,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.5 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.6 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -989,9 +991,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.0.5"></script>
-<script src="audio-cache.js?v=1.0.5"></script>
-<script src="ui-motion.js?v=1.0.5"></script>
+<script src="review-core.js?v=1.0.6"></script>
+<script src="audio-cache.js?v=1.0.6"></script>
+<script src="ui-motion.js?v=1.0.6"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1020,8 +1022,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.0.5";
-var BUILD_TS = 1784428774;
+var APP_BUILD_ID = "1.0.6";
+var BUILD_TS = 1784432095;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3511,9 +3513,10 @@ function showProgress() {
     var d = recent[b];
     var height = Math.max(d.total > 0 ? 3 : 0, d.total / maxRecent * 100);
     var todayClass = b === recent.length - 1 ? ' today' : '';
+    var valueLabel = d.total > 0 ? '<span class="progress-bar-value">' + d.total + '</span>' : '';
     bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次（生词本 ' + d.vocab + '，红宝书 ' + d.hb + '，不熟词 ' + d.uf + '）">'
       + '<div class="progress-bar-stack" style="height:' + height.toFixed(1) + '%">'
-      + '<i class="progress-bar-total' + todayClass + '"></i></div>'
+      + '<i class="progress-bar-total' + todayClass + '"></i>' + valueLabel + '</div>'
       + '<span class="progress-bar-label">' + (b % 3 === 0 || b === recent.length - 1 ? progressShortDay(d.day) : '') + '</span></div>';
   }
   var totalPlays = totals.vocab + totals.hb + totals.uf;
@@ -3526,7 +3529,7 @@ function showProgress() {
   html += '</div>';
   html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天播放次数越多</div></div>';
   html += '<h3>近30日累计播放</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次播放</div></div>';
-  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub">总播放次数 · 今日用深海蓝高亮；悬停柱体可查看词库来源</div></div>';
+  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub">总播放次数 · 数值固定显示在柱顶，日期固定在柱底；今日用深海蓝高亮</div></div>';
   html += '<h3>各词库累计播放</h3><div class="progress-source-grid">';
   html += '<div class="progress-source"><div class="progress-source-num">' + totals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
   html += '<div class="progress-source"><div class="progress-source-num">' + totals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
