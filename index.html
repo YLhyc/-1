@@ -592,13 +592,13 @@
   .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
   .app-tabbar {
     left:15px; right:15px; bottom:15px; max-width:640px;
-    min-height:70px; padding:5px 6px calc(5px + env(safe-area-inset-bottom)); border-radius:999px;
+    height:64px; min-height:64px; padding:5px 6px; border-radius:999px;
     background:var(--glass); border-color:var(--glass-line);
     box-shadow:0 22px 58px rgba(12,66,84,.16);
     backdrop-filter:blur(36px) saturate(170%); -webkit-backdrop-filter:blur(36px) saturate(170%);
     transition:transform .24s var(--ease-drawer),opacity .16s var(--ease-out);
   }
-  .app-tab { min-height:56px; border-radius:999px; color:#59717b; }
+  .app-tab { min-height:52px; border-radius:999px; color:#59717b; }
   .app-tab.active { color:var(--ocean); }
   .app-tab:active { transform:scale(.97); }
   .app-tab-indicator {
@@ -654,7 +654,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.6 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.7 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -991,9 +991,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.0.6"></script>
-<script src="audio-cache.js?v=1.0.6"></script>
-<script src="ui-motion.js?v=1.0.6"></script>
+<script src="review-core.js?v=1.0.7"></script>
+<script src="audio-cache.js?v=1.0.7"></script>
+<script src="ui-motion.js?v=1.0.7"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1022,8 +1022,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.0.6";
-var BUILD_TS = 1784432095;
+var APP_BUILD_ID = "1.0.7";
+var BUILD_TS = 1784439154;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3501,6 +3501,7 @@ function showProgress() {
   var recent = days.slice(-14);
   var maxRecent = 1;
   for (var r = 0; r < recent.length; r++) maxRecent = Math.max(maxRecent, recent[r].total);
+  var chartMaxHeightPct = 64;
   var heat = '';
   for (var h = 83; h >= 0; h--) {
     var heatDay = progressDayAt(h);
@@ -3511,7 +3512,7 @@ function showProgress() {
   var bars = '';
   for (var b = 0; b < recent.length; b++) {
     var d = recent[b];
-    var height = Math.max(d.total > 0 ? 3 : 0, d.total / maxRecent * 100);
+    var height = Math.max(d.total > 0 ? 3 : 0, d.total / maxRecent * chartMaxHeightPct);
     var todayClass = b === recent.length - 1 ? ' today' : '';
     var valueLabel = d.total > 0 ? '<span class="progress-bar-value">' + d.total + '</span>' : '';
     bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次（生词本 ' + d.vocab + '，红宝书 ' + d.hb + '，不熟词 ' + d.uf + '）">'
@@ -3529,7 +3530,7 @@ function showProgress() {
   html += '</div>';
   html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天播放次数越多</div></div>';
   html += '<h3>近30日累计播放</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次播放</div></div>';
-  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub">总播放次数 · 数值固定显示在柱顶，日期固定在柱底；今日用深海蓝高亮</div></div>';
+  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub">每日总播放 · 今日深海蓝</div></div>';
   html += '<h3>各词库累计播放</h3><div class="progress-source-grid">';
   html += '<div class="progress-source"><div class="progress-source-num">' + totals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
   html += '<div class="progress-source"><div class="progress-source-num">' + totals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
