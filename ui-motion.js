@@ -97,7 +97,8 @@
       if (opts.commitOut) {
         committing = true;
         var distance = Number(opts.exitDistance) || Math.max((global.innerWidth || 320) * .95, (opts.limit || 120) + 64);
-        el.style.transition = reduceMotion ? 'none' : 'transform .16s cubic-bezier(.23,1,.32,1)';
+        var exitDuration = Math.max(80, Number(opts.exitDuration) || 110);
+        el.style.transition = reduceMotion ? 'none' : 'transform ' + exitDuration + 'ms cubic-bezier(.23,1,.32,1)';
         setX(el, left ? -distance : distance, true);
         var completed = false;
         function completeCommit() {
@@ -105,7 +106,7 @@
           completed = true; committing = false; resetClasses(); el.style.transition = '';
           if (left && opts.onLeft) opts.onLeft(); else if (!left && opts.onRight) opts.onRight();
         }
-        if (reduceMotion) completeCommit(); else setTimeout(completeCommit, 170);
+        if (reduceMotion) completeCommit(); else setTimeout(completeCommit, exitDuration + 8);
         return;
       }
       resetClasses(); el.style.transition = 'none'; setX(el, 0, true);
