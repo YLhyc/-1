@@ -163,9 +163,13 @@
   /* ── Nav bar ── */
   .nav-bar { position:sticky; top:calc(env(safe-area-inset-top) * -1 - 16px); z-index:50; display:grid; grid-template-columns:minmax(72px,1fr) minmax(0,2fr) minmax(72px,1fr); align-items:center; min-height:52px; margin:-16px -16px 18px; padding:16px 16px 8px; background:rgba(225,244,255,.84); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
   .nav-back {
-    justify-self:start; background:none; border:none; color:#0878bd; font-size:15px; font-weight:700; cursor:pointer;
-    padding: 6px 0; white-space: nowrap;
+    justify-self:start; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid rgba(5,122,157,.16); border-radius:50%; background:rgba(235,249,252,.88);
+    color:#057a9d; cursor:pointer; padding:0; box-shadow:0 4px 12px rgba(5,122,157,.12);
+    -webkit-tap-highlight-color:transparent; transition:transform .16s var(--ease-out), background-color .16s ease;
   }
+  .nav-back:active { transform:scale(.92); background:rgba(208,241,246,.96); }
+  .nav-back svg, .morning-nav-back svg { width:16px; height:16px; display:block; }
   .nav-title { overflow:hidden; font-size:16px; font-weight:750; text-align:center; white-space:nowrap; text-overflow:ellipsis; }
   .nav-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
   .nav-icon {
@@ -408,7 +412,14 @@
   .morning-stats { font-size: 11px; color: #6b5e3e; line-height: 1.4; }
   .morning-nav { display: flex; align-items: center; padding: 12px 16px; padding-top: calc(env(safe-area-inset-top) + 12px); background: #fff; border-bottom: 1px solid #e8e8ed; position: sticky; top: 0; z-index: 10; }
   .morning-nav-title { flex: 1; text-align: center; font-size: 16px; font-weight: 700; }
-  .morning-nav-back { background: none; border: none; font-size: 24px; color: #007aff; cursor: pointer; padding: 0 8px; }
+  .morning-nav-back {
+    flex:0 0 32px; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid rgba(5,122,157,.16); border-radius:50%; background:rgba(235,249,252,.88);
+    color:#057a9d; cursor:pointer; padding:0; box-shadow:0 4px 12px rgba(5,122,157,.12);
+    -webkit-tap-highlight-color:transparent; transition:transform .16s var(--ease-out), background-color .16s ease;
+  }
+  .morning-nav-back:active { transform:scale(.92); background:rgba(208,241,246,.96); }
+  .morning-nav-back.morning-nav-end { color:#49707b; background:rgba(244,249,250,.92); }
   .morning-loading { text-align: center; padding: 60px 20px; }
   .morning-loading .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #007aff; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -548,10 +559,9 @@
   .progress-chart { height: 132px; width: 100%; display: block; }
   .progress-bars { height: 146px; display: flex; align-items: end; gap: 5px; padding-top: 8px; border-bottom: 1px solid #e2e2e7; }
   .progress-bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 4px; }
-  .progress-bar-stack { width: 100%; max-width: 18px; min-height: 2px; display: flex; flex-direction: column-reverse; overflow: hidden; border-radius: 5px 5px 2px 2px; background: #e8e8ed; }
-  .progress-bar-vocab { background: #1683ed; }
-  .progress-bar-hb { background: #6db3f6; }
-  .progress-bar-uf { background: #ff9f0a; }
+  .progress-bar-stack { width: 100%; max-width: 14px; min-height: 2px; overflow: hidden; border-radius: 7px 7px 3px 3px; background: #e9f0f4; box-shadow: inset 0 0 0 1px rgba(8,83,106,.04); }
+  .progress-bar-total { display:block; width:100%; height:100%; min-height:2px; border-radius:inherit; background:#84b7c7; }
+  .progress-bar-total.today { background:#07536a; box-shadow:0 3px 9px rgba(7,83,106,.24); }
   .progress-bar-label { font-size: 9px; color: #8e8e93; white-space: nowrap; }
   .progress-source-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .progress-source { border-radius: 10px; padding: 10px 8px; text-align: center; background: #f5f5f7; }
@@ -611,16 +621,16 @@
   .word-block { transition:transform .2s var(--ease-out); }
   .btn:active, .task-button:active, .app-icon-btn:active, .unit-btn:active, .vc-btn:active { transition-duration:.1s; }
   @media (prefers-reduced-motion:reduce) {
-    .app-tabbar, .app-edge-back, .app-tab-symbol, .app-tab-indicator, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn { transition:opacity .16s ease !important; }
+    .app-tabbar, .app-edge-back, .app-tab-symbol, .app-tab-indicator, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn, .nav-back, .morning-nav-back { transition:opacity .16s ease !important; }
     .app-tabbar.hidden { opacity:0; transform:none; }
     .app-tab.active .app-tab-symbol, button:active { transform:none !important; }
     .spinner, .morning-loading .spinner { animation-duration:1.2s; }
   }
   @media (prefers-reduced-transparency:reduce) {
-    .app-topbar, .app-tabbar, .nav-bar, .app-edge-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
+    .app-topbar, .app-tabbar, .nav-bar, .app-edge-back, .nav-back, .morning-nav-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
   }
   @media (prefers-contrast:more) {
-    .app-topbar, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list { border-color:#31515e; }
+    .app-topbar, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list, .nav-back, .morning-nav-back { border-color:#31515e; }
     .app-tab, .app-section-title span, .today-sub, .source-meta { color:#40545d; }
   }
 </style>
@@ -642,7 +652,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.4 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.5 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -714,14 +724,14 @@
 
 <!-- ═══════════ TODAY RECITE ═══════════ -->
 <div id="view-today-recite" class="app-page" style="display:none;">
-  <div class="nav-bar"><button class="nav-back" onclick="appBackTo('home')">‹ 今日</button><span class="nav-title">今日背诵</span></div>
+  <div class="nav-bar"><button class="nav-back" aria-label="返回今日" onclick="appBackTo('home')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="nav-title">今日背诵</span></div>
   <div id="todayReciteContainer"></div>
 </div>
 
 <!-- ═══════════ UNIT SELECTOR ═══════════ -->
 <div id="view-units" class="app-page" style="display:none;">
   <div class="nav-bar">
-    <button class="nav-back" onclick="appBackTo('library')">‹ 词库</button>
+    <button class="nav-back" aria-label="返回词库" onclick="appBackTo('library')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="nav-title" id="unitDictTitle"></span>
   </div>
   <div class="jump-row">
@@ -738,7 +748,7 @@
 <!-- ═══════════ WORD GROUPS ═══════════ -->
 <div id="view-groups" class="app-page" style="display:none;">
   <div class="nav-bar">
-    <button class="nav-back" onclick="appBackTo('units')">‹ Unit列表</button>
+    <button class="nav-back" aria-label="返回 Unit 列表" onclick="appBackTo('units')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="nav-title" id="groupTitle"></span>
   </div>
   <div class="toggle-row">
@@ -819,7 +829,7 @@
 <!-- ═══════════ MORNING LOADING ═══════════ -->
 <div id="view-morning-loading" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="morning-nav-title">今日晨听</span>
   </div>
   <div class="morning-loading">
@@ -831,7 +841,7 @@
 <!-- ═══════════ MORNING ERROR ═══════════ -->
 <div id="view-morning-error" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="morning-nav-title">今日晨听</span>
   </div>
   <div class="morning-error">
@@ -845,7 +855,7 @@
 <!-- ═══════════ MORNING HOME ═══════════ -->
 <div id="view-morning-home" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="morning-nav-title">今日晨听</span>
   </div>
   <div class="morning-home-section">
@@ -881,7 +891,7 @@
 <!-- ═══════════ MORNING QUEUE ═══════════ -->
 <div id="view-morning-queue" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" onclick="showMorningHome()">← 返回</button>
+    <button class="morning-nav-back" aria-label="返回晨听" onclick="showMorningHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="morning-nav-title">今日队列</span>
   </div>
   <div style="padding:12px 16px;border-bottom:1px solid #e8e8ed;background:#fff;">
@@ -899,7 +909,7 @@
   <div class="morning-player">
     <div class="morning-player-top">
       <div style="display:flex;justify-content:space-between;align-items:center;">
-        <button class="morning-nav-back" onclick="confirmEndMorning()" style="font-size:16px;padding:4px 8px;">✕ 结束</button>
+        <button class="morning-nav-back morning-nav-end" aria-label="结束晨听" onclick="confirmEndMorning()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div class="morning-player-progress">第 <span id="mpIdx">0</span> / <span id="mpTotal">0</span> 词 · ⌛ <span id="mpElapsed">0</span>分</div>
         <div style="width:40px;"></div>
       </div>
@@ -936,7 +946,7 @@
 <!-- ═══════════ MORNING SUMMARY ═══════════ -->
 <div id="view-morning-summary" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" onclick="showHome()">← 首页</button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="morning-nav-title">晨听完成</span>
   </div>
   <div class="morning-summary">
@@ -957,7 +967,7 @@
 <!-- ═══════════ MORNING REVIEW ═══════════ -->
 <div id="view-morning-review" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" onclick="showMorningHome()">← 返回</button>
+    <button class="morning-nav-back" aria-label="返回晨听" onclick="showMorningHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <span class="morning-nav-title">晨读回顾</span>
   </div>
   <div class="morning-review" id="morningReviewContent"></div>
@@ -979,9 +989,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.0.4"></script>
-<script src="audio-cache.js?v=1.0.4"></script>
-<script src="ui-motion.js?v=1.0.4"></script>
+<script src="review-core.js?v=1.0.5"></script>
+<script src="audio-cache.js?v=1.0.5"></script>
+<script src="ui-motion.js?v=1.0.5"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1010,8 +1020,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.0.4";
-var BUILD_TS = 1784428089;
+var APP_BUILD_ID = "1.0.5";
+var BUILD_TS = 1784428774;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3500,14 +3510,10 @@ function showProgress() {
   for (var b = 0; b < recent.length; b++) {
     var d = recent[b];
     var height = Math.max(d.total > 0 ? 3 : 0, d.total / maxRecent * 100);
-    var vocabH = d.total ? d.vocab / d.total * 100 : 0;
-    var hbH = d.total ? d.hb / d.total * 100 : 0;
-    var ufH = d.total ? d.uf / d.total * 100 : 0;
-    bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次">'
+    var todayClass = b === recent.length - 1 ? ' today' : '';
+    bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次（生词本 ' + d.vocab + '，红宝书 ' + d.hb + '，不熟词 ' + d.uf + '）">'
       + '<div class="progress-bar-stack" style="height:' + height.toFixed(1) + '%">'
-      + '<i class="progress-bar-vocab" style="height:' + vocabH.toFixed(1) + '%"></i>'
-      + '<i class="progress-bar-hb" style="height:' + hbH.toFixed(1) + '%"></i>'
-      + '<i class="progress-bar-uf" style="height:' + ufH.toFixed(1) + '%"></i></div>'
+      + '<i class="progress-bar-total' + todayClass + '"></i></div>'
       + '<span class="progress-bar-label">' + (b % 3 === 0 || b === recent.length - 1 ? progressShortDay(d.day) : '') + '</span></div>';
   }
   var totalPlays = totals.vocab + totals.hb + totals.uf;
@@ -3520,7 +3526,7 @@ function showProgress() {
   html += '</div>';
   html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天播放次数越多</div></div>';
   html += '<h3>近30日累计播放</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次播放</div></div>';
-  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub"><span style="color:#1683ed">■ 生词本</span>　<span style="color:#6db3f6">■ 红宝书</span>　<span style="color:#ff9f0a">■ 不熟词</span></div></div>';
+  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub">总播放次数 · 今日用深海蓝高亮；悬停柱体可查看词库来源</div></div>';
   html += '<h3>各词库累计播放</h3><div class="progress-source-grid">';
   html += '<div class="progress-source"><div class="progress-source-num">' + totals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
   html += '<div class="progress-source"><div class="progress-source-num">' + totals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
