@@ -52,7 +52,7 @@
   }
   function bindCardSwipe(el, options) {
     if (!el || !global.PointerEvent) return function() {};
-    var opts = options || {}, drag = null, revealCalled = false;
+    var opts = options || {}, drag = null, revealCalled = false, committing = false;
     el.style.touchAction = opts.touchAction || 'pan-y';
     el.style.userSelect = 'none';
     function resetClasses() { el.classList.remove(opts.leftClass || 'swipe-left', opts.rightClass || 'swipe-right'); }
@@ -63,7 +63,7 @@
       setTimeout(function() { if (!drag) el.style.transition = ''; }, 180);
     }
     function down(e) {
-      if (!e.isPrimary || drag || e.button > 0 || e.clientX <= (opts.edgeReserve == null ? 22 : opts.edgeReserve)) return;
+      if (!e.isPrimary || drag || committing || e.button > 0 || e.clientX <= (opts.edgeReserve == null ? 22 : opts.edgeReserve)) return;
       var current = stop(el); setX(el, current, true); revealCalled = false;
       el.style.transition = 'none';
       drag = { id:e.pointerId, pointerStartX:e.clientX, pointerStartY:e.clientY, originX:current, axis:'', x:current, captured:false };
@@ -73,7 +73,8 @@
       if (!drag || e.pointerId !== drag.id) return;
       var rawDx = e.clientX - drag.pointerStartX, rawDy = e.clientY - drag.pointerStartY;
       if (!drag.axis && Math.max(Math.abs(rawDx), Math.abs(rawDy)) >= 6) {
-        drag.axis = Math.abs(rawDx) > Math.abs(rawDy) * 1.05 ? 'x' : 'y';
+        var axisRatio = Number(opts.axisRatio) > 0 ? Number(opts.axisRatio) : 1.05;
+        drag.axis = Math.abs(rawDx) > Math.abs(rawDy) * axisRatio ? 'x' : 'y';
         if (drag.axis === 'x') e.preventDefault();
       }
       if (drag.axis !== 'x') return;
@@ -93,6 +94,20 @@
       var threshold = opts.threshold || 80;
       if (Math.abs(active.x) < threshold) { settleHome(); return; }
       var left = active.x < 0;
+      if (opts.commitOut) {
+        committing = true;
+        var distance = Number(opts.exitDistance) || Math.max((global.innerWidth || 320) * .95, (opts.limit || 120) + 64);
+        el.style.transition = reduceMotion ? 'none' : 'transform .16s cubic-bezier(.23,1,.32,1)';
+        setX(el, left ? -distance : distance, true);
+        var completed = false;
+        function completeCommit() {
+          if (completed) return;
+          completed = true; committing = false; resetClasses(); el.style.transition = '';
+          if (left && opts.onLeft) opts.onLeft(); else if (!left && opts.onRight) opts.onRight();
+        }
+        if (reduceMotion) completeCommit(); else setTimeout(completeCommit, 170);
+        return;
+      }
       resetClasses(); el.style.transition = 'none'; setX(el, 0, true);
       if (left && opts.onLeft) opts.onLeft(); else if (!left && opts.onRight) opts.onRight();
     }

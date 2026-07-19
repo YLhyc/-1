@@ -29,6 +29,31 @@
     -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
   }
   #view-today-recite, #view-units, #view-groups { padding-bottom:calc(env(safe-area-inset-bottom) + 8px); }
+  #view-today-recite {
+    height:100vh; height:100dvh; overflow:hidden; display:flex; flex-direction:column;
+  }
+  #view-today-recite #todayReciteContainer {
+    min-height:0; flex:1 1 auto; display:flex; flex-direction:column; overflow:hidden;
+  }
+  #view-today-recite #todayReciteContainer > .vocab-card-shell {
+    width:100%; height:100%; min-height:0; padding:4px 4px 0; justify-content:space-between;
+  }
+  #view-today-recite .vocab-card-progress { flex:none; margin-bottom:6px; }
+  #view-today-recite .vocab-card-stage { min-height:0; flex:1 1 auto; align-items:center; }
+  #view-today-recite .vocab-card {
+    width:min(86vw,420px); height:min(52dvh,430px); min-height:0; padding:22px 20px;
+  }
+  #view-today-recite .vc-word { font-size:36px; margin-bottom:8px; }
+  #view-today-recite .vc-cn { font-size:19px; margin-bottom:14px; }
+  #view-today-recite .vc-example-en { font-size:17px; line-height:1.35; margin-bottom:8px; }
+  #view-today-recite .vc-example-cn { font-size:15px; line-height:1.35; margin-bottom:12px; }
+  #view-today-recite .vocab-card-controls { flex:none; gap:14px; margin-top:8px; }
+  #view-today-recite .vc-btn { width:48px; height:48px; font-size:20px; }
+  #view-today-recite .vc-btn-main { width:56px; height:56px; font-size:22px; }
+  #view-today-recite .recite-rate-actions { flex:none; margin-top:8px; }
+  #view-today-recite .recite-rate-btn { min-height:42px; }
+  #view-today-recite .vc-hint { flex:none; margin-top:6px; font-size:11px; line-height:1.25; }
+  #view-today-recite .recite-setup, #view-today-recite .recite-summary { margin:4px auto 0; max-height:100%; overflow:auto; }
   #view-groups .vocab-card-shell { padding-bottom:18px; }
   .morning-view {
     width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
@@ -617,7 +642,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.2 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.0.3 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -954,9 +979,9 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.0.2"></script>
-<script src="audio-cache.js?v=1.0.2"></script>
-<script src="ui-motion.js?v=1.0.2"></script>
+<script src="review-core.js?v=1.0.3"></script>
+<script src="audio-cache.js?v=1.0.3"></script>
+<script src="ui-motion.js?v=1.0.3"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -985,8 +1010,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.0.2";
-var BUILD_TS = 1784388171;
+var APP_BUILD_ID = "1.0.3";
+var BUILD_TS = 1784426935;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1619,7 +1644,7 @@ function todayReciteUndoLast() {
 }
 function bindTodayReciteSwipe() {
   var card = document.getElementById('todayReciteCard'); if (!card) return;
-  WordsMotion.bindCardSwipe(card, { edgeReserve:22, onReveal:todayReciteShow, onLeft:function(){todayReciteRate(true);}, onRight:function(){todayReciteRate(false);} });
+  WordsMotion.bindCardSwipe(card, { edgeReserve:22, touchAction:'pan-x', axisRatio:.78, commitOut:true, onReveal:todayReciteShow, onLeft:function(){todayReciteRate(true);}, onRight:function(){todayReciteRate(false);} });
 }
 
 function openDueReviewFromButton(button) {
