@@ -2,7 +2,7 @@
   'use strict';
   var STORAGE_KEY = 'focus_words_v1';
   var DIRTY_KEY = 'learning_activity_dirty_v1';
-  var LESSON_WORDS = new Set(["curb", "margin", "initiative", "foster", "interpret"]);
+  var LESSON_WORDS = new Set(["curb", "margin", "initiative", "foster", "interpret", "identical"]);
   var VALID_STATUS = ['pending', 'ready', 'review', 'stable'];
   var toastTimer = 0;
 
@@ -18,6 +18,7 @@
     var key = normalizeWord(word);
     if (!key) return null;
     var status = VALID_STATUS.indexOf(raw.status) >= 0 ? raw.status : (LESSON_WORDS.has(key) ? 'ready' : 'pending');
+    if (status === 'pending' && LESSON_WORDS.has(key)) status = 'ready';
     var sources = Array.isArray(raw.sources) ? raw.sources.map(String).filter(Boolean) : [];
     return {
       word: word,
