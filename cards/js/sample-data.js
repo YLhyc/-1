@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "ad8dee897ba7",
-  "content_version": "ffd43dd9de21",
+  "exam_wording_version": "ba3a27b36ba1",
+  "content_version": "82a69b078d74",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -54,6 +54,14 @@
       "title": "《红楼梦》",
       "order": 60,
       "description": "三重悲剧、叙事艺术与人物塑造"
+    },
+    {
+      "id": "topic_706_character_distinction",
+      "subject": "706",
+      "module": "古代汉语",
+      "title": "古今字、异体字、通假字、假借字",
+      "order": 60,
+      "description": "西华师大历年真题中的四类用字现象辨析与答题框架"
     },
     {
       "id": "topic_706_5057032ab808",
@@ -1280,6 +1288,168 @@
       "revision": {
         "version": 4,
         "updated_at": "2026-07-17T12:05:02+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_0e53d7e5e6f6bed5",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_character_distinction",
+      "order": 10,
+      "title": "古今字、异体字、通假字、假借字如何区分",
+      "prompt": "判断古今字、异体字、通假字、假借字时，分别看哪些条件？",
+      "summary": "先看**时间关系**，再看**音义关系**和使用范围：古今字有先后和意义分工；异体字音义全同、只是写法不同；通假字本有其字而临时借用；假借字本无其字而借音记录。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先总括四类现象，再依次比较古今字、异体字、通假字、假借字的时间、音义和使用边界。"
+      },
+      "outline": [
+        {
+          "heading": "古今字",
+          "text": "有时代先后，今字只分担古字的部分义项，如责—债。"
+        },
+        {
+          "heading": "异体字",
+          "text": "同一时期音、义完全相同，只是形体不同，如峰—峯。"
+        },
+        {
+          "heading": "通假字",
+          "text": "本来有本字，在具体古文中临时借用音同或音近字，如惠—慧。"
+        },
+        {
+          "heading": "假借字",
+          "text": "本来没有专门字形，借用同音或音近字记录词语，强调造字或记录原则。"
+        }
+      ],
+      "examples": [
+        "责—债：古字兼有债务、责任等义，今字分担债务义。",
+        "鹅—鵞：音义全同而形体不同。",
+        "惠—慧：本字存在而在具体句中借惠表示慧。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先按时间，再按意义和使用范围比较。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "历时分工／音义全同／本有其字／本无其字。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "回忆例子：责—债、峰—峯、惠—慧。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "判断这四类用字现象，不能只看现代字形，而要综合考察时间关系、音义关系和使用范围。\n\n第一，{{accent|古今字}}是有时代先后的字，今字产生后分担古字的一个或几个义项，如“责—债”中“债”分担债务义。{{accent|异体字}}则是在同一历史时期内音、义完全相同而形体不同的字，如“峰—峯”，在相同条件下通常可以互相替代。\n\n第二，{{accent|通假字}}是本来已有本字，但古书在具体语境中临时借用音同或音近的字，如“惠—慧”中“惠”是通假字，“慧”是本字。{{accent|假借字}}偏重造字和记录原则，指本来没有专门字形而借用同音或音近字来表示。\n\n因此，古今字看历时分工，异体字看音义全同，通假字看本有其字而临时借用，假借字看本无其字而借音记录。判断具体材料时，应先下定义，再按时代、意义和使用范围逐项比较。",
+      "tags": [
+        "古今字",
+        "异体字",
+        "通假字",
+        "假借字",
+        "西华师大真题"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-19",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/古今字/西华师大706_古今字异体字通假字假借字历年真题专题.md",
+        "session_id": "706-2026-07-19-xihua-character-distinction",
+        "created_at": "2026-07-20T15:10:07+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:10:07+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:10:07+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_3b64f43ebaee6d95",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_character_distinction",
+      "order": 20,
+      "title": "莫—暮与惠—慧的性质辨析",
+      "prompt": "为什么“莫—暮”和“惠—慧”不能归为同一种用字现象？",
+      "summary": "“莫—暮”是古今字关系中的同音假借：莫被借作别义，后造暮表示日暮；“惠—慧”是具体句中的通假：本有慧字而借惠表示聪明。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先分别判定莫—暮和惠—慧，再以“区别维度”统摄时代关系、是否本有其字和使用范围的比较。"
+      },
+      "outline": [
+        {
+          "heading": "莫—暮",
+          "text": "莫原与日暮有关，后被借作否定性无定代词等义，暮为后起字，形成稳定分工。"
+        },
+        {
+          "heading": "惠—慧",
+          "text": "惠在“汝之不惠”中临时借作慧，慧是本字，属于通假。"
+        },
+        {
+          "heading": "区别维度",
+          "text": "前者是古今字的历时关系，后者是具体语境中的共时借用；前者形成字义分工，后者依赖句中语境。"
+        }
+      ],
+      "examples": [
+        "莫—暮：后起“暮”专门表示日暮义。",
+        "《列子·汤问》“甚矣，汝之不惠”：惠通慧，表示聪明。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先分别判断，再比较是否有后起字和是否临时借用。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "古今字／同音假借／通假字／本字。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "“莫—暮”和“惠—慧”都涉及音同或音近，但二者的性质和使用范围不同。\n\n第一，{{accent|“莫—暮”}}中，“莫”原来与日暮义有关，后来又被借作否定性的无定代词等意义；为了重新表示日暮义，后起造“暮”字。因此二者属于古今字关系，其形成机制是同音假借，后来形成了较稳定的字义分工。\n\n第二，{{accent|“惠—慧”}}中，“甚矣，汝之不惠”的“惠”本有仁爱、恩惠等义，这里临时借来表示“慧”的聪明义；“慧”是本字，“惠”是通假字。这种用法依赖具体文献和语境，并未形成古字与后起今字的稳定分工。\n\n从{{accent|区别维度}}看，“莫—暮”是古字与后起今字的历时关系，“惠—慧”是具体语境中的临时借用；前者形成意义分工，后者只是借音代用，{{success|不能仅因都有音近关系就混为一谈}}。",
+      "tags": [
+        "莫暮",
+        "惠慧",
+        "古今字",
+        "通假字",
+        "材料辨析"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-19",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/古今字/西华师大706_古今字异体字通假字假借字历年真题专题.md",
+        "session_id": "706-2026-07-19-xihua-character-distinction",
+        "created_at": "2026-07-20T15:10:07+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:10:07+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:10:07+08:00",
         "device_id": "assistant-706"
       }
     },
@@ -3172,23 +3342,23 @@
         "study_date": "2026-07-13"
       },
       "schedule": {
-        "average_seconds": 75,
-        "difficulty": null,
-        "due_at": "2026-07-16T00:00:00+08:00",
+        "average_seconds": 45,
+        "difficulty": 4.8,
+        "due_at": "2026-07-20T06:02:30.150Z",
         "lapses": 0,
-        "last_reviewed_at": null,
-        "mastery": "unrated",
-        "reps": 0,
-        "stability": null,
-        "state": "new"
+        "last_reviewed_at": "2026-07-17T06:02:30.150Z",
+        "mastery": "familiar",
+        "reps": 1,
+        "stability": 3,
+        "state": "review"
       },
       "revision": {
-        "version": 6,
-        "updated_at": "2026-07-17T12:05:03+08:00",
-        "device_id": "assistant-politics"
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-17T06:02:30.150Z",
+        "version": 7
       }
     }
   ],
-  "release_id": "413444021d89"
+  "release_id": "881267760484"
 };
 })();
