@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "ba3a27b36ba1",
-  "content_version": "82a69b078d74",
+  "exam_wording_version": "ddb5f43123e6",
+  "content_version": "5e1c217f2e29",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -152,6 +152,14 @@
       "description": "物质意识、唯物唯心与可知不可知"
     },
     {
+      "id": "topic_politics_materialism",
+      "subject": "politics",
+      "module": "马原",
+      "title": "物质观",
+      "order": 20,
+      "description": "物质、运动、时空、意识及自然界与人类社会的关系"
+    },
+    {
       "id": "topic_politics_9a290f0fa9d7",
       "subject": "politics",
       "module": "马原",
@@ -166,6 +174,14 @@
       "title": "物质运动与意识活动",
       "order": 30,
       "description": "区分物质运动、意识活动及其物质基础"
+    },
+    {
+      "id": "topic_politics_consciousness",
+      "subject": "politics",
+      "module": "马原",
+      "title": "意识观与世界的物质统一性",
+      "order": 40,
+      "description": "意识的起源和本质、能动作用、人工智能边界与世界的物质统一性"
     }
   ],
   "cards": [
@@ -3136,6 +3152,326 @@
       }
     },
     {
+      "id": "card_politics_5c04f99e0d2f854d",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 10,
+      "title": "意识的起源和本质",
+      "prompt": "如何说明意识的起源和本质？",
+      "summary": "意识是自然界长期发展和社会历史发展的产物，**劳动起决定性作用**、语言促进其发展；意识是人脑的机能和属性，是客观世界的主观映象，是==客观内容和主观形式的统一==。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "先说明{{accent|自然起源}}与社会起源，再从人脑机能和主观映象两个层次界定意识本质。"
+      },
+      "outline": [
+        {
+          "heading": "自然起源",
+          "text": "意识经历反应特性、刺激感应性、高等动物感觉和心理，最终发展为人的意识。"
+        },
+        {
+          "heading": "社会起源",
+          "text": "社会实践特别是**劳动起决定性作用**，语言作为思维的物质外壳和意识的现实形式促进意识发展。"
+        },
+        {
+          "heading": "人脑机能",
+          "text": "意识是人脑这一特殊物质的机能和属性，{{danger|不是人脑本身或人脑的分泌物}}。"
+        },
+        {
+          "heading": "主观映象",
+          "text": "意识是客观世界的能动反映，是==客观内容和主观形式的统一==。"
+        }
+      ],
+      "examples": [
+        "孙悟空虽不是现实中的具体对象，但其形象材料来自猴子、人的动作、服饰和兵器等客观原型。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按起源和本质两部分回答。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "自然发展—劳动语言—人脑机能—主观映象。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "意识既是自然界长期发展的产物，也是社会历史发展的产物。第一，{{accent|自然起源}}表现为物质的反应特性逐步发展为低等生物的刺激感应性、高等动物的感觉和心理，最终发展为人的意识。第二，{{accent|社会起源}}表现为社会实践特别是劳动在意识的产生和发展中起决定性作用，在劳动和交往中形成的语言促进意识发展。\n\n从本质上看，{{accent|人脑机能}}是指意识是人脑这一特殊物质的机能和属性，但不是人脑本身或人脑的分泌物；{{accent|主观映象}}是指意识是客观世界的主观映象，是客观内容和主观形式的统一。它以客观世界为原型，又经过人的主动选择和加工，因而是能动反映而非直观、机械的复制。\n\n因此，{{success|意识的产生和存在必须依赖物质}}，既不能把意识物质化，也不能把意识说成脱离客观世界的主观自生物。",
+      "tags": [
+        "马原",
+        "意识起源",
+        "意识本质",
+        "劳动",
+        "能动反映"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_a12e43f7109b546c",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 20,
+      "title": "意识能动作用与客观规律性",
+      "prompt": "意识的能动作用有哪些表现？怎样正确发挥主观能动性？",
+      "summary": "意识具有目的性和计划性、创造性、指导实践改造世界、调控行为和生理活动四种能动表现；正确发挥主观能动性必须以**尊重客观规律**为前提，以实践为根本途径，并依赖一定物质条件。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先列目的性和计划性、创造性、改造客观世界、调控作用四种表现，再说明正确发挥条件。"
+      },
+      "outline": [
+        {
+          "heading": "目的性和计划性",
+          "text": "实践围绕意识活动预先构建的目标和蓝图展开。"
+        },
+        {
+          "heading": "创造性",
+          "text": "意识能够加工和建构感性材料，形成现实中尚不存在的观念世界。"
+        },
+        {
+          "heading": "改造客观世界",
+          "text": "意识必须==通过实践==指导人把观念转化为客观现实。"
+        },
+        {
+          "heading": "调控作用",
+          "text": "意识和心理因素能够影响人的行为选择和生理活动。"
+        },
+        {
+          "heading": "正确发挥条件",
+          "text": "尊重规律是前提，发挥能动性才能认识利用规律，实践是二者统一基础。"
+        }
+      ],
+      "examples": [
+        "制定考研计划体现目的性和计划性，按客观时间与自身基础执行计划体现规律性和能动性的统一。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先答四种表现，再答规律和能动性的关系。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "目的—创造—实践—调控；规律前提—能动条件—实践统一。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "意识对物质的反作用就是意识的能动作用，即人特有的积极认识世界和改造世界的能力和活动。第一，意识具有{{accent|目的性和计划性}}，人的实践围绕预先构建的目标和蓝图展开。第二，意识具有{{accent|创造性}}，能够对感性材料进行加工、选择和建构。第三，意识能够改造客观世界，即通过实践把观念的东西变成客观现实。第四，意识具有调控作用，能够影响人的行为和生理活动。\n\n意识的能动作用不是主观任性。正确发挥条件是：**尊重客观规律是正确发挥主观能动性的前提**；同时，只有充分发挥主观能动性，才能正确认识和利用客观规律；实践是客观规律性与主观能动性统一的基础。\n\n因此，正确发挥主观能动性必须从实际出发，以实践为根本途径，并依赖一定的物质条件和物质手段。{{danger|人能够认识和利用规律，但不能创造、消灭或改变规律}}。",
+      "tags": [
+        "马原",
+        "意识能动作用",
+        "主观能动性",
+        "客观规律性",
+        "实践"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_c7fda79c64ef3357",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 30,
+      "title": "人工智能与人类意识的边界",
+      "prompt": "如何理解人工智能与人类意识、人类智能的关系？",
+      "summary": "人工智能是人的部分智能活动的机器化，是人类智能的物化和意识能动性的特殊表现；它在特定能力上可以超过人类，但==不能真正具有人的意识，也不能全面取代人类智能==。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先界定技术实质，再从知情意差异、社会属性差异、理解与化约边界说明人工智能与人的意识的区别。"
+      },
+      "outline": [
+        {
+          "heading": "技术实质",
+          "text": "人工智能是对人脑组织结构与思维运行机制的模仿，是人类智能的物化。"
+        },
+        {
+          "heading": "知情意差异",
+          "text": "人的意识是知情意的统一体，人工智能主要模拟和扩展理性智能。"
+        },
+        {
+          "heading": "社会属性差异",
+          "text": "社会性是人的意识所固有的本质属性，人工智能不能真正具备人的社会属性。"
+        },
+        {
+          "heading": "理解与化约边界",
+          "text": "人工智能难以完全理解自然语言真实意义，人的意识也不能全部化约为数字信号。"
+        }
+      ],
+      "examples": [
+        "脑机接口把部分意识活动物化为机器运动，能够延伸意识器官功能，但并未使机器获得人的情感、信念和意志。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先答技术实质，再答四个不可替代原因。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "物化—知情意—社会性—语言—不可化约。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "人工智能的{{accent|技术实质}}是把人的部分智能活动机器化，让机器具有完成某种复杂目标的能力；它是对人脑组织结构与思维运行机制的模仿，是人类智能的物化，也是人的意识能动性和本质力量对象化、现实化的一种表现，能够延伸人的意识器官功能。\n\n但是，人工智能不能真正具有人的意识。第一，知情意差异在于人的意识是知情意的统一体，人工智能主要模拟和扩展理性智能，不具备人的情感、信念和意志。第二，社会属性差异在于社会性是人的意识所固有的本质属性，人工智能不能真正具备人的社会属性。第三，理解与化约边界表现为人工智能难以完全理解自然语言的真实意义，人的意识中仍有许多内容不能被完全化约为数字信号。\n\n因此，人工智能在计算和特定程序化任务上可以超过人类，{{success|但特定功能更强不等于获得人的意识，也不等于能够全面取代人类智能}}。",
+      "tags": [
+        "马原",
+        "人工智能",
+        "人类意识",
+        "知情意",
+        "社会属性"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_5aaf9aabde7cf578",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 40,
+      "title": "世界的物质统一性原理",
+      "prompt": "世界的物质统一性原理包括哪些内容，有什么方法论意义？",
+      "summary": "世界统一于物质：自然界是物质的，人类社会本质上是生产实践基础上形成的物质体系，人的意识统一于物质；其方法论要求是**一切从实际出发**。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先给出世界统一于物质的总判断，再按自然界物质性、人类社会物质性、意识统一于物质展开，最后说明方法论意义。"
+      },
+      "outline": [
+        {
+          "heading": "自然界物质性",
+          "text": "天然自然和人化自然都具有客观实在性。"
+        },
+        {
+          "heading": "人类社会物质性",
+          "text": "人类社会是生产实践基础上形成的物质体系，具有客观规律性。"
+        },
+        {
+          "heading": "意识统一于物质",
+          "text": "意识在起源、本质和作用上都依赖物质。"
+        },
+        {
+          "heading": "方法论意义",
+          "text": "世界的物质统一性要求坚持**一切从实际出发**。"
+        }
+      ],
+      "examples": [
+        "制定复习计划要以考试要求、剩余时间和自身掌握情况为依据，体现一切从实际出发。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按自然界、社会、意识和方法论四层回答。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "自然物质—社会物质体系—意识统一于物质—实际出发。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "世界是统一的，世界的本原是一个。包括自然界和人类社会在内的整个世界，其真正统一性在于物质性，世界统一于物质。\n\n第一，{{accent|自然界物质性}}表现为无论天然自然还是经过实践改造的人化自然，都具有客观实在性。第二，人类社会物质性表现为人类社会本质上是生产实践基础上形成的物质体系；其自然基础、物质资料生产活动和生产方式都是物质的，社会发展具有客观规律性。第三，意识统一于物质表现为从起源、本质和作用看，意识的产生和存在都依赖物质，并通过实践反作用于物质。\n\n世界的物质统一性是多样性的统一，是辩证唯物主义最基本、最核心的观点，是马克思主义的基石。其方法论意义是{{success|坚持一切从实际出发，使主观符合客观}}。",
+      "tags": [
+        "马原",
+        "世界的物质统一性",
+        "自然界",
+        "人类社会",
+        "一切从实际出发"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
       "id": "card_politics_f396ea06de5fe50f",
       "subject": "politics",
       "module": "马原·唯物论",
@@ -3357,8 +3693,306 @@
         "updated_at": "2026-07-17T06:02:30.150Z",
         "version": 7
       }
+    },
+    {
+      "id": "card_politics_ac34c7b93373d3de",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 21,
+      "title": "物质与运动为什么不可分割",
+      "prompt": "为什么说运动必须由物质承担，物质也不能脱离运动？",
+      "summary": "{{accent|运动是物质的根本属性和存在方式}}，物质是一切运动变化的实在基础和承担者；没有脱离物质的运动，也没有脱离运动的物质。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先给出物质与运动不可分割的总判断，再从物质是运动的承担者、运动是物质的存在方式和与意识问题的联系逐项展开。"
+      },
+      "outline": [
+        {
+          "heading": "物质是运动的承担者",
+          "text": "任何运动都有具体的物质载体，把运动说成脱离对象的纯粹动作会滑向唯心主义。"
+        },
+        {
+          "heading": "运动是物质的存在方式",
+          "text": "脱离运动的物质是不存在的，把物质理解为完全静止会滑向形而上学。"
+        },
+        {
+          "heading": "与意识问题的联系",
+          "text": "意识活动可以变化并反作用于物质，但意识不能脱离人脑、实践和物质条件独立存在。"
+        }
+      ],
+      "examples": [
+        "柏格森把运动说成没有物质承担者的纯粹动作，错在割裂物质与运动。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "承担者—存在方式—不可分割。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "物质运动、根本属性、物质载体。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "物质与运动不可分割，运动是物质的根本属性和存在方式，物质是运动的承担者。\n\n首先，从{{accent|物质是运动的承担者}}看，任何运动都有具体的物质载体，把运动说成脱离对象的纯粹动作，就割裂了运动与物质的联系并滑向唯心主义。其次，从{{accent|运动是物质的存在方式}}看，物质总是在运动、变化和发展中存在，把物质理解为完全静止的实体，就会陷入形而上学。\n\n最后，与意识问题的联系表明，意识活动可以变化并反作用于物质，但意识不能脱离人脑、实践和物质条件独立存在。因此，既不能设想无物质的运动，也不能设想脱离运动的物质。 ",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "物质与运动"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_b863d4e75f0227c7",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 22,
+      "title": "时间和空间的客观性",
+      "prompt": "时间和空间有哪些基本性质，如何区分客观时间与主观时间观？",
+      "summary": "时间和空间是{{accent|运动着的物质的基本存在形式}}，与物质运动不可分割；人的时间观可以不同，但时间本身不由意识创造。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "先分别界定时间和空间，再说明认识层面的时间观差异，最后回到时空客观性与物质运动不可分割的结论。"
+      },
+      "outline": [
+        {
+          "heading": "时间",
+          "text": "时间是物质运动的持续性、顺序性，特点是一维性。"
+        },
+        {
+          "heading": "空间",
+          "text": "空间是物质运动的广延性、伸张性，特点是三维性。"
+        },
+        {
+          "heading": "认识层面",
+          "text": "人的实践和认识可以拓展空间观念、形成不同时间观，但不能改变时空的客观实在性。"
+        }
+      ],
+      "examples": [
+        "用天体运动确定年、月、日，用光年衡量距离，说明时空不能脱离物质运动。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "keywords",
+          "text": "时间一维、空间三维、物质运动存在形式。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "不同的时间观不等于时间是意识产物。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "时间和空间是{{accent|运动着的物质的基本存在形式}}，二者与物质运动不可分割并具有客观性。\n\n第一，时间是物质运动的持续性和顺序性，具有一维性；空间是物质运动的广延性和伸张性，具有三维性。物质运动总是在一定时间和空间中进行，时空也不能脱离物质运动单独存在。\n\n第二，在{{accent|认识层面}}，人的实践和认识可以拓展空间观念、形成不同的时间观，但这种主观差异不改变时空的客观实在性。用天体运动确定年、月、日，用光年衡量距离，正说明时空的客观性必须在物质运动中把握。综上，人的时间观可以变化，但不能把客观时空说成意识的产物。",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "时间空间"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_aedb3175306c6ead",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 23,
+      "title": "意识的能动性与人工智能边界",
+      "prompt": "意识具有什么本质和能动作用，人工智能能否取代人的意识？",
+      "summary": "意识是人脑对客观世界的{{accent|主观映象}}，具有能动性和创造性；人工智能可以模拟、延伸人脑部分活动，但不是独立意识主体。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先界定意识的来源和本质，再说明意识的作用，最后以“人工智能边界”为重点对比其工具属性与意识主体边界。"
+      },
+      "outline": [
+        {
+          "heading": "意识的来源和本质",
+          "text": "意识内容来源于客观存在，是人脑对客观世界的能动反映，不是主观自生。"
+        },
+        {
+          "heading": "意识的作用",
+          "text": "意识可以调控人的行为和生理活动，并通过实践反作用于物质。"
+        },
+        {
+          "heading": "人工智能边界",
+          "text": "人工智能是人创造和使用的工具，能扩展人脑某些活动，但不能成为独立实践主体或取代人的整体决策。"
+        }
+      ],
+      "examples": [
+        "同一肖像看出老太太或年轻姑娘，体现意识是客观事物的主观映象；毕加索概括公牛体现意识的创造性。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "客观来源—主观映象—能动反作用。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "AI能模拟部分活动，不等于具有完整人的意识。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "意识是人脑对客观世界的{{accent|主观映象}}，其内容来源于客观存在，表现形式则具有能动性和创造性，并不是主观自生的产物。\n\n首先，从{{accent|意识的来源和本质}}看，意识依赖人脑这一特殊物质，并在社会实践中形成；其次，从{{accent|意识的作用}}看，意识能够调控人的行为和生理活动，并通过实践反作用于物质。由此可见，意识具有相对独立性，但不能脱离物质条件和实践过程。\n\n最后，在{{accent|人工智能边界}}上，人工智能是人创造和使用的工具，可以模拟、延伸人脑的某些活动，却不能成为独立实践主体或取代人的整体决策。它能够处理特定任务，不等于具有完整的人的意识、情感和社会属性。综上，人工智能是人的实践工具，而不是独立的意识主体。",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "意识",
+        "人工智能"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_21ae1c5994363e41",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 24,
+      "title": "自然界与人类社会的关系",
+      "prompt": "自然界和人类社会有什么区别与联系？",
+      "summary": "自然界和人类社会不是截然分开，二者交叉重叠、相互作用；实践使自然界出现{{accent|人化自然}}，但人类社会仍属于客观物质世界。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先比较自然界与人类社会的区别，再说明人化自然和物质基础形成的联系，最后提出尊重规律与发挥能动性的统一方法论。"
+      },
+      "outline": [
+        {
+          "heading": "区别",
+          "text": "自然过程主要是自发的；社会活动具有人的目的、意识和实践印记。"
+        },
+        {
+          "heading": "联系",
+          "text": "自然界中存在人化自然，社会活动以自然物质和自然力为基础。"
+        },
+        {
+          "heading": "方法论",
+          "text": "既要发挥人的主观能动性，又要尊重自然界和社会发展的客观规律。"
+        }
+      ],
+      "examples": [
+        "城市、公园、水利工程是人化自然；但建设和运行都离不开土地、水、能源等自然物质条件。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "区别看自发/自觉，联系看人化自然和物质基础。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "不能把社会归为主观世界，也不能把社会发展归结为个人意志。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "自然界与人类社会既有区别又有联系，不能把人类社会归为脱离客观条件的主观世界。\n\n首先，从{{accent|区别}}看，自然过程主要表现为自发运动，社会活动则具有人的目的、意识和实践印记；但这并不意味着社会发展由个人意志任意决定。其次，从{{accent|联系}}看，实践使自然界出现人化自然，社会活动又始终以土地、水、能源等自然物质和自然力为基础。\n\n因此，人类社会仍属于客观物质世界并受客观规律制约。方法论上，既要发挥人的主观能动性，又要尊重自然界和社会发展的客观规律，不能把人的目的性误解为可以任意改造世界。",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "自然界",
+        "人类社会"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
     }
   ],
-  "release_id": "881267760484"
+  "release_id": "79e401ffcba3"
 };
 })();
