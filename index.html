@@ -148,7 +148,7 @@
   .focus-closing { margin-top:13px; padding:12px 13px; border-radius:15px; background:#fff3d9; color:#815d19; font-size:12px; line-height:1.55; }
   .focus-lesson-controls { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:15px; }
   .focus-lesson-controls.single { grid-template-columns:1fr; }
-  .focus-action-row { display:flex; justify-content:center; margin-top:10px; }
+  .focus-action-row { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:10px; }
   /* ── Today ── */
   .today-kicker { color:#3479b4; font-size:13px; font-weight:700; margin-bottom:8px; }
   .today-title { max-width:300px; font-size:31px; line-height:1.15; letter-spacing:0; margin-bottom:8px; }
@@ -208,6 +208,8 @@
   .home-metric-label { color:#71869a; font-size:10px; margin-top:3px; }
   .home-actions { display:flex; justify-content:center; gap:16px; margin:20px 0 6px; }
   .home-link { border:0; background:transparent; color:#397eb9; font-size:12px; cursor:pointer; padding:6px; }
+  .archive-review-action { border:0; background:transparent; color:#b36760; font-size:12px; font-weight:650; line-height:1.2; cursor:pointer; padding:6px 4px; border-radius:999px; -webkit-tap-highlight-color:transparent; transition:transform 140ms cubic-bezier(.23,1,.32,1), background-color 140ms ease, color 140ms ease; }
+  .archive-review-action:active { transform:scale(.96); background:rgba(180,92,73,.08); }
   /* ── Library and review ── */
   .library-hero, .review-hero { padding:20px; border:0; border-radius:25px; background:linear-gradient(135deg,#075f92,#1492bc 68%,#25a17c); color:#fff; box-shadow:0 16px 36px rgba(8,95,145,.16); }
   .library-hero-num, .review-hero-num { font-size:28px; font-weight:800; }
@@ -688,6 +690,18 @@
   .app-tab.active .app-tab-symbol svg { stroke-width:2.2; }
   .app-edge-back { background:rgba(230,247,249,.74); color:var(--deep); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); transition:opacity .16s var(--ease-out),transform .16s var(--ease-out); }
   .today-task, .source-list, .library-card, .review-list, .group-card, .vocab-card, .recite-setup, .recite-summary { background:var(--surface); border-color:rgba(92,132,145,.12); }
+  /* 01 Reading paper: keep the word prominent, then give examples a left-aligned reading rail. */
+  .vocab-card { width:min(92vw,460px); min-height:430px; padding:26px 22px 22px; border:1px solid rgba(92,132,145,.16); border-radius:28px; background:var(--surface); box-shadow:0 18px 50px rgba(12,66,84,.12); text-align:left; display:flex; flex-direction:column; }
+  .vocab-card .vc-word { color:var(--deep); font-size:44px; line-height:1.04; font-weight:850; letter-spacing:0; overflow-wrap:anywhere; }
+  .vocab-card .vc-cn { color:var(--ink); font-size:19px; line-height:1.42; font-weight:720; margin-bottom:17px; }
+  .vc-sentence-zone { margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:auto; }
+  .vc-sentence-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; color:var(--ocean); font-size:10px; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
+  .vc-example { margin:0; text-align:left; color:#234b59; font-size:14px; line-height:1.55; font-style:normal; }
+  .vc-example + .vc-example { margin-top:11px; padding-top:11px; border-top:1px solid rgba(18,76,91,.12); }
+  .vc-example-en { font-size:14px; line-height:1.55; font-weight:650; color:#234b59; }
+  .vc-example-cn { margin-top:4px; font-size:12px; line-height:1.45; font-weight:500; color:#6c8790; }
+  .vc-sentence-empty { display:flex; align-items:center; min-height:64px; color:#78919a; font-size:12px; line-height:1.45; }
+  .vocab-card .vc-meta { margin-top:auto; padding-top:15px; font-size:12px; color:#7b919b; }
   #morningHomeCard, .library-hero, .review-hero { background:var(--deep); border-radius:28px; }
   #morningHomeCard { box-shadow:0 20px 48px rgba(7,83,106,.22); }
   .today-task, .source-list, .library-card { border-radius:24px; }
@@ -732,7 +746,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.2.1 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.2.3 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1087,10 +1101,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.2.1"></script>
-<script src="focus-core.js?v=1.2.1"></script>
-<script src="audio-cache.js?v=1.2.1"></script>
-<script src="ui-motion.js?v=1.2.1"></script>
+<script src="review-core.js?v=1.2.3"></script>
+<script src="focus-core.js?v=1.2.3"></script>
+<script src="audio-cache.js?v=1.2.3"></script>
+<script src="ui-motion.js?v=1.2.3"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1131,8 +1145,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.2.1";
-var BUILD_TS = 1784534010;
+var APP_BUILD_ID = "1.2.3";
+var BUILD_TS = 1784554134;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1932,10 +1946,10 @@ function renderTodayRecite() {
   }
   if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
   var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = todayReciteShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书', tag = todayRecitePracticeOnly ? '再背练习' : (entry.kind === 'due' ? '到期复习' : '不熟词');
-  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-example-en">' + escapeHTML(w.ex || '') + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div><div class="vc-example-cn' + hidden + '" id="todayReciteExCn">' + escapeHTML(w.ex_cn || '') + '</div><div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="focus-action-row">' + FocusCore.buttonHTML(w.en,w.cn,entry.source,'今日背诵') + '<button class="home-link" onclick="archiveReviewWord(&quot;' + escapeHTML(entry.source) + '&quot;,&quot;' + escapeHTML(w.en) + '&quot;,&quot;' + escapeHTML(w.cn || '') + '&quot;,true)">移出后续复习</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
+  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div>' + cardExamplesMarkup(w, hidden) + '<div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="focus-action-row">' + FocusCore.buttonHTML(w.en,w.cn,entry.source,'今日背诵') + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + escapeHTML(entry.source) + '&quot;,&quot;' + escapeHTML(w.en) + '&quot;,&quot;' + escapeHTML(w.cn || '') + '&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
   bindTodayReciteSwipe();
 }
-function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; ['todayReciteCn','todayReciteExCn'].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.remove('recite-hidden'); }); haptic(8); }
+function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; var card = document.getElementById('todayReciteCard'); if (card) card.querySelectorAll('.recite-hidden').forEach(function(el) { el.classList.remove('recite-hidden'); }); haptic(8); }
 function todayReciteRate(familiar) {
   var entry = todayReciteItems[todayReciteIdx]; if (!entry) return;
   var key = '', activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab', state = null;
@@ -2256,6 +2270,21 @@ function getVocabCardEntries() {
   return entries;
 }
 
+function getCardExamples(item) {
+  var list = Array.isArray(item && item.examples) ? item.examples.slice(0, 2) : [];
+  if (!list.length && item && item.ex) list = [{ en: item.ex, ex_cn: item.ex_cn || '' }];
+  return list.filter(function(example) { return example && example.en; });
+}
+function cardExamplesMarkup(item, hidden) {
+  var examples = getCardExamples(item);
+  if (!examples.length) return '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
+  var body = examples.map(function(example, index) {
+    var translation = example.ex_cn ? '<div class="vc-example-cn' + (hidden || '') + '">' + escapeHTML(example.ex_cn) + '</div>' : '';
+    return '<p class="vc-example"><span class="vc-example-en">' + (index + 1) + '. ' + escapeHTML(example.en) + '</span>' + translation + '</p>';
+  }).join('');
+  return '<section class="vc-sentence-zone"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div>' + body + '</section>';
+}
+
 function renderVocabCardMode() {
   var container = document.getElementById('groupContainer');
   var entries = getVocabCardEntries();
@@ -2275,8 +2304,7 @@ function renderVocabCardMode() {
     + '    <div class="vocab-card" id="vocabCard">'
     + '      <div class="vc-word" id="vcWord"></div>'
     + '      <div class="vc-cn" id="vcCn"></div>'
-    + '      <div class="vc-example-en" id="vcEx"></div>'
-    + '      <div class="vc-example-cn" id="vcExCn"></div>'
+    + '      <section class="vc-sentence-zone" id="vcSentenceBox"><div class="vc-sentence-head"><span>Reading context</span><span>1句</span></div><p class="vc-example"><span class="vc-example-en" id="vcEx"></span><span class="vc-example-cn" id="vcExCn"></span></p></section>'
     + '      <div class="vc-meta" id="vcMeta"></div>'
     + '    </div>'
     + '  </div>'
@@ -2315,10 +2343,10 @@ function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; voc
 function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
-  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-example-en">'+escapeHTML(w.ex||'')+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div><div class="vc-example-cn'+hidden+'" id="vcExCn">'+escapeHTML(w.ex_cn||'')+'</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="focus-action-row">'+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵')+'<button class="home-link" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)">移出后续复习</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div>'+cardExamplesMarkup(w,hidden)+'<div class="vc-meta">生词本 · 文字例句</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="focus-action-row">'+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵')+'<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
   bindVocabReciteSwipe();
 }
-function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var a=document.getElementById('vcCn'),b=document.getElementById('vcExCn');if(a)a.classList.remove('recite-hidden');if(b)b.classList.remove('recite-hidden');haptic(8);}
+function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var card=document.getElementById('vocabCard');if(card)card.querySelectorAll('.recite-hidden').forEach(function(el){el.classList.remove('recite-hidden');});haptic(8);}
 function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),state=ReviewCore.applyRating('vocab',e.item.en,familiar,'recite');showRatingFeedback('vocab',e.item.en,familiar,'recite');recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,state:state,en:e.item.en,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
 function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;ReviewCore.undoRating(u.state);undoLearningActivity('vocab',u.en,'vocab_recite');hideScheduleFeedback();vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
 function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard');if(!card)return;WordsMotion.bindCardSwipe(card,{edgeReserve:22,onReveal:vocabReciteShow,onLeft:function(){vocabReciteRate(true)},onRight:function(){vocabReciteRate(false)}})}
@@ -2345,6 +2373,13 @@ function updateVocabCardUI() {
   document.getElementById('vcCn').textContent = item.cn;
   var ex = document.getElementById('vcEx');
   var exCn = document.getElementById('vcExCn');
+  var sentenceBox = document.getElementById('vcSentenceBox');
+  var examples = getCardExamples(item);
+  if (sentenceBox) {
+    sentenceBox.style.display = examples.length ? 'block' : 'none';
+    var sentenceCount = sentenceBox.querySelector('.vc-sentence-head span:last-child');
+    if (sentenceCount) sentenceCount.textContent = examples.length + '句';
+  }
   ex.textContent = item.ex || '';
   ex.style.display = item.ex ? 'block' : 'none';
   exCn.textContent = item.ex_cn || '';
@@ -4986,7 +5021,7 @@ function updateMorningPlayerUI() {
   document.getElementById('mpSource').textContent = srcLabel;
   document.getElementById('mpReason').textContent = reasonLabel;
   var focus = document.getElementById('mpFocus');
-  if (focus) focus.innerHTML = FocusCore.buttonHTML(item.en,item.cn,item.source === 'vocab' ? 'vocab' : 'hongbaoshu','晨听') + '<button class="home-link" onclick="archiveReviewWord(&quot;' + (item.source === 'vocab' ? 'vocab' : 'hongbaoshu') + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;,&quot;' + escapeHTML(item.cn || '') + '&quot;,true)">移出后续复习</button>';
+  if (focus) focus.innerHTML = FocusCore.buttonHTML(item.en,item.cn,item.source === 'vocab' ? 'vocab' : 'hongbaoshu','晨听') + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + (item.source === 'vocab' ? 'vocab' : 'hongbaoshu') + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;,&quot;' + escapeHTML(item.cn || '') + '&quot;,true)">移除</button>';
   var pct = Math.max(0, Math.round((morningPos) / morningQueue.length * 100));
   document.getElementById('mpBar').style.width = pct + '%';
   document.getElementById('mpBtnPrev').disabled = (morningPos <= 0);
