@@ -79,7 +79,12 @@
       }
       if (drag.axis !== 'x') return;
       e.preventDefault();
-      var limit = opts.limit || 120, x = Math.max(-limit, Math.min(limit, drag.originX + rawDx));
+      // `limit` is the rating threshold, not a visual drag boundary. Keep the
+      // card attached to the pointer past the cue; only the far edge gets
+      // progressive rubber-band resistance so there is no hard stop.
+      var limit = Number(opts.limit) || 120;
+      var travelLimit = Number(opts.travelLimit) || Math.max((global.innerWidth || 320) * 1.1, limit + 160);
+      var x = rubber(drag.originX + rawDx, travelLimit, .6);
       drag.x = x;
       if (!revealCalled && Math.abs(x) > 12) { revealCalled = true; if (opts.onReveal) opts.onReveal(); }
       setX(el, x, true);

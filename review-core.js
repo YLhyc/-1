@@ -1,6 +1,7 @@
 (function(global) {
   'use strict';
   var REVIEW_META_KEY = 'review_meta_v1';
+  var EXCLUDED_KEY = 'review_excluded_v1';
   var ACTIVITY_KEY = 'learning_activity_v1';
   var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
   var DAY_MS = 86400000;
@@ -16,6 +17,62 @@
   }
   function loadReviewMeta() { return safeJson(REVIEW_META_KEY, {}); }
   function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta || {})); }
+  function loadExcluded() { return safeJson(EXCLUDED_KEY, {}); }
+  function saveExcluded(data) {
+    if (data && Object.keys(data).length) localStorage.setItem(EXCLUDED_KEY, JSON.stringify(data));
+    else localStorage.removeItem(EXCLUDED_KEY);
+    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  }
+  function exclusionKey(source, en) { return reviewSource(source) + ':' + en; }
+  function isExcluded(source, en) {
+    return Object.prototype.hasOwnProperty.call(loadExcluded(), exclusionKey(source, en));
+  }
+  function cloneValue(value) {
+    try { return JSON.parse(JSON.stringify(value)); } catch(e) { return value; }
+  }
+  function archive(source, en, info) {
+    var canonical = reviewSource(source), key = exclusionKey(canonical, en);
+    var excluded = loadExcluded(), meta = loadReviewMeta();
+    if (excluded[key]) return excluded[key];
+    var prefsKey = preferenceStorageKey(canonical), prefs = safeJson(prefsKey, {});
+    var hadPref = Object.prototype.hasOwnProperty.call(prefs, en);
+    excluded[key] = {
+      source: canonical, en: en, meaning: info && info.meaning ? String(info.meaning) : '',
+      archivedAt: Date.now(), reason: info && info.reason ? String(info.reason) : 'manual',
+      hadPref: hadPref, oldPref: hadPref ? prefs[en] : null,
+      oldReview: meta[key] ? cloneValue(meta[key]) : null
+    };
+    prefs[en] = 'hidden';
+    localStorage.setItem(prefsKey, JSON.stringify(prefs));
+    if (meta[key]) { delete meta[key]; saveReviewMeta(meta); }
+    saveExcluded(excluded);
+    return excluded[key];
+  }
+  function restore(source, en) {
+    var canonical = reviewSource(source), key = exclusionKey(canonical, en), excluded = loadExcluded();
+    var entry = excluded[key];
+    if (!entry) return false;
+    var prefsKey = preferenceStorageKey(canonical), prefs = safeJson(prefsKey, {});
+    if (entry.hadPref) prefs[en] = entry.oldPref;
+    else delete prefs[en];
+    if (Object.keys(prefs).length) localStorage.setItem(prefsKey, JSON.stringify(prefs));
+    else localStorage.removeItem(prefsKey);
+    var meta = loadReviewMeta();
+    var now = Date.now();
+    if (entry.oldReview && isObject(entry.oldReview)) {
+      var restored = cloneValue(entry.oldReview);
+      restored.lastReviewAt = now;
+      if (restored.hardDueAt) restored.hardDueAt = now;
+      if (restored.nextDueAt) restored.nextDueAt = now;
+      if (!restored.nextDueAt && !restored.hardDueAt) restored.nextDueAt = now;
+      meta[key] = restored;
+    } else {
+      meta[key] = { streak: 0, lapses: 0, hardHits: 0, intervalDays: 1, lastReviewAt: now, nextDueAt: now };
+    }
+    saveReviewMeta(meta);
+    delete excluded[key]; saveExcluded(excluded);
+    return true;
+  }
   function reviewSource(source) {
     return source === 'hb' ? 'hongbaoshu' : source;
   }
@@ -32,6 +89,9 @@
     var opts = options || {}, oldReview = null, reviewApplied = false;
     if (mode === 'recite' || (mode === 'morning' && opts.reviewDue)) {
       oldReview = rateReview(reviewSource(source), en, familiar);
+      reviewApplied = true;
+    } else if (!familiar) {
+      oldReview = scheduleHardOnly(reviewSource(source), en);
       reviewApplied = true;
     }
     return {
@@ -52,16 +112,34 @@
   }
   function rateReview(source, en, familiar) {
     var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
-    var next = { streak: old.streak || 0, lapses: old.lapses || 0, intervalDays: old.intervalDays || 0 };
+    var next = { streak: old.streak || 0, lapses: old.lapses || 0, intervalDays: old.intervalDays || 0, hardHits: old.hardHits || 0 };
     if (familiar) {
       next.streak++;
       next.intervalDays = [1,3,7,14,30,60][Math.min(next.streak - 1, 5)];
+      next.hardDueAt = 0;
+      next.hardHits = 0;
     } else {
-      next.streak = 0; next.lapses++; next.intervalDays = 1;
+      next.streak = 0; next.lapses++; next.hardHits++;
+      next.intervalDays = next.hardHits === 1 ? 2 : 1;
+      next.hardDueAt = Date.now() + next.intervalDays * DAY_MS;
     }
     next.lastReviewAt = Date.now();
     next.nextDueAt = next.lastReviewAt + next.intervalDays * DAY_MS;
     meta[key] = next;
+    saveReviewMeta(meta);
+    return old;
+  }
+  function scheduleHardOnly(source, en) {
+    var meta = loadReviewMeta(), key = exclusionKey(source, en), old = meta[key] || {};
+    var hardHits = Number(old.hardHits) || 0;
+    if (!hardHits && Number(old.lapses) > 0) hardHits = 1;
+    hardHits++;
+    var interval = hardHits === 1 ? 2 : 1;
+    meta[key] = {
+      streak: 0, lapses: (Number(old.lapses) || 0) + 1, hardHits: hardHits,
+      intervalDays: interval, lastReviewAt: Date.now(),
+      hardDueAt: Date.now() + interval * DAY_MS
+    };
     saveReviewMeta(meta);
     return old;
   }
@@ -74,10 +152,22 @@
     var meta = loadReviewMeta(), at = now || Date.now(), items = [];
     Object.keys(meta).forEach(function(key) {
       var entry = meta[key];
-      if (!entry || !entry.nextDueAt || entry.nextDueAt > at) return;
       var split = key.indexOf(':');
-      if (split < 1) return;
-      items.push({ source: key.slice(0, split), en: key.slice(split + 1), dueAt: entry.nextDueAt, lapses: Number(entry.lapses) || 0 });
+      if (!entry || split < 1 || isExcluded(key.slice(0, split), key.slice(split + 1))) return;
+      var dueAt = entry.nextDueAt || entry.hardDueAt;
+      if (!dueAt || dueAt > at) return;
+      items.push({ source: key.slice(0, split), en: key.slice(split + 1), dueAt: dueAt, lapses: Number(entry.lapses) || 0 });
+    });
+    items.sort(function(a, b) { return a.dueAt - b.dueAt; });
+    return items;
+  }
+  function getHardDueReviewItems(now) {
+    var meta = loadReviewMeta(), at = now || Date.now(), items = [];
+    Object.keys(meta).forEach(function(key) {
+      var entry = meta[key], split = key.indexOf(':');
+      if (!entry || split < 1 || isExcluded(key.slice(0, split), key.slice(split + 1))) return;
+      if (!entry.hardDueAt || entry.hardDueAt > at) return;
+      items.push({ source: key.slice(0, split), en: key.slice(split + 1), dueAt: entry.hardDueAt, lapses: Number(entry.lapses) || 0 });
     });
     items.sort(function(a, b) { return a.dueAt - b.dueAt; });
     return items;
@@ -86,7 +176,10 @@
     var meta = loadReviewMeta(), now = Date.now(), end = now + (hours || 24) * 3600000, count = 0;
     Object.keys(meta).forEach(function(key) {
       var due = Number(meta[key] && meta[key].nextDueAt) || 0;
-      if (due > now && due <= end) count++;
+      var hardDue = Number(meta[key] && meta[key].hardDueAt) || 0;
+      var split = key.indexOf(':');
+      if (split > 0 && isExcluded(key.slice(0, split), key.slice(split + 1))) return;
+      if ((due > now && due <= end) || (hardDue > now && hardDue <= end)) count++;
     });
     return count;
   }
@@ -135,12 +228,19 @@
 
   global.ReviewCore = {
     REVIEW_META_KEY: REVIEW_META_KEY,
+    EXCLUDED_KEY: EXCLUDED_KEY,
     ACTIVITY_KEY: ACTIVITY_KEY,
     ACTIVITY_DIRTY_KEY: ACTIVITY_DIRTY_KEY,
     safeJson: safeJson,
     localDayKey: localDayKey,
     loadReviewMeta: loadReviewMeta,
     saveReviewMeta: saveReviewMeta,
+    loadExcluded: loadExcluded,
+    saveExcluded: saveExcluded,
+    isExcluded: isExcluded,
+    archive: archive,
+    restore: restore,
+    scheduleHardOnly: scheduleHardOnly,
     reviewSource: reviewSource,
     preferenceStorageKey: preferenceStorageKey,
     applyRating: applyRating,
@@ -148,6 +248,7 @@
     rateReview: rateReview,
     undoReview: undoReview,
     getDueReviewItems: getDueReviewItems,
+    getHardDueReviewItems: getHardDueReviewItems,
     upcomingReviewCount: upcomingReviewCount,
     loadLearningActivity: loadLearningActivity,
     saveLearningActivity: saveLearningActivity,
