@@ -746,7 +746,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.2.3 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.2.4 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1101,10 +1101,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.2.3"></script>
-<script src="focus-core.js?v=1.2.3"></script>
-<script src="audio-cache.js?v=1.2.3"></script>
-<script src="ui-motion.js?v=1.2.3"></script>
+<script src="review-core.js?v=1.2.4"></script>
+<script src="focus-core.js?v=1.2.4"></script>
+<script src="audio-cache.js?v=1.2.4"></script>
+<script src="ui-motion.js?v=1.2.4"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1145,8 +1145,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.2.3";
-var BUILD_TS = 1784554134;
+var APP_BUILD_ID = "1.2.4";
+var BUILD_TS = 1784600736;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1976,7 +1976,7 @@ function todayReciteUndoLast() {
 }
 function bindTodayReciteSwipe() {
   var card = document.getElementById('todayReciteCard'); if (!card) return;
-  WordsMotion.bindCardSwipe(card, { edgeReserve:22, touchAction:'pan-x', axisRatio:.78, commitOut:true, exitDuration:110, onReveal:todayReciteShow, onLeft:function(){todayReciteRate(true);}, onRight:function(){todayReciteRate(false);} });
+  WordsMotion.bindCardSwipe(card, { edgeReserve:22, touchAction:'none', axisRatio:.72, commitOut:true, exitDuration:110, onReveal:todayReciteShow, onLeft:function(){todayReciteRate(true);}, onRight:function(){todayReciteRate(false);} });
 }
 
 function openDueReviewFromButton(button) {

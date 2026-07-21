@@ -72,9 +72,15 @@
     function move(e) {
       if (!drag || e.pointerId !== drag.id) return;
       var rawDx = e.clientX - drag.pointerStartX, rawDy = e.clientY - drag.pointerStartY;
-      if (!drag.axis && Math.max(Math.abs(rawDx), Math.abs(rawDy)) >= 6) {
-        var axisRatio = Number(opts.axisRatio) > 0 ? Number(opts.axisRatio) : 1.05;
-        drag.axis = Math.abs(rawDx) > Math.abs(rawDy) * axisRatio ? 'x' : 'y';
+      if (!drag.axis) {
+        var absX = Math.abs(rawDx), absY = Math.abs(rawDy);
+        var axisRatio = Number(opts.axisRatio) > 0 ? Number(opts.axisRatio) : .82;
+        var verticalRatio = Number(opts.verticalRatio) > 0 ? Number(opts.verticalRatio) : 1.25;
+        // Do not let the first few pixels of finger jitter lock the gesture to
+        // vertical. Horizontal cards should engage early, while page scrolling
+        // only wins after a clearly vertical movement.
+        if (absX >= 5 && absX >= absY * axisRatio) drag.axis = 'x';
+        else if (absY >= 12 && absY > absX * verticalRatio) drag.axis = 'y';
         if (drag.axis === 'x') e.preventDefault();
       }
       if (drag.axis !== 'x') return;
