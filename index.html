@@ -54,7 +54,34 @@
   #view-today-recite .recite-rate-btn { min-height:42px; }
   #view-today-recite .vc-hint { flex:none; margin-top:6px; font-size:11px; line-height:1.25; }
   #view-today-recite .recite-setup, #view-today-recite .recite-summary { margin:4px auto 0; max-height:100%; overflow:auto; }
-  #view-groups .vocab-card-shell { padding-bottom:18px; }
+  #view-groups.vocab-card-view {
+    height:100vh; height:100dvh; overflow:hidden; scrollbar-gutter:auto;
+    display:flex; flex-direction:column;
+  }
+  #view-groups.vocab-card-view > .nav-bar,
+  #view-groups.vocab-card-view > .toggle-row { flex:none; }
+  #view-groups.vocab-card-view #groupContainer {
+    min-height:0; flex:1 1 auto; display:flex; flex-direction:column; overflow:hidden;
+  }
+  #view-groups.vocab-card-view .vocab-card-shell {
+    width:100%; height:100%; min-height:0; padding:0 4px 4px; justify-content:space-between;
+  }
+  #view-groups.vocab-card-view .study-mode,
+  #view-groups.vocab-card-view .vocab-card-progress,
+  #view-groups.vocab-card-view .vc-status,
+  #view-groups.vocab-card-view .focus-action-row,
+  #view-groups.vocab-card-view .vocab-card-controls,
+  #view-groups.vocab-card-view .recite-rate-actions,
+  #view-groups.vocab-card-view .vc-hint { flex:none; }
+  #view-groups.vocab-card-view .vocab-card-progress { margin-bottom:6px; }
+  #view-groups.vocab-card-view .vocab-card-stage {
+    min-height:0; flex:1 1 auto; align-items:center;
+  }
+  #view-groups.vocab-card-view .vocab-card {
+    height:min(100%,430px); min-height:0; touch-action:none;
+  }
+  #view-groups.vocab-card-view .vocab-card-controls { margin-top:8px; }
+  #view-groups.vocab-card-view .vc-hint { margin-top:6px; line-height:1.25; }
   .morning-view {
     width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
     overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
@@ -694,9 +721,9 @@
   .vocab-card { width:min(92vw,460px); min-height:430px; padding:26px 22px 22px; border:1px solid rgba(92,132,145,.16); border-radius:28px; background:var(--surface); box-shadow:0 18px 50px rgba(12,66,84,.12); text-align:left; display:flex; flex-direction:column; }
   .vocab-card .vc-word { color:var(--deep); font-size:44px; line-height:1.04; font-weight:850; letter-spacing:0; overflow-wrap:anywhere; }
   .vocab-card .vc-cn { color:var(--ink); font-size:19px; line-height:1.42; font-weight:720; margin-bottom:17px; }
-  .vc-cn-note { margin:-7px 0 16px; padding:11px 12px; border-left:3px solid #56a6ba; background:#edf7f8; color:#48646b; font-size:13px; line-height:1.62; text-align:left; }
+  .vc-cn-note { flex:none; margin:-7px 0 16px; padding:11px 12px; border-left:3px solid #56a6ba; background:#edf7f8; color:#48646b; font-size:13px; line-height:1.62; text-align:left; }
   .vc-cn-note::before { content:'语义说明'; display:block; margin-bottom:3px; color:#397f91; font-size:11px; font-weight:750; }
-  .vc-sentence-zone { margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:auto; }
+  .vc-sentence-zone { min-height:0; flex:1 1 auto; margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:auto; overscroll-behavior:contain; }
   .vc-sentence-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; color:var(--ocean); font-size:10px; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
   .vc-example { margin:0; text-align:left; color:#234b59; font-size:14px; line-height:1.55; font-style:normal; }
   .vc-example + .vc-example { margin-top:11px; padding-top:11px; border-top:1px solid rgba(18,76,91,.12); }
@@ -714,6 +741,27 @@
   .nav-back, .home-link { color:var(--ocean); }
   .task-button, .btn-play, .jump-btn { background:var(--deep); }
   .vocab-card, .morning-player-card { touch-action:pan-y; will-change:transform; }
+  #view-today-recite .vocab-card,
+  #view-groups.vocab-card-view .vocab-card { touch-action:none; }
+  @media (max-height:720px) {
+    #view-groups.vocab-card-view { padding-top:calc(env(safe-area-inset-top) + 10px); }
+    #view-groups.vocab-card-view > .nav-bar { min-height:46px; margin-top:-10px; margin-bottom:8px; padding-top:10px; padding-bottom:6px; }
+    #view-groups.vocab-card-view > .toggle-row { margin-bottom:6px; }
+    #view-groups.vocab-card-view .study-mode { margin-bottom:6px; }
+    #view-groups.vocab-card-view .study-mode button { padding:6px; }
+    #view-groups.vocab-card-view .vocab-card { padding:16px 16px 14px; }
+    #view-groups.vocab-card-view .vocab-card .vc-word { font-size:34px; margin-bottom:6px; }
+    #view-groups.vocab-card-view .vocab-card .vc-cn { font-size:16px; margin-bottom:10px; }
+    #view-groups.vocab-card-view .vc-cn-note { margin:-3px 0 9px; padding:7px 9px; font-size:12px; line-height:1.45; }
+    #view-groups.vocab-card-view .vc-sentence-zone { padding:9px 10px 8px; }
+    #view-groups.vocab-card-view .vocab-card .vc-meta { padding-top:7px; }
+    #view-groups.vocab-card-view .vc-status { margin-top:4px; min-height:20px; font-size:12px; }
+    #view-groups.vocab-card-view .focus-action-row { margin-top:4px; }
+    #view-groups.vocab-card-view .vc-btn { width:46px; height:46px; font-size:19px; }
+    #view-groups.vocab-card-view .vc-btn-main { width:52px; height:52px; font-size:21px; }
+    #view-groups.vocab-card-view .recite-rate-actions { margin-top:6px; }
+    #view-groups.vocab-card-view .recite-rate-btn { min-height:38px; }
+  }
   .word-block { transition:transform .2s var(--ease-out); }
   .btn:active, .task-button:active, .app-icon-btn:active, .unit-btn:active, .vc-btn:active { transition-duration:.1s; }
   @media (prefers-reduced-motion:reduce) {
@@ -748,7 +796,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.3.0 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.4.0 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1103,10 +1151,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.3.0"></script>
-<script src="focus-core.js?v=1.3.0"></script>
-<script src="audio-cache.js?v=1.3.0"></script>
-<script src="ui-motion.js?v=1.3.0"></script>
+<script src="review-core.js?v=1.4.0"></script>
+<script src="focus-core.js?v=1.4.0"></script>
+<script src="audio-cache.js?v=1.4.0"></script>
+<script src="ui-motion.js?v=1.4.0"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1147,8 +1195,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.3.0";
-var BUILD_TS = 1784625168;
+var APP_BUILD_ID = "1.4.0";
+var BUILD_TS = 1784646092;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2169,6 +2217,9 @@ function updateHomeStats() {
 // ═══════════ GROUP RENDERING ═══════════
 function renderGroups() {
   var dict = currentDict;
+  var groupsView = document.getElementById('view-groups');
+  groupsView.classList.toggle('vocab-card-view', dict === 'vocab');
+  if (groupsView.style.display !== 'none') groupsView.style.display = dict === 'vocab' ? 'flex' : 'block';
   if (dict === 'vocab') {
     renderVocabCardMode();
     return;
@@ -2279,12 +2330,13 @@ function getCardExamples(item) {
 }
 function cardExamplesMarkup(item, hidden) {
   var examples = getCardExamples(item);
-  if (!examples.length) return '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
+  var detail = item && item.cn_note ? '<div class="vc-cn-note' + (hidden || '') + '">' + escapeHTML(item.cn_note) + '</div>' : '';
+  if (!examples.length) return detail + '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
   var body = examples.map(function(example, index) {
     var translation = example.ex_cn ? '<div class="vc-example-cn' + (hidden || '') + '">' + escapeHTML(example.ex_cn) + '</div>' : '';
     return '<p class="vc-example"><span class="vc-example-en">' + (index + 1) + '. ' + escapeHTML(example.en) + '</span>' + translation + '</p>';
   }).join('');
-  return '<section class="vc-sentence-zone"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div>' + body + '</section>';
+  return detail + '<section class="vc-sentence-zone"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div>' + body + '</section>';
 }
 
 function renderVocabCardMode() {
@@ -2346,14 +2398,14 @@ function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; voc
 function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
-  var note=w.cn_note?'<div class="vc-cn-note'+hidden+'">'+escapeHTML(w.cn_note)+'</div>':'';
+  var note='';
   c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div>'+note+cardExamplesMarkup(w,hidden)+'<div class="vc-meta">生词本 · 文字例句</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="focus-action-row">'+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵')+'<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var card=document.getElementById('vocabCard');if(card)card.querySelectorAll('.recite-hidden').forEach(function(el){el.classList.remove('recite-hidden');});haptic(8);}
 function vocabReciteRate(familiar){var e=vocabCardCurrentEntry();if(!e)return;var k=prefKey('vocab',vocabCardLocalToGW(e.localIdx)),state=ReviewCore.applyRating('vocab',e.item.en,familiar,'recite');showRatingFeedback('vocab',e.item.en,familiar,'recite');recordLearningActivity('vocab',e.item.en,'vocab_recite');vocabReciteUndo={idx:vocabCardIdx,state:state,en:e.item.en,familiar:familiar};haptic(18);updateHomeStats();if(vocabCardIdx<getVocabCardEntries().length-1)vocabCardIdx++;else vocabReciteDone=true;vocabReciteShown=false;renderVocabCardMode();}
 function vocabReciteUndoLast(){var u=vocabReciteUndo;if(!u)return;ReviewCore.undoRating(u.state);undoLearningActivity('vocab',u.en,'vocab_recite');hideScheduleFeedback();vocabCardIdx=u.idx;vocabReciteShown=false;vocabReciteDone=false;vocabReciteUndo=null;haptic(10);updateHomeStats();renderVocabCardMode();}
-function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard');if(!card)return;WordsMotion.bindCardSwipe(card,{edgeReserve:22,onReveal:vocabReciteShow,onLeft:function(){vocabReciteRate(true)},onRight:function(){vocabReciteRate(false)}})}
+function bindVocabReciteSwipe(){var card=document.getElementById('vocabCard');if(!card)return;WordsMotion.bindCardSwipe(card,{edgeReserve:22,touchAction:'none',onReveal:vocabReciteShow,onLeft:function(){vocabReciteRate(true)},onRight:function(){vocabReciteRate(false)}})}
 
 function getVocabCardStepInfo(entry) {
   var localIdx = entry.localIdx;
@@ -2512,8 +2564,7 @@ function vocabCardStop(resetPlaying) {
   currentGroup = -1;
   wordIdx = 0;
   vocabCardStepInfo = null;
-  if (resetPlaying !== false) updateVocabCardUI();
-  else updateVocabCardUI();
+  if (document.getElementById('vcIdx')) updateVocabCardUI();
 }
 
 function vocabCardNext(manual) {
@@ -2565,6 +2616,7 @@ function bindVocabCardSwipe() {
   if (!card) return;
   WordsMotion.bindCardSwipe(card, {
     edgeReserve:22,
+    touchAction:'none',
     onLeft:function(){vocabCardSetPref('familiar');card.style.transform='';},
     onRight:function(){vocabCardSetPref('hard');card.style.transform='';}
   });
