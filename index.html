@@ -120,6 +120,13 @@
   .app-tools { display:flex; gap:6px; }
   .app-icon-btn { width:39px; height:39px; border:0; border-radius:50%; background:rgba(255,255,255,.78); color:#145f87; box-shadow:0 4px 14px rgba(21,85,120,.08); font-size:19px; cursor:pointer; }
   .app-icon-btn:active { transform:scale(.96); }
+  .app-update-btn { display:grid; place-items:center; padding:0; }
+  .app-update-btn svg { width:18px; height:18px; display:block; }
+  .app-update-btn.checking { color:#0876b8; cursor:wait; }
+  .app-update-btn.checking svg { animation:app-update-spin .72s linear infinite; }
+  .app-update-btn:disabled { opacity:.72; }
+  @keyframes app-update-spin { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion:reduce) { .app-update-btn.checking svg { animation:none; opacity:.68; } }
   .app-tabbar { position:fixed; left:18px; right:18px; bottom:calc(env(safe-area-inset-bottom) + 10px); z-index:80; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:604px; margin:auto; padding:8px 7px 11px; border:1px solid rgba(255,255,255,.8); border-radius:28px; background:rgba(255,255,255,.9); box-shadow:0 15px 38px rgba(18,70,103,.16); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); transition:transform .24s cubic-bezier(.32,.72,0,1),opacity .16s cubic-bezier(.23,1,.32,1); }
   .app-tabbar.hidden { transform:translateY(calc(100% + env(safe-area-inset-bottom) + 24px)); opacity:0; pointer-events:none; }
   .app-tab { position:relative; z-index:1; min-height:50px; border:0; background:transparent; color:#708696; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:11px; }
@@ -519,6 +526,8 @@
     background: #007aff; color: #fff; text-align: center; padding:10px 14px; border-radius:10px;
     font-size:13px; cursor: pointer; box-shadow:0 6px 18px rgba(37,96,145,.16); }
   .update-banner.show { display: block; }
+  .update-banner.checking { cursor:default; }
+  .update-banner.error { background:#b45f24; }
 
   /* ── Morning Mode ── */
   .morning-home-card {
@@ -823,7 +832,7 @@
 </style>
 </head>
 <body>
-<div class="update-banner" id="updateBanner" onclick="location.reload()">🔄 有新版本，点击更新</div>
+<div class="update-banner" id="updateBanner" role="status" aria-live="polite" aria-atomic="true" onclick="checkForAppUpdate()">正在检查应用更新…</div>
 
 <!-- ═══════════ DIAGNOSTIC OVERLAY ═══════════ -->
 <div id="diagOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;overflow:auto;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
@@ -839,8 +848,8 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.0 · 检查缓存…</button></div>
-    <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.1 · 检查缓存…</button></div>
+    <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
   <h1 class="today-title">把复习放回今天。</h1>
@@ -1194,10 +1203,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.5.0"></script>
-<script src="focus-core.js?v=1.5.0"></script>
-<script src="audio-cache.js?v=1.5.0"></script>
-<script src="ui-motion.js?v=1.5.0"></script>
+<script src="review-core.js?v=1.5.1"></script>
+<script src="focus-core.js?v=1.5.1"></script>
+<script src="audio-cache.js?v=1.5.1"></script>
+<script src="ui-motion.js?v=1.5.1"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1238,8 +1247,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.0";
-var BUILD_TS = 1784716370;
+var APP_BUILD_ID = "1.5.1";
+var BUILD_TS = 1784729717;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1282,6 +1291,177 @@ function updateAppVersionBadge() {
     el.textContent = base + ' · 缓存检测失败';
     el.classList.add('stale');
   });
+}
+
+var appUpdateState = {
+  busy: false,
+  bannerTimer: 0,
+  bannerRestore: null,
+  watchedRegistrations: [],
+  watchedWorkers: []
+};
+var refreshing = false;
+
+function restoreUpdateBanner() {
+  var banner = document.getElementById('updateBanner');
+  if (!banner) return;
+  if (appUpdateState.bannerTimer) {
+    clearTimeout(appUpdateState.bannerTimer);
+    appUpdateState.bannerTimer = 0;
+  }
+  banner.classList.remove('checking', 'error');
+  if (appUpdateState.bannerRestore) {
+    var previous = appUpdateState.bannerRestore;
+    appUpdateState.bannerRestore = null;
+    banner.innerHTML = previous.html;
+    banner.style.background = previous.background;
+    banner.dataset.wordsBannerKind = 'recovery';
+    banner.classList.add('show');
+    return;
+  }
+  banner.textContent = '正在检查应用更新…';
+  banner.style.background = '';
+  delete banner.dataset.wordsBannerKind;
+  banner.classList.remove('show');
+}
+
+function setUpdateBanner(text, state, persistent) {
+  var banner = document.getElementById('updateBanner');
+  if (!banner) return;
+  if (appUpdateState.bannerTimer) {
+    clearTimeout(appUpdateState.bannerTimer);
+    appUpdateState.bannerTimer = 0;
+  }
+  if (banner.dataset.wordsBannerKind === 'recovery' && !appUpdateState.bannerRestore) {
+    appUpdateState.bannerRestore = { html: banner.innerHTML, background: banner.style.background };
+  }
+  banner.dataset.wordsBannerKind = 'update';
+  banner.classList.remove('checking', 'error');
+  banner.style.background = '';
+  banner.textContent = text;
+  banner.classList.add('show');
+  if (state) banner.classList.add(state);
+  if (!persistent) {
+    appUpdateState.bannerTimer = setTimeout(restoreUpdateBanner, state === 'error' ? 4400 : 2400);
+  }
+}
+
+function setAppUpdateButtonBusy(busy) {
+  var button = document.getElementById('appUpdateButton');
+  if (!button) return;
+  button.disabled = !!busy;
+  button.classList.toggle('checking', !!busy);
+  button.setAttribute('aria-busy', busy ? 'true' : 'false');
+  button.title = busy ? '正在更新应用' : '更新应用';
+}
+
+function finishAppUpdateAttempt() {
+  appUpdateState.busy = false;
+  setAppUpdateButtonBusy(false);
+}
+
+function isValidAppVersion(version) {
+  return typeof version === 'string' && /^\d+\.\d+\.\d+$/.test(version);
+}
+
+function compareAppVersions(left, right) {
+  var a = left.split('.').map(Number), b = right.split('.').map(Number);
+  for (var i = 0; i < 3; i += 1) {
+    if (a[i] !== b[i]) return a[i] > b[i] ? 1 : -1;
+  }
+  return 0;
+}
+
+function activateWaitingServiceWorker(worker) {
+  if (!worker) return;
+  setUpdateBanner(appUpdateState.busy ? '正在应用新版本…' : '发现新版本，正在更新…', 'checking', true);
+  try { worker.postMessage('skipWaiting'); } catch (error) {}
+}
+
+function watchInstallingServiceWorker(worker) {
+  if (!worker || appUpdateState.watchedWorkers.indexOf(worker) !== -1) return;
+  appUpdateState.watchedWorkers.push(worker);
+  worker.addEventListener('statechange', function() {
+    if (worker.state === 'installed') {
+      if (navigator.serviceWorker.controller || appUpdateState.busy) activateWaitingServiceWorker(worker);
+    } else if (worker.state === 'redundant' && appUpdateState.busy) {
+      finishAppUpdateAttempt();
+      setUpdateBanner('更新未能完成，请稍后再试', 'error', false);
+    }
+  });
+  if (worker.state === 'installed') activateWaitingServiceWorker(worker);
+}
+
+function watchAppServiceWorker(registration) {
+  if (!registration) return;
+  watchInstallingServiceWorker(registration.installing);
+  if (registration.waiting) activateWaitingServiceWorker(registration.waiting);
+  if (appUpdateState.watchedRegistrations.indexOf(registration) !== -1) return;
+  appUpdateState.watchedRegistrations.push(registration);
+  registration.addEventListener('updatefound', function() {
+    var worker = registration.installing;
+    if (appUpdateState.busy) setUpdateBanner('正在下载新版本…', 'checking', true);
+    watchInstallingServiceWorker(worker);
+  });
+}
+
+function checkForAppUpdate() {
+  if (appUpdateState.busy) return;
+  if (!('serviceWorker' in navigator)) {
+    setUpdateBanner('当前浏览器不支持应用更新', 'error', false);
+    return;
+  }
+  appUpdateState.busy = true;
+  setAppUpdateButtonBusy(true);
+  setUpdateBanner('正在检查应用更新…', 'checking', true);
+  fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(response) {
+      if (!response.ok) throw new Error('version request failed');
+      return response.json();
+    })
+    .then(function(payload) {
+      var remoteVersion = payload && payload.version;
+      if (!isValidAppVersion(remoteVersion)) throw new Error('invalid version');
+      if (remoteVersion === APP_BUILD_ID) {
+        finishAppUpdateAttempt();
+        setUpdateBanner('已是最新版本', '', false);
+        updateAppVersionBadge();
+        return null;
+      }
+      if (compareAppVersions(remoteVersion, APP_BUILD_ID) < 0) {
+        finishAppUpdateAttempt();
+        setUpdateBanner('服务器版本尚未同步，请稍后重试', 'error', false);
+        return null;
+      }
+      setUpdateBanner('发现新版本 ' + remoteVersion + '，正在下载…', 'checking', true);
+      return navigator.serviceWorker.register(
+        'sw.js?v=' + encodeURIComponent(remoteVersion),
+        { updateViaCache: 'none' }
+      ).then(function(registration) {
+        watchAppServiceWorker(registration);
+        if (registration.waiting) {
+          activateWaitingServiceWorker(registration.waiting);
+          return null;
+        }
+        return registration.update().then(function() {
+          watchAppServiceWorker(registration);
+          if (registration.waiting) {
+            activateWaitingServiceWorker(registration.waiting);
+          } else if (registration.installing) {
+            setUpdateBanner('正在下载新版本…', 'checking', true);
+          } else {
+            finishAppUpdateAttempt();
+            setUpdateBanner('更新资源尚未就绪，请稍后再试', 'error', false);
+          }
+          return null;
+        });
+      });
+    })
+    .catch(function() {
+      if (!appUpdateState.busy) return;
+      finishAppUpdateAttempt();
+      setUpdateBanner(navigator.onLine === false ? '当前离线，联网后再试' : '无法获取更新信息，请稍后再试', 'error', false);
+    });
 }
 
 // ═══════════ STATE ═══════════
@@ -1395,6 +1575,7 @@ if (needRecovery) {
   if (banner) {
     banner.style.background = '#ff9500';
     banner.innerHTML = '⚠ 检测到备份数据，<u style="cursor:pointer" onclick="restoreBackups()">点击恢复学习进度</u>';
+    banner.dataset.wordsBannerKind = 'recovery';
     banner.classList.add('show');
   }
 }
@@ -4328,24 +4509,20 @@ window.addEventListener('online', function() { setTimeout(maybeAutoGithubBackup,
 if ('serviceWorker' in navigator) {
   var swUrl = 'sw.js?v=' + BUILD_TS;
   navigator.serviceWorker.register(swUrl, { updateViaCache: 'none' }).then(function(reg) {
+    watchAppServiceWorker(reg);
     // Force update check on every page load
-    reg.update();
+    reg.update().catch(function() {});
     // Periodic check every 30 min for long-lived PWA sessions
-    setInterval(function() { reg.update(); }, 30 * 60 * 1000);
-    reg.addEventListener('updatefound', function() {
-      var newWorker = reg.installing;
-      if (!newWorker) return;
-      newWorker.addEventListener('statechange', function() {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          document.getElementById('updateBanner').classList.add('show');
-          newWorker.postMessage('skipWaiting');
-        }
-      });
-    });
+    setInterval(function() { reg.update().catch(function() {}); }, 30 * 60 * 1000);
+  }).catch(function() {
+    updateAppVersionBadge();
   });
-  var refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', function() {
-    if (!refreshing) { refreshing = true; location.reload(); }
+    if (!refreshing) {
+      refreshing = true;
+      finishAppUpdateAttempt();
+      location.reload();
+    }
   });
 }
 // ═══════════ MORNING MODE ═══════════
