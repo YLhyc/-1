@@ -24,16 +24,16 @@
   /* ── App shell ── */
   .app-page {
     width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
-    padding:16px 16px 80px;
+    padding:0 16px 95px;
     overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
     -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
   }
   #view-today-recite, #view-units, #view-groups { padding-bottom:calc(env(safe-area-inset-bottom) + 8px); }
   #view-today-recite {
     position:relative; height:100vh; height:100dvh; overflow:hidden; scrollbar-gutter:auto;
-    display:flex; flex-direction:column; padding-top:calc(env(safe-area-inset-top) + 8px);
+    display:flex; flex-direction:column; padding-top:0;
   }
-  #view-today-recite > .nav-bar { flex:none; min-height:40px; margin:calc(-8px - env(safe-area-inset-top)) -16px 4px; padding:calc(8px + env(safe-area-inset-top)) 16px 4px; }
+  #view-today-recite > .nav-bar { flex:none; min-height:40px; margin:0 -16px 4px; padding:calc(8px + env(safe-area-inset-top)) 16px 4px; }
   #view-today-recite #todayReciteContainer {
     min-height:0; flex:1 1 auto; display:flex; flex-direction:column; overflow:hidden; scrollbar-gutter:auto;
   }
@@ -62,9 +62,9 @@
   #view-today-recite .recite-setup, #view-today-recite .recite-summary { margin:4px auto 0; max-height:100%; overflow:auto; }
   #view-groups.vocab-card-view {
     position:relative; height:100vh; height:100dvh; overflow:hidden; scrollbar-gutter:auto;
-    display:flex; flex-direction:column; padding-top:calc(env(safe-area-inset-top) + 8px);
+    display:flex; flex-direction:column; padding-top:0;
   }
-  #view-groups.vocab-card-view > .nav-bar { flex:none; min-height:40px; margin:calc(-8px - env(safe-area-inset-top)) -16px 4px; padding:calc(8px + env(safe-area-inset-top)) 16px 4px; }
+  #view-groups.vocab-card-view > .nav-bar { flex:none; min-height:40px; margin:0 -16px 4px; padding:calc(8px + env(safe-area-inset-top)) 16px 4px; }
   #view-groups.vocab-card-view > .toggle-row {
     position:absolute; z-index:70; top:calc(env(safe-area-inset-top) + 8px); right:16px;
     width:34px; height:34px; margin:0;
@@ -291,7 +291,7 @@
   .archive-empty { padding:34px 18px; color:#8293a1; text-align:center; font-size:14px; }
   .review-empty { padding:36px 18px; text-align:center; color:#6e8397; font-size:13px; line-height:1.7; }
   /* ── Nav bar ── */
-  .nav-bar { position:sticky; top:0; z-index:50; display:grid; grid-template-columns:minmax(72px,1fr) minmax(0,2fr) minmax(72px,1fr); align-items:center; min-height:52px; margin:-16px -16px 18px; padding:calc(16px + env(safe-area-inset-top)) 16px 8px; background:rgba(225,244,255,.84); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+  .nav-bar { position:sticky; top:0; z-index:50; display:grid; grid-template-columns:minmax(72px,1fr) minmax(0,2fr) minmax(72px,1fr); align-items:center; min-height:52px; margin:0 -16px 18px; padding:calc(16px + env(safe-area-inset-top)) 16px 8px; background:rgba(225,244,255,.84); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
   .nav-back {
     justify-self:start; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
     border:1px solid rgba(5,122,157,.16); border-radius:50%; background:rgba(235,249,252,.88);
@@ -742,13 +742,13 @@
   button:focus-visible, input:focus-visible { outline:3px solid rgba(5,122,157,.32); outline-offset:2px; }
   .app-topbar {
     position:sticky; top:0; z-index:50;
-    margin:-16px -16px 18px; padding:calc(16px + env(safe-area-inset-top)) 16px 12px;
+    margin:0 -16px 18px; padding:calc(16px + env(safe-area-inset-top)) 16px 12px;
     background:var(--glass); border-bottom:1px solid var(--glass-line);
     backdrop-filter:blur(28px) saturate(155%); -webkit-backdrop-filter:blur(28px) saturate(155%);
   }
   .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
   .app-tabbar {
-    left:15px; right:15px; bottom:0; max-width:640px;
+    left:15px; right:15px; bottom:15px; max-width:640px;
     height:64px; min-height:64px; padding:5px 6px; border-radius:999px;
     overflow:visible;
     background:var(--glass); border-color:var(--glass-line);
@@ -842,7 +842,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.2 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.3 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1197,10 +1197,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.5.2"></script>
-<script src="focus-core.js?v=1.5.2"></script>
-<script src="audio-cache.js?v=1.5.2"></script>
-<script src="ui-motion.js?v=1.5.2"></script>
+<script src="review-core.js?v=1.5.3"></script>
+<script src="focus-core.js?v=1.5.3"></script>
+<script src="audio-cache.js?v=1.5.3"></script>
+<script src="ui-motion.js?v=1.5.3"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1241,8 +1241,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.2";
-var BUILD_TS = 1784732352;
+var APP_BUILD_ID = "1.5.3";
+var BUILD_TS = 1784735324;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
