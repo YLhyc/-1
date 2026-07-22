@@ -46,12 +46,12 @@
   #view-today-recite .vocab-card-progress { grid-area:progress; margin-bottom:4px; }
   #view-today-recite .vocab-card-stage { grid-area:stage; min-height:0; height:100%; align-items:center; }
   #view-today-recite .vocab-card {
-    width:min(92vw,460px); height:min(100%,470px); min-height:0; padding:18px 18px 14px;
+    width:min(92vw,460px); height:min(100%,470px); min-height:0; padding:26px 22px 22px;
   }
-  #view-today-recite .vc-word { font-size:34px; margin-bottom:6px; }
-  #view-today-recite .vc-cn { font-size:16px; margin-bottom:10px; }
-  #view-today-recite .vc-cn-note { margin:-3px 0 9px; padding:7px 9px; font-size:12px; line-height:1.45; }
-  #view-today-recite .vc-sentence-zone { padding:9px 10px 8px; }
+  #view-today-recite .vocab-card .vc-word { font-size:44px; margin-bottom:12px; }
+  #view-today-recite .vocab-card .vc-cn { font-size:19px; margin-bottom:17px; }
+  #view-today-recite .vc-cn-note { margin:-7px 0 16px; padding:11px 12px; font-size:13px; line-height:1.62; }
+  #view-today-recite .vc-sentence-zone { padding:15px 15px 13px; }
   #view-today-recite .vocab-card-controls { grid-area:controls; justify-self:end; gap:7px; margin:4px 3px 0 0; }
   #view-today-recite .focus-action-row { grid-area:focus; justify-self:start; flex-wrap:nowrap; gap:7px; margin:4px 0 0 3px; }
   #view-today-recite .vc-btn { width:38px; height:38px; font-size:17px; }
@@ -767,11 +767,17 @@
   #view-today-recite .vocab-card,
   #view-groups.vocab-card-view .vocab-card { touch-action:none; }
   @media (max-height:720px) {
+    #view-today-recite .vocab-card,
     #view-groups.vocab-card-view .vocab-card { padding:16px 16px 14px; }
+    #view-today-recite .vocab-card .vc-word,
     #view-groups.vocab-card-view .vocab-card .vc-word { font-size:34px; margin-bottom:6px; }
+    #view-today-recite .vocab-card .vc-cn,
     #view-groups.vocab-card-view .vocab-card .vc-cn { font-size:16px; margin-bottom:10px; }
+    #view-today-recite .vc-cn-note,
     #view-groups.vocab-card-view .vc-cn-note { margin:-3px 0 9px; padding:7px 9px; font-size:12px; line-height:1.45; }
+    #view-today-recite .vc-sentence-zone,
     #view-groups.vocab-card-view .vc-sentence-zone { padding:9px 10px 8px; }
+    #view-today-recite .vocab-card .vc-meta,
     #view-groups.vocab-card-view .vocab-card .vc-meta { padding-top:7px; }
   }
   .word-block { transition:transform .2s var(--ease-out); }
@@ -808,7 +814,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.4.2 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.4.3 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1163,10 +1169,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.4.2"></script>
-<script src="focus-core.js?v=1.4.2"></script>
-<script src="audio-cache.js?v=1.4.2"></script>
-<script src="ui-motion.js?v=1.4.2"></script>
+<script src="review-core.js?v=1.4.3"></script>
+<script src="focus-core.js?v=1.4.3"></script>
+<script src="audio-cache.js?v=1.4.3"></script>
+<script src="ui-motion.js?v=1.4.3"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1207,8 +1213,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.4.2";
-var BUILD_TS = 1784701507;
+var APP_BUILD_ID = "1.4.3";
+var BUILD_TS = 1784706853;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1402,7 +1408,7 @@ function showView(name, options) {
   var previous = activeViewName;
   hideAllViews();
   var view = document.getElementById('view-' + name);
-  view.style.display = 'block';
+  view.style.display = name === 'today-recite' ? 'flex' : 'block';
   view.scrollTop = 0;
   activeViewName = name;
   setAppTab(name);
