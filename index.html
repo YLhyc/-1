@@ -683,15 +683,40 @@
   .progress-bars { height: 154px; display: flex; align-items: stretch; gap: 5px; padding: 8px 0 0; border-bottom: 1px solid #e2e2e7; }
   .progress-bar-col { position: relative; flex: 1; min-width: 0; height: 100%; }
   .progress-bar-stack { position: absolute; left: 50%; bottom: 23px; width: 100%; max-width: 14px; min-height: 2px; overflow: visible; border-radius: 7px 7px 3px 3px; background: #e9f0f4; box-shadow: inset 0 0 0 1px rgba(8,83,106,.04); transform: translateX(-50%); }
-  .progress-bar-total { display:block; width:100%; height:100%; min-height:2px; border-radius:inherit; background:#84b7c7; }
-  .progress-bar-total.today { background:#07536a; box-shadow:0 3px 9px rgba(7,83,106,.24); }
+  .progress-bar-fill { width:100%; height:100%; min-height:2px; overflow:hidden; display:flex; flex-direction:column-reverse; border-radius:inherit; }
+  .progress-bar-fill.today { box-shadow:0 3px 9px rgba(7,83,106,.24); }
+  .progress-bar-segment { display:block; width:100%; min-height:0; }
+  .progress-bar-segment.listen { background:#84b7c7; }
+  .progress-bar-segment.morning { background:#58a98d; }
+  .progress-bar-segment.recite { background:#07536a; }
+  .progress-bar-segment.other { background:#b7c3c8; }
   .progress-bar-value { position:absolute; left:50%; top:-15px; transform:translateX(-50%); color:#527580; font-size:8px; font-weight:750; line-height:1; white-space:nowrap; }
-  .progress-bar-total.today + .progress-bar-value { color:#07536a; }
+  .progress-bar-fill.today + .progress-bar-value { color:#07536a; }
   .progress-bar-label { position:absolute; left:0; right:0; bottom:1px; height:16px; font-size:8px; line-height:16px; color:#8e8e93; text-align:center; white-space:nowrap; letter-spacing:-.1px; }
   .progress-source-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .progress-source { border-radius: 10px; padding: 10px 8px; text-align: center; background: #f5f5f7; }
   .progress-source-num { font-size: 19px; font-weight: 700; color: #1d1d1f; }
   .progress-source-label { margin-top: 3px; font-size: 10px; color: #6e6e73; }
+  .progress-activity-legend { display:flex; flex-wrap:wrap; gap:7px 11px; margin-top:10px; }
+  .progress-legend-item { display:inline-flex; align-items:center; gap:5px; color:#5f747d; font-size:10px; line-height:1.2; }
+  .progress-legend-dot { width:8px; height:8px; border-radius:50%; flex:0 0 8px; }
+  .progress-legend-dot.listen { background:#84b7c7; }
+  .progress-legend-dot.morning { background:#58a98d; }
+  .progress-legend-dot.recite { background:#07536a; }
+  .progress-legend-dot.other { background:#b7c3c8; }
+  .recall-quality-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 14px; }
+  .recall-quality-item { min-width:0; }
+  .recall-quality-num { color:#102a36; font-size:20px; font-weight:780; line-height:1.1; }
+  .recall-quality-label { margin-top:4px; color:#5f747d; font-size:10px; line-height:1.35; }
+  .progress-priority-list { margin-top:2px; }
+  .progress-priority-row { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px; padding:11px 0; border-top:1px solid rgba(8,83,106,.10); }
+  .progress-priority-row:first-child { border-top:0; padding-top:0; }
+  .progress-priority-word { max-width:100%; padding:0; border:0; background:transparent; color:#102a36; font:760 15px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:0; text-align:left; overflow-wrap:anywhere; cursor:pointer; }
+  .progress-priority-cn { display:block; margin-top:4px; color:#5f747d; font-size:11px; line-height:1.35; }
+  .progress-priority-reasons { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+  .progress-priority-reason { padding:2px 5px; border-radius:5px; background:#e5f0f3; color:#41626d; font-size:9px; line-height:1.2; }
+  .progress-priority-actions { display:flex; align-items:center; gap:7px; }
+  .progress-priority-open { min-width:44px; min-height:38px; padding:0 8px; border:0; border-radius:10px; background:#e0f1f5; color:#07536a; font-size:11px; font-weight:760; letter-spacing:0; cursor:pointer; }
 
   /* 02-C Double Crystal: glass is reserved for floating navigation layers. */
   :root {
@@ -814,7 +839,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.4.3 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.0 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1169,10 +1194,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.4.3"></script>
-<script src="focus-core.js?v=1.4.3"></script>
-<script src="audio-cache.js?v=1.4.3"></script>
-<script src="ui-motion.js?v=1.4.3"></script>
+<script src="review-core.js?v=1.5.0"></script>
+<script src="focus-core.js?v=1.5.0"></script>
+<script src="audio-cache.js?v=1.5.0"></script>
+<script src="ui-motion.js?v=1.5.0"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1213,8 +1238,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.4.3";
-var BUILD_TS = 1784706853;
+var APP_BUILD_ID = "1.5.0";
+var BUILD_TS = 1784716370;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2020,15 +2045,18 @@ function renderTodayRecite() {
 function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; var card = document.getElementById('todayReciteCard'); if (card) card.querySelectorAll('.recite-hidden').forEach(function(el) { el.classList.remove('recite-hidden'); }); haptic(8); }
 function todayReciteRate(familiar) {
   var entry = todayReciteItems[todayReciteIdx]; if (!entry) return;
-  var key = '', activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab', state = null;
+  var key = '', activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab', state = null, practiceRecallOutcome = null;
   if (!todayRecitePracticeOnly) {
     key = prefKey(entry.source, entry.index);
     state = ReviewCore.applyRating(entry.source, entry.en, familiar, 'recite');
     markTodayReciteRated(entry, 1);
     showRatingFeedback(entry.source, entry.en, familiar, 'recite');
+  } else {
+    // Practice rounds are active recall, but must not alter spaced-repetition state.
+    practiceRecallOutcome = ReviewCore.recordRecallOutcome(entry.source, entry.en, familiar, 'today_recite_repeat', { practice: true });
   }
   var activityMode = todayRecitePracticeOnly ? 'today_recite_repeat' : 'today_recite';
-  recordLearningActivity(activitySource, entry.en, activityMode); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, state: state, activitySource: activitySource, activityMode: activityMode, familiar: familiar, practiceOnly: todayRecitePracticeOnly };
+  recordLearningActivity(activitySource, entry.en, activityMode); todayReciteUndo = { idx: todayReciteIdx, entry: entry, key: key, state: state, activitySource: activitySource, activityMode: activityMode, familiar: familiar, practiceOnly: todayRecitePracticeOnly, practiceRecallOutcome: practiceRecallOutcome };
   if (familiar) todayReciteStats.familiar++; else {
     todayReciteStats.hard++;
     if (!todayRecitePracticeOnly) todayReciteHardReinforcement.push(entry);
@@ -2040,6 +2068,7 @@ function todayReciteUndoLast() {
   if (!u.practiceOnly) {
     ReviewCore.undoRating(u.state); markTodayReciteRated(u.entry, -1);
   }
+  if (u.practiceRecallOutcome) ReviewCore.undoRecallOutcome(u.practiceRecallOutcome);
   undoLearningActivity(u.activitySource, u.entry.en, u.activityMode || 'today_recite'); removeTodayReciteCompletion(); hideScheduleFeedback(); if (u.familiar) todayReciteStats.familiar = Math.max(0, todayReciteStats.familiar - 1); else todayReciteStats.hard = Math.max(0, todayReciteStats.hard - 1); todayReciteIdx = u.idx; todayReciteDone = false; todayReciteShown = false; todayReciteUndo = null; saveTodayReciteSession(); haptic(10); updateHomeStats(); renderTodayRecite();
 }
 function bindTodayReciteSwipe() {
@@ -3343,10 +3372,11 @@ function b64decode(str) {
 }
 
 var BACKUP_APP_ID = 'kaoyan-english-review';
-var BACKUP_VERSION = 8;
+var BACKUP_VERSION = 9;
 var PRE_IMPORT_BACKUP_KEY = 'learning_pre_import_backup_v1';
 var PRE_IMPORT_BACKUP_TS_KEY = 'learning_pre_import_backup_ts';
 var ACTIVITY_KEY = 'learning_activity_v1';
+var RECALL_KEY = ReviewCore.RECALL_KEY || 'recall_quality_v1';
 var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
 var GITHUB_BACKUP_CONFIG_KEY = 'github_backup_config_v1';
 var GITHUB_BACKUP_LAST_KEY = 'github_backup_last_v1';
@@ -3427,6 +3457,7 @@ function createLearningBackup() {
   all.uf = safeJsonFromStorage('uf_prefs', {});
   all.uf_counts = safeJsonFromStorage('uf_counts', {});
   all.activity = safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
+  all.recall = ReviewCore.loadRecallQuality();
   all.review = safeJsonFromStorage(REVIEW_META_KEY, {});
   all.excluded = ReviewCore.loadExcluded();
   all.focus = FocusCore.load();
@@ -3477,12 +3508,23 @@ function validateDictBackup(name, data) {
 
 function validateLearningBackup(all) {
   if (!isPlainObject(all)) throw new Error('备份数据格式错误');
-  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review && !all.focus && !all.excluded) throw new Error('没有找到可恢复的学习记录');
+  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded) throw new Error('没有找到可恢复的学习记录');
   validateDictBackup('生词本', all.vocab || {});
   validateDictBackup('红宝书', all.hongbaoshu || {});
   if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
   if (all.uf_counts && !isPlainObject(all.uf_counts)) throw new Error('不熟词次数格式错误');
   if (all.activity && !isPlainObject(all.activity)) throw new Error('学习活动记录格式错误');
+  if (all.recall) {
+    if (!isPlainObject(all.recall) || (all.recall.days && !isPlainObject(all.recall.days))) throw new Error('主动回忆记录格式错误');
+    Object.keys(all.recall.days || {}).forEach(function(day) {
+      var bucket = all.recall.days[day];
+      if (!isPlainObject(bucket)) throw new Error('主动回忆日记录格式错误');
+      ['total','familiar','hard','delayed','delayedFamiliar','delayedHard','practice'].forEach(function(key) {
+        if (bucket[key] !== undefined && (!isFinite(Number(bucket[key])) || Number(bucket[key]) < 0)) throw new Error('主动回忆计数格式错误');
+      });
+      if (bucket.modes && !isPlainObject(bucket.modes)) throw new Error('主动回忆模式格式错误');
+    });
+  }
   if (all.review && !isPlainObject(all.review)) throw new Error('复习状态格式错误');
   if (all.excluded) {
     if (!isPlainObject(all.excluded)) throw new Error('已移出复习格式错误');
@@ -3535,6 +3577,7 @@ function applyLearningBackup(all) {
   localStorage.setItem('uf_prefs', JSON.stringify(isPlainObject(all.uf) ? all.uf : {}));
   localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
   if (isPlainObject(all.activity)) localStorage.setItem(ACTIVITY_KEY, JSON.stringify(all.activity));
+  if (isPlainObject(all.recall)) localStorage.setItem(RECALL_KEY, JSON.stringify(all.recall)); else localStorage.removeItem(RECALL_KEY);
   if (isPlainObject(all.review)) localStorage.setItem(REVIEW_META_KEY, JSON.stringify(all.review));
   if (isPlainObject(all.excluded)) localStorage.setItem(ReviewCore.EXCLUDED_KEY, JSON.stringify(all.excluded));
   if (isPlainObject(all.focus)) localStorage.setItem(FocusCore.STORAGE_KEY, JSON.stringify(all.focus));
@@ -3852,7 +3895,7 @@ function progressCountValues(obj) {
 function progressActivityForDay(activity, day) {
   var bucket = activity && activity.days && isPlainObject(activity.days[day]) ? activity.days[day] : {};
   var words = isPlainObject(bucket.words) ? bucket.words : {};
-  var result = { total: 0, unique: 0, vocab: 0, hb: 0, uf: 0, vocabUnique: 0, hbUnique: 0, ufUnique: 0 };
+  var result = { total: 0, unique: 0, vocab: 0, hb: 0, uf: 0, vocabUnique: 0, hbUnique: 0, ufUnique: 0, listen: 0, morning: 0, recite: 0, other: 0 };
   Object.keys(words).forEach(function(key) {
     var value = Number(words[key]) || 0;
     if (value <= 0) return;
@@ -3863,26 +3906,51 @@ function progressActivityForDay(activity, day) {
     else if (source === 'hb' || source === 'hongbaoshu') { result.hb += value; result.hbUnique++; }
     else if (source === 'uf') { result.uf += value; result.ufUnique++; }
   });
+  var modes = isPlainObject(bucket.modes) ? bucket.modes : {};
+  Object.keys(modes).forEach(function(mode) {
+    var value = Number(modes[mode]) || 0;
+    if (value <= 0) return;
+    if (mode === 'morning') result.morning += value;
+    else if (mode.indexOf('recite') !== -1) result.recite += value;
+    else result.listen += value;
+  });
+  var classified = result.listen + result.morning + result.recite;
+  // Older activity records predate mode tracking. Keep them visible without
+  // pretending that their listening/recitation split is known.
+  if (classified < result.total) result.other = result.total - classified;
   return result;
 }
 
-function progressTotals() {
+function progressLegacyTotals() {
   var uf = safeJsonFromStorage('uf_counts', {});
-  var legacy = {
+  return {
     vocab: progressCountValues(loadCounts('vocab')),
     hb: progressCountValues(loadCounts('hongbaoshu')),
     uf: progressCountValues(uf)
   };
-  // New sessions are recorded in learning_activity_v1. Keep legacy counters as
-  // a floor so older all-time totals are not lost when the activity log rotates.
-  var activity = loadLearningActivity();
-  var activityTotals = { vocab: 0, hb: 0, uf: 0 };
+}
+
+function progressActivityTotals(activity) {
+  var activityTotals = { total: 0, vocab: 0, hb: 0, uf: 0, listen: 0, morning: 0, recite: 0, other: 0 };
   Object.keys(activity.days || {}).forEach(function(day) {
     var stat = progressActivityForDay(activity, day);
+    activityTotals.total += stat.total;
     activityTotals.vocab += stat.vocab;
     activityTotals.hb += stat.hb;
     activityTotals.uf += stat.uf;
+    activityTotals.listen += stat.listen;
+    activityTotals.morning += stat.morning;
+    activityTotals.recite += stat.recite;
+    activityTotals.other += stat.other;
   });
+  return activityTotals;
+}
+
+function progressTotals() {
+  var legacy = progressLegacyTotals();
+  // Preserve the compatibility result for old callers. User-facing progress
+  // now renders legacy listening and recent learning activity separately.
+  var activityTotals = progressActivityTotals(loadLearningActivity());
   return {
     vocab: Math.max(legacy.vocab, activityTotals.vocab),
     hb: Math.max(legacy.hb, activityTotals.hb),
@@ -3890,14 +3958,62 @@ function progressTotals() {
   };
 }
 
+function recallQualityForDays(recall, days) {
+  var data = recall && isPlainObject(recall.days) ? recall.days : {};
+  var result = { total: 0, familiar: 0, hard: 0, delayed: 0, delayedFamiliar: 0, delayedHard: 0, practice: 0 };
+  for (var offset = 0; offset < days; offset++) {
+    var bucket = data[progressDayAt(offset)] || {};
+    ['total','familiar','hard','delayed','delayedFamiliar','delayedHard','practice'].forEach(function(key) {
+      result[key] += Math.max(0, Number(bucket[key]) || 0);
+    });
+  }
+  return result;
+}
+
+function progressPercent(part, total) {
+  return total > 0 ? Math.round(part / total * 100) : null;
+}
+
+function progressPriorityWords(limit) {
+  var meta = loadReviewMeta(), result = [], now = Date.now();
+  Object.keys(meta).forEach(function(key) {
+    var split = key.indexOf(':');
+    if (split < 1) return;
+    var source = key.slice(0, split), en = key.slice(split + 1);
+    if (source === 'hb') source = 'hongbaoshu';
+    if (source !== 'vocab' && source !== 'hongbaoshu') return;
+    if (ReviewCore.isExcluded(source, en)) return;
+    var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []), item = null;
+    for (var i = 0; i < words.length; i++) if (words[i].en === en) { item = words[i]; break; }
+    if (!item) return;
+    var entry = meta[key] || {}, hardHits = Math.max(0, Number(entry.hardHits) || 0), lapses = Math.max(0, Number(entry.lapses) || 0), streak = Math.max(0, Number(entry.streak) || 0);
+    var dueAt = Number(entry.hardDueAt) || Number(entry.nextDueAt) || 0, due = dueAt > 0 && dueAt <= now;
+    var noteMissing = !String(item.cn_note || '').trim();
+    var examples = Array.isArray(item.examples) ? item.examples : (item.ex ? [{ en: item.ex }] : []);
+    var exampleMissing = !examples.some(function(example) { return example && String(example.en || '').trim(); });
+    var recentLapse = lapses > 0 && streak < 2;
+    if (!hardHits && !recentLapse && !due && !noteMissing && !exampleMissing) return;
+    var score = hardHits * 100 + (recentLapse ? lapses * 20 : 0) + (due ? 15 : 0) + (noteMissing ? 12 : 0) + (exampleMissing ? 5 : 0);
+    var reasons = [];
+    if (hardHits) reasons.push('不熟 ' + hardHits);
+    else if (recentLapse) reasons.push('遗忘 ' + lapses);
+    if (due) reasons.push('到期');
+    if (noteMissing) reasons.push('缺详解');
+    if (exampleMissing) reasons.push('缺例句');
+    result.push({ source: source, en: en, cn: item.cn || '', score: score, reasons: reasons });
+  });
+  result.sort(function(a, b) { return b.score - a.score || a.en.localeCompare(b.en); });
+  return result.slice(0, limit || 8);
+}
+
 function updateProgressHomeStats() {
   var activity = loadLearningActivity();
   var today = progressActivityForDay(activity, progressDayAt(0));
-  var totals = progressTotals();
+  var activityTotals = progressActivityTotals(activity);
   var todayEl = document.getElementById('statProgressToday');
   var totalEl = document.getElementById('statProgressTotal');
-  if (todayEl) todayEl.textContent = '今日 ' + today.total + ' 次';
-  if (totalEl) totalEl.textContent = '累计 ' + (totals.vocab + totals.hb + totals.uf) + ' 次';
+  if (todayEl) todayEl.textContent = '今日 ' + today.total + ' 次学习活动';
+  if (totalEl) totalEl.textContent = '近90日 ' + activityTotals.total + ' 次学习活动';
   var activeDays = 0;
   Object.keys(activity.days || {}).forEach(function(day) {
     if (progressActivityForDay(activity, day).total > 0) activeDays++;
@@ -3933,7 +4049,7 @@ function progressLineSvg(days) {
     points.push(x.toFixed(2) + ',' + y.toFixed(2));
   }
   var area = '0,92 ' + points.join(' ') + ' 100,92';
-  return '<svg class="progress-chart" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="近30日累计播放次数">'
+  return '<svg class="progress-chart" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="近30日累计学习活动">'
     + '<line x1="0" y1="92" x2="100" y2="92" stroke="#e2e2e7" stroke-width="1"/>'
     + '<line x1="0" y1="52" x2="100" y2="52" stroke="#ededf1" stroke-width="1"/>'
     + '<polygon points="' + area + '" fill="#1683ed" opacity="0.14"/>'
@@ -3945,14 +4061,40 @@ function progressShortDay(day) {
   return Number(day.slice(5, 7)) + '/' + Number(day.slice(8, 10));
 }
 
+function progressBarSegments(day) {
+  if (!day || !day.total) return '';
+  var kinds = ['listen','morning','recite','other'], html = '';
+  kinds.forEach(function(kind) {
+    var value = Math.max(0, Number(day[kind]) || 0);
+    if (!value) return;
+    html += '<i class="progress-bar-segment ' + kind + '" style="height:' + (value / day.total * 100).toFixed(2) + '%"></i>';
+  });
+  return html;
+}
+
+function progressPriorityMarkup(items) {
+  if (!items.length) return '';
+  var rows = items.map(function(item) {
+    var reasons = item.reasons.map(function(reason) { return '<span class="progress-priority-reason">' + escapeHTML(reason) + '</span>'; }).join('');
+    return '<div class="progress-priority-row"><div><button class="progress-priority-word" onclick="openDueReview(&quot;' + escapeHTML(item.source) + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;)">' + escapeHTML(item.en) + '</button><span class="progress-priority-cn">' + escapeHTML(item.cn) + '</span><div class="progress-priority-reasons">' + reasons + '</div></div><div class="progress-priority-actions"><button class="progress-priority-open" onclick="openDueReview(&quot;' + escapeHTML(item.source) + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;)">复习</button>' + FocusCore.buttonHTML(item.en, item.cn, item.source, '学习诊断优先加强', { compact: true }) + '</div></div>';
+  }).join('');
+  return '<h3>优先加强词</h3><div class="progress-panel"><div class="progress-priority-list">' + rows + '</div></div>';
+}
+
 function showProgress() {
   stopAll();
   showView('progress');
   var container = document.getElementById('progressContent');
   if (!container) return;
   var activity = loadLearningActivity();
-  var totals = progressTotals();
+  var activityTotals = progressActivityTotals(activity);
+  var legacyTotals = progressLegacyTotals();
   var today = progressActivityForDay(activity, progressDayAt(0));
+  var recall7 = recallQualityForDays(ReviewCore.loadRecallQuality(), 7);
+  var recallRate = progressPercent(recall7.familiar, recall7.total);
+  var delayedRate = progressPercent(recall7.delayedFamiliar, recall7.delayed);
+  var priorityWords = progressPriorityWords(8);
+  var needsHbForPriority = !HONGBAOSHU;
   var activeDays = 0;
   Object.keys(activity.days || {}).forEach(function(day) {
     if (progressActivityForDay(activity, day).total > 0) activeDays++;
@@ -3985,7 +4127,7 @@ function showProgress() {
     var heatDay = progressDayAt(h);
     var heatStat = progressActivityForDay(activity, heatDay);
     var level = heatStat.total >= 10 ? 'l3' : heatStat.total >= 4 ? 'l2' : heatStat.total > 0 ? 'l1' : '';
-    heat += '<span class="progress-heat ' + level + '" title="' + heatDay + '：' + heatStat.total + ' 次播放"></span>';
+    heat += '<span class="progress-heat ' + level + '" title="' + heatDay + '：' + heatStat.total + ' 次学习活动"></span>';
   }
   var bars = '';
   for (var b = 0; b < recent.length; b++) {
@@ -3993,28 +4135,33 @@ function showProgress() {
     var height = Math.max(d.total > 0 ? 3 : 0, d.total / maxRecent * chartMaxHeightPct);
     var todayClass = b === recent.length - 1 ? ' today' : '';
     var valueLabel = d.total > 0 ? '<span class="progress-bar-value">' + d.total + '</span>' : '';
-    bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次（生词本 ' + d.vocab + '，红宝书 ' + d.hb + '，不熟词 ' + d.uf + '）">'
+    bars += '<div class="progress-bar-col" title="' + d.day + '：' + d.total + ' 次学习活动（聆听 ' + d.listen + '，晨听 ' + d.morning + '，主动背诵 ' + d.recite + (d.other ? '，历史未分类 ' + d.other : '') + '；生词本 ' + d.vocab + '，红宝书 ' + d.hb + '，不熟词 ' + d.uf + '）">'
       + '<div class="progress-bar-stack" style="height:' + height.toFixed(1) + '%">'
-      + '<i class="progress-bar-total' + todayClass + '"></i>' + valueLabel + '</div>'
+      + '<div class="progress-bar-fill' + todayClass + '">' + progressBarSegments(d) + '</div>' + valueLabel + '</div>'
       + '<span class="progress-bar-label">' + progressShortDay(d.day) + '</span></div>';
   }
-  var totalPlays = totals.vocab + totals.hb + totals.uf;
+  var legacyPlayTotal = legacyTotals.vocab + legacyTotals.hb + legacyTotals.uf;
   var html = '';
   html += '<div class="progress-summary">';
   html += '<div class="progress-summary-item"><div class="progress-summary-num">' + activeDays + '</div><div class="progress-summary-label">记录学习天数</div></div>';
-  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.unique + '</div><div class="progress-summary-label">今日听词</div></div>';
-  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.total + '</div><div class="progress-summary-label">今日播放</div></div>';
-  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + totalPlays + '</div><div class="progress-summary-label">累计播放</div></div>';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.unique + '</div><div class="progress-summary-label">今日接触</div></div>';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.total + '</div><div class="progress-summary-label">今日学习活动</div></div>';
+  html += '<div class="progress-summary-item"><div class="progress-summary-num">' + activityTotals.total + '</div><div class="progress-summary-label">近90日学习活动</div></div>';
   html += '</div>';
-  html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天播放次数越多</div></div>';
-  html += '<h3>近30日累计播放</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次播放</div></div>';
-  html += '<h3>每日播放次数</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-panel-sub">每日总播放 · 今日深海蓝</div></div>';
-  html += '<h3>各词库累计播放</h3><div class="progress-source-grid">';
-  html += '<div class="progress-source"><div class="progress-source-num">' + totals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
-  html += '<div class="progress-source"><div class="progress-source-num">' + totals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
-  html += '<div class="progress-source"><div class="progress-source-num">' + totals.uf + '</div><div class="progress-source-label">不熟词</div></div></div>';
+  html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天学习活动越多</div></div>';
+  html += '<h3>主动回忆</h3><div class="progress-panel"><div class="recall-quality-grid"><div class="recall-quality-item"><div class="recall-quality-num">' + recall7.total + '</div><div class="recall-quality-label">近7日主动评分</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + (recallRate === null ? '—' : recallRate + '%') + '</div><div class="recall-quality-label">自评熟悉率</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + (delayedRate === null ? '—' : delayedRate + '%') + '</div><div class="recall-quality-label">到期复测熟悉率</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + recall7.practice + '</div><div class="recall-quality-label">练习轮评分</div></div></div><div class="progress-panel-sub">到期复测只统计间隔后再次评分；练习轮不计入该比率。</div></div>';
+  html += '<h3>近30日累计学习活动</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次学习活动</div></div>';
+  html += '<h3>每日学习活动</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-activity-legend"><span class="progress-legend-item"><i class="progress-legend-dot listen"></i>聆听</span><span class="progress-legend-item"><i class="progress-legend-dot morning"></i>晨听完成</span><span class="progress-legend-item"><i class="progress-legend-dot recite"></i>主动背诵</span>' + (activityTotals.other ? '<span class="progress-legend-item"><i class="progress-legend-dot other"></i>历史未分类</span>' : '') + '</div><div class="progress-panel-sub">每日总活动 · 今日显示为最深边框</div></div>';
+  html += '<h3>各词库累计聆听</h3><div class="progress-source-grid">';
+  html += '<div class="progress-source"><div class="progress-source-num">' + legacyTotals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
+  html += '<div class="progress-source"><div class="progress-source-num">' + legacyTotals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
+  html += '<div class="progress-source"><div class="progress-source-num">' + legacyTotals.uf + '</div><div class="progress-source-label">不熟词</div></div></div>';
+  html += '<div class="progress-panel-sub">累计 ' + legacyPlayTotal + ' 次音频记录；主动背诵不混入此项。</div>';
+  html += progressPriorityMarkup(priorityWords);
   html += '<div class="progress-panel" style="margin-top:18px"><div class="progress-panel-title">晨读完成</div><div class="progress-panel-sub">近30日 ' + Object.keys(morningDays).length + ' 天 · ' + Math.round(morningMin / 60000) + ' 分钟。晨读详情与优先复习词仍可在“今日晨听”内查看。</div></div>';
   container.innerHTML = html;
+  FocusCore.refreshButtons();
+  if (needsHbForPriority) loadHB(function(err) { if (!err && activeViewName === 'progress') showProgress(); });
 }
 
 function closeBackupCenter() {
@@ -4092,7 +4239,7 @@ function restorePreImportBackup() {
   }
 }
 
-// ═══════════ DIAGNOSTIC (long-press title 2s) ═══════════
+// ═══════════ DIAGNOSTIC (long-press version badge) ═══════════
 function showDiagnostic() {
   var lines = [];
   lines.push('Build: ' + new Date(BUILD_TS * 1000).toISOString().replace('T',' ').substring(0,19));
@@ -4103,11 +4250,17 @@ function showDiagnostic() {
   var up = {}; try { up = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) {}
   var mm = {}; try { mm = JSON.parse(localStorage.getItem('morning_meta_v1')||'{}'); } catch(e) {}
   var md = {}; try { md = JSON.parse(localStorage.getItem('morning_daily_v1')||'{}'); } catch(e) {}
+  var activity = ReviewCore.loadLearningActivity();
+  var activityTotals = progressActivityTotals(activity);
+  var recall7 = recallQualityForDays(ReviewCore.loadRecallQuality(), 7);
   lines.push('vv_prefs: ' + Object.keys(vp).length + ' entries');
   lines.push('hb_prefs: ' + Object.keys(hp).length + ' entries');
   lines.push('uf_prefs: ' + Object.keys(up).length + ' entries');
   lines.push('morning_meta: ' + Object.keys(mm).length + ' entries');
   lines.push('morning_daily: ' + Object.keys(md).length + ' words tracked');
+  lines.push('activity: ' + Object.keys(activity.days || {}).length + ' days / ' + activityTotals.total + ' events');
+  lines.push('activity modes: listen ' + activityTotals.listen + ', morning ' + activityTotals.morning + ', recite ' + activityTotals.recite + ', unclassified ' + activityTotals.other);
+  lines.push('recall 7d: ' + recall7.total + ' ratings / familiar ' + recall7.familiar + ' / hard ' + recall7.hard + ' / delayed ' + recall7.delayed);
   var le = localStorage.getItem('last_export_ts');
   if (le) {
     var d = new Date(parseInt(le));
@@ -4129,21 +4282,21 @@ function showDiagnostic() {
   document.getElementById('diagOverlay').style.display = 'block';
 }
 (function(){
-  var hero = document.querySelector('.home-hero');
-  if (hero) {
-    var diagTimer;
-    hero.addEventListener('touchstart', function(e){
-      diagTimer = setTimeout(function(){ showDiagnostic(); }, 2000);
-    });
-    hero.addEventListener('touchend', function(){ clearTimeout(diagTimer); });
-    hero.addEventListener('touchmove', function(){ clearTimeout(diagTimer); });
-    // Also support mouse long-press for desktop debugging
-    hero.addEventListener('mousedown', function(e){
-      diagTimer = setTimeout(function(){ showDiagnostic(); }, 2000);
-    });
-    hero.addEventListener('mouseup', function(){ clearTimeout(diagTimer); });
-    hero.addEventListener('mouseleave', function(){ clearTimeout(diagTimer); });
-  }
+  var trigger = document.getElementById('appVersionBadge');
+  if (!trigger) return;
+  var diagTimer = null, opened = false;
+  function cancel() { if (diagTimer) clearTimeout(diagTimer); diagTimer = null; }
+  trigger.addEventListener('pointerdown', function() {
+    opened = false; cancel();
+    diagTimer = setTimeout(function(){ opened = true; showDiagnostic(); }, 900);
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(type) { trigger.addEventListener(type, cancel); });
+  trigger.addEventListener('click', function(event) {
+    if (!opened) return;
+    event.preventDefault(); event.stopImmediatePropagation(); opened = false;
+  }, true);
+  trigger.addEventListener('contextmenu', function(event) { if (opened) event.preventDefault(); });
+  if (/[?&]diagnostics=1(?:&|$)/.test(location.search)) setTimeout(showDiagnostic, 0);
 })();
 
 // ═══════════ INIT ═══════════

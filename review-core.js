@@ -3,6 +3,7 @@
   var REVIEW_META_KEY = 'review_meta_v1';
   var EXCLUDED_KEY = 'review_excluded_v1';
   var ACTIVITY_KEY = 'learning_activity_v1';
+  var RECALL_KEY = 'recall_quality_v1';
   var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
   var DAY_MS = 86400000;
 
@@ -87,17 +88,25 @@
     localStorage.setItem(storageKey, JSON.stringify(prefs));
     localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
     var opts = options || {}, oldReview = null, reviewApplied = false;
+    var canonicalSource = reviewSource(source);
+    var reviewBefore = mode === 'recite' ? loadReviewMeta()[canonicalSource + ':' + en] : null;
+    var recallOutcome = null;
     if (mode === 'recite' || (mode === 'morning' && opts.reviewDue)) {
-      oldReview = rateReview(reviewSource(source), en, familiar);
+      oldReview = rateReview(canonicalSource, en, familiar);
       reviewApplied = true;
     } else if (!familiar) {
-      oldReview = scheduleHardOnly(reviewSource(source), en);
+      oldReview = scheduleHardOnly(canonicalSource, en);
       reviewApplied = true;
     }
+    if (mode === 'recite') {
+      recallOutcome = recordRecallOutcome(canonicalSource, en, familiar, 'recite', {
+        delayed: wasScheduledRecall(reviewBefore)
+      });
+    }
     return {
-      source: reviewSource(source), en: en, hadPref: hadPref, oldPref: oldPref,
+      source: canonicalSource, en: en, hadPref: hadPref, oldPref: oldPref,
       oldReview: oldReview, reviewApplied: reviewApplied, familiar: !!familiar,
-      mode: mode || 'listen'
+      mode: mode || 'listen', recallOutcome: recallOutcome
     };
   }
   function undoRating(state) {
@@ -109,6 +118,7 @@
     else localStorage.removeItem(storageKey);
     localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
     if (state.reviewApplied) undoReview(state.source, state.en, state.oldReview || {});
+    if (state.recallOutcome) undoRecallOutcome(state.recallOutcome);
   }
   function rateReview(source, en, familiar) {
     var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
@@ -147,6 +157,66 @@
     var meta = loadReviewMeta(), key = source + ':' + en;
     if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
     if (Object.keys(meta).length) saveReviewMeta(meta); else localStorage.removeItem(REVIEW_META_KEY);
+  }
+  function loadRecallQuality() { return safeJson(RECALL_KEY, { days: {} }); }
+  function saveRecallQuality(data) {
+    var days = data && isObject(data.days) ? data.days : {};
+    var cutoff = Date.now() - 90 * DAY_MS;
+    Object.keys(days).forEach(function(day) {
+      var ts = new Date(day + 'T00:00:00').getTime();
+      if (!isFinite(ts) || ts < cutoff) delete days[day];
+    });
+    if (Object.keys(days).length) localStorage.setItem(RECALL_KEY, JSON.stringify({ days: days }));
+    else localStorage.removeItem(RECALL_KEY);
+    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  }
+  function wasScheduledRecall(entry, at) {
+    if (!isObject(entry) || !Number(entry.lastReviewAt)) return false;
+    var due = Number(entry.hardDueAt) || Number(entry.nextDueAt) || 0;
+    return due > 0 && due <= (at || Date.now());
+  }
+  function recordRecallOutcome(source, en, familiar, mode, options) {
+    if (!source || !en) return null;
+    var opts = options || {}, at = Number(opts.at) || Date.now(), day = localDayKey(at);
+    var data = loadRecallQuality();
+    if (!isObject(data.days)) data.days = {};
+    var bucket = data.days[day] || { total: 0, familiar: 0, hard: 0, delayed: 0, delayedFamiliar: 0, delayedHard: 0, practice: 0, modes: {} };
+    if (!isObject(bucket.modes)) bucket.modes = {};
+    bucket.total = (Number(bucket.total) || 0) + 1;
+    if (familiar) bucket.familiar = (Number(bucket.familiar) || 0) + 1;
+    else bucket.hard = (Number(bucket.hard) || 0) + 1;
+    if (opts.delayed) {
+      bucket.delayed = (Number(bucket.delayed) || 0) + 1;
+      if (familiar) bucket.delayedFamiliar = (Number(bucket.delayedFamiliar) || 0) + 1;
+      else bucket.delayedHard = (Number(bucket.delayedHard) || 0) + 1;
+    }
+    if (opts.practice) bucket.practice = (Number(bucket.practice) || 0) + 1;
+    mode = mode || 'recite';
+    bucket.modes[mode] = (Number(bucket.modes[mode]) || 0) + 1;
+    bucket.updatedAt = at;
+    data.days[day] = bucket;
+    saveRecallQuality(data);
+    return { day: day, familiar: !!familiar, delayed: !!opts.delayed, practice: !!opts.practice, mode: mode };
+  }
+  function undoRecallOutcome(event) {
+    if (!event || !event.day) return;
+    var data = loadRecallQuality(), bucket = data.days && data.days[event.day];
+    if (!bucket) return;
+    function dec(key) { bucket[key] = Math.max(0, (Number(bucket[key]) || 0) - 1); }
+    dec('total');
+    dec(event.familiar ? 'familiar' : 'hard');
+    if (event.delayed) {
+      dec('delayed');
+      dec(event.familiar ? 'delayedFamiliar' : 'delayedHard');
+    }
+    if (event.practice) dec('practice');
+    if (bucket.modes && bucket.modes[event.mode]) {
+      bucket.modes[event.mode]--;
+      if (bucket.modes[event.mode] <= 0) delete bucket.modes[event.mode];
+    }
+    bucket.updatedAt = Date.now();
+    if (!bucket.total) delete data.days[event.day];
+    saveRecallQuality(data);
   }
   function getDueReviewItems(now) {
     var meta = loadReviewMeta(), at = now || Date.now(), items = [];
@@ -230,6 +300,7 @@
     REVIEW_META_KEY: REVIEW_META_KEY,
     EXCLUDED_KEY: EXCLUDED_KEY,
     ACTIVITY_KEY: ACTIVITY_KEY,
+    RECALL_KEY: RECALL_KEY,
     ACTIVITY_DIRTY_KEY: ACTIVITY_DIRTY_KEY,
     safeJson: safeJson,
     localDayKey: localDayKey,
@@ -247,6 +318,11 @@
     undoRating: undoRating,
     rateReview: rateReview,
     undoReview: undoReview,
+    loadRecallQuality: loadRecallQuality,
+    saveRecallQuality: saveRecallQuality,
+    recordRecallOutcome: recordRecallOutcome,
+    undoRecallOutcome: undoRecallOutcome,
+    wasScheduledRecall: wasScheduledRecall,
     getDueReviewItems: getDueReviewItems,
     getHardDueReviewItems: getHardDueReviewItems,
     upcomingReviewCount: upcomingReviewCount,
