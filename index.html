@@ -747,6 +747,13 @@
     backdrop-filter:blur(28px) saturate(155%); -webkit-backdrop-filter:blur(28px) saturate(155%);
   }
   .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
+  .app-tabbar-rail {
+    position:fixed; left:0; right:0; bottom:0; z-index:79; width:100%; max-width:670px; height:94px; margin:0 auto;
+    pointer-events:none; background:rgba(229,241,245,.92); border:1px solid var(--glass-line); border-bottom:0; border-radius:28px 28px 0 0;
+    box-shadow:0 -10px 28px rgba(12,66,84,.07); backdrop-filter:blur(24px) saturate(155%); -webkit-backdrop-filter:blur(24px) saturate(155%);
+    transition:transform .24s var(--ease-drawer),opacity .16s var(--ease-out);
+  }
+  .app-tabbar-rail.hidden { transform:translateY(100%); opacity:0; }
   .app-tabbar {
     left:15px; right:15px; bottom:15px; max-width:640px;
     height:64px; min-height:64px; padding:5px 6px; border-radius:999px;
@@ -811,16 +818,16 @@
   .word-block { transition:transform .2s var(--ease-out); }
   .btn:active, .task-button:active, .app-icon-btn:active, .unit-btn:active, .vc-btn:active { transition-duration:.1s; }
   @media (prefers-reduced-motion:reduce) {
-    .app-tabbar, .app-edge-back, .app-tab-symbol, .app-tab-indicator, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn, .nav-back, .morning-nav-back { transition:opacity .16s ease !important; }
+    .app-tabbar-rail, .app-tabbar, .app-edge-back, .app-tab-symbol, .app-tab-indicator, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn, .nav-back, .morning-nav-back { transition:opacity .16s ease !important; }
     .app-tabbar.hidden { opacity:0; transform:none; }
     .app-tab.active .app-tab-symbol, button:active { transform:none !important; }
     .spinner, .morning-loading .spinner { animation-duration:1.2s; }
   }
   @media (prefers-reduced-transparency:reduce) {
-    .app-topbar, .app-tabbar, .nav-bar, .app-edge-back, .nav-back, .morning-nav-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
+    .app-topbar, .app-tabbar-rail, .app-tabbar, .nav-bar, .app-edge-back, .nav-back, .morning-nav-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
   }
   @media (prefers-contrast:more) {
-    .app-topbar, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list, .nav-back, .morning-nav-back { border-color:#31515e; }
+    .app-topbar, .app-tabbar-rail, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list, .nav-back, .morning-nav-back { border-color:#31515e; }
     .app-tab, .app-section-title span, .today-sub, .source-meta { color:#40545d; }
   }
 </style>
@@ -842,7 +849,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.3 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.4 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1189,6 +1196,7 @@
 </div>
 
 <div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
+<div class="app-tabbar-rail" id="appTabbarRail" aria-hidden="true"></div>
 <nav class="app-tabbar" id="appTabbar" aria-label="主导航">
   <div class="app-tab-indicator" aria-hidden="true"></div>
   <button class="app-tab active" data-tab="home" onclick="showHome()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.8 12 3l9 7.8V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span><span>今日</span></button>
@@ -1197,10 +1205,10 @@
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
 
-<script src="review-core.js?v=1.5.3"></script>
-<script src="focus-core.js?v=1.5.3"></script>
-<script src="audio-cache.js?v=1.5.3"></script>
-<script src="ui-motion.js?v=1.5.3"></script>
+<script src="review-core.js?v=1.5.4"></script>
+<script src="focus-core.js?v=1.5.4"></script>
+<script src="audio-cache.js?v=1.5.4"></script>
+<script src="ui-motion.js?v=1.5.4"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1241,8 +1249,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.3";
-var BUILD_TS = 1784735324;
+var APP_BUILD_ID = "1.5.4";
+var BUILD_TS = 1784773385;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1660,9 +1668,11 @@ function syncAppTabIndicator(nav, tab) {
 
 function setAppTab(view) {
   var nav = document.getElementById('appTabbar');
+  var rail = document.getElementById('appTabbarRail');
   if (!nav) return;
   var tab = view === 'home' ? 'home' : (view === 'library' || view === 'units') ? 'library' : view === 'review' ? 'review' : view === 'progress' ? 'progress' : '';
   nav.classList.toggle('hidden', !tab);
+  if (rail) rail.classList.toggle('hidden', !tab);
   var buttons = nav.querySelectorAll('.app-tab');
   for (var i = 0; i < buttons.length; i++) buttons[i].classList.toggle('active', buttons[i].getAttribute('data-tab') === tab);
   syncAppTabIndicator(nav, tab);
@@ -4965,6 +4975,8 @@ function hideAllViews() {
   }
   var nav = document.getElementById('appTabbar');
   if (nav) nav.classList.add('hidden');
+  var rail = document.getElementById('appTabbarRail');
+  if (rail) rail.classList.add('hidden');
 }
 
 function morningReasonLabel(item) {
