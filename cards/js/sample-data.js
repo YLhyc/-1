@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "0d9832d7b573",
-  "content_version": "ae58faed2d62",
+  "exam_wording_version": "837336bdf109",
+  "content_version": "1565622ce1d4",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -14,6 +14,14 @@
       "title": "杜甫",
       "order": 10,
       "description": "诗史、沉郁顿挫与律诗成就"
+    },
+    {
+      "id": "topic_706_classical_words",
+      "subject": "706",
+      "module": "古代汉语",
+      "title": "文言实词：适与前往方向词",
+      "order": 10,
+      "description": "适的多义与异读，以及之、适、如、往、赴、去的前往、奔赴、离开辨析"
     },
     {
       "id": "topic_706_389756ab8769",
@@ -1474,6 +1482,178 @@
       "revision": {
         "version": 1,
         "updated_at": "2026-07-20T15:10:07+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_ee162b76ced8e0aa",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_classical_words",
+      "order": 10,
+      "title": "“适”的常见义项如何按语境判断",
+      "prompt": "“适”在古文中有哪些常见义项？如何根据搭配判断？",
+      "summary": "“适”常见义项包括{{accent|到、往……去}}、适合、恰好、依照和出嫁；“適戍”中的适读zhé，通“谪”，是发配义。判断要看地点、时间副词、合宜语境和婚姻语境。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先界定前往义，再对比合宜与恰好义、依照与出嫁义，最后说明异读边界。"
+      },
+      "outline": [
+        {
+          "heading": "前往义",
+          "text": "适加地点宾语时表示往、到……去，如“子适卫”。"
+        },
+        {
+          "heading": "合宜与恰好义",
+          "text": "适然表示合适、适宜；适至、适逢中的适表示恰好、正好。"
+        },
+        {
+          "heading": "依照与出嫁义",
+          "text": "处分适兄意中的适是顺从、依照；始适还家门中的适是出嫁。"
+        },
+        {
+          "heading": "异读边界",
+          "text": "適戍中的适读zhé，通谪，表示发配或责罚，不是shì的前往义。"
+        }
+      ],
+      "examples": [
+        "子适卫：孔子到卫国去。",
+        "适然：合适、适宜；适至：刚好来到。",
+        "始适还家门：刚出嫁就返回娘家。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先看后面的成分：地点、时间、合宜对象还是婚姻语境？"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "适卫—到；适然—合适；适至—恰好；始适—出嫁。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "遇到適戍先看读音zhé，并联系通谪。"
+        }
+      ],
+      "exam_answer_type": "term",
+      "exam_wording": "“适”是多义词，必须结合上下文判断。首先，在前往义中，适加地点宾语表示“往、到……去”，如“子适卫”即孔子到卫国去。其次，在合宜与恰好义中，适然表示合适、适宜，适至、适逢表示恰好、正好。\n\n再次，在依照与出嫁义中，处分适兄意表示依照、顺从，始适还家门表示出嫁。最后，在异读边界上，适戍中的适读zhé，通“谪”，表示发配、责罚，不能按shì的前往义翻译。由此可见，适的译法必须由搭配和读音共同确定，不能脱离语境固定翻译。",
+      "tags": [
+        "文言实词",
+        "适",
+        "多义词",
+        "异读",
+        "古代汉语"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-23",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/文言知识积累/文言知识积累.md",
+        "session_id": "706-2026-07-23-classical-words-direction",
+        "created_at": "2026-07-23T20:30:03+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-23T20:30:03+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-23T20:30:03+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_89fbdbeee2cf46b1",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_classical_words",
+      "order": 20,
+      "title": "上古“之、适、如、往、赴、去”如何辨析",
+      "prompt": "如何区分上古表示前往、奔赴和离开的“之、适、如、往、赴、去”？",
+      "summary": "之、适、如通常表示到……去并可带地点宾语；往也表示前往但上古通常不直接带宾语；赴是奔向，语气更强；去在先秦多表示{{danger|离开}}，不要轻译为到。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先比较之、适、如与往的句法差别，再区分赴的奔赴语气和去的离开方向，最后归纳判断步骤。"
+      },
+      "outline": [
+        {
+          "heading": "之、适、如",
+          "text": "三词都可表示到、往……去，上古通常可直接带地点宾语，如之滕、适卫、如师。"
+        },
+        {
+          "heading": "往",
+          "text": "往也表示前往，但上古通常不直接带宾语，如“舜往耕焉”。"
+        },
+        {
+          "heading": "赴",
+          "text": "赴本义是奔向，常带快速奔赴或奔向危险处所的意味，如赴东海、赴汤火。"
+        },
+        {
+          "heading": "去",
+          "text": "去在上古最常见义是离开某地或某人，与前往义方向相反；到……去义是中古以后发展出来的。"
+        }
+      ],
+      "examples": [
+        "楚子使屈完如师：楚王派屈完到诸侯联军那里去。",
+        "赴汤火：奔赴汤火；去齐：先秦语境通常是离开齐国。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先判断方向：是到某地、奔向某处，还是离开某地？"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "之适如可带地点宾语；往通常不带；赴=奔向；去=离开。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "看到地名后再看动词语气，不要把所有移动词都译成到。"
+        }
+      ],
+      "exam_answer_type": "term",
+      "exam_wording": "上古表示移动的词不能一概翻译为“到”。首先，之、适、如都可表示“到、往……去”，并通常可以直接带地点宾语，如“之滕”“适卫”“如师”。其次，往意义相近，但上古通常不直接带宾语。\n\n再次，赴表示奔向、奔赴，动作力度较强，常用于“赴东海”“赴汤火”等语境。最后，去在先秦最常见的意思是离开某地或某人，与“适卫”的前往方向相反；去表示到某地去，是中古以后才发展出的义项。由此可见，应先判断移动方向，再结合宾语和语气选择“到、前往、奔赴”或“离开”。",
+      "tags": [
+        "文言实词",
+        "前往",
+        "赴",
+        "去",
+        "宾语",
+        "古代汉语"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-23",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/文言知识积累/文言知识积累.md",
+        "session_id": "706-2026-07-23-classical-words-direction",
+        "created_at": "2026-07-23T20:30:03+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-23T20:30:03+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-23T20:30:03+08:00",
         "device_id": "assistant-706"
       }
     },
@@ -4377,6 +4557,6 @@
       }
     }
   ],
-  "release_id": "81313177880a"
+  "release_id": "6a08e731e650"
 };
 })();
