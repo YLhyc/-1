@@ -24,7 +24,7 @@
   /* ── App shell ── */
   .app-page {
     width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
-    padding:0 16px calc(95px + env(safe-area-inset-bottom));
+    padding:0 16px calc(80px + env(safe-area-inset-bottom));
     overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
     -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
   }
@@ -127,8 +127,9 @@
   .app-update-btn:disabled { opacity:.72; }
   @keyframes app-update-spin { to { transform:rotate(360deg); } }
   @media (prefers-reduced-motion:reduce) { .app-update-btn.checking svg { animation:none; opacity:.68; } }
-  .app-tabbar { position:fixed; left:18px; right:18px; bottom:calc(env(safe-area-inset-bottom) + 10px); z-index:80; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:604px; margin:auto; padding:8px 7px 11px; border:1px solid rgba(255,255,255,.8); border-radius:28px; background:rgba(255,255,255,.9); box-shadow:0 15px 38px rgba(18,70,103,.16); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); transition:transform .24s cubic-bezier(.32,.72,0,1),opacity .16s cubic-bezier(.23,1,.32,1); }
-  .app-tabbar.hidden { transform:translateY(calc(100% + env(safe-area-inset-bottom) + 24px)); opacity:0; pointer-events:none; }
+  .app-tabbar-host { position:fixed; left:0; right:0; bottom:0; z-index:80; height:calc(58px + env(safe-area-inset-bottom) + 9px); padding:4px 15px calc(env(safe-area-inset-bottom) + 4px); transition:transform .24s cubic-bezier(.32,.72,0,1),opacity .16s cubic-bezier(.23,1,.32,1); }
+  .app-tabbar-host.hidden { transform:translateY(100%); opacity:0; pointer-events:none; }
+  .app-tabbar { position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; width:100%; max-width:604px; height:58px; margin:0 auto; padding:3px 4px; border:0; background:transparent; }
   .app-tab { position:relative; z-index:1; min-height:50px; border:0; background:transparent; color:#708696; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:11px; }
   .app-tab-symbol { width:28px; height:27px; border-radius:14px; display:grid; place-items:center; color:currentColor; transition:transform .16s cubic-bezier(.23,1,.32,1),color .16s ease; }
   .app-tab-symbol svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
@@ -747,21 +748,26 @@
     backdrop-filter:blur(28px) saturate(155%); -webkit-backdrop-filter:blur(28px) saturate(155%);
   }
   .app-icon-btn { background:var(--glass-strong); color:var(--deep); box-shadow:0 6px 18px rgba(7,83,106,.09); transition:transform .16s var(--ease-out); }
-  .app-tabbar {
-    left:15px; right:15px; bottom:calc(15px + env(safe-area-inset-bottom)); max-width:640px;
-    height:64px; min-height:64px; padding:5px 6px; border-radius:999px;
-    overflow:visible;
-    background:var(--glass); border-color:var(--glass-line);
-    box-shadow:0 22px 58px rgba(12,66,84,.16);
-    backdrop-filter:blur(36px) saturate(170%); -webkit-backdrop-filter:blur(36px) saturate(170%);
+  .app-tabbar-host {
+    height:calc(58px + env(safe-area-inset-bottom) + 9px); padding:4px 15px calc(env(safe-area-inset-bottom) + 4px);
+    border-top:1px solid rgba(255,255,255,.72); background:rgba(241,252,253,.58);
+    box-shadow:0 -8px 20px rgba(12,66,84,.07),inset 0 1px rgba(255,255,255,.36);
+    backdrop-filter:blur(24px) saturate(155%); -webkit-backdrop-filter:blur(24px) saturate(155%);
     transition:transform .24s var(--ease-drawer),opacity .16s var(--ease-out);
   }
-  .app-tab { min-height:52px; border-radius:999px; color:#59717b; }
+  .app-tabbar {
+    position:relative; left:auto; right:auto; bottom:auto; max-width:640px; height:58px; min-height:58px;
+    padding:3px 4px; border:0; border-radius:0; overflow:visible; background:transparent; box-shadow:none;
+    backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  .app-tab { min-height:52px; border-radius:16px; color:#59717b; gap:2px; font-size:10px; line-height:11px; }
+  .app-tab-symbol { width:20px; height:20px; border-radius:0; }
+  .app-tab-symbol svg { width:20px; height:20px; }
   .app-tab.active { color:var(--ocean); }
   .app-tab:active { transform:scale(.97); }
   .app-tab-indicator {
-    position:absolute; z-index:0; top:5px; bottom:5px; left:0; height:auto; width:0; border-radius:999px;
-    pointer-events:none; background:#e1f6f8; box-shadow:inset 0 1px rgba(255,255,255,.82);
+    position:absolute; z-index:0; top:3px; bottom:3px; left:0; height:auto; width:0; border-radius:16px;
+    pointer-events:none; background:rgba(216,244,247,.72); box-shadow:inset 0 1px rgba(255,255,255,.72);
     transform:translateX(0); transition:transform .42s var(--ease-drawer),opacity .18s ease;
   }
   .app-tab.active .app-tab-symbol { color:currentColor; background:transparent; box-shadow:none; transform:none; }
@@ -811,16 +817,16 @@
   .word-block { transition:transform .2s var(--ease-out); }
   .btn:active, .task-button:active, .app-icon-btn:active, .unit-btn:active, .vc-btn:active { transition-duration:.1s; }
   @media (prefers-reduced-motion:reduce) {
-    .app-tabbar, .app-edge-back, .app-tab-symbol, .app-tab-indicator, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn, .nav-back, .morning-nav-back { transition:opacity .16s ease !important; }
-    .app-tabbar.hidden { opacity:0; transform:none; }
+    .app-tabbar-host, .app-tabbar, .app-edge-back, .app-tab-symbol, .app-tab-indicator, .app-icon-btn, .word-block, .vocab-card, .morning-player-card, .btn, .task-button, .vc-btn, .nav-back, .morning-nav-back { transition:opacity .16s ease !important; }
+    .app-tabbar-host.hidden { opacity:0; transform:none; }
     .app-tab.active .app-tab-symbol, button:active { transform:none !important; }
     .spinner, .morning-loading .spinner { animation-duration:1.2s; }
   }
   @media (prefers-reduced-transparency:reduce) {
-    .app-topbar, .app-tabbar, .nav-bar, .app-edge-back, .nav-back, .morning-nav-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
+    .app-topbar, .app-tabbar-host, .nav-bar, .app-edge-back, .nav-back, .morning-nav-back { background:#f7fbfc; backdrop-filter:none; -webkit-backdrop-filter:none; }
   }
   @media (prefers-contrast:more) {
-    .app-topbar, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list, .nav-back, .morning-nav-back { border-color:#31515e; }
+    .app-topbar, .app-tabbar-host, .nav-bar, .today-task, .source-list, .library-card, .review-list, .nav-back, .morning-nav-back { border-color:#31515e; }
     .app-tab, .app-section-title span, .today-sub, .source-meta { color:#40545d; }
   }
 </style>
@@ -842,7 +848,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.5 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.6 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1189,6 +1195,7 @@
 </div>
 
 <div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
+<div class="app-tabbar-host" id="appTabbarHost">
 <nav class="app-tabbar" id="appTabbar" aria-label="主导航">
   <div class="app-tab-indicator" aria-hidden="true"></div>
   <button class="app-tab active" data-tab="home" onclick="showHome()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.8 12 3l9 7.8V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span><span>今日</span></button>
@@ -1196,11 +1203,12 @@
   <button class="app-tab" data-tab="review" onclick="showReview()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7v5l3.5 2"></path></svg></span><span>复习</span></button>
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
 </nav>
+</div>
 
-<script src="review-core.js?v=1.5.5"></script>
-<script src="focus-core.js?v=1.5.5"></script>
-<script src="audio-cache.js?v=1.5.5"></script>
-<script src="ui-motion.js?v=1.5.5"></script>
+<script src="review-core.js?v=1.5.6"></script>
+<script src="focus-core.js?v=1.5.6"></script>
+<script src="audio-cache.js?v=1.5.6"></script>
+<script src="ui-motion.js?v=1.5.6"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1241,8 +1249,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.5";
-var BUILD_TS = 1784778186;
+var APP_BUILD_ID = "1.5.6";
+var BUILD_TS = 1784792386;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1612,7 +1620,7 @@ function showView(name, options) {
   view.scrollTop = 0;
   activeViewName = name;
   setAppTab(name);
-  updateHomeStats();
+  if (!opts.skipHomeStats) updateHomeStats();
   if (appNavigationReady && previous !== name && !opts.fromHistory && window.history && window.history.replaceState) {
     if (isRootAppView(name)) {
       appViewDepth = 0;
@@ -1660,9 +1668,11 @@ function syncAppTabIndicator(nav, tab) {
 
 function setAppTab(view) {
   var nav = document.getElementById('appTabbar');
+  var host = document.getElementById('appTabbarHost');
   if (!nav) return;
   var tab = view === 'home' ? 'home' : (view === 'library' || view === 'units') ? 'library' : view === 'review' ? 'review' : view === 'progress' ? 'progress' : '';
   nav.classList.toggle('hidden', !tab);
+  if (host) host.classList.toggle('hidden', !tab);
   var buttons = nav.querySelectorAll('.app-tab');
   for (var i = 0; i < buttons.length; i++) buttons[i].classList.toggle('active', buttons[i].getAttribute('data-tab') === tab);
   syncAppTabIndicator(nav, tab);
@@ -1944,6 +1954,7 @@ var TODAY_RECITE_SESSION_KEY = 'today_recite_session_v1';
 var TODAY_RECITE_ROTATION_KEY = 'today_recite_rotation_v1';
 var todayRecitePool = [], todayReciteItems = [], todayReciteIdx = 0, todayReciteShown = false, todayReciteUndo = null, todayReciteDone = false, todayReciteStarted = false;
 var todayReciteStats = null, todayReciteCompletionId = '', todayRecitePracticeOnly = false, todayReciteHardReinforcement = [];
+var todayReciteWordIndexes = { vocab: null, hongbaoshu: null };
 function loadTodayReciteSettings() {
   var s = safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30 });
   if ([20,30,50,60].indexOf(Number(s.limit)) < 0) s.limit = 30;
@@ -2071,9 +2082,18 @@ function restoreTodayReciteSession() {
   return true;
 }
 function todayReciteWord(source, en) {
-  var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []);
-  for (var i = 0; i < words.length; i++) if (words[i].en === en) return { item: words[i], index: i };
-  return null;
+  var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []), cached = todayReciteWordIndexes[source];
+  if (!cached || cached.words !== words) {
+    var byEn = Object.create(null);
+    for (var i = 0; i < words.length; i++) {
+      var word = words[i];
+      if (word && word.en && typeof byEn[word.en] === 'undefined') byEn[word.en] = i;
+    }
+    cached = { words: words, byEn: byEn };
+    todayReciteWordIndexes[source] = cached;
+  }
+  var index = cached.byEn[en];
+  return typeof index === 'number' ? { item: words[index], index: index } : null;
 }
 function buildTodayReciteItems(includeRated) {
   var out = [], seen = {}, rated = includeRated ? {} : getTodayReciteRated();
@@ -2161,8 +2181,20 @@ function updateTodayReciteCard() {
   el.textContent = day.completed ? '今天已背 ' + day.completed + ' 词 · ' + base : base;
 }
 function openTodayRecite() {
-  function start() { stopAll(); todayRecitePool = buildTodayReciteItems(false); todayReciteItems = []; todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; todayReciteStarted = false; todayRecitePracticeOnly = false; todayReciteStats = null; todayReciteCompletionId = ''; todayReciteHardReinforcement = []; restoreTodayReciteSession(); showView('today-recite'); renderTodayRecite(); }
-  if (!HONGBAOSHU) loadHB(function(err) { if (err) { alert('红宝书数据加载失败，请稍后重试'); return; } start(); }); else start();
+  var c = document.getElementById('todayReciteContainer');
+  stopAll(); showView('today-recite', { skipHomeStats:true });
+  if (c) c.innerHTML = '<div class="review-empty">正在整理今日背诵…</div>';
+  function start() {
+    var nextPaint = window.requestAnimationFrame || function(callback) { callback(); return 0; };
+    nextPaint(function() {
+      todayRecitePool = buildTodayReciteItems(false); todayReciteItems = []; todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null; todayReciteDone = false; todayReciteStarted = false; todayRecitePracticeOnly = false; todayReciteStats = null; todayReciteCompletionId = ''; todayReciteHardReinforcement = [];
+      restoreTodayReciteSession(); renderTodayRecite();
+    });
+  }
+  if (!HONGBAOSHU) loadHB(function(err) {
+    if (err) { if (c) c.innerHTML = '<div class="review-empty">红宝书数据加载失败，请稍后重试。</div><button class="task-button" onclick="openTodayRecite()">重试</button>'; return; }
+    start();
+  }); else start();
 }
 function chooseTodayReciteLimit(limit) { saveTodayReciteLimit(limit); renderTodayRecite(); }
 function startTodayRecite() {
@@ -4995,6 +5027,8 @@ function hideAllViews() {
   }
   var nav = document.getElementById('appTabbar');
   if (nav) nav.classList.add('hidden');
+  var navHost = document.getElementById('appTabbarHost');
+  if (navHost) navHost.classList.add('hidden');
 }
 
 function morningReasonLabel(item) {

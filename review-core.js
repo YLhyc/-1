@@ -219,36 +219,38 @@
     saveRecallQuality(data);
   }
   function getDueReviewItems(now) {
-    var meta = loadReviewMeta(), at = now || Date.now(), items = [];
+    var meta = loadReviewMeta(), excluded = loadExcluded(), at = now || Date.now(), items = [];
     Object.keys(meta).forEach(function(key) {
       var entry = meta[key];
       var split = key.indexOf(':');
-      if (!entry || split < 1 || isExcluded(key.slice(0, split), key.slice(split + 1))) return;
+      var source = key.slice(0, split), en = key.slice(split + 1);
+      if (!entry || split < 1 || Object.prototype.hasOwnProperty.call(excluded, exclusionKey(source, en))) return;
       var dueAt = entry.nextDueAt || entry.hardDueAt;
       if (!dueAt || dueAt > at) return;
-      items.push({ source: key.slice(0, split), en: key.slice(split + 1), dueAt: dueAt, lapses: Number(entry.lapses) || 0 });
+      items.push({ source: source, en: en, dueAt: dueAt, lapses: Number(entry.lapses) || 0 });
     });
     items.sort(function(a, b) { return a.dueAt - b.dueAt; });
     return items;
   }
   function getHardDueReviewItems(now) {
-    var meta = loadReviewMeta(), at = now || Date.now(), items = [];
+    var meta = loadReviewMeta(), excluded = loadExcluded(), at = now || Date.now(), items = [];
     Object.keys(meta).forEach(function(key) {
       var entry = meta[key], split = key.indexOf(':');
-      if (!entry || split < 1 || isExcluded(key.slice(0, split), key.slice(split + 1))) return;
+      var source = key.slice(0, split), en = key.slice(split + 1);
+      if (!entry || split < 1 || Object.prototype.hasOwnProperty.call(excluded, exclusionKey(source, en))) return;
       if (!entry.hardDueAt || entry.hardDueAt > at) return;
-      items.push({ source: key.slice(0, split), en: key.slice(split + 1), dueAt: entry.hardDueAt, lapses: Number(entry.lapses) || 0 });
+      items.push({ source: source, en: en, dueAt: entry.hardDueAt, lapses: Number(entry.lapses) || 0 });
     });
     items.sort(function(a, b) { return a.dueAt - b.dueAt; });
     return items;
   }
   function upcomingReviewCount(hours) {
-    var meta = loadReviewMeta(), now = Date.now(), end = now + (hours || 24) * 3600000, count = 0;
+    var meta = loadReviewMeta(), excluded = loadExcluded(), now = Date.now(), end = now + (hours || 24) * 3600000, count = 0;
     Object.keys(meta).forEach(function(key) {
       var due = Number(meta[key] && meta[key].nextDueAt) || 0;
       var hardDue = Number(meta[key] && meta[key].hardDueAt) || 0;
       var split = key.indexOf(':');
-      if (split > 0 && isExcluded(key.slice(0, split), key.slice(split + 1))) return;
+      if (split > 0 && Object.prototype.hasOwnProperty.call(excluded, exclusionKey(key.slice(0, split), key.slice(split + 1)))) return;
       if ((due > now && due <= end) || (hardDue > now && hardDue <= end)) count++;
     });
     return count;
