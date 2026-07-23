@@ -4,7 +4,7 @@
   "description": "考研英语生词本 · 分组朗读 · 标记熟/不熟 · 跨设备同步",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#e5f1f5",
+  "background_color": "#f1fafc",
   "theme_color": "#07536a",
   "icons": [
     {
