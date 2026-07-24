@@ -840,16 +840,16 @@
   <div style="background:#1c1c1e;color:#fff;border-radius:16px;padding:20px;max-width:400px;margin:40px auto;font-size:12px;font-family:monospace;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <span style="font-size:16px;font-weight:600;">诊断信息</span>
-      <button style="background:#3a3a3c;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;" onclick="document.getElementById('diagOverlay').style.display='none'">关闭</button>
+      <span style="display:flex;gap:6px;"><button style="background:#0a84ff;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;" onclick="copyDiagnosticText(this)">复制</button><button style="background:#3a3a3c;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;" onclick="document.getElementById('diagOverlay').style.display='none'">关闭</button></span>
     </div>
-    <div id="diagContent"></div>
+    <div id="diagContent" style="white-space:pre-wrap;word-break:break-word;user-select:text;-webkit-user-select:text;"></div>
   </div>
 </div>
 
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.13 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.14 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1206,10 +1206,10 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=1.5.13"></script>
-<script src="focus-core.js?v=1.5.13"></script>
-<script src="audio-cache.js?v=1.5.13"></script>
-<script src="ui-motion.js?v=1.5.13"></script>
+<script src="review-core.js?v=1.5.14"></script>
+<script src="focus-core.js?v=1.5.14"></script>
+<script src="audio-cache.js?v=1.5.14"></script>
+<script src="ui-motion.js?v=1.5.14"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1250,8 +1250,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.13";
-var BUILD_TS = 1784866280;
+var APP_BUILD_ID = "1.5.14";
+var BUILD_TS = 1784870360;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1615,6 +1615,7 @@ function getStepInfo(dict, unitIdx, gIdx, wIdx) {
 var activeViewName = 'home';
 var appViewDepth = 0;
 var appNavigationReady = false;
+var navDiagnosticSamples = {};
 function isRootAppView(name) { return name === 'home' || name === 'library' || name === 'review' || name === 'progress'; }
 function appTabForView(view) { return view === 'home' ? 'home' : (view === 'library' || view === 'units') ? 'library' : view === 'review' ? 'review' : view === 'progress' ? 'progress' : ''; }
 function showView(name, options) {
@@ -1626,6 +1627,7 @@ function showView(name, options) {
   view.scrollTop = 0;
   activeViewName = name;
   setAppTab(name);
+  scheduleNavDiagnostic(name);
   if (!opts.skipHomeStats) updateHomeStats();
   if (appNavigationReady && previous !== name && !opts.fromHistory && window.history && window.history.replaceState) {
     if (isRootAppView(name)) {
@@ -4472,6 +4474,86 @@ function diagnosticRect(id) {
   return id + ': x=' + px(rect.left) + ' y=' + px(rect.top) + ' w=' + px(rect.width) + ' h=' + px(rect.height) + ' bottom=' + px(rect.bottom);
 }
 
+function navDiagnosticNumber(value) {
+  var number = Number(value);
+  return isFinite(number) ? Math.round(number * 10) / 10 : null;
+}
+
+function captureNavDiagnostic(view, phase) {
+  if (!appTabForView(view)) return;
+  var nav = document.getElementById('appTabbar');
+  var page = document.getElementById('view-' + view);
+  if (!nav || !page) return;
+  var navRect = nav.getBoundingClientRect();
+  var navStyle = getComputedStyle(nav);
+  var visual = window.visualViewport;
+  var safeInsets = readSafeAreaInsets();
+  var scrolling = document.scrollingElement;
+  navDiagnosticSamples[view + ':' + phase] = {
+    view:view,
+    phase:phase,
+    inner:[window.innerWidth, window.innerHeight],
+    document:[document.documentElement.clientWidth, document.documentElement.clientHeight],
+    bodyHeight:document.body.clientHeight,
+    visual:visual ? [navDiagnosticNumber(visual.width), navDiagnosticNumber(visual.height), navDiagnosticNumber(visual.offsetLeft), navDiagnosticNumber(visual.offsetTop), navDiagnosticNumber(visual.pageLeft), navDiagnosticNumber(visual.pageTop), navDiagnosticNumber(visual.scale)] : null,
+    screen:[screen.width, screen.height, screen.availWidth, screen.availHeight, window.devicePixelRatio],
+    safeBottom:safeInsets.bottom,
+    nav:[navDiagnosticNumber(navRect.left), navDiagnosticNumber(navRect.top), navDiagnosticNumber(navRect.right), navDiagnosticNumber(navRect.bottom), navDiagnosticNumber(navRect.width), navDiagnosticNumber(navRect.height)],
+    navGap:navDiagnosticNumber(window.innerHeight - navRect.bottom),
+    navStyle:[navStyle.position, navStyle.bottom, navStyle.transform, navStyle.visibility, navStyle.display],
+    page:[page.clientHeight, page.scrollHeight, page.scrollTop],
+    windowScroll:[window.scrollX, window.scrollY, scrolling ? scrolling.scrollTop : null],
+    activeElement:document.activeElement ? (document.activeElement.id || document.activeElement.getAttribute('data-tab') || document.activeElement.tagName) : ''
+  };
+}
+
+function scheduleNavDiagnostic(view) {
+  if (!appTabForView(view)) return;
+  captureNavDiagnostic(view, 'now');
+  requestAnimationFrame(function() { captureNavDiagnostic(view, 'raf'); });
+  setTimeout(function() { captureNavDiagnostic(view, '100ms'); }, 100);
+  setTimeout(function() { captureNavDiagnostic(view, '600ms'); }, 600);
+}
+
+function navDiagnosticLine(sample) {
+  if (!sample) return '';
+  return sample.view + '@' + sample.phase
+    + ' inner=' + sample.inner.join('x')
+    + ' doc=' + sample.document.join('x') + '/' + sample.bodyHeight
+    + ' visual=' + (sample.visual ? sample.visual.join(',') : 'none')
+    + ' screen=' + sample.screen.join(',')
+    + ' safeB=' + sample.safeBottom
+    + ' nav=' + sample.nav.join(',') + ' gap=' + sample.navGap
+    + ' css=' + sample.navStyle.join(',')
+    + ' page=' + sample.page.join(',')
+    + ' scroll=' + sample.windowScroll.join(',')
+    + ' focus=' + sample.activeElement;
+}
+
+function copyDiagnosticText(button) {
+  var content = document.getElementById('diagContent');
+  var text = content ? content.textContent : '';
+  function done(label) {
+    if (!button) return;
+    var original = button.textContent;
+    button.textContent = label;
+    setTimeout(function() { button.textContent = original; }, 1200);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() { done('已复制'); }, function() { done('复制失败'); });
+    return;
+  }
+  var area = document.createElement('textarea');
+  area.value = text;
+  area.style.cssText = 'position:fixed;left:-9999px;top:0;';
+  document.body.appendChild(area);
+  area.select();
+  var copied = false;
+  try { copied = document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(area);
+  done(copied ? '已复制' : '复制失败');
+}
+
 function showDiagnostic() {
   var lines = [];
   lines.push('Build: ' + new Date(BUILD_TS * 1000).toISOString().replace('T',' ').substring(0,19));
@@ -4487,6 +4569,14 @@ function showDiagnostic() {
   lines.push('safe-area: top=' + safeInsets.top + ', right=' + safeInsets.right + ', bottom=' + safeInsets.bottom + ', left=' + safeInsets.left);
   lines.push(diagnosticRect('view-home'));
   lines.push(diagnosticRect('appTabbar'));
+  lines.push('');
+  lines.push('NAV TAB SAMPLES');
+  ['home','library','review','progress'].forEach(function(view) {
+    ['now','raf','100ms','600ms'].forEach(function(phase) {
+      var sample = navDiagnosticSamples[view + ':' + phase];
+      if (sample) lines.push(navDiagnosticLine(sample));
+    });
+  });
   lines.push('');
   var vp = loadPrefs('vocab');
   var hp = loadPrefs('hongbaoshu');
