@@ -17,20 +17,23 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(180deg, #d9f2ff 0, #eaf7ff 260px, #f7fafc 560px); color: #10283a;
-    width:100%; height:100%; overflow:hidden;
+    position:relative; width:100%; height:100%; overflow:hidden;
     -webkit-tap-highlight-color: transparent; user-select: none;
+  }
+  @supports (height:100lvh) {
+    html, body { height:100lvh; min-height:100lvh; }
   }
   button { font: inherit; }
   /* ── App shell ── */
   .app-page {
-    width:100%; max-width:640px; height:100vh; height:100dvh; margin:0 auto;
+    position:absolute; inset:0; width:100%; max-width:640px; height:auto; min-height:100%; margin:0 auto;
     padding:0 16px calc(102px + env(safe-area-inset-bottom));
     overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
     -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
   }
   #view-today-recite, #view-groups { padding-bottom:calc(env(safe-area-inset-bottom) + 8px); }
   #view-today-recite {
-    position:relative; height:100vh; height:100dvh; overflow:hidden; scrollbar-gutter:auto;
+    position:absolute; inset:0; height:auto; min-height:100%; overflow:hidden; scrollbar-gutter:auto;
     display:flex; flex-direction:column; padding-top:0;
   }
   #view-today-recite > .nav-bar { flex:none; min-height:40px; margin:0 -16px 4px; padding:calc(8px + env(safe-area-inset-top)) 16px 4px; }
@@ -61,7 +64,7 @@
   #view-today-recite .vc-hint { display:none; }
   #view-today-recite .recite-setup, #view-today-recite .recite-summary { margin:4px auto 0; max-height:100%; overflow:auto; }
   #view-groups.vocab-card-view {
-    position:relative; height:100vh; height:100dvh; overflow:hidden; scrollbar-gutter:auto;
+    position:absolute; inset:0; height:auto; min-height:100%; overflow:hidden; scrollbar-gutter:auto;
     display:flex; flex-direction:column; padding-top:0;
   }
   #view-groups.vocab-card-view > .nav-bar { flex:none; min-height:40px; margin:0 -16px 4px; padding:calc(8px + env(safe-area-inset-top)) 16px 4px; }
@@ -752,7 +755,7 @@
     display:contents;
   }
   .app-tabbar {
-    position:fixed; z-index:80; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom));
+    position:absolute; z-index:80; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom));
     width:calc(100% - 24px); max-width:616px; height:58px; min-height:58px; margin:0 auto; padding:5px;
     border:1px solid rgba(77,119,133,.14); border-radius:22px; overflow:hidden;
     background:rgba(251,253,254,.93); box-shadow:0 13px 32px rgba(23,67,81,.14);
@@ -849,7 +852,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.14 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.15 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1206,10 +1209,10 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=1.5.14"></script>
-<script src="focus-core.js?v=1.5.14"></script>
-<script src="audio-cache.js?v=1.5.14"></script>
-<script src="ui-motion.js?v=1.5.14"></script>
+<script src="review-core.js?v=1.5.15"></script>
+<script src="focus-core.js?v=1.5.15"></script>
+<script src="audio-cache.js?v=1.5.15"></script>
+<script src="ui-motion.js?v=1.5.15"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1250,8 +1253,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.14";
-var BUILD_TS = 1784870360;
+var APP_BUILD_ID = "1.5.15";
+var BUILD_TS = 1784873159;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
