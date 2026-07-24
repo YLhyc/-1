@@ -852,7 +852,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.11 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.12 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1209,10 +1209,10 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=1.5.11"></script>
-<script src="focus-core.js?v=1.5.11"></script>
-<script src="audio-cache.js?v=1.5.11"></script>
-<script src="ui-motion.js?v=1.5.11"></script>
+<script src="review-core.js?v=1.5.12"></script>
+<script src="focus-core.js?v=1.5.12"></script>
+<script src="audio-cache.js?v=1.5.12"></script>
+<script src="ui-motion.js?v=1.5.12"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1253,8 +1253,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [2, 10], "4": [2, 20], "5": [2, 30], "6": [2, 40], "7": [2, 50], "8": [2, 60], "9": [2, 70], "10": [2, 80], "11": [2, 90], "12": [2, 100], "13": [2, 110], "14": [2, 120], "15": [2, 130], "16": [2, 140], "17": [2, 150], "18": [2, 160], "19": [2, 170], "20": [2, 180], "21": [2, 190], "22": [2, 200]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.11";
-var BUILD_TS = 1784820914;
+var APP_BUILD_ID = "1.5.12";
+var BUILD_TS = 1784861343;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1619,10 +1619,11 @@ var activeViewName = 'home';
 var appViewDepth = 0;
 var appNavigationReady = false;
 function isRootAppView(name) { return name === 'home' || name === 'library' || name === 'review' || name === 'progress'; }
+function appTabForView(view) { return view === 'home' ? 'home' : (view === 'library' || view === 'units') ? 'library' : view === 'review' ? 'review' : view === 'progress' ? 'progress' : ''; }
 function showView(name, options) {
   var opts = options || {};
   var previous = activeViewName;
-  hideAllViews();
+  hideAllViews({ keepAppTabbar: !!appTabForView(name) });
   var view = document.getElementById('view-' + name);
   view.style.display = name === 'today-recite' ? 'flex' : 'block';
   view.scrollTop = 0;
@@ -1678,7 +1679,7 @@ function setAppTab(view) {
   var nav = document.getElementById('appTabbar');
   var host = document.getElementById('appTabbarHost');
   if (!nav) return;
-  var tab = view === 'home' ? 'home' : (view === 'library' || view === 'units') ? 'library' : view === 'review' ? 'review' : view === 'progress' ? 'progress' : '';
+  var tab = appTabForView(view);
   nav.classList.toggle('hidden', !tab);
   if (host) host.classList.toggle('hidden', !tab);
   var buttons = nav.querySelectorAll('.app-tab');
@@ -5027,16 +5028,19 @@ function showMorningLoading() {
   document.getElementById('view-morning-loading').style.display = 'block';
 }
 
-function hideAllViews() {
+function hideAllViews(options) {
+  var opts = options || {};
   var views = ['view-home', 'view-library', 'view-review', 'view-excluded-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
   for (var i = 0; i < views.length; i++) {
     var el = document.getElementById(views[i]);
     if (el) { el.style.display = 'none'; el.scrollTop = 0; }
   }
-  var nav = document.getElementById('appTabbar');
-  if (nav) nav.classList.add('hidden');
-  var navHost = document.getElementById('appTabbarHost');
-  if (navHost) navHost.classList.add('hidden');
+  if (!opts.keepAppTabbar) {
+    var nav = document.getElementById('appTabbar');
+    if (nav) nav.classList.add('hidden');
+    var navHost = document.getElementById('appTabbarHost');
+    if (navHost) navHost.classList.add('hidden');
+  }
 }
 
 function morningReasonLabel(item) {
