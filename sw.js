@@ -1,11 +1,11 @@
-const CACHE = 'kv-1.5.12';
+const CACHE = 'kv-1.5.13';
 const APP_SHELL = [
   './',
   'index.html',
-  'review-core.js?v=1.5.12',
-  'focus-core.js?v=1.5.12',
-  'audio-cache.js?v=1.5.12',
-  'ui-motion.js?v=1.5.12',
+  'review-core.js?v=1.5.13',
+  'focus-core.js?v=1.5.13',
+  'audio-cache.js?v=1.5.13',
+  'ui-motion.js?v=1.5.13',
   'manifest.json',
   'hb/',
   'hb/index.html',
@@ -43,10 +43,10 @@ self.addEventListener('activate', e => {
       .then(cache => Promise.all([
         cache.match('./'),
         cache.match('index.html'),
-        cache.match('review-core.js?v=1.5.12'),
-        cache.match('focus-core.js?v=1.5.12'),
-        cache.match('audio-cache.js?v=1.5.12'),
-        cache.match('ui-motion.js?v=1.5.12')
+        cache.match('review-core.js?v=1.5.13'),
+        cache.match('focus-core.js?v=1.5.13'),
+        cache.match('audio-cache.js?v=1.5.13'),
+        cache.match('ui-motion.js?v=1.5.13')
       ]))
       .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3] && shell[4] && shell[5]
         ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
