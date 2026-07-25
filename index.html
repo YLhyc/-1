@@ -1282,14 +1282,57 @@ var FocusCore = window.FocusCore || {
   refreshButtons:function(){}
 };
 var HONGBAOSHU = null; var HB_COUNT = 6549; var HB_LOADING = false; var HB_CBS = [];
+function fetchWithTimeout(url, options, timeoutMs) {
+  var opts = options ? Object.assign({}, options) : {};
+  var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  if (controller) opts.signal = controller.signal;
+  return new Promise(function(resolve, reject) {
+    var settled = false;
+    var timer = setTimeout(function() {
+      if (settled) return;
+      settled = true;
+      if (controller) controller.abort();
+      var error = new Error('request_timeout');
+      error.name = 'TimeoutError';
+      reject(error);
+    }, Math.max(1000, Number(timeoutMs) || 8000));
+    fetch(url, opts).then(function(response) {
+      if (settled) return;
+      settled = true; clearTimeout(timer); resolve(response);
+    }, function(error) {
+      if (settled) return;
+      settled = true; clearTimeout(timer); reject(error);
+    });
+  });
+}
+function fetchJsonWithRetry(url, options) {
+  var opts = options || {};
+  var attempts = Math.max(1, Number(opts.attempts) || 1);
+  var timeoutMs = Math.max(1000, Number(opts.timeoutMs) || 8000);
+  var retryDelayMs = Math.max(0, Number(opts.retryDelayMs) || 350);
+  function run(attempt) {
+    return fetchWithTimeout(url, opts.fetchOptions || {}, timeoutMs)
+      .then(function(response) {
+        if (!response.ok) throw new Error('http_' + response.status);
+        return response.json();
+      })
+      .catch(function(error) {
+        if (attempt + 1 >= attempts) throw error;
+        return new Promise(function(resolve) {
+          setTimeout(resolve, retryDelayMs * Math.pow(2, attempt));
+        }).then(function() { return run(attempt + 1); });
+      });
+  }
+  return run(0);
+}
 function loadHB(cb) {
   if (HONGBAOSHU) { if (cb) cb(); return; }
   if (cb) HB_CBS.push(cb);
   if (HB_LOADING) return;
   HB_LOADING = true;
-  fetch('hongbaoshu.json?v=' + BUILD_TS)
-    .then(function(r) { return r.json(); })
+  fetchJsonWithRetry('hongbaoshu.json?v=' + APP_BUILD_ID, { attempts: 2, timeoutMs: 6000 })
     .then(function(data) {
+      if (!Array.isArray(data) || data.length !== HB_COUNT) throw new Error('invalid_hb_data');
       HONGBAOSHU = data;
       HB_LOADING = false;
       var cbs = HB_CBS; HB_CBS = [];
@@ -1304,7 +1347,7 @@ function loadHB(cb) {
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
 var APP_BUILD_ID = "1.5.19";
-var BUILD_TS = 1784966438;
+var BUILD_TS = 1784985506;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1352,6 +1395,7 @@ function updateAppVersionBadge() {
 var appUpdateState = {
   busy: false,
   bannerTimer: 0,
+  guardTimer: 0,
   bannerRestore: null,
   watchedRegistrations: [],
   watchedWorkers: []
@@ -1412,6 +1456,10 @@ function setAppUpdateButtonBusy(busy) {
 }
 
 function finishAppUpdateAttempt() {
+  if (appUpdateState.guardTimer) {
+    clearTimeout(appUpdateState.guardTimer);
+    appUpdateState.guardTimer = 0;
+  }
   appUpdateState.busy = false;
   setAppUpdateButtonBusy(false);
 }
@@ -1468,9 +1516,14 @@ function checkForAppUpdate() {
     return;
   }
   appUpdateState.busy = true;
+  appUpdateState.guardTimer = setTimeout(function() {
+    if (!appUpdateState.busy) return;
+    finishAppUpdateAttempt();
+    setUpdateBanner('更新等待超时，请检查网络后重试', 'error', false);
+  }, 30000);
   setAppUpdateButtonBusy(true);
   setUpdateBanner('正在检查应用更新…', 'checking', true);
-  fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
+  fetchWithTimeout('version.json?t=' + Date.now(), { cache: 'no-store' }, 8000)
     .then(function(response) {
       if (!response.ok) throw new Error('version request failed');
       return response.json();
@@ -1748,7 +1801,7 @@ window.addEventListener('resize', function() {
 
 function showHome() {
   stopAll();
-  showView('home');
+  showView('home', { skipHomeStats:true });
   refreshHomeDynamicUI();
 }
 
@@ -2945,6 +2998,26 @@ function escapeHTML(s) {
 var preloaded = {};        // globalWordIdx_lang → blob URL (instant playback)
 var audioFilesLoaded = {}; // fileIdx → true | 'loading' | undefined
 var audioLoadCbs = {};     // fileIdx → [callbacks]
+var audioFileBlobKeys = {}; // fileIdx → preloaded keys
+var audioFileOrder = [];
+var VOCAB_AUDIO_MEMORY_LIMIT = 6;
+
+function touchVocabAudioFile(fileIdx) {
+  audioFileOrder = audioFileOrder.filter(function(value) { return value !== fileIdx; });
+  audioFileOrder.push(fileIdx);
+}
+function evictVocabAudioFiles() {
+  while (audioFileOrder.length > VOCAB_AUDIO_MEMORY_LIMIT) {
+    var fileIdx = audioFileOrder.shift();
+    var keys = audioFileBlobKeys[fileIdx] || [];
+    keys.forEach(function(key) {
+      if (preloaded[key]) URL.revokeObjectURL(preloaded[key]);
+      delete preloaded[key];
+    });
+    delete audioFileBlobKeys[fileIdx];
+    delete audioFilesLoaded[fileIdx];
+  }
+}
 
 function base64ToBlobUrl(b64) {
   var raw = atob(b64);
@@ -2970,6 +3043,8 @@ function preloadUnitAudio() {
     var af = getAudioFile(gg);
     if (!audioFilesLoaded[af.fileIdx]) {
       fetchAudioFile(af.fileIdx);
+    } else if (audioFilesLoaded[af.fileIdx] === true) {
+      touchVocabAudioFile(af.fileIdx);
     }
   }
 }
@@ -2979,11 +3054,11 @@ function fetchAudioFile(fileIdx) {
   audioFilesLoaded[fileIdx] = 'loading';
 
   var audioUrl = 'audio_g' + fileIdx + '.json?v=' + BUILD_TS;
-  fetch(audioUrl)
-    .then(function(r) { if (!r.ok) throw new Error('audio_http_' + r.status); return r.json(); })
+  fetchJsonWithRetry(audioUrl, { attempts: 3, timeoutMs: 15000, retryDelayMs: 450 })
     .then(function(data) {
       if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
       audioFilesLoaded[fileIdx] = true;
+      var blobKeys = [];
       var totalGlobalGroups = Math.ceil(VOCAB.length / GROUP_SIZE);
       for (var gg = 0; gg < totalGlobalGroups; gg++) {
         var af = getAudioFile(gg);
@@ -2993,10 +3068,20 @@ function fetchAudioFile(fileIdx) {
           var gwi = gg * GROUP_SIZE + w;
           var srcIdx = af.offset + w;
           if (srcIdx < data.words.length && data.words[srcIdx]) {
-            preloaded[String(gwi) + '_en'] = base64ToBlobUrl(data.words[srcIdx].en);
-            preloaded[String(gwi) + '_cn'] = base64ToBlobUrl(data.words[srcIdx].cn);
-            if (data.words[srcIdx].ex) preloaded[String(gwi) + '_ex'] = base64ToBlobUrl(data.words[srcIdx].ex);
-            if (data.words[srcIdx].ex_cn) preloaded[String(gwi) + '_ex_cn'] = base64ToBlobUrl(data.words[srcIdx].ex_cn);
+            var enKey = String(gwi) + '_en', cnKey = String(gwi) + '_cn';
+            preloaded[enKey] = base64ToBlobUrl(data.words[srcIdx].en);
+            preloaded[cnKey] = base64ToBlobUrl(data.words[srcIdx].cn);
+            blobKeys.push(enKey, cnKey);
+            if (data.words[srcIdx].ex) {
+              var exKey = String(gwi) + '_ex';
+              preloaded[exKey] = base64ToBlobUrl(data.words[srcIdx].ex);
+              blobKeys.push(exKey);
+            }
+            if (data.words[srcIdx].ex_cn) {
+              var exCnKey = String(gwi) + '_ex_cn';
+              preloaded[exCnKey] = base64ToBlobUrl(data.words[srcIdx].ex_cn);
+              blobKeys.push(exCnKey);
+            }
           }
         }
       }
@@ -3007,6 +3092,9 @@ function fetchAudioFile(fileIdx) {
           if (wb) wb.classList.remove('loading-word');
         }
       }
+      audioFileBlobKeys[fileIdx] = blobKeys;
+      touchVocabAudioFile(fileIdx);
+      evictVocabAudioFiles();
       var cbs = audioLoadCbs[fileIdx];
       if (cbs) { cbs.forEach(function(cb) { cb(); }); delete audioLoadCbs[fileIdx]; }
     })
@@ -3974,7 +4062,7 @@ function githubApiRequest(url, options, token) {
   headers['X-GitHub-Api-Version'] = '2022-11-28';
   if (opts.body) headers['Content-Type'] = 'application/json';
   opts.headers = headers;
-  return fetch(url, opts).then(function(response) {
+  return fetchWithTimeout(url, opts, 12000).then(function(response) {
     return response.text().then(function(text) {
       var data = {};
       if (text) {
@@ -4776,10 +4864,21 @@ function saveMorningSessions(arr) {
 }
 
 // ── Daily per-word history (morning_daily_v1) ──
+var morningDailyCache = null;
+var morningDailyPrunedForDay = '';
 function loadMorningDaily() {
-  try { return JSON.parse(localStorage.getItem(MOR_KEYS.daily) || '{}'); } catch(e) { return {}; }
+  if (morningDailyCache) return morningDailyCache;
+  try { morningDailyCache = JSON.parse(localStorage.getItem(MOR_KEYS.daily) || '{}'); }
+  catch(e) { morningDailyCache = {}; }
+  return morningDailyCache;
 }
 function saveMorningDaily(obj) {
+  var pruneDay = String(todayKey());
+  if (morningDailyPrunedForDay === pruneDay) {
+    morningDailyCache = obj;
+    try { localStorage.setItem(MOR_KEYS.daily, JSON.stringify(obj)); } catch(e) {}
+    return;
+  }
   // Prune entries older than 60 days
   var cutoff = Date.now() - 60 * 86400000;
   var cleaned = {};
@@ -4800,6 +4899,8 @@ function saveMorningDaily(obj) {
       cleaned[k] = entry;
     }
   }
+  morningDailyCache = cleaned;
+  morningDailyPrunedForDay = pruneDay;
   try { localStorage.setItem(MOR_KEYS.daily, JSON.stringify(cleaned)); } catch(e) {}
 }
 
@@ -4831,16 +4932,16 @@ function recordMorningDaily(item, completed) {
   saveMorningDaily(daily);
 }
 
-function wordHeardYesterday(item) {
-  var daily = loadMorningDaily();
+function wordHeardYesterday(item, daily) {
+  daily = daily || loadMorningDaily();
   var entry = daily[morningKey(item)];
   if (!entry || !entry.days) return false;
   var yest = todayKey() - 86400000;
   return !!entry.days[String(yest)];
 }
 
-function wordHeardDayBefore(item) {
-  var daily = loadMorningDaily();
+function wordHeardDayBefore(item, daily) {
+  daily = daily || loadMorningDaily();
   var entry = daily[morningKey(item)];
   if (!entry || !entry.days) return false;
   var db = todayKey() - 2 * 86400000;
@@ -4944,6 +5045,7 @@ var morningQueue = [];
 var morningQueueEstSec = 0;
 var morningQueueBuiltAt = 0;
 var morningSettings = null;
+var morningPlanningContext = null;
 
 function buildMorningCandidates() {
   morningSettings = loadMorningSettings();
@@ -4952,6 +5054,8 @@ function buildMorningCandidates() {
   try { prefsV = JSON.parse(localStorage.getItem('vv_prefs')||'{}'); } catch(e) { prefsV = {}; }
   try { prefsH = JSON.parse(localStorage.getItem('hb_prefs')||'{}'); } catch(e) { prefsH = {}; }
   try { ufP = JSON.parse(localStorage.getItem('uf_prefs')||'{}'); } catch(e) { ufP = {}; }
+  var excluded = ReviewCore.loadExcluded();
+  morningPlanningContext = { prefsV: prefsV, prefsH: prefsH, daily: loadMorningDaily() };
 
   // Vocab words
   for (var i = 0; i < VOCAB.length; i++) {
@@ -4959,7 +5063,7 @@ function buildMorningCandidates() {
     if (!w.en || !w.cn) continue;
     if (ufP['vocab_' + w.en] === 'removed') continue;
     if (prefsV[w.en] === 'hidden') continue;
-    if (ReviewCore.isExcluded('vocab', w.en)) continue;
+    if (Object.prototype.hasOwnProperty.call(excluded, 'vocab:' + w.en)) continue;
     candidates.push({
       source: 'vocab', key: 'vocab:' + w.en, en: w.en, cn: w.cn,
       ex: w.ex || null, ex_cn: w.ex_cn || null,
@@ -4974,7 +5078,7 @@ function buildMorningCandidates() {
       if (!w.en || !w.cn) continue;
       if (ufP['hb_' + w.en] === 'removed') continue;
       if (prefsH[w.en] === 'hidden') continue;
-      if (ReviewCore.isExcluded('hb', w.en)) continue;
+      if (Object.prototype.hasOwnProperty.call(excluded, 'hongbaoshu:' + w.en)) continue;
       candidates.push({
         source: 'hb', key: 'hb:' + w.en, en: w.en, cn: w.cn,
         idx: i, dict: 'hongbaoshu', reason: ''
@@ -5017,9 +5121,9 @@ function buildMorningCandidates() {
   return candidates;
 }
 
-function estimateWordDurationSec(item) {
+function estimateWordDurationSec(item, context) {
   // Estimate based on step count from getMorningStepLabels
-  var info = getMorningStepLabels(item);
+  var info = getMorningStepLabels(item, context);
   var sec = 0;
   for (var s = 0; s < info.langs.length; s++) {
     if (info.langs[s] === 'ex' || info.langs[s] === 'ex_cn') {
@@ -5098,7 +5202,7 @@ function buildMorningQueue() {
     for (var p = 0; p < categories.length; p++) {
       var cat = categories[p];
       var item = pools[cat][0];
-      var dur = estimateWordDurationSec(item);
+      var dur = estimateWordDurationSec(item, morningPlanningContext);
       if (totalSec + dur > targetSec + 30) continue;
       pools[cat].shift();
       item._estSec = dur;
@@ -5114,7 +5218,7 @@ function buildMorningQueue() {
   // Fill any remaining budget with other category
   while (totalSec < targetSec && other.length > 0) {
     var item = other.shift();
-    var dur = estimateWordDurationSec(item);
+    var dur = estimateWordDurationSec(item, morningPlanningContext);
     if (totalSec + dur > targetSec + 30) break;
     item._estSec = dur;
     q.push(item);
@@ -5349,8 +5453,7 @@ function loadMorningVocabFile(fileIdx, cb) {
   }
   _mVocabLoading[fileIdx] = true;
   var audioUrl = 'audio_g' + fileIdx + '.json?v=' + BUILD_TS;
-  fetch(audioUrl)
-    .then(function(r) { if (!r.ok) throw new Error('audio_http_' + r.status); return r.json(); })
+  fetchJsonWithRetry(audioUrl, { attempts: 3, timeoutMs: 15000, retryDelayMs: 450 })
     .then(function(data) {
       if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
       var words = [];
@@ -5380,8 +5483,7 @@ function loadMorningHbUnit(unitIdx, cb) {
   }
   _mHbLoading[unitIdx] = true;
   var audioUrl = 'hb/audio_unit' + unitIdx + '.json?v=' + BUILD_TS;
-  fetch(audioUrl)
-    .then(function(r) { if (!r.ok) throw new Error('audio_http_' + r.status); return r.json(); })
+  fetchJsonWithRetry(audioUrl, { attempts: 3, timeoutMs: 15000, retryDelayMs: 450 })
     .then(function(data) {
       if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
       var words = [];
@@ -5467,6 +5569,8 @@ var morningCurrentSegmentProgress = 0;
 var morningCurrentWordCompletedSteps = 0;
 var morningCurrentWordTotalSteps = 1;
 var morningSessionStart = 0;
+var morningActiveStartedAt = 0;
+var morningElapsedActiveMs = 0;
 var morningSessionHard = 0;
 var morningSessionFamiliar = 0;
 var morningSessionSkipped = 0;
@@ -5474,14 +5578,37 @@ var morningSessionCompleted = 0;
 var morningEnded = false;
 var morningElapsedTimer = null;
 
-function getMorningStepLabels(item) {
+function morningElapsedMs() {
+  var elapsed = morningElapsedActiveMs;
+  if (morningActiveStartedAt && morningPlaying && !morningPaused && !morningEnded) {
+    elapsed += Math.max(0, Date.now() - morningActiveStartedAt);
+  }
+  return elapsed;
+}
+function pauseMorningClock() {
+  if (morningActiveStartedAt) {
+    morningElapsedActiveMs += Math.max(0, Date.now() - morningActiveStartedAt);
+    morningActiveStartedAt = 0;
+  }
+}
+function resumeMorningClock() {
+  if (!morningActiveStartedAt && morningPlaying && !morningEnded) morningActiveStartedAt = Date.now();
+}
+
+function getMorningStepLabels(item, context) {
   var pref;
-  try {
-    var prefs = item.source === 'vocab'
-      ? JSON.parse(localStorage.getItem('vv_prefs')||'{}')
-      : JSON.parse(localStorage.getItem('hb_prefs')||'{}');
-    pref = prefs[item.en];
-  } catch(e) { pref = null; }
+  var daily = context && context.daily ? context.daily : null;
+  if (context) {
+    var cachedPrefs = item.source === 'vocab' ? context.prefsV : context.prefsH;
+    pref = cachedPrefs && cachedPrefs[item.en];
+  } else {
+    try {
+      var prefs = item.source === 'vocab'
+        ? JSON.parse(localStorage.getItem('vv_prefs')||'{}')
+        : JSON.parse(localStorage.getItem('hb_prefs')||'{}');
+      pref = prefs[item.en];
+    } catch(e) { pref = null; }
+  }
 
   var hasEx = item.source === 'vocab' && !!item.ex;
   var labels = [];
@@ -5499,8 +5626,8 @@ function getMorningStepLabels(item) {
   }
 
   // Determine if recently heard
-  var heardYesterday = wordHeardYesterday(item);
-  var heardDayBefore = wordHeardDayBefore(item);
+  var heardYesterday = wordHeardYesterday(item, daily);
+  var heardDayBefore = wordHeardDayBefore(item, daily);
   var isFamiliar = pref === 'familiar';
 
   if (playbackRating === 'hard' || pref === 'hard') {
@@ -5716,7 +5843,7 @@ function updateMorningProgressUI() {
 
 function updateMorningTimeUI() {
   if (!morningSessionStart) return;
-  var elapsedMs = Math.max(0, Date.now() - morningSessionStart);
+  var elapsedMs = morningElapsedMs();
   var elapsedSec = Math.floor(elapsedMs / 1000);
   var elapsed = document.getElementById('mpElapsed');
   if (elapsed) elapsed.textContent = String(Math.floor(elapsedSec / 60)).padStart(2, '0') + ':' + String(elapsedSec % 60).padStart(2, '0');
@@ -5754,7 +5881,7 @@ function finishMorningCurrentWord(item) {
   morningDisplayStepInfo = null;
   morningPos++;
   morningStep = 0;
-  var elapsed2 = Date.now() - morningSessionStart;
+  var elapsed2 = morningElapsedMs();
   var budgetMs2 = morningSettings.durationMin * 60 * 1000;
   if (elapsed2 >= budgetMs2) { endMorningSession('timeout'); return; }
   if (morningPos >= morningQueue.length) { maybeExtendOrEnd(); return; }
@@ -5775,7 +5902,7 @@ function playMorningCurrent() {
 
   // Check time budget BEFORE playing the next word
   if (morningPos > 0) {
-    var elapsed = Date.now() - morningSessionStart;
+    var elapsed = morningElapsedMs();
     var budgetMs = morningSettings.durationMin * 60 * 1000;
     if (elapsed >= budgetMs) {
       endMorningSession('timeout');
@@ -5854,7 +5981,7 @@ function playMorningCurrent() {
         function handleFailure(err) {
           if (!isCurrentAttempt()) return;
           morningClearAudioWatchdog();
-          if (document.hidden) { morningPaused = true; return; }
+          if (document.hidden) { pauseMorningClock(); morningPaused = true; return; }
           if (err && err.name === 'NotAllowedError') {
             morningPaused = true;
             var btn = document.getElementById('mpBtnPlay');
@@ -5890,7 +6017,7 @@ function playMorningCurrent() {
           if (!isCurrentAttempt()) return;
           morningClearAudioWatchdog();
           morningDetachAu(au);
-          if (document.hidden) { morningPaused = true; return; }
+          if (document.hidden) { pauseMorningClock(); morningPaused = true; return; }
           au.playbackRate = 1.0;
           morningCurrentSegmentProgress = 0;
           morningStep++;
@@ -5933,7 +6060,7 @@ function playMorningCurrent() {
 }
 
 function maybeExtendOrEnd() {
-  var elapsed = Date.now() - morningSessionStart;
+  var elapsed = morningElapsedMs();
   var targetMs = morningSettings.durationMin * 60 * 1000;
   // Time's up: end session
   if (elapsed >= targetMs * 0.92) {
@@ -5960,7 +6087,7 @@ function maybeExtendOrEnd() {
     var cat = categoryOrder[c];
     for (var i = 0; i < catLists[cat].length; i++) {
       if (queueKeys[catLists[cat][i].key]) continue;
-      var dur = estimateWordDurationSec(catLists[cat][i]);
+      var dur = estimateWordDurationSec(catLists[cat][i], morningPlanningContext);
       if (addedSec + dur > remainingSec * 0.85) continue;
       extend.push(catLists[cat][i]);
       addedSec += dur;
@@ -6001,6 +6128,8 @@ function startMorning() {
   morningEnded = false;
   _morningPlayToken = 0;
   morningSessionStart = Date.now();
+  morningElapsedActiveMs = 0;
+  morningActiveStartedAt = morningSessionStart;
   morningSessionHard = 0;
   morningSessionFamiliar = 0;
   morningSessionSkipped = 0;
@@ -6024,6 +6153,7 @@ function pauseMorningForBackground() {
   if (!morningPlaying || morningEnded || morningPaused) return;
   var au = morningGetAu(morningSlot);
   if (au) au.pause();
+  pauseMorningClock();
   morningPaused = true;
   var btn = document.getElementById('mpBtnPlay');
   if (btn) btn.textContent = '▶';
@@ -6053,10 +6183,12 @@ function toggleMorningPause() {
   var btn = document.getElementById('mpBtnPlay');
   if (morningPaused) {
     morningPaused = false;
+    resumeMorningClock();
     if (btn) btn.textContent = 'Ⅱ';
     syncMorningPlayback();
   } else {
     au.pause();
+    pauseMorningClock();
     morningPaused = true;
     if (btn) btn.textContent = '▶';
   }
@@ -6075,6 +6207,7 @@ function prevMorningWord() {
   morningRatingAppendPending = null;
   morningDisplayStepInfo = null;
   morningPaused = false;
+  resumeMorningClock();
   var btn = document.getElementById('mpBtnPlay');
   if (btn) btn.textContent = 'Ⅱ';
   updateMorningPlayerUI();
@@ -6098,6 +6231,7 @@ function nextMorningWord() {
   morningRatingAppendPending = null;
   morningDisplayStepInfo = null;
   morningPaused = false;
+  resumeMorningClock();
   var btn = document.getElementById('mpBtnPlay');
   if (btn) btn.textContent = 'Ⅱ';
   updateMorningPlayerUI();
@@ -6157,6 +6291,7 @@ function restartMorningWordForRating() {
   morningSingle = false;
   if (!morningPlaying || morningEnded) return;
   morningPaused = false;
+  resumeMorningClock();
   var btn = document.getElementById('mpBtnPlay');
   if (btn) btn.textContent = 'Ⅱ';
   updateMorningPlayerUI();
@@ -6241,6 +6376,8 @@ function confirmEndMorning() {
 }
 
 function endMorningSession(status) {
+  var actualMs = morningElapsedMs();
+  pauseMorningClock();
   morningRatingRestartPending = null;
   morningStopAudio();
   morningPlaying = false;
@@ -6256,7 +6393,6 @@ function endMorningSession(status) {
   cleanupMorningAudioCache();
 
   status = status || 'completed';
-  var actualMs = Date.now() - morningSessionStart;
   var sessions = loadMorningSessions();
   var now = new Date();
   var dateStr = now.getFullYear() + '-' +

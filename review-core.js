@@ -6,6 +6,7 @@
   var RECALL_KEY = 'recall_quality_v1';
   var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
   var DAY_MS = 86400000;
+  var excludedCache = null;
 
   function safeJson(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
@@ -18,11 +19,21 @@
   }
   function loadReviewMeta() { return safeJson(REVIEW_META_KEY, {}); }
   function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta || {})); }
-  function loadExcluded() { return safeJson(EXCLUDED_KEY, {}); }
+  function loadExcluded() {
+    if (excludedCache) return excludedCache;
+    excludedCache = safeJson(EXCLUDED_KEY, {});
+    return excludedCache;
+  }
   function saveExcluded(data) {
+    excludedCache = data || {};
     if (data && Object.keys(data).length) localStorage.setItem(EXCLUDED_KEY, JSON.stringify(data));
     else localStorage.removeItem(EXCLUDED_KEY);
     localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  }
+  if (global.addEventListener) {
+    global.addEventListener('storage', function(event) {
+      if (event && event.key === EXCLUDED_KEY) excludedCache = null;
+    });
   }
   function exclusionKey(source, en) { return reviewSource(source) + ':' + en; }
   function isExcluded(source, en) {

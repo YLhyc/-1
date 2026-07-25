@@ -1,17 +1,14 @@
 const CACHE = 'kv-1.5.19';
 const APP_SHELL = [
-  './',
   'index.html',
   'review-core.js?v=1.5.19',
   'focus-core.js?v=1.5.19',
   'audio-cache.js?v=1.5.19',
   'ui-motion.js?v=1.5.19',
+  'hongbaoshu.json?v=1.5.19',
   'manifest.json',
-  'hb/',
   'hb/index.html',
-  'uf/',
   'uf/index.html',
-  'wordbank/',
   'wordbank/index.html',
   'icons/words-180.png',
   'icons/words-192.png',
@@ -23,13 +20,16 @@ function cacheAppShell() {
   );
 }
 function matchNavigation(request) {
+  const pathname = new URL(request.url).pathname;
+  let fallback = 'index.html';
+  if (/\/hb\/(?:index\.html)?$/.test(pathname)) fallback = 'hb/index.html';
+  else if (/\/uf\/(?:index\.html)?$/.test(pathname)) fallback = 'uf/index.html';
+  else if (/\/wordbank\/(?:index\.html)?$/.test(pathname)) fallback = 'wordbank/index.html';
   return caches.open(CACHE)
     .then(cache => cache.match(request)
-      .then(cached => cached || cache.match('./'))
-      .then(cached => cached || cache.match('index.html')))
+      .then(cached => cached || cache.match(fallback)))
     .then(cached => cached || caches.match(request))
-    .then(cached => cached || caches.match('./'))
-    .then(cached => cached || caches.match('index.html'));
+    .then(cached => cached || caches.match(fallback));
 }
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -41,14 +41,14 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.open(CACHE)
       .then(cache => Promise.all([
-        cache.match('./'),
         cache.match('index.html'),
         cache.match('review-core.js?v=1.5.19'),
         cache.match('focus-core.js?v=1.5.19'),
         cache.match('audio-cache.js?v=1.5.19'),
-        cache.match('ui-motion.js?v=1.5.19')
+        cache.match('ui-motion.js?v=1.5.19'),
+        cache.match('hongbaoshu.json?v=1.5.19')
       ]))
-      .then(shell => (shell[0] || shell[1]) && shell[2] && shell[3] && shell[4] && shell[5]
+      .then(shell => shell.every(Boolean)
         ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
         : null)
       .then(() => self.clients.claim())
@@ -58,6 +58,7 @@ self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   const isSameOrigin = u.origin === self.location.origin;
   const isAudioBundle = /\/audio_g\d+\.json$/.test(u.pathname) || /\/hb\/audio_unit\d+\.json$/.test(u.pathname);
+  const isCoreData = /\/hongbaoshu\.json$/.test(u.pathname);
   // Large audio bundles are cache-first. The page keeps only the most recent bounded set.
   if (isAudioBundle) {
     e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request).then(r => {
@@ -65,6 +66,25 @@ self.addEventListener('fetch', e => {
       if (isSameOrigin) { const c = r.clone(); caches.open(CACHE).then(ca => ca.put(e.request, c)); }
       return r;
     })));
+    return;
+  }
+  // Core review data must open immediately on weak networks and remain usable
+  // offline. Refresh a cached copy in the background when possible.
+  if (isCoreData) {
+    const networkPromise = fetch(e.request).then(r => {
+      if (!r.ok) return r;
+      if (isSameOrigin) {
+        const copy = r.clone();
+        return caches.open(CACHE).then(cache => cache.put(e.request, copy)).then(() => r);
+      }
+      return r;
+    });
+    e.waitUntil(networkPromise.then(() => null, () => null));
+    e.respondWith(
+      caches.match(e.request, { ignoreSearch: true })
+        .then(cached => cached || networkPromise)
+        .catch(() => caches.match(e.request, { ignoreSearch: true }))
+    );
     return;
   }
   // Network-first for JSON / daily-reports: always try network, fall back to cache

@@ -162,7 +162,7 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(5,122,157,.32);o
     <button class="nav-back" onclick="location.href='../'">← 首页</button>
     <span class="nav-title">红宝书</span>
   </div>
-  <div class="hero-sub">考研英语词汇 · 2026-07-25 16:00</div>
+  <div class="hero-sub">考研英语词汇 · 2026-07-25 21:18</div>
   <div class="jump-row">
     <input type="number" class="jump-input" id="jumpInput" placeholder="输入Unit编号 (1-219)…" min="1" max="219">
     <button class="jump-btn" onclick="jumpToUnit()">跳转</button>
@@ -197,7 +197,7 @@ var WORDS = [{"en": "radiate", "cn": "散发；流露；发出", "examples": [{"
 var UNIT_COUNT = 219;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
-var TS = 1784966439;
+var TS = 1784985507;
 
 // ── Word-based key ──
 function wordKey(u, g, w) {
@@ -351,6 +351,39 @@ function updateAllCounts() {
 // ── Audio: unit-level JSON bundles (base64 → blob URL) ──
 var audioBundles = {}; // unitIdx → 'loading' | true
 var audioBundleCbs = {}; // unitIdx → [callbacks]
+var audioBundleTokens = {};
+
+function fetchJsonWithRetry(url, attempts, timeoutMs) {
+  attempts = Math.max(1, attempts || 1);
+  timeoutMs = Math.max(1000, timeoutMs || 15000);
+  function run(attempt) {
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = null;
+    return new Promise(function(resolve, reject) {
+      var settled = false;
+      timer = setTimeout(function() {
+        if (settled) return;
+        settled = true;
+        if (controller) controller.abort();
+        reject(new Error('request_timeout'));
+      }, timeoutMs);
+      fetch(url, controller ? {signal:controller.signal} : {}).then(function(response) {
+        if (settled) return;
+        settled = true; clearTimeout(timer);
+        if (!response.ok) { reject(new Error('http_' + response.status)); return; }
+        response.json().then(resolve, reject);
+      }, function(error) {
+        if (settled) return;
+        settled = true; clearTimeout(timer); reject(error);
+      });
+    }).catch(function(error) {
+      if (attempt + 1 >= attempts) throw error;
+      return new Promise(function(resolve) { setTimeout(resolve, 450 * Math.pow(2, attempt)); })
+        .then(function() { return run(attempt + 1); });
+    });
+  }
+  return run(0);
+}
 
 function b64toBlob(b64) {
   var raw = atob(b64), bytes = new Uint8Array(raw.length);
@@ -366,13 +399,20 @@ function loadAudioBundle(u, cb) {
   }
   if (audioBundles[u] === 'loading') return;
   audioBundles[u] = 'loading';
+  var requestToken = {};
+  audioBundleTokens[u] = requestToken;
 
   var audioUrl = 'audio_unit' + u + '.json?v=' + TS;
-  fetch(audioUrl)
-    .then(function(r) { return r.json(); })
+  fetchJsonWithRetry(audioUrl, 3, 15000)
     .then(function(data) {
+      if (audioBundleTokens[u] !== requestToken) return;
       if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
-      if (u !== curUnit) return; // Stale request, ignore
+      if (u !== curUnit) {
+        delete audioBundles[u]; delete audioBundleTokens[u];
+        var staleCbs = audioBundleCbs[u];
+        if (staleCbs) { staleCbs.forEach(function(fn) { fn('stale'); }); delete audioBundleCbs[u]; }
+        return;
+      }
       audioBundles[u] = true;
       for (var w = 0; w < data.words.length; w++) {
         if (!data.words[w]) continue;
@@ -385,11 +425,14 @@ function loadAudioBundle(u, cb) {
         for (var gi = 0; gi < groups; gi++) setBtns(gi, false, false);
       }
       preloadDone = true;
+      delete audioBundleTokens[u];
       var cbs = audioBundleCbs[u];
       if (cbs) { cbs.forEach(function(fn) { fn(); }); delete audioBundleCbs[u]; }
     })
     .catch(function() {
+      if (audioBundleTokens[u] !== requestToken) return;
       delete audioBundles[u];
+      delete audioBundleTokens[u];
       var cbs = audioBundleCbs[u];
       if (cbs) { cbs.forEach(function(fn) { fn('err'); }); delete audioBundleCbs[u]; }
     });
@@ -793,7 +836,7 @@ function preloadUnit(u) {
   // Revoke old blob URLs to prevent memory leak
   for (var k in preloaded) { URL.revokeObjectURL(preloaded[k]); }
   preloaded = {}; preloadDone = false;
-  audioBundles = {}; // Reset to force re-fetch on re-entry
+  audioBundles = {}; audioBundleCbs = {}; audioBundleTokens = {};
   loadAudioBundle(u);
 }
 
