@@ -72,14 +72,25 @@
     function move(e) {
       if (!drag || e.pointerId !== drag.id) return;
       var rawDx = e.clientX - drag.pointerStartX, rawDy = e.clientY - drag.pointerStartY;
-      if (!drag.axis && Math.max(Math.abs(rawDx), Math.abs(rawDy)) >= 6) {
-        var axisRatio = Number(opts.axisRatio) > 0 ? Number(opts.axisRatio) : 1.05;
-        drag.axis = Math.abs(rawDx) > Math.abs(rawDy) * axisRatio ? 'x' : 'y';
+      if (!drag.axis) {
+        var absX = Math.abs(rawDx), absY = Math.abs(rawDy);
+        var axisRatio = Number(opts.axisRatio) > 0 ? Number(opts.axisRatio) : .82;
+        var verticalRatio = Number(opts.verticalRatio) > 0 ? Number(opts.verticalRatio) : 1.25;
+        // Do not let the first few pixels of finger jitter lock the gesture to
+        // vertical. Horizontal cards should engage early, while page scrolling
+        // only wins after a clearly vertical movement.
+        if (absX >= 5 && absX >= absY * axisRatio) drag.axis = 'x';
+        else if (absY >= 12 && absY > absX * verticalRatio) drag.axis = 'y';
         if (drag.axis === 'x') e.preventDefault();
       }
       if (drag.axis !== 'x') return;
       e.preventDefault();
-      var limit = opts.limit || 120, x = Math.max(-limit, Math.min(limit, drag.originX + rawDx));
+      // `limit` is the rating threshold, not a visual drag boundary. Keep the
+      // card attached to the pointer past the cue; only the far edge gets
+      // progressive rubber-band resistance so there is no hard stop.
+      var limit = Number(opts.limit) || 120;
+      var travelLimit = Number(opts.travelLimit) || Math.max((global.innerWidth || 320) * 1.1, limit + 160);
+      var x = rubber(drag.originX + rawDx, travelLimit, .6);
       drag.x = x;
       if (!revealCalled && Math.abs(x) > 12) { revealCalled = true; if (opts.onReveal) opts.onReveal(); }
       setX(el, x, true);
