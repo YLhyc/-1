@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "ad8dee897ba7",
-  "content_version": "ffd43dd9de21",
+  "exam_wording_version": "837336bdf109",
+  "content_version": "1565622ce1d4",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -14,6 +14,14 @@
       "title": "杜甫",
       "order": 10,
       "description": "诗史、沉郁顿挫与律诗成就"
+    },
+    {
+      "id": "topic_706_classical_words",
+      "subject": "706",
+      "module": "古代汉语",
+      "title": "文言实词：适与前往方向词",
+      "order": 10,
+      "description": "适的多义与异读，以及之、适、如、往、赴、去的前往、奔赴、离开辨析"
     },
     {
       "id": "topic_706_389756ab8769",
@@ -56,6 +64,14 @@
       "description": "三重悲剧、叙事艺术与人物塑造"
     },
     {
+      "id": "topic_706_character_distinction",
+      "subject": "706",
+      "module": "古代汉语",
+      "title": "古今字、异体字、通假字、假借字",
+      "order": 60,
+      "description": "西华师大历年真题中的四类用字现象辨析与答题框架"
+    },
+    {
       "id": "topic_706_5057032ab808",
       "subject": "706",
       "module": "古代汉语",
@@ -86,6 +102,14 @@
       "title": "《狂人日记》",
       "order": 30,
       "description": "吃人隐喻、叙述反讽与启蒙困境"
+    },
+    {
+      "id": "topic_807_luxun_storynew",
+      "subject": "807",
+      "module": "现当代文学",
+      "title": "鲁迅《故事新编》与晚期创新",
+      "order": 30,
+      "description": "历史小说的实验性、艺术手法、先驱者命运与晚期风格"
     },
     {
       "id": "topic_807_e1a03dd04f7a",
@@ -144,6 +168,14 @@
       "description": "物质意识、唯物唯心与可知不可知"
     },
     {
+      "id": "topic_politics_materialism",
+      "subject": "politics",
+      "module": "马原",
+      "title": "物质观",
+      "order": 20,
+      "description": "物质、运动、时空、意识及自然界与人类社会的关系"
+    },
+    {
       "id": "topic_politics_9a290f0fa9d7",
       "subject": "politics",
       "module": "马原",
@@ -158,6 +190,14 @@
       "title": "物质运动与意识活动",
       "order": 30,
       "description": "区分物质运动、意识活动及其物质基础"
+    },
+    {
+      "id": "topic_politics_consciousness",
+      "subject": "politics",
+      "module": "马原",
+      "title": "意识观与世界的物质统一性",
+      "order": 40,
+      "description": "意识的起源和本质、能动作用、人工智能边界与世界的物质统一性"
     }
   ],
   "cards": [
@@ -1280,6 +1320,340 @@
       "revision": {
         "version": 4,
         "updated_at": "2026-07-17T12:05:02+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_0e53d7e5e6f6bed5",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_character_distinction",
+      "order": 10,
+      "title": "古今字、异体字、通假字、假借字如何区分",
+      "prompt": "判断古今字、异体字、通假字、假借字时，分别看哪些条件？",
+      "summary": "先看**时间关系**，再看**音义关系**和使用范围：古今字有先后和意义分工；异体字音义全同、只是写法不同；通假字本有其字而临时借用；假借字本无其字而借音记录。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先总括四类现象，再依次比较古今字、异体字、通假字、假借字的时间、音义和使用边界。"
+      },
+      "outline": [
+        {
+          "heading": "古今字",
+          "text": "有时代先后，今字只分担古字的部分义项，如责—债。"
+        },
+        {
+          "heading": "异体字",
+          "text": "同一时期音、义完全相同，只是形体不同，如峰—峯。"
+        },
+        {
+          "heading": "通假字",
+          "text": "本来有本字，在具体古文中临时借用音同或音近字，如惠—慧。"
+        },
+        {
+          "heading": "假借字",
+          "text": "本来没有专门字形，借用同音或音近字记录词语，强调造字或记录原则。"
+        }
+      ],
+      "examples": [
+        "责—债：古字兼有债务、责任等义，今字分担债务义。",
+        "鹅—鵞：音义全同而形体不同。",
+        "惠—慧：本字存在而在具体句中借惠表示慧。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先按时间，再按意义和使用范围比较。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "历时分工／音义全同／本有其字／本无其字。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "回忆例子：责—债、峰—峯、惠—慧。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "判断这四类用字现象，不能只看现代字形，而要综合考察时间关系、音义关系和使用范围。\n\n第一，{{accent|古今字}}是有时代先后的字，今字产生后分担古字的一个或几个义项，如“责—债”中“债”分担债务义。{{accent|异体字}}则是在同一历史时期内音、义完全相同而形体不同的字，如“峰—峯”，在相同条件下通常可以互相替代。\n\n第二，{{accent|通假字}}是本来已有本字，但古书在具体语境中临时借用音同或音近的字，如“惠—慧”中“惠”是通假字，“慧”是本字。{{accent|假借字}}偏重造字和记录原则，指本来没有专门字形而借用同音或音近字来表示。\n\n因此，古今字看历时分工，异体字看音义全同，通假字看本有其字而临时借用，假借字看本无其字而借音记录。判断具体材料时，应先下定义，再按时代、意义和使用范围逐项比较。",
+      "tags": [
+        "古今字",
+        "异体字",
+        "通假字",
+        "假借字",
+        "西华师大真题"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-19",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/古今字/西华师大706_古今字异体字通假字假借字历年真题专题.md",
+        "session_id": "706-2026-07-19-xihua-character-distinction",
+        "created_at": "2026-07-20T15:10:07+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:10:07+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:10:07+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_3b64f43ebaee6d95",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_character_distinction",
+      "order": 20,
+      "title": "莫—暮与惠—慧的性质辨析",
+      "prompt": "为什么“莫—暮”和“惠—慧”不能归为同一种用字现象？",
+      "summary": "“莫—暮”是古今字关系中的同音假借：莫被借作别义，后造暮表示日暮；“惠—慧”是具体句中的通假：本有慧字而借惠表示聪明。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先分别判定莫—暮和惠—慧，再以“区别维度”统摄时代关系、是否本有其字和使用范围的比较。"
+      },
+      "outline": [
+        {
+          "heading": "莫—暮",
+          "text": "莫原与日暮有关，后被借作否定性无定代词等义，暮为后起字，形成稳定分工。"
+        },
+        {
+          "heading": "惠—慧",
+          "text": "惠在“汝之不惠”中临时借作慧，慧是本字，属于通假。"
+        },
+        {
+          "heading": "区别维度",
+          "text": "前者是古今字的历时关系，后者是具体语境中的共时借用；前者形成字义分工，后者依赖句中语境。"
+        }
+      ],
+      "examples": [
+        "莫—暮：后起“暮”专门表示日暮义。",
+        "《列子·汤问》“甚矣，汝之不惠”：惠通慧，表示聪明。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先分别判断，再比较是否有后起字和是否临时借用。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "古今字／同音假借／通假字／本字。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "“莫—暮”和“惠—慧”都涉及音同或音近，但二者的性质和使用范围不同。\n\n第一，{{accent|“莫—暮”}}中，“莫”原来与日暮义有关，后来又被借作否定性的无定代词等意义；为了重新表示日暮义，后起造“暮”字。因此二者属于古今字关系，其形成机制是同音假借，后来形成了较稳定的字义分工。\n\n第二，{{accent|“惠—慧”}}中，“甚矣，汝之不惠”的“惠”本有仁爱、恩惠等义，这里临时借来表示“慧”的聪明义；“慧”是本字，“惠”是通假字。这种用法依赖具体文献和语境，并未形成古字与后起今字的稳定分工。\n\n从{{accent|区别维度}}看，“莫—暮”是古字与后起今字的历时关系，“惠—慧”是具体语境中的临时借用；前者形成意义分工，后者只是借音代用，{{success|不能仅因都有音近关系就混为一谈}}。",
+      "tags": [
+        "莫暮",
+        "惠慧",
+        "古今字",
+        "通假字",
+        "材料辨析"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-19",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/古今字/西华师大706_古今字异体字通假字假借字历年真题专题.md",
+        "session_id": "706-2026-07-19-xihua-character-distinction",
+        "created_at": "2026-07-20T15:10:07+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:10:07+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:10:07+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_ee162b76ced8e0aa",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_classical_words",
+      "order": 10,
+      "title": "“适”的常见义项如何按语境判断",
+      "prompt": "“适”在古文中有哪些常见义项？如何根据搭配判断？",
+      "summary": "“适”常见义项包括{{accent|到、往……去}}、适合、恰好、依照和出嫁；“適戍”中的适读zhé，通“谪”，是发配义。判断要看地点、时间副词、合宜语境和婚姻语境。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先界定前往义，再对比合宜与恰好义、依照与出嫁义，最后说明异读边界。"
+      },
+      "outline": [
+        {
+          "heading": "前往义",
+          "text": "适加地点宾语时表示往、到……去，如“子适卫”。"
+        },
+        {
+          "heading": "合宜与恰好义",
+          "text": "适然表示合适、适宜；适至、适逢中的适表示恰好、正好。"
+        },
+        {
+          "heading": "依照与出嫁义",
+          "text": "处分适兄意中的适是顺从、依照；始适还家门中的适是出嫁。"
+        },
+        {
+          "heading": "异读边界",
+          "text": "適戍中的适读zhé，通谪，表示发配或责罚，不是shì的前往义。"
+        }
+      ],
+      "examples": [
+        "子适卫：孔子到卫国去。",
+        "适然：合适、适宜；适至：刚好来到。",
+        "始适还家门：刚出嫁就返回娘家。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先看后面的成分：地点、时间、合宜对象还是婚姻语境？"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "适卫—到；适然—合适；适至—恰好；始适—出嫁。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "遇到適戍先看读音zhé，并联系通谪。"
+        }
+      ],
+      "exam_answer_type": "term",
+      "exam_wording": "“适”是多义词，必须结合上下文判断。首先，在前往义中，适加地点宾语表示“往、到……去”，如“子适卫”即孔子到卫国去。其次，在合宜与恰好义中，适然表示合适、适宜，适至、适逢表示恰好、正好。\n\n再次，在依照与出嫁义中，处分适兄意表示依照、顺从，始适还家门表示出嫁。最后，在异读边界上，适戍中的适读zhé，通“谪”，表示发配、责罚，不能按shì的前往义翻译。由此可见，适的译法必须由搭配和读音共同确定，不能脱离语境固定翻译。",
+      "tags": [
+        "文言实词",
+        "适",
+        "多义词",
+        "异读",
+        "古代汉语"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-23",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/文言知识积累/文言知识积累.md",
+        "session_id": "706-2026-07-23-classical-words-direction",
+        "created_at": "2026-07-23T20:30:03+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-23T20:30:03+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-23T20:30:03+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_89fbdbeee2cf46b1",
+      "subject": "706",
+      "module": "古代汉语",
+      "topic_id": "topic_706_classical_words",
+      "order": 20,
+      "title": "上古“之、适、如、往、赴、去”如何辨析",
+      "prompt": "如何区分上古表示前往、奔赴和离开的“之、适、如、往、赴、去”？",
+      "summary": "之、适、如通常表示到……去并可带地点宾语；往也表示前往但上古通常不直接带宾语；赴是奔向，语气更强；去在先秦多表示{{danger|离开}}，不要轻译为到。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先比较之、适、如与往的句法差别，再区分赴的奔赴语气和去的离开方向，最后归纳判断步骤。"
+      },
+      "outline": [
+        {
+          "heading": "之、适、如",
+          "text": "三词都可表示到、往……去，上古通常可直接带地点宾语，如之滕、适卫、如师。"
+        },
+        {
+          "heading": "往",
+          "text": "往也表示前往，但上古通常不直接带宾语，如“舜往耕焉”。"
+        },
+        {
+          "heading": "赴",
+          "text": "赴本义是奔向，常带快速奔赴或奔向危险处所的意味，如赴东海、赴汤火。"
+        },
+        {
+          "heading": "去",
+          "text": "去在上古最常见义是离开某地或某人，与前往义方向相反；到……去义是中古以后发展出来的。"
+        }
+      ],
+      "examples": [
+        "楚子使屈完如师：楚王派屈完到诸侯联军那里去。",
+        "赴汤火：奔赴汤火；去齐：先秦语境通常是离开齐国。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先判断方向：是到某地、奔向某处，还是离开某地？"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "之适如可带地点宾语；往通常不带；赴=奔向；去=离开。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "看到地名后再看动词语气，不要把所有移动词都译成到。"
+        }
+      ],
+      "exam_answer_type": "term",
+      "exam_wording": "上古表示移动的词不能一概翻译为“到”。首先，之、适、如都可表示“到、往……去”，并通常可以直接带地点宾语，如“之滕”“适卫”“如师”。其次，往意义相近，但上古通常不直接带宾语。\n\n再次，赴表示奔向、奔赴，动作力度较强，常用于“赴东海”“赴汤火”等语境。最后，去在先秦最常见的意思是离开某地或某人，与“适卫”的前往方向相反；去表示到某地去，是中古以后才发展出的义项。由此可见，应先判断移动方向，再结合宾语和语气选择“到、前往、奔赴”或“离开”。",
+      "tags": [
+        "文言实词",
+        "前往",
+        "赴",
+        "去",
+        "宾语",
+        "古代汉语"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-07-23",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代汉语/文言知识积累/文言知识积累.md",
+        "session_id": "706-2026-07-23-classical-words-direction",
+        "created_at": "2026-07-23T20:30:03+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-23T20:30:03+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-23T20:30:03+08:00",
         "device_id": "assistant-706"
       }
     },
@@ -2565,6 +2939,382 @@
       }
     },
     {
+      "id": "card_807_db7858a167180234",
+      "subject": "807",
+      "module": "现当代文学",
+      "topic_id": "topic_807_luxun_storynew",
+      "order": 10,
+      "title": "为什么说《故事新编》是鲁迅最后的创新之作",
+      "prompt": "为什么说《故事新编》是鲁迅“最后的创新之作”？",
+      "summary": "《故事新编》不是复述古代故事，而是以{{accent|非正统的实验性小说}}重新激活古人古事，并以现代眼光揭示理想、现实与历史继承的矛盾，显示鲁迅晚期仍在冲击既有小说规范。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先界定“最后的创新”的总体含义，再依次说明非正统实验、古人新释与晚期价值。"
+      },
+      "outline": [
+        {
+          "heading": "非正统实验",
+          "text": "鲁迅自称作品“不足称为文学概论之所谓小说”，表明他有意冲击《呐喊》《彷徨》后已建立的小说规范。"
+        },
+        {
+          "heading": "古人新释",
+          "text": "女娲、后羿、夏禹、墨子等被从神圣叙事中拉回日常处境，呈现孤独、困顿和现实矛盾。"
+        },
+        {
+          "heading": "晚期价值",
+          "text": "古今杂糅、戏谑笔法与杂文式锋芒共同扩展了历史小说的表达边界。"
+        }
+      ],
+      "examples": [
+        "《奔月》不铺写后羿射日的成功，而写其功成后的孤独与日常困顿。",
+        "《理水》把大禹治水放入现代化语言和现实社会关系中重新解释。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "不是“最后一本书”，而是“晚期仍在实验”。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "非正统—古人新释—冲击小说规范。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "《故事新编》之所以可称为鲁迅“最后的创新之作”，不在于它只是晚年出版的小说集，而在于鲁迅在生命后期仍主动寻找新的小说突破。鲁迅在《序言》中强调作品不足称为“文学概论之所谓小说”，显示出反规范、非正统的实验意识。\n\n首先，在**非正统实验**上，作品有意冲击已建立的小说规范；其次，在**古人新释**上，它不把古代神话、传说和史实当作固定英雄叙事来复述，而是重新激活女娲、后羿、夏禹、墨子等人物，将其置于日常生活、精神困境和现实矛盾中。\n\n从**晚期价值**看，它以古今杂糅、戏谑讽刺和杂文式思维打破历史与现实、小说与杂文之间的边界，既保留历史题材的想象力，又以现代眼光追问先驱者命运和历史悲剧，显示了鲁迅晚期持续旺盛的艺术创造力。",
+      "tags": [
+        "鲁迅",
+        "故事新编",
+        "晚期创新",
+        "历史小说"
+      ],
+      "source": {
+        "assistant": "807",
+        "study_date": "2026-07-22",
+        "note_path": "D:/AAA考研/807复习助手/outputs/答题框架/鲁迅_故事新编与晚期创新_对话讲授记录.md",
+        "session_id": "807-2026-07-22-luxun-story-new-rewritten-dialogue",
+        "created_at": "2026-07-22T20:30:01+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-22T20:30:01+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-22T20:30:01+08:00",
+        "device_id": "assistant-807"
+      }
+    },
+    {
+      "id": "card_807_401e8d382838f92e",
+      "subject": "807",
+      "module": "现当代文学",
+      "topic_id": "topic_807_luxun_storynew",
+      "order": 20,
+      "title": "《故事新编》的古今杂糅与油滑",
+      "prompt": "如何区分《故事新编》的古今杂糅与“油滑”？",
+      "summary": "**古今杂糅**是把现代语言、细节和社会关系置入古代故事的叙事原则；“油滑”是以喜剧人物、错位语言和戏谑语调实现讽刺的笔法。前者以现代照亮古代，后者使其显出批判锋芒。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先分别界定古今杂糅与油滑笔法，再说明二者的共同效果，即现代阐释古代与拆解权威。"
+      },
+      "outline": [
+        {
+          "heading": "古今杂糅",
+          "text": "打破时空界限，把现代语言、社会关系和人物类型融入古代神话、传说与史实，以现代眼光重新解释古人古事。"
+        },
+        {
+          "heading": "油滑笔法",
+          "text": "借鉴丑角插科打诨，运用喜剧人物、世俗口吻和身份错位，使神圣叙事接受现实检验。"
+        },
+        {
+          "heading": "共同效果",
+          "text": "古今杂糅搭建古今相通的结构，油滑将假借美名、文化空谈和权威神圣化等问题暴露出来。"
+        }
+      ],
+      "examples": [
+        "《理水》“文化山”学者开口“OK”、闭口“莎士比亚”，讽刺脱离现实的文化姿态。",
+        "《采薇》中的小穷奇、小丙君借“先王之道”抢劫、投机，揭示假借美名的逻辑。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "一个是古今如何被组织，一个是怎样以戏谑表现。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "时空打破—现代照亮古代；丑角式错位—讽刺现实。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，**古今杂糅**是鲁迅有意打破古今时空界限，将现代语言、生活细节、社会关系和人物类型融入古代神话、传说与史实之中，以现代眼光重新解释古人古事。它不是随意的时代错置，而是为了揭示古今社会精神结构的相通。\n\n其次，**油滑笔法**是这种艺术实验的具体表现方式。鲁迅借鉴传统戏剧丑角插科打诨的方式，设置喜剧人物、世俗口吻和身份错位，以戏谑拆解圣贤、权威与庄严叙事的神圣外表。\n\n最后，从**共同效果**看，《理水》的“文化山”学者和《采薇》中假借“先王之道”的人物，都使古代故事显出对现实的讽刺。{{success|古今杂糅提供叙事结构，油滑提供讽刺锋芒}}，二者共同实现了“以现代照亮古代”的新阐释。",
+      "tags": [
+        "鲁迅",
+        "故事新编",
+        "古今杂糅",
+        "油滑"
+      ],
+      "source": {
+        "assistant": "807",
+        "study_date": "2026-07-22",
+        "note_path": "D:/AAA考研/807复习助手/outputs/答题框架/鲁迅_故事新编与晚期创新_对话讲授记录.md",
+        "session_id": "807-2026-07-22-luxun-story-new-rewritten-dialogue",
+        "created_at": "2026-07-22T20:30:01+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-22T20:30:01+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-22T20:30:01+08:00",
+        "device_id": "assistant-807"
+      }
+    },
+    {
+      "id": "card_807_61d5bfe0c55e30ec",
+      "subject": "807",
+      "module": "现当代文学",
+      "topic_id": "topic_807_luxun_storynew",
+      "order": 30,
+      "title": "《故事新编》的庄严与荒诞",
+      "prompt": "《故事新编》怎样通过庄严与荒诞的互相消解表现历史悲凉？",
+      "summary": "作品先写创造、治水、复仇、止战等{{accent|庄严行动}}，再以围观、利用、误解和狼狈结局将其翻转。荒诞不是玩笑，而是揭示理想行动在现实中被消费和消解的历史悲凉。",
+      "outline_logic": {
+        "type": "causal",
+        "description": "从建立庄严行动，经过荒诞性反转，推到庄严理想被消费后的悲凉意义。"
+      },
+      "outline": [
+        {
+          "heading": "建立庄严行动",
+          "text": "女娲造人补天、夏禹治水、复仇者复仇、墨子止战都包含创造、责任、正义等崇高愿望。"
+        },
+        {
+          "heading": "荒诞性反转",
+          "text": "后人借女娲之名谋利，百姓把夏禹奋斗故事化，复仇者与暴君同被展览，墨子功成后却受困于琐事。"
+        },
+        {
+          "heading": "悲凉意义",
+          "text": "作品并非否定英雄，而是揭示现实并不会自动尊重理想，庄严行动可能被误解、围观和消费。"
+        }
+      ],
+      "examples": [
+        "《补天》结尾，后人以“女娲嫡派”名义在女娲尸体上扎寨。",
+        "《铸剑》结尾，复仇者与暴君的头骨同被“万民观瞻”。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "庄严行动—结尾翻转—历史悲凉。"
+        },
+        {
+          "level": 2,
+          "kind": "evidence",
+          "text": "补天的“嫡派”、理水的围观、铸剑的展览、非攻的狼狈。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，作品**建立庄严行动**：女娲造人补天、夏禹治水、复仇者复仇、墨子止战都包含创造、责任和正义的愿望。与此同时，鲁迅又将庄严与荒诞并置。\n\n其次，作品发生**荒诞性反转**：如《补天》由女娲造人补天的宏大场面，转到后人打着“女娲嫡派”旗号谋利；《理水》写夏禹真实的治水劳动最终被围观和神话化；《铸剑》又让复仇者与暴君的头骨同被展览。前半部的崇高在后半部或结尾被现实翻转。\n\n因此，其**悲凉意义**在于，这种结构{{danger|不是嘲笑英雄或否定理想}}，而是以更深的怀疑揭示：现实历史并不会自动保存行动的意义，庄严理想常在看客、权力和名义利用中被消解，因而形成鲁迅特有的悲凉。",
+      "tags": [
+        "鲁迅",
+        "故事新编",
+        "庄严与荒诞",
+        "历史悲凉"
+      ],
+      "source": {
+        "assistant": "807",
+        "study_date": "2026-07-22",
+        "note_path": "D:/AAA考研/807复习助手/outputs/答题框架/鲁迅_故事新编与晚期创新_对话讲授记录.md",
+        "session_id": "807-2026-07-22-luxun-story-new-rewritten-dialogue",
+        "created_at": "2026-07-22T20:30:01+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-22T20:30:01+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-22T20:30:01+08:00",
+        "device_id": "assistant-807"
+      }
+    },
+    {
+      "id": "card_807_5195b67873ac666a",
+      "subject": "807",
+      "module": "现当代文学",
+      "topic_id": "topic_807_luxun_storynew",
+      "order": 40,
+      "title": "《故事新编》中的先驱者命运",
+      "prompt": "《故事新编》如何书写先驱者、英雄和理想的现实命运？",
+      "summary": "鲁迅把镜头移到英雄成功以后：创造者的理想会被后人借名利用，行动者会失去目标、遭受冷落或被看客消费。作品由此揭示{{accent|先驱者理想与现实历史之间的矛盾}}。",
+      "outline_logic": {
+        "type": "causal",
+        "description": "从成功后的困境出发，说明理想被误解或利用，最后归纳其历史性批判。"
+      },
+      "outline": [
+        {
+          "heading": "成功后的困境",
+          "text": "鲁迅不止写英雄功绩，更写功成之后的孤独、失去对手、亲友背叛和精神无可着落。"
+        },
+        {
+          "heading": "理想被误解或利用",
+          "text": "创造精神可能被后人仅作为名义继承，真实劳动可能被故事化、神话化为供人围观的标签。"
+        },
+        {
+          "heading": "历史性批判",
+          "text": "作品揭示行动与看客、真诚者与假借美名者之间会在古今反复出现的矛盾结构。"
+        }
+      ],
+      "examples": [
+        "《奔月》写后羿功成后失去对手，嫦娥离去、逢蒙背叛，陷入琐碎生活。",
+        "《补天》写女娲创造精神被后人转化为“嫡派”名义；《理水》写夏禹劳动被围观和神话化。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "不要只说英雄伟大，要说“成功以后怎样被现实回应”。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "奔月：失去对手；补天：借名利用；理水：看客消费。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "《故事新编》通过古代英雄和圣贤的重新书写，集中追问先驱者理想在现实历史中的命运。首先是**成功后的困境**：鲁迅不满足于表现英雄完成事业的瞬间，而是写功成之后他们是否仍有行动目标、是否被他人理解。\n\n其次是**理想被误解或利用**。《奔月》中的后羿射日后失去对手，遭遇嫦娥离去和逢蒙背叛，显示英雄失去历史使命后的孤独；《补天》中女娲的创造精神被后人转化为“嫡派”名义；《理水》中夏禹的真实劳动则被围观、故事化和神话化。\n\n这种书写构成了作品的**历史性批判**：鲁迅既肯定创造、实干和反抗的价值，又揭示它们可能在现实中被误解、利用或消费。作品呈现的不是简单悲观，而是对先驱者、看客与历史继承关系的深刻批判。",
+      "tags": [
+        "鲁迅",
+        "故事新编",
+        "先驱者命运",
+        "后羿"
+      ],
+      "source": {
+        "assistant": "807",
+        "study_date": "2026-07-22",
+        "note_path": "D:/AAA考研/807复习助手/outputs/答题框架/鲁迅_故事新编与晚期创新_对话讲授记录.md",
+        "session_id": "807-2026-07-22-luxun-story-new-rewritten-dialogue",
+        "created_at": "2026-07-22T20:30:01+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-22T20:30:01+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-22T20:30:01+08:00",
+        "device_id": "assistant-807"
+      }
+    },
+    {
+      "id": "card_807_2a783a7e5491c98f",
+      "subject": "807",
+      "module": "现当代文学",
+      "topic_id": "topic_807_luxun_storynew",
+      "order": 50,
+      "title": "《故事新编》的晚期风格与实验性",
+      "prompt": "怎样理解《故事新编》晚期从容、幽默、洒脱而内含悲凉的艺术风格？",
+      "summary": "晚期《故事新编》的{{accent|从容、充裕、幽默与洒脱}}不是现实轻松或放弃批判，而是鲁迅以诙谐笔墨容纳历史、现实与荒诞；其幽默越显出理想行动遭遇冷漠时的悲凉。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先界定风格的矛盾统一，再说明苦涩幽默与杂文锋芒，最后作出实验性评价。"
+      },
+      "outline": [
+        {
+          "heading": "风格的矛盾统一",
+          "text": "从容、幽默、洒脱属于艺术控制力，不等于鲁迅现实处境轻松；其内核仍是悲凉与怀疑。"
+        },
+        {
+          "heading": "苦涩幽默与杂文锋芒",
+          "text": "伟大行动与琐碎狼狈、圣贤哲学与世俗追问的并置，使笑声成为揭露现实荒诞的方式。"
+        },
+        {
+          "heading": "实验性评价",
+          "text": "作品打破小说与杂文、历史与现实、庄严与戏谑的边界；同时应承认部分实验尚有未成熟之处。"
+        }
+      ],
+      "examples": [
+        "《非攻》中墨子止战成功后仍被搜检、淋雨、赶走，形成苦涩幽默。",
+        "《出关》《起死》将老子、庄子置入世俗喜剧场景，使圣贤思想接受现实检验。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "幽默的表面，悲凉的内核，实验性的形式。"
+        },
+        {
+          "level": 2,
+          "kind": "evidence",
+          "text": "非攻：止战伟业与回程狼狈的不相称。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，《故事新编》晚期的**风格的矛盾统一**在于：从容、充裕、幽默和洒脱属于艺术控制力，并不意味着鲁迅现实生活轻松或放弃批判；其内核仍是悲凉与怀疑。\n\n其次，其中的**苦涩幽默与杂文锋芒**可见于《非攻》：墨子完成止战伟业后却被搜检、淋雨、赶走，诙谐的结尾正因伟大行动与琐碎遭遇的极端不相称而显出苦涩。《出关》《起死》又以世俗人物和喜剧性错位，使圣贤哲学不再处于不可质疑的位置。\n\n最后，从**实验性评价**看，作品以古今杂糅和杂文式锋芒突破小说边界，具有强烈实验性；{{muted|评价时也应承认实验性带来的某些未成熟之处}}。",
+      "tags": [
+        "鲁迅",
+        "故事新编",
+        "晚期风格",
+        "苦涩幽默",
+        "实验性"
+      ],
+      "source": {
+        "assistant": "807",
+        "study_date": "2026-07-22",
+        "note_path": "D:/AAA考研/807复习助手/outputs/答题框架/鲁迅_故事新编与晚期创新_对话讲授记录.md",
+        "session_id": "807-2026-07-22-luxun-story-new-rewritten-dialogue",
+        "created_at": "2026-07-22T20:30:01+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-22T20:30:01+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-22T20:30:01+08:00",
+        "device_id": "assistant-807"
+      }
+    },
+    {
       "id": "card_politics_b6cbf99b7869f305",
       "subject": "politics",
       "module": "马原",
@@ -2966,6 +3716,326 @@
       }
     },
     {
+      "id": "card_politics_5c04f99e0d2f854d",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 10,
+      "title": "意识的起源和本质",
+      "prompt": "如何说明意识的起源和本质？",
+      "summary": "意识是自然界长期发展和社会历史发展的产物，**劳动起决定性作用**、语言促进其发展；意识是人脑的机能和属性，是客观世界的主观映象，是==客观内容和主观形式的统一==。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "先说明{{accent|自然起源}}与社会起源，再从人脑机能和主观映象两个层次界定意识本质。"
+      },
+      "outline": [
+        {
+          "heading": "自然起源",
+          "text": "意识经历反应特性、刺激感应性、高等动物感觉和心理，最终发展为人的意识。"
+        },
+        {
+          "heading": "社会起源",
+          "text": "社会实践特别是**劳动起决定性作用**，语言作为思维的物质外壳和意识的现实形式促进意识发展。"
+        },
+        {
+          "heading": "人脑机能",
+          "text": "意识是人脑这一特殊物质的机能和属性，{{danger|不是人脑本身或人脑的分泌物}}。"
+        },
+        {
+          "heading": "主观映象",
+          "text": "意识是客观世界的能动反映，是==客观内容和主观形式的统一==。"
+        }
+      ],
+      "examples": [
+        "孙悟空虽不是现实中的具体对象，但其形象材料来自猴子、人的动作、服饰和兵器等客观原型。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按起源和本质两部分回答。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "自然发展—劳动语言—人脑机能—主观映象。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "意识既是自然界长期发展的产物，也是社会历史发展的产物。第一，{{accent|自然起源}}表现为物质的反应特性逐步发展为低等生物的刺激感应性、高等动物的感觉和心理，最终发展为人的意识。第二，{{accent|社会起源}}表现为社会实践特别是劳动在意识的产生和发展中起决定性作用，在劳动和交往中形成的语言促进意识发展。\n\n从本质上看，{{accent|人脑机能}}是指意识是人脑这一特殊物质的机能和属性，但不是人脑本身或人脑的分泌物；{{accent|主观映象}}是指意识是客观世界的主观映象，是客观内容和主观形式的统一。它以客观世界为原型，又经过人的主动选择和加工，因而是能动反映而非直观、机械的复制。\n\n因此，{{success|意识的产生和存在必须依赖物质}}，既不能把意识物质化，也不能把意识说成脱离客观世界的主观自生物。",
+      "tags": [
+        "马原",
+        "意识起源",
+        "意识本质",
+        "劳动",
+        "能动反映"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_a12e43f7109b546c",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 20,
+      "title": "意识能动作用与客观规律性",
+      "prompt": "意识的能动作用有哪些表现？怎样正确发挥主观能动性？",
+      "summary": "意识具有目的性和计划性、创造性、指导实践改造世界、调控行为和生理活动四种能动表现；正确发挥主观能动性必须以**尊重客观规律**为前提，以实践为根本途径，并依赖一定物质条件。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先列目的性和计划性、创造性、改造客观世界、调控作用四种表现，再说明正确发挥条件。"
+      },
+      "outline": [
+        {
+          "heading": "目的性和计划性",
+          "text": "实践围绕意识活动预先构建的目标和蓝图展开。"
+        },
+        {
+          "heading": "创造性",
+          "text": "意识能够加工和建构感性材料，形成现实中尚不存在的观念世界。"
+        },
+        {
+          "heading": "改造客观世界",
+          "text": "意识必须==通过实践==指导人把观念转化为客观现实。"
+        },
+        {
+          "heading": "调控作用",
+          "text": "意识和心理因素能够影响人的行为选择和生理活动。"
+        },
+        {
+          "heading": "正确发挥条件",
+          "text": "尊重规律是前提，发挥能动性才能认识利用规律，实践是二者统一基础。"
+        }
+      ],
+      "examples": [
+        "制定考研计划体现目的性和计划性，按客观时间与自身基础执行计划体现规律性和能动性的统一。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先答四种表现，再答规律和能动性的关系。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "目的—创造—实践—调控；规律前提—能动条件—实践统一。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "意识对物质的反作用就是意识的能动作用，即人特有的积极认识世界和改造世界的能力和活动。第一，意识具有{{accent|目的性和计划性}}，人的实践围绕预先构建的目标和蓝图展开。第二，意识具有{{accent|创造性}}，能够对感性材料进行加工、选择和建构。第三，意识能够改造客观世界，即通过实践把观念的东西变成客观现实。第四，意识具有调控作用，能够影响人的行为和生理活动。\n\n意识的能动作用不是主观任性。正确发挥条件是：**尊重客观规律是正确发挥主观能动性的前提**；同时，只有充分发挥主观能动性，才能正确认识和利用客观规律；实践是客观规律性与主观能动性统一的基础。\n\n因此，正确发挥主观能动性必须从实际出发，以实践为根本途径，并依赖一定的物质条件和物质手段。{{danger|人能够认识和利用规律，但不能创造、消灭或改变规律}}。",
+      "tags": [
+        "马原",
+        "意识能动作用",
+        "主观能动性",
+        "客观规律性",
+        "实践"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_c7fda79c64ef3357",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 30,
+      "title": "人工智能与人类意识的边界",
+      "prompt": "如何理解人工智能与人类意识、人类智能的关系？",
+      "summary": "人工智能是人的部分智能活动的机器化，是人类智能的物化和意识能动性的特殊表现；它在特定能力上可以超过人类，但==不能真正具有人的意识，也不能全面取代人类智能==。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先界定技术实质，再从知情意差异、社会属性差异、理解与化约边界说明人工智能与人的意识的区别。"
+      },
+      "outline": [
+        {
+          "heading": "技术实质",
+          "text": "人工智能是对人脑组织结构与思维运行机制的模仿，是人类智能的物化。"
+        },
+        {
+          "heading": "知情意差异",
+          "text": "人的意识是知情意的统一体，人工智能主要模拟和扩展理性智能。"
+        },
+        {
+          "heading": "社会属性差异",
+          "text": "社会性是人的意识所固有的本质属性，人工智能不能真正具备人的社会属性。"
+        },
+        {
+          "heading": "理解与化约边界",
+          "text": "人工智能难以完全理解自然语言真实意义，人的意识也不能全部化约为数字信号。"
+        }
+      ],
+      "examples": [
+        "脑机接口把部分意识活动物化为机器运动，能够延伸意识器官功能，但并未使机器获得人的情感、信念和意志。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先答技术实质，再答四个不可替代原因。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "物化—知情意—社会性—语言—不可化约。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "人工智能的{{accent|技术实质}}是把人的部分智能活动机器化，让机器具有完成某种复杂目标的能力；它是对人脑组织结构与思维运行机制的模仿，是人类智能的物化，也是人的意识能动性和本质力量对象化、现实化的一种表现，能够延伸人的意识器官功能。\n\n但是，人工智能不能真正具有人的意识。第一，知情意差异在于人的意识是知情意的统一体，人工智能主要模拟和扩展理性智能，不具备人的情感、信念和意志。第二，社会属性差异在于社会性是人的意识所固有的本质属性，人工智能不能真正具备人的社会属性。第三，理解与化约边界表现为人工智能难以完全理解自然语言的真实意义，人的意识中仍有许多内容不能被完全化约为数字信号。\n\n因此，人工智能在计算和特定程序化任务上可以超过人类，{{success|但特定功能更强不等于获得人的意识，也不等于能够全面取代人类智能}}。",
+      "tags": [
+        "马原",
+        "人工智能",
+        "人类意识",
+        "知情意",
+        "社会属性"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_5aaf9aabde7cf578",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_consciousness",
+      "order": 40,
+      "title": "世界的物质统一性原理",
+      "prompt": "世界的物质统一性原理包括哪些内容，有什么方法论意义？",
+      "summary": "世界统一于物质：自然界是物质的，人类社会本质上是生产实践基础上形成的物质体系，人的意识统一于物质；其方法论要求是**一切从实际出发**。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先给出世界统一于物质的总判断，再按自然界物质性、人类社会物质性、意识统一于物质展开，最后说明方法论意义。"
+      },
+      "outline": [
+        {
+          "heading": "自然界物质性",
+          "text": "天然自然和人化自然都具有客观实在性。"
+        },
+        {
+          "heading": "人类社会物质性",
+          "text": "人类社会是生产实践基础上形成的物质体系，具有客观规律性。"
+        },
+        {
+          "heading": "意识统一于物质",
+          "text": "意识在起源、本质和作用上都依赖物质。"
+        },
+        {
+          "heading": "方法论意义",
+          "text": "世界的物质统一性要求坚持**一切从实际出发**。"
+        }
+      ],
+      "examples": [
+        "制定复习计划要以考试要求、剩余时间和自身掌握情况为依据，体现一切从实际出发。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按自然界、社会、意识和方法论四层回答。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "自然物质—社会物质体系—意识统一于物质—实际出发。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "世界是统一的，世界的本原是一个。包括自然界和人类社会在内的整个世界，其真正统一性在于物质性，世界统一于物质。\n\n第一，{{accent|自然界物质性}}表现为无论天然自然还是经过实践改造的人化自然，都具有客观实在性。第二，人类社会物质性表现为人类社会本质上是生产实践基础上形成的物质体系；其自然基础、物质资料生产活动和生产方式都是物质的，社会发展具有客观规律性。第三，意识统一于物质表现为从起源、本质和作用看，意识的产生和存在都依赖物质，并通过实践反作用于物质。\n\n世界的物质统一性是多样性的统一，是辩证唯物主义最基本、最核心的观点，是马克思主义的基石。其方法论意义是{{success|坚持一切从实际出发，使主观符合客观}}。",
+      "tags": [
+        "马原",
+        "世界的物质统一性",
+        "自然界",
+        "人类社会",
+        "一切从实际出发"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-16",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/04_意识观、世界的物质统一性.md",
+        "session_id": "politics-2026-07-16-lesson04",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
       "id": "card_politics_f396ea06de5fe50f",
       "subject": "politics",
       "module": "马原·唯物论",
@@ -3172,23 +4242,321 @@
         "study_date": "2026-07-13"
       },
       "schedule": {
-        "average_seconds": 75,
-        "difficulty": null,
-        "due_at": "2026-07-16T00:00:00+08:00",
+        "average_seconds": 45,
+        "difficulty": 4.8,
+        "due_at": "2026-07-20T06:02:30.150Z",
         "lapses": 0,
-        "last_reviewed_at": null,
-        "mastery": "unrated",
-        "reps": 0,
-        "stability": null,
-        "state": "new"
+        "last_reviewed_at": "2026-07-17T06:02:30.150Z",
+        "mastery": "familiar",
+        "reps": 1,
+        "stability": 3,
+        "state": "review"
       },
       "revision": {
-        "version": 6,
-        "updated_at": "2026-07-17T12:05:03+08:00",
+        "device_id": "browser_c347a1e74ad94325838dd82a44ce9b4b",
+        "updated_at": "2026-07-17T06:02:30.150Z",
+        "version": 7
+      }
+    },
+    {
+      "id": "card_politics_ac34c7b93373d3de",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 21,
+      "title": "物质与运动为什么不可分割",
+      "prompt": "为什么说运动必须由物质承担，物质也不能脱离运动？",
+      "summary": "{{accent|运动是物质的根本属性和存在方式}}，物质是一切运动变化的实在基础和承担者；没有脱离物质的运动，也没有脱离运动的物质。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先给出物质与运动不可分割的总判断，再从物质是运动的承担者、运动是物质的存在方式和与意识问题的联系逐项展开。"
+      },
+      "outline": [
+        {
+          "heading": "物质是运动的承担者",
+          "text": "任何运动都有具体的物质载体，把运动说成脱离对象的纯粹动作会滑向唯心主义。"
+        },
+        {
+          "heading": "运动是物质的存在方式",
+          "text": "脱离运动的物质是不存在的，把物质理解为完全静止会滑向形而上学。"
+        },
+        {
+          "heading": "与意识问题的联系",
+          "text": "意识活动可以变化并反作用于物质，但意识不能脱离人脑、实践和物质条件独立存在。"
+        }
+      ],
+      "examples": [
+        "柏格森把运动说成没有物质承担者的纯粹动作，错在割裂物质与运动。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "承担者—存在方式—不可分割。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "物质运动、根本属性、物质载体。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "物质与运动不可分割，运动是物质的根本属性和存在方式，物质是运动的承担者。\n\n首先，从{{accent|物质是运动的承担者}}看，任何运动都有具体的物质载体，把运动说成脱离对象的纯粹动作，就割裂了运动与物质的联系并滑向唯心主义。其次，从{{accent|运动是物质的存在方式}}看，物质总是在运动、变化和发展中存在，把物质理解为完全静止的实体，就会陷入形而上学。\n\n最后，与意识问题的联系表明，意识活动可以变化并反作用于物质，但意识不能脱离人脑、实践和物质条件独立存在。因此，既不能设想无物质的运动，也不能设想脱离运动的物质。 ",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "物质与运动"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_b863d4e75f0227c7",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 22,
+      "title": "时间和空间的客观性",
+      "prompt": "时间和空间有哪些基本性质，如何区分客观时间与主观时间观？",
+      "summary": "时间和空间是{{accent|运动着的物质的基本存在形式}}，与物质运动不可分割；人的时间观可以不同，但时间本身不由意识创造。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "先分别界定时间和空间，再说明认识层面的时间观差异，最后回到时空客观性与物质运动不可分割的结论。"
+      },
+      "outline": [
+        {
+          "heading": "时间",
+          "text": "时间是物质运动的持续性、顺序性，特点是一维性。"
+        },
+        {
+          "heading": "空间",
+          "text": "空间是物质运动的广延性、伸张性，特点是三维性。"
+        },
+        {
+          "heading": "认识层面",
+          "text": "人的实践和认识可以拓展空间观念、形成不同时间观，但不能改变时空的客观实在性。"
+        }
+      ],
+      "examples": [
+        "用天体运动确定年、月、日，用光年衡量距离，说明时空不能脱离物质运动。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "keywords",
+          "text": "时间一维、空间三维、物质运动存在形式。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "不同的时间观不等于时间是意识产物。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "时间和空间是{{accent|运动着的物质的基本存在形式}}，二者与物质运动不可分割并具有客观性。\n\n第一，时间是物质运动的持续性和顺序性，具有一维性；空间是物质运动的广延性和伸张性，具有三维性。物质运动总是在一定时间和空间中进行，时空也不能脱离物质运动单独存在。\n\n第二，在{{accent|认识层面}}，人的实践和认识可以拓展空间观念、形成不同的时间观，但这种主观差异不改变时空的客观实在性。用天体运动确定年、月、日，用光年衡量距离，正说明时空的客观性必须在物质运动中把握。综上，人的时间观可以变化，但不能把客观时空说成意识的产物。",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "时间空间"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_aedb3175306c6ead",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 23,
+      "title": "意识的能动性与人工智能边界",
+      "prompt": "意识具有什么本质和能动作用，人工智能能否取代人的意识？",
+      "summary": "意识是人脑对客观世界的{{accent|主观映象}}，具有能动性和创造性；人工智能可以模拟、延伸人脑部分活动，但不是独立意识主体。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先界定意识的来源和本质，再说明意识的作用，最后以“人工智能边界”为重点对比其工具属性与意识主体边界。"
+      },
+      "outline": [
+        {
+          "heading": "意识的来源和本质",
+          "text": "意识内容来源于客观存在，是人脑对客观世界的能动反映，不是主观自生。"
+        },
+        {
+          "heading": "意识的作用",
+          "text": "意识可以调控人的行为和生理活动，并通过实践反作用于物质。"
+        },
+        {
+          "heading": "人工智能边界",
+          "text": "人工智能是人创造和使用的工具，能扩展人脑某些活动，但不能成为独立实践主体或取代人的整体决策。"
+        }
+      ],
+      "examples": [
+        "同一肖像看出老太太或年轻姑娘，体现意识是客观事物的主观映象；毕加索概括公牛体现意识的创造性。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "客观来源—主观映象—能动反作用。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "AI能模拟部分活动，不等于具有完整人的意识。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "意识是人脑对客观世界的{{accent|主观映象}}，其内容来源于客观存在，表现形式则具有能动性和创造性，并不是主观自生的产物。\n\n首先，从{{accent|意识的来源和本质}}看，意识依赖人脑这一特殊物质，并在社会实践中形成；其次，从{{accent|意识的作用}}看，意识能够调控人的行为和生理活动，并通过实践反作用于物质。由此可见，意识具有相对独立性，但不能脱离物质条件和实践过程。\n\n最后，在{{accent|人工智能边界}}上，人工智能是人创造和使用的工具，可以模拟、延伸人脑的某些活动，却不能成为独立实践主体或取代人的整体决策。它能够处理特定任务，不等于具有完整的人的意识、情感和社会属性。综上，人工智能是人的实践工具，而不是独立的意识主体。",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "意识",
+        "人工智能"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_21ae1c5994363e41",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_materialism",
+      "order": 24,
+      "title": "自然界与人类社会的关系",
+      "prompt": "自然界和人类社会有什么区别与联系？",
+      "summary": "自然界和人类社会不是截然分开，二者交叉重叠、相互作用；实践使自然界出现{{accent|人化自然}}，但人类社会仍属于客观物质世界。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先比较自然界与人类社会的区别，再说明人化自然和物质基础形成的联系，最后提出尊重规律与发挥能动性的统一方法论。"
+      },
+      "outline": [
+        {
+          "heading": "区别",
+          "text": "自然过程主要是自发的；社会活动具有人的目的、意识和实践印记。"
+        },
+        {
+          "heading": "联系",
+          "text": "自然界中存在人化自然，社会活动以自然物质和自然力为基础。"
+        },
+        {
+          "heading": "方法论",
+          "text": "既要发挥人的主观能动性，又要尊重自然界和社会发展的客观规律。"
+        }
+      ],
+      "examples": [
+        "城市、公园、水利工程是人化自然；但建设和运行都离不开土地、水、能源等自然物质条件。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "区别看自发/自觉，联系看人化自然和物质基础。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "不能把社会归为主观世界，也不能把社会发展归结为个人意志。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "自然界与人类社会既有区别又有联系，不能把人类社会归为脱离客观条件的主观世界。\n\n首先，从{{accent|区别}}看，自然过程主要表现为自发运动，社会活动则具有人的目的、意识和实践印记；但这并不意味着社会发展由个人意志任意决定。其次，从{{accent|联系}}看，实践使自然界出现人化自然，社会活动又始终以土地、水、能源等自然物质和自然力为基础。\n\n因此，人类社会仍属于客观物质世界并受客观规律制约。方法论上，既要发挥人的主观能动性，又要尊重自然界和社会发展的客观规律，不能把人的目的性误解为可以任意改造世界。",
+      "tags": [
+        "政治",
+        "马原",
+        "物质观",
+        "自然界",
+        "人类社会"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-14",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/物质观综合测验解析.md",
+        "session_id": "politics-materialism-quiz-review-20260714",
+        "created_at": "2026-07-20T15:27:18+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-20T15:27:18+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-20T15:27:18+08:00",
         "device_id": "assistant-politics"
       }
     }
   ],
-  "release_id": "413444021d89"
+  "release_id": "6a08e731e650"
 };
 })();
