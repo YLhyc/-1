@@ -115,7 +115,7 @@
     overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none;
     -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
   }
-  #view-morning-player { max-width:none; overflow:hidden; }
+  #view-morning-player { max-width:none; overflow:hidden; scrollbar-gutter:auto; }
   .app-topbar { display:flex; justify-content:space-between; align-items:center; min-height:42px; margin-bottom:18px; }
   .app-brand { font-size:16px; font-weight:750; letter-spacing:0; }
   .app-brand-stack { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
@@ -607,10 +607,30 @@
   .schedule-feedback.show { opacity:1; transform:translateX(-50%) translateY(-4px); }
   /* Player view — card UI */
   .morning-player { display: flex; flex-direction: column; height: 100vh; height:100dvh; padding-top: env(safe-area-inset-top); }
-  .morning-player-top { padding: 12px 16px; border-bottom: 1px solid #e8e8ed; }
-  .morning-player-progress { font-size: 12px; color: #86868b; margin-bottom: 4px; }
-  .morning-player-bar { height: 3px; background: #e0e0e0; border-radius: 2px; overflow: hidden; }
-  .morning-player-bar-fill { height: 100%; background: #ff9500; border-radius: 2px; }
+  .morning-player-top { flex:none; padding:0; border-bottom:1px solid rgba(92,132,145,.12); background:rgba(251,253,254,.54); }
+  .morning-player-heading {
+    height:54px; display:grid; grid-template-columns:40px 1fr 40px; align-items:center; padding:0 14px;
+    background:var(--glass); border-bottom:1px solid var(--glass-line);
+    backdrop-filter:blur(28px) saturate(155%); -webkit-backdrop-filter:blur(28px) saturate(155%);
+  }
+  .morning-player-heading-title { text-align:center; color:var(--deep); font-size:16px; line-height:1; font-weight:760; }
+  .morning-progress-panel { min-height:122px; display:grid; grid-template-columns:84px minmax(0,1fr); align-items:center; gap:17px; padding:14px 22px 15px; }
+  .morning-progress-ring {
+    --morning-progress:0%; width:78px; aspect-ratio:1; display:grid; place-items:center; position:relative; border-radius:50%;
+    background:conic-gradient(#ff9500 var(--morning-progress),rgba(7,83,106,.11) 0);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.58),0 8px 22px rgba(7,83,106,.10);
+  }
+  .morning-progress-ring::before { content:''; width:60px; aspect-ratio:1; grid-area:1/1; border-radius:50%; background:var(--surface); box-shadow:inset 0 0 0 1px rgba(92,132,145,.08); }
+  .morning-progress-value { grid-area:1/1; z-index:1; color:var(--deep); font-size:18px; line-height:1; font-weight:820; font-variant-numeric:tabular-nums; }
+  .morning-progress-copy { min-width:0; }
+  .morning-progress-kicker { margin:0 0 5px; color:var(--ocean); font-size:11px; line-height:1; font-weight:780; }
+  .morning-player-progress { margin:0; color:var(--deep); font-size:18px; line-height:1.25; font-weight:780; }
+  .morning-progress-meta { margin-top:6px; display:flex; flex-wrap:wrap; gap:5px 12px; color:var(--muted); font-size:12px; line-height:1.4; }
+  .morning-progress-meta strong { color:var(--ink); font-weight:720; font-variant-numeric:tabular-nums; }
+  .morning-progress-now { margin-top:8px; display:flex; align-items:center; gap:7px; color:#b46100; font-size:11px; font-weight:720; }
+  .morning-progress-dot { width:6px; height:6px; flex:none; border-radius:50%; background:#ff9500; box-shadow:0 0 0 4px rgba(255,149,0,.12); }
+  .morning-progress-now.paused { color:var(--muted); }
+  .morning-progress-now.paused .morning-progress-dot { background:#8aa0a8; box-shadow:0 0 0 4px rgba(95,116,125,.10); }
   .morning-card-shell { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0 16px; overflow: hidden; }
   .morning-card-stage { width: 100%; display: flex; justify-content: center; perspective: 900px; }
   .morning-player-card {
@@ -648,6 +668,18 @@
   .mc-btn-skip { font-size: 14px; width: auto; padding: 0 18px; border-radius: 12px; background: #f0f0f0; color: #8e8e93; }
   .mc-swipe-hint { text-align: center; font-size: 11px; color: #c0c0c4; margin-top: 8px; padding-bottom: 4px; }
   .mc-btn-prev:disabled, .mc-btn-next:disabled { opacity: 0.3; }
+  @media (max-height:720px) {
+    .morning-player-heading { height:48px; }
+    .morning-progress-panel { min-height:104px; padding:8px 22px 9px; }
+    .morning-card-shell { padding:6px 0 8px; }
+    .morning-player-card { min-height:46vh; max-height:55vh; padding:22px 20px; }
+    .morning-player-card .mc-step-hint { margin-bottom:8px; }
+    .morning-player-card .mc-en { font-size:32px; margin-bottom:5px; }
+    .morning-player-card .mc-cn { font-size:18px; margin-bottom:9px; }
+    .morning-player-card .mc-example { margin:8px 0 4px; padding:11px; }
+    .morning-card-controls { margin-top:12px; }
+    .mc-swipe-hint { margin-top:4px; }
+  }
   /* Summary view */
   .morning-summary { text-align: center; padding: 40px 20px; }
   .morning-summary .ms-icon { font-size: 48px; margin-bottom: 12px; }
@@ -860,7 +892,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.17 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.18 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1133,12 +1165,22 @@
 <div id="view-morning-player" class="morning-view" style="display:none;">
   <div class="morning-player">
     <div class="morning-player-top">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div class="morning-player-heading">
         <button class="morning-nav-back morning-nav-end" aria-label="结束晨听" onclick="confirmEndMorning()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-        <div class="morning-player-progress">第 <span id="mpIdx">0</span> / <span id="mpTotal">0</span> 词 · ⌛ <span id="mpElapsed">0</span>分</div>
-        <div style="width:40px;"></div>
+        <div class="morning-player-heading-title">晨听</div>
+        <div></div>
       </div>
-        <div class="morning-player-bar"><div class="morning-player-bar-fill" id="mpBar" role="progressbar" aria-label="晨听进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div>
+      <div class="morning-progress-panel" aria-label="晨听进度">
+        <div class="morning-progress-ring" id="mpProgressRing" role="progressbar" aria-label="总进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="morning-progress-value" id="mpProgressValue">0%</span>
+        </div>
+        <div class="morning-progress-copy">
+          <div class="morning-progress-kicker">今日晨听</div>
+          <div class="morning-player-progress">第 <span id="mpIdx">0</span> 个，共 <span id="mpTotal">0</span> 个</div>
+          <div class="morning-progress-meta"><span>已用 <strong id="mpElapsed">00:00</strong></span><span>约剩 <strong id="mpRemaining">--</strong></span></div>
+          <div class="morning-progress-now"><span class="morning-progress-dot"></span><span id="mpProgressNow">准备播放</span></div>
+        </div>
+      </div>
     </div>
     <div class="morning-card-shell">
       <div class="morning-card-stage">
@@ -1217,10 +1259,10 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=1.5.17"></script>
-<script src="focus-core.js?v=1.5.17"></script>
-<script src="audio-cache.js?v=1.5.17"></script>
-<script src="ui-motion.js?v=1.5.17"></script>
+<script src="review-core.js?v=1.5.18"></script>
+<script src="focus-core.js?v=1.5.18"></script>
+<script src="audio-cache.js?v=1.5.18"></script>
+<script src="ui-motion.js?v=1.5.18"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1261,8 +1303,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.17";
-var BUILD_TS = 1784949564;
+var APP_BUILD_ID = "1.5.18";
+var BUILD_TS = 1784953316;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -5614,11 +5656,7 @@ function updateMorningPlayerUI() {
   var info = morningDisplayStepInfo || getMorningStepLabels(item);
   document.getElementById('mpIdx').textContent = morningPos + 1;
   document.getElementById('mpTotal').textContent = morningQueue.length;
-  // Elapsed time
-  if (morningSessionStart) {
-    var em = Math.floor((Date.now() - morningSessionStart) / 60000);
-    document.getElementById('mpElapsed').textContent = em;
-  }
+  updateMorningTimeUI();
   document.getElementById('mpEn').textContent = item.en;
   document.getElementById('mpCn').textContent = item.cn;
   var exBox = document.getElementById('mpExampleBox');
@@ -5655,15 +5693,36 @@ function updateMorningPlayerUI() {
 }
 
 function updateMorningProgressUI() {
-  var bar = document.getElementById('mpBar');
-  if (!bar || !morningQueue.length || morningPos >= morningQueue.length) return;
+  var ring = document.getElementById('mpProgressRing');
+  var value = document.getElementById('mpProgressValue');
+  if (!ring || !value || !morningQueue.length || morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
   var info = morningDisplayStepInfo || getMorningStepLabels(item);
   var stepCount = Math.max(1, morningCurrentWordTotalSteps || info.labels.length);
   var currentWordProgress = Math.min(1, (morningCurrentWordCompletedSteps + morningCurrentSegmentProgress) / stepCount);
   var pct = Math.max(0, Math.min(100, ((morningPos + currentWordProgress) / morningQueue.length) * 100));
-  bar.style.width = pct.toFixed(1) + '%';
-  bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+  var roundedPct = Math.round(pct);
+  ring.style.setProperty('--morning-progress', pct.toFixed(1) + '%');
+  ring.setAttribute('aria-valuenow', String(roundedPct));
+  value.textContent = roundedPct + '%';
+  var now = document.getElementById('mpProgressNow');
+  if (now) {
+    var label = info.labels[Math.min(morningStep, Math.max(0, info.labels.length - 1))] || '准备播放';
+    now.textContent = morningPaused ? '已暂停' : label + ' · 播放中';
+    if (now.parentElement) now.parentElement.classList.toggle('paused', morningPaused);
+  }
+  updateMorningTimeUI();
+}
+
+function updateMorningTimeUI() {
+  if (!morningSessionStart) return;
+  var elapsedMs = Math.max(0, Date.now() - morningSessionStart);
+  var elapsedSec = Math.floor(elapsedMs / 1000);
+  var elapsed = document.getElementById('mpElapsed');
+  if (elapsed) elapsed.textContent = String(Math.floor(elapsedSec / 60)).padStart(2, '0') + ':' + String(elapsedSec % 60).padStart(2, '0');
+  var remaining = document.getElementById('mpRemaining');
+  var durationMin = morningSettings && morningSettings.durationMin ? morningSettings.durationMin : 25;
+  if (remaining) remaining.textContent = Math.max(0, Math.ceil((durationMin * 60000 - elapsedMs) / 60000)) + '分钟';
 }
 
 function updateMorningRatingUI() {
@@ -5956,10 +6015,8 @@ function startMorning() {
   if (morningElapsedTimer) clearInterval(morningElapsedTimer);
   morningElapsedTimer = setInterval(function() {
     if (!morningPlaying || morningEnded) { clearInterval(morningElapsedTimer); morningElapsedTimer = null; return; }
-    var em = Math.floor((Date.now() - morningSessionStart) / 60000);
-    var el = document.getElementById('mpElapsed');
-    if (el) el.textContent = em;
-  }, 15000);
+    updateMorningTimeUI();
+  }, 1000);
   playMorningCurrent();
 }
 
@@ -6003,6 +6060,7 @@ function toggleMorningPause() {
     morningPaused = true;
     if (btn) btn.textContent = '▶';
   }
+  updateMorningProgressUI();
 }
 
 function prevMorningWord() {
