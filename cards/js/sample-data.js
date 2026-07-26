@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "837336bdf109",
-  "content_version": "1565622ce1d4",
+  "exam_wording_version": "979b46a61309",
+  "content_version": "9d9a9d071645",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -198,6 +198,14 @@
       "title": "意识观与世界的物质统一性",
       "order": 40,
       "description": "意识的起源和本质、能动作用、人工智能边界与世界的物质统一性"
+    },
+    {
+      "id": "topic_politics_unity_opposites",
+      "subject": "politics",
+      "module": "马原",
+      "title": "对立统一规律",
+      "order": 60,
+      "description": "矛盾规律、矛盾分析法及同一性斗争性、共性个性、主次矛盾辨析"
     }
   ],
   "cards": [
@@ -4555,8 +4563,406 @@
         "updated_at": "2026-07-20T15:27:18+08:00",
         "device_id": "assistant-politics"
       }
+    },
+    {
+      "id": "card_politics_c96e47031faa537b",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_unity_opposites",
+      "order": 10,
+      "title": "对立统一规律为什么是唯物辩证法的实质和核心",
+      "prompt": "为什么说对立统一规律是唯物辩证法的实质和核心？",
+      "summary": "**对立统一规律**揭示普遍联系的根本内容和发展的内在动力，贯穿其他规律和范畴，并提供{{accent|矛盾分析方法}}这一认识和改造世界的根本方法。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先给出总判断，再从揭示内在动力、贯穿中心线索和提供根本方法三个分论点展开。"
+      },
+      "outline": [
+        {
+          "heading": "揭示内在动力",
+          "text": "它揭示事物普遍联系的根本内容和变化发展的内在动力，回答事物为什么会发展。"
+        },
+        {
+          "heading": "贯穿中心线索",
+          "text": "它贯穿量变质变规律、否定之否定规律和唯物辩证法基本范畴。"
+        },
+        {
+          "heading": "提供根本方法",
+          "text": "它提供认识世界和改造世界的根本方法，即**矛盾分析方法**。"
+        }
+      ],
+      "examples": [
+        "分析考研复习时，不能只看外部课程安排，还要看自身理解、训练和错题之间的内部矛盾。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按三点答：动力、线索、方法。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "内在动力；中心线索；矛盾分析方法。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "对立统一规律是唯物辩证法的实质和核心。第一，在揭示内在动力方面，它揭示了事物普遍联系的根本内容和变化发展的内在动力，从根本上回答了事物为什么会发展的问题。\n\n第二，在贯穿中心线索方面，它贯穿量变质变规律、否定之否定规律以及唯物辩证法基本范畴，是理解这些规律和范畴的中心线索。\n\n第三，在提供根本方法方面，它提供了认识世界和改造世界的根本方法，即**矛盾分析方法**。运用这一方法，必须具体分析事物内部矛盾、矛盾各方面及其运动条件，不能脱离矛盾抽象地谈联系和发展。因此，对立统一规律把唯物辩证法的理论内容与认识、改造世界的实践方法统一起来。",
+      "tags": [
+        "马原",
+        "对立统一规律",
+        "矛盾分析法"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-24",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/06_对立统一规律.md",
+        "session_id": "politics-2026-07-24-lesson06-unity-of-opposites",
+        "created_at": "2026-07-26T10:44:55+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-26T10:44:55+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-26T10:44:55+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_33f1c3df8f65cfed",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_unity_opposites",
+      "order": 20,
+      "title": "矛盾的同一性和斗争性关系",
+      "prompt": "矛盾的同一性和斗争性是什么关系？",
+      "summary": "同一性指对立面相互依存、相互贯通，斗争性指对立面相互排斥、相互分离。二者是==既同一又斗争==，{{danger|只能说斗争性寓于同一性之中}}。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先区分同一性和斗争性的含义，再说明辩证关系和发展作用。"
+      },
+      "outline": [
+        {
+          "heading": "同一性",
+          "text": "矛盾双方相互依存、相互贯通，并在一定条件下相互转化。"
+        },
+        {
+          "heading": "斗争性",
+          "text": "矛盾双方相互排斥、相互分离，表现为差异、竞争、制约和否定。"
+        },
+        {
+          "heading": "辩证关系",
+          "text": "同一性和斗争性相互联结、相辅相成，斗争性寓于同一性之中。"
+        },
+        {
+          "heading": "发展作用",
+          "text": "有条件的同一性和无条件的斗争性结合，构成矛盾运动，推动事物发展。"
+        }
+      ],
+      "examples": [
+        "师生关系中，双方围绕教学形成同一性，同时又因要求、反馈和调整形成斗争性。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先分别定义，再答关系。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "相互依存；相互排斥；寓于；相对和绝对。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "同一性不是没有差别，斗争性也不是只有激烈冲突。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "矛盾的同一性和斗争性是矛盾的两种基本属性。首先，同一性是指矛盾着的对立面相互依存、相互贯通的性质和趋势，包括互为存在前提以及在一定条件下相互转化。\n\n其次，斗争性是指矛盾着的对立面相互排斥、相互分离的性质和趋势，表现为双方的差异、竞争、制约和否定。\n\n再次，二者的辩证关系不是“时而同一、时而斗争”的交替关系，而是==既同一又斗争==的统一关系。没有斗争性就没有同一性，没有同一性也没有斗争性；{{danger|斗争性寓于同一性之中}}，同一性通过斗争性体现。\n\n因此，在发展作用上，同一性是有条件的、相对的，斗争性是无条件的、绝对的，二者结合构成事物的矛盾运动，共同推动事物发展。",
+      "tags": [
+        "马原",
+        "同一性",
+        "斗争性",
+        "易混辨析"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-24",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/06_对立统一规律.md",
+        "session_id": "politics-2026-07-24-lesson06-unity-of-opposites",
+        "created_at": "2026-07-26T10:44:55+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-26T10:44:55+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-26T10:44:55+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_4fc195b016ba55c4",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_unity_opposites",
+      "order": 25,
+      "title": "矛盾同一性在事物发展中的三方面作用",
+      "prompt": "矛盾的同一性在事物发展中有哪些作用？材料中怎样识别？",
+      "summary": "矛盾同一性使双方{{accent|互为存在和发展的条件}}、相互吸取有利因素，并规定相互转化的可能和趋势；材料出现同一对双方互相依存时，不要误判为共性与个性。",
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "先界定同一性，再从存在发展前提、吸取有利因素和规定转化趋势三个作用展开。"
+      },
+      "outline": [
+        {
+          "heading": "存在发展前提",
+          "text": "矛盾双方互相依存，一方的发展以另一方的存在和发展为条件。"
+        },
+        {
+          "heading": "吸取有利因素",
+          "text": "矛盾双方在相互作用中利用对方有利于自身的因素，从而获得发展。"
+        },
+        {
+          "heading": "规定转化趋势",
+          "text": "同一性规定事物向对立面转化的可能和发展趋势，但现实转化必须具备一定条件。"
+        }
+      ],
+      "examples": [
+        "供给和需求互为存在、发展的条件：没有需求，供给无从实现；新的供给也能创造新的需求。这是一对矛盾双方的同一性，不是多个同类对象之间的共性与个性。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按三个作用回答：前提、吸取、趋势。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "互为条件；吸取有利因素；转化可能和趋势。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "一对双方互为条件，优先判断同一性。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "矛盾的同一性是指矛盾着的对立面相互依存、相互贯通的性质和趋势。第一，存在发展前提作用表现为矛盾双方互为条件，一方的发展离不开另一方的存在和发展。\n\n第二，吸取有利因素作用使矛盾双方能够利用对方有利于自身的因素，并在相互作用中各自得到发展。例如，供给和需求互相依存，新的需求能够催生新的供给，新的供给也能够创造新的需求。\n\n第三，规定转化趋势作用意味着同一性规定事物向对立面转化的可能和发展趋势，但现实转化必须具备一定条件。判断材料时，若强调==同一对矛盾双方互为条件、互相促进==，应优先判断同一性的作用；只有材料讨论一般规律与具体对象的关系时，才属于共性与个性的关系。",
+      "tags": [
+        "马原",
+        "矛盾同一性",
+        "作用",
+        "错题辨析"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-25",
+        "note_path": "D:/AAA考研/政治复习助手/outputs/知识框架/对立统一规律综合测验解析.md",
+        "session_id": "politics-2026-07-25-lesson06-formal-diagnostic",
+        "created_at": "2026-07-26T10:44:55+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-26T10:44:55+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-26T10:44:55+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_a51885ec724a817f",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_unity_opposites",
+      "order": 30,
+      "title": "矛盾的普遍性和特殊性关系",
+      "prompt": "怎样理解矛盾的普遍性和特殊性及其方法论意义？",
+      "summary": "普遍性就是共性，特殊性就是个性。任何现实事物都是二者统一，**共性寓于个性之中**，方法论要求{{accent|具体问题具体分析}}。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "由概念对应进入辩证关系，再推出认识路径和方法论。"
+      },
+      "outline": [
+        {
+          "heading": "概念对应",
+          "text": "矛盾的普遍性即共性，矛盾的特殊性即个性。"
+        },
+        {
+          "heading": "辩证关系",
+          "text": "共性寓于个性之中，没有离开个性的共性，也没有离开共性的个性。"
+        },
+        {
+          "heading": "认识路径",
+          "text": "人的认识一般由个别上升到一般，再由一般回到个别。"
+        },
+        {
+          "heading": "方法论",
+          "text": "坚持具体问题具体分析，把普遍原理同具体实际结合。"
+        }
+      ],
+      "examples": [
+        "“白马非马”的错误在于用白马的个性否定马的共性，割裂了共性和个性的联系。",
+        "马克思主义中国化体现的是马克思主义基本原理同中国具体实际相结合。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "概念对应、辩证关系、方法论三步。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "共性寓于个性；具体问题具体分析。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，在概念对应上，矛盾的普遍性就是矛盾的共性，矛盾的特殊性就是矛盾的个性。\n\n其次，在辩证关系上，共性是无条件的、绝对的，个性是有条件的、相对的；任何现实事物都是共性和个性的有机统一。应当说**共性寓于个性之中**，不能说个性寓于共性之中，因为个性比共性更丰富。\n\n再次，在认识路径上，人的认识一般由个别上升到一般，再由一般回到个别，从具体事物中概括共同规律，再用一般认识指导具体实践。\n\n因此，在方法论上，要坚持{{accent|具体问题具体分析}}，把普遍原理同具体实际结合。“白马非马”割裂了白马的个性和马的共性；马克思主义中国化则体现了马克思主义基本原理同中国具体实际相结合。",
+      "tags": [
+        "马原",
+        "普遍性",
+        "特殊性",
+        "具体问题具体分析"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-24",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/06_对立统一规律.md",
+        "session_id": "politics-2026-07-24-lesson06-unity-of-opposites",
+        "created_at": "2026-07-26T10:44:55+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-26T10:44:55+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-26T10:44:55+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_7e494f5482d51907",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_unity_opposites",
+      "order": 40,
+      "title": "两点论和重点论统一",
+      "prompt": "主要矛盾、矛盾主要方面与两点论重点论怎样区分？",
+      "summary": "主要矛盾决定事物发展，矛盾的主要方面决定事物性质。方法论是==两点论和重点论统一==：既全面看主次，又突出主要矛盾和主要方面。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "先区分主要矛盾和主要方面，再说明两点论和重点论的方法论。"
+      },
+      "outline": [
+        {
+          "heading": "主要矛盾",
+          "text": "在矛盾体系中处于支配地位，对事物发展起决定作用。"
+        },
+        {
+          "heading": "主要方面",
+          "text": "在每一对矛盾中处于支配地位、起主导作用的一方，决定事物性质。"
+        },
+        {
+          "heading": "两点论",
+          "text": "既看主要矛盾和主要方面，也看次要矛盾和次要方面。"
+        },
+        {
+          "heading": "重点论",
+          "text": "着重把握主要矛盾和矛盾主要方面，抓关键、看主流。"
+        }
+      ],
+      "examples": [
+        "备考期间学习是主要矛盾，但健康和人际关系也不能完全忽视；这体现两点论和重点论统一。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先判断问发展还是问性质。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "主要矛盾管发展；主要方面管性质。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "两点论不是平均用力，重点论不是只看一点。"
+        }
+      ],
+      "exam_answer_type": "quick",
+      "exam_wording": "首先，**主要矛盾**是在矛盾体系中处于支配地位、对事物发展起决定作用的矛盾。\n\n其次，主要方面是在每一对矛盾中处于支配地位、起主导作用的一方，事物性质由主要矛盾的主要方面决定。\n\n因此，方法论上要坚持==两点论和重点论统一==：两点论要求全面看到主次矛盾和矛盾双方，重点论要求突出主要矛盾和主要方面，抓关键、看主流。",
+      "tags": [
+        "马原",
+        "主要矛盾",
+        "矛盾主要方面",
+        "两点论",
+        "重点论"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-24",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/06_对立统一规律.md",
+        "session_id": "politics-2026-07-24-lesson06-unity-of-opposites",
+        "created_at": "2026-07-26T10:44:55+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-26T10:44:55+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-26T10:44:55+08:00",
+        "device_id": "assistant-politics"
+      }
     }
   ],
-  "release_id": "6a08e731e650"
+  "release_id": "8fed58364d7a"
 };
 })();
