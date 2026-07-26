@@ -682,7 +682,8 @@
   .morning-player-card .mc-rating { flex:none; min-height:20px; font-size:10px; line-height:20px; margin-top:5px; }
   .morning-player-card .focus-action-row { flex:none; margin-top:3px; }
   .morning-player-card .mc-undo { margin-left: 8px; font-size: 12px; color: #007aff; background: none; border: none; cursor: pointer; }
-  .morning-card-controls { height:78px; flex:none; display:grid; grid-template-columns:42px 42px 58px 42px 42px; align-items:center; justify-content:center; gap:10px; margin-top:0; padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
+  .morning-card-controls { height:78px; flex:none; display:grid; grid-template-columns:42px 42px 42px 58px 42px 42px 42px; align-items:center; justify-content:center; gap:10px; margin-top:0; padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
+  .mc-control-spacer { width:42px; height:42px; pointer-events:none; }
   .mc-btn {
     width:42px; height:42px; border:none; border-radius:999px;
     font-size:21px; cursor:pointer; background:rgba(251,253,254,.74); color:var(--deep); box-shadow:0 6px 15px rgba(7,83,106,.08);
@@ -715,9 +716,15 @@
     .morning-player-card .mc-en { font-size:31px; }
     .morning-player-card .mc-cn { font-size:15px; }
     .morning-player-card .mc-example { margin-top:7px; padding:9px 11px; }
-    .morning-card-controls { height:70px; grid-template-columns:40px 40px 52px 40px 40px; gap:8px; }
+    .morning-card-controls { height:70px; grid-template-columns:40px 40px 40px 52px 40px 40px 40px; gap:8px; }
+    .mc-control-spacer { width:40px; height:40px; }
     .mc-btn { width:40px; height:40px; }
     .mc-btn-play { width:52px; height:52px; }
+  }
+  @media (max-width:350px) {
+    .morning-card-controls { grid-template-columns:36px 36px 36px 48px 36px 36px 36px; gap:4px; }
+    .mc-control-spacer, .mc-btn { width:36px; height:36px; }
+    .mc-btn-play { width:48px; height:48px; }
   }
   /* Summary view */
   .morning-summary { text-align: center; padding: 40px 20px; }
@@ -931,7 +938,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.22 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.23 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1255,11 +1262,13 @@
       </div>
       <div class="mc-swipe-hint">← 左划熟了 · 右划困难 →</div>
       <div class="morning-card-controls">
+        <span class="mc-control-spacer" aria-hidden="true"></span>
         <button class="mc-btn mc-btn-replay" aria-label="再听" onclick="replayMorningWord()">↻</button>
         <button class="mc-btn mc-btn-prev" id="mpBtnPrev" onclick="prevMorningWord()">‹</button>
         <button class="mc-btn mc-btn-play" id="mpBtnPlay" onclick="toggleMorningPause()">Ⅱ</button>
         <button class="mc-btn mc-btn-next" id="mpBtnNext" onclick="nextMorningWord()">›</button>
         <button class="mc-btn mc-btn-skip" aria-label="跳过" onclick="skipMorningWord()">跳</button>
+        <button class="mc-btn study-copy-btn" id="mpStudyCopy" data-study-word="" data-study-meaning="" aria-label="复制AI讲解提示词" title="复制AI讲解提示词"><span class="study-copy-icon" aria-hidden="true">⧉</span></button>
       </div>
     </div>
     <div class="morning-exit-scrim" id="morningExitScrim" onclick="closeMorningExitSheet()"></div>
@@ -1321,10 +1330,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=1.5.22"></script>
-<script src="focus-core.js?v=1.5.22"></script>
-<script src="audio-cache.js?v=1.5.22"></script>
-<script src="ui-motion.js?v=1.5.22"></script>
+<script src="review-core.js?v=1.5.23"></script>
+<script src="focus-core.js?v=1.5.23"></script>
+<script src="study-copy.js?v=1.5.23"></script>
+<script src="audio-cache.js?v=1.5.23"></script>
+<script src="ui-motion.js?v=1.5.23"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1343,6 +1353,7 @@ var FocusCore = window.FocusCore || {
   setStatus:function(){return null;},
   refreshButtons:function(){}
 };
+var StudyCopy = window.StudyCopy || { buttonHTML:function(){return '';}, updateButton:function(){} };
 var HONGBAOSHU = null; var HB_COUNT = 6549; var HB_LOADING = false; var HB_CBS = [];
 function fetchWithTimeout(url, options, timeoutMs) {
   var opts = options ? Object.assign({}, options) : {};
@@ -1408,8 +1419,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.22";
-var BUILD_TS = 1785036908;
+var APP_BUILD_ID = "1.5.23";
+var BUILD_TS = 1785043403;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2422,7 +2433,7 @@ function renderTodayRecite() {
   }
   if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
   var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = todayReciteShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书', tag = todayRecitePracticeOnly ? '再背练习' : (entry.kind === 'due' ? '到期复习' : '不熟词');
-  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div>' + cardExamplesMarkup(w, hidden) + '<div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button></div><div class="focus-action-row">' + FocusCore.buttonHTML(w.en,w.cn,entry.source,'今日背诵') + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + escapeHTML(entry.source) + '&quot;,&quot;' + escapeHTML(w.en) + '&quot;,&quot;' + escapeHTML(w.cn || '') + '&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
+  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div>' + cardExamplesMarkup(w, hidden) + '<div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button>' + StudyCopy.buttonHTML(w.en,w.cn,'vc-btn') + '</div><div class="focus-action-row">' + FocusCore.buttonHTML(w.en,w.cn,entry.source,'今日背诵') + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + escapeHTML(entry.source) + '&quot;,&quot;' + escapeHTML(w.en) + '&quot;,&quot;' + escapeHTML(w.cn || '') + '&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
   bindTodayReciteSwipe();
 }
 function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; var card = document.getElementById('todayReciteCard'); if (card) card.querySelectorAll('.recite-hidden').forEach(function(el) { el.classList.remove('recite-hidden'); }); haptic(8); }
@@ -2799,6 +2810,7 @@ function renderVocabCardMode() {
     + '    <button class="vc-btn" id="vcPrev" onclick="vocabCardPrev()">‹</button>'
     + '    <button class="vc-btn vc-btn-main" id="vcPlay" onclick="vocabCardTogglePlay()">▶</button>'
     + '    <button class="vc-btn" id="vcNext" onclick="vocabCardNext(true)">›</button>'
+    + StudyCopy.buttonHTML('', '', 'vc-btn', 'vcStudyCopy')
     + '  </div>'
     + '  <div class="vc-hint">左划标熟 · 右划标不熟 · 不划默认</div>'
     + '</div>';
@@ -2829,7 +2841,7 @@ function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
   var note='';
-  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div>'+note+cardExamplesMarkup(w,hidden)+'<div class="vc-meta">生词本 · 文字例句</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button></div><div class="focus-action-row">'+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵')+'<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div>'+note+cardExamplesMarkup(w,hidden)+'<div class="vc-meta">生词本 · 文字例句</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button>'+StudyCopy.buttonHTML(w.en,w.cn,'vc-btn')+'</div><div class="focus-action-row">'+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵')+'<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var card=document.getElementById('vocabCard');if(card)card.querySelectorAll('.recite-hidden').forEach(function(el){el.classList.remove('recite-hidden');});haptic(8);}
@@ -2886,6 +2898,7 @@ function updateVocabCardUI() {
   else { status.textContent = ''; }
   var focus = document.getElementById('vcFocus');
   if (focus) focus.innerHTML = FocusCore.buttonHTML(item.en,item.cn,'vocab','生词本 Unit ' + (currentUnit + 1) + ' 聆听');
+  StudyCopy.updateButton(document.getElementById('vcStudyCopy'), item.en, item.cn);
   var cnts = loadCounts('vocab');
   var entry = vocabCardCurrentEntry();
   if (!entry) return;
@@ -6110,6 +6123,7 @@ function updateMorningPlayerUI() {
   document.getElementById('mpReason').textContent = reasonLabel;
   var focus = document.getElementById('mpFocus');
   if (focus) focus.innerHTML = FocusCore.buttonHTML(item.en,item.cn,item.source === 'vocab' ? 'vocab' : 'hongbaoshu','晨听') + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + (item.source === 'vocab' ? 'vocab' : 'hongbaoshu') + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;,&quot;' + escapeHTML(item.cn || '') + '&quot;,true)">移除</button>';
+  StudyCopy.updateButton(document.getElementById('mpStudyCopy'), item.en, item.cn);
   updateMorningProgressUI();
   document.getElementById('mpBtnPrev').disabled = (morningPos <= 0);
   document.getElementById('mpBtnNext').disabled = (morningPos >= morningQueue.length - 1);
