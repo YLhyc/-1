@@ -1,5 +1,61 @@
 (function(global) {
   'use strict';
+  function sameOrder(a, b) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+  function isValid(order, length) {
+    if (!Array.isArray(order) || order.length !== length) return false;
+    var seen = Object.create(null);
+    for (var i = 0; i < order.length; i++) {
+      var value = Number(order[i]);
+      if (!Number.isInteger(value) || value < 0 || value >= length || seen[value]) return false;
+      seen[value] = true;
+    }
+    return true;
+  }
+  function create(length, randomFn, avoidOrder) {
+    length = Math.max(0, Math.floor(Number(length) || 0));
+    var order = [];
+    for (var i = 0; i < length; i++) order.push(i);
+    if (length < 2) return order;
+    var random = typeof randomFn === 'function' ? randomFn : Math.random;
+    for (var j = length - 1; j > 0; j--) {
+      var sample = Number(random());
+      if (!Number.isFinite(sample)) sample = 0;
+      sample = Math.max(0, Math.min(0.999999999999, sample));
+      var swapIndex = Math.floor(sample * (j + 1));
+      var tmp = order[j]; order[j] = order[swapIndex]; order[swapIndex] = tmp;
+    }
+    var blocked = isValid(avoidOrder, length) ? avoidOrder : order.map(function(_, index) { return index; });
+    if (sameOrder(order, blocked)) order.push(order.shift());
+    return order;
+  }
+  function reorder(items, order) {
+    if (!Array.isArray(items)) return [];
+    if (!isValid(order, items.length)) return items.slice();
+    return order.map(function(index) { return items[index]; });
+  }
+  function shuffle(items, randomFn, avoidItems) {
+    if (!Array.isArray(items) || items.length < 2) return Array.isArray(items) ? items.slice() : [];
+    var avoidOrder = null;
+    if (Array.isArray(avoidItems) && avoidItems.length === items.length) {
+      avoidOrder = avoidItems.map(function(item) { return items.indexOf(item); });
+      if (!isValid(avoidOrder, items.length)) avoidOrder = null;
+    }
+    return reorder(items, create(items.length, randomFn, avoidOrder));
+  }
+  global.WordsSessionOrder = {
+    sameOrder: sameOrder,
+    isValid: isValid,
+    create: create,
+    reorder: reorder,
+    shuffle: shuffle
+  };
+})(window);
+(function(global) {
+  'use strict';
   var animations = new WeakMap();
   var reduceMotion = global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

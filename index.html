@@ -299,11 +299,12 @@
   /* ── Nav bar ── */
   .nav-bar { position:sticky; top:0; z-index:50; display:grid; grid-template-columns:minmax(72px,1fr) minmax(0,2fr) minmax(72px,1fr); align-items:center; min-height:52px; margin:0 -16px 18px; padding:calc(16px + env(safe-area-inset-top)) 16px 8px; background:rgba(225,244,255,.84); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
   .nav-back {
-    justify-self:start; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
-    border:1px solid rgba(5,122,157,.16); border-radius:50%; background:rgba(235,249,252,.88);
-    color:#057a9d; cursor:pointer; padding:0; box-shadow:0 4px 12px rgba(5,122,157,.12);
+    justify-self:start; width:auto; min-width:72px; height:34px; display:inline-flex; align-items:center; justify-content:flex-start; gap:3px;
+    border:1px solid rgba(255,255,255,.84); border-radius:999px; background:linear-gradient(145deg,rgba(255,255,255,.87),rgba(223,241,242,.8));
+    color:#057a9d; cursor:pointer; padding:0 11px 0 8px; box-shadow:0 5px 14px rgba(22,77,89,.07),inset 0 1px #fff;
     -webkit-tap-highlight-color:transparent; transition:transform .16s var(--ease-out), background-color .16s ease;
   }
+  .nav-back span, .morning-nav-back span { font-size:11px; font-weight:760; }
   .nav-back:active { transform:scale(.92); background:rgba(208,241,246,.96); }
   .nav-back svg, .morning-nav-back svg { width:16px; height:16px; display:block; }
   .nav-title { overflow:hidden; font-size:16px; font-weight:750; text-align:center; white-space:nowrap; text-overflow:ellipsis; }
@@ -551,9 +552,9 @@
   .morning-nav { display: flex; align-items: center; padding: 12px 16px; padding-top: calc(env(safe-area-inset-top) + 12px); background: #fff; border-bottom: 1px solid #e8e8ed; position: sticky; top: 0; z-index: 10; }
   .morning-nav-title { flex: 1; text-align: center; font-size: 16px; font-weight: 700; }
   .morning-nav-back {
-    flex:0 0 32px; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
-    border:1px solid rgba(5,122,157,.16); border-radius:50%; background:rgba(235,249,252,.88);
-    color:#057a9d; cursor:pointer; padding:0; box-shadow:0 4px 12px rgba(5,122,157,.12);
+    flex:0 0 auto; width:auto; min-width:72px; height:34px; display:inline-flex; align-items:center; justify-content:flex-start; gap:3px;
+    border:1px solid rgba(255,255,255,.84); border-radius:999px; background:linear-gradient(145deg,rgba(255,255,255,.87),rgba(223,241,242,.8));
+    color:#057a9d; cursor:pointer; padding:0 11px 0 8px; box-shadow:0 5px 14px rgba(22,77,89,.07),inset 0 1px #fff;
     -webkit-tap-highlight-color:transparent; transition:transform .16s var(--ease-out), background-color .16s ease;
   }
   .morning-nav-back:active { transform:scale(.92); background:rgba(208,241,246,.96); }
@@ -592,6 +593,13 @@
   .morning-custom-duration.show { display:grid; }
   .morning-custom-duration input { width:100%; accent-color:var(--ocean); }
   .morning-custom-value { min-width:52px; color:var(--deep); font-size:13px; font-weight:800; text-align:right; }
+  .morning-ratio { margin-top:14px; padding:13px 14px 12px; border:1px solid rgba(92,132,145,.16); border-radius:8px; background:rgba(251,253,254,.7); }
+  .morning-ratio-head { display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+  .morning-ratio-title { color:var(--ink); font-size:13px; font-weight:800; }
+  .morning-ratio-value { color:var(--ocean); font-size:12px; font-weight:780; }
+  .morning-ratio input { width:100%; margin:12px 0 4px; accent-color:var(--ocean); }
+  .morning-ratio-labels { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:2px; color:var(--muted); font-size:9px; text-align:center; }
+  .morning-ratio-labels span.active { color:var(--deep); font-weight:800; }
   .morning-forecast { margin-top:12px; padding:14px; border:1px solid rgba(92,132,145,.16); border-radius:8px; background:var(--surface); }
   .morning-forecast-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
   .morning-forecast-main { color:var(--deep); font-size:21px; line-height:1; font-weight:830; font-variant-numeric:tabular-nums; }
@@ -657,12 +665,12 @@
   .morning-progress-now.paused { color:var(--muted); }
   .morning-progress-now.paused .morning-progress-dot { background:#8aa0a8; box-shadow:0 0 0 4px rgba(95,116,125,.10); }
   .morning-card-shell { flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; padding:9px 0 0; overflow:hidden; }
-  .morning-card-stage { width:100%; flex:1; min-height:0; display:flex; justify-content:center; perspective:900px; padding:0 12px; }
+  .morning-card-stage { width:100%; flex:1; min-height:0; display:flex; align-items:center; justify-content:center; perspective:900px; padding:0 12px; }
   .morning-player-card {
-    box-sizing:border-box; width:100%; max-width:520px; min-height:0; height:100%; display:flex; flex-direction:column; background:var(--surface);
-    border:1px solid rgba(92,132,145,.16); border-radius:8px;
-    padding:16px 18px 12px; text-align:center; position:relative;
-    touch-action:pan-y; overflow:hidden; transition:border-color .2s,box-shadow .2s;
+    box-sizing:border-box; width:min(92vw,460px); min-height:0; height:min(100%,470px); display:flex; flex-direction:column; background:var(--surface);
+    border:1px solid rgba(92,132,145,.16); border-radius:28px;
+    padding:26px 22px 22px; text-align:left; position:relative;
+    touch-action:none; overflow:hidden; transition:border-color .2s,box-shadow .2s;
     -webkit-user-select: none; user-select: none;
   }
   .morning-player-card::before, .morning-player-card::after { position: absolute; top: 18px; padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 800; opacity: 0; transition: opacity 0.15s; }
@@ -672,12 +680,15 @@
   .morning-player-card.swipe-left::before { opacity: 1; }
   .morning-player-card.swipe-right { border-color: rgba(255,149,0,0.38); box-shadow: 0 18px 50px rgba(255,149,0,0.20); }
   .morning-player-card.swipe-right::after { opacity: 1; }
-  .morning-player-card .mc-step-hint { flex:none; color:#e98116; font-size:10px; font-weight:800; margin-bottom:7px; }
-  .morning-player-card .mc-en { flex:none; color:var(--deep); font-size:36px; line-height:1.04; font-weight:850; margin-bottom:6px; overflow-wrap:anywhere; }
-  .morning-player-card .mc-cn { flex:none; color:var(--ink); font-size:17px; line-height:1.34; font-weight:720; margin-bottom:0; }
-  .morning-player-card .mc-example { flex:1; min-height:0; margin:10px 0 0; padding:12px 13px; border-radius:8px; background:#e6f3f5; text-align:left; display:none; overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
-  .morning-player-card .mc-example-en { color:#234b59; font-size:13px; line-height:1.48; font-weight:650; margin-bottom:5px; }
-  .morning-player-card .mc-example-cn { color:#6c8790; font-size:11px; line-height:1.48; }
+  .morning-player-card .mc-step-hint { flex:none; color:#e98116; font-size:10px; font-weight:800; margin-bottom:9px; }
+  .morning-player-card .mc-en { flex:none; color:var(--deep); font-size:44px; line-height:1.04; font-weight:850; margin-bottom:7px; overflow-wrap:anywhere; }
+  .morning-player-card .mc-cn { flex:none; color:var(--ink); font-size:19px; line-height:1.42; font-weight:720; margin-bottom:0; }
+  .morning-player-card .mc-example { flex:1; min-height:0; margin:16px 0 0; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); text-align:left; display:none; overflow:hidden; }
+  .morning-player-card .mc-example-copy { min-height:0; overflow:hidden; }
+  .morning-player-card .mc-example-en { color:#234b59; font-size:16px; line-height:1.58; font-weight:650; margin-bottom:7px; }
+  .morning-player-card .mc-example-cn { color:#6c8790; font-size:14px; line-height:1.55; }
+  .morning-player-card .mc-example-pager { display:none; grid-template-columns:88px minmax(0,1fr) 88px; align-items:center; gap:7px; margin-top:10px; }
+  .morning-player-card .mc-example-pager.show { display:grid; }
   .morning-player-card .mc-meta { flex:none; color:#82979f; font-size:9px; margin-top:8px; }
   .morning-player-card .mc-rating { flex:none; min-height:20px; font-size:10px; line-height:20px; margin-top:5px; }
   .morning-player-card .focus-action-row { flex:none; margin-top:3px; }
@@ -712,10 +723,12 @@
     .morning-progress-ring { width:54px; }
     .morning-progress-ring::before { width:41px; }
     .morning-card-shell { padding-top:6px; }
-    .morning-player-card { padding:11px 16px 9px; }
-    .morning-player-card .mc-en { font-size:31px; }
-    .morning-player-card .mc-cn { font-size:15px; }
-    .morning-player-card .mc-example { margin-top:7px; padding:9px 11px; }
+    .morning-player-card { padding:16px 16px 14px; }
+    .morning-player-card .mc-en { font-size:34px; }
+    .morning-player-card .mc-cn { font-size:16px; }
+    .morning-player-card .mc-example { margin-top:10px; padding:10px 11px; }
+    .morning-player-card .mc-example-en { font-size:15px; }
+    .morning-player-card .mc-example-cn { font-size:13px; }
     .morning-card-controls { height:70px; grid-template-columns:40px 40px 40px 52px 40px 40px 40px; gap:8px; }
     .mc-control-spacer { width:40px; height:40px; }
     .mc-btn { width:40px; height:40px; }
@@ -863,12 +876,18 @@
   .vocab-card .vc-cn { color:var(--ink); font-size:19px; line-height:1.42; font-weight:720; margin-bottom:17px; }
   .vc-cn-note { flex:none; margin:-7px 0 16px; padding:11px 12px; border-left:3px solid #56a6ba; background:#edf7f8; color:#48646b; font-size:13px; line-height:1.62; text-align:left; }
   .vc-cn-note::before { content:'语义说明'; display:block; margin-bottom:3px; color:#397f91; font-size:11px; font-weight:750; }
-  .vc-sentence-zone { min-height:0; flex:1 1 auto; margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:auto; overscroll-behavior:contain; }
+  .vc-sentence-zone { min-height:0; flex:1 1 auto; margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:hidden; }
   .vc-sentence-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; color:var(--ocean); font-size:10px; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
   .vc-example { margin:0; text-align:left; color:#234b59; font-size:14px; line-height:1.55; font-style:normal; }
   .vc-example + .vc-example { margin-top:11px; padding-top:11px; border-top:1px solid rgba(18,76,91,.12); }
   .vc-example-en { font-size:14px; line-height:1.55; font-weight:650; color:#234b59; }
   .vc-example-cn { margin-top:4px; font-size:12px; line-height:1.45; font-weight:500; color:#6c8790; }
+  .vc-example-pager { display:grid; grid-template-columns:88px minmax(0,1fr) 88px; align-items:center; gap:8px; margin-top:11px; }
+  .vc-example-page { width:auto; min-width:78px; height:34px; padding:0 9px; border:1px solid rgba(255,255,255,.84); border-radius:999px; background:linear-gradient(145deg,rgba(255,255,255,.87),rgba(223,241,242,.8)); color:var(--ocean); box-shadow:0 5px 14px rgba(22,77,89,.07),inset 0 1px #fff; display:inline-flex; align-items:center; justify-content:center; gap:3px; font-size:16px; line-height:1; }
+  .vc-example-page:last-child { justify-self:end; }
+  .vc-example-page span { font-size:10px; font-weight:760; }
+  .vc-example-page:disabled { opacity:.32; }
+  .vc-example-count { color:var(--muted); font-size:10px; font-weight:720; text-align:center; }
   .vc-sentence-empty { display:flex; align-items:center; min-height:64px; color:#78919a; font-size:12px; line-height:1.45; }
   .vocab-card .vc-meta { margin-top:auto; padding-top:15px; font-size:12px; color:#7b919b; }
   #morningHomeCard, .library-hero, .review-hero { background:var(--deep); border-radius:28px; }
@@ -938,7 +957,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 1.5.23 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.0 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1006,7 +1025,7 @@
 
 <!-- ═══════════ FOCUS LEARNING ═══════════ -->
 <div id="view-focus" class="app-page" style="display:none;">
-  <div class="nav-bar"><button class="nav-back" id="focusBackButton" aria-label="返回词库" onclick="focusBack()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="nav-title" id="focusNavTitle">精选学习</span></div>
+  <div class="nav-bar"><button class="nav-back" id="focusBackButton" aria-label="返回词库" onclick="focusBack()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button><span class="nav-title" id="focusNavTitle">精选学习</span></div>
   <div id="focusContent"></div>
 </div>
 
@@ -1020,21 +1039,21 @@
 </div>
 
 <div id="view-excluded-review" class="app-page" style="display:none;">
-  <div class="nav-bar"><button class="nav-back" aria-label="返回复习" onclick="appBackTo('review')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="nav-title">已移出复习</span></div>
+  <div class="nav-bar"><button class="nav-back" aria-label="返回复习" onclick="appBackTo('review')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button><span class="nav-title">已移出复习</span></div>
   <div class="app-page-head"><div><h1>已移出复习</h1><p>不再进入今日背诵和晨听到期池。左划一行可恢复。</p></div></div>
   <div class="review-archive-list" id="excludedReviewList"></div>
 </div>
 
 <!-- ═══════════ TODAY RECITE ═══════════ -->
 <div id="view-today-recite" class="app-page" style="display:none;">
-  <div class="nav-bar"><button class="nav-back" aria-label="返回今日" onclick="appBackTo('home')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="nav-title">今日背诵</span></div>
+  <div class="nav-bar"><button class="nav-back" aria-label="返回今日" onclick="appBackTo('home')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button><span class="nav-title">今日背诵</span></div>
   <div id="todayReciteContainer"></div>
 </div>
 
 <!-- ═══════════ UNIT SELECTOR ═══════════ -->
 <div id="view-units" class="app-page" style="display:none;">
   <div class="nav-bar">
-    <button class="nav-back" aria-label="返回词库" onclick="appBackTo('library')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="nav-back" aria-label="返回词库" onclick="appBackTo('library')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="nav-title" id="unitDictTitle"></span>
   </div>
   <div class="jump-row">
@@ -1051,7 +1070,7 @@
 <!-- ═══════════ WORD GROUPS ═══════════ -->
 <div id="view-groups" class="app-page" style="display:none;">
   <div class="nav-bar">
-    <button class="nav-back" aria-label="返回 Unit 列表" onclick="appBackTo('units')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="nav-back" aria-label="返回 Unit 列表" onclick="appBackTo('units')"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="nav-title" id="groupTitle"></span>
   </div>
   <div class="toggle-row">
@@ -1132,7 +1151,7 @@
 <!-- ═══════════ MORNING LOADING ═══════════ -->
 <div id="view-morning-loading" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="morning-nav-title">今日晨听</span>
   </div>
   <div class="morning-loading">
@@ -1144,7 +1163,7 @@
 <!-- ═══════════ MORNING ERROR ═══════════ -->
 <div id="view-morning-error" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="morning-nav-title">今日晨听</span>
   </div>
   <div class="morning-error">
@@ -1158,7 +1177,7 @@
 <!-- ═══════════ MORNING HOME ═══════════ -->
 <div id="view-morning-home" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="morning-nav-title">今日晨听</span>
   </div>
   <div class="morning-home-section">
@@ -1188,6 +1207,11 @@
         <input id="morningCustomRange" type="range" min="5" max="60" step="5" value="25" aria-label="自定义晨听分钟" oninput="setMorningDuration(Number(this.value),true)">
         <span class="morning-custom-value" id="morningCustomValue">25 分钟</span>
       </div>
+      <div class="morning-ratio">
+        <div class="morning-ratio-head"><div class="morning-ratio-title">新旧词比例</div><div class="morning-ratio-value" id="morningRatioValue">均衡 · 新词 50%</div></div>
+        <input id="morningFreshRatio" type="range" min="0" max="4" step="1" value="2" aria-label="新旧词比例" oninput="setMorningFreshRatio(Number(this.value))">
+        <div class="morning-ratio-labels" id="morningRatioLabels"><span>旧词为主</span><span>偏旧</span><span>均衡</span><span>偏新</span><span>新词为主</span></div>
+      </div>
     </section>
     <section class="morning-forecast" aria-label="晨听任务预估">
       <div class="morning-forecast-top">
@@ -1215,7 +1239,7 @@
 <!-- ═══════════ MORNING QUEUE ═══════════ -->
 <div id="view-morning-queue" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" aria-label="返回晨听" onclick="showMorningHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="morning-nav-back" aria-label="返回晨听" onclick="showMorningHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="morning-nav-title">今日队列</span>
   </div>
   <div style="padding:12px 16px;border-bottom:1px solid #e8e8ed;background:#fff;">
@@ -1239,7 +1263,7 @@
         </div>
         <div class="morning-progress-copy">
           <div class="morning-progress-kicker">今日晨听</div>
-          <div class="morning-player-progress">第 <span id="mpIdx">0</span> 个 · 共 <span id="mpTotal">0</span> 个</div>
+          <div class="morning-player-progress">已完成 <span id="mpIdx">0</span> / <span id="mpTotal">0</span> 词</div>
           <div class="morning-progress-meta"><span>已用 <strong id="mpElapsed">00:00</strong></span><span>约剩 <strong id="mpRemaining">--:--</strong></span></div>
           <div class="morning-progress-now"><span class="morning-progress-dot"></span><span id="mpProgressNow">准备播放</span></div>
         </div>
@@ -1252,8 +1276,15 @@
           <div class="mc-en" id="mpEn"></div>
           <div class="mc-cn" id="mpCn"></div>
           <div class="mc-example" id="mpExampleBox">
-            <div class="mc-example-en" id="mpExampleEn"></div>
-            <div class="mc-example-cn" id="mpExampleCn"></div>
+            <div class="mc-example-copy">
+              <div class="mc-example-en" id="mpExampleEn"></div>
+              <div class="mc-example-cn" id="mpExampleCn"></div>
+            </div>
+            <div class="mc-example-pager" id="mpExamplePager">
+              <button class="vc-example-page" id="mpExamplePrev" type="button" aria-label="上一条例句" onclick="event.stopPropagation();morningExampleStep(-1)">‹ <span>上一句</span></button>
+              <span class="vc-example-count" id="mpExampleCount">1 / 1</span>
+              <button class="vc-example-page" id="mpExampleNext" type="button" aria-label="下一条例句" onclick="event.stopPropagation();morningExampleStep(1)"><span>下一句</span> ›</button>
+            </div>
           </div>
         <div class="mc-meta"><span id="mpSource"></span> · <span id="mpReason"></span></div>
         <div class="mc-rating" id="mpRating"></div>
@@ -1285,7 +1316,7 @@
 <!-- ═══════════ MORNING SUMMARY ═══════════ -->
 <div id="view-morning-summary" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="morning-nav-title">晨听完成</span>
   </div>
   <div class="morning-summary">
@@ -1306,7 +1337,7 @@
 <!-- ═══════════ MORNING REVIEW ═══════════ -->
 <div id="view-morning-review" class="morning-view" style="display:none;">
   <div class="morning-nav">
-    <button class="morning-nav-back" aria-label="返回晨听" onclick="showMorningHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="morning-nav-back" aria-label="返回晨听" onclick="showMorningHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
     <span class="morning-nav-title">晨读回顾</span>
   </div>
   <div class="morning-review" id="morningReviewContent"></div>
@@ -1330,11 +1361,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=1.5.23"></script>
-<script src="focus-core.js?v=1.5.23"></script>
-<script src="study-copy.js?v=1.5.23"></script>
-<script src="audio-cache.js?v=1.5.23"></script>
-<script src="ui-motion.js?v=1.5.23"></script>
+<script src="review-core.js?v=2.0.0"></script>
+<script src="focus-core.js?v=2.0.0"></script>
+<script src="study-copy.js?v=2.0.0"></script>
+<script src="audio-cache.js?v=2.0.0"></script>
+<script src="ui-motion.js?v=2.0.0"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1419,8 +1450,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "1.5.23";
-var BUILD_TS = 1785043403;
+var APP_BUILD_ID = "2.0.0";
+var BUILD_TS = 1785164361;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -1999,11 +2030,14 @@ function getDueReviewItems() {
 }
 
 var LEARNING_RESUME_KEY = 'learning_resume_v1';
-function saveLearningResume(source, unitIdx, mode, itemIdx) {
+function saveLearningResume(source, unitIdx, mode, itemIdx, order) {
   if (unitIdx < 0) return;
-  localStorage.setItem(LEARNING_RESUME_KEY, JSON.stringify({
+  var payload = {
     source: source, unitIdx: unitIdx, mode: mode || 'listen', itemIdx: Math.max(0, itemIdx || 0), updatedAt: Date.now()
-  }));
+  };
+  var savedOrder = Array.isArray(order) ? order : (source === 'vocab' && vocabCardOrderUnit === unitIdx ? vocabCardOrder : null);
+  if (Array.isArray(savedOrder)) payload.order = savedOrder.slice();
+  localStorage.setItem(LEARNING_RESUME_KEY, JSON.stringify(payload));
 }
 function loadLearningResume() {
   var r = safeJsonFromStorage(LEARNING_RESUME_KEY, null);
@@ -2038,8 +2072,8 @@ function scheduleHomeDynamicRefresh() {
 function continueLearning() {
   var r = loadLearningResume(); if (!r) { showLibrary(); return; }
   if (r.source === 'hongbaoshu') { location.href = 'hb/?resume=1'; return; }
-  currentDict = 'vocab'; vocabStudyMode = r.mode === 'recite' ? 'recite' : 'listen'; showGroups(r.unitIdx);
-  vocabCardIdx = Math.max(0, r.itemIdx || 0); vocabReciteDone = false; renderGroups();
+  currentDict = 'vocab'; vocabStudyMode = r.mode === 'recite' ? 'recite' : 'listen';
+  showGroups(r.unitIdx, { resume: r });
 }
 
 function reviewSourceLabel(source) {
@@ -2304,7 +2338,7 @@ function buildTodayReciteItems(includeRated) {
   out.sort(function(a, b) { if (a.kind !== b.kind) return a.kind === 'due' ? -1 : 1; return (a.dueAt || 0) - (b.dueAt || 0); });
   return out;
 }
-function selectTodayReciteItems(pool, limit) {
+function selectTodayReciteItems(pool, limit, randomFn) {
   limit = Math.max(1, Number(limit) || 30);
   var due = pool.filter(function(item) { return item.kind === 'due'; });
   var hard = pool.filter(function(item) { return item.kind === 'hard'; });
@@ -2325,7 +2359,7 @@ function selectTodayReciteItems(pool, limit) {
   if (remaining > 0) selected = selected.concat(hard.slice(hardQuota, hardQuota + remaining));
   var selectedHard = selected.filter(function(item) { return item.kind === 'hard'; }).length;
   if (selectedHard && hard.length) saveTodayReciteRotation({ cursor: (rotation.cursor + selectedHard) % hard.length });
-  return selected;
+  return WordsSessionOrder.shuffle(selected, randomFn);
 }
 function todayRecitePoolStats(pool) {
   var out = { total: pool.length, due: 0, hard: 0 };
@@ -2487,6 +2521,13 @@ function openDueReview(source, en) {
     currentDict = 'vocab';
     showGroups(unit);
     vocabStudyMode = 'recite'; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+    var targetPosition = Math.min(localIndex, Math.max(0, vocabCardOrder.length - 1));
+    var currentPosition = vocabCardOrder.indexOf(localIndex);
+    if (currentPosition >= 0 && currentPosition !== targetPosition) {
+      var displaced = vocabCardOrder[targetPosition];
+      vocabCardOrder[targetPosition] = localIndex;
+      vocabCardOrder[currentPosition] = displaced;
+    }
     var entries = getVocabCardEntries(), cardIndex = -1;
     for (var j = 0; j < entries.length; j++) if (entries[j].localIdx === localIndex) { cardIndex = j; break; }
     if (cardIndex < 0) {
@@ -2530,10 +2571,20 @@ function showUnits(dictBack) {
   renderUnits();
 }
 
-function showGroups(unitIdx) {
+function showGroups(unitIdx, options) {
+  var opts = options || {};
   currentUnit = unitIdx;
   stopAll();
-  if (currentDict === 'vocab') { vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false; saveLearningResume('vocab', unitIdx, vocabStudyMode, 0); }
+  if (currentDict === 'vocab') {
+    var words = getUnitWords('vocab', unitIdx), resume = opts.resume;
+    var hasSavedOrder = !!(resume && resume.source === 'vocab' && resume.unitIdx === unitIdx && WordsSessionOrder.isValid(resume.order, words.length));
+    vocabCardOrder = hasSavedOrder ? resume.order.slice() : WordsSessionOrder.create(words.length);
+    vocabCardOrderUnit = unitIdx;
+    var resumeIndex = hasSavedOrder ? Number(resume.itemIdx) : (resume ? vocabCardOrder.indexOf(Math.max(0, Number(resume.itemIdx) || 0)) : 0);
+    vocabCardIdx = Math.max(0, Math.min(Number.isFinite(resumeIndex) ? resumeIndex : 0, Math.max(0, words.length - 1)));
+    vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+    saveLearningResume('vocab', unitIdx, vocabStudyMode, vocabCardIdx, vocabCardOrder);
+  }
   showView('groups');
   var w = getWords(currentDict);
   var start = unitIdx * UNIT_SIZE + 1;
@@ -2749,17 +2800,23 @@ var vocabCardTouchX = 0, vocabCardTouchY = 0, vocabCardDragging = false;
 var vocabCardStepInfo = null;
 var vocabStudyMode = localStorage.getItem('vocab_study_mode_v1') || 'listen';
 var vocabReciteShown = false, vocabReciteUndo = null, vocabReciteDone = false;
+var vocabCardOrder = [], vocabCardOrderUnit = -1;
 
 function getVocabCardEntries() {
   var words = getUnitWords('vocab', currentUnit);
+  if (vocabCardOrderUnit !== currentUnit || !WordsSessionOrder.isValid(vocabCardOrder, words.length)) {
+    vocabCardOrder = WordsSessionOrder.create(words.length);
+    vocabCardOrderUnit = currentUnit;
+  }
   var prefs = loadPrefs('vocab');
   var showHidden = document.getElementById('showHiddenToggleG') && document.getElementById('showHiddenToggleG').checked;
   var entries = [];
-  for (var i = 0; i < words.length; i++) {
-    var gw = currentUnit * UNIT_SIZE + i;
+  for (var i = 0; i < vocabCardOrder.length; i++) {
+    var localIdx = vocabCardOrder[i];
+    var gw = currentUnit * UNIT_SIZE + localIdx;
     var pref = prefs[prefKey('vocab', gw)];
     if (pref === 'hidden' && !showHidden) continue;
-    entries.push({ item: words[i], localIdx: i, pref: pref || '' });
+    entries.push({ item: words[localIdx], localIdx: localIdx, pref: pref || '' });
   }
   return entries;
 }
@@ -2775,9 +2832,23 @@ function cardExamplesMarkup(item, hidden) {
   if (!examples.length) return detail + '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
   var body = examples.map(function(example, index) {
     var translation = example.ex_cn ? '<div class="vc-example-cn' + (hidden || '') + '">' + escapeHTML(example.ex_cn) + '</div>' : '';
-    return '<p class="vc-example"><span class="vc-example-en">' + (index + 1) + '. ' + escapeHTML(example.en) + '</span>' + translation + '</p>';
+    return '<p class="vc-example"' + (index ? ' hidden' : '') + '><span class="vc-example-en">' + (index + 1) + '. ' + escapeHTML(example.en) + '</span>' + translation + '</p>';
   }).join('');
-  return detail + '<section class="vc-sentence-zone"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div>' + body + '</section>';
+  var pager = examples.length > 1 ? '<div class="vc-example-pager"><button class="vc-example-page" type="button" aria-label="上一条例句" disabled onclick="event.stopPropagation();cardExampleStep(this,-1)">‹ <span>上一句</span></button><span class="vc-example-count">1 / ' + examples.length + '</span><button class="vc-example-page" type="button" aria-label="下一条例句" onclick="event.stopPropagation();cardExampleStep(this,1)"><span>下一句</span> ›</button></div>' : '';
+  return detail + '<section class="vc-sentence-zone" data-example-index="0"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div>' + body + pager + '</section>';
+}
+function cardExampleStep(button, delta) {
+  var zone = button && button.closest ? button.closest('.vc-sentence-zone') : null;
+  if (!zone) return;
+  var examples = Array.prototype.slice.call(zone.querySelectorAll('.vc-example'));
+  var index = Math.max(0, Math.min(examples.length - 1, Number(zone.getAttribute('data-example-index')) + delta));
+  zone.setAttribute('data-example-index', String(index));
+  examples.forEach(function(example, itemIndex) { example.hidden = itemIndex !== index; });
+  var count = zone.querySelector('.vc-example-count');
+  if (count) count.textContent = (index + 1) + ' / ' + examples.length;
+  var buttons = zone.querySelectorAll('.vc-example-page');
+  if (buttons[0]) buttons[0].disabled = index === 0;
+  if (buttons[1]) buttons[1].disabled = index === examples.length - 1;
 }
 
 function renderVocabCardMode() {
@@ -3892,6 +3963,7 @@ function createLearningBackup() {
   all.review = safeJsonFromStorage(REVIEW_META_KEY, {});
   all.excluded = ReviewCore.loadExcluded();
   all.focus = FocusCore.load();
+  all.learningResume = safeJsonFromStorage(LEARNING_RESUME_KEY, null);
   all.todayRecite = {
     settings: safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30 }),
     daily: safeJsonFromStorage(TODAY_RECITE_DAILY_KEY, { days: {}, rated: {} }),
@@ -3941,7 +4013,7 @@ function validateDictBackup(name, data) {
 
 function validateLearningBackup(all) {
   if (!isPlainObject(all)) throw new Error('备份数据格式错误');
-  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded) throw new Error('没有找到可恢复的学习记录');
+  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded && !all.learningResume) throw new Error('没有找到可恢复的学习记录');
   validateDictBackup('生词本', all.vocab || {});
   validateDictBackup('红宝书', all.hongbaoshu || {});
   if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
@@ -4016,6 +4088,7 @@ function applyLearningBackup(all) {
   if (isPlainObject(all.review)) localStorage.setItem(REVIEW_META_KEY, JSON.stringify(all.review));
   if (isPlainObject(all.excluded)) localStorage.setItem(ReviewCore.EXCLUDED_KEY, JSON.stringify(all.excluded));
   if (isPlainObject(all.focus)) localStorage.setItem(FocusCore.STORAGE_KEY, JSON.stringify(all.focus));
+  if (isPlainObject(all.learningResume)) localStorage.setItem(LEARNING_RESUME_KEY, JSON.stringify(all.learningResume)); else localStorage.removeItem(LEARNING_RESUME_KEY);
   if (all.todayRecite && isPlainObject(all.todayRecite)) {
     if (isPlainObject(all.todayRecite.settings)) localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify(all.todayRecite.settings));
     if (isPlainObject(all.todayRecite.daily)) localStorage.setItem(TODAY_RECITE_DAILY_KEY, JSON.stringify(all.todayRecite.daily));
@@ -4030,6 +4103,11 @@ function applyLearningBackup(all) {
     if (isPlainObject(all.morning.daily)) localStorage.setItem(MOR_KEYS.daily, JSON.stringify(all.morning.daily));
     if (isPlainObject(all.morning.active)) localStorage.setItem(MOR_KEYS.active, JSON.stringify(all.morning.active)); else localStorage.removeItem(MOR_KEYS.active);
     if (isPlainObject(all.morning.timing)) localStorage.setItem(MOR_KEYS.timing, JSON.stringify(all.morning.timing));
+  }
+  if (all.learningResume) {
+    if (!isPlainObject(all.learningResume)) throw new Error('继续学习进度格式错误');
+    if (['vocab','hongbaoshu'].indexOf(all.learningResume.source) < 0 || !isFinite(Number(all.learningResume.unitIdx)) || Number(all.learningResume.unitIdx) < 0) throw new Error('继续学习来源或 Unit 无效');
+    if (all.learningResume.order && !Array.isArray(all.learningResume.order)) throw new Error('继续学习顺序格式错误');
   }
   FocusCore.refreshButtons();
   updateFocusLibraryCount();
@@ -4927,9 +5005,11 @@ function loadMorningSettings() {
     var s = JSON.parse(localStorage.getItem(MOR_KEYS.settings) || '{}');
     s.durationMin = Math.max(5, Math.min(60, Number(s.durationMin) || 25));
     s.mix = s.mix || { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 };
+    var savedRatioStep = Number(s.freshRatioStep);
+    s.freshRatioStep = Number.isFinite(savedRatioStep) ? Math.max(0, Math.min(4, Math.round(savedRatioStep))) : 2;
     s.staleDays = s.staleDays || 14;
     return s;
-  } catch(e) { return { durationMin: 25, mix: { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 }, staleDays: 14 }; }
+  } catch(e) { return { durationMin: 25, mix: { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 }, freshRatioStep: 2, staleDays: 14 }; }
 }
 function saveMorningSettings(obj) {
   try { localStorage.setItem(MOR_KEYS.settings, JSON.stringify(obj)); } catch(e) {}
@@ -5200,7 +5280,7 @@ function buildMorningCandidates() {
     if (Object.prototype.hasOwnProperty.call(excluded, 'vocab:' + w.en)) continue;
     candidates.push({
       source: 'vocab', key: 'vocab:' + w.en, en: w.en, cn: w.cn,
-      ex: w.ex || null, ex_cn: w.ex_cn || null,
+      ex: w.ex || null, ex_cn: w.ex_cn || null, examples: w.examples || null,
       idx: i, dict: 'vocab', reason: ''
     });
   }
@@ -5215,6 +5295,7 @@ function buildMorningCandidates() {
       if (Object.prototype.hasOwnProperty.call(excluded, 'hongbaoshu:' + w.en)) continue;
       candidates.push({
         source: 'hb', key: 'hb:' + w.en, en: w.en, cn: w.cn,
+        ex: w.ex || null, ex_cn: w.ex_cn || null, examples: w.examples || null,
         idx: i, dict: 'hongbaoshu', reason: ''
       });
     }
@@ -5268,10 +5349,14 @@ function estimateWordDurationSec(item, context) {
   return Math.max(1, sec);
 }
 
-function buildMorningQueue() {
+function buildMorningQueue(randomFn) {
   var all = buildMorningCandidates();
   morningSettings = loadMorningSettings();
-  var mix = morningSettings.mix || { due: 0.40, stale: 0.25, hard: 0.20, fresh: 0.15 };
+  var freshRatios = [0.20, 0.35, 0.50, 0.65, 0.80];
+  var freshRatio = freshRatios[morningSettings.freshRatioStep] || 0.50;
+  // Due cards retain priority; this slider apportions new words against the ordinary old-word pools.
+  var oldRatio = 1 - freshRatio;
+  var mix = { due: oldRatio * 0.40, stale: oldRatio * 0.35, hard: oldRatio * 0.25, fresh: freshRatio };
   var budgetSec = morningSettings.durationMin * 60;
   // Segment estimates already include observed loading/transition time.
   var targetSec = Math.max(60, budgetSec);
@@ -5287,22 +5372,17 @@ function buildMorningQueue() {
     }
   }
 
-  // Shuffle within each category
-  function shuffle(arr) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-    }
-    return arr;
-  }
   // Put overdue recall cards first, oldest first. The other categories remain
   // shuffled so a morning session is varied rather than mechanically ordered.
   due.sort(function(a, b) {
     if (!!a.reviewDue !== !!b.reviewDue) return a.reviewDue ? -1 : 1;
     return (a.reviewDueAt || 0) - (b.reviewDueAt || 0);
   });
-  shuffle(stale); shuffle(hard); shuffle(other);
-  // Fresh: sequential by source+idx (from cursor), not shuffled
+  stale = WordsSessionOrder.shuffle(stale, randomFn);
+  hard = WordsSessionOrder.shuffle(hard, randomFn);
+  other = WordsSessionOrder.shuffle(other, randomFn);
+  // Fresh selection still respects the source cursor; final presentation order
+  // is shuffled only after the time-budget and category quotas are fixed.
   fresh.sort(function(a, b) {
     if (a.source !== b.source) return a.source === 'vocab' ? -1 : 1;
     return a.idx - b.idx;
@@ -5358,14 +5438,7 @@ function buildMorningQueue() {
     totalSec += dur;
   }
 
-  // Shuffle within each "batch" of 8 for variety
-  for (var b = 0; b < q.length; b += 8) {
-    var end = Math.min(b + 8, q.length);
-    for (var i = end - 1; i > b; i--) {
-      var j = b + Math.floor(Math.random() * (i - b + 1));
-      var tmp = q[i]; q[i] = q[j]; q[j] = tmp;
-    }
-  }
+  q = WordsSessionOrder.shuffle(q, randomFn);
 
   morningQueue = q;
   morningQueueEstSec = totalSec;
@@ -5480,8 +5553,40 @@ function setMorningDuration(minutes, custom) {
   });
   var trigger = document.getElementById('morningCustomTrigger');
   if (trigger) trigger.classList.toggle('active', !!custom);
-  try { buildMorningQueue(); } catch(e) {}
-  showMorningHome();
+  scheduleMorningQueueRefresh();
+}
+
+function setMorningFreshRatio(step) {
+  var labels = ['旧词为主','偏旧','均衡','偏新','新词为主'];
+  var ratios = [20,35,50,65,80];
+  step = Math.max(0, Math.min(4, Math.round(Number(step) || 0)));
+  morningSettings = loadMorningSettings();
+  morningSettings.freshRatioStep = step;
+  saveMorningSettings(morningSettings);
+  var range = document.getElementById('morningFreshRatio');
+  if (range) range.value = step;
+  var value = document.getElementById('morningRatioValue');
+  if (value) value.textContent = labels[step] + ' · 新词 ' + ratios[step] + '%';
+  document.querySelectorAll('#morningRatioLabels span').forEach(function(label, index) { label.classList.toggle('active', index === step); });
+  scheduleMorningQueueRefresh();
+}
+
+var morningQueueRefreshTimer = 0;
+var morningQueueRefreshGeneration = 0;
+function scheduleMorningQueueRefresh() {
+  var generation = ++morningQueueRefreshGeneration;
+  if (morningQueueRefreshTimer) clearTimeout(morningQueueRefreshTimer);
+  var rebuild = function() {
+    if (generation !== morningQueueRefreshGeneration) return;
+    morningQueueRefreshTimer = setTimeout(function() {
+      if (generation !== morningQueueRefreshGeneration) return;
+      morningQueueRefreshTimer = 0;
+      try { buildMorningQueue(); } catch(e) {}
+      if (document.getElementById('view-morning-home').style.display !== 'none') showMorningHome();
+    }, 0);
+  };
+  if (window.requestAnimationFrame) requestAnimationFrame(function() { requestAnimationFrame(rebuild); });
+  else rebuild();
 }
 
 function toggleMorningCustomDuration() {
@@ -5592,6 +5697,14 @@ function showMorningHome() {
   var customValue = document.getElementById('morningCustomValue');
   if (range) range.value = duration;
   if (customValue) customValue.textContent = duration + ' 分钟';
+  var ratioStep = morningSettings && Number.isFinite(morningSettings.freshRatioStep) ? morningSettings.freshRatioStep : 2;
+  var ratioRange = document.getElementById('morningFreshRatio');
+  if (ratioRange) ratioRange.value = ratioStep;
+  var ratioLabels = ['旧词为主','偏旧','均衡','偏新','新词为主'];
+  var ratioValues = [20,35,50,65,80];
+  var ratioValue = document.getElementById('morningRatioValue');
+  if (ratioValue) ratioValue.textContent = ratioLabels[ratioStep] + ' · 新词 ' + ratioValues[ratioStep] + '%';
+  document.querySelectorAll('#morningRatioLabels span').forEach(function(label, index) { label.classList.toggle('active', index === ratioStep); });
   var start = document.getElementById('morningStartButton');
   if (start) start.textContent = '开始 ' + duration + ' 分钟晨听';
   var active = loadMorningActiveSession();
@@ -6091,7 +6204,7 @@ function updateMorningPlayerUI() {
   if (morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
   var info = morningDisplayStepInfo || getMorningStepLabels(item);
-  document.getElementById('mpIdx').textContent = morningPos + 1;
+  document.getElementById('mpIdx').textContent = countMorningQueueDone();
   document.getElementById('mpTotal').textContent = morningQueue.length;
   updateMorningTimeUI();
   document.getElementById('mpEn').textContent = item.en;
@@ -6100,16 +6213,25 @@ function updateMorningPlayerUI() {
   var exEn = document.getElementById('mpExampleEn');
   var exCn = document.getElementById('mpExampleCn');
   if (exBox && exEn && exCn) {
-    if (item.ex || item.ex_cn) {
+    var examples = morningExamples(item);
+    if (morningExampleWordKey !== morningPos + ':' + item.en) {
+      morningExampleWordKey = morningPos + ':' + item.en;
+      morningExampleIndex = 0;
+    }
+    if (examples.length) {
+      morningExampleIndex = Math.max(0, Math.min(examples.length - 1, morningExampleIndex));
+      var example = examples[morningExampleIndex];
       exBox.style.display = 'block';
-      exEn.textContent = item.ex || '';
-      exEn.style.display = item.ex ? 'block' : 'none';
-      exCn.textContent = item.ex_cn || '';
-      exCn.style.display = item.ex_cn ? 'block' : 'none';
+      exEn.textContent = example.en || '';
+      exEn.style.display = example.en ? 'block' : 'none';
+      exCn.textContent = example.ex_cn || '';
+      exCn.style.display = example.ex_cn ? 'block' : 'none';
+      updateMorningExamplePager(examples.length);
     } else {
       exBox.style.display = 'none';
       exEn.textContent = '';
       exCn.textContent = '';
+      updateMorningExamplePager(0);
     }
   }
   if (morningStep < info.labels.length) {
@@ -6130,16 +6252,41 @@ function updateMorningPlayerUI() {
   updateMorningRatingUI();
 }
 
+var morningExampleIndex = 0;
+var morningExampleWordKey = '';
+function morningExamples(item) {
+  var examples = Array.isArray(item && item.examples) ? item.examples.filter(function(example) {
+    return example && (example.en || example.ex_cn);
+  }) : [];
+  if (!examples.length && item && (item.ex || item.ex_cn)) examples = [{ en:item.ex || '', ex_cn:item.ex_cn || '' }];
+  return examples;
+}
+function updateMorningExamplePager(total) {
+  var pager = document.getElementById('mpExamplePager');
+  var count = document.getElementById('mpExampleCount');
+  var previous = document.getElementById('mpExamplePrev');
+  var next = document.getElementById('mpExampleNext');
+  if (pager) pager.classList.toggle('show', total > 1);
+  if (count) count.textContent = total ? (morningExampleIndex + 1) + ' / ' + total : '0 / 0';
+  if (previous) previous.disabled = morningExampleIndex <= 0;
+  if (next) next.disabled = morningExampleIndex >= total - 1;
+}
+function morningExampleStep(delta) {
+  var item = morningQueue[morningPos];
+  var examples = morningExamples(item);
+  if (examples.length < 2) return;
+  morningExampleIndex = Math.max(0, Math.min(examples.length - 1, morningExampleIndex + delta));
+  updateMorningPlayerUI();
+}
+
 function updateMorningProgressUI() {
   var ring = document.getElementById('mpProgressRing');
   var value = document.getElementById('mpProgressValue');
   if (!ring || !value || !morningQueue.length || morningPos >= morningQueue.length) return;
   var item = morningQueue[morningPos];
   var info = morningDisplayStepInfo || getMorningStepLabels(item);
-  var elapsedSec = morningElapsedMs() / 1000;
-  var remainingSec = estimateMorningRemainingSec();
-  var predictedTotal = elapsedSec + remainingSec;
-  var pct = predictedTotal > 0 ? Math.max(0, Math.min(100, elapsedSec / predictedTotal * 100)) : 100;
+  var done = countMorningQueueDone();
+  var pct = morningQueue.length ? Math.max(0, Math.min(100, done / morningQueue.length * 100)) : 100;
   var roundedPct = Math.round(pct);
   ring.style.setProperty('--morning-progress', pct.toFixed(1) + '%');
   ring.setAttribute('aria-valuenow', String(roundedPct));
@@ -6151,6 +6298,10 @@ function updateMorningProgressUI() {
     if (now.parentElement) now.parentElement.classList.toggle('paused', morningPaused);
   }
   updateMorningTimeUI();
+}
+
+function countMorningQueueDone() {
+  return morningQueue.reduce(function(total, item) { return total + (item.morningCompleted || item.morningSkipped ? 1 : 0); }, 0);
 }
 
 function updateMorningTimeUI() {
@@ -6733,6 +6884,7 @@ function bindMorningCardSwipe() {
   if (!card) return;
   WordsMotion.bindCardSwipe(card, {
     edgeReserve:22,
+    touchAction:'none',
     onLeft:function(){markMorningFamiliar();card.style.transform='';},
     onRight:function(){markMorningHard();card.style.transform='';}
   });
