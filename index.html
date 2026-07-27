@@ -938,6 +938,282 @@
     .app-topbar, .app-tabbar, .nav-bar, .today-task, .source-list, .library-card, .review-list, .nav-back, .morning-nav-back { border-color:#31515e; }
     .app-tab, .app-section-title span, .today-sub, .source-meta { color:#40545d; }
   }
+
+  /* A3 immersive glass system: structural glass, solid reading surfaces. */
+  :root {
+    --a3-glass:linear-gradient(145deg,rgba(255,255,255,.82),rgba(226,244,246,.66));
+    --a3-glass-soft:linear-gradient(145deg,rgba(255,255,255,.68),rgba(218,239,242,.52));
+    --a3-line:rgba(255,255,255,.82);
+    --a3-outline:rgba(52,111,126,.14);
+    --a3-shadow:0 16px 38px rgba(20,72,87,.11),inset 0 1px rgba(255,255,255,.88);
+    --a3-shadow-soft:0 9px 24px rgba(20,72,87,.075),inset 0 1px rgba(255,255,255,.76);
+    --a3-reading:#f8fcfd;
+    --a3-radius-xl:28px;
+    --a3-radius-lg:22px;
+    --a3-radius-md:16px;
+  }
+  body {
+    background:
+      linear-gradient(160deg,rgba(255,255,255,.34) 0%,rgba(229,243,246,.28) 38%,rgba(205,232,237,.36) 100%),
+      var(--canvas);
+  }
+  .app-topbar,.nav-bar,.morning-nav,.morning-player-top {
+    background:linear-gradient(145deg,rgba(248,253,254,.76),rgba(222,241,244,.64));
+    border-color:var(--a3-line);
+    box-shadow:0 8px 26px rgba(20,72,87,.07);
+    backdrop-filter:blur(28px) saturate(165%);
+    -webkit-backdrop-filter:blur(28px) saturate(165%);
+  }
+  .app-icon-btn,.nav-back,.morning-nav-back {
+    border:1px solid var(--a3-line);
+    background:var(--a3-glass);
+    color:var(--deep);
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .app-version {
+    border:0;
+    border-radius:999px;
+    padding:2px 0;
+    background:transparent;
+    color:#397b6b;
+  }
+  .app-tabbar {
+    border-color:var(--a3-line);
+    background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(220,239,242,.84));
+    box-shadow:0 16px 38px rgba(20,72,87,.16),inset 0 1px rgba(255,255,255,.94);
+    backdrop-filter:blur(24px) saturate(170%);
+    -webkit-backdrop-filter:blur(24px) saturate(170%);
+  }
+  .app-tab-indicator {
+    background:linear-gradient(145deg,rgba(207,238,242,.96),rgba(226,246,247,.86));
+    box-shadow:inset 0 1px rgba(255,255,255,.9),0 4px 12px rgba(22,94,109,.08);
+  }
+  .today-task,.source-list,.library-card,.review-list,.review-archive-list,
+  .home-metric,.library-hero,.review-hero,.group-card,.unit-btn,.jump-row,.toggle-row,
+  .recite-setup,.recite-summary,.morning-resume,.morning-duration-grid,
+  .morning-custom-duration,.morning-ratio,.morning-forecast,.morning-queue-section,
+  .morning-summary-stat,.morning-review-stat,.progress-summary-item,.progress-panel,
+  .sync-modal-card {
+    border:1px solid var(--a3-line);
+    background:var(--a3-glass);
+    box-shadow:var(--a3-shadow);
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+  #morningHomeCard,.today-task.recall-task,.library-hero,.review-hero {
+    color:var(--ink);
+    border-radius:var(--a3-radius-xl);
+    background:
+      linear-gradient(135deg,rgba(255,255,255,.86),rgba(205,235,240,.7) 68%,rgba(203,237,226,.68));
+    box-shadow:0 20px 46px rgba(20,72,87,.13),inset 0 1px rgba(255,255,255,.94);
+  }
+  #morningHomeCard .today-task-label,.library-hero-num,.review-hero-num { color:var(--ocean); }
+  #morningHomeCard .today-task-title,.library-hero-text,.review-hero-text { color:var(--ink); }
+  #morningHomeCard .today-task-meta { color:var(--muted); }
+  .today-task.recall-task .today-task-label { color:#28785a; }
+  .task-button,.morning-btn-primary,.morning-resume-primary,.jump-btn,.btn-play {
+    border:0;
+    background:linear-gradient(135deg,var(--ocean),var(--deep));
+    color:#fff;
+    box-shadow:0 10px 22px rgba(7,83,106,.19),inset 0 1px rgba(255,255,255,.2);
+  }
+  .today-task.recall-task .task-button {
+    background:linear-gradient(135deg,#3c9c78,#1f6c54);
+  }
+  .today-task,.source-list,.library-card,.review-list,.review-archive-list {
+    border-radius:var(--a3-radius-lg);
+  }
+  .source-row { border-color:rgba(42,94,108,.1); }
+  .source-row:active { background:rgba(220,241,244,.72); }
+  .source-mark {
+    border:1px solid rgba(255,255,255,.86);
+    border-radius:13px;
+    background:linear-gradient(145deg,#f8fdfe,#dbeff2);
+    color:var(--ocean);
+    box-shadow:0 5px 14px rgba(19,82,97,.08),inset 0 1px #fff;
+  }
+  .source-mark.green { background:linear-gradient(145deg,#f3fcf7,#dcefe5); }
+  .source-mark.amber { background:linear-gradient(145deg,#fffaf0,#f3e8d2); }
+  .home-metrics { gap:9px; }
+  .home-metric {
+    min-height:68px;
+    border-radius:var(--a3-radius-md);
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .home-actions {
+    flex-wrap:wrap;
+    gap:6px;
+    padding:5px;
+    border:1px solid var(--a3-line);
+    border-radius:18px;
+    background:rgba(238,249,250,.58);
+  }
+  .home-link {
+    min-height:36px;
+    padding:7px 10px;
+    border-radius:12px;
+    color:var(--deep);
+  }
+  .home-link:active { background:rgba(255,255,255,.72); }
+  .unit-grid { gap:10px; }
+  .unit-btn {
+    min-height:76px;
+    border-radius:18px;
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .jump-row,.toggle-row {
+    padding:8px;
+    border-radius:var(--a3-radius-md);
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .jump-input {
+    border-color:rgba(56,112,126,.14);
+    border-radius:12px;
+    background:rgba(248,252,253,.92);
+  }
+  .review-item { border-color:rgba(42,94,108,.1); }
+  .recite-setup,.recite-summary { border-radius:var(--a3-radius-xl); }
+  .recite-limit-grid {
+    padding:5px;
+    border-radius:16px;
+    background:rgba(210,234,238,.58);
+  }
+  .recite-limit {
+    border:0;
+    border-radius:12px;
+    background:transparent;
+  }
+  .recite-limit.active {
+    background:var(--a3-reading);
+    color:var(--deep);
+    box-shadow:0 4px 13px rgba(20,72,87,.1),inset 0 1px #fff;
+  }
+  .recite-summary-stat,.progress-source {
+    border:1px solid rgba(255,255,255,.78);
+    border-radius:var(--a3-radius-md);
+    background:rgba(248,252,253,.78);
+  }
+  .morning-home-section { max-width:640px; margin:0 auto; }
+  .morning-resume,.morning-ratio,.morning-forecast { border-radius:var(--a3-radius-md); }
+  .morning-duration-grid { border-radius:var(--a3-radius-md); box-shadow:var(--a3-shadow-soft); }
+  .morning-duration-btn { border-radius:12px; }
+  .morning-duration-btn.active {
+    background:var(--a3-reading);
+    box-shadow:0 4px 13px rgba(20,72,87,.1),inset 0 1px #fff;
+  }
+  .morning-custom-duration { border-radius:var(--a3-radius-md); }
+  .morning-mixbar { height:8px; border-radius:999px; }
+  .morning-btn { border-radius:15px; }
+  .morning-btn-primary { width:100%; }
+  .morning-btn-secondary,.morning-btn-outline {
+    border-color:var(--a3-line);
+    background:var(--a3-glass-soft);
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .morning-start-sticky {
+    background:linear-gradient(180deg,rgba(229,241,245,0),rgba(229,241,245,.96) 28%);
+  }
+  .morning-exit-sheet { border-radius:var(--a3-radius-xl); background:rgba(248,252,253,.96); }
+  .morning-exit-btn { border-radius:14px; }
+  .morning-player-card,.vocab-card {
+    border-color:var(--a3-line);
+    background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(239,249,250,.93));
+    box-shadow:0 20px 48px rgba(12,66,84,.13),inset 0 1px #fff;
+  }
+  .morning-player-card .mc-example,.vc-sentence-zone,.vc-cn-note {
+    background:var(--a3-reading);
+    border-color:rgba(50,104,118,.12);
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+  .progress-page { max-width:640px; margin:0 auto; }
+  .progress-summary { gap:10px; }
+  .progress-summary-item {
+    min-height:76px;
+    border-radius:18px;
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .progress-panel {
+    border-radius:var(--a3-radius-lg);
+    box-shadow:var(--a3-shadow-soft);
+  }
+  .progress-heat { border-radius:4px; background:rgba(103,131,140,.12); }
+  .progress-heat.l1 { background:#b8dde0; }
+  .progress-heat.l2 { background:#66b7bc; }
+  .progress-heat.l3 { background:#08728c; }
+  .progress-bars { border-color:rgba(42,94,108,.12); }
+  .progress-bar-stack { background:rgba(79,126,139,.12); }
+  .progress-bar-segment.listen,.progress-legend-dot.listen { background:#8fc5ce; }
+  .progress-bar-segment.morning,.progress-legend-dot.morning { background:#54aa8d; }
+  .progress-bar-segment.recite,.progress-legend-dot.recite { background:#07536a; }
+  .progress-bar-segment.other,.progress-legend-dot.other { background:#b7c7cc; }
+  .progress-priority-reason { border-radius:999px; }
+  .progress-priority-open { border-radius:12px; }
+  .sync-modal-bg {
+    background:rgba(12,42,51,.32);
+    backdrop-filter:blur(5px);
+    -webkit-backdrop-filter:blur(5px);
+  }
+  .sync-modal-card {
+    border-radius:var(--a3-radius-xl);
+    background:linear-gradient(145deg,rgba(252,254,255,.97),rgba(230,244,246,.95));
+  }
+  .sync-tab,.cache-limit-grid {
+    padding:4px;
+    border-radius:15px;
+    background:rgba(207,232,236,.62);
+  }
+  .sync-tab span,.cache-limit-btn { border-radius:11px; }
+  .sync-tab span.active,.cache-limit-btn.active {
+    border-color:transparent;
+    background:#fff;
+    color:var(--deep);
+    box-shadow:0 4px 12px rgba(20,72,87,.09);
+  }
+  .sync-textarea,.backup-textarea,.github-backup-input {
+    border-color:rgba(50,104,118,.18);
+    border-radius:13px;
+    background:rgba(248,252,253,.9);
+  }
+  .backup-status,.cache-status,.github-backup {
+    border-radius:var(--a3-radius-md);
+    background:rgba(248,252,253,.76);
+  }
+  .backup-action,.github-backup-btn,.sync-action,.sync-close,.cache-clear { border-radius:13px; }
+  @media (max-width:420px) {
+    .today-task { padding:20px; }
+    .home-actions { display:grid; grid-template-columns:1fr 1fr; }
+    .home-actions .home-link:last-child { grid-column:1/-1; }
+  }
+  @media (max-height:720px) {
+    .morning-home-section { padding-top:10px; }
+    .morning-planner { margin-top:10px; }
+    .morning-ratio { margin-top:10px; padding:10px 12px 9px; }
+    .morning-forecast { margin-top:9px; padding:11px; }
+    .progress-summary-item { min-height:68px; padding:10px 8px; }
+  }
+  @media (prefers-reduced-transparency:reduce) {
+    .today-task,.source-list,.library-card,.review-list,.review-archive-list,.home-metric,
+    .library-hero,.review-hero,.group-card,.unit-btn,.jump-row,.toggle-row,.recite-setup,
+    .recite-summary,.morning-resume,.morning-duration-grid,.morning-custom-duration,
+    .morning-ratio,.morning-forecast,.morning-queue-section,.progress-summary-item,
+    .progress-panel,.sync-modal-card {
+      background:#f6fbfc;
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+    }
+  }
+  @media (prefers-contrast:more) {
+    .today-task,.source-list,.library-card,.review-list,.review-archive-list,.home-metric,
+    .library-hero,.review-hero,.group-card,.unit-btn,.jump-row,.toggle-row,.recite-setup,
+    .recite-summary,.morning-resume,.morning-duration-grid,.morning-custom-duration,
+    .morning-ratio,.morning-forecast,.morning-queue-section,.progress-summary-item,
+    .progress-panel,.sync-modal-card {
+      background:#f8fcfd;
+      border-color:#31515e;
+    }
+    .progress-heat { outline:1px solid rgba(49,81,94,.42); }
+  }
 </style>
 </head>
 <body>
@@ -957,7 +1233,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.0 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.1 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1361,11 +1637,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.0"></script>
-<script src="focus-core.js?v=2.0.0"></script>
-<script src="study-copy.js?v=2.0.0"></script>
-<script src="audio-cache.js?v=2.0.0"></script>
-<script src="ui-motion.js?v=2.0.0"></script>
+<script src="review-core.js?v=2.0.1"></script>
+<script src="focus-core.js?v=2.0.1"></script>
+<script src="study-copy.js?v=2.0.1"></script>
+<script src="audio-cache.js?v=2.0.1"></script>
+<script src="ui-motion.js?v=2.0.1"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1450,8 +1726,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.0";
-var BUILD_TS = 1785164361;
+var APP_BUILD_ID = "2.0.1";
+var BUILD_TS = 1785175285;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
