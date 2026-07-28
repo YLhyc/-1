@@ -6,14 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Words">
-<meta name="theme-color" content="#e5f1f5">
+<meta name="theme-color" content="#cfe5eb">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/words-card-stack.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/words-180.png">
 <title>Words</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { width:100%; height:100%; overflow:hidden; background:#e5f1f5; }
+  html { width:100%; height:100%; overflow:hidden; background:#cfe5eb; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(180deg, #d9f2ff 0, #eaf7ff 260px, #f7fafc 560px); color: #10283a;
@@ -785,6 +785,11 @@
   .progress-heat.l1 { background: #b9d9ff; }
   .progress-heat.l2 { background: #72b5f8; }
   .progress-heat.l3 { background: #1683ed; }
+  .progress-heat-legend { display:flex; align-items:center; justify-content:flex-end; gap:4px; margin-top:9px; color:#86868b; font-size:8px; }
+  .progress-heat-legend i { width:12px; height:12px; border-radius:4px; background:#e8e8ed; }
+  .progress-heat-legend i.l1 { background:#b9d9ff; }
+  .progress-heat-legend i.l2 { background:#72b5f8; }
+  .progress-heat-legend i.l3 { background:#1683ed; }
   .progress-chart { height: 132px; width: 100%; display: block; }
   .progress-bars { height: 154px; display: flex; align-items: stretch; gap: 5px; padding: 8px 0 0; border-bottom: 1px solid #e2e2e7; }
   .progress-bar-col { position: relative; flex: 1; min-width: 0; height: 100%; }
@@ -830,7 +835,7 @@
     --ease-in-out:cubic-bezier(.77,0,.175,1);
     --ease-drawer:cubic-bezier(.32,.72,0,1);
     --deep:#07536a; --ocean:#057a9d; --mint:#44b892;
-    --ink:#102a36; --muted:#5f747d; --canvas:#e5f1f5;
+    --ink:#102a36; --muted:#5f747d; --canvas:#cfe5eb;
     --glass:rgba(243,251,252,.62); --glass-strong:rgba(252,254,255,.84);
     --glass-line:rgba(255,255,255,.76); --surface:#fbfdfe;
   }
@@ -941,28 +946,26 @@
 
   /* A3 immersive glass system: structural glass, solid reading surfaces. */
   :root {
-    --a3-glass:linear-gradient(145deg,rgba(255,255,255,.82),rgba(226,244,246,.66));
-    --a3-glass-soft:linear-gradient(145deg,rgba(255,255,255,.68),rgba(218,239,242,.52));
-    --a3-line:rgba(255,255,255,.82);
-    --a3-outline:rgba(52,111,126,.14);
-    --a3-shadow:0 16px 38px rgba(20,72,87,.11),inset 0 1px rgba(255,255,255,.88);
-    --a3-shadow-soft:0 9px 24px rgba(20,72,87,.075),inset 0 1px rgba(255,255,255,.76);
-    --a3-reading:#f8fcfd;
+    --a3-glass:linear-gradient(145deg,#ffffffd5,#e4f6f5bf 68%,#d7eef1ae);
+    --a3-glass-soft:linear-gradient(135deg,#ffffffc7,#d9f4f7b8);
+    --a3-line:#ffffffcf;
+    --a3-outline:#346f7e24;
+    --a3-shadow:0 16px 38px #0c425516,inset 0 1px #fff;
+    --a3-shadow-soft:0 9px 24px #14485713,inset 0 1px #ffffffc2;
+    --a3-reading:#f8fcfdef;
     --a3-radius-xl:28px;
     --a3-radius-lg:22px;
     --a3-radius-md:16px;
   }
   body {
-    background:
-      linear-gradient(160deg,rgba(255,255,255,.34) 0%,rgba(229,243,246,.28) 38%,rgba(205,232,237,.36) 100%),
-      var(--canvas);
+    background:#cfe5eb;
   }
   .app-topbar,.nav-bar,.morning-nav,.morning-player-top {
-    background:linear-gradient(145deg,rgba(248,253,254,.76),rgba(222,241,244,.64));
+    background:var(--a3-glass-soft);
     border-color:var(--a3-line);
-    box-shadow:0 8px 26px rgba(20,72,87,.07);
-    backdrop-filter:blur(28px) saturate(165%);
-    -webkit-backdrop-filter:blur(28px) saturate(165%);
+    box-shadow:0 10px 25px #174b5618;
+    backdrop-filter:blur(24px) saturate(165%);
+    -webkit-backdrop-filter:blur(24px) saturate(165%);
   }
   .app-icon-btn,.nav-back,.morning-nav-back {
     border:1px solid var(--a3-line);
@@ -979,10 +982,10 @@
   }
   .app-tabbar {
     border-color:var(--a3-line);
-    background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(220,239,242,.84));
-    box-shadow:0 16px 38px rgba(20,72,87,.16),inset 0 1px rgba(255,255,255,.94);
-    backdrop-filter:blur(24px) saturate(170%);
-    -webkit-backdrop-filter:blur(24px) saturate(170%);
+    background:var(--a3-glass-soft);
+    box-shadow:0 14px 34px #164b591f;
+    backdrop-filter:blur(26px) saturate(170%);
+    -webkit-backdrop-filter:blur(26px) saturate(170%);
   }
   .app-tab-indicator {
     background:linear-gradient(145deg,rgba(207,238,242,.96),rgba(226,246,247,.86));
@@ -1003,9 +1006,8 @@
   #morningHomeCard,.today-task.recall-task,.library-hero,.review-hero {
     color:var(--ink);
     border-radius:var(--a3-radius-xl);
-    background:
-      linear-gradient(135deg,rgba(255,255,255,.86),rgba(205,235,240,.7) 68%,rgba(203,237,226,.68));
-    box-shadow:0 20px 46px rgba(20,72,87,.13),inset 0 1px rgba(255,255,255,.94);
+    background:var(--a3-glass);
+    box-shadow:var(--a3-shadow);
   }
   #morningHomeCard .today-task-label,.library-hero-num,.review-hero-num { color:var(--ocean); }
   #morningHomeCard .today-task-title,.library-hero-text,.review-hero-text { color:var(--ink); }
@@ -1137,18 +1139,122 @@
     border-radius:var(--a3-radius-lg);
     box-shadow:var(--a3-shadow-soft);
   }
-  .progress-heat { border-radius:4px; background:rgba(103,131,140,.12); }
-  .progress-heat.l1 { background:#b8dde0; }
-  .progress-heat.l2 { background:#66b7bc; }
-  .progress-heat.l3 { background:#08728c; }
-  .progress-bars { border-color:rgba(42,94,108,.12); }
-  .progress-bar-stack { background:rgba(79,126,139,.12); }
-  .progress-bar-segment.listen,.progress-legend-dot.listen { background:#8fc5ce; }
-  .progress-bar-segment.morning,.progress-legend-dot.morning { background:#54aa8d; }
+  .progress-heat { border-radius:4px; background:#e4edef; }
+  .progress-heat.l1 { background:#b9dde1; }
+  .progress-heat.l2 { background:#64b5c2; }
+  .progress-heat.l3 { background:#08788f; }
+  .progress-heat-legend { color:var(--a3-muted); }
+  .progress-heat-legend i { background:#e4edef; }
+  .progress-heat-legend i.l1 { background:#b9dde1; }
+  .progress-heat-legend i.l2 { background:#64b5c2; }
+  .progress-heat-legend i.l3 { background:#08788f; }
+  .progress-bars { border-color:#cfe1e3; }
+  .progress-bar-stack { background:#e7eff0; }
+  .progress-bar-segment.listen,.progress-legend-dot.listen { background:#8ec6d0; }
+  .progress-bar-segment.morning,.progress-legend-dot.morning { background:#55a984; }
   .progress-bar-segment.recite,.progress-legend-dot.recite { background:#07536a; }
   .progress-bar-segment.other,.progress-legend-dot.other { background:#b7c7cc; }
   .progress-priority-reason { border-radius:999px; }
   .progress-priority-open { border-radius:12px; }
+  /* A3 approved structure: compact floating chrome and data-led task cards. */
+  .app-page {
+    max-width:430px; padding-left:16px; padding-right:16px; scrollbar-gutter:auto; scrollbar-width:none;
+    background:linear-gradient(145deg,#ccebf4 0,#e8f6f8 47%,#f7f9f8 72%,#edf6f3 100%);
+  }
+  .app-page::-webkit-scrollbar { display:none; }
+  .app-topbar {
+    position:sticky; top:calc(8px + env(safe-area-inset-top)); z-index:50;
+    min-height:76px; margin:calc(8px + env(safe-area-inset-top)) -6px 16px;
+    padding:8px 10px 8px 14px; border:1px solid var(--a3-line); border-radius:21px;
+  }
+  #view-library .app-topbar,#view-review .app-topbar,#view-progress .app-topbar {
+    min-height:54px; margin-bottom:12px; padding-top:7px; padding-bottom:7px;
+  }
+  .nav-bar {
+    top:calc(8px + env(safe-area-inset-top)); min-height:54px;
+    margin:calc(8px + env(safe-area-inset-top)) -6px 12px; padding:7px 10px;
+    border:1px solid var(--a3-line); border-radius:21px;
+    background:var(--a3-glass-soft); box-shadow:0 10px 25px #174b5618;
+    backdrop-filter:blur(24px) saturate(165%); -webkit-backdrop-filter:blur(24px) saturate(165%);
+  }
+  .app-brand-stack { gap:2px; }
+  .app-brand { color:var(--deep); font-size:18px; font-weight:820; }
+  .app-date { color:var(--muted); font-size:9px; font-weight:650; line-height:1.2; }
+  .app-version { color:var(--muted); font-size:8px; font-weight:650; }
+  .app-tools { gap:6px; }
+  .app-icon-btn { width:36px; height:36px; border-radius:50%; }
+  .today-kicker { margin:2px 2px 4px; color:var(--ocean); font-size:10px; font-weight:850; }
+  .today-title { max-width:none; margin:0 2px 2px; color:var(--deep); font-size:27px; line-height:1.12; font-weight:850; }
+  .today-sub { margin:0 2px 12px; color:var(--muted); font-size:10px; line-height:1.5; }
+  .today-task { padding:18px; }
+  .today-task + .today-task { margin-top:10px; }
+  .today-task-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .today-task-label { margin:0; color:var(--ocean); font-size:10px; font-weight:850; }
+  .today-task-title { margin:4px 0 2px; color:var(--deep); font-size:23px; line-height:1.12; font-weight:850; }
+  .today-task-meta { min-height:0; color:var(--muted); font-size:10px; line-height:1.45; }
+  .today-task-count { flex:none; min-width:48px; color:var(--deep); font-size:27px; line-height:1; font-weight:850; text-align:right; }
+  .today-task-count small { display:block; margin-top:4px; color:var(--muted); font-size:8px; font-weight:650; }
+  .today-task-mix { height:7px; margin:14px 0 10px; display:flex; overflow:hidden; border-radius:999px; background:#dce9eb; }
+  .today-task-mix i { display:block; height:100%; width:25%; transition:width .2s var(--ease-out); }
+  .today-task-mix .due { background:#057a9d; }
+  .today-task-mix .hard { background:#ff9500; }
+  .today-task-mix .stale { background:#d1a028; }
+  .today-task-mix .fresh { background:#44a47d; }
+  .task-button { height:43px; margin-top:0; border-radius:13px; }
+  #morningHomeCard .task-button { background:var(--deep); color:#fff; }
+  .today-task.recall-task .task-button { border:1px solid rgba(255,255,255,.82); background:rgba(238,248,249,.78); color:var(--ocean); box-shadow:inset 0 1px rgba(255,255,255,.9); }
+  .recall-orbit {
+    width:50px; height:50px; flex:none; border-radius:50%; display:grid; place-items:center;
+    color:#24785d; font-size:17px; line-height:1; font-weight:850;
+    background:conic-gradient(#3c9c78 var(--recall-progress,0%),rgba(84,170,141,.16) 0);
+    box-shadow:inset 0 0 0 5px rgba(248,252,253,.82);
+  }
+  .recall-orbit small { display:block; margin-top:2px; color:#4f8172; font-size:7px; font-weight:750; text-align:center; }
+  .app-section-title { margin:15px 2px 8px; align-items:flex-end; }
+  .app-section-title h2 { color:var(--ink); font-size:14px; font-weight:820; }
+  .app-section-title span { color:var(--muted); font-size:9px; font-weight:650; }
+  .source-row { min-height:61px; padding:11px 13px; gap:11px; }
+  .source-mark { width:37px; height:37px; border-radius:12px; }
+  .source-name { display:block; font-size:13px; }
+  .source-meta { margin-top:2px; font-size:9px; }
+  .source-arrow { width:24px; height:24px; display:grid; place-items:center; border-radius:10px; background:#e2f1f2; color:#3c707c; font-size:11px; }
+  .home-metrics { grid-template-columns:repeat(3,1fr); gap:0; overflow:hidden; border:1px solid var(--a3-line); border-radius:22px; background:var(--a3-glass); box-shadow:var(--a3-shadow); }
+  .home-metric { min-height:68px; padding:12px 8px; border:0; border-radius:0; border-left:1px solid rgba(42,94,108,.1); border-top:1px solid rgba(42,94,108,.1); background:transparent; box-shadow:none; }
+  .home-metric:nth-child(-n+3) { border-top:0; }
+  .home-metric:nth-child(3n+1) { border-left:0; }
+  .home-metric-num { color:var(--deep); font-size:21px; }
+  .home-metric-label { color:var(--muted); font-size:9px; }
+  .progress-page { max-width:none; padding:0 0 40px; }
+  .progress-page h3 { margin:15px 2px 8px; color:var(--ink); font-size:14px; font-weight:820; }
+  .progress-summary { gap:8px; }
+  .progress-summary-item { min-height:76px; padding:12px; border-radius:22px; text-align:left; }
+  .progress-summary-num { color:var(--deep); font-size:21px; }
+  .progress-summary-label { color:var(--muted); font-size:9px; }
+  .progress-panel { padding:14px; }
+  .progress-panel-sub { color:var(--muted); font-size:9px; line-height:1.45; }
+  .progress-heatmap { grid-template-rows:repeat(7,13px); gap:4px; }
+  .app-tabbar { left:14px; right:14px; bottom:calc(9px + env(safe-area-inset-bottom)); width:calc(100% - 28px); }
+  .morning-view {
+    max-width:430px; scrollbar-gutter:auto; scrollbar-width:none;
+    background:linear-gradient(145deg,#ccebf4 0,#e8f6f8 47%,#f7f9f8 72%,#edf6f3 100%);
+  }
+  .morning-view::-webkit-scrollbar { display:none; }
+  .morning-nav {
+    top:calc(8px + env(safe-area-inset-top)); min-height:54px;
+    margin:calc(8px + env(safe-area-inset-top)) 10px 5px; padding:7px 10px;
+    border:1px solid var(--a3-line); border-radius:21px; box-shadow:0 10px 25px #174b5618;
+  }
+  .morning-nav::after { content:''; flex:0 0 72px; }
+  .morning-nav-title { color:var(--deep); font-size:16px; }
+  .morning-home-section { max-width:none; padding:8px 16px calc(24px + env(safe-area-inset-bottom)); }
+  .morning-home-intro { margin-bottom:13px; }
+  .morning-home-kicker { font-size:10px; font-weight:850; }
+  .morning-home-title { font-size:23px; }
+  .morning-home-date { font-size:9px; }
+  .morning-planner { margin-top:15px; }
+  .morning-duration-grid { border-radius:15px; }
+  .morning-ratio,.morning-forecast,.morning-resume { border-radius:22px; }
+  .morning-forecast { margin-top:0; }
   .sync-modal-bg {
     background:rgba(12,42,51,.32);
     backdrop-filter:blur(5px);
@@ -1233,7 +1339,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.1 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.2 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1241,16 +1347,12 @@
   <p class="today-sub">先完成一段可持续的学习，再继续推进新词。</p>
   <div class="home-mode" id="homeMode"></div>
   <section class="today-task" onclick="openMorning()" id="morningHomeCard">
-    <div class="today-task-label">今日主任务</div>
-    <div class="today-task-title">25 分钟晨听</div>
-    <div class="today-task-meta" id="morningCardSub">按复习状态自动安排</div>
-    <div class="today-task-meta" id="morningCardStats"></div>
-    <button class="task-button" onclick="event.stopPropagation();openMorning()">开始今日学习</button>
+    <div class="today-task-top"><div><div class="today-task-label">今日主任务</div><div class="today-task-title" id="morningCardTitle">25 分钟晨听</div><div class="today-task-meta" id="morningCardSub">到期、困难、久未听与新词</div><div class="today-task-meta" id="morningCardStats"></div></div><div class="today-task-count"><span id="morningCardCount">—</span><small>预计词数</small></div></div>
+    <div class="today-task-mix" aria-label="晨听任务构成"><i class="due" id="morningCardDueMix"></i><i class="hard" id="morningCardHardMix"></i><i class="stale" id="morningCardStaleMix"></i><i class="fresh" id="morningCardFreshMix"></i></div>
+    <button class="task-button" id="morningCardButton" onclick="event.stopPropagation();openMorning()">开始今日学习</button>
   </section>
   <section class="today-task recall-task" onclick="openTodayRecite()" id="todayReciteHomeCard">
-    <div class="today-task-label">主动回忆</div>
-    <div class="today-task-title">今日背诵</div>
-    <div class="today-task-meta" id="todayReciteCardSub">跨词库整理今天该背的词</div>
+    <div class="today-task-top"><div><div class="today-task-label">主动回忆</div><div class="today-task-title">今日背诵</div><div class="today-task-meta" id="todayReciteCardSub">跨词库整理今天该背的词</div></div><div class="recall-orbit" id="todayReciteOrbit"><span id="todayReciteCardCount">0<small>待背</small></span></div></div>
     <button class="task-button" id="todayReciteCardButton" onclick="event.stopPropagation();openTodayRecite()">开始背诵</button>
   </section>
   <div class="app-section-title"><h2>继续学习</h2><span>上次位置</span></div>
@@ -1261,9 +1363,6 @@
   <div class="source-list">
     <button class="source-row" onclick="openDict('vocab')">
       <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">247 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
-    </button>
-    <button class="source-row" onclick="openRedBook()">
-      <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · <span id="statHbDone">从 Unit 开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="location.href='uf/'">
       <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
@@ -1286,17 +1385,19 @@
 
 <!-- ═══════════ LIBRARY ═══════════ -->
 <div id="view-library" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand">词库</div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
-  <div class="app-page-head"><div><h1>你的词库</h1><p>按来源推进，按掌握程度复习。</p></div></div>
-  <div class="library-hero"><div class="library-hero-num">247 <span style="font-size:15px;font-weight:650">个生词</span></div><div class="library-hero-text">来自真题阅读中的生词与短语</div></div>
-  <div class="library-card">
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">词库</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="source-list">
     <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow">›</span></button>
     <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和背诵</span></span><span class="source-arrow">›</span></button>
     <button class="source-row" onclick="showFocus()"><span class="source-mark amber">★</span><span class="source-main"><span class="source-name">精选学习</span><span class="source-meta"><span id="libraryFocusCount">0词</span> · 深入辨义与复测</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="location.href='wordbank/'"><span class="source-mark">固</span><span class="source-main"><span class="source-name">固定搭配</span><span class="source-meta">单词本 · 分组学习</span></span><span class="source-arrow">›</span></button>
   </div>
-  <div class="app-section-title"><h2>复习池</h2><span>从难词回收</span></div>
-  <div class="library-card"><button class="source-row" onclick="showReview()"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow">›</span></button></div>
+  <div class="app-section-title"><h2>复习入口</h2></div>
+  <div class="source-list">
+    <button class="source-row" onclick="showReview()"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和主动背诵</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewLibraryCount">0词</span> · 左划恢复</span></span><span class="source-arrow">›</span></button>
+  </div>
 </div>
 
 <!-- ═══════════ FOCUS LEARNING ═══════════ -->
@@ -1307,11 +1408,12 @@
 
 <!-- ═══════════ REVIEW ═══════════ -->
 <div id="view-review" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand">复习</div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
-  <div class="app-page-head"><div><h1>到期复习</h1><p>按照你的上次评分安排下一次回顾。</p></div></div>
-  <div class="review-hero"><div class="review-hero-num" id="reviewDueCount">0</div><div class="review-hero-text">个单词需要回顾</div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">复习</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <section class="today-task"><div class="today-task-count" style="min-width:0;text-align:left"><span id="reviewDueCount">0</span><small>个单词需要回顾</small></div><button class="task-button" onclick="openTodayRecite()" style="margin-top:13px">开始今日背诵</button></section>
+  <div class="app-section-title"><h2>优先复习</h2></div>
   <div class="review-list" id="reviewList"></div>
-  <div class="library-card"><button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewCount">0词</span> · 左划可恢复</span></span><span class="source-arrow">›</span></button></div>
+  <div class="app-section-title"><h2>管理</h2></div>
+  <div class="source-list"><button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewCount">0词</span> · 左划可恢复</span></span><span class="source-arrow">›</span></button></div>
 </div>
 
 <div id="view-excluded-review" class="app-page" style="display:none;">
@@ -1428,7 +1530,7 @@
 <div id="view-morning-loading" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
-    <span class="morning-nav-title">今日晨听</span>
+    <span class="morning-nav-title">晨听设置</span>
   </div>
   <div class="morning-loading">
     <div class="spinner"></div>
@@ -1454,7 +1556,7 @@
 <div id="view-morning-home" class="morning-view" style="display:none;">
   <div class="morning-nav">
     <button class="morning-nav-back" aria-label="返回首页" onclick="showHome()"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>返回</span></button>
-    <span class="morning-nav-title">今日晨听</span>
+    <span class="morning-nav-title">晨听设置</span>
   </div>
   <div class="morning-home-section">
     <div class="morning-home-intro">
@@ -1489,6 +1591,7 @@
         <div class="morning-ratio-labels" id="morningRatioLabels"><span>旧词为主</span><span>偏旧</span><span>均衡</span><span>偏新</span><span>新词为主</span></div>
       </div>
     </section>
+    <div class="morning-planner-head" style="margin-top:15px;"><div class="morning-planner-title">任务预估</div></div>
     <section class="morning-forecast" aria-label="晨听任务预估">
       <div class="morning-forecast-top">
         <div class="morning-forecast-main"><span id="mhTotal">0</span> <small>词</small></div>
@@ -1621,8 +1724,7 @@
 
 <!-- ═══════════ LEARNING PROGRESS ═══════════ -->
 <div id="view-progress" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand">进度</div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
-  <div class="app-page-head"><div><h1>学习进度</h1><p>稳定复习，比连续打卡更重要。</p></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">进度</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
   <div class="progress-page" id="progressContent"></div>
 </div>
 
@@ -1637,11 +1739,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.1"></script>
-<script src="focus-core.js?v=2.0.1"></script>
-<script src="study-copy.js?v=2.0.1"></script>
-<script src="audio-cache.js?v=2.0.1"></script>
-<script src="ui-motion.js?v=2.0.1"></script>
+<script src="review-core.js?v=2.0.2"></script>
+<script src="focus-core.js?v=2.0.2"></script>
+<script src="study-copy.js?v=2.0.2"></script>
+<script src="audio-cache.js?v=2.0.2"></script>
+<script src="ui-motion.js?v=2.0.2"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1726,8 +1828,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.1";
-var BUILD_TS = 1785175285;
+var APP_BUILD_ID = "2.0.2";
+var BUILD_TS = 1785208660;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2192,6 +2294,7 @@ function showLibrary() {
   currentUnit = -1;
   showView('library');
   updateFocusLibraryCount();
+  updateExcludedReviewCount();
 }
 
 var focusFilter = 'all';
@@ -2331,6 +2434,14 @@ function renderResumeCard() {
 }
 var homeRefreshTimer = 0;
 function refreshHomeDynamicUI() {
+  var appTodayDate = document.getElementById('appTodayDate');
+  if (appTodayDate) {
+    var now = new Date();
+    appTodayDate.textContent = '今日 · ' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+    document.querySelectorAll('.appCurrentDate').forEach(function(node) {
+      node.textContent = (now.getMonth() + 1) + '月' + now.getDate() + '日';
+    });
+  }
   renderResumeCard();
   updateTodayReciteCard();
   if (typeof updateMorningCard === 'function') updateMorningCard();
@@ -2411,6 +2522,8 @@ function archiveReviewFromButton(button) {
 function updateExcludedReviewCount() {
   var count = Object.keys(ReviewCore.loadExcluded()).length, el = document.getElementById('excludedReviewCount');
   if (el) el.textContent = count + '词';
+  var libraryEl = document.getElementById('excludedReviewLibraryCount');
+  if (libraryEl) libraryEl.textContent = count + '词';
 }
 function showExcludedReview() {
   stopAll();
@@ -2665,10 +2778,14 @@ function countHardReciteItems() {
 function updateTodayReciteCard() {
   var el = document.getElementById('todayReciteCardSub'); if (!el) return;
   var button = document.getElementById('todayReciteCardButton');
+  var count = document.getElementById('todayReciteCardCount');
+  var orbit = document.getElementById('todayReciteOrbit');
   var active = readTodayReciteSession();
   if (active) {
     var completed = Number(active.stats && active.stats.familiar || 0) + Number(active.stats && active.stats.hard || 0);
     el.textContent = '继续上次：已完成 ' + completed + ' / ' + active.items.length + ' 词';
+    if (count) count.innerHTML = Math.max(0, active.items.length - completed) + '<small>待背</small>';
+    if (orbit) orbit.style.setProperty('--recall-progress', Math.round(completed / Math.max(1, active.items.length) * 100) + '%');
     if (button) button.textContent = '继续背诵';
     return;
   }
@@ -2676,6 +2793,9 @@ function updateTodayReciteCard() {
   var due = getDueReviewItems(), hard = countHardReciteItems(), day = getTodayReciteDayStats();
   var base = '到期 ' + due.length + ' 词 · 不熟 ' + hard + ' 词';
   el.textContent = day.completed ? '今天已背 ' + day.completed + ' 词 · ' + base : base;
+  var pending = HONGBAOSHU ? buildTodayReciteItems(false).length : Math.max(due.length, hard);
+  if (count) count.innerHTML = pending + '<small>待背</small>';
+  if (orbit) orbit.style.setProperty('--recall-progress', day.completed ? Math.min(100, Math.round(day.completed / Math.max(1, day.completed + pending) * 100)) + '%' : '0%');
 }
 function openTodayRecite() {
   var c = document.getElementById('todayReciteContainer');
@@ -4841,10 +4961,10 @@ function progressLineSvg(days) {
   }
   var area = '0,92 ' + points.join(' ') + ' 100,92';
   return '<svg class="progress-chart" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="近30日累计学习活动">'
-    + '<line x1="0" y1="92" x2="100" y2="92" stroke="#e2e2e7" stroke-width="1"/>'
-    + '<line x1="0" y1="52" x2="100" y2="52" stroke="#ededf1" stroke-width="1"/>'
-    + '<polygon points="' + area + '" fill="#1683ed" opacity="0.14"/>'
-    + '<polyline points="' + points.join(' ') + '" fill="none" stroke="#1683ed" stroke-width="2.5" vector-effect="non-scaling-stroke"/>'
+    + '<line x1="0" y1="92" x2="100" y2="92" stroke="#cfe1e3" stroke-width="1"/>'
+    + '<line x1="0" y1="52" x2="100" y2="52" stroke="#dce9eb" stroke-width="1"/>'
+    + '<polygon points="' + area + '" fill="#168da4" opacity="0.14"/>'
+    + '<polyline points="' + points.join(' ') + '" fill="none" stroke="#087d94" stroke-width="2.5" vector-effect="non-scaling-stroke"/>'
     + '</svg>';
 }
 
@@ -4863,13 +4983,70 @@ function progressBarSegments(day) {
   return html;
 }
 
+function progressHeatThresholds(values) {
+  var positive = (values || []).map(function(value) {
+    return Math.max(0, Math.round(Number(value) || 0));
+  }).filter(function(value) {
+    return value > 0;
+  }).sort(function(a, b) {
+    return a - b;
+  });
+  if (!positive.length) {
+    return { lowMax: 1, midMax: 2, hasData: false };
+  }
+  var max = positive[positive.length - 1];
+  var distinct = positive.filter(function(value, index) {
+    return index === 0 || value !== positive[index - 1];
+  });
+  var lowMax;
+  var midMax;
+  if (positive.length < 3 || distinct.length < 3) {
+    lowMax = Math.max(1, Math.floor(max / 3));
+    midMax = Math.max(lowMax + 1, Math.floor(max * 2 / 3));
+    if (max >= 3) {
+      midMax = Math.min(max - 1, midMax);
+      lowMax = Math.min(lowMax, midMax - 1);
+    }
+  } else {
+    lowMax = positive[Math.floor((positive.length - 1) * 0.33)];
+    midMax = positive[Math.floor((positive.length - 1) * 0.67)];
+    lowMax = Math.max(1, Math.min(max - 2, lowMax));
+    midMax = Math.max(lowMax + 1, Math.min(max - 1, midMax));
+    if (midMax <= lowMax) {
+      for (var i = 0; i < distinct.length; i++) {
+        if (distinct[i] > lowMax && distinct[i] < max) {
+          midMax = distinct[i];
+          break;
+        }
+      }
+    }
+  }
+  return { lowMax: lowMax, midMax: midMax, hasData: true };
+}
+
+function progressHeatLevel(total, thresholds) {
+  total = Math.max(0, Number(total) || 0);
+  if (!total) return '';
+  if (total <= thresholds.lowMax) return 'l1';
+  if (total <= thresholds.midMax) return 'l2';
+  return 'l3';
+}
+
+function progressHeatLegend(thresholds) {
+  var note = thresholds.hasData
+    ? '本设备动态界限：低 1–' + thresholds.lowMax + ' 次，中 ' + (thresholds.lowMax + 1) + '–' + thresholds.midMax + ' 次，高 ' + (thresholds.midMax + 1) + ' 次以上'
+    : '最近 12 周暂无学习活动；产生记录后将按本设备数据自动分层';
+  return '<div class="progress-heat-legend" aria-label="学习任务量颜色图例"><span>少</span><i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><span>多</span></div>'
+    + '<div class="progress-panel-sub">' + note + '</div>';
+}
+
 function progressPriorityMarkup(items) {
   if (!items.length) return '';
   var rows = items.map(function(item) {
     var reasons = item.reasons.map(function(reason) { return '<span class="progress-priority-reason">' + escapeHTML(reason) + '</span>'; }).join('');
     return '<div class="progress-priority-row"><div><button class="progress-priority-word" onclick="openDueReview(&quot;' + escapeHTML(item.source) + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;)">' + escapeHTML(item.en) + '</button><span class="progress-priority-cn">' + escapeHTML(item.cn) + '</span><div class="progress-priority-reasons">' + reasons + '</div></div><div class="progress-priority-actions"><button class="progress-priority-open" onclick="openDueReview(&quot;' + escapeHTML(item.source) + '&quot;,&quot;' + escapeHTML(item.en) + '&quot;)">复习</button>' + FocusCore.buttonHTML(item.en, item.cn, item.source, '学习诊断优先加强', { compact: true }) + '</div></div>';
   }).join('');
-  return '<h3>优先加强词</h3><div class="progress-panel"><div class="progress-priority-list">' + rows + '</div></div>';
+  return '<div class="app-section-title" aria-label="优先加强词"><h2>优先加强</h2></div><div class="progress-panel"><div class="progress-priority-list">' + rows + '</div></div>';
 }
 
 function showProgress() {
@@ -4913,12 +5090,18 @@ function showProgress() {
   var maxRecent = 1;
   for (var r = 0; r < recent.length; r++) maxRecent = Math.max(maxRecent, recent[r].total);
   var chartMaxHeightPct = 64;
-  var heat = '';
+  var heatDays = [];
   for (var h = 83; h >= 0; h--) {
     var heatDay = progressDayAt(h);
     var heatStat = progressActivityForDay(activity, heatDay);
-    var level = heatStat.total >= 10 ? 'l3' : heatStat.total >= 4 ? 'l2' : heatStat.total > 0 ? 'l1' : '';
-    heat += '<span class="progress-heat ' + level + '" title="' + heatDay + '：' + heatStat.total + ' 次学习活动"></span>';
+    heatDays.push({ day: heatDay, total: heatStat.total });
+  }
+  var heatThresholds = progressHeatThresholds(heatDays.map(function(item) { return item.total; }));
+  var heat = '';
+  for (var hd = 0; hd < heatDays.length; hd++) {
+    var heatItem = heatDays[hd];
+    var level = progressHeatLevel(heatItem.total, heatThresholds);
+    heat += '<span class="progress-heat ' + level + '" title="' + heatItem.day + '：' + heatItem.total + ' 次学习活动"></span>';
   }
   var bars = '';
   for (var b = 0; b < recent.length; b++) {
@@ -4939,11 +5122,11 @@ function showProgress() {
   html += '<div class="progress-summary-item"><div class="progress-summary-num">' + today.total + '</div><div class="progress-summary-label">今日学习活动</div></div>';
   html += '<div class="progress-summary-item"><div class="progress-summary-num">' + activityTotals.total + '</div><div class="progress-summary-label">近90日学习活动</div></div>';
   html += '</div>';
-  html += '<h3>学习活动</h3><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div><div class="progress-panel-sub">最近 12 周 · 颜色越深表示当天学习活动越多</div></div>';
-  html += '<h3>主动回忆</h3><div class="progress-panel"><div class="recall-quality-grid"><div class="recall-quality-item"><div class="recall-quality-num">' + recall7.total + '</div><div class="recall-quality-label">近7日主动评分</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + (recallRate === null ? '—' : recallRate + '%') + '</div><div class="recall-quality-label">自评熟悉率</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + (delayedRate === null ? '—' : delayedRate + '%') + '</div><div class="recall-quality-label">到期复测熟悉率</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + recall7.practice + '</div><div class="recall-quality-label">练习轮评分</div></div></div><div class="progress-panel-sub">到期复测只统计间隔后再次评分；练习轮不计入该比率。</div></div>';
-  html += '<h3>近30日累计学习活动</h3><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次学习活动</div></div>';
-  html += '<h3>每日学习活动</h3><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-activity-legend"><span class="progress-legend-item"><i class="progress-legend-dot listen"></i>聆听</span><span class="progress-legend-item"><i class="progress-legend-dot morning"></i>晨听完成</span><span class="progress-legend-item"><i class="progress-legend-dot recite"></i>主动背诵</span>' + (activityTotals.other ? '<span class="progress-legend-item"><i class="progress-legend-dot other"></i>历史未分类</span>' : '') + '</div><div class="progress-panel-sub">每日总活动 · 今日显示为最深边框</div></div>';
-  html += '<h3>各词库累计聆听</h3><div class="progress-source-grid">';
+  html += '<div class="app-section-title"><h2>学习活动</h2><span>最近 12 周</span></div><div class="progress-panel"><div class="progress-heatmap">' + heat + '</div>' + progressHeatLegend(heatThresholds) + '</div>';
+  html += '<div class="app-section-title"><h2>主动回忆</h2><span>近 7 日</span></div><div class="progress-panel"><div class="recall-quality-grid"><div class="recall-quality-item"><div class="recall-quality-num">' + recall7.total + '</div><div class="recall-quality-label">近7日主动评分</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + (recallRate === null ? '—' : recallRate + '%') + '</div><div class="recall-quality-label">自评熟悉率</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + (delayedRate === null ? '—' : delayedRate + '%') + '</div><div class="recall-quality-label">到期复测熟悉率</div></div><div class="recall-quality-item"><div class="recall-quality-num">' + recall7.practice + '</div><div class="recall-quality-label">练习轮评分</div></div></div><div class="progress-panel-sub">到期复测只统计间隔后再次评分；练习轮不计入该比率。</div></div>';
+  html += '<div class="app-section-title"><h2>近 30 日累计学习活动</h2></div><div class="progress-panel">' + progressLineSvg(days) + '<div class="progress-panel-sub">近30日累计 ' + running + ' 次学习活动</div></div>';
+  html += '<div class="app-section-title"><h2>每日学习活动</h2><span>最近 14 天</span></div><div class="progress-panel"><div class="progress-bars">' + bars + '</div><div class="progress-activity-legend"><span class="progress-legend-item"><i class="progress-legend-dot listen"></i>聆听</span><span class="progress-legend-item"><i class="progress-legend-dot morning"></i>晨听完成</span><span class="progress-legend-item"><i class="progress-legend-dot recite"></i>主动背诵</span>' + (activityTotals.other ? '<span class="progress-legend-item"><i class="progress-legend-dot other"></i>历史未分类</span>' : '') + '</div><div class="progress-panel-sub">柱高按最近 14 天最大任务量缩放，今天用深色描边标出。</div></div>';
+  html += '<div class="app-section-title"><h2>各词库累计聆听</h2></div><div class="progress-source-grid">';
   html += '<div class="progress-source"><div class="progress-source-num">' + legacyTotals.vocab + '</div><div class="progress-source-label">生词本</div></div>';
   html += '<div class="progress-source"><div class="progress-source-num">' + legacyTotals.hb + '</div><div class="progress-source-label">红宝书</div></div>';
   html += '<div class="progress-source"><div class="progress-source-num">' + legacyTotals.uf + '</div><div class="progress-source-label">不熟词</div></div></div>';
@@ -5829,6 +6012,10 @@ function setMorningDuration(minutes, custom) {
   });
   var trigger = document.getElementById('morningCustomTrigger');
   if (trigger) trigger.classList.toggle('active', !!custom);
+  var start = document.getElementById('morningStartButton');
+  if (start) start.textContent = '开始 ' + minutes + ' 分钟晨听';
+  var homeTitle = document.getElementById('morningCardTitle');
+  if (homeTitle) homeTitle.textContent = minutes + ' 分钟晨听';
   scheduleMorningQueueRefresh();
 }
 
@@ -6063,22 +6250,89 @@ function toggleMQGroup(el) {
 }
 
 // ── Homepage card ──
+var morningHomeEstimateLoading = false;
 function updateMorningCard() {
   var el = document.getElementById('morningCardStats');
   if (!el) return;
+  var duration = morningSettings && morningSettings.durationMin ? morningSettings.durationMin : 25;
+  var title = document.getElementById('morningCardTitle');
+  var sub = document.getElementById('morningCardSub');
+  var count = document.getElementById('morningCardCount');
+  var button = document.getElementById('morningCardButton');
+  if (title) title.textContent = duration + ' 分钟晨听';
+  if (sub) sub.textContent = '到期、困难、久未听与新词';
   try {
+    var active = loadMorningActiveSession();
+    if (active && Array.isArray(active.queue)) {
+      var remaining = Math.max(0, active.queue.length - (Number(active.completed) || 0));
+      if (count) count.textContent = remaining;
+      if (button) button.textContent = '继续晨听';
+      el.textContent = '已完成 ' + (Number(active.completed) || 0) + ' / ' + active.queue.length + ' 词';
+      updateMorningCardMix(active.queue);
+      return;
+    }
+    if (morningQueue.length) {
+      var stats = getMorningStats();
+      if (count) count.textContent = stats.total;
+      if (button) button.textContent = '开始今日学习';
+      updateMorningCardMix(morningQueue);
+      el.textContent = '';
+      return;
+    }
+    if (Array.isArray(HONGBAOSHU)) {
+      if (count) count.textContent = '0';
+      if (button) button.textContent = '查看今日安排';
+      updateMorningCardMix([]);
+      el.textContent = '今天暂无可安排的单词';
+      return;
+    }
     var sessions = loadMorningSessions();
     if (sessions.length > 0) {
       var last = sessions[sessions.length - 1];
-      var daily = loadMorningDaily();
-      var dk = Object.keys(daily).length;
       el.textContent = '上次晨听：' + last.date + ' ' + last.completed + '词';
-      var sub = document.getElementById('morningCardSub');
-      if (sub) sub.textContent = (morningSettings ? morningSettings.durationMin : 25) + '分钟 · ' + dk + '词有记录';
     } else {
-      el.textContent = '25分钟 · 点击生成队列';
+      el.textContent = '正在估算今日队列…';
     }
-  } catch(e) { el.textContent = '25分钟 · 点击生成队列'; }
+    if (count) count.textContent = '…';
+    if (!morningHomeEstimateLoading) {
+      morningHomeEstimateLoading = true;
+      loadHB(function(err) {
+        morningHomeEstimateLoading = false;
+        if (err) {
+          var failedCount = document.getElementById('morningCardCount');
+          var failedStats = document.getElementById('morningCardStats');
+          if (failedCount) failedCount.textContent = '—';
+          if (failedStats) failedStats.textContent = '队列将在进入晨听后重试';
+          return;
+        }
+        try { buildMorningQueue(); } catch(e) {}
+        if (document.getElementById('view-home').style.display !== 'none') {
+          updateMorningCard();
+          updateTodayReciteCard();
+        }
+      });
+    }
+  } catch(e) {
+    el.textContent = '点击后生成今日队列';
+    if (count) count.textContent = '—';
+  }
+}
+
+function updateMorningCardMix(queue) {
+  var totals = { due:0, hard:0, stale:0, fresh:0 };
+  (queue || []).forEach(function(item) {
+    if (item && item.reviewDue) {
+      totals.due++;
+      return;
+    }
+    var key = item && item.reason;
+    if (Object.prototype.hasOwnProperty.call(totals, key)) totals[key]++;
+  });
+  var total = Math.max(1, (queue || []).length);
+  [['morningCardDueMix','due'],['morningCardHardMix','hard'],['morningCardStaleMix','stale'],['morningCardFreshMix','fresh']].forEach(function(pair) {
+    var node = document.getElementById(pair[0]);
+    if (node) node.style.width = (totals[pair[1]] / total * 100).toFixed(1) + '%';
+  });
 }
 
 // ── Audio helpers ──
