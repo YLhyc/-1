@@ -881,8 +881,9 @@
   .vocab-card .vc-cn { color:var(--ink); font-size:19px; line-height:1.42; font-weight:720; margin-bottom:17px; }
   .vc-cn-note { flex:none; margin:-7px 0 16px; padding:11px 12px; border-left:3px solid #56a6ba; background:#edf7f8; color:#48646b; font-size:13px; line-height:1.62; text-align:left; }
   .vc-cn-note::before { content:'语义说明'; display:block; margin-bottom:3px; color:#397f91; font-size:11px; font-weight:750; }
-  .vc-sentence-zone { min-height:0; flex:1 1 auto; margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:hidden; }
+  .vc-sentence-zone { min-height:0; flex:1 1 auto; margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:hidden; display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
   .vc-sentence-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; color:var(--ocean); font-size:10px; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
+  .vc-example-viewport { min-height:0; overflow:hidden; }
   .vc-example { margin:0; text-align:left; color:#234b59; font-size:14px; line-height:1.55; font-style:normal; }
   .vc-example + .vc-example { margin-top:11px; padding-top:11px; border-top:1px solid rgba(18,76,91,.12); }
   .vc-example-en { font-size:14px; line-height:1.55; font-weight:650; color:#234b59; }
@@ -1339,7 +1340,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.2 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.3 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1363,6 +1364,9 @@
   <div class="source-list">
     <button class="source-row" onclick="openDict('vocab')">
       <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">247 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+    </button>
+    <button class="source-row" onclick="openRedBook()">
+      <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549词 · <span id="statHbDone">尚未开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="location.href='uf/'">
       <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
@@ -1739,11 +1743,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.2"></script>
-<script src="focus-core.js?v=2.0.2"></script>
-<script src="study-copy.js?v=2.0.2"></script>
-<script src="audio-cache.js?v=2.0.2"></script>
-<script src="ui-motion.js?v=2.0.2"></script>
+<script src="review-core.js?v=2.0.3"></script>
+<script src="focus-core.js?v=2.0.3"></script>
+<script src="study-copy.js?v=2.0.3"></script>
+<script src="audio-cache.js?v=2.0.3"></script>
+<script src="ui-motion.js?v=2.0.3"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1828,8 +1832,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.2";
-var BUILD_TS = 1785208660;
+var APP_BUILD_ID = "2.0.3";
+var BUILD_TS = 1785215675;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3231,7 +3235,7 @@ function cardExamplesMarkup(item, hidden) {
     return '<p class="vc-example"' + (index ? ' hidden' : '') + '><span class="vc-example-en">' + (index + 1) + '. ' + escapeHTML(example.en) + '</span>' + translation + '</p>';
   }).join('');
   var pager = examples.length > 1 ? '<div class="vc-example-pager"><button class="vc-example-page" type="button" aria-label="上一条例句" disabled onclick="event.stopPropagation();cardExampleStep(this,-1)">‹ <span>上一句</span></button><span class="vc-example-count">1 / ' + examples.length + '</span><button class="vc-example-page" type="button" aria-label="下一条例句" onclick="event.stopPropagation();cardExampleStep(this,1)"><span>下一句</span> ›</button></div>' : '';
-  return detail + '<section class="vc-sentence-zone" data-example-index="0"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div>' + body + pager + '</section>';
+  return detail + '<section class="vc-sentence-zone" data-example-index="0"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div><div class="vc-example-viewport">' + body + '</div>' + pager + '</section>';
 }
 function cardExampleStep(button, delta) {
   var zone = button && button.closest ? button.closest('.vc-sentence-zone') : null;
