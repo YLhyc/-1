@@ -44,20 +44,20 @@
   #view-today-recite #todayReciteContainer > .vocab-card-shell {
     position:relative; width:100%; height:100%; min-height:0; padding:4px 4px 0;
     display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    grid-template-areas:"progress progress" "stage stage" "controls focus" "rate rate";
-    grid-template-rows:auto minmax(0,1fr) auto auto; column-gap:6px; align-items:center;
+    grid-template-areas:"progress progress" "stage stage" "utility utility" "rate rate";
+    grid-template-rows:auto auto auto auto; column-gap:6px; align-content:center; align-items:center;
   }
   #view-today-recite .vocab-card-progress { grid-area:progress; margin-bottom:4px; }
-  #view-today-recite .vocab-card-stage { grid-area:stage; min-height:0; height:100%; align-items:center; }
+  #view-today-recite .vocab-card-stage { grid-area:stage; min-height:0; height:auto; align-items:center; }
   #view-today-recite .vocab-card {
-    width:min(92vw,460px); height:min(100%,470px); min-height:0; padding:26px 22px 22px;
+    width:min(92vw,460px); height:min(59dvh,500px); min-height:0; padding:24px 20px 17px;
   }
-  #view-today-recite .vocab-card .vc-word { font-size:44px; margin-bottom:12px; }
-  #view-today-recite .vocab-card .vc-cn { font-size:19px; margin-bottom:17px; }
-  #view-today-recite .vc-cn-note { margin:-7px 0 16px; padding:11px 12px; font-size:13px; line-height:1.62; }
-  #view-today-recite .vc-sentence-zone { padding:15px 15px 13px; }
-  #view-today-recite .vocab-card-controls { grid-area:controls; justify-self:end; gap:7px; margin:4px 3px 0 0; }
-  #view-today-recite .focus-action-row { grid-area:focus; justify-self:start; flex-wrap:nowrap; gap:7px; margin:4px 0 0 3px; }
+  #view-today-recite .vocab-card .vc-word { font-size:clamp(35px,10vw,46px); margin-bottom:12px; }
+  #view-today-recite .vocab-card .vc-cn { font-size:18px; margin-bottom:17px; }
+  #view-today-recite .vc-cn-note { max-height:96px; margin:-7px 0 11px; padding:9px 11px; font-size:13px; line-height:1.5; overflow:auto; }
+  #view-today-recite .vc-sentence-zone { min-height:112px; padding:12px 13px 10px; }
+  #view-today-recite .vocab-card-controls { grid-area:utility; justify-self:center; }
+  #view-today-recite .focus-action-row { display:contents; }
   #view-today-recite .vc-btn { width:38px; height:38px; font-size:17px; }
   #view-today-recite .vc-btn-main { width:44px; height:44px; font-size:18px; }
   #view-today-recite .recite-rate-actions { grid-area:rate; width:min(100%,420px); margin-top:4px; justify-self:center; }
@@ -88,22 +88,22 @@
   #view-groups.vocab-card-view .vocab-card-shell {
     position:relative; width:100%; height:100%; min-height:0; padding:0 4px 4px;
     display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    grid-template-areas:"mode mode" "stage stage" "status status" "controls focus" "rate rate";
-    grid-template-rows:auto minmax(0,1fr) auto auto auto; column-gap:6px; align-items:center;
+    grid-template-areas:"mode mode" "stage stage" "status status" "utility utility" "rate rate";
+    grid-template-rows:auto auto auto auto auto; column-gap:6px; align-content:center; align-items:center;
   }
   #view-groups.vocab-card-view .study-mode { grid-area:mode; justify-self:center; margin:0 0 4px; }
   #view-groups.vocab-card-view .study-mode button { padding:6px 12px; font-size:13px; }
   #view-groups.vocab-card-view .vocab-card-progress { position:absolute; z-index:2; top:10px; right:4px; margin:0; }
   #view-groups.vocab-card-view .vocab-card-stage {
-    grid-area:stage; min-height:0; height:100%; align-items:center;
+    grid-area:stage; min-height:0; height:auto; align-items:center;
   }
   #view-groups.vocab-card-view .vocab-card {
-    height:min(100%,470px); min-height:0; touch-action:none;
+    height:min(59dvh,500px); min-height:0; touch-action:none;
   }
   #view-groups.vocab-card-view .vc-status { grid-area:status; min-height:20px; margin:2px 0 0; font-size:12px; }
   #view-groups.vocab-card-view .vc-status:empty { display:none; }
-  #view-groups.vocab-card-view .vocab-card-controls { grid-area:controls; justify-self:end; gap:7px; margin:4px 3px 0 0; }
-  #view-groups.vocab-card-view .focus-action-row { grid-area:focus; justify-self:start; flex-wrap:nowrap; gap:7px; margin:4px 0 0 3px; }
+  #view-groups.vocab-card-view .vocab-card-controls { grid-area:utility; justify-self:center; }
+  #view-groups.vocab-card-view .focus-action-row { display:contents; }
   #view-groups.vocab-card-view .vc-btn { width:38px; height:38px; font-size:17px; }
   #view-groups.vocab-card-view .vc-btn-main { width:44px; height:44px; font-size:18px; }
   #view-groups.vocab-card-view .recite-rate-actions { grid-area:rate; width:min(100%,420px); margin-top:4px; justify-self:center; }
@@ -667,9 +667,9 @@
   .morning-card-shell { flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; padding:9px 0 0; overflow:hidden; }
   .morning-card-stage { width:100%; flex:1; min-height:0; display:flex; align-items:center; justify-content:center; perspective:900px; padding:0 12px; }
   .morning-player-card {
-    box-sizing:border-box; width:min(92vw,460px); min-height:0; height:min(100%,470px); display:flex; flex-direction:column; background:var(--surface);
+    box-sizing:border-box; width:min(92vw,460px); min-height:0; height:min(59dvh,500px); display:flex; flex-direction:column; background:var(--surface);
     border:1px solid rgba(92,132,145,.16); border-radius:28px;
-    padding:26px 22px 22px; text-align:left; position:relative;
+    padding:24px 20px 17px; text-align:left; position:relative;
     touch-action:none; overflow:hidden; transition:border-color .2s,box-shadow .2s;
     -webkit-user-select: none; user-select: none;
   }
@@ -876,12 +876,12 @@
   .app-edge-back { background:rgba(230,247,249,.74); color:var(--deep); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); transition:opacity .16s var(--ease-out),transform .16s var(--ease-out); }
   .today-task, .source-list, .library-card, .review-list, .group-card, .vocab-card, .recite-setup, .recite-summary { background:var(--surface); border-color:rgba(92,132,145,.12); }
   /* 01 Reading paper: keep the word prominent, then give examples a left-aligned reading rail. */
-  .vocab-card { width:min(92vw,460px); min-height:430px; padding:26px 22px 22px; border:1px solid rgba(92,132,145,.16); border-radius:28px; background:var(--surface); box-shadow:0 18px 50px rgba(12,66,84,.12); text-align:left; display:flex; flex-direction:column; }
-  .vocab-card .vc-word { color:var(--deep); font-size:44px; line-height:1.04; font-weight:850; letter-spacing:0; overflow-wrap:anywhere; }
-  .vocab-card .vc-cn { color:var(--ink); font-size:19px; line-height:1.42; font-weight:720; margin-bottom:17px; }
-  .vc-cn-note { flex:none; margin:-7px 0 16px; padding:11px 12px; border-left:3px solid #56a6ba; background:#edf7f8; color:#48646b; font-size:13px; line-height:1.62; text-align:left; }
+  .vocab-card { width:min(92vw,460px); min-height:420px; padding:24px 20px 17px; border:1px solid rgba(92,132,145,.16); border-radius:28px; background:var(--surface); box-shadow:0 18px 50px rgba(12,66,84,.12); text-align:left; display:flex; flex-direction:column; }
+  .vocab-card .vc-word { color:var(--deep); font-size:clamp(35px,10vw,46px); line-height:1.04; font-weight:850; letter-spacing:0; overflow-wrap:anywhere; }
+  .vocab-card .vc-cn { color:var(--ink); font-size:18px; line-height:1.4; font-weight:720; margin-bottom:17px; }
+  .vc-cn-note { flex:none; max-height:96px; margin:-7px 0 11px; padding:9px 11px; border-left:3px solid #56a6ba; background:#edf7f8; color:#48646b; font-size:13px; line-height:1.5; text-align:left; overflow:auto; }
   .vc-cn-note::before { content:'语义说明'; display:block; margin-bottom:3px; color:#397f91; font-size:11px; font-weight:750; }
-  .vc-sentence-zone { min-height:0; flex:1 1 auto; margin-top:2px; padding:15px 15px 13px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:hidden; display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
+  .vc-sentence-zone { min-height:112px; flex:1 1 auto; margin-top:2px; padding:12px 13px 10px; border-radius:18px; background:rgba(230,247,249,.72); border:1px solid rgba(255,255,255,.9); box-shadow:0 10px 22px rgba(30,102,119,.06); max-height:220px; overflow:hidden; display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
   .vc-sentence-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; color:var(--ocean); font-size:10px; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
   .vc-example-viewport { min-height:0; overflow:hidden; }
   .vc-example { margin:0; text-align:left; color:#234b59; font-size:14px; line-height:1.55; font-style:normal; }
@@ -1328,7 +1328,22 @@
     --b1-control-ink:#286b70;
     --b1-primary:linear-gradient(145deg,#55b2af,#268b91);
     --b1-shadow:0 12px 28px rgba(35,105,107,.13),inset 0 1px rgba(255,255,255,.9);
+    --b-card:linear-gradient(145deg,rgba(235,250,250,.98),rgba(184,226,228,.94) 58%,rgba(163,216,215,.9));
+    --b-reading:rgba(251,254,254,.9);
   }
+  .vocab-card,
+  .morning-player-card {
+    border-color:rgba(255,255,255,.92);
+    background:var(--b-card);
+    box-shadow:0 22px 48px rgba(12,66,84,.17),inset 0 1px rgba(255,255,255,.82);
+  }
+  .vc-sentence-zone,
+  .morning-player-card .mc-example {
+    background:var(--b-reading);
+    border-color:rgba(47,109,123,.1);
+    box-shadow:inset 0 0 0 1px rgba(47,109,123,.1);
+  }
+  .vocab-card .vc-meta { color:#5c7780; }
   .vocab-card-shell > .vocab-card-controls,
   .vocab-card-shell > .focus-action-row,
   .morning-card-controls {
@@ -1341,6 +1356,22 @@
   .vocab-card-shell > .vocab-card-controls {
     min-height:52px; margin-top:10px; padding:5px 6px; border-radius:19px; gap:5px;
   }
+  .vocab-card-shell > .card-utility-bar {
+    display:grid; grid-area:utility; grid-template-columns:repeat(5,minmax(0,1fr)); align-items:center;
+    width:min(100%,360px); min-height:52px; margin-top:10px; padding:6px; border-radius:19px; gap:5px;
+  }
+  .vocab-card-shell > .card-utility-bar .vc-btn,
+  .vocab-card-shell > .card-utility-bar .focus-toggle,
+  .vocab-card-shell > .card-utility-bar .archive-review-action {
+    width:100%; min-width:0; height:40px; min-height:40px; padding:0; border:0; border-radius:14px;
+    background:transparent; color:var(--b1-control-ink); box-shadow:none; display:grid; place-items:center;
+  }
+  #view-today-recite .card-utility-bar .vc-btn-main,
+  #view-groups.vocab-card-view .card-utility-bar .vc-btn-main { width:100%; height:40px; background:var(--b1-primary); color:#fff; }
+  .card-icon { width:19px; height:19px; display:grid; place-items:center; font-size:20px; line-height:1; }
+  .card-icon svg { width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .card-utility-bar .focus-star { font-size:21px; line-height:1; }
+  .card-utility-bar .focus-label { display:none; }
   .vocab-card-shell > .vocab-card-controls .vc-btn {
     width:44px; height:40px; border:0; border-radius:14px;
     background:transparent; color:var(--b1-control-ink); box-shadow:none;
@@ -1418,7 +1449,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.4 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.5 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1821,11 +1852,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.4"></script>
-<script src="focus-core.js?v=2.0.4"></script>
-<script src="study-copy.js?v=2.0.4"></script>
-<script src="audio-cache.js?v=2.0.4"></script>
-<script src="ui-motion.js?v=2.0.4"></script>
+<script src="review-core.js?v=2.0.5"></script>
+<script src="focus-core.js?v=2.0.5"></script>
+<script src="study-copy.js?v=2.0.5"></script>
+<script src="audio-cache.js?v=2.0.5"></script>
+<script src="ui-motion.js?v=2.0.5"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1910,8 +1941,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.4";
-var BUILD_TS = 1785221515;
+var APP_BUILD_ID = "2.0.5";
+var BUILD_TS = 1785243053;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2945,7 +2976,7 @@ function renderTodayRecite() {
   }
   if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
   var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = todayReciteShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书', tag = todayRecitePracticeOnly ? '再背练习' : (entry.kind === 'due' ? '到期复习' : '不熟词');
-  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div>' + cardExamplesMarkup(w, hidden) + '<div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '>↶</button><button class="vc-btn vc-btn-main" onclick="todayReciteShow()">显示</button>' + StudyCopy.buttonHTML(w.en,w.cn,'vc-btn') + '</div><div class="focus-action-row">' + FocusCore.buttonHTML(w.en,w.cn,entry.source,'今日背诵') + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + escapeHTML(entry.source) + '&quot;,&quot;' + escapeHTML(w.en) + '&quot;,&quot;' + escapeHTML(w.cn || '') + '&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
+  c.innerHTML = '<div class="vocab-card-shell"><div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div><div class="vocab-card-stage"><div class="vocab-card" id="todayReciteCard"><div class="vc-word">' + escapeHTML(w.en) + '</div><div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div>' + cardExamplesMarkup(w, hidden) + '<div class="vc-meta">' + src + (entry.lapses ? ' · 遗忘 ' + entry.lapses + ' 次' : '') + '</div></div></div><div class="vocab-card-controls card-utility-bar"><button class="vc-btn" aria-label="撤销" onclick="todayReciteUndoLast()"' + (todayReciteUndo ? '' : ' disabled') + '><span class="card-icon" aria-hidden="true">↶</span></button><button class="vc-btn vc-btn-main" aria-label="显示释义" onclick="todayReciteShow()"><span class="card-icon" aria-hidden="true">◉</span></button>' + StudyCopy.buttonHTML(w.en,w.cn,'vc-btn') + FocusCore.buttonHTML(w.en,w.cn,entry.source,'今日背诵',{compact:true}) + '<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;' + escapeHTML(entry.source) + '&quot;,&quot;' + escapeHTML(w.en) + '&quot;,&quot;' + escapeHTML(w.cn || '') + '&quot;,true)"><span class="card-icon" aria-hidden="true">▣</span></button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="todayReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张<br><button class="home-link" onclick="resetTodayReciteSession()">重新选择任务量</button></div></div>';
   bindTodayReciteSwipe();
 }
 function todayReciteShow() { if (todayReciteShown) return; todayReciteShown = true; var card = document.getElementById('todayReciteCard'); if (card) card.querySelectorAll('.recite-hidden').forEach(function(el) { el.classList.remove('recite-hidden'); }); haptic(8); }
@@ -3390,7 +3421,7 @@ function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
   var note='';
-  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div>'+note+cardExamplesMarkup(w,hidden)+'<div class="vc-meta">生词本 · 文字例句</div></div></div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'>↶</button><button class="vc-btn vc-btn-main" onclick="vocabReciteShow()">显示</button>'+StudyCopy.buttonHTML(w.en,w.cn,'vc-btn')+'</div><div class="focus-action-row">'+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵')+'<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)">移除</button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
+  c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="vocab-card-progress">'+(vocabCardIdx+1)+' / '+entries.length+'</div><div class="vocab-card-stage"><div class="vocab-card" id="vocabCard" onclick="vocabReciteShow()"><div class="vc-word">'+escapeHTML(w.en)+'</div><div class="vc-cn'+hidden+'" id="vcCn">'+escapeHTML(w.cn)+'</div>'+note+cardExamplesMarkup(w,hidden)+'<div class="vc-meta">生词本 · 文字例句</div></div></div><div class="vocab-card-controls card-utility-bar"><button class="vc-btn" aria-label="撤销" onclick="vocabReciteUndoLast()"'+(vocabReciteUndo?'':' disabled')+'><span class="card-icon" aria-hidden="true">↶</span></button><button class="vc-btn vc-btn-main" aria-label="显示释义" onclick="vocabReciteShow()"><span class="card-icon" aria-hidden="true">◉</span></button>'+StudyCopy.buttonHTML(w.en,w.cn,'vc-btn')+FocusCore.buttonHTML(w.en,w.cn,'vocab','生词本 Unit '+(currentUnit+1)+' 背诵',{compact:true})+'<button class="archive-review-action" aria-label="移除后续复习" onclick="archiveReviewWord(&quot;vocab&quot;,&quot;'+escapeHTML(w.en)+'&quot;,&quot;'+escapeHTML(w.cn||'')+'&quot;,true)"><span class="card-icon" aria-hidden="true">▣</span></button></div><div class="recite-rate-actions"><button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(true)">熟悉</button><button class="recite-rate-btn recite-rate-hard" onclick="vocabReciteRate(false)">不熟悉</button></div><div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div></div>';
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(){if(vocabReciteShown)return;vocabReciteShown=true;var card=document.getElementById('vocabCard');if(card)card.querySelectorAll('.recite-hidden').forEach(function(el){el.classList.remove('recite-hidden');});haptic(8);}
