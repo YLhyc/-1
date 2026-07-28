@@ -1321,6 +1321,84 @@
     }
     .progress-heat { outline:1px solid rgba(49,81,94,.42); }
   }
+  /* B1 jade control glass + N2 inset semantic note. Keep reading surfaces solid. */
+  :root {
+    --b1-control:linear-gradient(145deg,rgba(239,251,250,.94),rgba(183,224,222,.86));
+    --b1-control-line:rgba(255,255,255,.92);
+    --b1-control-ink:#286b70;
+    --b1-primary:linear-gradient(145deg,#55b2af,#268b91);
+    --b1-shadow:0 12px 28px rgba(35,105,107,.13),inset 0 1px rgba(255,255,255,.9);
+  }
+  .vocab-card-shell > .vocab-card-controls,
+  .vocab-card-shell > .focus-action-row,
+  .morning-card-controls {
+    border:1px solid var(--b1-control-line);
+    background:var(--b1-control);
+    box-shadow:var(--b1-shadow);
+    backdrop-filter:blur(22px) saturate(150%);
+    -webkit-backdrop-filter:blur(22px) saturate(150%);
+  }
+  .vocab-card-shell > .vocab-card-controls {
+    min-height:52px; margin-top:10px; padding:5px 6px; border-radius:19px; gap:5px;
+  }
+  .vocab-card-shell > .vocab-card-controls .vc-btn {
+    width:44px; height:40px; border:0; border-radius:14px;
+    background:transparent; color:var(--b1-control-ink); box-shadow:none;
+  }
+  .vocab-card-shell > .vocab-card-controls .vc-btn-main {
+    width:52px; height:40px; background:var(--b1-primary); color:#fff;
+    box-shadow:0 7px 16px rgba(38,139,145,.24),inset 0 1px rgba(255,255,255,.42);
+  }
+  .vocab-card-shell > .focus-action-row {
+    min-height:52px; margin-top:10px; padding:5px 6px; border-radius:19px; gap:5px;
+  }
+  .vocab-card-shell > .focus-action-row .focus-toggle,
+  .vocab-card-shell > .focus-action-row .archive-review-action {
+    min-width:40px; height:40px; min-height:40px; padding:0 9px; border:0;
+    border-radius:14px; background:transparent; color:var(--b1-control-ink); box-shadow:none;
+  }
+  .recite-rate-familiar {
+    background:linear-gradient(145deg,#dff5ec,#c5ebdc); color:#28735a;
+  }
+  .recite-rate-hard {
+    background:linear-gradient(145deg,#fff4e6,#ffe4c5); color:#9a5a17;
+  }
+  .morning-card-controls {
+    border-radius:20px; gap:8px; padding-left:6px; padding-right:6px;
+  }
+  .morning-card-controls .mc-btn {
+    border:0; border-radius:15px; background:transparent;
+    color:var(--b1-control-ink); box-shadow:none;
+  }
+  .morning-card-controls .mc-btn-play {
+    background:var(--b1-primary); color:#fff;
+    box-shadow:0 7px 16px rgba(38,139,145,.24),inset 0 1px rgba(255,255,255,.42);
+  }
+  .vc-cn-note {
+    border:1px solid rgba(255,255,255,.9); border-radius:16px;
+    background:linear-gradient(145deg,rgba(246,253,252,.88),rgba(205,234,232,.76));
+    box-shadow:inset 4px 0 #50b6a5,inset 0 1px rgba(255,255,255,.9),0 6px 14px rgba(39,112,111,.06);
+    padding-left:14px;
+  }
+  .vc-cn-note::before { color:#278275; }
+  @media (max-height:720px) {
+    #view-today-recite .vc-cn-note,
+    #view-groups.vocab-card-view .vc-cn-note { padding-left:12px; }
+  }
+  @media (prefers-reduced-transparency:reduce) {
+    .vocab-card-shell > .vocab-card-controls,
+    .vocab-card-shell > .focus-action-row,
+    .morning-card-controls {
+      background:#dcefee; backdrop-filter:none; -webkit-backdrop-filter:none;
+    }
+    .vc-cn-note { background:#e3f3f1; }
+  }
+  @media (prefers-contrast:more) {
+    .vocab-card-shell > .vocab-card-controls,
+    .vocab-card-shell > .focus-action-row,
+    .morning-card-controls,
+    .vc-cn-note { border-color:#31515e; }
+  }
 </style>
 </head>
 <body>
@@ -1340,7 +1418,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.3 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.4 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1743,11 +1821,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.3"></script>
-<script src="focus-core.js?v=2.0.3"></script>
-<script src="study-copy.js?v=2.0.3"></script>
-<script src="audio-cache.js?v=2.0.3"></script>
-<script src="ui-motion.js?v=2.0.3"></script>
+<script src="review-core.js?v=2.0.4"></script>
+<script src="focus-core.js?v=2.0.4"></script>
+<script src="study-copy.js?v=2.0.4"></script>
+<script src="audio-cache.js?v=2.0.4"></script>
+<script src="ui-motion.js?v=2.0.4"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1832,8 +1910,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.3";
-var BUILD_TS = 1785215675;
+var APP_BUILD_ID = "2.0.4";
+var BUILD_TS = 1785221515;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
