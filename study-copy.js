@@ -22,7 +22,7 @@
     return '<button type="button"' + (id ? ' id="' + escapeHTML(id) + '"' : '')
       + ' class="' + escapeHTML(className || '') + ' study-copy-btn" data-study-word="' + escapeHTML(word)
       + '" data-study-meaning="' + escapeHTML(meaning) + '" aria-label="复制AI讲解提示词：' + escapeHTML(word)
-      + '" title="复制AI讲解提示词"><span class="study-copy-icon" aria-hidden="true">⧉</span></button>';
+      + '" title="复制AI讲解提示词"><svg class="study-copy-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>';
   }
   function updateButton(button, word, meaning) {
     if (!button) return;
@@ -48,12 +48,10 @@
     toastTimer = setTimeout(function() { el.classList.remove('show'); }, 1500);
   }
   function finish(button, success) {
-    var icon = button && button.querySelector('.study-copy-icon');
-    if (icon) icon.textContent = success ? '✓' : '!';
     if (button) button.classList.toggle('copied', success);
     toast(success ? '已复制AI讲解提示词' : '复制失败，请稍后重试');
     try { if (success && navigator.vibrate) navigator.vibrate(10); } catch(e) {}
-    setTimeout(function() { if (icon) icon.textContent = '⧉'; if (button) button.classList.remove('copied'); }, 1200);
+    setTimeout(function() { if (button) button.classList.remove('copied'); }, 1200);
   }
   function copyFromButton(button) {
     var text = promptText(button.getAttribute('data-study-word'), button.getAttribute('data-study-meaning'));
@@ -65,7 +63,7 @@
     if (!document.getElementById('studyCopyStyles')) {
       var style = document.createElement('style'); style.id = 'studyCopyStyles'; style.textContent =
         '.study-copy-btn{position:relative;flex:0 0 auto;-webkit-tap-highlight-color:transparent;transition:transform 120ms cubic-bezier(.23,1,.32,1),background-color 160ms ease,color 160ms ease}' +
-        '.study-copy-btn:active{transform:scale(.94)}.study-copy-btn.copied{color:#247a44;background:#e5f7ec}.study-copy-icon{font-size:17px;line-height:1;font-weight:760}' +
+        '.study-copy-btn:active{transform:scale(.94)}.study-copy-btn.copied{color:#247a44;background:#e5f7ec}.study-copy-icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
         '.study-copy-toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 82px);z-index:10060;max-width:calc(100vw - 36px);padding:10px 14px;border-radius:8px;background:rgba(19,43,57,.94);color:#fff;font:650 12px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;box-shadow:0 10px 28px rgba(17,49,68,.2);opacity:0;transform:translate(-50%,8px);pointer-events:none;transition:opacity 150ms ease,transform 180ms cubic-bezier(.23,1,.32,1)}.study-copy-toast.show{opacity:1;transform:translate(-50%,0)}' +
         '@media(prefers-reduced-motion:reduce){.study-copy-btn,.study-copy-toast{transition-duration:.01ms!important}}';
       document.head.appendChild(style);

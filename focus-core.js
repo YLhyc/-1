@@ -83,7 +83,7 @@
       + ' data-focus-word="' + escapeHTML(word) + '" data-focus-meaning="' + escapeHTML(meaning) + '"'
       + ' data-focus-source="' + escapeHTML(source) + '" data-focus-reason="' + escapeHTML(reason) + '"'
       + ' aria-pressed="' + selected + '" aria-label="' + label + '：' + escapeHTML(word) + '" title="' + label + '">'
-      + '<span class="focus-star" aria-hidden="true">' + (selected ? '★' : '☆') + '</span>'
+      + '<svg class="focus-star" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"/></svg>'
       + (compact ? '<span class="focus-label sr-only">' + label + '</span>' : '<span class="focus-label">' + label + '</span>') + '</button>';
   }
   function refreshButtons() {
@@ -92,8 +92,8 @@
     document.querySelectorAll('.focus-toggle[data-focus-word]').forEach(function(button) {
       var selected = !!data[normalizeWord(button.getAttribute('data-focus-word'))];
       button.classList.toggle('is-selected', selected); button.setAttribute('aria-pressed', String(selected));
-      var label = selected ? '移出精选' : '放入精选', star = button.querySelector('.focus-star'), text = button.querySelector('.focus-label');
-      if (star) star.textContent = selected ? '★' : '☆'; if (text) text.textContent = label;
+      var label = selected ? '移出精选' : '放入精选', text = button.querySelector('.focus-label');
+      if (text) text.textContent = label;
       button.setAttribute('title', label); button.setAttribute('aria-label', label + '：' + button.getAttribute('data-focus-word'));
     });
   }
@@ -108,7 +108,7 @@
     if (!document.getElementById('focusCoreStyles')) {
       var style = document.createElement('style'); style.id = 'focusCoreStyles'; style.textContent =
         '.focus-toggle{min-height:42px;padding:0 13px;border:1px solid rgba(20,112,159,.14);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(239,249,255,.9);color:#176f9e;font:700 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;box-shadow:0 4px 13px rgba(31,99,136,.07);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 140ms cubic-bezier(.23,1,.32,1),background-color 160ms ease,color 160ms ease}' +
-        '.focus-toggle:active{transform:scale(.96)}.focus-toggle.is-selected{color:#8a6418;background:#fff4dc;border-color:rgba(156,106,22,.2)}.focus-star{font-size:18px;line-height:1}.focus-compact{width:38px;height:38px;min-height:38px;padding:0;border-radius:50%;flex:0 0 38px}.focus-compact .focus-star{font-size:19px}.focus-action-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:10px}' +
+        '.focus-toggle:active{transform:scale(.96)}.focus-toggle.is-selected{color:#8a6418;background:#fff4dc;border-color:rgba(156,106,22,.2)}.focus-star{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.focus-toggle.is-selected .focus-star{fill:currentColor}.focus-compact{width:38px;height:38px;min-height:38px;padding:0;border-radius:50%;flex:0 0 38px}.focus-action-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:10px}' +
         '.focus-core-toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 94px);z-index:10050;max-width:calc(100vw - 40px);padding:10px 15px;border-radius:999px;background:rgba(19,43,57,.9);color:#fff;font:650 12px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;box-shadow:0 10px 28px rgba(17,49,68,.2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;transform:translate(-50%,8px);pointer-events:none;transition:opacity 160ms ease,transform 190ms cubic-bezier(.23,1,.32,1)}.focus-core-toast.show{opacity:1;transform:translate(-50%,0)}' +
         '.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}@media(prefers-reduced-motion:reduce){.focus-toggle,.focus-core-toast{transition-duration:.01ms!important}}';
       document.head.appendChild(style);
