@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "979b46a61309",
-  "content_version": "9d9a9d071645",
+  "exam_wording_version": "57a2a26af58d",
+  "content_version": "7bb5021c4e49",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -206,6 +206,14 @@
       "title": "对立统一规律",
       "order": 60,
       "description": "矛盾规律、矛盾分析法及同一性斗争性、共性个性、主次矛盾辨析"
+    },
+    {
+      "id": "topic_politics_basic_categories",
+      "subject": "politics",
+      "module": "马原",
+      "title": "唯物辩证法五对基本范畴",
+      "order": 70,
+      "description": "内容与形式、本质与现象、原因与结果、必然与偶然、现实与可能的关系及辨析"
     }
   ],
   "cards": [
@@ -3563,6 +3571,393 @@
       }
     },
     {
+      "id": "card_politics_7a6a02aa72cc7835",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_basic_categories",
+      "order": 10,
+      "title": "内容与形式的辩证关系及形式主义边界",
+      "prompt": "怎样理解内容与形式的辩证关系？为什么要反对形式主义？",
+      "summary": "内容是构成事物的要素总和，形式是统一要素或表现内容的方式。内容决定形式，形式又{{accent|反作用于内容}}；脱离内容的形式会失去价值，但形式并非可有可无。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "按概念界定、内容决定形式、形式反作用内容、反对形式主义四步展开。"
+      },
+      "outline": [
+        {
+          "heading": "概念界定",
+          "text": "内容是构成事物的一切要素的总和，形式是统一要素和表现内容的方式。"
+        },
+        {
+          "heading": "内容决定形式",
+          "text": "内容是事物存在的基础，内容变化要求形式相应变化。"
+        },
+        {
+          "heading": "形式反作用内容",
+          "text": "适合内容的形式促进内容发展，不适合的形式阻碍内容发展，形式具有相对独立性。"
+        },
+        {
+          "heading": "反对形式主义",
+          "text": "不能脱离实际内容追求表面形式，也不能因此否认选择和改进形式的积极作用。"
+        }
+      ],
+      "examples": [
+        "同一知识可以用讲授、图表或练习呈现；知识内容决定形式，合适的形式又能提高理解效率。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "定义、内容决定形式、形式反作用、方法论。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "要素总和；表现方式；相对独立性；反对形式主义。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，在概念界定上，内容是构成事物的一切要素的总和，是事物存在的基础；形式是把这些要素统一起来的结构或表现内容的方式。\n\n其次，在内容决定形式方面，有什么样的内容，就需要什么样的形式，内容发生变化时，形式也要相应调整。再次，在形式反作用内容方面，适合内容的形式能够促进内容发展，不适合的形式则会阻碍内容发展，说明形式具有相对独立性。\n\n因此，反对形式主义是方法论上的重要要求：既要反对脱离实际内容、只追求外在形式的做法，也不能把内容决定形式理解为形式{{danger|完全被动、可有可无}}。应当根据实际内容选择和改进形式，使形式真正服务于内容的发展。",
+      "tags": [
+        "马原",
+        "内容与形式",
+        "形式主义"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-30",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/08_五对基本范畴.md",
+        "session_id": "politics-2026-07-30-lesson08-formal-diagnostic",
+        "created_at": "2026-07-31T19:29:36+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-31T19:29:36+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-31T19:29:36+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_9a624c3e808fe77a",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_basic_categories",
+      "order": 20,
+      "title": "本质、现象、真象、假象与错觉如何区分",
+      "prompt": "本质与现象、真象与假象、假象与错觉怎样区分？",
+      "summary": "本质是根本性质和内部联系，现象是外部联系和表面特征；真象和假象都是客观现象，分别正面或歪曲表现本质，{{danger|错觉则是主观错误认识}}。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "按本质与现象、真象与假象、假象与错觉、认识方法四步展开。"
+      },
+      "outline": [
+        {
+          "heading": "本质与现象",
+          "text": "本质是事物的根本性质和内部联系，现象是本质的外部联系和表面表现。"
+        },
+        {
+          "heading": "真象与假象",
+          "text": "真象从正面直接表现本质，假象从反面歪曲地表现本质，二者都是客观现象。"
+        },
+        {
+          "heading": "假象与错觉",
+          "text": "假象属于客观现象，错觉是主体产生的错误感觉或认识，不能把二者混同。"
+        },
+        {
+          "heading": "认识方法",
+          "text": "认识不能停留在现象表面，应透过现象把握本质，同时承认假象也有客观根据。"
+        }
+      ],
+      "examples": [
+        "水中筷子看似弯折是光的折射形成的假象，认为筷子真的弯了则是人的错觉；假象仍表现了光传播的客观规律。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "本质现象、真象假象、假象错觉、认识方法。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "内部联系；正面表现；反面歪曲；客观现象；主观认识。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，在本质与现象的关系上，本质是事物的根本性质和构成要素之间的内部联系，现象是事物的外部联系和表面特征，现象是本质的外在表现。其次，在真象与假象的区分上，真象从正面直接表现本质，假象从反面歪曲地表现本质；真象和假象都属于客观现象，并不存在“假象不表现本质”的结论。\n\n再次，假象与错觉不能混同。假象具有客观性，是事物在一定条件下呈现的歪曲外观；错觉则是主体产生的错误感觉或认识。\n\n因此，在认识方法上，认识事物不能停留在现象表面，而要透过现象把握本质，同时承认假象也有客观根据。比如水中筷子的弯折外观是假象，把筷子真的判断为弯曲则是错觉。",
+      "tags": [
+        "马原",
+        "本质与现象",
+        "真象与假象",
+        "错觉"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-30",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/08_五对基本范畴.md",
+        "session_id": "politics-2026-07-30-lesson08-formal-diagnostic",
+        "created_at": "2026-07-31T19:29:36+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-31T19:29:36+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-31T19:29:36+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_d23a9e7364cd675a",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_basic_categories",
+      "order": 30,
+      "title": "原因与结果的辩证关系及因果识别",
+      "prompt": "怎样理解原因与结果的辩证关系？为什么先后相继不一定是因果？",
+      "summary": "原因是引起某现象的现象，结果是被引起的现象。具体因果联系中区分较确定，但因果链中二者可以转换；判断因果必须确认{{accent|引起与被引起}}关系。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "按定义与识别、具体联系确定、因果链可转换、方法论意义四步展开。"
+      },
+      "outline": [
+        {
+          "heading": "定义与识别",
+          "text": "原因是引起某种现象的现象，结果是被某种现象引起的现象，单纯先后不等于因果。"
+        },
+        {
+          "heading": "具体联系确定",
+          "text": "在一个具体因果联系中，原因和结果的区分是确定的，不能倒因为果。"
+        },
+        {
+          "heading": "因果链可转换",
+          "text": "在普遍联系和因果长链中，同一现象在一种联系里是结果，在另一联系里可能成为原因。"
+        },
+        {
+          "heading": "方法论意义",
+          "text": "正确把握因果联系能够增强实践的预见性和调控性，创造有利条件并消除不利原因。"
+        }
+      ],
+      "examples": [
+        "努力学习带来成绩提高，成绩提高又可能增强学习动力；前一段中学习是原因，放入长链后成绩又成为新原因。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "定义、具体联系、因果长链、方法论。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "引起与被引起；具体确定；长链转换；预见调控。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，在定义与识别上，原因是引起某种现象的现象，结果是被某种现象引起的现象，二者具有引起与被引起的关系。仅有时间上的先后相继还不能断定因果，还要确认实际作用关系。\n\n其次，在具体联系确定方面，一个具体因果联系中原因和结果的区分是确定的，不能倒因为果。再次，在因果链可转换方面，同一现象在一种联系里可能是结果，在另一种联系里又可能成为原因，因此二者具有相互依存和相互转化的一面。\n\n因此，在方法论意义上，要正确把握因果联系，增强实践活动的预见性和调控性，消除不利原因并创造有利条件。比如努力学习带来成绩提高，成绩提高又可能增强学习动力，说明不能把因果关系机械地固定在单一片段中。",
+      "tags": [
+        "马原",
+        "原因与结果",
+        "因果关系"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-30",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/08_五对基本范畴.md",
+        "session_id": "politics-2026-07-30-lesson08-formal-diagnostic",
+        "created_at": "2026-07-31T19:29:36+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-31T19:29:36+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-31T19:29:36+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_2190ef51e5afb26e",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_basic_categories",
+      "order": 40,
+      "title": "必然与偶然的关系及判断边界",
+      "prompt": "必然与偶然是什么关系？为什么偶然不能决定发展总趋势？",
+      "summary": "必然是确定不移的客观趋势，偶然是不确定的趋势。必然决定发展方向，偶然影响具体进程；二者相互依存，偶然是{{muted|必然的表现形式和实现条件之一}}。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "按概念区分、发展作用、相互依存、方法论四步展开。"
+      },
+      "outline": [
+        {
+          "heading": "概念区分",
+          "text": "必然是确定不移且在一定条件下不可避免的趋势，偶然是不确定的趋势。"
+        },
+        {
+          "heading": "发展作用",
+          "text": "必然产生于内部根本矛盾并决定发展方向，偶然受非根本矛盾和外部条件影响，促进或延缓进程。"
+        },
+        {
+          "heading": "相互依存",
+          "text": "没有脱离偶然的必然，必然通过偶然表现并为自己开辟道路；没有脱离必然的偶然。"
+        },
+        {
+          "heading": "方法论",
+          "text": "既要把握必然规律和总趋势，也要估计偶然因素、识别机遇并防范风险。"
+        }
+      ],
+      "examples": [
+        "气候总趋势受稳定因素支配，但厄尔尼诺等偶然因素会影响具体进程；偶然不可忽视，却不能替代必然决定方向。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "区分概念、判断作用、说明统一、落到方法论。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "确定趋势；不确定趋势；决定方向；影响进程。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，在概念区分上，必然是事物联系和发展中确定不移、在一定条件下不可避免的趋势，偶然则是不确定的趋势。其次，在发展作用上，必然通常产生于事物内部的根本矛盾，居于支配地位并决定发展方向；偶然受非根本矛盾和外部条件影响，主要促进或延缓具体进程。\n\n再次，必然与偶然相互依存。没有脱离偶然的必然，必然总要通过偶然表现并为自己开辟道路；也没有脱离必然的偶然，偶然受必然制约并具有转化条件。\n\n因此，方法论上既要把握必然规律和发展总趋势，又要估计偶然因素、识别机遇和防范风险。不能因为偶然影响进程，就把偶然夸大为决定事物根本方向的力量。",
+      "tags": [
+        "马原",
+        "必然与偶然",
+        "发展趋势"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-30",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/08_五对基本范畴.md",
+        "session_id": "politics-2026-07-30-lesson08-formal-diagnostic",
+        "created_at": "2026-07-31T19:29:36+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-31T19:29:36+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-31T19:29:36+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_9a78b405388309dd",
+      "subject": "politics",
+      "module": "马原",
+      "topic_id": "topic_politics_basic_categories",
+      "order": 50,
+      "title": "现实可能、抽象可能与不可能的区分",
+      "prompt": "怎样区分现实可能、抽象可能和不可能？可能怎样转化为现实？",
+      "summary": "现实是实际存在的联系综合，可能是事物中尚未实现的发展趋势。区分不可能与可能看有无根据，区分抽象与现实可能看条件是否充分，方法上要{{accent|立足现实创造条件}}。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "按现实与可能、不可能与可能、抽象与现实可能、转化方法四步展开。"
+      },
+      "outline": [
+        {
+          "heading": "现实与可能",
+          "text": "现实是相互联系着的实际存在的事物综合，可能是包含在事物中、预示发展前途的潜在趋势。"
+        },
+        {
+          "heading": "不可能与可能",
+          "text": "现实中完全没有根据和条件的是不可能，有现实根据但条件尚不充分的是可能。"
+        },
+        {
+          "heading": "抽象与现实可能",
+          "text": "可能已有现实根据但条件不充分属于抽象可能，根据和条件较充分属于现实可能。"
+        },
+        {
+          "heading": "转化方法",
+          "text": "应立足现实分析可能，创造条件促使好的可能转化为现实，并防止坏的可能实现。"
+        }
+      ],
+      "examples": [
+        "目标院校录取在考试制度和学习基础等现实根据上不是不可能；条件是否充分，决定它属于抽象可能还是现实可能，持续学习是在创造条件。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "定义现实可能，再按根据和条件逐层判断。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "有无根据；条件充分；抽象可能；现实可能；创造条件。"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，在现实与可能的关系上，现实是相互联系着的实际存在的事物综合，可能是包含在事物中、预示发展前途的潜在趋势。其次，在不可能与可能的区分上，现实中完全没有根据和条件的是不可能；有现实根据但条件尚不充分的，才属于可能。\n\n再次，在抽象与现实可能的区分上，现实中有一定根据但条件不充分的是抽象可能，现实中的根据和条件较充分的是现实可能。二者的区分关键不在主观愿望，而在客观根据和条件。\n\n因此，在转化方法上要立足现实，全面分析各种可能，创造条件促使好的可能转化为现实，同时防止坏的可能变成现实。比如目标院校录取有考试制度和学习基础作根据，不是不可能，但持续学习能否补足条件决定其现实可能程度。",
+      "tags": [
+        "马原",
+        "现实与可能",
+        "抽象可能",
+        "现实可能"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-07-30",
+        "note_path": "D:/AAA考研/政治复习助手/徐涛网课笔记/08_五对基本范畴.md",
+        "session_id": "politics-2026-07-30-lesson08-formal-diagnostic",
+        "created_at": "2026-07-31T19:29:36+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-07-31T19:29:36+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-07-31T19:29:36+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
       "id": "card_politics_64ec0ef20b5e7333",
       "subject": "politics",
       "module": "马原",
@@ -4963,6 +5358,6 @@
       }
     }
   ],
-  "release_id": "8fed58364d7a"
+  "release_id": "ea38656a3040"
 };
 })();
