@@ -1468,7 +1468,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.8 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.9 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1871,11 +1871,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.8"></script>
-<script src="focus-core.js?v=2.0.8"></script>
-<script src="study-copy.js?v=2.0.8"></script>
-<script src="audio-cache.js?v=2.0.8"></script>
-<script src="ui-motion.js?v=2.0.8"></script>
+<script src="review-core.js?v=2.0.9"></script>
+<script src="focus-core.js?v=2.0.9"></script>
+<script src="study-copy.js?v=2.0.9"></script>
+<script src="audio-cache.js?v=2.0.9"></script>
+<script src="ui-motion.js?v=2.0.9"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1960,8 +1960,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.8";
-var BUILD_TS = 1785309796;
+var APP_BUILD_ID = "2.0.9";
+var BUILD_TS = 1785587557;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3326,6 +3326,11 @@ var vocabCardIdx = 0;
 var vocabCardPlaying = false;
 var vocabCardTouchX = 0, vocabCardTouchY = 0, vocabCardDragging = false;
 var vocabCardStepInfo = null;
+var vocabCardPlayToken = 0;
+var vocabCardAudioAttemptSerial = 0;
+var vocabCardAudioFailed = false;
+var vocabCardRetryPlayback = null;
+var vocabCardCountedPlayToken = 0;
 var vocabStudyMode = localStorage.getItem('vocab_study_mode_v1') || 'listen';
 var vocabReciteShown = false, vocabReciteUndo = null, vocabReciteDone = false;
 var vocabCardOrder = [], vocabCardOrderUnit = -1;
@@ -3422,7 +3427,7 @@ function renderVocabCardMode() {
     + '  </div>'
     + '  <div class="vc-hint">左划标熟 · 右划标不熟 · 不划默认</div>'
     + '</div>';
-  preloadUnitAudio();
+  preloadUnitAudio(entries[vocabCardIdx].localIdx);
   updateVocabCardUI();
   bindVocabCardSwipe();
 }
@@ -3544,8 +3549,13 @@ function vocabCardEnsureAudio(entryIdx, cb) {
 function vocabCardStartCurrent() {
   var entries = getVocabCardEntries();
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) { vocabCardStop(false); return; }
+  vocabCardAudioAttemptSerial++;
+  var token = ++vocabCardPlayToken;
+  var entryIdx = vocabCardIdx;
   vocabCardPlaying = true;
   paused = false;
+  vocabCardAudioFailed = false;
+  vocabCardRetryPlayback = null;
   step = 0;
   var localIdx = entries[vocabCardIdx].localIdx;
   currentGroup = Math.floor(localIdx / GROUP_SIZE);
@@ -3554,35 +3564,109 @@ function vocabCardStartCurrent() {
   vocabCardStepInfo = getVocabCardStepInfo(entries[vocabCardIdx]);
   updateVocabCardUI();
   vocabCardEnsureAudio(vocabCardIdx, function(err) {
-    if (err || !vocabCardPlaying) { vocabCardStop(false); return; }
+    if (token !== vocabCardPlayToken || entryIdx !== vocabCardIdx || !vocabCardPlaying) return;
+    if (err) {
+      vocabCardPauseForAudioFailure(token, entryIdx, 0, null, { name: 'AudioBundleError' }, function() {
+        vocabCardStartCurrent();
+      });
+      return;
+    }
     vocabCardPlaySegment();
   });
 }
 
-function vocabCardPlaySegment() {
-  if (!vocabCardPlaying || paused) return;
+function vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId) {
+  return token === vocabCardPlayToken && vocabCardPlaying && entryIdx === vocabCardIdx &&
+    segmentStep === step && (!au || getAu(0) === au) &&
+    (attemptId == null || attemptId === vocabCardAudioAttemptSerial);
+}
+
+function vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId) {
+  if (!vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, null, attemptId)) return;
+  vocabCardAudioFailed = false;
+  vocabCardRetryPlayback = null;
+  if (paused) paused = false;
+  if (segmentStep === 0 && vocabCardCountedPlayToken !== token) {
+    var entries = getVocabCardEntries();
+    var entry = entries[entryIdx];
+    if (entry) {
+      var gw = vocabCardLocalToGW(entry.localIdx);
+      var key = prefKey('vocab', gw);
+      var counts = loadCounts('vocab');
+      counts[key] = (counts[key] || 0) + 1;
+      saveCounts('vocab', counts);
+      recordLearningActivity('vocab', entry.item.en, 'vocab_card');
+      vocabCardCountedPlayToken = token;
+    }
+  }
+  updateVocabCardUI();
+}
+
+function vocabCardPauseForAudioFailure(token, entryIdx, segmentStep, au, err, retry, attemptId) {
+  if (!vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId)) return false;
+  if (au) {
+    au.onended = null;
+    au.onerror = null;
+    au.onplaying = null;
+    au.pause();
+    if (!err || err.name !== 'NotAllowedError') {
+      au.removeAttribute('src');
+      auUrlA = null;
+    }
+  }
+  vocabCardAudioAttemptSerial++;
+  vocabCardAudioFailed = true;
+  vocabCardRetryPlayback = retry || function() { vocabCardPlaySegment(true); };
+  paused = true;
+  updateVocabCardUI();
+  return true;
+}
+
+function vocabCardPlaySegment(retrying) {
+  if (!vocabCardPlaying || (paused && !retrying)) return;
   var entries = getVocabCardEntries();
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) { vocabCardStop(false); return; }
-  var localIdx = entries[vocabCardIdx].localIdx;
+  var token = vocabCardPlayToken;
+  var entryIdx = vocabCardIdx;
+  var segmentStep = step;
   var si = vocabCardStepInfo || getVocabCardStepInfo(entries[vocabCardIdx]);
   if (step >= si.labels.length) { vocabCardAutoNext(); return; }
   var url = vocabCardSegUrl(vocabCardIdx, step);
-  if (!url) { step++; vocabCardPlaySegment(); return; }
-  if (step === 0) {
-    var gw = vocabCardLocalToGW(localIdx);
-    var key = prefKey('vocab', gw);
-    var counts = loadCounts('vocab');
-    counts[key] = (counts[key] || 0) + 1;
-    saveCounts('vocab', counts);
-    recordLearningActivity('vocab', entries[vocabCardIdx].item.en, 'vocab_card');
+  if (!url) {
+    vocabCardPauseForAudioFailure(token, entryIdx, segmentStep, null, { name: 'MissingAudio' });
+    return;
   }
   updateVocabCardUI();
   loadAu(0, url);
   var au = getAu(0);
-  au.onended = function() { if (!vocabCardPlaying) return; step++; vocabCardPlaySegment(); };
-  au.onerror = function() { if (!vocabCardPlaying) return; step++; vocabCardPlaySegment(); };
-  var p = au.play();
-  if (p !== undefined) { p.catch(function() { if (!vocabCardPlaying) return; step++; vocabCardPlaySegment(); }); }
+  var attemptId = ++vocabCardAudioAttemptSerial;
+  var settled = false;
+  function fail(err) {
+    if (settled || !vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId)) return;
+    settled = true;
+    vocabCardPauseForAudioFailure(token, entryIdx, segmentStep, au, err, null, attemptId);
+  }
+  au.onplaying = function() { vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId); };
+  au.onended = function() {
+    if (settled || !vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId)) return;
+    settled = true;
+    au.onended = null; au.onerror = null; au.onplaying = null;
+    step++;
+    vocabCardPlaySegment();
+  };
+  au.onerror = function() { fail(au.error || { name: 'AudioError' }); };
+  var p;
+  try {
+    p = au.play();
+  } catch (err) {
+    fail(err);
+    return;
+  }
+  if (p === undefined) {
+    vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId);
+  } else {
+    p.then(function() { vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId); }).catch(fail);
+  }
 }
 
 function vocabCardAutoNext() {
@@ -3594,11 +3678,17 @@ function vocabCardAutoNext() {
 function vocabCardTogglePlay() {
   if (!vocabCardPlaying) { vocabCardStartCurrent(); return; }
   if (paused) {
-    var au = getAu(0);
-    if (au && au.src) au.play();
-    paused = false;
+    if (vocabCardAudioFailed && vocabCardRetryPlayback) {
+      var retry = vocabCardRetryPlayback;
+      vocabCardAudioFailed = false;
+      vocabCardRetryPlayback = null;
+      retry();
+      return;
+    }
+    vocabCardPlaySegment(true);
   } else {
     var au = getAu(0);
+    vocabCardAudioAttemptSerial++;
     if (au) au.pause();
     paused = true;
   }
@@ -3606,10 +3696,15 @@ function vocabCardTogglePlay() {
 }
 
 function vocabCardStop(resetPlaying) {
-  if (auA) { auA.onended=null; auA.onerror=null; auA.pause(); auA.removeAttribute('src'); }
-  if (auB) { auB.onended=null; auB.onerror=null; auB.pause(); auB.removeAttribute('src'); }
+  vocabCardPlayToken++;
+  vocabCardAudioAttemptSerial++;
+  vocabPlaybackToken++;
+  if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
+  if (auB) { auB.onended=null; auB.onerror=null; auB.onplaying=null; auB.pause(); auB.removeAttribute('src'); }
   auUrlA = null; auUrlB = null;
   vocabCardPlaying = false;
+  vocabCardAudioFailed = false;
+  vocabCardRetryPlayback = null;
   paused = false;
   step = 0;
   currentGroup = -1;
@@ -3684,6 +3779,7 @@ var audioLoadCbs = {};     // fileIdx → [callbacks]
 var audioFileBlobKeys = {}; // fileIdx → preloaded keys
 var audioFileOrder = [];
 var VOCAB_AUDIO_MEMORY_LIMIT = 6;
+var vocabPreloadGeneration = 0;
 
 function touchVocabAudioFile(fileIdx) {
   audioFileOrder = audioFileOrder.filter(function(value) { return value !== fileIdx; });
@@ -3718,18 +3814,33 @@ function getAudioFile(globalGIdx) {
   return { fileIdx: map[0], offset: map[1] };
 }
 
-function preloadUnitAudio() {
+function preloadUnitAudio(priorityLocalIdx) {
   var words = getUnitWords(currentDict, currentUnit);
   var groupCount = Math.ceil(words.length / GROUP_SIZE);
+  var fileIndices = [];
   for (var g = 0; g < groupCount; g++) {
     var gg = globalGroupIdx(g);
     var af = getAudioFile(gg);
-    if (!audioFilesLoaded[af.fileIdx]) {
-      fetchAudioFile(af.fileIdx);
-    } else if (audioFilesLoaded[af.fileIdx] === true) {
-      touchVocabAudioFile(af.fileIdx);
-    }
+    if (fileIndices.indexOf(af.fileIdx) < 0) fileIndices.push(af.fileIdx);
   }
+  if (!fileIndices.length) return;
+
+  var generation = ++vocabPreloadGeneration;
+  var localIdx = Math.max(0, Math.min(words.length - 1, Number(priorityLocalIdx) || 0));
+  var priorityGroup = Math.floor(localIdx / GROUP_SIZE);
+  var priorityFile = getAudioFile(globalGroupIdx(priorityGroup)).fileIdx;
+  fileIndices = fileIndices.filter(function(fileIdx) { return fileIdx !== priorityFile; });
+
+  waitForAudioFile(priorityFile, function(err) {
+    if (err || generation !== vocabPreloadGeneration) return;
+    setTimeout(function() {
+      if (generation !== vocabPreloadGeneration) return;
+      fileIndices.forEach(function(fileIdx) {
+        if (!audioFilesLoaded[fileIdx]) fetchAudioFile(fileIdx);
+        else if (audioFilesLoaded[fileIdx] === true) touchVocabAudioFile(fileIdx);
+      });
+    }, 180);
+  });
 }
 
 function fetchAudioFile(fileIdx) {
@@ -3802,28 +3913,39 @@ function audioIsReady(gIdx, wIdx) {
 
 // ═══════════ AUDIO: RED BOOK (Web Speech API) ═══════════
 function speakWeb(text, lang, onEnd) {
-  if (!window.speechSynthesis) { onEnd(); return; }
+  var onStart = arguments.length > 3 ? arguments[3] : null;
+  if (!window.speechSynthesis) { onEnd({ name: 'SpeechUnavailable' }); return; }
   window.speechSynthesis.cancel();
   var u = new SpeechSynthesisUtterance(text);
   u.lang = lang;
   u.rate = 0.85;
-  u.onend = onEnd;
-  u.onerror = onEnd;
   var keepAlive = setInterval(function() {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.pause();
       window.speechSynthesis.resume();
     }
   }, 5000);
-  var done = function() { clearInterval(keepAlive); onEnd(); };
-  u.onend = done;
-  u.onerror = done;
+  var settled = false;
+  var done = function(err) {
+    if (settled) return;
+    settled = true;
+    clearInterval(keepAlive);
+    onEnd(err || null);
+  };
+  u.onstart = function() { if (onStart) onStart(); };
+  u.onend = function() { done(null); };
+  u.onerror = function(event) { done({ name: event && event.error ? 'SpeechError:' + event.error : 'SpeechError' }); };
   window.speechSynthesis.speak(u);
 }
 
 // ═══════════ AUDIO PLAYBACK ═══════════
 var currentGroup = -1, wordIdx = 0, step = 0, paused = false, singleWordMode = false;
 var auA = null, auB = null, curAuSlot = 0, auUrlA = null, auUrlB = null;
+var vocabPlaybackToken = 0;
+var vocabAudioAttemptSerial = 0;
+var vocabAudioFailed = false;
+var vocabRetryPlayback = null;
+var vocabCountedPlayKey = '';
 
 function getAu(slot) {
   if (slot === 0) { if (!auA) auA = new Audio(); return auA; }
@@ -3895,26 +4017,35 @@ function setBtnState(gIdx, playing, isPaused, disabled) {
 }
 
 function stopAll() {
-  if (auA) { auA.onended=null; auA.onerror=null; auA.pause(); auA.removeAttribute('src'); }
-  if (auB) { auB.onended=null; auB.onerror=null; auB.pause(); auB.removeAttribute('src'); }
+  vocabPlaybackToken++;
+  vocabAudioAttemptSerial++;
+  vocabCardPlayToken++;
+  if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
+  if (auB) { auB.onended=null; auB.onerror=null; auB.onplaying=null; auB.pause(); auB.removeAttribute('src'); }
   auUrlA = null; auUrlB = null;
   if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
   vocabCardPlaying = false;
+  vocabAudioFailed = false;
+  vocabRetryPlayback = null;
   vocabCardStepInfo = null;
   clearHighlight();
   var gc = currentDict && currentUnit >= 0 ? unitGroupCount() : 0;
   for (var i = 0; i < gc; i++) setBtnState(i, false, false, false);
-  currentGroup = -1; wordIdx = 0; step = 0; paused = false; singleWordMode = false;
+  currentGroup = -1; wordIdx = 0; step = 0; paused = false; singleWordMode = false; curAuSlot = 0;
 }
 
 function finishGroup() {
-  if (auA) { auA.onended=null; auA.onerror=null; auA.pause(); auA.removeAttribute('src'); }
-  if (auB) { auB.onended=null; auB.onerror=null; auB.pause(); auB.removeAttribute('src'); }
+  vocabPlaybackToken++;
+  vocabAudioAttemptSerial++;
+  if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
+  if (auB) { auB.onended=null; auB.onerror=null; auB.onplaying=null; auB.pause(); auB.removeAttribute('src'); }
   auUrlA = null; auUrlB = null;
   clearHighlight();
   setBtnState(currentGroup, false, false, false);
   if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
-  currentGroup = -1; wordIdx = 0; step = 0; paused = false; singleWordMode = false;
+  vocabAudioFailed = false;
+  vocabRetryPlayback = null;
+  currentGroup = -1; wordIdx = 0; step = 0; paused = false; singleWordMode = false; curAuSlot = 0;
 }
 
 // ── Vocab audio playback (Edge TTS, AB swap) ──
@@ -3935,101 +4066,134 @@ function vocabNextStepAfter(gIdx, ns, nw) {
   return null;
 }
 
-function vocabOnSegEnd() {
-  var au = getAu(1 - curAuSlot);
-  curAuSlot = 1 - curAuSlot;
+function vocabPlaybackStateIsCurrent(token, dict, unit, group, currentWord, currentStep) {
+  return token === vocabPlaybackToken && currentDict === dict && currentUnit === unit &&
+    currentGroup === group && wordIdx === currentWord && step === currentStep;
+}
+
+function vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId) {
+  return vocabPlaybackStateIsCurrent(token, dict, unit, group, currentWord, currentStep) &&
+    curAuSlot === slot && (!au || getAu(slot) === au) &&
+    (attemptId == null || attemptId === vocabAudioAttemptSerial);
+}
+
+function markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId) {
+  if (!vocabPlaybackStateIsCurrent(token, dict, unit, group, currentWord, currentStep) ||
+      (attemptId != null && attemptId !== vocabAudioAttemptSerial)) return;
+  vocabAudioFailed = false;
+  vocabRetryPlayback = null;
+  paused = false;
+  if (currentStep === 0) {
+    var countKey = token + ':' + dict + ':' + unit + ':' + group + ':' + currentWord;
+    if (vocabCountedPlayKey !== countKey) {
+      var groupWords = unitGroupWords(group);
+      var item = groupWords[currentWord];
+      var gw = unit * UNIT_SIZE + group * GROUP_SIZE + currentWord;
+      var key = prefKey(dict, gw);
+      var counts = loadCounts(dict);
+      counts[key] = (counts[key] || 0) + 1;
+      saveCounts(dict, counts);
+      updateCount(group, currentWord);
+      if (item) recordLearningActivity(dict === 'vocab' ? 'vocab' : 'hb', item.en, dict === 'vocab' ? 'vocab_group' : 'hb_group');
+      vocabCountedPlayKey = countKey;
+    }
+  }
+  setBtnState(group, true, false, false);
+}
+
+function pauseVocabPlaybackForFailure(token, dict, unit, group, currentWord, currentStep, slot, au, err, retry, attemptId) {
+  if (!vocabPlaybackStateIsCurrent(token, dict, unit, group, currentWord, currentStep)) return false;
+  if (attemptId != null && attemptId !== vocabAudioAttemptSerial) return false;
+  if (au && !vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return false;
+  if (au) {
+    au.onended = null; au.onerror = null; au.onplaying = null;
+    au.pause();
+    if (!err || err.name !== 'NotAllowedError') {
+      au.removeAttribute('src');
+      if (slot === 0) auUrlA = null; else auUrlB = null;
+    }
+  }
+  vocabAudioAttemptSerial++;
+  vocabAudioFailed = true;
+  vocabRetryPlayback = retry || function() { vocabPlayWord(); };
+  paused = true;
+  setBtnState(group, false, true, false);
+  return true;
+}
+
+function playVocabSegmentAt(slot) {
+  var words = unitGroupWords(currentGroup);
+  if (wordIdx >= words.length) { finishGroup(); return Promise.resolve(false); }
+  var token = vocabPlaybackToken;
+  var dict = currentDict;
+  var unit = currentUnit;
+  var group = currentGroup;
+  var currentWord = wordIdx;
+  var currentStep = step;
+  var url = vocabSegUrl(group, currentWord, currentStep);
+  if (!url) {
+    pauseVocabPlaybackForFailure(token, dict, unit, group, currentWord, currentStep, slot, null, { name: 'MissingAudio' });
+    return Promise.resolve(false);
+  }
+
+  curAuSlot = slot;
+  loadAu(slot, url);
+  var au = getAu(slot);
+  var attemptId = ++vocabAudioAttemptSerial;
   au.playbackRate = 1.0;
-  highlight(currentGroup, wordIdx);
+  highlight(group, currentWord);
 
-  if (step === 0) {
-    var gw = currentUnit * UNIT_SIZE + currentGroup * GROUP_SIZE + wordIdx;
-    var key = prefKey(currentDict, gw);
-    var counts = loadCounts(currentDict);
-    counts[key] = (counts[key] || 0) + 1;
-    saveCounts(currentDict, counts);
-    updateCount(currentGroup, wordIdx);
-    if (words[wordIdx]) recordLearningActivity(currentDict === 'vocab' ? 'vocab' : 'hb', words[wordIdx].en, currentDict === 'vocab' ? 'vocab_group' : 'hb_group');
+  var settled = false;
+  function fail(err) {
+    if (settled || !vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return false;
+    settled = true;
+    pauseVocabPlaybackForFailure(token, dict, unit, group, currentWord, currentStep, slot, au, err, null, attemptId);
+    return false;
   }
-
-  var segDone = false;
-  function onErr() {
-    if (segDone) return;
-    segDone = true;
-    au.onended = null; au.onerror = null;
-    au.pause(); au.removeAttribute('src');
-    if (curAuSlot === 0) auUrlA = null; else auUrlB = null;
-    var nx = vocabNextStepAfter(currentGroup, step, wordIdx);
-    if (!nx) { finishGroup(); return; }
-    step = nx.step; wordIdx = nx.wordIdx;
-    vocabPlayWord();
-  }
-
+  au.onplaying = function() { markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId); };
   au.onended = function() {
-    var nx = vocabNextStepAfter(currentGroup, step, wordIdx);
+    if (settled || !vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return;
+    settled = true;
+    au.onended = null; au.onerror = null; au.onplaying = null;
+    var nx = vocabNextStepAfter(group, currentStep, currentWord);
     if (!nx) { finishGroup(); return; }
     step = nx.step; wordIdx = nx.wordIdx;
-    if (!segDone) { segDone = true; vocabOnSegEnd(); }
+    vocabOnSegEnd();
   };
-  au.onerror = onErr;
-  var playP = au.play();
-  if (playP !== undefined) { playP.catch(onErr); }
-
-  var nx = vocabNextStepAfter(currentGroup, step, wordIdx);
-  if (nx) {
-    var url = vocabSegUrl(currentGroup, nx.wordIdx, nx.step);
-    if (url) loadAu(1 - curAuSlot, url);
+  au.onerror = function() { fail(au.error || { name: 'AudioError' }); };
+  var playP;
+  try {
+    playP = au.play();
+  } catch (err) {
+    fail(err);
+    playP = Promise.resolve(false);
   }
+  var playbackPromise;
+  if (playP === undefined) {
+    markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId);
+    playbackPromise = Promise.resolve(true);
+  } else {
+    playbackPromise = Promise.resolve(playP).then(function() {
+      if (!vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return false;
+      markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId);
+      return true;
+    }).catch(fail);
+  }
+
+  var nx = vocabNextStepAfter(group, currentStep, currentWord);
+  if (nx) {
+    var nextUrl = vocabSegUrl(group, nx.wordIdx, nx.step);
+    if (nextUrl) loadAu(1 - slot, nextUrl);
+  }
+  return playbackPromise;
+}
+
+function vocabOnSegEnd() {
+  return playVocabSegmentAt(1 - curAuSlot);
 }
 
 function vocabPlayWord() {
-  var words = unitGroupWords(currentGroup);
-  if (wordIdx >= words.length) { finishGroup(); return; }
-
-  var url = vocabSegUrl(currentGroup, wordIdx, step);
-  if (!url) { finishGroup(); return; }
-
-  if (step === 0) {
-    var gw = currentUnit * UNIT_SIZE + currentGroup * GROUP_SIZE + wordIdx;
-    var key = prefKey(currentDict, gw);
-    var counts = loadCounts(currentDict);
-    counts[key] = (counts[key] || 0) + 1;
-    saveCounts(currentDict, counts);
-    updateCount(currentGroup, wordIdx);
-  }
-
-  loadAu(curAuSlot, url);
-  var au = getAu(curAuSlot);
-  au.playbackRate = 1.0;
-  highlight(currentGroup, wordIdx);
-
-  var segDone = false;
-  function onErr() {
-    if (segDone) return;
-    segDone = true;
-    au.onended = null; au.onerror = null;
-    au.pause(); au.removeAttribute('src');
-    if (curAuSlot === 0) auUrlA = null; else auUrlB = null;
-    var nx = vocabNextStepAfter(currentGroup, step, wordIdx);
-    if (!nx) { finishGroup(); return; }
-    step = nx.step; wordIdx = nx.wordIdx;
-    vocabPlayWord();
-  }
-
-  au.onended = function() {
-    var nx = vocabNextStepAfter(currentGroup, step, wordIdx);
-    if (!nx) { finishGroup(); return; }
-    step = nx.step; wordIdx = nx.wordIdx;
-    if (!segDone) { segDone = true; vocabOnSegEnd(); }
-  };
-  au.onerror = onErr;
-  var playP = au.play();
-  if (playP !== undefined) { playP.catch(onErr); }
-
-  var nx = vocabNextStepAfter(currentGroup, step, wordIdx);
-  if (nx) {
-    var nu = vocabSegUrl(currentGroup, nx.wordIdx, nx.step);
-    if (nu) loadAu(1 - curAuSlot, nu);
-  }
+  return playVocabSegmentAt(curAuSlot);
 }
 
 // ── Red book audio playback (Web Speech API) ──
@@ -4039,6 +4203,14 @@ function playCurrentWordHb() {
   if (wordIdx >= words.length) { finishGroup(); return; }
   if (!words[wordIdx]) { finishGroup(); return; }
 
+  var token = vocabPlaybackToken;
+  var dict = currentDict;
+  var unit = currentUnit;
+  var group = currentGroup;
+  var currentWord = wordIdx;
+  var currentStep = step;
+  var attemptId = ++vocabAudioAttemptSerial;
+
   var si = getStepInfo(currentDict, currentUnit, currentGroup, wordIdx);
   var isEN = si.isEN.indexOf(step) !== -1;
   var text = isEN ? words[wordIdx].en : words[wordIdx].cn;
@@ -4046,19 +4218,17 @@ function playCurrentWordHb() {
 
   highlight(currentGroup, wordIdx);
 
-  if (step === 0) {
-    var gw = currentUnit * UNIT_SIZE + currentGroup * GROUP_SIZE + wordIdx;
-    var key = prefKey(currentDict, gw);
-    var counts = loadCounts(currentDict);
-    counts[key] = (counts[key] || 0) + 1;
-    saveCounts(currentDict, counts);
-    updateCount(currentGroup, wordIdx);
-  }
-
-  speakWeb(text, lang, function() {
-    if (currentGroup < 0) return;
-    step++;
-    var si2 = getStepInfo(currentDict, currentUnit, currentGroup, wordIdx);
+  speakWeb(text, lang, function(err) {
+    if (!vocabPlaybackStateIsCurrent(token, dict, unit, group, currentWord, currentStep) ||
+        attemptId !== vocabAudioAttemptSerial) return;
+    if (err) {
+      pauseVocabPlaybackForFailure(token, dict, unit, group, currentWord, currentStep, curAuSlot, null, err, function() {
+        playCurrentWordHb();
+      }, attemptId);
+      return;
+    }
+    step = currentStep + 1;
+    var si2 = getStepInfo(dict, unit, group, currentWord);
     if (step >= si2.labels.length) {
       if (singleWordMode) { finishGroup(); return; }
       step = 0;
@@ -4066,11 +4236,14 @@ function playCurrentWordHb() {
     }
     if (wordIdx >= words.length) { finishGroup(); }
     else { playCurrentWordHb(); }
+  }, function() {
+    markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId);
   });
 }
 
 // ── Play controls ──
 function startVocabPlayback(gIdx) {
+  var token = vocabPlaybackToken;
   var gw = currentUnit * UNIT_SIZE + gIdx * GROUP_SIZE + 0;
   if (preloaded[String(gw) + '_en']) {
     setBtnState(gIdx, true, false, false);
@@ -4085,25 +4258,62 @@ function startVocabPlayback(gIdx) {
 
   waitForAudioFile(af.fileIdx, function(err) {
     if (loading) loading.classList.remove('show');
-    if (err || currentGroup !== gIdx) { finishGroup(); return; }
+    if (token !== vocabPlaybackToken || currentGroup !== gIdx) return;
+    if (err) {
+      pauseVocabPlaybackForFailure(token, currentDict, currentUnit, gIdx, wordIdx, step, curAuSlot, null, { name: 'AudioBundleError' }, function() {
+        startVocabPlayback(gIdx);
+      });
+      return;
+    }
     setBtnState(gIdx, true, false, false);
     vocabPlayWord();
   });
 }
 
+function resumeVocabPlayback(gIdx) {
+  if (currentGroup !== gIdx) return Promise.resolve(false);
+  if (vocabAudioFailed && vocabRetryPlayback) {
+    var retry = vocabRetryPlayback;
+    vocabAudioFailed = false;
+    vocabRetryPlayback = null;
+    return Promise.resolve().then(retry).then(function(result) {
+      return result !== false;
+    }).catch(function() {
+      return false;
+    });
+  }
+  if (currentDict !== 'vocab' || !HAS_VOCAB_AUDIO) {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    playCurrentWordHb();
+    return Promise.resolve(true);
+  }
+
+  var token = vocabPlaybackToken;
+  var dict = currentDict;
+  var unit = currentUnit;
+  var group = currentGroup;
+  var currentWord = wordIdx;
+  var currentStep = step;
+  var slot = curAuSlot;
+  var au = getAu(slot);
+  if (!au || !au.src) {
+    vocabRetryPlayback = function() { vocabPlayWord(); };
+    vocabAudioFailed = true;
+    return resumeVocabPlayback(gIdx);
+  }
+  return vocabPlayWord();
+}
+
 function togglePlay(gIdx) {
   if (currentGroup === gIdx && !paused) {
-    if (auA) { auA.pause(); }
-    if (auB) { auB.pause(); }
+    vocabAudioAttemptSerial++;
+    var activeAu = getAu(curAuSlot);
+    if (activeAu) activeAu.pause();
     if (window.speechSynthesis) { window.speechSynthesis.pause(); }
     paused = true;
     setBtnState(gIdx, false, true, false);
   } else if (currentGroup === gIdx && paused) {
-    if (auA && auA.src && auA.paused) { auA.play(); }
-    else if (auB && auB.src && auB.paused) { auB.play(); }
-    if (window.speechSynthesis) { window.speechSynthesis.resume(); }
-    paused = false;
-    setBtnState(gIdx, true, false, false);
+    resumeVocabPlayback(gIdx);
   } else {
     stopAll();
     currentGroup = gIdx;
@@ -4124,14 +4334,11 @@ function togglePlay(gIdx) {
 function togglePause(gIdx) {
   if (currentGroup !== gIdx) return;
   if (paused) {
-    if (auA && auA.src && auA.paused) { auA.play(); }
-    else if (auB && auB.src && auB.paused) { auB.play(); }
-    if (window.speechSynthesis) { window.speechSynthesis.resume(); }
-    paused = false;
-    setBtnState(gIdx, true, false, false);
+    resumeVocabPlayback(gIdx);
   } else {
-    if (auA) { auA.pause(); }
-    if (auB) { auB.pause(); }
+    vocabAudioAttemptSerial++;
+    var activeAu = getAu(curAuSlot);
+    if (activeAu) activeAu.pause();
     if (window.speechSynthesis) { window.speechSynthesis.pause(); }
     paused = true;
     setBtnState(gIdx, false, true, false);
@@ -4149,6 +4356,7 @@ function doRewind(gIdx) {
 
 // ── Single word tap ──
 function playbackSingleVocab(gIdx, wIdx) {
+  var token = vocabPlaybackToken;
   var gw = currentUnit * UNIT_SIZE + gIdx * GROUP_SIZE + wIdx;
   if (preloaded[String(gw) + '_en']) {
     setBtnState(gIdx, true, false, false);
@@ -4163,7 +4371,13 @@ function playbackSingleVocab(gIdx, wIdx) {
 
   waitForAudioFile(af.fileIdx, function(err) {
     if (loading) loading.classList.remove('show');
-    if (err || currentGroup !== gIdx) { finishGroup(); return; }
+    if (token !== vocabPlaybackToken || currentGroup !== gIdx || wordIdx !== wIdx) return;
+    if (err) {
+      pauseVocabPlaybackForFailure(token, currentDict, currentUnit, gIdx, wIdx, step, curAuSlot, null, { name: 'AudioBundleError' }, function() {
+        playbackSingleVocab(gIdx, wIdx);
+      });
+      return;
+    }
     setBtnState(gIdx, true, false, false);
     vocabPlayWord();
   });
@@ -6049,6 +6263,7 @@ function buildMorningQueue(randomFn) {
     q[i].morningPrefCaptured = false;
   }
   morningQueueBuiltAt = Date.now();
+  scheduleMorningFirstAudioPrefetch();
   return q;
 }
 
@@ -6571,6 +6786,20 @@ function ensureMorningAudio(item, cb) {
   }
 }
 
+var morningFirstAudioPrefetchTimer = 0;
+var morningFirstAudioPrefetchToken = 0;
+function scheduleMorningFirstAudioPrefetch(item) {
+  var target = item || (morningQueue && morningQueue[0]);
+  var token = ++morningFirstAudioPrefetchToken;
+  if (morningFirstAudioPrefetchTimer) clearTimeout(morningFirstAudioPrefetchTimer);
+  if (!target) return;
+  morningFirstAudioPrefetchTimer = setTimeout(function() {
+    morningFirstAudioPrefetchTimer = 0;
+    if (token !== morningFirstAudioPrefetchToken || morningPlaying) return;
+    ensureMorningAudio(target, function() {});
+  }, 120);
+}
+
 function cleanupMorningAudioCache() {
   for (var k in _mVocabAudio) {
     var words = _mVocabAudio[k];
@@ -6612,6 +6841,8 @@ var morningDisplayStepInfo = null; // exact plan currently represented by the UI
 var morningCurrentAudioUrl = null; // source URL for the segment the UI says is active
 var morningCurrentAudioToken = 0;
 var morningAudioAttemptSerial = 0;
+var morningPlayPromiseSerial = 0;
+var morningCurrentPlayPromiseId = 0;
 var morningAudioWatchdog = null;
 var morningCurrentSegmentProgress = 0;
 var morningCurrentSegmentLang = null;
@@ -6632,6 +6863,8 @@ var morningElapsedTimer = null;
 var morningActiveSaveTimer = null;
 var morningResumePromise = null;
 var morningExitShouldResume = false;
+var morningAudioFailed = false;
+var morningRetryCurrentSegment = null;
 
 function formatMorningClock(seconds) {
   seconds = Math.max(0, Math.round(Number(seconds) || 0));
@@ -6812,6 +7045,20 @@ function morningClearAudioWatchdog() {
   morningAudioWatchdog = null;
 }
 
+function beginMorningPlayPromise() {
+  morningCurrentPlayPromiseId = ++morningPlayPromiseSerial;
+  return morningCurrentPlayPromiseId;
+}
+
+function invalidateMorningPlayPromise() {
+  morningPlayPromiseSerial++;
+  morningCurrentPlayPromiseId = 0;
+}
+
+function morningPlayPromiseIsCurrent(playPromiseId) {
+  return playPromiseId === morningPlayPromiseSerial && playPromiseId === morningCurrentPlayPromiseId;
+}
+
 function morningDetachAu(au) {
   if (!au) return;
   au.onended = null;
@@ -6862,6 +7109,7 @@ function morningResetAu(slot) {
 function morningStopAudio() {
   morningClearAudioWatchdog();
   morningAudioAttemptSerial++;
+  invalidateMorningPlayPromise();
   [morningAuA, morningAuB].forEach(function(au) {
     if (au) { morningDetachAu(au); au.pause(); au.removeAttribute('src'); }
   });
@@ -6869,6 +7117,23 @@ function morningStopAudio() {
   morningAuUrlB = null;
   morningCurrentAudioUrl = null;
   morningCurrentAudioToken = 0;
+  morningRetryCurrentSegment = null;
+  morningResumePromise = null;
+}
+
+function pauseMorningForAudioFailure(token, item, retry) {
+  if (token !== _morningPlayToken || item !== morningQueue[morningPos]) return false;
+  morningClearAudioWatchdog();
+  invalidateMorningPlayPromise();
+  pauseMorningClock();
+  morningPaused = true;
+  morningAudioFailed = true;
+  morningRetryCurrentSegment = retry || null;
+  var btn = document.getElementById('mpBtnPlay');
+  if (btn) btn.textContent = '▶';
+  updateMorningPlayerUI();
+  saveMorningActiveSession('audio_error');
+  return true;
 }
 
 function updateMorningPlayerUI() {
@@ -7047,6 +7312,8 @@ function playMorningCurrent() {
   _morningPlayToken++;
   var token = _morningPlayToken;
   var item = morningQueue[morningPos];
+  morningAudioFailed = false;
+  morningRetryCurrentSegment = null;
   morningCurrentSegmentProgress = 0;
   morningCurrentWordCompletedSteps = 0;
   morningDisplayStepInfo = getMorningStepLabels(item);
@@ -7056,7 +7323,15 @@ function playMorningCurrent() {
   ensureMorningAudio(item, function(err, fileOrUnit) {
     if (token !== _morningPlayToken) return;
     if (item !== morningQueue[morningPos]) return;
-    if (err) { skipMorningWord(); return; }
+    if (err) {
+      pauseMorningForAudioFailure(token, item, function() {
+        if (item !== morningQueue[morningPos]) return Promise.resolve(false);
+        morningPaused = false;
+        playMorningCurrent();
+        return Promise.resolve(true);
+      });
+      return;
+    }
 
     var stepInfo = morningDisplayStepInfo || getMorningStepLabels(item);
     var extraStepInfo = null;
@@ -7071,9 +7346,11 @@ function playMorningCurrent() {
       if (!url) {
         morningCurrentSegmentProgress = 0;
         if (morningStep < activeStepInfo.labels.length) {
-          morningStep++;
-          morningCurrentWordCompletedSteps++;
-          playSegment();
+          pauseMorningForAudioFailure(token, item, function() {
+            if (token !== _morningPlayToken || item !== morningQueue[morningPos]) return Promise.resolve(false);
+            morningPaused = false;
+            return playSegment() || Promise.resolve(true);
+          });
           return;
         }
         if (!extraStepInfo && morningRatingAppendPending === item) {
@@ -7116,37 +7393,43 @@ function playMorningCurrent() {
           morningAudioWatchdog = setTimeout(function() { handleFailure({ name: 'AudioTimeout' }); }, 8000);
         }
 
-        function handleFailure(err) {
-          if (!isCurrentAttempt()) return;
+        function handleFailure(err, playPromiseId) {
+          if (!isCurrentAttempt()) return Promise.resolve(false);
+          if (playPromiseId != null && !morningPlayPromiseIsCurrent(playPromiseId)) return Promise.resolve(false);
           morningClearAudioWatchdog();
           if (err && err.name === 'NotAllowedError') {
-            pauseMorningClock();
-            morningPaused = true;
-            var btn = document.getElementById('mpBtnPlay');
-            if (btn) btn.textContent = '▶';
-            updateMorningPlayerUI();
-            return;
+            pauseMorningForAudioFailure(token, item, function() {
+              if (token !== _morningPlayToken || item !== morningQueue[morningPos] || morningStep !== segmentStep) return Promise.resolve(false);
+              return startSegment(0);
+            });
+            return Promise.resolve(false);
           }
           morningDetachAu(au);
           au.pause();
           if (attempt < 2) {
+            invalidateMorningPlayPromise();
             morningResetAu(segmentSlot);
-            startSegment(attempt + 1);
-            return;
+            return startSegment(attempt + 1);
           }
           // A broken segment must not discard the rest of the word. In
-          // particular, an English-example failure still advances to Chinese.
-          au.playbackRate = 1.0;
+          // particular, it must stay on the same segment until the user retries.
+          morningAudioAttemptSerial++;
+          morningResetAu(segmentSlot);
           morningCurrentSegmentProgress = 0;
-          morningStep++;
-          morningCurrentWordCompletedSteps++;
-          morningSlot = 1 - segmentSlot;
-          playSegment();
+          pauseMorningForAudioFailure(token, item, function() {
+            if (token !== _morningPlayToken || item !== morningQueue[morningPos] || morningStep !== segmentStep) return Promise.resolve(false);
+            return startSegment(0);
+          });
+          return Promise.resolve(false);
         }
 
         au.onplaying = function() {
-          if (!isCurrentAttempt()) return;
+          if (!isCurrentAttempt() || !morningCurrentPlayPromiseId ||
+              morningCurrentPlayPromiseId !== morningPlayPromiseSerial) return;
           morningClearAudioWatchdog();
+          morningAudioFailed = false;
+          morningRetryCurrentSegment = null;
+          setMorningPausedState(false);
           morningSegmentPlayingAt = Date.now();
           var loadSec = morningSegmentLoadStartedAt ? Math.max(0, (morningSegmentPlayingAt - morningSegmentLoadStartedAt) / 1000) : 0;
           recordMorningTimingSample(null, NaN, loadSec);
@@ -7154,6 +7437,8 @@ function playMorningCurrent() {
         au.onwaiting = armWatchdog;
         au.onpause = function() {
           if (!isCurrentAttempt() || au.ended || morningPaused || morningEnded) return;
+          morningClearAudioWatchdog();
+          invalidateMorningPlayPromise();
           setMorningPausedState(true);
           saveMorningActiveSession('audio_paused');
         };
@@ -7176,8 +7461,27 @@ function playMorningCurrent() {
         };
         au.onerror = function() { handleFailure(au.error || { name: 'AudioError' }); };
         updateMorningPlayerUI();
+        var playPromiseId = beginMorningPlayPromise();
         armWatchdog();
-        au.play().then(morningClearAudioWatchdog).catch(handleFailure);
+        var playPromise;
+        try {
+          playPromise = au.play();
+        } catch (err) {
+          return handleFailure(err, playPromiseId);
+        }
+        if (playPromise === undefined) {
+          if (!isCurrentAttempt() || !morningPlayPromiseIsCurrent(playPromiseId)) return Promise.resolve(false);
+          morningClearAudioWatchdog();
+          setMorningPausedState(false);
+          return Promise.resolve(true);
+        }
+        return Promise.resolve(playPromise).then(function() {
+          if (!isCurrentAttempt() || !morningPlayPromiseIsCurrent(playPromiseId)) return false;
+          morningClearAudioWatchdog();
+          return true;
+        }).catch(function(err) {
+          return handleFailure(err, playPromiseId);
+        });
       }
 
       startSegment(0);
@@ -7283,7 +7587,7 @@ function prepareMorningPlayer() {
 
 function startNewMorning() {
   if (loadMorningActiveSession()) archiveMorningActiveSession('replaced');
-  buildMorningQueue();
+  if (!morningQueue.length || morningQueueBuiltAt <= Date.now() - 600000) buildMorningQueue();
   if (morningQueue.length === 0) { alert('队列为空，请先生成队列'); return; }
   morningPos = 0;
   morningStep = 0;
@@ -7296,6 +7600,8 @@ function startNewMorning() {
   morningDisplayStepInfo = null;
   morningCurrentAudioUrl = null;
   morningCurrentAudioToken = 0;
+  morningAudioFailed = false;
+  morningRetryCurrentSegment = null;
   morningEnded = false;
   _morningPlayToken = 0;
   morningSessionStart = Date.now();
@@ -7332,6 +7638,8 @@ function resumeMorningSession() {
   morningDisplayStepInfo = null;
   morningCurrentAudioUrl = null;
   morningCurrentAudioToken = 0;
+  morningAudioFailed = false;
+  morningRetryCurrentSegment = null;
   morningEnded = false;
   _morningPlayToken = 0;
   morningSessionStart = Number(active.startedAt) || Date.now();
@@ -7356,35 +7664,83 @@ function setMorningPausedState(paused) {
   updateMorningProgressUI();
 }
 
+function trackMorningResumePromise(promise) {
+  var tracked = Promise.resolve(promise);
+  morningResumePromise = tracked;
+  tracked.then(function() {
+    if (morningResumePromise === tracked) morningResumePromise = null;
+  }, function() {
+    if (morningResumePromise === tracked) morningResumePromise = null;
+  });
+  return tracked;
+}
+
 function attemptMorningResume(restartIfStale) {
   if (!morningPlaying || morningEnded || morningPos >= morningQueue.length) return Promise.resolve(false);
   if (morningResumePromise) return morningResumePromise;
   var item = morningQueue[morningPos];
+  if (morningAudioFailed && morningRetryCurrentSegment) {
+    var retry = morningRetryCurrentSegment;
+    morningAudioFailed = false;
+    morningRetryCurrentSegment = null;
+    return trackMorningResumePromise(Promise.resolve().then(function() {
+      return retry();
+    }).then(function(result) {
+      return result !== false;
+    }).catch(function() {
+      setMorningPausedState(true);
+      return false;
+    }));
+  }
   var info = morningDisplayStepInfo || getMorningStepLabels(item);
   var expected = morningSegUrl(item, morningStep, info);
   var au = morningGetAu(morningSlot);
   var loaded = morningSlot === 0 ? morningAuUrlA : morningAuUrlB;
   if (!expected || loaded !== expected || morningCurrentAudioUrl !== expected || morningCurrentAudioToken !== _morningPlayToken) {
     if (!restartIfStale) { setMorningPausedState(true); return Promise.resolve(false); }
+    var currentStep = morningStep;
     _morningPlayToken++;
     morningStopAudio();
-    morningStep = 0;
-    morningDisplayStepInfo = null;
-    setMorningPausedState(false);
+    morningStep = currentStep;
+    morningPaused = false;
     playMorningCurrent();
     return Promise.resolve(true);
   }
-  morningResumePromise = au.play().then(function() {
+  var token = _morningPlayToken;
+  var segmentStep = morningStep;
+  var segmentSlot = morningSlot;
+  var audioAttemptId = morningAudioAttemptSerial;
+  var playPromiseId = beginMorningPlayPromise();
+  function resumeAttemptIsCurrent() {
+    return audioAttemptId === morningAudioAttemptSerial && token === _morningPlayToken &&
+      item === morningQueue[morningPos] && segmentStep === morningStep && segmentSlot === morningSlot &&
+      morningGetAu(segmentSlot) === au && morningPlayPromiseIsCurrent(playPromiseId);
+  }
+  var playPromise;
+  try {
+    playPromise = au.play();
+  } catch (err) {
+    if (resumeAttemptIsCurrent()) {
+      invalidateMorningPlayPromise();
+      setMorningPausedState(true);
+    }
+    return Promise.resolve(false);
+  }
+  if (playPromise === undefined) {
+    if (!resumeAttemptIsCurrent()) return Promise.resolve(false);
+    setMorningPausedState(false);
+    return Promise.resolve(true);
+  }
+  return trackMorningResumePromise(Promise.resolve(playPromise).then(function() {
+    if (!resumeAttemptIsCurrent()) return false;
     setMorningPausedState(false);
     return true;
   }).catch(function() {
+    if (!resumeAttemptIsCurrent()) return false;
+    invalidateMorningPlayPromise();
     setMorningPausedState(true);
     return false;
-  }).then(function(result) {
-    morningResumePromise = null;
-    return result;
-  });
-  return morningResumePromise;
+  }));
 }
 
 function syncMorningPlayback() {
@@ -7400,6 +7756,9 @@ function toggleMorningPause() {
   if (morningPaused) {
     attemptMorningResume(true);
   } else {
+    morningClearAudioWatchdog();
+    invalidateMorningPlayPromise();
+    morningResumePromise = null;
     au.pause();
     setMorningPausedState(true);
     saveMorningActiveSession('paused');
