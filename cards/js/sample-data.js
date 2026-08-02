@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "cb645a9029d9",
-  "content_version": "51eb96cc0721",
+  "exam_wording_version": "350c7ed59285",
+  "content_version": "d1cb2f60e11c",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -2693,6 +2693,91 @@
       "revision": {
         "version": 1,
         "updated_at": "2026-08-01T20:30:03+08:00",
+        "device_id": "assistant-706"
+      }
+    },
+    {
+      "id": "card_706_167d7284d5e5ffe4",
+      "subject": "706",
+      "module": "古代文学",
+      "topic_id": "topic_706_zhuangzi_prose",
+      "order": 100,
+      "title": "有待、无待与齐物的关系",
+      "prompt": "有待、无待、齐物三者是什么关系？魍魉问影该归入哪个概念？",
+      "summary": "有待是万物有所凭借的实然状态，齐物是物我不分、界限消融，无待是无己之后的自由境界；齐物是无待的认识基础，魍魉问影字面讲有待、深层证齐物。",
+      "outline_logic": {
+        "type": "causal",
+        "description": "按万物有待、齐物破界、无己通无待、魍魉问影归位四层说明三者关系与链条。"
+      },
+      "outline": [
+        {
+          "heading": "万物有待",
+          "text": "影待形、鹏待风，万物运行皆有所凭借。"
+        },
+        {
+          "heading": "齐物破界",
+          "text": "从道看万物等齐一体，物我不分，界限消融。"
+        },
+        {
+          "heading": "无己通无待",
+          "text": "至人无己即忘我、物我不分，由此任其自然达到无待。"
+        },
+        {
+          "heading": "魍魉问影归位",
+          "text": "字面讲有待的依赖链，深层证齐物，是连接二者的桥。"
+        }
+      ],
+      "examples": [
+        "魍魉问影：影有待于形，形又有待于他物——字面是有待链，深层是齐物。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "先分别界定有待、齐物、无待，再连成链条，最后给魍魉问影定位。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "有所凭借；物我不分；忘我；无待；齐物。"
+        },
+        {
+          "level": 3,
+          "kind": "evidence",
+          "text": "王力注：无待即任其自然、与万物混为一体；郭锡良注：无己即与天地合一。"
+        }
+      ],
+      "exam_answer_type": "term",
+      "exam_wording": "首先，在万物有待上，鲲鹏需凭借风力、影子需依赖形体，万物运行皆有所凭借，这是实然状态。其次，在齐物破界上，从道的立场看，万物等齐一体，物我、梦醒、生死界限消融，达到**物我不分**的齐物境界。\n\n再次，在无己通无待上，至人无己就是忘我、与天地合一，放下我执后一切任其自然，方达到**无待**的逍遥，故齐物是无待的认识基础。最后，在魍魉问影归位上，这则寓言字面讲影有待于形、形又有待于他物，深层却以无独立之我证明万物齐同，是连接有待与齐物的桥梁。",
+      "tags": [
+        "庄子",
+        "齐物",
+        "有待",
+        "无待",
+        "魍魉问影",
+        "概念关系"
+      ],
+      "source": {
+        "assistant": "706",
+        "study_date": "2026-08-02",
+        "note_path": "D:/AAA考研/706复习助手/笔记/古代文学/庄子/庄子_高频例证深读_2026-08-01.md",
+        "session_id": "706-2026-08-02-zhuangzi-concept-chain",
+        "created_at": "2026-08-02T15:26:15+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-08-02T15:26:15+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-08-02T15:26:15+08:00",
         "device_id": "assistant-706"
       }
     },
@@ -6545,6 +6630,6 @@
       }
     }
   ],
-  "release_id": "715442dd5057"
+  "release_id": "7b7b7cc76267"
 };
 })();
