@@ -1468,7 +1468,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.11 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.12 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1871,11 +1871,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.11"></script>
-<script src="focus-core.js?v=2.0.11"></script>
-<script src="study-copy.js?v=2.0.11"></script>
-<script src="audio-cache.js?v=2.0.11"></script>
-<script src="ui-motion.js?v=2.0.11"></script>
+<script src="review-core.js?v=2.0.12"></script>
+<script src="focus-core.js?v=2.0.12"></script>
+<script src="study-copy.js?v=2.0.12"></script>
+<script src="audio-cache.js?v=2.0.12"></script>
+<script src="ui-motion.js?v=2.0.12"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1960,8 +1960,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.11";
-var BUILD_TS = 1785814269;
+var APP_BUILD_ID = "2.0.12";
+var BUILD_TS = 1785996140;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2341,6 +2341,7 @@ function appTabForView(view) { return view === 'home' ? 'home' : (view === 'libr
 function showView(name, options) {
   var opts = options || {};
   var previous = activeViewName;
+  suspendMorningForAppNavigation();
   hideAllViews({ keepAppTabbar: !!appTabForView(name) });
   var view = document.getElementById('view-' + name);
   view.style.display = name === 'today-recite' ? 'flex' : 'block';
@@ -3604,13 +3605,15 @@ function vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId) {
 
 function vocabCardPauseForAudioFailure(token, entryIdx, segmentStep, au, err, retry, attemptId) {
   if (!vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId)) return false;
+  if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+  vocabAudioWatchdog = null;
   if (au) {
-    au.onended = null;
-    au.onerror = null;
-    au.onplaying = null;
-    au.pause();
-    if (!err || err.name !== 'NotAllowedError') {
-      au.removeAttribute('src');
+    if (err && err.name === 'NotAllowedError') {
+      au.onended = null; au.onerror = null; au.onplaying = null;
+      au.onpause = null; au.onwaiting = null; au.onstalled = null; au.ontimeupdate = null;
+      au.pause();
+    } else {
+      releaseAudioElement(au);
       auUrlA = null;
     }
   }
@@ -3640,21 +3643,52 @@ function vocabCardPlaySegment(retrying) {
   loadAu(0, url);
   var au = getAu(0);
   var attemptId = ++vocabCardAudioAttemptSerial;
+  var unexpectedPauseTimer = null;
   var settled = false;
+  function isCurrentAttempt() {
+    return vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId);
+  }
+  function clearAttemptTimers() {
+    if (unexpectedPauseTimer) clearTimeout(unexpectedPauseTimer);
+    unexpectedPauseTimer = null;
+    if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+    vocabAudioWatchdog = null;
+  }
   function fail(err) {
-    if (settled || !vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId)) return;
+    if (settled || !isCurrentAttempt()) return;
     settled = true;
+    clearAttemptTimers();
     vocabCardPauseForAudioFailure(token, entryIdx, segmentStep, au, err, null, attemptId);
   }
-  au.onplaying = function() { vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId); };
+  au.onplaying = function() {
+    if (!isCurrentAttempt()) return;
+    if (unexpectedPauseTimer) clearTimeout(unexpectedPauseTimer);
+    unexpectedPauseTimer = null;
+    vocabCardMarkPlaybackStarted(token, entryIdx, segmentStep, attemptId);
+    armVocabAudioWatchdog(au, isCurrentAttempt, fail);
+  };
+  au.onwaiting = function() { if (isCurrentAttempt()) armVocabAudioWatchdog(au, isCurrentAttempt, fail); };
+  au.onstalled = au.onwaiting;
+  au.ontimeupdate = function() { if (isCurrentAttempt()) armVocabAudioWatchdog(au, isCurrentAttempt, fail); };
+  au.onpause = function() {
+    if (!isCurrentAttempt() || au.ended || paused) return;
+    if (unexpectedPauseTimer) clearTimeout(unexpectedPauseTimer);
+    unexpectedPauseTimer = setTimeout(function() {
+      unexpectedPauseTimer = null;
+      if (isCurrentAttempt() && !paused && !au.ended) fail({ name: 'AudioPaused' });
+    }, 240);
+  };
   au.onended = function() {
-    if (settled || !vocabCardAttemptIsCurrent(token, entryIdx, segmentStep, au, attemptId)) return;
+    if (settled || !isCurrentAttempt()) return;
     settled = true;
+    clearAttemptTimers();
     au.onended = null; au.onerror = null; au.onplaying = null;
+    au.onpause = null; au.onwaiting = null; au.onstalled = null; au.ontimeupdate = null;
     step++;
     vocabCardPlaySegment();
   };
   au.onerror = function() { fail(au.error || { name: 'AudioError' }); };
+  armVocabAudioWatchdog(au, isCurrentAttempt, fail);
   var p;
   try {
     p = au.play();
@@ -3689,6 +3723,8 @@ function vocabCardTogglePlay() {
   } else {
     var au = getAu(0);
     vocabCardAudioAttemptSerial++;
+    if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+    vocabAudioWatchdog = null;
     if (au) au.pause();
     paused = true;
   }
@@ -3699,8 +3735,11 @@ function vocabCardStop(resetPlaying) {
   vocabCardPlayToken++;
   vocabCardAudioAttemptSerial++;
   vocabPlaybackToken++;
-  if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
-  if (auB) { auB.onended=null; auB.onerror=null; auB.onplaying=null; auB.pause(); auB.removeAttribute('src'); }
+  if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+  vocabAudioWatchdog = null;
+  releaseAudioElement(auA);
+  releaseAudioElement(auB);
+  auA = null; auB = null;
   auUrlA = null; auUrlB = null;
   vocabCardPlaying = false;
   vocabCardAudioFailed = false;
@@ -3946,15 +3985,49 @@ var vocabAudioAttemptSerial = 0;
 var vocabAudioFailed = false;
 var vocabRetryPlayback = null;
 var vocabCountedPlayKey = '';
+var vocabAudioWatchdog = null;
+var VOCAB_AUDIO_WATCHDOG_MS = 5000;
 
 function getAu(slot) {
   if (slot === 0) { if (!auA) auA = new Audio(); return auA; }
   if (!auB) auB = new Audio(); return auB;
 }
+function releaseAudioElement(au) {
+  if (!au) return;
+  au.onended = null;
+  au.onerror = null;
+  au.onplaying = null;
+  au.onpause = null;
+  au.onwaiting = null;
+  au.onstalled = null;
+  au.ontimeupdate = null;
+  try { au.pause(); } catch (e) {}
+  try { au.removeAttribute('src'); } catch (e) {}
+  try { if (typeof au.load === 'function') au.load(); } catch (e) {}
+}
+function armVocabAudioWatchdog(au, isCurrent, fail) {
+  if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+  var baseline = isFinite(au.currentTime) ? au.currentTime : 0;
+  vocabAudioWatchdog = setTimeout(function checkPlaybackProgress() {
+    vocabAudioWatchdog = null;
+    if (!isCurrent() || au.ended || paused) return;
+    var current = isFinite(au.currentTime) ? au.currentTime : 0;
+    if (!au.paused && current > baseline + 0.05) {
+      armVocabAudioWatchdog(au, isCurrent, fail);
+      return;
+    }
+    fail({ name: au.paused ? 'AudioPaused' : 'AudioTimeout' });
+  }, VOCAB_AUDIO_WATCHDOG_MS);
+}
 function loadAu(slot, url) {
   var au = getAu(slot);
   var prev = slot === 0 ? auUrlA : auUrlB;
-  if (prev !== url) { au.src = url; if (slot === 0) auUrlA = url; else auUrlB = url; }
+  if (prev !== url) {
+    releaseAudioElement(au);
+    au.src = url;
+    try { if (typeof au.load === 'function') au.load(); } catch (e) {}
+    if (slot === 0) auUrlA = url; else auUrlB = url;
+  }
 }
 
 function unitGroupCount() {
@@ -4020,8 +4093,11 @@ function stopAll() {
   vocabPlaybackToken++;
   vocabAudioAttemptSerial++;
   vocabCardPlayToken++;
-  if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
-  if (auB) { auB.onended=null; auB.onerror=null; auB.onplaying=null; auB.pause(); auB.removeAttribute('src'); }
+  if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+  vocabAudioWatchdog = null;
+  releaseAudioElement(auA);
+  releaseAudioElement(auB);
+  auA = null; auB = null;
   auUrlA = null; auUrlB = null;
   if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
   vocabCardPlaying = false;
@@ -4037,8 +4113,11 @@ function stopAll() {
 function finishGroup() {
   vocabPlaybackToken++;
   vocabAudioAttemptSerial++;
-  if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
-  if (auB) { auB.onended=null; auB.onerror=null; auB.onplaying=null; auB.pause(); auB.removeAttribute('src'); }
+  if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+  vocabAudioWatchdog = null;
+  releaseAudioElement(auA);
+  releaseAudioElement(auB);
+  auA = null; auB = null;
   auUrlA = null; auUrlB = null;
   clearHighlight();
   setBtnState(currentGroup, false, false, false);
@@ -4105,11 +4184,15 @@ function pauseVocabPlaybackForFailure(token, dict, unit, group, currentWord, cur
   if (!vocabPlaybackStateIsCurrent(token, dict, unit, group, currentWord, currentStep)) return false;
   if (attemptId != null && attemptId !== vocabAudioAttemptSerial) return false;
   if (au && !vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return false;
+  if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+  vocabAudioWatchdog = null;
   if (au) {
-    au.onended = null; au.onerror = null; au.onplaying = null;
-    au.pause();
-    if (!err || err.name !== 'NotAllowedError') {
-      au.removeAttribute('src');
+    if (err && err.name === 'NotAllowedError') {
+      au.onended = null; au.onerror = null; au.onplaying = null;
+      au.onpause = null; au.onwaiting = null; au.onstalled = null; au.ontimeupdate = null;
+      au.pause();
+    } else {
+      releaseAudioElement(au);
       if (slot === 0) auUrlA = null; else auUrlB = null;
     }
   }
@@ -4143,24 +4226,55 @@ function playVocabSegmentAt(slot) {
   au.playbackRate = 1.0;
   highlight(group, currentWord);
 
+  var unexpectedPauseTimer = null;
   var settled = false;
+  function isCurrentAttempt() {
+    return vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId);
+  }
+  function clearAttemptTimers() {
+    if (unexpectedPauseTimer) clearTimeout(unexpectedPauseTimer);
+    unexpectedPauseTimer = null;
+    if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+    vocabAudioWatchdog = null;
+  }
   function fail(err) {
-    if (settled || !vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return false;
+    if (settled || !isCurrentAttempt()) return false;
     settled = true;
+    clearAttemptTimers();
     pauseVocabPlaybackForFailure(token, dict, unit, group, currentWord, currentStep, slot, au, err, null, attemptId);
     return false;
   }
-  au.onplaying = function() { markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId); };
+  au.onplaying = function() {
+    if (!isCurrentAttempt()) return;
+    if (unexpectedPauseTimer) clearTimeout(unexpectedPauseTimer);
+    unexpectedPauseTimer = null;
+    markVocabPlaybackStarted(token, dict, unit, group, currentWord, currentStep, attemptId);
+    armVocabAudioWatchdog(au, isCurrentAttempt, fail);
+  };
+  au.onwaiting = function() { if (isCurrentAttempt()) armVocabAudioWatchdog(au, isCurrentAttempt, fail); };
+  au.onstalled = au.onwaiting;
+  au.ontimeupdate = function() { if (isCurrentAttempt()) armVocabAudioWatchdog(au, isCurrentAttempt, fail); };
+  au.onpause = function() {
+    if (!isCurrentAttempt() || au.ended || paused) return;
+    if (unexpectedPauseTimer) clearTimeout(unexpectedPauseTimer);
+    unexpectedPauseTimer = setTimeout(function() {
+      unexpectedPauseTimer = null;
+      if (isCurrentAttempt() && !paused && !au.ended) fail({ name: 'AudioPaused' });
+    }, 240);
+  };
   au.onended = function() {
-    if (settled || !vocabPlaybackAttemptIsCurrent(token, dict, unit, group, currentWord, currentStep, slot, au, attemptId)) return;
+    if (settled || !isCurrentAttempt()) return;
     settled = true;
+    clearAttemptTimers();
     au.onended = null; au.onerror = null; au.onplaying = null;
+    au.onpause = null; au.onwaiting = null; au.onstalled = null; au.ontimeupdate = null;
     var nx = vocabNextStepAfter(group, currentStep, currentWord);
     if (!nx) { finishGroup(); return; }
     step = nx.step; wordIdx = nx.wordIdx;
     vocabOnSegEnd();
   };
   au.onerror = function() { fail(au.error || { name: 'AudioError' }); };
+  armVocabAudioWatchdog(au, isCurrentAttempt, fail);
   var playP;
   try {
     playP = au.play();
@@ -4307,6 +4421,8 @@ function resumeVocabPlayback(gIdx) {
 function togglePlay(gIdx) {
   if (currentGroup === gIdx && !paused) {
     vocabAudioAttemptSerial++;
+    if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+    vocabAudioWatchdog = null;
     var activeAu = getAu(curAuSlot);
     if (activeAu) activeAu.pause();
     if (window.speechSynthesis) { window.speechSynthesis.pause(); }
@@ -4337,6 +4453,8 @@ function togglePause(gIdx) {
     resumeVocabPlayback(gIdx);
   } else {
     vocabAudioAttemptSerial++;
+    if (vocabAudioWatchdog) clearTimeout(vocabAudioWatchdog);
+    vocabAudioWatchdog = null;
     var activeAu = getAu(curAuSlot);
     if (activeAu) activeAu.pause();
     if (window.speechSynthesis) { window.speechSynthesis.pause(); }
@@ -6930,6 +7048,9 @@ var morningAudioAttemptSerial = 0;
 var morningPlayPromiseSerial = 0;
 var morningCurrentPlayPromiseId = 0;
 var morningAudioWatchdog = null;
+var morningResumeVerificationTimer = null;
+var MORNING_RESUME_START_TIMEOUT_MS = 4500;
+var MORNING_RESUME_PROGRESS_TIMEOUT_MS = 1600;
 var morningCurrentSegmentProgress = 0;
 var morningCurrentSegmentLang = null;
 var morningCurrentSegmentRate = 1;
@@ -7131,6 +7252,11 @@ function morningClearAudioWatchdog() {
   morningAudioWatchdog = null;
 }
 
+function morningClearResumeVerification() {
+  if (morningResumeVerificationTimer) clearTimeout(morningResumeVerificationTimer);
+  morningResumeVerificationTimer = null;
+}
+
 function beginMorningPlayPromise() {
   morningCurrentPlayPromiseId = ++morningPlayPromiseSerial;
   return morningCurrentPlayPromiseId;
@@ -7159,13 +7285,12 @@ function morningDetachAu(au) {
 function morningLoadAu(slot, url, force) {
   var au = morningGetAu(slot);
   var loaded = slot === 0 ? morningAuUrlA : morningAuUrlB;
-  if (!force && loaded === url) return au;
-  morningDetachAu(au);
-  au.pause();
+  if (!force && loaded === url && au.src) return au;
+  releaseAudioElement(au);
   if (slot === 0) morningAuUrlA = url;
   else morningAuUrlB = url;
   au.src = url;
-  au.load();
+  try { if (typeof au.load === 'function') au.load(); } catch (e) {}
   return au;
 }
 
@@ -7178,9 +7303,7 @@ function morningPreloadAu(slot, url) {
 
 function morningResetAu(slot) {
   var au = morningGetAu(slot);
-  morningDetachAu(au);
-  au.pause();
-  au.removeAttribute('src');
+  releaseAudioElement(au);
   var fresh = new Audio();
   fresh.preload = 'auto';
   if (slot === 0) {
@@ -7195,11 +7318,13 @@ function morningResetAu(slot) {
 
 function morningStopAudio() {
   morningClearAudioWatchdog();
+  morningClearResumeVerification();
   morningAudioAttemptSerial++;
   invalidateMorningPlayPromise();
-  [morningAuA, morningAuB].forEach(function(au) {
-    if (au) { morningDetachAu(au); au.pause(); au.removeAttribute('src'); }
-  });
+  releaseAudioElement(morningAuA);
+  releaseAudioElement(morningAuB);
+  morningAuA = null;
+  morningAuB = null;
   morningAuUrlA = null;
   morningAuUrlB = null;
   morningCurrentAudioUrl = null;
@@ -7211,7 +7336,9 @@ function morningStopAudio() {
 function pauseMorningForAudioFailure(token, item, retry) {
   if (token !== _morningPlayToken || item !== morningQueue[morningPos]) return false;
   morningClearAudioWatchdog();
+  morningClearResumeVerification();
   invalidateMorningPlayPromise();
+  morningResumePromise = null;
   pauseMorningClock();
   morningPaused = true;
   morningAudioFailed = true;
@@ -7546,6 +7673,7 @@ function playMorningCurrent() {
           if (!isCurrentAttempt() || !morningCurrentPlayPromiseId ||
               morningCurrentPlayPromiseId !== morningPlayPromiseSerial) return;
           clearUnexpectedPauseTimer();
+          morningClearResumeVerification();
           armWatchdog();
           morningAudioFailed = false;
           morningRetryCurrentSegment = null;
@@ -7576,6 +7704,7 @@ function playMorningCurrent() {
           if (!isCurrentAttempt()) return;
           clearUnexpectedPauseTimer();
           morningClearAudioWatchdog();
+          morningClearResumeVerification();
           morningDetachAu(au);
           if (isFinite(au.duration) && au.duration > 0) recordMorningTimingSample(morningCurrentSegmentLang, au.duration / Math.max(.5, stepRate), NaN);
           au.playbackRate = 1.0;
@@ -7780,6 +7909,20 @@ function pauseMorningForBackground() {
   saveMorningActiveSession('background');
 }
 
+function suspendMorningForAppNavigation() {
+  var player = document.getElementById('view-morning-player');
+  if (!morningPlaying || morningEnded || !player || player.style.display === 'none') return;
+  pauseMorningClock();
+  morningPaused = true;
+  saveMorningActiveSession('view_exit');
+  morningStopAudio();
+  morningPlaying = false;
+  if (morningElapsedTimer) { clearInterval(morningElapsedTimer); morningElapsedTimer = null; }
+  if (morningActiveSaveTimer) { clearInterval(morningActiveSaveTimer); morningActiveSaveTimer = null; }
+  cleanupMorningAudioCache();
+  closeMorningExitSheet(false);
+}
+
 function setMorningPausedState(paused) {
   morningPaused = paused;
   var btn = document.getElementById('mpBtnPlay');
@@ -7789,6 +7932,7 @@ function setMorningPausedState(paused) {
 }
 
 function resumeMorningAfterNavigation() {
+  morningClearResumeVerification();
   morningPaused = false;
   morningAudioFailed = false;
   morningRetryCurrentSegment = null;
@@ -7798,13 +7942,44 @@ function resumeMorningAfterNavigation() {
   if (btn) btn.textContent = 'Ⅱ';
 }
 
+function restartMorningCurrentSegment(token, item) {
+  if (token !== _morningPlayToken || item !== morningQueue[morningPos] || !morningPlaying || morningEnded) {
+    return Promise.resolve(false);
+  }
+  var currentStep = morningStep;
+  _morningPlayToken++;
+  morningStopAudio();
+  morningStep = currentStep;
+  morningPaused = false;
+  playMorningCurrent();
+  return Promise.resolve(true);
+}
+
 function holdMorningResumeFailure(token, item) {
   if (token !== _morningPlayToken || item !== morningQueue[morningPos]) return false;
   pauseMorningForAudioFailure(token, item, function() {
     if (token !== _morningPlayToken || item !== morningQueue[morningPos]) return Promise.resolve(false);
-    return attemptMorningResume(true);
+    return restartMorningCurrentSegment(token, item);
   });
   return true;
+}
+
+function armMorningResumeProgressCheck(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId) {
+  morningClearResumeVerification();
+  var baseline = isFinite(au.currentTime) ? au.currentTime : 0;
+  morningResumeVerificationTimer = setTimeout(function verifyResumedProgress() {
+    morningResumeVerificationTimer = null;
+    var current = audioAttemptId === morningAudioAttemptSerial && token === _morningPlayToken &&
+      item === morningQueue[morningPos] && segmentStep === morningStep && segmentSlot === morningSlot &&
+      morningGetAu(segmentSlot) === au && morningPlayPromiseIsCurrent(playPromiseId);
+    if (!current || au.ended || morningPaused || morningEnded) return;
+    var now = isFinite(au.currentTime) ? au.currentTime : 0;
+    if (au.paused || now <= baseline + 0.03) {
+      holdMorningResumeFailure(token, item);
+      return;
+    }
+    armMorningResumeProgressCheck(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId);
+  }, MORNING_RESUME_PROGRESS_TIMEOUT_MS);
 }
 
 function trackMorningResumePromise(promise) {
@@ -7841,19 +8016,14 @@ function attemptMorningResume(restartIfStale) {
   var loaded = morningSlot === 0 ? morningAuUrlA : morningAuUrlB;
   if (!expected || loaded !== expected || morningCurrentAudioUrl !== expected || morningCurrentAudioToken !== _morningPlayToken) {
     if (!restartIfStale) { holdMorningResumeFailure(_morningPlayToken, item); return Promise.resolve(false); }
-    var currentStep = morningStep;
-    _morningPlayToken++;
-    morningStopAudio();
-    morningStep = currentStep;
-    morningPaused = false;
-    playMorningCurrent();
-    return Promise.resolve(true);
+    return restartMorningCurrentSegment(_morningPlayToken, item);
   }
   var token = _morningPlayToken;
   var segmentStep = morningStep;
   var segmentSlot = morningSlot;
   var audioAttemptId = morningAudioAttemptSerial;
   var playPromiseId = beginMorningPlayPromise();
+  var resumeStartedAt = Date.now();
   function resumeAttemptIsCurrent() {
     return audioAttemptId === morningAudioAttemptSerial && token === _morningPlayToken &&
       item === morningQueue[morningPos] && segmentStep === morningStep && segmentSlot === morningSlot &&
@@ -7870,18 +8040,46 @@ function attemptMorningResume(restartIfStale) {
   }
   if (playPromise === undefined) {
     if (!resumeAttemptIsCurrent()) return Promise.resolve(false);
+    if (au.paused) {
+      holdMorningResumeFailure(token, item);
+      return Promise.resolve(false);
+    }
     setMorningPausedState(false);
+    armMorningResumeProgressCheck(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId);
     return Promise.resolve(true);
   }
-  return trackMorningResumePromise(Promise.resolve(playPromise).then(function() {
-    if (!resumeAttemptIsCurrent()) return false;
-    setMorningPausedState(false);
-    return true;
-  }).catch(function() {
-    if (!resumeAttemptIsCurrent()) return false;
-    holdMorningResumeFailure(token, item);
-    return false;
-  }));
+  var guardedPlay = new Promise(function(resolve) {
+    var settled = false;
+    var timeout = setTimeout(function() {
+      if (settled) return;
+      settled = true;
+      if (resumeAttemptIsCurrent()) holdMorningResumeFailure(token, item);
+      resolve(false);
+    }, MORNING_RESUME_START_TIMEOUT_MS);
+    Promise.resolve(playPromise).then(function() {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      if (!resumeAttemptIsCurrent()) { resolve(false); return; }
+      if (au.paused) {
+        holdMorningResumeFailure(token, item);
+        resolve(false);
+        return;
+      }
+      setMorningPausedState(false);
+      if (!morningSegmentPlayingAt || morningSegmentPlayingAt < resumeStartedAt) {
+        armMorningResumeProgressCheck(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId);
+      }
+      resolve(true);
+    }).catch(function() {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      if (resumeAttemptIsCurrent()) holdMorningResumeFailure(token, item);
+      resolve(false);
+    });
+  });
+  return trackMorningResumePromise(guardedPlay);
 }
 
 function syncMorningPlayback() {
@@ -7898,6 +8096,7 @@ function toggleMorningPause() {
     attemptMorningResume(true);
   } else {
     morningClearAudioWatchdog();
+    morningClearResumeVerification();
     invalidateMorningPlayPromise();
     morningResumePromise = null;
     setMorningPausedState(true);
