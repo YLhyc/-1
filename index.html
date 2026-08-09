@@ -1468,7 +1468,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.14 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.15 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1871,11 +1871,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.14"></script>
-<script src="focus-core.js?v=2.0.14"></script>
-<script src="study-copy.js?v=2.0.14"></script>
-<script src="audio-cache.js?v=2.0.14"></script>
-<script src="ui-motion.js?v=2.0.14"></script>
+<script src="review-core.js?v=2.0.15"></script>
+<script src="focus-core.js?v=2.0.15"></script>
+<script src="study-copy.js?v=2.0.15"></script>
+<script src="audio-cache.js?v=2.0.15"></script>
+<script src="ui-motion.js?v=2.0.15"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1960,8 +1960,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.14";
-var BUILD_TS = 1786083397;
+var APP_BUILD_ID = "2.0.15";
+var BUILD_TS = 1786241508;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -6407,7 +6407,7 @@ function getMorningStats() {
 
 function serializeMorningItem(item) {
   var out = {};
-  ['source','key','en','cn','ex','ex_cn','idx','dict','reason','reviewDue','reviewDueAt','_estSec',
+  ['source','key','en','cn','ex','ex_cn','examples','idx','dict','reason','reviewDue','reviewDueAt','_estSec',
    'morningRating','morningCompleted','morningSkipped','morningPrefCaptured','morningHadPrefBeforeRating',
    'morningPrefBeforeRating','morningRatingState','morningPlaybackRating'].forEach(function(key) {
     if (item[key] !== undefined) out[key] = item[key];
@@ -6817,13 +6817,15 @@ function b64toBlobUrl(b64) {
   return URL.createObjectURL(new Blob([bytes], { type: 'audio/mpeg' }));
 }
 
-var _mVocabAudio = {};  // fileIdx → {words: [{en_url, cn_url}, ...]}
+var _mVocabAudio = {};  // fileIdx → raw bundle words; Blob URLs are created only when played
 var _mVocabLoading = {};
-var _mHbAudio = {};     // unitIdx → {words: [{en_url, cn_url}, ...]}
+var _mHbAudio = {};     // unitIdx → raw bundle words; includes example_audio
 var _mHbLoading = {};
 var MORNING_AUDIO_CACHE_LIMIT = 6;
+var MORNING_AUDIO_PREFETCH_BUNDLES = 3;
 var _morningAudioLoadSerial = 0;
 var _morningAudioUseSerial = 0;
+var _morningAudioPrefetchSerial = 0;
 var _mVocabAudioUse = {};
 var _mHbAudioUse = {};
 
@@ -6836,6 +6838,24 @@ function morningAudioBundleKey(item) {
   return 'hb:' + Math.floor(item.idx / 30);
 }
 
+function morningAudioLookaheadBundles(startPos, includeCurrent, limit) {
+  var result = [];
+  var seen = {};
+  var start = Math.max(0, Number(startPos) || 0);
+  var current = morningQueue && morningQueue[start];
+  var currentKey = morningAudioBundleKey(current);
+  if (!includeCurrent && currentKey) seen[currentKey] = true;
+  for (var i = includeCurrent ? start : start + 1; morningQueue && i < morningQueue.length; i++) {
+    var item = morningQueue[i];
+    var key = morningAudioBundleKey(item);
+    if (!key || seen[key]) continue;
+    seen[key] = true;
+    result.push(item);
+    if (result.length >= limit) break;
+  }
+  return result;
+}
+
 function touchMorningAudioBundle(source, index) {
   var usage = source === 'vocab' ? _mVocabAudioUse : _mHbAudioUse;
   usage[String(index)] = ++_morningAudioUseSerial;
@@ -6844,21 +6864,59 @@ function touchMorningAudioBundle(source, index) {
 function revokeMorningAudioWords(words) {
   if (!Array.isArray(words)) return;
   for (var w = 0; w < words.length; w++) {
-    if (words[w].en_url) URL.revokeObjectURL(words[w].en_url);
-    if (words[w].cn_url) URL.revokeObjectURL(words[w].cn_url);
-    if (words[w].ex_url) URL.revokeObjectURL(words[w].ex_url);
-    if (words[w].ex_cn_url) URL.revokeObjectURL(words[w].ex_cn_url);
+    var word = words[w];
+    if (!word) continue;
+    var urls = word._urls || {};
+    Object.keys(urls).forEach(function(lang) {
+      if (urls[lang]) URL.revokeObjectURL(urls[lang]);
+    });
+    word._urls = {};
+    // Backward-compatible cleanup for bundles loaded by an older runtime.
+    if (word.en_url) URL.revokeObjectURL(word.en_url);
+    if (word.cn_url) URL.revokeObjectURL(word.cn_url);
+    if (word.ex_url) URL.revokeObjectURL(word.ex_url);
+    if (word.ex_cn_url) URL.revokeObjectURL(word.ex_cn_url);
   }
+}
+
+function morningAudioWordUrl(word, lang) {
+  if (!word) return null;
+  var urls = word._urls || (word._urls = {});
+  if (urls[lang]) return urls[lang];
+  var raw = null;
+  var example = Array.isArray(word.example_audio) && word.example_audio[0] ? word.example_audio[0] : null;
+  if (lang === 'en' || lang === 'cn') raw = word[lang];
+  else if (lang === 'ex') raw = word.ex || (example && example.en);
+  else if (lang === 'ex_cn') raw = word.ex_cn || (example && example.cn);
+  if (!raw) return null;
+  try {
+    urls[lang] = b64toBlobUrl(raw);
+  } catch (e) {
+    return null;
+  }
+  // Release the Base64 string after its Blob URL exists to avoid retaining both copies.
+  if (lang === 'en' || lang === 'cn') word[lang] = null;
+  else if (lang === 'ex') {
+    if (word.ex) word.ex = null;
+    if (example && example.en) example.en = null;
+  } else if (lang === 'ex_cn') {
+    if (word.ex_cn) word.ex_cn = null;
+    if (example && example.cn) example.cn = null;
+  }
+  return urls[lang];
 }
 
 function morningProtectedAudioBundles() {
   var keep = {};
-  var current = morningQueue && morningQueue[morningPos];
-  var next = morningQueue && morningQueue[morningPos + 1];
-  var currentKey = morningAudioBundleKey(current);
-  var nextKey = morningAudioBundleKey(next);
-  if (currentKey) keep[currentKey] = true;
-  if (nextKey) keep[nextKey] = true;
+  var protectedItems = morningAudioLookaheadBundles(
+    morningPos,
+    true,
+    MORNING_AUDIO_PREFETCH_BUNDLES + 1
+  );
+  for (var i = 0; i < protectedItems.length; i++) {
+    var key = morningAudioBundleKey(protectedItems[i]);
+    if (key) keep[key] = true;
+  }
   return keep;
 }
 
@@ -6912,15 +6970,8 @@ function loadMorningVocabFile(fileIdx, cb) {
     .then(function(data) {
       if (_mVocabLoading[fileIdx] !== loadId) { cb('cancelled'); return; }
       if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
-      var words = [];
-      for (var w = 0; w < data.words.length; w++) {
-        words.push({
-          en_url: data.words[w] ? b64toBlobUrl(data.words[w].en) : null,
-          cn_url: data.words[w] ? b64toBlobUrl(data.words[w].cn) : null,
-          ex_url: data.words[w] && data.words[w].ex ? b64toBlobUrl(data.words[w].ex) : null,
-          ex_cn_url: data.words[w] && data.words[w].ex_cn ? b64toBlobUrl(data.words[w].ex_cn) : null
-        });
-      }
+      var words = data && Array.isArray(data.words) ? data.words : [];
+      if (!words.length) throw new Error('empty_vocab_audio_bundle');
       _mVocabAudio[fileIdx] = words;
       delete _mVocabLoading[fileIdx];
       touchMorningAudioBundle('vocab', fileIdx);
@@ -6954,13 +7005,8 @@ function loadMorningHbUnit(unitIdx, cb) {
     .then(function(data) {
       if (_mHbLoading[unitIdx] !== loadId) { cb('cancelled'); return; }
       if (window.AudioCacheManager) AudioCacheManager.remember(audioUrl);
-      var words = [];
-      for (var w = 0; w < data.words.length; w++) {
-        words.push({
-          en_url: data.words[w] ? b64toBlobUrl(data.words[w].en) : null,
-          cn_url: data.words[w] ? b64toBlobUrl(data.words[w].cn) : null
-        });
-      }
+      var words = data && Array.isArray(data.words) ? data.words : [];
+      if (!words.length) throw new Error('empty_hb_audio_bundle');
       _mHbAudio[unitIdx] = words;
       delete _mHbLoading[unitIdx];
       touchMorningAudioBundle('hb', unitIdx);
@@ -6996,6 +7042,30 @@ function ensureMorningAudio(item, cb) {
   }
 }
 
+function prefetchMorningAudioSequence(startPos, includeCurrent) {
+  var serial = ++_morningAudioPrefetchSerial;
+  var limit = MORNING_AUDIO_PREFETCH_BUNDLES + (includeCurrent ? 1 : 0);
+  var targets = morningAudioLookaheadBundles(startPos, includeCurrent, limit);
+  var cursor = 0;
+  function loadNext() {
+    if (serial !== _morningAudioPrefetchSerial || cursor >= targets.length) return;
+    var target = targets[cursor++];
+    ensureMorningAudio(target, function(err) {
+      if (serial !== _morningAudioPrefetchSerial) return;
+      if (!err) morningSegUrl(target, 0, getMorningStepLabels(target));
+      loadNext();
+    });
+  }
+  loadNext();
+}
+
+function prewarmMorningImmediateNext(startPos) {
+  var current = morningQueue && morningQueue[startPos];
+  var next = morningQueue && morningQueue[startPos + 1];
+  if (!current || !next || morningAudioBundleKey(current) !== morningAudioBundleKey(next)) return;
+  morningSegUrl(next, 0, getMorningStepLabels(next));
+}
+
 var morningFirstAudioPrefetchTimer = 0;
 var morningFirstAudioPrefetchToken = 0;
 function scheduleMorningFirstAudioPrefetch(item) {
@@ -7006,11 +7076,19 @@ function scheduleMorningFirstAudioPrefetch(item) {
   morningFirstAudioPrefetchTimer = setTimeout(function() {
     morningFirstAudioPrefetchTimer = 0;
     if (token !== morningFirstAudioPrefetchToken || morningPlaying) return;
-    ensureMorningAudio(target, function() {});
+    var targetPos = morningQueue ? morningQueue.indexOf(target) : -1;
+    if (targetPos >= 0) prefetchMorningAudioSequence(targetPos, true);
+    else ensureMorningAudio(target, function(err) {
+      if (!err) morningSegUrl(target, 0, getMorningStepLabels(target));
+    });
   }, 120);
 }
 
 function cleanupMorningAudioCache() {
+  _morningAudioPrefetchSerial++;
+  morningFirstAudioPrefetchToken++;
+  if (morningFirstAudioPrefetchTimer) clearTimeout(morningFirstAudioPrefetchTimer);
+  morningFirstAudioPrefetchTimer = 0;
   for (var k in _mVocabAudio) {
     revokeMorningAudioWords(_mVocabAudio[k]);
     delete _mVocabAudio[k];
@@ -7143,7 +7221,7 @@ function getMorningStepLabels(item, context) {
     } catch(e) { pref = null; }
   }
 
-  var hasEx = item.source === 'vocab' && !!item.ex;
+  var hasEx = !!(item.ex || (Array.isArray(item.examples) && item.examples.length));
   var labels = [];
   var langs = [];
   var rates = [];  // playbackRate per step (1.0 = normal)
@@ -7215,16 +7293,14 @@ function morningSegUrl(item, step) {
     if (!file) return null;
     var offset = gMap[1] + wInGroup;
     if (offset >= file.length) return null;
-    if (lang === 'ex') return file[offset].ex_url || null;
-    if (lang === 'ex_cn') return file[offset].ex_cn_url || null;
-    return lang === 'en' ? file[offset].en_url : file[offset].cn_url;
+    return morningAudioWordUrl(file[offset], lang);
   } else {
     var unitIdx = Math.floor(item.idx / 30);
     var unit = _mHbAudio[unitIdx];
     if (!unit) return null;
     var wInUnit = item.idx % 30;
     if (wInUnit >= unit.length) return null;
-    return lang === 'en' ? unit[wInUnit].en_url : unit[wInUnit].cn_url;
+    return morningAudioWordUrl(unit[wInUnit], lang);
   }
 }
 
@@ -7327,6 +7403,23 @@ function morningStopAudio() {
   morningAuB = null;
   morningAuUrlA = null;
   morningAuUrlB = null;
+  morningCurrentAudioUrl = null;
+  morningCurrentAudioToken = 0;
+  morningRetryCurrentSegment = null;
+  morningResumePromise = null;
+}
+
+function morningSoftStopAudio() {
+  morningClearAudioWatchdog();
+  morningClearResumeVerification();
+  morningAudioAttemptSerial++;
+  invalidateMorningPlayPromise();
+  [morningAuA, morningAuB].forEach(function(au) {
+    if (!au) return;
+    morningDetachAu(au);
+    try { au.pause(); } catch (e) {}
+    try { au.currentTime = 0; } catch (e) {}
+  });
   morningCurrentAudioUrl = null;
   morningCurrentAudioToken = 0;
   morningRetryCurrentSegment = null;
@@ -7504,7 +7597,7 @@ function finishMorningCurrentWord(item) {
 function skipMorningCurrentForFamiliar(item) {
   var shouldResume = !morningPaused || morningAudioFailed;
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   if (shouldResume) resumeMorningAfterNavigation();
   finishMorningCurrentWord(item);
 }
@@ -7552,6 +7645,8 @@ function playMorningCurrent() {
 
     var stepInfo = morningDisplayStepInfo || getMorningStepLabels(item);
     var extraStepInfo = null;
+    prewarmMorningImmediateNext(morningPos);
+    prefetchMorningAudioSequence(morningPos, false);
 
     function playSegment() {
       if (token !== _morningPlayToken) return;
@@ -7948,7 +8043,7 @@ function restartMorningCurrentSegment(token, item) {
   }
   var currentStep = morningStep;
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   morningStep = currentStep;
   morningPaused = false;
   playMorningCurrent();
@@ -8108,18 +8203,20 @@ function toggleMorningPause() {
 function prevMorningWord() {
   if (!morningPlaying) return;
   if (morningPos <= 0) return;
+  var shouldResume = !morningPaused || morningAudioFailed;
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   morningPos--;
   morningStep = 0;
   morningSingle = false;
   morningRatingRestartPending = null;
   morningRatingAppendPending = null;
   morningDisplayStepInfo = null;
-  resumeMorningAfterNavigation();
+  if (shouldResume) resumeMorningAfterNavigation();
   updateMorningPlayerUI();
   saveMorningActiveSession('previous');
-  playMorningCurrent();
+  if (shouldResume) playMorningCurrent();
+  else prefetchMorningAudioSequence(morningPos, true);
 }
 
 function nextMorningWord() {
@@ -8130,23 +8227,24 @@ function nextMorningWord() {
     item.morningSkipped = true;
     morningSessionSkipped++;
   }
+  var shouldResume = !morningPaused || morningAudioFailed;
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   morningPos++;
   morningStep = 0;
   morningSingle = false;
   morningRatingRestartPending = null;
   morningRatingAppendPending = null;
   morningDisplayStepInfo = null;
-  resumeMorningAfterNavigation();
+  if (shouldResume) resumeMorningAfterNavigation();
   updateMorningPlayerUI();
   saveMorningActiveSession('next');
-  playMorningCurrent();
+  if (shouldResume) playMorningCurrent();
+  else prefetchMorningAudioSequence(morningPos, true);
 }
 
 function replayMorningWord() {
   var item = morningQueue[morningPos];
-  var wasAudioFailure = morningAudioFailed;
   var meta = loadMorningMeta();
   var key = morningKey(item);
   var m = meta[key] || {};
@@ -8154,14 +8252,14 @@ function replayMorningWord() {
   meta[key] = m;
   saveMorningMeta(meta);
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   morningStep = 0;
   morningRatingRestartPending = null;
   morningRatingAppendPending = null;
   morningDisplayStepInfo = null;
   // Restarting before the first completion still counts as one completed review.
   morningSingle = false;
-  if (wasAudioFailure) resumeMorningAfterNavigation();
+  resumeMorningAfterNavigation();
   saveMorningActiveSession('replay');
   playMorningCurrent();
 }
@@ -8195,7 +8293,7 @@ function restartMorningWordForRating() {
   morningRatingAppendPending = null;
   morningDisplayStepInfo = null;
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   morningStep = 0;
   morningSingle = false;
   if (!morningPlaying || morningEnded) return;
@@ -8260,7 +8358,7 @@ function skipMorningWord() {
     morningSessionSkipped++;
   }
   _morningPlayToken++;
-  morningStopAudio();
+  morningSoftStopAudio();
   morningPos++;
   morningStep = 0;
   morningSingle = false;
