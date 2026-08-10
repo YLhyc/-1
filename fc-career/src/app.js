@@ -1,31 +1,75 @@
 import {
   acceptCoachJob,
   acceptOffer,
+  agentEvent,
+  applyPositionTraining,
+  awardNomination,
   advanceWeek,
   buildLifeReport,
+  chooseNationalTeam,
   chooseMatchAction,
+  clubPoliticsAction,
+  coachMoraleAction,
+  coachSetFormation,
+  coachSetLineup,
+  coachSetTraining,
+  coachTransferAction,
   continueMatch,
+  createClubPromise,
+  createBrand,
+  createFactions,
   createInitialState,
+  createRivals,
   deleteSave,
   exportState,
+  fanEvent,
+  familyNextGen,
+  goldenBall,
+  halftimeChoice,
+  importExtensionPack,
   importState,
+  injuryRehab,
   listSaves,
   loadState,
+  mediaInterview,
+  mentorApply,
+  mentorTeach,
+  mindGame,
+  moralChoice,
+  nationalCaptain,
   negotiateOffer,
+  playerSuggestToCoach,
+  potentialBreakthrough,
+  postSocial,
+  psychScar,
+  recordMilestone,
+  refereeEvent,
+  refreshMentalState,
+  resolveClubPromise,
   retireCoach,
   retirePlayer,
   saveState,
   selectTransferOffer,
+  setAudioPreferences,
+  ritualFlashback,
   simulateSeason,
   simulateToRetirement,
-  startCurrentMatch
+  startComeback,
+  startCurrentMatch,
+  unemploymentPath,
+  transferAdaptation,
+  unlockAudio,
+  unlockHiddenTitle,
+  worldChange
 } from "./career.js";
+import { createAudioEngine } from "./audio.js";
 import { CLUBS, COACH_JOBS, LEAGUES, NATIONAL_TEAMS, POSITIONS, SECOND_NATIONALITIES, TALENTS, TRAINING_PLANS, TRAITS } from "./data.js";
 
 const app = document.querySelector("#app");
 let storage;
 let state = null;
 let toastTimer;
+let audioEngine = null;
 
 function getStorage() {
   if (storage) return storage;
@@ -239,6 +283,16 @@ function nextActionCopy() {
   return { headline: "继续推进生涯", copy: "每次推进都会按你的训练计划处理一周，焦点比赛会在到达时停下来。", action: "advance", id: "", label: "推进一周" };
 }
 
+function renderPsychology() {
+  const psychology = state.psychology || { energy: 80, state: "平静专注", trend: "稳定", advice: "保持节奏。" };
+  return `
+    <section class="surface-card psychology-card">
+      <header><div><span>心理仪表盘</span><h2>${escapeHtml(psychology.state)}</h2></div><b>${escapeHtml(psychology.trend)}</b></header>
+      <label><span>心理能量</span><b>${Math.round(psychology.energy || 0)}</b><i><em style="width:${Math.min(100, psychology.energy || 0)}%"></em></i></label>
+      <p>${escapeHtml(psychology.advice || "")}</p>
+    </section>`;
+}
+
 function renderWeek() {
   const selected = TRAINING_PLANS.find((item) => item.id === state.training.planId) || TRAINING_PLANS[0];
   const mind = mentalLabel(state.resources.mind);
@@ -246,6 +300,7 @@ function renderWeek() {
   return `
     <section class="view week-view">
       <header class="view-heading"><div><span>${state.world.season} 赛季 · 第 ${state.world.week} 周</span><h1>本周计划</h1></div><p>训练、恢复、生活与商业的分配会进入存档，不会靠刷新重新随机。</p></header>
+      ${renderPsychology()}
       <section class="resource-strip horizontal-scroll">
         <article><span>可支配时间</span><b>${Math.round(state.resources.time)}</b><i><em style="width:${Math.min(100, state.resources.time)}%"></em></i></article>
         <article><span>身体负荷</span><b>${Math.round(state.resources.load)}</b><i><em style="width:${Math.min(100, state.resources.load)}%"></em></i></article>
@@ -274,9 +329,10 @@ function renderWeek() {
         <section class="progress-card surface-card">
           <h2>成长进度</h2>
           ${[["技术", state.growth.technique], ["精神", state.growth.composure], ["身体", state.growth.stamina], ["视野", state.growth.vision]].map(([label, value]) => `<label><span>${label}</span><b>${Math.round(value)}%</b><i><em style="width:${Math.min(100, value)}%"></em></i></label>`).join("")}
-          <label><span>位置专项</span><select id="positionTraining"><option value="">无</option><option value="technique" ${state.training.positionTraining === "technique" ? "selected" : ""}>技术</option><option value="composure" ${state.training.positionTraining === "composure" ? "selected" : ""}>精神</option><option value="stamina" ${state.training.positionTraining === "stamina" ? "selected" : ""}>身体</option><option value="vision" ${state.training.positionTraining === "vision" ? "selected" : ""}>视野</option><option value="passing" ${state.training.positionTraining === "passing" ? "selected" : ""}>传球</option><option value="physical" ${state.training.positionTraining === "physical" ? "selected" : ""}>体能</option></select></label>
-          <button class="secondary-action" data-action="training-position">应用位置专项</button>
+          <label><span>位置特训</span><select id="positionTraining"><option value="">选择新位置</option>${POSITIONS.filter((item) => item.id !== state.player.position).map((item) => `<option value="${item.id}" ${state.training.positionTraining?.positionId === item.id ? "selected" : ""}>${item.name} · ${item.roles[0]}</option>`).join("")}</select></label>
+          <button class="secondary-action" data-action="position-training">推进位置特训</button>
           <button class="secondary-action" data-action="weak-foot">提升逆足（当前 ${state.player.weakFoot.toFixed(1)}/5）</button>
+          <button class="secondary-action" data-action="suggest-tactics">向教练提出战术建议</button>
           <button class="primary-action" data-action="advance">推进本周</button>
         </section>
       </div>
@@ -451,6 +507,61 @@ function renderPeople() {
           <h2>国家与家庭</h2>
           <div class="national-card"><span>国家队</span><b>${escapeHtml(NATIONAL_TEAMS.find((item) => item.id === "chn")?.name || "中国")}</b><p>成年队出场 ${state.nationalTeam.caps} · 进球 ${state.nationalTeam.goals}</p></div>
           <div class="national-card"><span>第二国籍</span><b>${escapeHtml(state.player.secondNationality)}</b><p>${state.player.secondNationality === "无" ? "目前没有资格选择。" : "尚未代表成年队时仍可作出最终选择。"}</p></div>
+          ${state.player.secondNationality && state.player.secondNationality !== "无" && state.nationalTeam.caps === 0 ? `
+            <label class="inline-control"><span>选择国家队协会</span><select id="nationalChoice"><option value="${escapeHtml(state.player.secondNationality)}">${escapeHtml(state.player.secondNationality)}</option></select></label>
+            <button class="secondary-action" data-action="choose-national">作出最终选择</button>` : ""}
+          <button class="secondary-action" data-action="national-captain">争夺队长袖标</button>
+          ${renderPsychology()}
+          <section class="social-card surface-card">
+            <h2>社交媒体</h2>
+            <textarea id="socialText" rows="3" placeholder="关键事件后发布内容，自由输入会被标记为自定义。">${escapeHtml(state.media.social.at(-1)?.text || "")}</textarea>
+            <button class="secondary-action" data-action="post-social">发布自定义内容</button>
+          </section>
+          <section class="rival-card surface-card">
+            <h2>长期对手</h2>
+            ${state.peers.length ? `<ul>${state.peers.map((peer) => `<li><b>${escapeHtml(peer.name)}</b><span>${escapeHtml(peer.clubId)} · ${escapeHtml(peer.position)}</span></li>`).join("")}</ul>` : `<p class="empty-copy">还没有形成长期对手。</p>`}
+            <button class="secondary-action" data-action="create-rivals">生成长期对手</button>
+          </section>
+          <section class="moral-card surface-card">
+            <h2>裁判、VAR 与道德选择</h2>
+            <p>裁判耐心：${state.match?.patience ?? 100}/100 · 主裁判：${escapeHtml(state.match?.referee?.name || (state.world.referees?.[0]?.name || "待定"))}</p>
+            <div class="button-row">
+              <button class="secondary-action" data-action="referee-calm">冷静等待</button>
+              <button class="secondary-action" data-action="referee-pressure">向第四官员施压</button>
+              <button class="secondary-action" data-action="moral-honest">诚实继续进攻</button>
+              <button class="secondary-action" data-action="moral-dive">顺势倒地</button>
+              <button class="secondary-action" data-action="moral-strong">强硬不越界</button>
+            </div>
+          </section>
+          <section class="psych-extra surface-card">
+            <h2>中场调控、心理战与心理伤疤</h2>
+            <div class="button-row">
+              <button class="secondary-action" data-action="halftime-silence">中场沉默</button>
+              <button class="secondary-action" data-action="halftime-motivate">主动激励</button>
+              <button class="secondary-action" data-action="psych-scar">触发心理伤疤</button>
+              <button class="secondary-action" data-action="mind-calm">冷静回应</button>
+              <button class="secondary-action" data-action="mind-aggressive">激烈回击</button>
+            </div>
+          </section>
+          <section class="locker-card surface-card">
+            <h2>更衣室派系与师徒</h2>
+            <p>${state.club.factions.length ? state.club.factions.map((item) => `${escapeHtml(item.name)}（${escapeHtml(item.attitude)}）`).join(" · ") : "更衣室尚未形成派系。"}</p>
+            <div class="button-row">
+              <button class="secondary-action" data-action="create-factions">观察派系</button>
+              <button class="secondary-action" data-action="mentor-apply">申请拜师</button>
+              <button class="secondary-action" data-action="mentor-teach">推进师徒学习</button>
+            </div>
+          </section>
+          <section class="media-card surface-card">
+            <h2>媒体采访与球迷文化</h2>
+            <div class="button-row">
+              <button class="secondary-action" data-action="interview-standard">标准回应</button>
+              <button class="secondary-action" data-action="interview-bold">个性回应</button>
+              <button class="secondary-action" data-action="interview-humor">幽默化解</button>
+              <button class="secondary-action" data-action="fan-greet">绕场感谢</button>
+              <button class="secondary-action" data-action="fan-betray">回应转会传闻</button>
+            </div>
+          </section>
           <h2>共同记忆</h2>
           <ul class="memory-list">${state.feed.slice(0, 5).map((item) => `<li><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.text)}</span></li>`).join("")}</ul>
         </section>
@@ -520,7 +631,20 @@ function renderCareer() {
   } else if (state.world.phase === "coach") {
     body = `
       ${renderCoach()}
-      <section class="transfer-card surface-card"><h2>执教赛季</h2><p>${state.coach?.club} · 第 ${state.world.week} 周。推进一周会处理训练、比赛、转会与更衣室事件。</p><button class="primary-action" data-action="advance">推进一周</button><button class="secondary-action danger" data-action="retire-coach">结束教练生涯</button></section>`;
+      <section class="coach-ops surface-card">
+        <h2>教练操作台</h2>
+        <p>${state.coach?.club} · 第 ${state.world.week} 周 · 士气 ${Math.round(state.coach?.morale || 60)} · 预算 ${((state.coach?.budget || 2000000) / 10000).toFixed(0)} 万</p>
+        <label><span>阵型</span><select id="coachFormation">${["4-3-3", "4-2-3-1", "3-5-2", "4-4-2", "5-3-2"].map((item) => `<option value="${item}" ${state.coach?.formation === item ? "selected" : ""}>${item}</option>`).join("")}</select></label>
+        <button class="secondary-action" data-action="coach-formation">应用阵型</button>
+        <label><span>首发（逗号分隔球员 ID）</span><input id="coachStarters" value="${escapeHtml((state.coach?.lineup?.starters || []).join(","))}"></label>
+        <label><span>替补（逗号分隔球员 ID）</span><input id="coachBench" value="${escapeHtml((state.coach?.lineup?.bench || []).join(","))}"></label>
+        <button class="secondary-action" data-action="coach-lineup">保存首发与替补</button>
+        <label><span>训练重点</span><select id="coachTraining">${["高位压迫", "控球推进", "定位球", "身体对抗", "反击速度"].map((item) => `<option value="${item}" ${state.coach?.trainingFocus === item ? "selected" : ""}>${item}</option>`).join("")}</select></label>
+        <button class="secondary-action" data-action="coach-training">更新训练</button>
+        <div class="button-row"><button class="primary-action" data-action="coach-buy">引援（-100万）</button><button class="secondary-action" data-action="coach-sell">出售球员（+80万）</button><button class="secondary-action" data-action="coach-morale">更衣室动员</button></div>
+        <button class="primary-action" data-action="advance">推进一周</button>
+        <button class="secondary-action danger" data-action="retire-coach">结束教练生涯</button>
+      </section>`;
   } else if (state.world.phase === "final") {
     const report = buildLifeReport(state);
     body = `<article class="life-report surface-card"><p class="eyebrow">LIFE REPORT</p><h1>${escapeHtml(report.report)}</h1><p>${escapeHtml(report.themes.join("、"))}</p></article>`;
@@ -544,6 +668,51 @@ function renderCareer() {
         <h2>能力等级（1-9）</h2>
         <div class="summary-grid ability-grid">
           ${[["终结", state.player.attributes.finishing], ["视野", state.player.attributes.vision], ["传球", (state.player.attributes.shortPassing + state.player.attributes.longPassing) / 2], ["盘带", state.player.attributes.dribbling], ["镇定", state.player.attributes.composure], ["身体", (state.player.attributes.stamina + state.player.attributes.strength) / 2]].map(([label, value]) => `<div><span>${label}</span><b>${abilityGrade(value)}</b></div>`).join("")}
+        </div>
+      </section>
+      <section class="club-politics surface-card">
+        <h2>俱乐部承诺与政治</h2>
+        <p>影响力 ${state.club.politics.influence}/100 · ${state.club.politics.unlocked ? "政治已解锁" : "尚未解锁"}</p>
+        <div class="button-row">
+          <button class="secondary-action" data-action="create-promise">提出承诺要求</button>
+          <button class="secondary-action" data-action="resolve-promise">标记承诺兑现</button>
+          <button class="secondary-action" data-action="politics-facilities">要求升级设施</button>
+          <button class="secondary-action" data-action="politics-support">支持主教练</button>
+        </div>
+      </section>
+      <section class="comeback-card surface-card">
+        <h2>复出与失业机会</h2>
+        <p>传统复出已使用：${state.comeback.traditionalUsed ? "是" : "否"} · 传奇复出已使用：${state.comeback.legendaryUsed ? "是" : "否"}</p>
+        <div class="button-row">
+          <button class="secondary-action" data-action="comeback-traditional">传统复出</button>
+          <button class="secondary-action" data-action="comeback-legendary">传奇复出</button>
+          <button class="secondary-action" data-action="unemployment-trial">失业后试训</button>
+          <button class="secondary-action" data-action="unemployment-abroad">前往海外</button>
+        </div>
+      </section>
+      <section class="fast-forward surface-card">
+        <h2>快速推进（旧档/测试用）</h2>
+        <p>把球员生涯推进到退役并自动接受第一份教练合同；教练阶段仍需要你亲自完成阵容、战术、训练、转会与更衣室操作。</p>
+        <button class="secondary-action" data-action="fast-forward-player">快速推进至教练世界</button>
+      </section>
+      <section class="records-card surface-card">
+        <h2>纪录、奖项与世界变迁</h2>
+        <p>历史纪录 ${state.records.length} · 奖项提名 ${state.awards.length} · 世界新闻 ${state.world.news.length}</p>
+        <div class="button-row">
+          <button class="secondary-action" data-action="record-milestone">记录里程碑</button>
+          <button class="secondary-action" data-action="award-nomination">发起年度评选</button>
+          <button class="secondary-action" data-action="golden-ball">金球奖叙事</button>
+          <button class="secondary-action" data-action="hidden-title">解锁隐藏称号</button>
+          <button class="secondary-action" data-action="potential-breakthrough">触发潜力突破</button>
+          <button class="secondary-action" data-action="world-change">触发世界变迁</button>
+        </div>
+        <div class="button-row">
+          <button class="secondary-action" data-action="brand-create">创建个人品牌</button>
+          <button class="secondary-action" data-action="transfer-adapt">转会适应期</button>
+          <button class="secondary-action" data-action="agent-replace">更换经纪人</button>
+          <button class="secondary-action" data-action="family-next">下一代叙事</button>
+          <button class="secondary-action" data-action="ritual-flash">回忆闪回</button>
+          <button class="secondary-action" data-action="injury-rehab">推进康复</button>
         </div>
       </section>
       <section class="wealth-card surface-card">
@@ -586,10 +755,25 @@ function renderSettings() {
           <label class="file-label"><span>导入存档</span><input type="file" accept="application/json" data-action="import"></label>
         </section>
         <section class="surface-card">
+          <h2>声音与反馈</h2>
+          <p>音频只在你点击后才解锁；可分别关闭背景、界面反馈和球场环境。</p>
+          <button class="secondary-action" data-action="audio-enable">${state.audio.enabled ? "声音已启用" : "点击解锁声音"}</button>
+          <label><span>背景音乐</span><input type="checkbox" id="audioBackground" ${state.audio.background ? "checked" : ""}></label>
+          <label><span>界面反馈</span><input type="checkbox" id="audioUi" ${state.audio.ui ? "checked" : ""}></label>
+          <label><span>球场环境</span><input type="checkbox" id="audioEnvironment" ${state.audio.environment ? "checked" : ""}></label>
+          <button class="secondary-action" data-action="save-audio">保存声音设置</button>
+        </section>
+        <section class="surface-card">
+          <h2>版本化扩展包</h2>
+          <p>导入前校验版本、类型、manifest 与条目；错误 ID 会拒绝导入。</p>
+          <button class="secondary-action" data-action="import-sample-extension">导入示例扩展包</button>
+        </section>
+        <section class="surface-card">
           <h2>生涯难度</h2>
           <label><span>伤病频率</span><select id="injuryRate"><option value="0.5" ${state.settings.injuryRate === 0.5 ? "selected" : ""}>较低</option><option value="1" ${state.settings.injuryRate === 1 ? "selected" : ""}>标准</option><option value="1.6" ${state.settings.injuryRate === 1.6 ? "selected" : ""}>较高</option></select></label>
           <label><span>随机性</span><select id="randomness"><option value="0.7" ${state.settings.randomness === 0.7 ? "selected" : ""}>更稳定</option><option value="1" ${state.settings.randomness === 1 ? "selected" : ""}>标准</option><option value="1.4" ${state.settings.randomness === 1.4 ? "selected" : ""}>更波动</option></select></label>
           <label><span>经济压力</span><select id="economicPressure"><option value="0.6" ${state.settings.economicPressure === 0.6 ? "selected" : ""}>宽松</option><option value="1" ${state.settings.economicPressure === 1 ? "selected" : ""}>标准</option><option value="1.5" ${state.settings.economicPressure === 1.5 ? "selected" : ""}>紧巴</option></select></label>
+          <label><span>计划退役年龄</span><select id="retireAge"><option value="22" ${state.settings.retireAge === 22 ? "selected" : ""}>22（快速测试）</option><option value="28" ${state.settings.retireAge === 28 ? "selected" : ""}>28</option><option value="34" ${state.settings.retireAge === 34 ? "selected" : ""}>34（标准）</option></select></label>
           <button class="secondary-action" data-action="save-settings">保存难度</button>
         </section>
         <section class="surface-card save-list">
@@ -643,6 +827,7 @@ function render() {
       <main class="app-content" id="mainContent">${renderCurrentView()}</main>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
+  if (audioEngine && state?.audio?.enabled) audioEngine.setPreferences(state.audio);
 }
 
 function createCareer() {
@@ -758,13 +943,202 @@ app.addEventListener("click", (event) => {
     if (!state) return;
     const positionTraining = document.querySelector("#positionTraining")?.value || "";
     commit({ ...state, training: { ...state.training, positionTraining } }, "位置专项已更新");
+  } else if (action === "position-training") {
+    if (!state) return;
+    const positionId = document.querySelector("#positionTraining")?.value;
+    commit(positionId ? applyPositionTraining(state, positionId) : state, positionId ? "位置特训已推进" : "请先选择新位置");
+  } else if (action === "suggest-tactics") {
+    if (!state) return;
+    commit(playerSuggestToCoach(state, "增加一次右路配合训练，并在比赛日提前布置第一脚触球方向。"), "战术建议已提交");
+  } else if (action === "choose-national") {
+    if (!state) return;
+    const nation = document.querySelector("#nationalChoice")?.value;
+    commit(nation ? chooseNationalTeam(state, nation) : state, "国家队选择已提交");
+  } else if (action === "post-social") {
+    if (!state) return;
+    const text = document.querySelector("#socialText")?.value?.trim();
+    commit(text ? postSocial(state, text, true) : state, text ? "自定义内容已发布" : "内容为空");
+  } else if (action === "create-rivals") {
+    if (!state) return;
+    commit(createRivals(state), "长期对手已生成");
+  } else if (action === "referee-calm") {
+    if (!state) return;
+    commit(refereeEvent(state, "calm"), "裁判互动已记录");
+  } else if (action === "referee-pressure") {
+    if (!state) return;
+    commit(refereeEvent(state, "pressure"), "裁判互动已记录");
+  } else if (action === "moral-honest") {
+    if (!state) return;
+    commit(moralChoice(state, "honest"), "道德选择已记录");
+  } else if (action === "moral-dive") {
+    if (!state) return;
+    commit(moralChoice(state, "dive"), "道德选择已记录");
+  } else if (action === "moral-strong") {
+    if (!state) return;
+    commit(moralChoice(state, "strong"), "道德选择已记录");
+  } else if (action === "create-factions") {
+    if (!state) return;
+    commit(createFactions(state), "更衣室派系已观察");
+  } else if (action === "mentor-apply") {
+    if (!state) return;
+    commit(mentorApply(state), "拜师申请已提交");
+  } else if (action === "mentor-teach") {
+    if (!state) return;
+    commit(mentorTeach(state), "师徒学习已推进");
+  } else if (action === "interview-standard") {
+    if (!state) return;
+    commit(mediaInterview(state, "standard"), "采访回应已保存");
+  } else if (action === "interview-bold") {
+    if (!state) return;
+    commit(mediaInterview(state, "bold"), "采访回应已保存");
+  } else if (action === "interview-humor") {
+    if (!state) return;
+    commit(mediaInterview(state, "humor"), "采访回应已保存");
+  } else if (action === "fan-greet") {
+    if (!state) return;
+    commit(fanEvent(state, "greet"), "球迷互动已记录");
+  } else if (action === "fan-betray") {
+    if (!state) return;
+    commit(fanEvent(state, "betray"), "球迷反应已记录");
+  } else if (action === "record-milestone") {
+    if (!state) return;
+    commit(recordMilestone(state, `第 ${state.career.totalStats.appearances + 1} 场里程碑`), "纪录已记录");
+  } else if (action === "award-nomination") {
+    if (!state) return;
+    commit(awardNomination(state, "赛季最佳阵容"), "年度评选已处理");
+  } else if (action === "world-change") {
+    if (!state) return;
+    commit(worldChange(state, "联赛宣布引入新的财务规则，一家老牌俱乐部完成易主。"), "世界变迁已记录");
+  } else if (action === "halftime-silence") {
+    if (!state) return;
+    commit(halftimeChoice(state, "silence"), "中场选择已记录");
+  } else if (action === "halftime-motivate") {
+    if (!state) return;
+    commit(halftimeChoice(state, "motivate"), "中场选择已记录");
+  } else if (action === "psych-scar") {
+    if (!state) return;
+    commit(psychScar(state, "再次面对相同情境时，你感到熟悉的迟疑。"), "心理伤疤已记录");
+  } else if (action === "mind-calm") {
+    if (!state) return;
+    commit(mindGame(state, "calm"), "心理战回应已保存");
+  } else if (action === "mind-aggressive") {
+    if (!state) return;
+    commit(mindGame(state, "aggressive"), "心理战回应已保存");
+  } else if (action === "brand-create") {
+    if (!state) return;
+    commit(createBrand(state, "个人运动品牌"), "品牌创建已处理");
+  } else if (action === "transfer-adapt") {
+    if (!state) return;
+    commit(transferAdaptation(state), "转会适应期已启动");
+  } else if (action === "agent-replace") {
+    if (!state) return;
+    commit(agentEvent(state, "replace"), "经纪人事件已处理");
+  } else if (action === "family-next") {
+    if (!state) return;
+    commit(familyNextGen(state), "家庭事件已处理");
+  } else if (action === "ritual-flash") {
+    if (!state) return;
+    commit(ritualFlashback(state), "回忆闪回已记录");
+  } else if (action === "injury-rehab") {
+    if (!state) return;
+    commit(injuryRehab(state, "standard"), "康复已推进");
+  } else if (action === "golden-ball") {
+    if (!state) return;
+    commit(goldenBall(state), "金球奖叙事已处理");
+  } else if (action === "hidden-title") {
+    if (!state) return;
+    commit(unlockHiddenTitle(state, "生涯图腾"), "隐藏称号已解锁");
+  } else if (action === "potential-breakthrough") {
+    if (!state) return;
+    commit(potentialBreakthrough(state, "决定性表现"), "潜力突破已处理");
+  } else if (action === "national-captain") {
+    if (!state) return;
+    commit(nationalCaptain(state, "captain"), "国家队事件已处理");
+  } else if (action === "create-promise") {
+    if (!state) return;
+    commit(createClubPromise(state, "出场承诺", "俱乐部承诺在下一阶段给予稳定比赛时间。"), "承诺已记录");
+  } else if (action === "resolve-promise") {
+    if (!state) return;
+    const promise = state.club.promises.find((item) => item.kept === null);
+    commit(promise ? resolveClubPromise(state, promise.id, true) : state, promise ? "承诺已标记兑现" : "没有待处理的承诺");
+  } else if (action === "politics-facilities") {
+    if (!state) return;
+    commit(clubPoliticsAction(state, "facilities"), "训练设施谈判已发起");
+  } else if (action === "politics-support") {
+    if (!state) return;
+    commit(clubPoliticsAction(state, "support-manager"), "已公开支持主教练");
+  } else if (action === "comeback-traditional") {
+    if (!state) return;
+    commit(startComeback(state, "traditional"), "传统复出尝试已处理");
+  } else if (action === "comeback-legendary") {
+    if (!state) return;
+    commit(startComeback(state, "legendary"), "传奇复出尝试已处理");
+  } else if (action === "unemployment-trial") {
+    if (!state) return;
+    commit(unemploymentPath(state, "trial"), "失业试训已处理");
+  } else if (action === "unemployment-abroad") {
+    if (!state) return;
+    commit(unemploymentPath(state, "abroad"), "海外机会已处理");
+  } else if (action === "fast-forward-player") {
+    if (!state) return;
+    commit(refreshMentalState(simulateToRetirement(state, { coach: true })), "已快速推进到教练世界");
+  } else if (action === "coach-formation") {
+    if (!state) return;
+    const formation = document.querySelector("#coachFormation")?.value;
+    commit(formation ? coachSetFormation(state, formation) : state, "阵型已应用");
+  } else if (action === "coach-lineup") {
+    if (!state) return;
+    const starters = (document.querySelector("#coachStarters")?.value || "").split(",").map((item) => item.trim()).filter(Boolean);
+    const bench = (document.querySelector("#coachBench")?.value || "").split(",").map((item) => item.trim()).filter(Boolean);
+    commit(coachSetLineup(state, starters, bench), "首发与替补已保存");
+  } else if (action === "coach-training") {
+    if (!state) return;
+    const focus = document.querySelector("#coachTraining")?.value;
+    commit(focus ? coachSetTraining(state, focus) : state, "训练重点已更新");
+  } else if (action === "coach-buy") {
+    if (!state) return;
+    commit(coachTransferAction(state, "buy"), "引援处理完成");
+  } else if (action === "coach-sell") {
+    if (!state) return;
+    commit(coachTransferAction(state, "sell"), "出售处理完成");
+  } else if (action === "coach-morale") {
+    if (!state) return;
+    commit(coachMoraleAction(state, "team-talk"), "更衣室动员完成");
+  } else if (action === "audio-enable") {
+    if (!state) return;
+    if (!audioEngine) audioEngine = createAudioEngine();
+    let next = unlockAudio(state);
+    next = setAudioPreferences(next, { ...next.audio, enabled: true });
+    if (audioEngine) audioEngine.setPreferences(next.audio);
+    commit(next, "声音已通过用户点击解锁");
+  } else if (action === "save-audio") {
+    if (!state) return;
+    const preferences = {
+      enabled: true,
+      background: Boolean(document.querySelector("#audioBackground")?.checked),
+      ui: Boolean(document.querySelector("#audioUi")?.checked),
+      environment: Boolean(document.querySelector("#audioEnvironment")?.checked),
+      unlocked: state.audio.unlocked
+    };
+    if (audioEngine) audioEngine.setPreferences(preferences);
+    commit(setAudioPreferences(state, preferences), "声音设置已保存");
+  } else if (action === "import-sample-extension") {
+    if (!state) return;
+    const pack = {
+      version: "1.0",
+      type: "database",
+      manifest: { checksum: "sample" },
+      entries: [{ id: "sample-club", name: "示例俱乐部" }]
+    };
+    const result = importExtensionPack(state, pack);
+    commit(result.errors.length ? state : result.state, result.errors.length ? "扩展包校验失败" : "示例扩展包已导入");
   } else if (action === "weak-foot") {
     if (!state) return;
     const weakFoot = Math.min(5, state.player.weakFoot + 0.5);
     commit({ ...state, player: { ...state.player, weakFoot }, training: { ...state.training, weakFoot: 1 } }, "逆足训练已加入本周计划");
   } else if (action === "advance") {
     if (!state) return;
-    const next = advanceWeek(state);
+    const next = refreshMentalState(advanceWeek(state));
     const progressed = next.world.week !== state.world.week || next.world.phase !== state.world.phase || next.match?.id !== state.match?.id;
     commit(next, progressed ? "一周已推进" : "当前节点需要你先处理");
   } else if (action === "start-match") {
@@ -803,7 +1177,8 @@ app.addEventListener("click", (event) => {
     const injuryRate = Number(document.querySelector("#injuryRate")?.value || 1);
     const randomness = Number(document.querySelector("#randomness")?.value || 1);
     const economicPressure = Number(document.querySelector("#economicPressure")?.value || 1);
-    commit({ ...state, settings: { ...state.settings, injuryRate, randomness, economicPressure } }, "难度设置已保存");
+    const retireAge = Number(document.querySelector("#retireAge")?.value || 34);
+    commit({ ...state, settings: { ...state.settings, injuryRate, randomness, economicPressure, retireAge } }, "难度设置已保存");
   } else if (action === "export") {
     exportCurrent();
   } else if (action === "new") {

@@ -1,3 +1,5 @@
+import { ADDITIONAL_CLUBS } from "./club-data.js";
+
 export const DATA_VERSION = "2026-08-09";
 
 export const DATA_SOURCE_NOTES = {
@@ -31,7 +33,7 @@ export const LEAGUES = [
   { id: "ligue1", name: "法甲", nation: "法国", level: 1, rounds: 34, reputation: 86, real: true, source: DATA_SOURCE_NOTES.clubs }
 ];
 
-export const CLUBS = [
+const BASE_CLUBS = [
   { id: "shanghai-port", fmId: "23292170", name: "上海海港", short: "海港", city: "上海", league: "csl", reputation: 82, facilities: 18, stadium: "浦东足球场", colors: ["#c8102e", "#ffffff"], real: true, source: DATA_SOURCE_NOTES.clubs, fmIdSource: "sortitoutsi FM26 2026-08-09" },
   { id: "shanghai-shenhua", fmId: "414", name: "上海申花", short: "申花", city: "上海", league: "csl", reputation: 81, facilities: 16, stadium: "上海体育场", colors: ["#00539c", "#ffffff"], real: true, source: DATA_SOURCE_NOTES.clubs, fmIdSource: "sortitoutsi FM26 2026-08-09" },
   { id: "chengdu-rongcheng", fmId: "23447397", name: "成都蓉城", short: "蓉城", city: "成都", league: "csl", reputation: 79, facilities: 17, stadium: "凤凰山体育公园", colors: ["#e00000", "#ffd100"], real: true, source: DATA_SOURCE_NOTES.clubs, fmIdSource: "fminside FM 2026-08-09" },
@@ -88,6 +90,8 @@ export const CLUBS = [
   { id: "inter", fmId: null, name: "国际米兰", short: "国米", city: "米兰", league: "seriea", reputation: 91, facilities: 18, stadium: "梅阿查", colors: ["#0068a8", "#000000"], real: true, source: DATA_SOURCE_NOTES.clubs },
   { id: "psg", fmId: null, name: "巴黎圣日耳曼", short: "巴黎", city: "巴黎", league: "ligue1", reputation: 93, facilities: 20, stadium: "王子公园球场", colors: ["#004170", "#da291c"], real: true, source: DATA_SOURCE_NOTES.clubs }
 ];
+
+export const CLUBS = [...BASE_CLUBS, ...ADDITIONAL_CLUBS];
 
 export const NATIONAL_TEAMS = [
   { id: "chn", name: "中国", short: "中国", reputation: 68, threshold: 62, real: true },

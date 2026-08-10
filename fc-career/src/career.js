@@ -14,10 +14,11 @@ import {
   TRAINING_PLANS,
   TRAITS
 } from "./data.js";
+import { SQUADS } from "./squads.js";
 import { MATCH } from "./content.js";
 import { buildMatchSummary, deterministicRoll, resolveMoment } from "./engine.js";
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 export const SAVES_KEY = "fc-career-saves";
 
 function clamp(value, minimum, maximum) {
@@ -31,6 +32,15 @@ function randomSeed() {
 
 function saveKey(id) {
   return `fc-career-save-${id}`;
+}
+
+function cloneState(state) {
+  const world = { ...state.world };
+  const players = world.players;
+  delete world.players;
+  const next = structuredClone({ ...state, world });
+  if (players) next.world.players = players;
+  return next;
 }
 
 function addDays(date, days) {
@@ -148,6 +158,7 @@ function initialPlayer(options, seed, club) {
     height: options.height || 176,
     weight: options.weight || 66,
     number: options.number || 17,
+    secondaryPositions: options.secondaryPositions || [],
     overall: 67,
     attributes,
     hidden,
@@ -197,6 +208,54 @@ function createSeason(club, season, seed) {
   };
 }
 
+function ensureStandings(state) {
+  if (!state.season || state.season.standings?.length) return;
+  state.season.standings = CLUBS
+    .filter((club) => club.league === state.season.leagueId)
+    .map((club) => ({
+      clubId: club.id,
+      name: club.name,
+      played: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      points: 0
+    }));
+}
+
+function updateStandings(state, result) {
+  ensureStandings(state);
+  const homeId = result.home?.id;
+  const awayId = result.away?.id;
+  if (!homeId || !awayId || !state.season?.standings?.length) return;
+  const home = state.season.standings.find((item) => item.clubId === homeId);
+  const away = state.season.standings.find((item) => item.clubId === awayId);
+  if (!home || !away) return;
+  home.played += 1;
+  away.played += 1;
+  home.goalsFor += result.homeGoals || 0;
+  home.goalsAgainst += result.awayGoals || 0;
+  away.goalsFor += result.awayGoals || 0;
+  away.goalsAgainst += result.homeGoals || 0;
+  if (result.homeGoals > result.awayGoals) {
+    home.wins += 1;
+    home.points += 3;
+    away.losses += 1;
+  } else if (result.homeGoals < result.awayGoals) {
+    away.wins += 1;
+    away.points += 3;
+    home.losses += 1;
+  } else {
+    home.draws += 1;
+    away.draws += 1;
+    home.points += 1;
+    away.points += 1;
+  }
+  state.season.standings.sort((a, b) => b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
+}
+
 export function createInitialState(options = {}) {
   const seed = options.seed || randomSeed();
   const club = CLUBS.find((item) => item.id === options.clubId) || CLUBS.find((item) => item.id === "shanghai-shenhua");
@@ -210,6 +269,13 @@ export function createInitialState(options = {}) {
     transferWindows: LEAGUE_RULES[club.league]?.transferWindows || [],
     news: [],
     newStars: [],
+    players: structuredClone(SQUADS),
+    referees: [
+      { id: "ref-zh-01", name: "马宁", strictness: 14, pressureResistance: 12, impression: 0 },
+      { id: "ref-zh-02", name: "傅明", strictness: 11, pressureResistance: 13, impression: 0 },
+      { id: "ref-eu-01", name: "Marciniak", strictness: 13, pressureResistance: 15, impression: 0 },
+      { id: "ref-eu-02", name: "Taylor", strictness: 12, pressureResistance: 14, impression: 0 }
+    ],
     clubStates: CLUBS.map((item) => ({ id: item.id, reputation: item.reputation, managerStability: 60 }))
   };
   return {
@@ -231,6 +297,29 @@ export function createInitialState(options = {}) {
     resources: { time: 72, load: 34, mind: 78 },
     growth: { technique: 0, composure: 0, stamina: 0, vision: 0, passing: 0, physical: 0 },
     training: { planId: "balanced", positionTraining: null, weakFoot: 0 },
+    psychology: {
+      energy: 80,
+      state: "平静专注",
+      trend: "稳定",
+      advice: "保持训练与生活平衡，连续两场稳定发挥后状态会继续向上。",
+      scars: []
+    },
+    club: {
+      promises: [],
+      politics: { influence: 0, unlocked: false, support: null, events: [] },
+      factions: []
+    },
+    mentor: { mentor: null, disciples: [], learnedTraits: [] },
+    comeback: { eligible: false, traditionalUsed: false, legendaryUsed: false, attempts: [] },
+    unemployment: { status: "none", offers: [] },
+    aiCache: [],
+    extensions: [],
+    fanCulture: { groups: [], tifo: [], rituals: [player.ritual] },
+    peers: [],
+    awards: [],
+    records: [],
+    hiddenTitles: [],
+    audio: { enabled: false, background: false, ui: false, environment: false, unlocked: false },
     contract: {
       clubId: club.id,
       type: "青训合同",
@@ -252,7 +341,17 @@ export function createInitialState(options = {}) {
     health: { fatigue: 34, injuries: [], injuryProneness: player.hidden.injuryProneness, bodyAge: player.age, form: 6.5, missWeeks: 0 },
     relations: initialRelations(),
     media: { fans: 1200, reputation: 20, image: { professional: 12, controversy: 4, warmth: 11, dominance: 9 }, social: [] },
-    nationalTeam: { status: "eligible", caps: 0, goals: 0, youthCaps: 0, youthGoals: 0, callups: [], history: [] },
+    nationalTeam: {
+      status: "eligible",
+      caps: 0,
+      goals: 0,
+      youthCaps: 0,
+      youthGoals: 0,
+      callups: [],
+      history: [],
+      choicePending: false,
+      committedNation: options.nationality || "中国"
+    },
     career: {
       seasonStats: { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, season: 2026 },
       totalStats: { appearances: 0, goals: 0, assists: 0, minutes: 0, titles: [] },
@@ -274,6 +373,29 @@ export function createInitialState(options = {}) {
 export function migrate(raw) {
   if (!raw || typeof raw !== "object") return createInitialState();
   if (raw.version === SAVE_VERSION) return structuredClone(raw);
+  if (raw.version === 2) {
+    const next = structuredClone(raw);
+    next.version = SAVE_VERSION;
+    next.psychology = next.psychology || { energy: 80, state: "平静专注", trend: "稳定", advice: "保持训练与生活平衡。", scars: [] };
+    next.club = next.club || { promises: [], politics: { influence: 0, unlocked: false, support: null, events: [] }, factions: [] };
+    next.mentor = next.mentor || { mentor: null, disciples: [], learnedTraits: [] };
+    next.comeback = next.comeback || { eligible: false, traditionalUsed: false, legendaryUsed: false, attempts: [] };
+    next.unemployment = next.unemployment || { status: "none", offers: [] };
+    next.aiCache = next.aiCache || [];
+    next.extensions = next.extensions || [];
+    next.fanCulture = next.fanCulture || { groups: [], tifo: [], rituals: [] };
+    next.peers = next.peers || [];
+    next.awards = next.awards || [];
+    next.records = next.records || [];
+    next.hiddenTitles = next.hiddenTitles || [];
+    next.audio = next.audio || { enabled: false, background: false, ui: false, environment: false, unlocked: false };
+    next.player.secondaryPositions = next.player.secondaryPositions || [];
+    next.nationalTeam = next.nationalTeam || {};
+    next.nationalTeam.choicePending = next.nationalTeam.choicePending || false;
+    next.nationalTeam.committedNation = next.nationalTeam.committedNation || next.player.nationality || "中国";
+    next.world.referees = next.world.referees || [];
+    return next;
+  }
   if (raw.version === 1 || raw.version === undefined) {
     const next = createInitialState({ seed: raw.seed || "migrated-v1" });
     next.ui = { ...next.ui, theme: raw.ui?.theme || next.ui.theme, largeText: Boolean(raw.ui?.largeText) };
@@ -282,9 +404,16 @@ export function migrate(raw) {
       next.player.name = raw.player.name || next.player.name;
       next.player.age = raw.player.age ?? next.player.age;
       next.player.position = raw.player.position || next.player.position;
+      next.player.clubId = raw.player.clubId || next.player.clubId;
+      next.player.club = raw.player.club || next.player.club;
+      next.player.secondaryPositions = raw.player.secondaryPositions || next.player.secondaryPositions;
       next.player.attributes = { ...next.player.attributes, ...raw.player.attributes };
       next.player.overall = raw.player.overall ?? next.player.overall;
     }
+    if (raw.coach) next.coach = structuredClone(raw.coach);
+    if (raw.season) next.season = structuredClone(raw.season);
+    if (raw.world) next.world = { ...next.world, ...structuredClone(raw.world) };
+    if (raw.career) next.career = { ...next.career, ...structuredClone(raw.career) };
     if (raw.training) next.training.planId = raw.training.selected || next.training.planId;
     if (raw.resources) next.resources = { ...next.resources, ...raw.resources };
     if (raw.relations) next.relations = { ...next.relations, ...raw.relations };
@@ -373,7 +502,7 @@ export function deleteSave(storage = globalThis.localStorage, id) {
 
 function applyPlan(state, planId) {
   const plan = TRAINING_PLANS.find((item) => item.id === planId) || TRAINING_PLANS[0];
-  const next = structuredClone(state);
+  const next = cloneState(state);
   next.training.planId = plan.id;
   next.resources.time = clamp(next.resources.time - plan.time / 7, 0, 100);
   next.resources.load = clamp(next.resources.load + plan.load / 7, 0, 100);
@@ -424,7 +553,7 @@ function rollInjury(state, source) {
 }
 
 function advanceInjuries(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   next.health.injuries = next.health.injuries.map((injury) => ({ ...injury, remaining: Math.max(0, injury.remaining - 1) }));
   for (const injury of next.health.injuries) {
     if (injury.active && injury.remaining <= 0) {
@@ -443,7 +572,7 @@ function advanceInjuries(state) {
 }
 
 function applyGrowthToAttributes(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const growthMap = {
     technique: [["technique", 2], ["ballControl", 1], ["shortPassing", 1], ["dribbling", 1]],
     composure: [["composure", 2], ["decisions", 1]],
@@ -473,7 +602,7 @@ function nationalTeamFor(state) {
 }
 
 function processNationalTeam(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (next.world.phase !== "season" || next.health.injuries.some((injury) => injury.active)) return next;
   const team = nationalTeamFor(next);
   const seniorReady = next.player.age >= 18 && next.player.overall >= (team.threshold || 60);
@@ -521,7 +650,7 @@ function processNationalTeam(state) {
 }
 
 function processWealthEvents(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const week = next.world.week;
   if (week % 6 === 0 && next.world.phase === "season" && next.contract?.weeklyWage) {
     const paid = Math.round(next.contract.weeklyWage * 0.85);
@@ -569,7 +698,7 @@ function processWealthEvents(state) {
 }
 
 function processLifeEvents(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const week = next.world.week;
   if (next.world.phase === "season") {
     const socialKey = `social-${next.world.season}-${week}`;
@@ -614,7 +743,7 @@ function processLifeEvents(state) {
 }
 
 function rememberRelation(state, id, title, text, delta = {}) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (!next.relations[id]) return next;
   next.relations[id].trust = clamp((next.relations[id].trust || 50) + (delta.trust || 0), 0, 100);
   next.relations[id].respect = clamp((next.relations[id].respect || 50) + (delta.respect || 0), 0, 100);
@@ -952,7 +1081,7 @@ function buildFocusMoments(state, fixture) {
 }
 
 function startMatch(state, fixture, academy = false) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const match = academy ? structuredClone(MATCH) : buildFocusMatch(state, fixture);
   if (academy) {
     match.seed = `${next.seed}|academy-final`;
@@ -980,7 +1109,7 @@ function startMatch(state, fixture, academy = false) {
 }
 
 export function startCurrentMatch(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (next.match?.status !== "ready") return next;
   next.match.status = "live";
   next.match.screen = "decision";
@@ -991,7 +1120,7 @@ export function startCurrentMatch(state) {
 }
 
 export function chooseMatchAction(state, choiceId) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (next.match?.status !== "live" || next.match?.screen !== "decision") return next;
   const moment = next.match.moments[next.match.currentMoment];
   const choice = moment?.choices.find((item) => item.id === choiceId);
@@ -1012,7 +1141,7 @@ export function chooseMatchAction(state, choiceId) {
 }
 
 export function continueMatch(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   if (next.match?.status !== "live" || next.match?.screen !== "outcome") return next;
   const moment = next.match.moments[next.match.currentMoment];
   if (moment?.bridge) {
@@ -1037,7 +1166,7 @@ export function continueMatch(state) {
 }
 
 function finalizeFocusMatch(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   const match = next.match;
   const rating = match.summary?.rating || match.rating;
   const goals = Math.max(0, Math.min(2, match.resolutions.filter((item) => item.fact.scoreDelta.home > 0).length));
@@ -1071,7 +1200,7 @@ function finalizeFocusMatch(state) {
 }
 
 function applyResultToCareer(state, result) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const season = next.career.seasonStats;
   season.appearances += 1;
   season.starts += 1;
@@ -1107,12 +1236,18 @@ function applyResultToCareer(state, result) {
       goals: result.goals || 0,
       assists: result.assists || 0
     });
+    updateStandings(next, {
+      home: result.home,
+      away: result.away,
+      homeGoals: result.homeGoals ?? result.teamGoals,
+      awayGoals: result.opponentGoals
+    });
   }
   return next;
 }
 
 function generateAcademyOffers(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   next.offers = [
     { id: "shenhua", clubId: "shanghai-shenhua", name: "上海申花", contract: "青年球员合同", role: "U21 核心 / 一线队杯赛观察", city: "上海", fit: 82 },
     { id: "zhejiang", clubId: "zhejiang", name: "浙江队", contract: "三年职业合同", role: "前场组织核心培养", city: "杭州", fit: 77 },
@@ -1124,7 +1259,7 @@ function generateAcademyOffers(state) {
 }
 
 function advanceAcademyWeek(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   if (next.world.week < 8) {
     next = advanceInjuries(next);
     next.feed.unshift({ time: next.world.date, title: `青训第 ${next.world.week} 周`, text: "训练按计划推进，教练组开始整理你的比赛报告。" });
@@ -1150,7 +1285,7 @@ function advanceAcademyWeek(state) {
 }
 
 function advanceSeasonWeek(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   next = advanceInjuries(next);
   next = applyPlan(next, next.training.planId);
   next = processNationalTeam(next);
@@ -1197,7 +1332,7 @@ function advanceSeasonWeek(state) {
 }
 
 function generateTransferOffers(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const current = CLUBS.find((item) => item.id === next.player.clubId);
   const candidates = CLUBS.filter((item) => item.id !== current.id && item.league !== "csl" && item.reputation >= current.reputation);
   if (!candidates.length) {
@@ -1223,7 +1358,7 @@ function generateTransferOffers(state) {
 }
 
 export function seasonEnd(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   next = applyGrowthToAttributes(next);
   const stats = next.career.seasonStats;
   const average = stats.appearances ? stats.ratingSum / stats.appearances : 6;
@@ -1239,13 +1374,70 @@ export function seasonEnd(state) {
   next.media.reputation = clamp(Math.round(next.media.reputation + (average - 6) * 8 + (stats.goals ? 4 : 0)), 10, 99);
   next.career.milestones.push(`${next.world.season} 赛季：${stats.appearances} 场 ${stats.goals} 球 ${stats.assists} 助攻，场均 ${average.toFixed(2)}。`);
   next.world.news.unshift({ time: next.world.date, title: "赛季总结", text: `你的赛季报告完成，队内排名 ${Math.max(1, Math.round(next.career.totalStats.appearances / 10))}。` });
+  const standing = next.season?.standings?.[0];
+  if (standing?.clubId === next.player.clubId) {
+    next.career.totalStats.titles.push(`${next.world.season} ${next.season.leagueId || "联赛"}冠军`);
+    next.awards.push({ id: `award-champion-${next.world.season}`, award: "联赛冠军", season: next.world.season, won: true });
+    next.feed.unshift({ time: next.world.date, title: "联赛冠军", text: "你的球队赢得联赛冠军，夺冠游行将在休赛期进行。" });
+  }
+  if (stats.goals >= 15) {
+    next.records.push({ id: `record-goals-${next.world.season}`, record: `单赛季 ${stats.goals} 球`, date: next.world.date, season: next.world.season });
+  }
   next = evolveWorld(next);
   next.career.seasonStats = { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, season: next.world.season };
   return next;
 }
 
 function evolveWorld(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
+  if (Array.isArray(state.world.players)) {
+    next.world.players = state.world.players.map((player) => ({ ...player }));
+    for (const player of next.world.players) {
+      const age = player.age || (2026 - (player.birthYear || 1995));
+      player.age = age + 1;
+      if (player.status === "injured") {
+        player.injury = player.injury || { name: "肌肉拉伤", weeks: 4 };
+        player.injury.weeks = Math.max(0, player.injury.weeks - 1);
+        if (player.injury.weeks <= 0) {
+          player.status = "active";
+          player.injury = null;
+        }
+        continue;
+      }
+      if (player.status === "loaned") {
+        const roll = deterministicRoll(`${next.seed}|loan-return|${next.world.season}|${player.id}`);
+        if (roll < 0.35) {
+          player.status = "active";
+          player.clubId = player.loanClubId || player.clubId;
+          player.loanClubId = null;
+        }
+        continue;
+      }
+      if (player.status !== "active") continue;
+      const roll = deterministicRoll(`${next.seed}|player-life|${next.world.season}|${player.id}`);
+      if (age > 34 && roll > 0.82) {
+        player.status = "retired";
+        continue;
+      }
+      if (roll > 0.97) {
+        const club = CLUBS.find((item) => item.id === player.clubId);
+        const candidates = CLUBS.filter((item) => item.league === club?.league && item.id !== player.clubId);
+        const target = candidates.length ? candidates[Math.floor(roll * 17 * candidates.length) % candidates.length] : null;
+        if (target) {
+          player.clubHistory = player.clubHistory || [];
+          player.clubHistory.push(player.clubId);
+          player.clubId = target.id;
+        }
+      }
+      if (roll > 0.985) {
+        player.status = "loaned";
+        player.loanClubId = CLUBS.find((item) => item.id !== player.clubId && item.league === CLUBS.find((item) => item.id === player.clubId)?.league)?.id || player.clubId;
+      } else if (roll > 0.99) {
+        player.status = "injured";
+        player.injury = { name: "肌肉拉伤", weeks: 4 };
+      }
+    }
+  }
   for (const club of next.world.clubStates) {
     const roll = deterministicRoll(`${next.seed}|evolve|${next.world.season}|${club.id}`);
     club.reputation = clamp(club.reputation + (roll > 0.7 ? 1 : roll < 0.25 ? -1 : 0), 35, 99);
@@ -1253,6 +1445,9 @@ function evolveWorld(state) {
     if (roll > 0.95) {
       next.world.news.unshift({ time: next.world.date, title: "换帅", text: `${CLUBS.find((item) => item.id === club.id)?.name}宣布更换主教练。` });
     }
+  }
+  if (deterministicRoll(`${next.seed}|world-rule|${next.world.season}`) > 0.97) {
+    next.world.news.unshift({ time: next.world.date, title: "规则变迁", text: "联赛办公室宣布调整外援名额与财务规则，俱乐部开始重新评估阵容。" });
   }
   const nation = next.player.nationality;
   const surnamePool = SURNAMES_BY_NATION[nation] || ["王", "李", "张"];
@@ -1282,7 +1477,7 @@ function calculateOverall(state) {
 }
 
 function advanceOffseasonWeek(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   next = processWealthEvents(next);
   next = processLifeEvents(next);
   if (next.world.week <= 4) {
@@ -1311,7 +1506,7 @@ function advanceOffseasonWeek(state) {
 }
 
 export function acceptOffer(state, offerId) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const offer = next.offers.find((item) => item.id === offerId);
   if (!offer) return next;
   const club = CLUBS.find((item) => item.id === offer.clubId) || CLUBS.find((item) => item.id === "shanghai-shenhua");
@@ -1340,7 +1535,7 @@ export function acceptOffer(state, offerId) {
 }
 
 export function negotiateOffer(state, offerId) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const offer = next.offers.find((item) => item.id === offerId);
   if (!offer || offer.negotiated) return next;
   offer.negotiated = true;
@@ -1353,7 +1548,7 @@ export function negotiateOffer(state, offerId) {
 }
 
 export function selectTransferOffer(state, accept, offerId) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   const offer = next.transferOffers.find((item) => item.id === offerId);
   if (!offer) return next;
   if (accept) {
@@ -1386,7 +1581,7 @@ export function selectTransferOffer(state, accept, offerId) {
 }
 
 export function retirePlayer(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (next.player.retired) return next;
   next.player.retired = true;
   next.player.status = "retired";
@@ -1414,7 +1609,7 @@ export function retirePlayer(state) {
 }
 
 export function acceptCoachJob(state, jobId) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (!next.coach) return next;
   const job = next.coach.jobOffers.find((item) => item.id === jobId);
   if (!job) return next;
@@ -1423,6 +1618,15 @@ export function acceptCoachJob(state, jobId) {
   next.coach.clubId = club.id;
   next.coach.club = club.name;
   next.coach.contract = { weeklyWage: job.wage, years: 2 };
+  next.coach.formation = "4-2-3-1";
+  next.coach.trainingFocus = "控球推进";
+  next.coach.morale = 60;
+  next.coach.budget = 800000 + club.reputation * 8000;
+  next.coach.transfers = [];
+  next.coach.lineup = { starters: [], bench: [] };
+  next.coach.squad = (next.world.players || []).filter((player) => player.clubId === club.id).slice(0, 18);
+  next.coach.seasonStats = { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
+  next.coach.careerStats = { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
   next.coach.jobOffers = [];
   next.world.phase = "coach";
   next.world.week = 1;
@@ -1434,34 +1638,75 @@ export function acceptCoachJob(state, jobId) {
   return next;
 }
 
+function coachSeasonEnd(state) {
+  let next = cloneState(state);
+  const stats = next.coach.seasonStats || { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
+  next.coach.careerStats = next.coach.careerStats || { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
+  next.coach.careerStats.wins += stats.wins || 0;
+  next.coach.careerStats.draws += stats.draws || 0;
+  next.coach.careerStats.losses += stats.losses || 0;
+  next.coach.careerStats.goalsFor += stats.goalsFor || 0;
+  next.coach.careerStats.goalsAgainst += stats.goalsAgainst || 0;
+  next.coach.careerStats.matches += stats.matches || 0;
+  const fixtures = next.season?.fixtures || [];
+  const points = stats.wins * 3 + stats.draws;
+  const finish = Math.max(1, Math.min(20, Math.round(20 - points * 2.2)));
+  const wonTitle = finish <= 2;
+  const underPressure = finish >= 14;
+  next.coach.contract.years = Math.max(0, (next.coach.contract?.years || 2) - 1);
+  next.coach.reputation = clamp(next.coach.reputation + (wonTitle ? 5 : underPressure ? -2 : 1), 20, 99);
+  if (next.coach.reputation >= 85 && next.coach.license !== "A级") {
+    next.coach.license = "A级";
+    next.feed.unshift({ time: next.world.date, title: "教练证书升级", text: "你通过 A 级教练证书考核，开始被列入更高级别候选名单。" });
+  }
+  next.career.milestones.push(`${next.world.season}:教练赛季结束，最终排名约第 ${finish} 位`);
+  if (wonTitle) next.feed.unshift({ time: next.world.date, title: "教练赛季冠军", text: "你带队赢得赛季冠军，董事会和更衣室都认可你的计划。" });
+  if (underPressure) next.feed.unshift({ time: next.world.date, title: "下课风险", text: "赛季末排名靠后，董事会开始评估你的位置。" });
+  if (next.coach.contract.years <= 0) {
+    next.coach.jobOffers = COACH_JOBS.filter((job) => next.coach.reputation >= job.minReputation).map((job) => ({ ...job, selected: false }));
+    next.feed.unshift({ time: next.world.date, title: "合同到期", text: "你的教练合同到期，市场上出现了新的机会。" });
+  }
+  const club = CLUBS.find((item) => item.id === next.coach.clubId);
+  next.world.season += 1;
+  next.world.week = 1;
+  next.world.date = `${next.world.season}-07-01`;
+  next.season = createSeason(club, next.world.season, `${next.seed}|coach`);
+  next.season.index = 0;
+  next.coach.seasonStats = { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
+  return next;
+}
+
 function advanceCoachWeek(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   if (!next.coach) return next;
   if (!next.season) {
     next.season = createSeason(CLUBS.find((item) => item.id === next.coach.clubId), next.world.season, `${next.seed}|coach`);
   }
   const fixture = next.season.fixtures[next.season.index];
   if (!fixture) {
-    next.coach.retired = true;
-    next.world.phase = "final";
-    next.world.week = 1;
-    return next;
+    return coachSeasonEnd(next);
   }
   const roll = deterministicRoll(`${next.seed}|coach|${fixture.id}`);
   const clubStrength = CLUBS.find((item) => item.id === next.coach.clubId)?.reputation || 55;
   const opponentStrength = fixtureStrength(fixture, fixture.home?.id === next.coach.clubId ? "away" : "home");
-  const edge = (clubStrength - opponentStrength) / 25 + (roll - 0.5) * 1.6 + next.coach.leadership / 50;
+  const trainingEdge = next.coach.trainingFocus === "高位压迫" ? 0.12 : next.coach.trainingFocus === "定位球" ? 0.1 : next.coach.trainingFocus === "反击速度" ? 0.08 : 0;
+  const moraleEdge = ((next.coach.morale || 60) - 60) / 100;
+  const lineupEdge = next.coach.lineup?.starters?.length >= 11 ? 0.08 : -0.12;
+  const edge = (clubStrength - opponentStrength) / 25 + (roll - 0.5) * 1.6 + next.coach.leadership / 50 + trainingEdge + moraleEdge + lineupEdge;
   const goalsFor = Math.max(0, Math.round(0.9 + edge + (roll - 0.4) * 1.2));
   const goalsAgainst = Math.max(0, Math.round(0.8 - edge + (roll - 0.6) * 1.1));
   next.season.results.push({ id: fixture.id, round: fixture.round, home: fixture.home, away: fixture.away, score: [goalsFor, goalsAgainst], coach: true });
   fixture.played = true;
   fixture.score = [goalsFor, goalsAgainst];
   fixture.result = goalsFor > goalsAgainst ? "win" : goalsFor === goalsAgainst ? "draw" : "loss";
+  updateStandings(next, { home: fixture.home, away: fixture.away, homeGoals: goalsFor, awayGoals: goalsAgainst });
   next.coach.seasonStats.wins += fixture.result === "win" ? 1 : 0;
   next.coach.seasonStats.draws += fixture.result === "draw" ? 1 : 0;
   next.coach.seasonStats.losses += fixture.result === "loss" ? 1 : 0;
   next.coach.seasonStats.goalsFor += goalsFor;
   next.coach.seasonStats.goalsAgainst += goalsAgainst;
+  next.coach.seasonStats.matches = (next.coach.seasonStats.matches || 0) + 1;
+  next.coach.morale = clamp((next.coach.morale || 60) + (fixture.result === "win" ? 2 : fixture.result === "loss" ? -2 : 0.5), 0, 100);
   next.coach.reputation = clamp(next.coach.reputation + (fixture.result === "win" ? 0.4 : fixture.result === "loss" ? -0.3 : 0.05), 20, 99);
   next.world.date = fixture.date;
   next.world.week += 1;
@@ -1471,7 +1716,7 @@ function advanceCoachWeek(state) {
 }
 
 export function retireCoach(state) {
-  const next = structuredClone(state);
+  const next = cloneState(state);
   if (!next.coach) return next;
   next.coach.retired = true;
   next.world.phase = "final";
@@ -1483,24 +1728,29 @@ export function buildLifeReport(state) {
   const player = state.player;
   const career = state.career.totalStats;
   const coach = state.coach;
-  const themes = [];
-  if (career.goals >= 80) themes.push("进球机器");
-  if (career.appearances >= 400) themes.push("常青树");
-  if (career.titles.length) themes.push("冠军收藏者");
-  if (state.finances.careerEarnings > 1000000) themes.push("商业赢家");
-  if (coach?.seasonStats?.wins > 100) themes.push("战术大师");
+  const themeChecks = [
+    ["冠军收割者", career.titles.length >= 3],
+    ["一生一队传奇", career.appearances >= 300 && (state.player.academyClubId === state.player.clubId)],
+    ["纪录粉碎机", (state.records || []).length >= 3],
+    ["商业帝国缔造者", state.finances.careerEarnings > 3000000],
+    ["国家队救世主", (state.nationalTeam.goals || 0) >= 20],
+    ["浴火重生者", (state.psychology.scars || []).length >= 1 && career.appearances >= 200],
+    ["足球传道者", (coach?.careerStats?.wins || 0) >= 50 || (state.mentor?.disciples || []).length >= 1],
+    ["文化符号", state.media.fans >= 20000000]
+  ];
+  const themes = themeChecks.filter(([, active]) => active).map(([name]) => name);
   if (!themes.length) themes.push("足球旅人");
   return {
     playerName: player.name,
     themes,
     playerStats: career,
     coachStats: coach?.seasonStats || null,
-    report: `${player.name}结束了漫长的足球人生。作为球员，他留下 ${career.appearances} 场、${career.goals} 球、${career.assists} 次助攻；${coach ? `作为教练，他带队取得 ${coach.seasonStats.wins} 场胜利。` : "他没有走向教练席。"}他的一生被概括为：${themes.join("、")}。`
+    report: `${player.name}结束了漫长的足球人生。作为球员，他留下 ${career.appearances} 场、${career.goals} 球、${career.assists} 次助攻；${coach ? `作为教练，他带队取得 ${(coach.careerStats?.wins || coach.seasonStats?.wins || 0)} 场胜利。` : "他没有走向教练席。"}他的一生被概括为：${themes.join("、")}。`
   };
 }
 
 export function advanceWeek(state) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   if (next.match?.status === "live") return next;
   if (next.match?.status === "ready") return next;
   if (next.world.phase === "academy") return advanceAcademyWeek(next);
@@ -1511,7 +1761,7 @@ export function advanceWeek(state) {
 }
 
 export function simulateToRetirement(state, options = {}) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   let safety = 0;
   while (!next.player.retired && safety < 20000) {
     safety += 1;
@@ -1544,7 +1794,7 @@ export function simulateToRetirement(state, options = {}) {
 }
 
 export function simulateSeason(state, options = {}) {
-  let next = structuredClone(state);
+  let next = cloneState(state);
   let safety = 0;
   while (next.world.phase === "season" && safety < 1000) {
     safety += 1;
@@ -1564,6 +1814,17 @@ export function simulateSeason(state, options = {}) {
   return next;
 }
 
+export function simulateCoachSeason(state) {
+  let next = cloneState(state);
+  const targetSeason = next.world.season;
+  let safety = 0;
+  while (next.world.phase === "coach" && next.world.season === targetSeason && safety < 2000) {
+    safety += 1;
+    next = advanceWeek(next);
+  }
+  return next;
+}
+
 export function exportState(state) {
   return JSON.stringify(structuredClone(state), null, 2);
 }
@@ -1579,3 +1840,4 @@ export function importState(json, storage = globalThis.localStorage) {
 }
 
 export { DATA_SOURCE_NOTES };
+export * from "./systems.js";

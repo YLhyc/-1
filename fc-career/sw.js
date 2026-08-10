@@ -1,4 +1,4 @@
-const CACHE = "fc-career-v2026-08-09-1";
+const CACHE = "fc-career-v2026-08-09-2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,8 +14,13 @@ const ASSETS = [
   "./src/engine.js",
   "./src/store.js",
   "./src/data.js",
+  "./src/club-data.js",
+  "./src/source-manifest.js",
+  "./src/squads.js",
   "./src/career.js",
-  "./src/ai.js"
+  "./src/systems.js",
+  "./src/ai.js",
+  "./src/audio.js"
 ];
 
 self.addEventListener("install", (event) => {
