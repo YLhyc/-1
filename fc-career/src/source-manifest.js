@@ -24,6 +24,13 @@ const ALL_CLUB_IDS = [...BASE_CLUB_IDS, ...ADDITIONAL_CLUBS.map((club) => club.i
 export const SOURCE_MANIFEST = {
   version: "2026-08-09-real-v1",
   verifiedAt: "2026-08-09",
+  assets: {
+    publicRegistryVersion: "2026-08-10-assets-v1",
+    privatePriority: ["club", "kit", "competition", "nation", "continent"],
+    exactMatchField: "fmId",
+    publicFallback: true,
+    privateNeverPublished: true
+  },
   leagueCounts: {
     csl: 16,
     cfl: 16,

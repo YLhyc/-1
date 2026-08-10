@@ -131,8 +131,29 @@ h1, h2, h3 { letter-spacing: -.035em; }
 .career-hero .primary-action { align-self: flex-start; }
 .overview-player { grid-area: player; }
 .player-card { min-height: 100%; padding: 1.25rem; display: grid; grid-template-columns: 4rem 1fr auto; align-items: center; gap: 1rem; }
-.crest { width: 3.9rem; height: 4.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; clip-path: polygon(50% 0, 90% 20%, 82% 78%, 50% 100%, 18% 78%, 10% 20%); color: white; background: linear-gradient(155deg, var(--accent), #1c4f38); }
-.crest b { font-size: 1.5rem; }.crest small { font-size: .52rem; font-weight: 900; }
+.player-assets { display: flex; flex-direction: column; align-items: center; gap: .35rem; }
+.crest { width: 3.9rem; height: 4.5rem; display: block; object-fit: contain; border-radius: .85rem; filter: drop-shadow(0 .35rem .7rem rgba(0, 0, 0, .22)); background: var(--surface-soft); }
+.entity-badge { width: 2.2rem; height: 2.2rem; display: inline-block; flex: 0 0 auto; object-fit: contain; vertical-align: middle; border-radius: .45rem; background: var(--surface-soft); }
+.kit-badge { width: 2rem; height: 2.3rem; object-fit: contain; }
+.mini-badge { width: 1.65rem; height: 1.65rem; display: inline-block; margin-right: .4rem; object-fit: contain; vertical-align: middle; border-radius: .35rem; background: var(--surface-soft); }
+.nation-flags { display: inline-flex; align-items: center; gap: .2rem; margin-right: .3rem; vertical-align: middle; }
+.nation-flags img { width: 1.35rem; height: .95rem; object-fit: cover; border-radius: .16rem; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent); }
+.identity-nation { display: inline-flex; align-items: center; }
+.award-badge { width: 3.35rem; height: 3.8rem; flex: 0 0 auto; object-fit: contain; }
+.competition-badge { width: 2.55rem; height: 2.55rem; flex: 0 0 auto; object-fit: contain; border-radius: 50%; }
+.competition-badge-inline { width: 1.1rem; height: 1.1rem; margin: 0 .2rem; vertical-align: middle; border-radius: 50%; }
+.honors-room { margin-top: 1rem; padding: 1.15rem; }
+.honors-room > header { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.honors-room > header > span { color: var(--accent); font-size: .72rem; font-weight: 850; }
+.honors-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin-top: 1rem; }
+.honor-group { padding: .85rem; border-radius: 1rem; background: var(--surface-soft); }
+.honor-group h3 { margin: 0 0 .7rem; font-size: .9rem; }
+.honor-grid { display: grid; gap: .6rem; }
+.honor-item { display: flex; align-items: center; gap: .65rem; min-width: 0; padding: .55rem; border-radius: .75rem; background: color-mix(in srgb, var(--surface) 72%, transparent); }
+.honor-item > div { min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
+.honor-item b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .75rem; }
+.honor-item span, .honor-item small { color: var(--muted); font-size: .62rem; }
+.honor-item.won small { color: var(--accent); }.honor-item.nominated { opacity: .62; }
 .player-identity { min-width: 0; }
 .player-identity p { margin: 0; color: var(--muted); font-size: .68rem; }
 .player-identity h2 { margin: .2rem 0 .45rem; font-size: 1.6rem; }
@@ -283,7 +304,7 @@ h1, h2, h3 { letter-spacing: -.035em; }
   .career-hero .primary-action { width: 100%; min-height: 3.2rem; }
   .overview-player { order: 2; }
   .player-card { min-height: 6.5rem; padding: .9rem; grid-template-columns: 3.2rem 1fr auto; border-radius: 1.4rem; }
-  .crest { width: 3rem; height: 3.6rem; }.crest b { font-size: 1.2rem; }.player-identity h2 { font-size: 1.35rem; }.player-identity p { font-size: .6rem; }.player-identity span { font-size: .53rem; }.overall strong { font-size: 2rem; }
+  .crest { width: 3rem; height: 3.6rem; }.player-identity h2 { font-size: 1.35rem; }.player-identity p { font-size: .6rem; }.player-identity span { font-size: .53rem; }.overall strong { font-size: 2rem; }.honors-groups { grid-template-columns: 1fr; }.honors-room { padding: .95rem; }
   .overview-metrics { order: 3; display: flex; gap: .65rem; overflow-x: auto; scroll-snap-type: x mandatory; }
   .metric-card { flex: 0 0 45%; min-height: 8.3rem; scroll-snap-align: start; border-radius: 1.35rem; }
   .next-match { order: 4; border-radius: 1.55rem; }.next-match h2 { font-size: 1.3rem; }.pitch-map { height: 14rem; }.next-match .secondary-action { width: 100%; min-height: 3.1rem; }

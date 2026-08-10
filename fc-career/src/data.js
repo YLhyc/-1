@@ -1,4 +1,5 @@
 import { ADDITIONAL_CLUBS } from "./club-data.js";
+import { attachFmMapping, continentEntities } from "./fm-mappings.js";
 
 export const DATA_VERSION = "2026-08-09";
 
@@ -22,7 +23,7 @@ export const LEAGUE_RULES = {
   ligue1: { start: "08-15", end: "05-23", rounds: 34, transferWindows: ["06-10", "09-01", "01-01", "02-03"] }
 };
 
-export const LEAGUES = [
+const RAW_LEAGUES = [
   { id: "csl", name: "中超", nation: "中国", level: 1, rounds: 30, reputation: 68, real: true, source: DATA_SOURCE_NOTES.clubs },
   { id: "cfl", name: "中甲", nation: "中国", level: 2, rounds: 30, reputation: 54, real: true, source: DATA_SOURCE_NOTES.clubs },
   { id: "csl2", name: "中乙", nation: "中国", level: 3, rounds: 28, reputation: 43, real: true, source: DATA_SOURCE_NOTES.clubs },
@@ -32,6 +33,8 @@ export const LEAGUES = [
   { id: "seriea", name: "意甲", nation: "意大利", level: 1, rounds: 38, reputation: 89, real: true, source: DATA_SOURCE_NOTES.clubs },
   { id: "ligue1", name: "法甲", nation: "法国", level: 1, rounds: 34, reputation: 86, real: true, source: DATA_SOURCE_NOTES.clubs }
 ];
+
+export const LEAGUES = Object.freeze(RAW_LEAGUES.map((league) => attachFmMapping(league, "competition")));
 
 const BASE_CLUBS = [
   { id: "shanghai-port", fmId: "23292170", name: "上海海港", short: "海港", city: "上海", league: "csl", reputation: 82, facilities: 18, stadium: "浦东足球场", colors: ["#c8102e", "#ffffff"], real: true, source: DATA_SOURCE_NOTES.clubs, fmIdSource: "sortitoutsi FM26 2026-08-09" },
@@ -91,15 +94,27 @@ const BASE_CLUBS = [
   { id: "psg", fmId: null, name: "巴黎圣日耳曼", short: "巴黎", city: "巴黎", league: "ligue1", reputation: 93, facilities: 20, stadium: "王子公园球场", colors: ["#004170", "#da291c"], real: true, source: DATA_SOURCE_NOTES.clubs }
 ];
 
-export const CLUBS = [...BASE_CLUBS, ...ADDITIONAL_CLUBS];
+export const CLUBS = Object.freeze([...BASE_CLUBS, ...ADDITIONAL_CLUBS].map((club) => attachFmMapping(club, "club")));
 
-export const NATIONAL_TEAMS = [
+const RAW_NATIONAL_TEAMS = [
   { id: "chn", name: "中国", short: "中国", reputation: 68, threshold: 62, real: true },
   { id: "eng", name: "英格兰", short: "英格兰", reputation: 92, threshold: 78, real: true },
   { id: "esp", name: "西班牙", short: "西班牙", reputation: 94, threshold: 80, real: true },
   { id: "arg", name: "阿根廷", short: "阿根廷", reputation: 95, threshold: 82, real: true },
   { id: "bra", name: "巴西", short: "巴西", reputation: 94, threshold: 81, real: true }
 ];
+
+export const NATIONAL_TEAMS = Object.freeze(RAW_NATIONAL_TEAMS.map((team) => attachFmMapping(team, "nation")));
+export const CONTINENTS = continentEntities();
+
+export const WORLD_COMPETITIONS = Object.freeze([
+  { id: "ucl", name: "欧洲冠军联赛", kind: "continental-cup", leagueIds: ["epl", "laliga", "bundesliga", "seriea", "ligue1"], participantCount: 16, rounds: 8 },
+  { id: "uel", name: "欧洲联赛", kind: "continental-cup", leagueIds: ["epl", "laliga", "bundesliga", "seriea", "ligue1"], participantCount: 16, rounds: 8 },
+  { id: "uecl", name: "欧洲协会联赛", kind: "continental-cup", leagueIds: ["epl", "laliga", "bundesliga", "seriea", "ligue1"], participantCount: 16, rounds: 8 },
+  { id: "europe-youth", name: "欧洲五大联赛青年赛事", kind: "youth", leagueIds: ["epl", "laliga", "bundesliga", "seriea", "ligue1"], participantCount: 20, rounds: 10 },
+  { id: "china-youth", name: "中国职业俱乐部青年联赛", kind: "youth", leagueIds: ["csl", "cfl", "csl2"], participantCount: 20, rounds: 10 },
+  { id: "china-regional", name: "中国抽象地区联赛", kind: "regional-abstract", leagueIds: ["csl2"], participantCount: 16, rounds: 12 }
+]);
 
 export const REAL_PLAYERS = [
   {

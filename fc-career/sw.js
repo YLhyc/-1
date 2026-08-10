@@ -1,4 +1,4 @@
-const CACHE = "fc-career-v2026-08-09-2";
+const CACHE = "fc-career-v2026-08-10-3";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,9 +14,14 @@ const ASSETS = [
   "./src/engine.js",
   "./src/store.js",
   "./src/data.js",
+  "./src/fm-mappings.js",
   "./src/club-data.js",
   "./src/source-manifest.js",
   "./src/squads.js",
+  "./src/asset-registry.js",
+  "./src/assets.js",
+  "./src/honors.js",
+  "./src/private-assets.js",
   "./src/career.js",
   "./src/systems.js",
   "./src/ai.js",
@@ -24,7 +29,13 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    const registryResponse = await fetch("./src/asset-registry.js");
+    const registryText = await registryResponse.text();
+    const publicAssets = [...registryText.matchAll(/\"path\":\s*\"([^\"]+)\"/g)].map((match) => match[1]);
+    await cache.addAll([...new Set([...ASSETS, ...publicAssets])]);
+  })());
   self.skipWaiting();
 });
 

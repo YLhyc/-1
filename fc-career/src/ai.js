@@ -90,6 +90,40 @@ export async function generateNarrative({ state, event, fallback = AI_DEFAULT_FA
   }
 }
 
+function validateSocialText(text) {
+  if (!text || typeof text !== "string") return null;
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (normalized.length < 8 || normalized.length > 180) return null;
+  return normalized;
+}
+
+export async function generateSocialPost({ state, draft, fetchImpl = globalThis.fetch }) {
+  if (!isConfigured(state?.settings) || typeof fetchImpl !== "function") return null;
+  const cleanDraft = String(draft || "").trim();
+  if (!cleanDraft) return null;
+  try {
+    const { endpoint, model, key } = state.settings.ai;
+    const response = await fetchImpl(endpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: "你是足球生涯游戏的社交媒体编辑。只改写玩家给出的草稿，不得加入未经提供的人名、球队、比分、时间或事实。输出一条 8 至 180 字简体中文内容，不要解释。" },
+          { role: "user", content: cleanDraft }
+        ],
+        temperature: 0.3,
+        max_tokens: 180
+      })
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return validateSocialText(data?.choices?.[0]?.message?.content || "");
+  } catch {
+    return null;
+  }
+}
+
 export function describeAiConfig(state) {
   const configured = isConfigured(state?.settings);
   return configured ? "AI 已配置，失败时仍会回退本地模板" : "未配置 AI，使用本地模板";

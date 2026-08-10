@@ -1,6 +1,7 @@
 import {
   CLUBS,
   COACH_JOBS,
+  DATA_VERSION,
   DATA_SOURCE_NOTES,
   LEAGUES,
   LEAGUE_RULES,
@@ -12,11 +13,13 @@ import {
   SURNAMES_BY_NATION,
   TALENTS,
   TRAINING_PLANS,
-  TRAITS
+  TRAITS,
+  WORLD_COMPETITIONS
 } from "./data.js";
 import { SQUADS } from "./squads.js";
 import { MATCH } from "./content.js";
 import { buildMatchSummary, deterministicRoll, resolveMoment } from "./engine.js";
+import { addHonor, migrateHonors } from "./honors.js";
 
 export const SAVE_VERSION = 3;
 export const SAVES_KEY = "fc-career-saves";
@@ -132,6 +135,16 @@ function initialRelations() {
   };
 }
 
+function initialAgent(seed) {
+  const profiles = [
+    { id: "agent-chen-lan", name: "陈岚", type: "职业发展型", resources: 72, loyalty: 68, interests: "优先稳定出场与长期声誉" },
+    { id: "agent-luo-qing", name: "罗青", type: "商业平衡型", resources: 76, loyalty: 61, interests: "兼顾合同金额、肖像权与上场时间" },
+    { id: "agent-he-yuan", name: "何远", type: "转会进取型", resources: 81, loyalty: 54, interests: "优先高平台与跨联赛机会" }
+  ];
+  const profile = profiles[Math.floor(deterministicRoll(`${seed}|agent-profile`) * profiles.length)] || profiles[0];
+  return { ...profile, history: [{ date: "2026-02-18", action: "签约", note: "经纪人确认以长期发展为首要目标。" }] };
+}
+
 function initialPlayer(options, seed, club) {
   const position = POSITIONS.find((item) => item.id === options.position) || POSITIONS.find((item) => item.id === "CAM");
   const talent = TALENTS.find((item) => item.id === options.talent) || TALENTS[1];
@@ -159,10 +172,12 @@ function initialPlayer(options, seed, club) {
     weight: options.weight || 66,
     number: options.number || 17,
     secondaryPositions: options.secondaryPositions || [],
+    // OVR is a public-facing media/market evaluation. Match resolution only reads attributes.
     overall: 67,
     attributes,
     hidden,
     traits: options.traits?.length ? options.traits.map((id) => TRAITS.find((t) => t.id === id)).filter(Boolean).map((t) => t.id) : [],
+    traitMemory: [],
     customized: Boolean(options.customized),
     source: options.customized ? "自定义生涯（已标记）" : "模板开档",
     family: options.family || "工人家庭",
@@ -185,16 +200,40 @@ function createSeason(club, season, seed) {
     const opponent = opponents[(clubIndex + index) % Math.max(opponents.length, 1)];
     const home = (index + clubIndex) % 2 === 0;
     const round = index + 1;
-    const focus = round === 1 || round === Math.ceil(rounds / 2) || round === rounds - 1 || round === rounds || (opponent && opponent.reputation >= 80);
+    const focusReasons = [];
+    if (round === 1) focusReasons.push("opening");
+    if (round === Math.ceil(rounds / 2)) focusReasons.push("midseason");
+    if (opponent?.city && opponent.city === club.city) focusReasons.push("derby");
+    if (opponent?.reputation >= 80) focusReasons.push("high-profile");
     fixtures.push({
       id: `${season}-r${round}-${club.id}-${opponent?.id || "bye"}`,
       round,
       home: home ? club : opponent,
       away: home ? opponent : club,
       competition: league?.name || "联赛",
-      focus,
+      competitionType: "league",
+      focus: focusReasons.length > 0,
+      focusReasons,
       played: false,
       date: addDays(startDate, index * 7)
+    });
+  }
+  const nation = league?.nation;
+  const cupPool = CLUBS.filter((item) => item.id !== club.id && (LEAGUES.find((entry) => entry.id === item.league)?.nation === nation || (nation !== "中国" && ["epl", "laliga", "bundesliga", "seriea", "ligue1"].includes(item.league))));
+  const cupOpponent = cupPool[Math.floor(deterministicRoll(`${seed}|cup-opponent|${season}|${club.id}`) * cupPool.length)] || opponents[0];
+  if (cupOpponent) {
+    const insertion = Math.min(7, fixtures.length);
+    fixtures.splice(insertion, 0, {
+      id: `${season}-cup-1-${club.id}-${cupOpponent.id}`,
+      round: 1,
+      home: club,
+      away: cupOpponent,
+      competition: nation === "中国" ? "中国足协杯" : club.reputation >= 86 ? "欧洲冠军联赛" : "欧洲联赛",
+      competitionType: "cup",
+      focus: true,
+      focusReasons: ["cup"],
+      played: false,
+      date: addDays(startDate, Math.max(4, insertion * 7 - 3))
     });
   }
   return {
@@ -204,8 +243,202 @@ function createSeason(club, season, seed) {
     index: 0,
     results: [],
     standings: [],
+    manualFocusIds: [],
+    manualFocusLimit: 2,
     seed: `${seed}|season-${season}`
   };
+}
+
+export function classifyFocusFixture(state, fixture) {
+  const reasons = new Set(fixture.focusReasons || []);
+  if (fixture.competitionType === "cup") reasons.add("cup");
+  if (state.season?.manualFocusIds?.includes(fixture.id)) reasons.add("manual");
+  const totalRounds = state.season?.fixtures?.length || 0;
+  if (fixture.round >= Math.max(1, totalRounds - 3) && state.season?.standings?.length) {
+    const rank = state.season.standings.findIndex((entry) => entry.clubId === state.player.clubId) + 1;
+    if (rank > 0 && rank <= 3) reasons.add("title-race");
+    if (rank > 0 && rank >= Math.max(1, state.season.standings.length - 2)) reasons.add("relegation");
+  }
+  if ((state.career?.totalStats?.appearances || 0) > 0 && ((state.career.totalStats.appearances + 1) % 50 === 0)) reasons.add("milestone");
+  return [...reasons];
+}
+
+export function markFocusFixture(state, fixtureId) {
+  const next = cloneState(state);
+  const fixture = next.season?.fixtures?.find((item) => item.id === fixtureId && !item.played);
+  if (!fixture) return next;
+  next.season.manualFocusIds = next.season.manualFocusIds || [];
+  const limit = next.season.manualFocusLimit || 2;
+  if (next.season.manualFocusIds.includes(fixtureId) || next.season.manualFocusIds.length >= limit) return next;
+  next.season.manualFocusIds.push(fixtureId);
+  fixture.focusReasons = classifyFocusFixture(next, fixture);
+  fixture.focus = true;
+  next.feed.unshift({ time: next.world.date, title: "主动标记焦点比赛", text: `${fixture.home?.name || "主队"}对${fixture.away?.name || "客队"}已加入本赛季焦点名单（${next.season.manualFocusIds.length}/${limit}）。` });
+  return next;
+}
+
+function migrateSeasonFocus(state) {
+  if (!state.season) return;
+  state.season.manualFocusIds = state.season.manualFocusIds || [];
+  state.season.manualFocusLimit = state.season.manualFocusLimit || 2;
+  for (const fixture of state.season.fixtures || []) {
+    fixture.competitionType = fixture.competitionType || "league";
+    fixture.focusReasons = fixture.focusReasons || (fixture.focus ? ["legacy-focus"] : []);
+  }
+}
+
+function createTable(clubIds) {
+  return clubIds.map((clubId) => {
+    const club = CLUBS.find((item) => item.id === clubId);
+    return { clubId, name: club?.name || clubId, played: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, points: 0 };
+  });
+}
+
+function databaseSnapshot() {
+  return {
+    version: DATA_VERSION,
+    frozen: true,
+    createdAt: "2026-08-10",
+    leagues: LEAGUES.map((league) => ({ id: league.id, name: league.name, nation: league.nation, level: league.level })),
+    clubs: CLUBS.map((club) => ({ id: club.id, name: club.name, league: club.league, city: club.city, reputation: club.reputation })),
+    playerCount: SQUADS.length
+  };
+}
+
+function createLeagueSimulations(relatedLeagueId) {
+  return LEAGUES.map((league) => {
+    const clubIds = CLUBS.filter((club) => club.league === league.id).map((club) => club.id);
+    return {
+      leagueId: league.id,
+      name: league.name,
+      precision: league.id === relatedLeagueId ? "detailed" : "simplified",
+      standings: createTable(clubIds),
+      results: [],
+      rounds: [],
+      awards: [],
+      records: [],
+      lastAdvancedKey: null
+    };
+  });
+}
+
+function competitionParticipants(definition) {
+  const pool = CLUBS
+    .filter((club) => definition.leagueIds.includes(club.league))
+    .sort((a, b) => b.reputation - a.reputation || a.id.localeCompare(b.id));
+  const offsetById = { ucl: 0, uel: 8, uecl: 16 };
+  const offset = Math.min(offsetById[definition.id] || 0, Math.max(0, pool.length - definition.participantCount));
+  return pool.slice(offset, offset + definition.participantCount).map((club) => club.id);
+}
+
+function createCompetitionStates(relatedClubId) {
+  return WORLD_COMPETITIONS.map((definition) => {
+    const participants = competitionParticipants(definition);
+    return {
+      id: definition.id,
+      name: definition.name,
+      kind: definition.kind,
+      rounds: definition.rounds,
+      currentRound: 0,
+      participants,
+      precision: participants.includes(relatedClubId) ? "detailed" : "simplified",
+      standings: createTable(participants),
+      results: [],
+      summaries: [],
+      awards: [],
+      records: [],
+      lastAdvancedKey: null
+    };
+  });
+}
+
+function ensureWorldAuditState(state) {
+  state.world.database = state.world.database || databaseSnapshot();
+  const relatedClubId = state.world.phase === "coach" && state.coach?.clubId ? state.coach.clubId : state.player.clubId;
+  const relatedLeagueId = CLUBS.find((club) => club.id === relatedClubId)?.league || state.season?.leagueId || "csl";
+  state.world.leagueSimulations = state.world.leagueSimulations || createLeagueSimulations(relatedLeagueId);
+  state.world.competitions = state.world.competitions || createCompetitionStates(relatedClubId);
+}
+
+function setRelatedSimulationPrecision(state, relatedClubId) {
+  ensureWorldAuditState(state);
+  const relatedLeagueId = CLUBS.find((club) => club.id === relatedClubId)?.league;
+  for (const simulation of state.world.leagueSimulations) simulation.precision = simulation.leagueId === relatedLeagueId ? "detailed" : "simplified";
+  for (const competition of state.world.competitions) competition.precision = competition.participants.includes(relatedClubId) ? "detailed" : "simplified";
+}
+
+function applyTableResult(table, homeId, awayId, homeGoals, awayGoals) {
+  const home = table.find((entry) => entry.clubId === homeId);
+  const away = table.find((entry) => entry.clubId === awayId);
+  if (!home || !away) return;
+  home.played += 1;
+  away.played += 1;
+  home.goalsFor += homeGoals;
+  home.goalsAgainst += awayGoals;
+  away.goalsFor += awayGoals;
+  away.goalsAgainst += homeGoals;
+  if (homeGoals > awayGoals) {
+    home.wins += 1;
+    away.losses += 1;
+    home.points += 3;
+  } else if (awayGoals > homeGoals) {
+    away.wins += 1;
+    home.losses += 1;
+    away.points += 3;
+  } else {
+    home.draws += 1;
+    away.draws += 1;
+    home.points += 1;
+    away.points += 1;
+  }
+  table.sort((a, b) => b.points - a.points || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst));
+}
+
+function simulateTableRound(state, simulation, key) {
+  const ids = simulation.standings.map((entry) => entry.clubId);
+  if (ids.length < 2) return;
+  const shift = (state.world.week - 1) % ids.length;
+  const rotated = ids.slice(shift).concat(ids.slice(0, shift));
+  const roundResults = [];
+  for (let index = 0; index + 1 < rotated.length; index += 2) {
+    const homeId = rotated[index];
+    const awayId = rotated[index + 1];
+    const homeClub = CLUBS.find((club) => club.id === homeId);
+    const awayClub = CLUBS.find((club) => club.id === awayId);
+    const roll = deterministicRoll(`${state.seed}|world-table|${simulation.leagueId || simulation.id}|${key}|${homeId}|${awayId}`);
+    const edge = ((homeClub?.reputation || 50) - (awayClub?.reputation || 50)) / 24;
+    const homeGoals = Math.max(0, Math.round(1.2 + edge + (roll - 0.45) * 2.2));
+    const awayGoals = Math.max(0, Math.round(1.0 - edge + (0.55 - roll) * 1.8));
+    applyTableResult(simulation.standings, homeId, awayId, homeGoals, awayGoals);
+    if (simulation.precision === "detailed") roundResults.push({ homeId, awayId, homeGoals, awayGoals, date: state.world.date, week: state.world.week });
+    if (homeGoals + awayGoals >= 6) simulation.records.push({ week: state.world.week, type: "high-score", homeId, awayId, score: [homeGoals, awayGoals] });
+  }
+  if (simulation.precision === "detailed") simulation.results.push(...roundResults);
+  const roundRecord = { week: state.world.week, leader: simulation.standings[0]?.clubId || null, matches: rotated.length >> 1 };
+  if (Array.isArray(simulation.rounds)) simulation.rounds.push(roundRecord);
+  else simulation.summaries.push(roundRecord);
+  simulation.lastAdvancedKey = key;
+}
+
+function advanceWorldSimulations(state) {
+  ensureWorldAuditState(state);
+  const key = `${state.world.season}-${state.world.week}`;
+  for (const simulation of state.world.leagueSimulations) {
+    if (simulation.lastAdvancedKey !== key) simulateTableRound(state, simulation, key);
+  }
+  if (state.world.week % 2 === 1) {
+    for (const competition of state.world.competitions) {
+      if (competition.lastAdvancedKey === key || competition.currentRound >= competition.rounds) continue;
+      simulateTableRound(state, competition, key);
+      competition.currentRound += 1;
+      competition.summaries.push({ round: competition.currentRound, leader: competition.standings[0]?.clubId || null });
+      if (competition.currentRound === competition.rounds) {
+        const winner = competition.standings[0];
+        competition.awards.push({ title: `${competition.name}冠军`, clubId: winner?.clubId || null, season: state.world.season });
+      }
+    }
+  }
+  return state;
 }
 
 function ensureStandings(state) {
@@ -260,6 +493,7 @@ export function createInitialState(options = {}) {
   const seed = options.seed || randomSeed();
   const club = CLUBS.find((item) => item.id === options.clubId) || CLUBS.find((item) => item.id === "shanghai-shenhua");
   const player = initialPlayer(options, seed, club);
+  player.overall = clamp(Math.round(calculateOverall({ player, health: { form: 6.5 } })), 40, 99);
   const world = {
     date: "2026-02-18",
     season: 2026,
@@ -270,6 +504,9 @@ export function createInitialState(options = {}) {
     news: [],
     newStars: [],
     players: structuredClone(SQUADS),
+    database: databaseSnapshot(),
+    leagueSimulations: createLeagueSimulations(club.league),
+    competitions: createCompetitionStates(club.id),
     referees: [
       { id: "ref-zh-01", name: "马宁", strictness: 14, pressureResistance: 12, impression: 0 },
       { id: "ref-zh-02", name: "傅明", strictness: 11, pressureResistance: 13, impression: 0 },
@@ -310,13 +547,17 @@ export function createInitialState(options = {}) {
       factions: []
     },
     mentor: { mentor: null, disciples: [], learnedTraits: [] },
+    agent: initialAgent(seed),
     comeback: { eligible: false, traditionalUsed: false, legendaryUsed: false, attempts: [] },
     unemployment: { status: "none", offers: [] },
     aiCache: [],
     extensions: [],
+    diagnostics: { errors: [] },
     fanCulture: { groups: [], tifo: [], rituals: [player.ritual] },
     peers: [],
     awards: [],
+    honors: [],
+    honorsVersion: 1,
     records: [],
     hiddenTitles: [],
     audio: { enabled: false, background: false, ui: false, environment: false, unlocked: false },
@@ -372,29 +613,44 @@ export function createInitialState(options = {}) {
 
 export function migrate(raw) {
   if (!raw || typeof raw !== "object") return createInitialState();
-  if (raw.version === SAVE_VERSION) return structuredClone(raw);
+    if (raw.version === SAVE_VERSION) {
+      const next = structuredClone(raw);
+      next.player.traitMemory = next.player.traitMemory || [];
+      next.agent = next.agent || initialAgent(next.seed || "migrated-agent");
+      next.diagnostics = next.diagnostics || { errors: [] };
+      migrateSeasonFocus(next);
+      ensureWorldAuditState(next);
+      return migrateHonors(next);
+    }
   if (raw.version === 2) {
     const next = structuredClone(raw);
     next.version = SAVE_VERSION;
     next.psychology = next.psychology || { energy: 80, state: "平静专注", trend: "稳定", advice: "保持训练与生活平衡。", scars: [] };
     next.club = next.club || { promises: [], politics: { influence: 0, unlocked: false, support: null, events: [] }, factions: [] };
     next.mentor = next.mentor || { mentor: null, disciples: [], learnedTraits: [] };
+    next.agent = next.agent || initialAgent(next.seed || "migrated-agent");
     next.comeback = next.comeback || { eligible: false, traditionalUsed: false, legendaryUsed: false, attempts: [] };
     next.unemployment = next.unemployment || { status: "none", offers: [] };
     next.aiCache = next.aiCache || [];
     next.extensions = next.extensions || [];
+    next.diagnostics = next.diagnostics || { errors: [] };
     next.fanCulture = next.fanCulture || { groups: [], tifo: [], rituals: [] };
     next.peers = next.peers || [];
     next.awards = next.awards || [];
+    next.honors = next.honors || [];
+    next.honorsVersion = next.honorsVersion || 1;
     next.records = next.records || [];
     next.hiddenTitles = next.hiddenTitles || [];
     next.audio = next.audio || { enabled: false, background: false, ui: false, environment: false, unlocked: false };
     next.player.secondaryPositions = next.player.secondaryPositions || [];
+    next.player.traitMemory = next.player.traitMemory || [];
     next.nationalTeam = next.nationalTeam || {};
     next.nationalTeam.choicePending = next.nationalTeam.choicePending || false;
     next.nationalTeam.committedNation = next.nationalTeam.committedNation || next.player.nationality || "中国";
     next.world.referees = next.world.referees || [];
-    return next;
+    migrateSeasonFocus(next);
+    ensureWorldAuditState(next);
+    return migrateHonors(next);
   }
   if (raw.version === 1 || raw.version === undefined) {
     const next = createInitialState({ seed: raw.seed || "migrated-v1" });
@@ -418,6 +674,8 @@ export function migrate(raw) {
     if (raw.resources) next.resources = { ...next.resources, ...raw.resources };
     if (raw.relations) next.relations = { ...next.relations, ...raw.relations };
     if (raw.match) next.match = structuredClone(raw.match);
+    next.honors = next.honors || [];
+    next.honorsVersion = next.honorsVersion || 1;
     if (raw.offers?.unlocked && raw.offers?.selected) {
       const selected = raw.offers.selected;
       const offerMap = {
@@ -428,7 +686,7 @@ export function migrate(raw) {
       next.offers = [{ id: selected, clubId: offerMap[selected] || "shanghai-shenhua", name: selected }];
     }
     next.feed = raw.feed || next.feed;
-    return next;
+    return migrateHonors(next);
   }
   throw new Error(`Unsupported save version: ${raw.version}`);
 }
@@ -605,8 +863,9 @@ function processNationalTeam(state) {
   const next = cloneState(state);
   if (next.world.phase !== "season" || next.health.injuries.some((injury) => injury.active)) return next;
   const team = nationalTeamFor(next);
-  const seniorReady = next.player.age >= 18 && next.player.overall >= (team.threshold || 60);
-  const youthReady = next.player.age <= 23 && next.player.overall >= (team.threshold || 60) - 10;
+  const selectionScore = calculateSelectionScore(next);
+  const seniorReady = next.player.age >= 18 && selectionScore >= (team.threshold || 60);
+  const youthReady = next.player.age <= 23 && selectionScore >= (team.threshold || 60) - 10;
   if (!seniorReady && !youthReady) return next;
   const stage = seniorReady ? "成年队" : "U23/青年队";
   const every = seniorReady ? 12 : 8;
@@ -701,6 +960,15 @@ function processLifeEvents(state) {
   const next = cloneState(state);
   const week = next.world.week;
   if (next.world.phase === "season") {
+    const eventPack = (next.extensions || []).find((pack) => pack.type === "event" && pack.entries?.some((entry) => !pack.deliveredIds?.includes(entry.id)));
+    if (eventPack) {
+      eventPack.deliveredIds = eventPack.deliveredIds || [];
+      const event = eventPack.entries.find((entry) => !eventPack.deliveredIds.includes(entry.id));
+      if (event) {
+        eventPack.deliveredIds.push(event.id);
+        next.feed.unshift({ time: next.world.date, title: event.title, text: event.text });
+      }
+    }
     const socialKey = `social-${next.world.season}-${week}`;
     if (week % 5 === 0 && !next.media.social.some((item) => item.id === socialKey)) {
       const posts = [
@@ -1236,12 +1504,14 @@ function applyResultToCareer(state, result) {
       goals: result.goals || 0,
       assists: result.assists || 0
     });
-    updateStandings(next, {
-      home: result.home,
-      away: result.away,
-      homeGoals: result.homeGoals ?? result.teamGoals,
-      awayGoals: result.opponentGoals
-    });
+    if (fixture?.competitionType !== "cup") {
+      updateStandings(next, {
+        home: result.home,
+        away: result.away,
+        homeGoals: result.homeGoals ?? result.teamGoals,
+        awayGoals: result.opponentGoals
+      });
+    }
   }
   return next;
 }
@@ -1291,6 +1561,7 @@ function advanceSeasonWeek(state) {
   next = processNationalTeam(next);
   next = processWealthEvents(next);
   next = processLifeEvents(next);
+  next = advanceWorldSimulations(next);
   if (!next.season) {
     next.season = createSeason(CLUBS.find((item) => item.id === next.player.clubId), next.world.season, next.seed);
   }
@@ -1306,6 +1577,8 @@ function advanceSeasonWeek(state) {
     next.season.index += 1;
     return next;
   }
+  fixture.focusReasons = classifyFocusFixture(next, fixture);
+  fixture.focus = fixture.focusReasons.length > 0;
   if (fixture.focus) {
     next = startMatch(next, fixture, false);
     return next;
@@ -1359,6 +1632,15 @@ function generateTransferOffers(state) {
 
 export function seasonEnd(state) {
   let next = cloneState(state);
+  ensureWorldAuditState(next);
+  for (const simulation of next.world.leagueSimulations) {
+    if (!simulation.awards.some((award) => award.season === next.world.season)) {
+      simulation.awards.push({ title: `${simulation.name}赛季冠军`, clubId: simulation.standings[0]?.clubId || null, season: next.world.season });
+    }
+    if (!simulation.records.some((record) => record.season === next.world.season)) {
+      simulation.records.push({ type: "season-leader", season: next.world.season, clubId: simulation.standings[0]?.clubId || null, points: simulation.standings[0]?.points || 0 });
+    }
+  }
   next = applyGrowthToAttributes(next);
   const stats = next.career.seasonStats;
   const average = stats.appearances ? stats.ratingSum / stats.appearances : 6;
@@ -1378,6 +1660,7 @@ export function seasonEnd(state) {
   if (standing?.clubId === next.player.clubId) {
     next.career.totalStats.titles.push(`${next.world.season} ${next.season.leagueId || "联赛"}冠军`);
     next.awards.push({ id: `award-champion-${next.world.season}`, award: "联赛冠军", season: next.world.season, won: true });
+    addHonor(next, { id: `honor-champion-${next.world.season}`, awardId: "league-title", title: "联赛冠军", category: "club", season: next.world.season, clubId: next.player.clubId, won: true });
     next.feed.unshift({ time: next.world.date, title: "联赛冠军", text: "你的球队赢得联赛冠军，夺冠游行将在休赛期进行。" });
   }
   if (stats.goals >= 15) {
@@ -1476,6 +1759,14 @@ function calculateOverall(state) {
   return clamp(base + (state.health.form - 6) * 1.2, 35, 99);
 }
 
+function calculateSelectionScore(state) {
+  const attrs = state.player.attributes;
+  const values = Object.values(attrs);
+  const base = values.reduce((sum, value) => sum + value, 0) / Math.max(values.length, 1);
+  const availability = state.health?.injuries?.some((injury) => injury.active) ? -16 : 0;
+  return clamp(base + (state.health?.form - 6) * 1.1 + availability, 35, 99);
+}
+
 function advanceOffseasonWeek(state) {
   let next = cloneState(state);
   next = processWealthEvents(next);
@@ -1572,6 +1863,7 @@ export function selectTransferOffer(state, accept, offerId) {
     next.world.transferWindows = LEAGUE_RULES[club.league]?.transferWindows || next.world.transferWindows;
     next.season = createSeason(club, next.world.season, next.seed);
     next.season.index = 1;
+    setRelatedSimulationPrecision(next, club.id);
     next.player.hidden.adaptability = clamp(next.player.hidden.adaptability + 1, 1, 20);
   } else {
     next.feed.unshift({ time: next.world.date, title: "转会窗", text: `你拒绝${offer.clubName}的报价，留在${next.player.club}。` });
@@ -1634,6 +1926,7 @@ export function acceptCoachJob(state, jobId) {
   next.world.transferWindows = LEAGUE_RULES[club.league]?.transferWindows || next.world.transferWindows;
   next.season = createSeason(club, next.world.season + 1, `${next.seed}|coach`);
   next.season.index = 0;
+  setRelatedSimulationPrecision(next, club.id);
   next.feed.unshift({ time: next.world.date, title: "教练生涯", text: `你成为${club.name}的${job.name}。` });
   return next;
 }
@@ -1679,6 +1972,7 @@ function coachSeasonEnd(state) {
 function advanceCoachWeek(state) {
   let next = cloneState(state);
   if (!next.coach) return next;
+  next = advanceWorldSimulations(next);
   if (!next.season) {
     next.season = createSeason(CLUBS.find((item) => item.id === next.coach.clubId), next.world.season, `${next.seed}|coach`);
   }

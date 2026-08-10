@@ -1,5 +1,6 @@
-import { CLUBS, POSITIONS } from "./data.js";
+import { CLUBS, POSITIONS, TRAITS } from "./data.js";
 import { deterministicRoll } from "./engine.js";
+import { addHonor } from "./honors.js";
 
 function clamp(value, minimum, maximum) {
   return Math.max(minimum, Math.min(maximum, value));
@@ -17,6 +18,37 @@ function cloneState(state) {
 function pushFeed(state, title, text) {
   state.feed.unshift({ time: state.world.date, title, text });
   return state;
+}
+
+function sanitizeDiagnostic(value) {
+  return String(value || "未知错误")
+    .replace(/Bearer\s+\S+/gi, "Bearer [redacted]")
+    .replace(/\bsk-[A-Za-z0-9_-]+\b/g, "[redacted]")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 280);
+}
+
+export function recordDiagnostic(state, value) {
+  const next = cloneState(state);
+  next.diagnostics = next.diagnostics || { errors: [] };
+  const message = sanitizeDiagnostic(value);
+  if (!next.diagnostics.errors.some((entry) => entry.message === message)) {
+    next.diagnostics.errors.push({ date: next.world.date, message });
+    next.diagnostics.errors = next.diagnostics.errors.slice(-20);
+  }
+  return next;
+}
+
+export function buildErrorReport(state) {
+  return JSON.stringify({
+    format: "fc-career-error-report-v1",
+    generatedAt: new Date().toISOString(),
+    saveVersion: state.version,
+    worldDate: state.world?.date || null,
+    ui: { theme: state.ui?.theme || "dark", largeText: Boolean(state.ui?.largeText) },
+    errors: (state.diagnostics?.errors || []).map((entry) => ({ date: entry.date, message: sanitizeDiagnostic(entry.message) }))
+  }, null, 2);
 }
 
 export function applyPositionTraining(state, positionId) {
@@ -255,6 +287,40 @@ export function postSocial(state, text, custom = false) {
   return next;
 }
 
+export function manageTrait(state, { traitId, replaceId, mode = "add" } = {}) {
+  const next = cloneState(state);
+  const active = next.player.traits || [];
+  const memory = next.player.traitMemory || [];
+  const target = TRAITS.find((item) => item.id === traitId);
+  const replaced = TRAITS.find((item) => item.id === replaceId);
+  if (mode === "add") {
+    if (!target || active.includes(target.id) || active.length >= 5) return next;
+    next.player.traits = [...active, target.id];
+    pushFeed(next, "特性学习", `你把“${target.name}”加入当前可执行特性。`);
+    return next;
+  }
+  if (!replaced || !active.includes(replaced.id)) return next;
+  const remember = (status) => {
+    if (!memory.some((entry) => entry.id === replaced.id && entry.status === status)) {
+      memory.push({ id: replaced.id, name: replaced.name, status, date: next.world.date });
+    }
+  };
+  if (mode === "suppress") {
+    next.player.traits = active.filter((id) => id !== replaced.id);
+    next.player.traitMemory = memory;
+    remember("suppressed");
+    pushFeed(next, "特性压制", `“${replaced.name}”暂不执行，但学习记忆已保留。`);
+    return next;
+  }
+  if (mode === "replace" && target && !active.includes(target.id)) {
+    next.player.traits = active.map((id) => id === replaced.id ? target.id : id);
+    next.player.traitMemory = memory;
+    remember("replaced");
+    pushFeed(next, "特性替换", `“${replaced.name}”退出当前槽位，“${target.name}”投入比赛；旧特性学习记忆已保留。`);
+  }
+  return next;
+}
+
 export function cacheNarrative(state, key, text) {
   const next = cloneState(state);
   if (next.aiCache.some((item) => item.key === key)) return next;
@@ -270,6 +336,11 @@ export function validateExtensionPack(pack) {
   if (!pack.manifest || typeof pack.manifest !== "object") errors.push("缺少 manifest");
   else if (pack.manifest.checksum && typeof pack.manifest.checksum !== "string") errors.push("checksum 必须是字符串");
   if (!Array.isArray(pack.entries) || !pack.entries.length) errors.push("缺少 entries");
+  if (pack?.type === "event" && Array.isArray(pack.entries)) {
+    for (const entry of pack.entries) {
+      if (!entry?.id || !entry?.title || !entry?.text) errors.push("事件扩展条目必须包含 id、title 和 text");
+    }
+  }
   return errors;
 }
 
@@ -278,7 +349,10 @@ export function importExtensionPack(state, pack) {
   if (errors.length) return { state, errors };
   const next = cloneState(state);
   const id = `ext-${next.extensions.length + 1}-${pack.type}`;
-  next.extensions.push({ id, type: pack.type, version: pack.version, importedAt: next.world.date, entryCount: pack.entries.length });
+  const entries = pack.type === "event"
+    ? pack.entries.map((entry) => ({ id: String(entry.id), title: String(entry.title), text: String(entry.text) }))
+    : [];
+  next.extensions.push({ id, type: pack.type, version: pack.version, importedAt: next.world.date, entryCount: pack.entries.length, entries, deliveredIds: [] });
   pushFeed(next, "扩展包已导入", `${pack.type} 扩展包通过校验，已导入 ${pack.entries.length} 个条目。`);
   return { state: next, errors: [] };
 }
@@ -500,7 +574,9 @@ export function recordMilestone(state, record) {
 export function awardNomination(state, award) {
   const next = cloneState(state);
   const id = `award-${next.world.season}-${award}-${next.awards.length + 1}`;
-  next.awards.push({ id, award, season: next.world.season, won: deterministicRoll(`${next.seed}|award|${id}`) > 0.55 });
+  const won = deterministicRoll(`${next.seed}|award|${id}`) > 0.55;
+  next.awards.push({ id, award, season: next.world.season, won });
+  addHonor(next, { id: `honor-${id}`, award, awardId: award, season: next.world.season, category: "individual", won });
   pushFeed(next, "年度评选", next.awards.at(-1).won ? `你赢得${award}，媒体开始写专题。` : `你入围${award}，最终没有获奖。`);
   return next;
 }
@@ -586,9 +662,24 @@ export function agentEvent(state, action) {
     next.media.image.controversy = clamp((next.media.image.controversy || 4) + 2, 0, 20);
     pushFeed(next, "经纪人事件", "经纪人向媒体泄露了你的转会意愿，更衣室出现裂痕。");
   } else if (action === "replace") {
+    const profiles = [
+      { id: "agent-chen-lan", name: "陈岚", type: "职业发展型", resources: 72, loyalty: 68, interests: "优先稳定出场与长期声誉" },
+      { id: "agent-luo-qing", name: "罗青", type: "商业平衡型", resources: 76, loyalty: 61, interests: "兼顾合同金额、肖像权与上场时间" },
+      { id: "agent-he-yuan", name: "何远", type: "转会进取型", resources: 81, loyalty: 54, interests: "优先高平台与跨联赛机会" }
+    ];
+    const previous = next.agent || profiles[0];
+    const replacement = profiles.find((profile) => profile.id !== previous.id) || profiles[0];
+    next.agent = {
+      ...replacement,
+      history: [
+        ...(previous.history || []),
+        { date: next.world.date, action: "解约", note: `结束与${previous.name}的合作。` },
+        { date: next.world.date, action: "签约", note: `改由${replacement.name}处理职业事务。` }
+      ]
+    };
     agent.trust = 55;
     agent.closeness = 45;
-    next.feed.unshift({ time: next.world.date, title: "更换经纪人", text: "你支付违约金解雇了原经纪人，新经纪人开始处理你的商业事务。" });
+    next.feed.unshift({ time: next.world.date, title: "更换经纪人", text: `你支付违约金结束与${previous.name}的合作，${replacement.name}开始处理你的商业事务。` });
   } else {
     agent.trust = clamp(agent.trust + 4, 0, 100);
     pushFeed(next, "经纪人事件", "经纪人帮你筛掉一份没有出场规划的报价，保持耐心。");
@@ -643,6 +734,7 @@ export function goldenBall(state) {
   const next = cloneState(state);
   const won = deterministicRoll(`${next.seed}|golden|${next.world.season}`) > 0.72;
   next.awards.push({ id: `award-golden-${next.world.season}`, award: "金球奖", season: next.world.season, won });
+  addHonor(next, { id: `honor-golden-${next.world.season}`, award: "金球奖", awardId: "golden-ball", season: next.world.season, category: "individual", won });
   if (won) {
     next.media.reputation = clamp(next.media.reputation + 8, 10, 99);
     next.media.fans = Math.round(next.media.fans * 1.25);
@@ -657,6 +749,7 @@ export function unlockHiddenTitle(state, title) {
   const next = cloneState(state);
   if (next.hiddenTitles.some((item) => item.title === title)) return next;
   next.hiddenTitles.push({ title, season: next.world.season, date: next.world.date });
+  addHonor(next, { id: `honor-hidden-${next.world.season}-${title}`, title, awardId: "hidden-title", season: next.world.season, category: "hidden", won: true });
   next.career.milestones.push(`${next.world.season}:获得隐藏称号 ${title}`);
   pushFeed(next, "隐藏称号", `系统判定你获得隐藏称号：${title}。`);
   return next;

@@ -6,8 +6,10 @@ import {
   awardNomination,
   advanceWeek,
   buildLifeReport,
+  buildErrorReport,
   chooseNationalTeam,
   chooseMatchAction,
+  classifyFocusFixture,
   clubPoliticsAction,
   coachMoraleAction,
   coachSetFormation,
@@ -31,7 +33,9 @@ import {
   injuryRehab,
   listSaves,
   loadState,
+  markFocusFixture,
   mediaInterview,
+  manageTrait,
   mentorApply,
   mentorTeach,
   mindGame,
@@ -43,6 +47,7 @@ import {
   postSocial,
   psychScar,
   recordMilestone,
+  recordDiagnostic,
   refereeEvent,
   refreshMentalState,
   resolveClubPromise,
@@ -63,13 +68,17 @@ import {
   worldChange
 } from "./career.js";
 import { createAudioEngine } from "./audio.js";
+import { generateSocialPost } from "./ai.js";
 import { CLUBS, COACH_JOBS, LEAGUES, NATIONAL_TEAMS, POSITIONS, SECOND_NATIONALITIES, TALENTS, TRAINING_PLANS, TRAITS } from "./data.js";
+import { listPrivateAssets, resolveAssociationAsset, resolveAwardAsset, resolveClubAsset, resolveCompetitionAsset, resolveKitAsset, resolveNationAssets } from "./assets.js";
+import { clearPrivateAssetDb, importPrivateZip, loadPrivateAssets } from "./private-assets.js";
 
 const app = document.querySelector("#app");
 let storage;
 let state = null;
 let toastTimer;
 let audioEngine = null;
+let privateAssetCount = 0;
 
 function getStorage() {
   if (storage) return storage;
@@ -131,6 +140,55 @@ function abilityGrade(value) {
   return clamp(Math.round((value - 38) / 6.5), 1, 9);
 }
 
+function renderClubBadge(clubOrId, className = "entity-badge") {
+  const club = typeof clubOrId === "object" ? clubOrId : CLUBS.find((item) => item.id === clubOrId);
+  const asset = resolveClubAsset(club || clubOrId);
+  if (!asset) return "";
+  const label = club?.name || club?.short || club?.id || clubOrId;
+  return `<img class="${className}" src="${escapeHtml(asset.src)}" alt="${escapeHtml(label)}" data-asset-id="${escapeHtml(asset.assetId || "")}" loading="lazy" decoding="async">`;
+}
+
+function renderNationFlags(primary, secondary, className = "nation-flags") {
+  return `<span class="${className}" aria-label="${escapeHtml([primary, secondary].filter((value) => value && value !== "无").join("、") || "未列明国籍")}">${resolveNationAssets(primary, secondary).map((asset) => `<img src="${escapeHtml(asset.src)}" alt="${escapeHtml(asset.id.replace(/^nation-/, ""))}" data-asset-id="${escapeHtml(asset.assetId || "")}" loading="lazy" decoding="async">`).join("")}</span>`;
+}
+
+function renderAssociationBadge(team, className = "association-badge") {
+  if (!team) return "";
+  const asset = resolveAssociationAsset(team);
+  if (!asset) return "";
+  return `<img class="${className}" src="${escapeHtml(asset.src)}" alt="${escapeHtml(`${team.name}足协徽章`)}" data-asset-id="${escapeHtml(asset.assetId || "")}" data-asset-role="association" loading="lazy" decoding="async">`;
+}
+
+function renderPrivateAssetPreview() {
+  if (!privateAssetCount) return "";
+  const imported = listPrivateAssets();
+  const club = CLUBS.find((item) => imported.some((asset) => asset.type === "club" && asset.fmId === item.fmId));
+  const kitClub = CLUBS.find((item) => imported.some((asset) => asset.type === "kit" && asset.fmId === item.fmId && asset.variant === "home"));
+  const competition = LEAGUES.find((item) => imported.some((asset) => asset.type === "competition" && asset.fmId === item.fmId));
+  const nation = NATIONAL_TEAMS.find((item) => imported.some((asset) => asset.type === "nation" && asset.fmId === item.fmId));
+  return `<div class="private-asset-preview" data-private-asset-preview><span>已导入资源预览</span>${club ? `<b>队徽 ${renderClubBadge(club, "private-preview-badge")}${escapeHtml(club.name)}</b>` : ""}${kitClub ? `<b>球衣 ${renderKitBadge(kitClub)}${escapeHtml(kitClub.name)}</b>` : ""}${competition ? `<b>赛事 ${renderCompetitionBadge(competition.id, "private-preview-badge")}${escapeHtml(competition.name)}</b>` : ""}${nation ? `<b>协会 ${renderAssociationBadge(nation, "private-preview-badge")}${escapeHtml(nation.name)}</b>` : ""}</div>`;
+}
+
+function renderAwardBadge(award, className = "award-badge") {
+  const asset = resolveAwardAsset(award);
+  if (!asset) return "";
+  return `<img class="${className}" src="${escapeHtml(asset.src)}" alt="${escapeHtml(award?.award || award?.title || award || "荣誉")}" data-asset-id="${escapeHtml(asset.assetId || "")}" loading="lazy" decoding="async">`;
+}
+
+function renderCompetitionBadge(competitionId, className = "competition-badge") {
+  const competition = LEAGUES.find((item) => item.id === competitionId || item.name === competitionId);
+  const asset = resolveCompetitionAsset(competition || competitionId);
+  if (!asset) return "";
+  return `<img class="${className}" src="${escapeHtml(asset.src)}" alt="${escapeHtml(competition?.name || competitionId || "赛事")}" data-asset-id="${escapeHtml(asset.assetId || "")}" loading="lazy" decoding="async">`;
+}
+
+function renderKitBadge(clubOrId, variant = "home") {
+  const club = typeof clubOrId === "object" ? clubOrId : CLUBS.find((item) => item.id === clubOrId);
+  const asset = resolveKitAsset(club || clubOrId, variant);
+  if (!asset) return "";
+  return `<img class="kit-badge" src="${escapeHtml(asset.src)}" alt="${escapeHtml(`${club?.name || clubOrId} ${variant}`)}" data-asset-id="${escapeHtml(asset.assetId || "")}" loading="lazy" decoding="async">`;
+}
+
 function phaseLabel(state) {
   const phase = state.world.phase;
   const labels = {
@@ -173,16 +231,15 @@ function setView(view) {
 
 function renderPlayerCard() {
   const club = CLUBS.find((item) => item.id === state.player.clubId);
-  const short = club?.short || state.player.club || "FC";
   return `
     <article class="player-card surface-card">
-      <div class="crest"><b>${escapeHtml(short.slice(0, 1))}</b><small>${escapeHtml(short.slice(0, 3).toUpperCase())}</small></div>
+      <div class="player-assets">${renderClubBadge(club || state.player.club, "crest")}${renderKitBadge(club || state.player.club)}</div>
       <div class="player-identity">
         <p>${escapeHtml(state.player.club)} · ${state.world.season}</p>
         <h2>${escapeHtml(state.player.name)}</h2>
-        <div><span>${escapeHtml(state.player.position)}</span><span>${state.player.age}岁</span><span>${escapeHtml(state.player.foot)}</span><span>${escapeHtml(state.player.nationality)}</span></div>
+        <div><span>${escapeHtml(state.player.position)}</span><span>${state.player.age}岁</span><span>${escapeHtml(state.player.foot)}</span><span class="identity-nation">${renderNationFlags(state.player.nationality, state.player.secondNationality)}${escapeHtml(state.player.nationality)}</span></div>
       </div>
-      <div class="overall"><small>OVR</small><strong>${state.player.overall}</strong><span>${state.player.retired ? "已退役" : `状态 ${state.health.form.toFixed(1)}`}</span></div>
+      <div class="overall"><small>媒体/市场 OVR</small><strong>${state.player.overall}</strong><span>${state.player.retired ? "已退役" : `状态 ${state.health.form.toFixed(1)}`}</span></div>
     </article>`;
 }
 
@@ -196,6 +253,18 @@ function renderFeed() {
     <section class="feed-card surface-card">
       <header><div><span>${state.world.date}</span><h2>生涯日志</h2></div><button data-action="view" data-view="people">查看关系</button></header>
       ${feed.slice(0, 4).map((item) => `<article><time>${escapeHtml(item.time || "")}</time><div><b>${escapeHtml(item.title || "")}</b><p>${escapeHtml(item.text || "")}</p></div></article>`).join("")}
+    </section>`;
+}
+
+function renderWorldSimulation() {
+  const leagues = state.world.leagueSimulations || [];
+  const detailed = leagues.find((league) => league.precision === "detailed");
+  const competitions = state.world.competitions || [];
+  return `
+    <section class="world-simulation surface-card">
+      <header><div><span>世界模拟</span><h2>${escapeHtml(detailed?.name || "相关联赛")}</h2></div><b>${leagues.filter((league) => league.precision === "detailed").length} 详细 / ${leagues.filter((league) => league.precision === "simplified").length} 简化</b></header>
+      <p>相关联赛保存完整轮次赛果；其他联赛保存积分、奖项与关键纪录，转会后自动切换精度。</p>
+      <ul class="memory-list">${competitions.map((competition) => `<li><b>${escapeHtml(competition.name)}</b><span>${competition.kind === "continental-cup" ? "欧战" : competition.kind === "youth" ? "青年赛事" : "抽象地区联赛"} · ${competition.precision === "detailed" ? "详细" : "简化"} · 第 ${competition.currentRound}/${competition.rounds} 轮</span></li>`).join("")}</ul>
     </section>`;
 }
 
@@ -257,12 +326,13 @@ function renderOverview() {
           <button class="primary-action" data-action="${nextAction.action}" data-id="${nextAction.id || ""}">${nextAction.label}</button>
         </section>
         <section class="overview-player">${renderPlayerCard()}</section>
-        <section class="overview-metrics horizontal-scroll">
+         <section class="overview-metrics horizontal-scroll">
           ${renderMetric("身体负荷", `${Math.round(state.resources.load)}%`, state.resources.load > 68 ? "需要留意" : "安全", state.resources.load > 68 ? "danger" : "good")}
           ${renderMetric("心理状态", mind, `${state.resources.mind >= 68 ? "稳定" : "建议生活平衡"}`, state.resources.mind < 48 ? "danger" : "good")}
           ${renderMetric("媒体声望", `${state.media.reputation}`, `${state.media.fans.toLocaleString("zh-CN")} 关注`, "")}
-        </section>
-        <section class="next-match surface-card">
+         </section>
+        ${renderWorldSimulation()}
+         <section class="next-match surface-card">
           <header><div><span>下一节点</span><h2>${nextAction.label}</h2></div><b>${phase}</b></header>
           <p>${nextAction.copy}</p>
           <button class="secondary-action" data-action="${nextAction.action}" data-id="${nextAction.id || ""}">${nextAction.label}</button>
@@ -297,6 +367,8 @@ function renderWeek() {
   const selected = TRAINING_PLANS.find((item) => item.id === state.training.planId) || TRAINING_PLANS[0];
   const mind = mentalLabel(state.resources.mind);
   const nextFixture = state.season?.fixtures?.find((item) => !item.played);
+  const nextFocusReasons = nextFixture ? classifyFocusFixture(state, nextFixture) : [];
+  const focusLabels = { opening: "揭幕", midseason: "半程", derby: "德比", cup: "杯赛", "title-race": "争冠", relegation: "保级", milestone: "里程碑", manual: "主动标记", "high-profile": "强强对话" };
   return `
     <section class="view week-view">
       <header class="view-heading"><div><span>${state.world.season} 赛季 · 第 ${state.world.week} 周</span><h1>本周计划</h1></div><p>训练、恢复、生活与商业的分配会进入存档，不会靠刷新重新随机。</p></header>
@@ -312,7 +384,7 @@ function renderWeek() {
           <ol class="calendar-list">
             <li class="selected-day"><time>本周</time><div><b>${selected.name}</b><span>${selected.description}</span></div><small>当前计划</small></li>
             <li><time>训练</time><div><b>团队合练</b><span>战术熟悉与基础状态</span></div><small>固定</small></li>
-            ${nextFixture ? `<li class="match-day"><time>${nextFixture.round}轮</time><div><b>${escapeHtml(nextFixture.home?.name || "")}</b><span>对 ${escapeHtml(nextFixture.away?.name || "")}</span></div><small>${nextFixture.focus ? "焦点" : "常规"}</small></li>` : ""}
+            ${nextFixture ? `<li class="match-day"><time>${nextFixture.round}轮</time><div><b>${escapeHtml(nextFixture.home?.name || "")}</b><span>对 ${escapeHtml(nextFixture.away?.name || "")} · ${nextFocusReasons.length ? nextFocusReasons.map((reason) => focusLabels[reason] || reason).join("/") : "常规"}</span></div><small>${nextFocusReasons.length ? "焦点" : "常规"}</small></li>` : ""}
           </ol>
         </section>
         <section class="activity-card surface-card">
@@ -333,6 +405,7 @@ function renderWeek() {
           <button class="secondary-action" data-action="position-training">推进位置特训</button>
           <button class="secondary-action" data-action="weak-foot">提升逆足（当前 ${state.player.weakFoot.toFixed(1)}/5）</button>
           <button class="secondary-action" data-action="suggest-tactics">向教练提出战术建议</button>
+          ${nextFixture && !nextFocusReasons.includes("manual") ? `<button class="secondary-action" data-action="mark-focus" data-id="${nextFixture.id}" ${(state.season.manualFocusIds?.length || 0) >= (state.season.manualFocusLimit || 2) ? "disabled" : ""}>主动标记下一场为焦点（${state.season.manualFocusIds?.length || 0}/${state.season.manualFocusLimit || 2}）</button>` : ""}
           <button class="primary-action" data-action="advance">推进本周</button>
         </section>
       </div>
@@ -345,7 +418,7 @@ function renderScoreboard() {
   return `
     <header class="match-scoreboard">
       <div><span>${escapeHtml(match.home)}</span><b>${match.score.home}</b></div>
-      <section><small>${match.minute ? `${match.minute}'` : match.kickoff || ""} · ${escapeHtml(match.competition || "")}</small><strong>${match.score.home} — ${match.score.away}</strong><em>${match.status === "complete" ? "全场结束" : match.status === "live" ? "焦点回合" : "赛前"}</em></section>
+      <section><small>${match.minute ? `${match.minute}'` : match.kickoff || ""} · ${renderCompetitionBadge(match.competition, "competition-badge-inline")}${escapeHtml(match.competition || "")}</small><strong>${match.score.home} — ${match.score.away}</strong><em>${match.status === "complete" ? "全场结束" : match.status === "live" ? "焦点回合" : "赛前"}</em></section>
       <div><b>${match.score.away}</b><span>${escapeHtml(match.away)}</span></div>
     </header>`;
 }
@@ -494,6 +567,11 @@ function relationRows() {
 }
 
 function renderPeople() {
+  const committedName = state.nationalTeam.committedNation || state.player.nationality;
+  const committedTeam = NATIONAL_TEAMS.find((item) => item.name === committedName) || NATIONAL_TEAMS[0];
+  const agent = state.agent || { name: "待分配", type: "未记录", resources: 0, loyalty: 0, interests: "未记录", history: [] };
+  const activeTraits = (state.player.traits || []).map((id) => TRAITS.find((item) => item.id === id)).filter(Boolean);
+  const availableTraits = TRAITS.filter((item) => !state.player.traits?.includes(item.id));
   return `
     <section class="view people-view">
       <header class="view-heading"><div><span>RELATIONSHIP MEMORY</span><h1>你在世界中的位置</h1></div><p>关系不使用万能好感度。信任、尊重和亲密会分别变化，人物也会记住具体事件。</p></header>
@@ -505,21 +583,39 @@ function renderPeople() {
         </article>
         <section class="people-strip surface-card">
           <h2>国家与家庭</h2>
-          <div class="national-card"><span>国家队</span><b>${escapeHtml(NATIONAL_TEAMS.find((item) => item.id === "chn")?.name || "中国")}</b><p>成年队出场 ${state.nationalTeam.caps} · 进球 ${state.nationalTeam.goals}</p></div>
-          <div class="national-card"><span>第二国籍</span><b>${escapeHtml(state.player.secondNationality)}</b><p>${state.player.secondNationality === "无" ? "目前没有资格选择。" : "尚未代表成年队时仍可作出最终选择。"}</p></div>
-          ${state.player.secondNationality && state.player.secondNationality !== "无" && state.nationalTeam.caps === 0 ? `
-            <label class="inline-control"><span>选择国家队协会</span><select id="nationalChoice"><option value="${escapeHtml(state.player.secondNationality)}">${escapeHtml(state.player.secondNationality)}</option></select></label>
-            <button class="secondary-action" data-action="choose-national">作出最终选择</button>` : ""}
-          <button class="secondary-action" data-action="national-captain">争夺队长袖标</button>
-          ${renderPsychology()}
-          <section class="social-card surface-card">
+          <div class="national-card"><span>国家队</span><b>${renderAssociationBadge(committedTeam)}${renderNationFlags(committedName)}${escapeHtml(committedTeam.name)}</b><p>成年队出场 ${state.nationalTeam.caps} · 进球 ${state.nationalTeam.goals}</p></div>
+          <div class="national-card"><span>第二国籍</span><b>${renderNationFlags(state.player.secondNationality)}${escapeHtml(state.player.secondNationality)}</b><p>${state.player.secondNationality === "无" ? "目前没有资格选择。" : "尚未代表成年队时仍可作出最终选择。"}</p></div>
+           ${state.player.secondNationality && state.player.secondNationality !== "无" && state.nationalTeam.caps === 0 ? `
+             <label class="inline-control"><span>选择国家队协会</span><select id="nationalChoice"><option value="${escapeHtml(state.player.secondNationality)}">${escapeHtml(state.player.secondNationality)}</option></select></label>
+             <button class="secondary-action" data-action="choose-national">作出最终选择</button>` : ""}
+           <button class="secondary-action" data-action="national-captain">争夺队长袖标</button>
+           ${renderPsychology()}
+           <section class="agent-card surface-card">
+             <h2>经纪人</h2>
+             <p><b>${escapeHtml(agent.name)}</b> · ${escapeHtml(agent.type)}</p>
+             <p>资源 ${agent.resources}/100 · 忠诚 ${agent.loyalty}/100</p>
+             <p>${escapeHtml(agent.interests)}</p>
+             <p class="section-note">最近记录：${escapeHtml(agent.history?.at(-1)?.note || "暂无")}</p>
+             <button class="secondary-action" data-action="agent-replace">更换经纪人</button>
+           </section>
+           <section class="trait-card surface-card">
+             <h2>球员特性（${activeTraits.length}/5）</h2>
+             <p>${activeTraits.length ? activeTraits.map((item) => escapeHtml(item.name)).join("、") : "当前没有激活特性。"}</p>
+             <label><span>训练新特性</span><select id="traitTraining"><option value="">选择特性</option>${availableTraits.map((item) => `<option value="${item.id}">${escapeHtml(item.name)}</option>`).join("")}</select></label>
+             ${activeTraits.length < 5 ? `<button class="secondary-action" data-action="trait-add">加入特性槽</button>` : `
+               <label><span>当前槽位</span><select id="traitReplace">${activeTraits.map((item) => `<option value="${item.id}">${escapeHtml(item.name)}</option>`).join("")}</select></label>
+               <div class="button-row"><button class="secondary-action" data-action="trait-suppress">压制旧特性</button><button class="secondary-action" data-action="trait-replace">替换并保留学习记忆</button></div>`}
+             <p class="section-note">学习记忆：${state.player.traitMemory?.length ? state.player.traitMemory.map((item) => `${escapeHtml(item.name)}（${item.status === "suppressed" ? "压制" : "替换"}）`).join("、") : "暂无"}</p>
+           </section>
+           <section class="social-card surface-card">
             <h2>社交媒体</h2>
-            <textarea id="socialText" rows="3" placeholder="关键事件后发布内容，自由输入会被标记为自定义。">${escapeHtml(state.media.social.at(-1)?.text || "")}</textarea>
-            <button class="secondary-action" data-action="post-social">发布自定义内容</button>
+            <textarea id="socialText" rows="3" placeholder="关键事件后输入草稿；仅在 AI 已配置且成功时发布自定义内容。">${escapeHtml(state.media.social.at(-1)?.text || "")}</textarea>
+            <button class="secondary-action" data-action="post-social">生成并发布自定义内容</button>
+            <p class="section-note">无 AI、离线或生成失败时不会保存草稿，自动发布预设内容。</p>
           </section>
           <section class="rival-card surface-card">
             <h2>长期对手</h2>
-            ${state.peers.length ? `<ul>${state.peers.map((peer) => `<li><b>${escapeHtml(peer.name)}</b><span>${escapeHtml(peer.clubId)} · ${escapeHtml(peer.position)}</span></li>`).join("")}</ul>` : `<p class="empty-copy">还没有形成长期对手。</p>`}
+            ${state.peers.length ? `<ul>${state.peers.map((peer) => `<li>${renderClubBadge(peer.clubId, "mini-badge")}<b>${escapeHtml(peer.name)}</b><span>${escapeHtml(CLUBS.find((club) => club.id === peer.clubId)?.name || peer.clubId)} · ${escapeHtml(peer.position)}</span></li>`).join("")}</ul>` : `<p class="empty-copy">还没有形成长期对手。</p>`}
             <button class="secondary-action" data-action="create-rivals">生成长期对手</button>
           </section>
           <section class="moral-card surface-card">
@@ -573,7 +669,7 @@ function renderOffers() {
   return state.offers.map((offer) => `
     <article class="offer-card surface-card">
       <span>${escapeHtml(offer.contract || "职业合同")}</span>
-      <h2>${escapeHtml(offer.name || offer.clubId)}</h2>
+      <h2>${renderClubBadge(offer.clubId, "mini-badge")}${escapeHtml(offer.name || CLUBS.find((club) => club.id === offer.clubId)?.name || offer.clubId)}</h2>
       <b>${escapeHtml(offer.role || "")}</b>
       <p>${escapeHtml(offer.city || "")} · 适配 ${offer.fit ?? "-"}${offer.negotiated ? " · 已协商" : ""}</p>
       ${offer.note ? `<em>${escapeHtml(offer.note)}</em>` : `<em>选择后进入合同</em>`}
@@ -585,7 +681,7 @@ function renderTransferOffers() {
   if (!state.transferOffers?.length) return "";
   return state.transferOffers.map((offer) => `
     <article class="transfer-card surface-card">
-      <span>海外报价</span><h2>${escapeHtml(offer.clubName)}</h2>
+      <span>海外报价</span><h2>${renderClubBadge(offer.clubId, "mini-badge")}${escapeHtml(offer.clubName)}</h2>
       <p>转会费 ${(offer.fee / 10000).toFixed(0)} 万欧元 · 周薪 ${Math.round(offer.weeklyWage)}</p>
       <div><button class="primary-action" data-action="accept-transfer" data-id="${offer.id}">接受</button><button class="secondary-action" data-action="reject-transfer" data-id="${offer.id}">留在现队</button></div>
     </article>`).join("");
@@ -607,9 +703,23 @@ function renderCoach() {
     <article class="coach-hero surface-card">
       <p class="eyebrow">COACH CAREER</p>
       <h1>${escapeHtml(coach?.name || state.player.name)} 的教练席</h1>
-      <p>${coach?.club ? `执教 ${escapeHtml(coach.club)} · ${coach.license} 证书` : "等待第一份工作"} · 声望 ${Math.round(coach?.reputation || 0)}</p>
+      <p>${coach?.club ? `${renderClubBadge(coach.clubId, "mini-badge")}执教 ${escapeHtml(coach.club)} · ${coach.license} 证书` : "等待第一份工作"} · 声望 ${Math.round(coach?.reputation || 0)}</p>
       <div class="coach-stats">${stats ? `<div><span>胜</span><b>${stats.wins}</b></div><div><span>平</span><b>${stats.draws}</b></div><div><span>负</span><b>${stats.losses}</b></div><div><span>进球</span><b>${stats.goalsFor}</b></div>` : ""}</div>
     </article>`;
+}
+
+function renderHonorsRoom() {
+  const honors = Array.isArray(state.honors) ? state.honors : [];
+  const groups = [
+    ["club", "俱乐部荣誉"],
+    ["national", "国家队荣誉"],
+    ["individual", "个人奖项"],
+    ["hidden", "隐藏称号"]
+  ];
+  return `<section class="honors-room surface-card"><header><div><p class="eyebrow">HONORS ROOM</p><h2>奖杯陈列室</h2></div><span>${honors.filter((item) => item.won).length} 项已获得</span></header><div class="honors-groups">${groups.map(([category, label]) => {
+    const items = honors.filter((item) => item.category === category);
+    return `<section class="honor-group"><h3>${label}</h3>${items.length ? `<div class="honor-grid">${items.map((honor) => `<article class="honor-item ${honor.won ? "won" : "nominated"}">${renderAwardBadge(honor)}${renderCompetitionBadge(honor.competitionId)}<div><b>${escapeHtml(honor.title)}</b><span>${honor.season ? `${honor.season} 赛季` : "生涯记录"}${honor.clubId ? ` · ${escapeHtml(CLUBS.find((club) => club.id === honor.clubId)?.name || honor.clubId)}` : ""}</span><small>${honor.won ? `获得 ×${honor.count || 1}` : "提名"}</small></div></article>`).join("")}</div>` : `<p class="empty-copy">还没有${label}。</p>`}</section>`;
+  }).join("")}</div></section>`;
 }
 
 function renderCareer() {
@@ -651,7 +761,7 @@ function renderCareer() {
   } else {
     body = `
       <section class="contract-summary surface-card">
-        <span>当前合同</span><strong>${escapeHtml(CLUBS.find((item) => item.id === state.contract.clubId)?.name || state.player.club)}</strong>
+        <span>当前合同</span><strong>${renderClubBadge(state.contract.clubId, "mini-badge")}${escapeHtml(CLUBS.find((item) => item.id === state.contract.clubId)?.name || state.player.club)}</strong>
         <p>${escapeHtml(state.contract.type)} · 周薪 ${state.contract.weeklyWage} · 到期 ${escapeHtml(state.contract.endDate)}</p>
       </section>
       ${renderTransferOffers()}
@@ -722,7 +832,7 @@ function renderCareer() {
       </section>
       <section class="national-card surface-card">
         <h2>国家队</h2>
-        <p>${state.player.nationality} · 成年队 ${state.nationalTeam.caps} 场 ${state.nationalTeam.goals} 球 · 青年队 ${state.nationalTeam.youthCaps} 场 · 资格 ${escapeHtml(state.nationalTeam.status)}</p>
+        <p>${renderNationFlags(state.player.nationality, state.player.secondNationality)}${state.player.nationality} · 成年队 ${state.nationalTeam.caps} 场 ${state.nationalTeam.goals} 球 · 青年队 ${state.nationalTeam.youthCaps} 场 · 资格 ${escapeHtml(state.nationalTeam.status)}</p>
         ${state.nationalTeam.history.slice(-3).map((entry) => `<p class="national-history">${escapeHtml(entry.date)} ${escapeHtml(entry.stage)} ${entry.caps} 场 ${entry.goals} 球 · 评分 ${entry.rating.toFixed(1)}</p>`).join("")}
         <button class="secondary-action danger" data-action="retire">提前结束球员生涯</button>
       </section>`;
@@ -731,6 +841,7 @@ function renderCareer() {
     <section class="view career-view">
       <header class="view-heading"><div><span>${state.world.phase === "coach" ? "COACH DESK" : "CAREER DESK"}</span><h1>${state.world.phase === "coach" ? "教练办公室" : state.world.phase === "final" ? "人生报告" : "职业档案"}</h1></div><p>球员生涯、合同、转会、财富和国家队记录都在这里。</p></header>
       ${body}
+      ${state.world.phase === "contract" ? "" : renderHonorsRoom()}
     </section>`;
 }
 
@@ -752,6 +863,7 @@ function renderSettings() {
           <button class="secondary-action" data-action="theme">切换深浅色</button>
           <button class="secondary-action" data-action="large-text">${state?.ui?.largeText ? "关闭大字体" : "开启大字体"}</button>
           <button class="secondary-action" data-action="export">导出存档</button>
+          <button class="secondary-action" data-action="export-error-report">导出错误报告</button>
           <label class="file-label"><span>导入存档</span><input type="file" accept="application/json" data-action="import"></label>
         </section>
         <section class="surface-card">
@@ -765,8 +877,15 @@ function renderSettings() {
         </section>
         <section class="surface-card">
           <h2>版本化扩展包</h2>
-          <p>导入前校验版本、类型、manifest 与条目；错误 ID 会拒绝导入。</p>
+          <p>导入前校验版本、类型、manifest 与条目；事件包会在后续赛季周进入本地事件流。</p>
+          <label class="file-label"><span>导入扩展 JSON</span><input id="extensionPackFile" data-action="import-extension-pack" type="file" accept=".json,application/json"></label>
           <button class="secondary-action" data-action="import-sample-extension">导入示例扩展包</button>
+          <p class="section-note">已导入 ${state.extensions?.length || 0} 个扩展包；错误文件会被拒绝且不会覆盖现有包。</p>
+        </section>
+        <section class="surface-card">
+          <h2>存档数据库快照</h2>
+          <p>版本 ${escapeHtml(state.world.database?.version || "未知")} · ${state.world.database?.frozen ? "创建后冻结" : "未冻结"}</p>
+          <p class="section-note">现实数据库更新只用于新存档；当前存档继续使用创建时的俱乐部、联赛和球员快照。</p>
         </section>
         <section class="surface-card">
           <h2>生涯难度</h2>
@@ -780,6 +899,14 @@ function renderSettings() {
           <h2>存档</h2>
           ${renderSaveList()}
           <button class="secondary-action" data-action="new">新建生涯</button>
+        </section>
+        <section class="surface-card private-assets-card">
+          <h2>私人 FM26 资源</h2>
+          <p>只在本机 IndexedDB 保存精确 FM ID 匹配的队徽、球衣、赛事、国家和洲际资源，不会上传到 GitHub Pages。</p>
+          <label><span>导入私人 ZIP</span><input id="privateAssetsZip" data-action="import-private-assets" type="file" accept=".zip,application/zip"></label>
+          <button class="secondary-action danger" data-action="clear-private-assets">删除本机私人包</button>
+          <p class="section-note">当前设备已加载 ${privateAssetCount} 个私人资源；找不到匹配时自动使用公开原创回退。</p>
+          ${renderPrivateAssetPreview()}
         </section>
       </div>
     </section>`;
@@ -906,6 +1033,24 @@ function exportCurrent() {
   showToast("存档已导出");
 }
 
+function exportErrorReport() {
+  if (!state) return;
+  const blob = new Blob([buildErrorReport(state)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `fc-career-error-report-${state.world.date}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+  showToast("本机错误报告已导出；不含 API Key、图片或完整存档");
+}
+
+function rememberClientError(value) {
+  if (!state) return;
+  state = recordDiagnostic(state, value);
+  saveState(state, getStorage());
+}
+
 async function importFile(file) {
   try {
     const text = await file.text();
@@ -915,6 +1060,43 @@ async function importFile(file) {
     showToast("存档已导入");
   } catch {
     showToast("导入失败：JSON 无效或版本不受支持");
+  }
+}
+
+async function importPrivateFile(file) {
+  try {
+    const result = await importPrivateZip(file);
+    const loaded = await loadPrivateAssets();
+    privateAssetCount = loaded.length;
+    render();
+    showToast(`私人 FM 资源已导入 ${result.imported} 个`);
+  } catch {
+    showToast("私人资源导入失败：ZIP、路径或 SHA-256 校验未通过");
+  }
+}
+
+async function importExtensionFile(file) {
+  try {
+    const pack = JSON.parse(await file.text());
+    const result = importExtensionPack(state, pack);
+    if (result.errors.length) {
+      showToast(`扩展包校验失败：${result.errors.join("；")}`);
+      return;
+    }
+    commit(result.state, `扩展包已导入：${pack.type}`);
+  } catch {
+    showToast("扩展包导入失败：文件必须是通过校验的 JSON");
+  }
+}
+
+async function clearPrivateFile() {
+  try {
+    await clearPrivateAssetDb();
+    privateAssetCount = 0;
+    render();
+    showToast("本机私人包已删除，公开回退已恢复");
+  } catch {
+    showToast("私人包删除失败");
   }
 }
 
@@ -930,7 +1112,7 @@ function saveAiSettings() {
   commit(next, "AI 配置已保存在本机");
 }
 
-app.addEventListener("click", (event) => {
+app.addEventListener("click", async (event) => {
   const button = event.target.closest("[data-action]");
   if (!button || button.disabled) return;
   const action = button.dataset.action;
@@ -950,14 +1132,36 @@ app.addEventListener("click", (event) => {
   } else if (action === "suggest-tactics") {
     if (!state) return;
     commit(playerSuggestToCoach(state, "增加一次右路配合训练，并在比赛日提前布置第一脚触球方向。"), "战术建议已提交");
+  } else if (action === "mark-focus") {
+    if (!state) return;
+    commit(markFocusFixture(state, button.dataset.id), "比赛已加入本赛季主动焦点名单");
   } else if (action === "choose-national") {
     if (!state) return;
     const nation = document.querySelector("#nationalChoice")?.value;
     commit(nation ? chooseNationalTeam(state, nation) : state, "国家队选择已提交");
   } else if (action === "post-social") {
     if (!state) return;
-    const text = document.querySelector("#socialText")?.value?.trim();
-    commit(text ? postSocial(state, text, true) : state, text ? "自定义内容已发布" : "内容为空");
+    const draft = document.querySelector("#socialText")?.value?.trim();
+    if (!draft) {
+      showToast("内容为空");
+      return;
+    }
+    const generated = await generateSocialPost({ state, draft });
+    const preset = "感谢每一位支持者，下一周继续把训练和比赛做好。";
+    commit(postSocial(state, generated || preset, Boolean(generated)), generated ? "AI 已生成并发布自定义内容" : "AI 不可用或生成失败，已回退到预设内容");
+  } else if (action === "trait-add") {
+    if (!state) return;
+    const traitId = document.querySelector("#traitTraining")?.value;
+    commit(traitId ? manageTrait(state, { traitId, mode: "add" }) : state, traitId ? "特性已加入当前槽位" : "请先选择新特性");
+  } else if (action === "trait-suppress") {
+    if (!state) return;
+    const replaceId = document.querySelector("#traitReplace")?.value;
+    commit(replaceId ? manageTrait(state, { replaceId, mode: "suppress" }) : state, replaceId ? "旧特性已压制并保留学习记忆" : "请先选择当前槽位");
+  } else if (action === "trait-replace") {
+    if (!state) return;
+    const traitId = document.querySelector("#traitTraining")?.value;
+    const replaceId = document.querySelector("#traitReplace")?.value;
+    commit(traitId && replaceId ? manageTrait(state, { traitId, replaceId, mode: "replace" }) : state, traitId && replaceId ? "特性已替换，旧学习记忆已保留" : "请选择新特性和当前槽位");
   } else if (action === "create-rivals") {
     if (!state) return;
     commit(createRivals(state), "长期对手已生成");
@@ -1181,6 +1385,8 @@ app.addEventListener("click", (event) => {
     commit({ ...state, settings: { ...state.settings, injuryRate, randomness, economicPressure, retireAge } }, "难度设置已保存");
   } else if (action === "export") {
     exportCurrent();
+  } else if (action === "export-error-report") {
+    exportErrorReport();
   } else if (action === "new") {
     state = null;
     render();
@@ -1188,15 +1394,25 @@ app.addEventListener("click", (event) => {
     loadSave(button.dataset.id);
   } else if (action === "delete-save") {
     removeSave(button.dataset.id);
+  } else if (action === "clear-private-assets") {
+    clearPrivateFile();
   }
 });
 
 app.addEventListener("change", (event) => {
   const input = event.target;
   if (input.dataset.action === "import" && input.files?.[0]) importFile(input.files[0]);
+  if (input.dataset.action === "import-private-assets" && input.files?.[0]) importPrivateFile(input.files[0]);
+  if (input.dataset.action === "import-extension-pack" && input.files?.[0]) importExtensionFile(input.files[0]);
 });
 
 render();
+window.addEventListener("error", (event) => rememberClientError(event.message || "window error"));
+window.addEventListener("unhandledrejection", (event) => rememberClientError(event.reason?.message || event.reason || "unhandled rejection"));
+loadPrivateAssets().then((loaded) => {
+  privateAssetCount = loaded.length;
+  if (state) render();
+}).catch(() => {});
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", () => {
