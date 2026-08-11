@@ -1,4 +1,4 @@
-const CACHE = "fc-career-v2026-08-11-5";
+const CACHE = "fc-career-v2026-08-11-6";
 const ASSETS = [
   "./",
   "./index.html",
@@ -31,13 +31,42 @@ const ASSETS = [
   "./src/audio.js"
 ];
 
+async function fetchWithRetry(url, attempts = 3) {
+  let lastError;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      if (response.ok) return response;
+      lastError = new Error(`HTTP ${response.status} for ${url}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+  }
+  throw lastError || new Error(`fetch failed for ${url}`);
+}
+
+async function cacheUrls(cache, urls, concurrency = 16) {
+  let index = 0;
+  async function worker() {
+    while (index < urls.length) {
+      const url = urls[index];
+      index += 1;
+      const response = await fetchWithRetry(url);
+      await cache.put(new Request(url, { cache: "reload" }), response);
+    }
+  }
+  const workers = Array.from({ length: Math.min(concurrency, urls.length) }, () => worker());
+  await Promise.all(workers);
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
-    const registryResponse = await fetch("./src/asset-registry.js");
+    const registryResponse = await fetchWithRetry("./src/asset-registry.js");
     const registryText = await registryResponse.text();
     const publicAssets = [...registryText.matchAll(/\"path\":\s*\"([^\"]+)\"/g)].map((match) => match[1]);
-    await cache.addAll([...new Set([...ASSETS, ...publicAssets])]);
+    await cacheUrls(cache, [...new Set([...ASSETS, ...publicAssets])]);
   })());
   self.skipWaiting();
 });
