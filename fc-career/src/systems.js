@@ -1,6 +1,7 @@
 import { CLUBS, POSITIONS, TRAITS } from "./data.js";
 import { deterministicRoll } from "./engine.js";
 import { addHonor } from "./honors.js";
+import { canonicalNationId, nationDisplayName } from "./nation-refs.js";
 
 function clamp(value, minimum, maximum) {
   return Math.max(minimum, Math.min(maximum, value));
@@ -156,7 +157,10 @@ export function chooseNationalTeam(state, nationId) {
   const next = cloneState(state);
   const team = (next.world?.players || []).find(() => false) ? null : null;
   void team;
-  if (next.nationalTeam.caps > 0 && next.nationalTeam.committedNation !== nationId) {
+  const targetId = canonicalNationId(nationId);
+  const currentId = next.nationalTeam.committedNationId
+    || canonicalNationId(next.nationalTeam.committedNation || next.player.nationality);
+  if (next.nationalTeam.caps > 0 && currentId !== targetId) {
     pushFeed(next, "国家队选择被拒", "你已代表当前协会参加成年正式比赛，无法再更换协会。");
     return next;
   }
@@ -164,11 +168,13 @@ export function chooseNationalTeam(state, nationId) {
     pushFeed(next, "国家队选择", "当前没有可更换的第二协会资格。");
     return next;
   }
-  next.nationalTeam.committedNation = nationId;
+  const displayName = nationDisplayName(targetId);
+  next.nationalTeam.committedNation = displayName;
+  next.nationalTeam.committedNationId = targetId;
   next.nationalTeam.status = "committed";
   next.nationalTeam.choicePending = false;
-  next.career.milestones.push(`${next.world.season}:选择代表 ${nationId}`);
-  pushFeed(next, "国家队选择", `你正式选择代表 ${nationId}，成年国家队资格从此绑定。`);
+  next.career.milestones.push(`${next.world.season}:选择代表 ${displayName}`);
+  pushFeed(next, "国家队选择", `你正式选择代表 ${displayName}，成年国家队资格从此绑定。`);
   return next;
 }
 

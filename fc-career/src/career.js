@@ -20,8 +20,9 @@ import { SQUADS } from "./squads.js";
 import { MATCH } from "./content.js";
 import { buildMatchSummary, deterministicRoll, resolveMoment } from "./engine.js";
 import { addHonor, migrateHonors } from "./honors.js";
+import { canonicalNationId, nationDisplayName, nationRefForCode } from "./nation-refs.js";
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 export const SAVES_KEY = "fc-career-saves";
 
 function clamp(value, minimum, maximum) {
@@ -159,7 +160,10 @@ function initialPlayer(options, seed, club) {
     birthDate: `${birthYear}-${String(birthMonth).padStart(2, "0")}-${String(birthDay).padStart(2, "0")}`,
     age: 2026 - birthYear,
     nationality: options.nationality || "中国",
+    nationalityId: canonicalNationId(options.nationality || "中国"),
     secondNationality: options.secondNationality || "无",
+    secondNationalityId: options.secondNationality && options.secondNationality !== "无" ? canonicalNationId(options.secondNationality) : null,
+    nationMigrationSource: null,
     clubId: club.id,
     club: `${club.name} U21`,
     academyClubId: club.id,
@@ -591,7 +595,8 @@ export function createInitialState(options = {}) {
       callups: [],
       history: [],
       choicePending: false,
-      committedNation: options.nationality || "中国"
+      committedNation: options.nationality || "中国",
+      committedNationId: canonicalNationId(options.nationality || "中国")
     },
     career: {
       seasonStats: { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, season: 2026 },
@@ -618,6 +623,7 @@ export function migrate(raw) {
       next.player.traitMemory = next.player.traitMemory || [];
       next.agent = next.agent || initialAgent(next.seed || "migrated-agent");
       next.diagnostics = next.diagnostics || { errors: [] };
+      migrateNationRefs(next, raw);
       migrateSeasonFocus(next);
       ensureWorldAuditState(next);
       return migrateHonors(next);
@@ -648,6 +654,19 @@ export function migrate(raw) {
     next.nationalTeam.choicePending = next.nationalTeam.choicePending || false;
     next.nationalTeam.committedNation = next.nationalTeam.committedNation || next.player.nationality || "中国";
     next.world.referees = next.world.referees || [];
+    migrateNationRefs(next, raw);
+    migrateSeasonFocus(next);
+    ensureWorldAuditState(next);
+    return migrateHonors(next);
+  }
+  if (raw.version === 3) {
+    const next = structuredClone(raw);
+    next.version = SAVE_VERSION;
+    next.player = next.player || {};
+    next.player.traitMemory = next.player.traitMemory || [];
+    next.nationalTeam = next.nationalTeam || {};
+    next.nationalTeam.committedNation = next.nationalTeam.committedNation || next.player.nationality || "中国";
+    migrateNationRefs(next, raw);
     migrateSeasonFocus(next);
     ensureWorldAuditState(next);
     return migrateHonors(next);
@@ -666,6 +685,9 @@ export function migrate(raw) {
       next.player.attributes = { ...next.player.attributes, ...raw.player.attributes };
       next.player.overall = raw.player.overall ?? next.player.overall;
     }
+    if (raw.player?.nationality) next.player.nationality = raw.player.nationality;
+    if (raw.player?.secondNationality) next.player.secondNationality = raw.player.secondNationality;
+    migrateNationRefs(next, raw);
     if (raw.coach) next.coach = structuredClone(raw.coach);
     if (raw.season) next.season = structuredClone(raw.season);
     if (raw.world) next.world = { ...next.world, ...structuredClone(raw.world) };
@@ -689,6 +711,26 @@ export function migrate(raw) {
     return migrateHonors(next);
   }
   throw new Error(`Unsupported save version: ${raw.version}`);
+}
+
+function migrateNationRefs(next, raw) {
+  const primary = next.player?.nationality || raw?.player?.nationality || "中国";
+  const secondary = next.player?.secondNationality || raw?.player?.secondNationality || "无";
+  next.player.nationality = primary;
+  next.player.nationalityId = canonicalNationId(primary);
+  next.player.secondNationality = secondary;
+  next.player.secondNationalityId = secondary && secondary !== "无" ? canonicalNationId(secondary) : null;
+  if (!next.player.nationMigrationSource && raw?.player) {
+    next.player.nationMigrationSource = {
+      version: raw.version ?? "unknown",
+      nationality: raw.player.nationality ?? null,
+      secondNationality: raw.player.secondNationality ?? null
+    };
+  }
+  next.nationalTeam = next.nationalTeam || {};
+  next.nationalTeam.committedNation = next.nationalTeam.committedNation || primary;
+  next.nationalTeam.committedNationId = canonicalNationId(next.nationalTeam.committedNation || primary);
+  return next;
 }
 
 function stamp(state) {
@@ -856,7 +898,12 @@ function applyGrowthToAttributes(state) {
 }
 
 function nationalTeamFor(state) {
-  return NATIONAL_TEAMS.find((item) => item.name === state.player.nationality) || NATIONAL_TEAMS[0];
+  const committedId = state.nationalTeam?.committedNationId
+    || canonicalNationId(state.nationalTeam?.committedNation || state.player.nationality);
+  const byCanonical = { cn: "chn", "gb-eng": "eng", es: "esp", ar: "arg", br: "bra" };
+  return NATIONAL_TEAMS.find((item) => item.id === byCanonical[committedId])
+    || NATIONAL_TEAMS.find((item) => item.name === state.player.nationality)
+    || NATIONAL_TEAMS[0];
 }
 
 function processNationalTeam(state) {

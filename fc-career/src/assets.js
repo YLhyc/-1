@@ -5,10 +5,14 @@ import {
   COMPETITION_ASSET_IDS,
   CONTINENT_ASSET_IDS,
   KIT_ASSET_IDS,
-  NATION_ASSET_IDS,
   PORTRAIT_ASSET_IDS,
   ASSET_REGISTRY_VERSION
 } from "./asset-registry.js";
+import { FLAG_ASSET_BY_CODE } from "./flag-manifest.js";
+import { flagGlyphFromCode, nationalityFlagParts } from "./nations.js";
+import { nationRefForCode, nationRefForValue, canonicalNationId, nationDisplayName } from "./nation-refs.js";
+
+export { nationRefForCode, nationRefForValue, canonicalNationId, nationDisplayName };
 
 /**
  * Asset resolution is deliberately kept in one module. The public registry is
@@ -18,6 +22,52 @@ import {
 export const ASSET_RESOLVER_VERSION = `resolver-${ASSET_REGISTRY_VERSION}`;
 
 const PRIVATE_ASSETS = new Map();
+
+const FLAG_CODE_BY_NATION_ID = new Map([
+  ["albania", "AL"], ["algeria", "DZ"], ["angola", "AO"], ["argentina", "AR"],
+  ["armenia", "AM"], ["australia", "AU"], ["austria", "AT"], ["belgium", "BE"],
+  ["belarus", "BY"], ["benin", "BJ"], ["bolivia", "BO"], ["bosnia", "BA"], ["brazil", "BR"],
+  ["bulgaria", "BG"], ["burkina-faso", "BF"], ["burundi", "BI"], ["cameroon", "CM"],
+  ["canada", "CA"], ["cape-verde", "CV"], ["central-african-republic", "CF"], ["chile", "CL"],
+  ["china", "CN"], ["chinese-taipei", "TW"], ["colombia", "CO"], ["congo", "CG"],
+  ["congo-dr", "CD"], ["costa-rica", "CR"], ["croatia", "HR"], ["cyprus", "CY"],
+  ["czechia", "CZ"], ["denmark", "DK"], ["dominican", "DO"], ["ecuador", "EC"],
+  ["egypt", "EG"], ["england", "GB-ENG"], ["equatorial-guinea", "GQ"], ["estonia", "EE"],
+  ["faroe", "FO"], ["finland", "FI"], ["france", "FR"], ["gabon", "GA"], ["gambia", "GM"],
+  ["georgia", "GE"], ["germany", "DE"], ["ghana", "GH"], ["greece", "GR"],
+  ["guinea", "GN"], ["guinea-bissau", "GW"], ["haiti", "HT"], ["honduras", "HN"],
+  ["hong-kong", "HK"], ["hungary", "HU"], ["iceland", "IS"], ["indonesia", "ID"],
+  ["israel", "IL"], ["italy", "IT"], ["ivory-coast", "CI"], ["jamaica", "JM"], ["japan", "JP"],
+  ["jordan", "JO"], ["kenya", "KE"], ["korea", "KR"], ["latvia", "LV"], ["libya", "LY"],
+  ["lithuania", "LT"], ["luxembourg", "LU"], ["madagascar", "MG"], ["malaysia", "MY"], ["mali", "ML"],
+  ["mauritania", "MR"], ["mexico", "MX"], ["moldova", "MD"], ["montenegro", "ME"],
+  ["morocco", "MA"], ["mozambique", "MZ"], ["netherlands", "NL"], ["new-zealand", "NZ"],
+  ["niger", "NE"], ["nigeria", "NG"], ["northern-ireland", "GB"], ["north-macedonia", "MK"],
+  ["norway", "NO"], ["panama", "PA"], ["paraguay", "PY"], ["peru", "PE"],
+  ["poland", "PL"], ["portugal", "PT"], ["republic-of-ireland", "IE"], ["romania", "RO"],
+  ["russia", "RU"], ["saudi-arabia", "SA"], ["scotland", "GB-SCT"], ["senegal", "SN"],
+  ["serbia", "RS"], ["sierra-leone", "SL"], ["slovakia", "SK"], ["slovenia", "SI"],
+  ["south-africa", "ZA"], ["spain", "ES"], ["suriname", "SR"], ["sweden", "SE"],
+  ["switzerland", "CH"], ["syria", "SY"], ["tanzania", "TZ"], ["thailand", "TH"],
+  ["togo", "TG"], ["trinidad-and-tobago", "TT"], ["tunisia", "TN"], ["turkey", "TR"],
+  ["ukraine", "UA"], ["united-states", "US"], ["uruguay", "UY"], ["uzbekistan", "UZ"],
+  ["venezuela", "VE"], ["wales", "GB-WLS"], ["zambia", "ZM"], ["zimbabwe", "ZW"]
+]);
+
+export function nationFlagGlyph(assetOrId) {
+  const explicitCode = typeof assetOrId === "object" ? assetOrId?.flagCode : "";
+  if (explicitCode) return flagGlyphFromCode(explicitCode);
+  const assetId = typeof assetOrId === "string" ? assetOrId : assetOrId?.assetId || assetOrId?.fallbackAssetId || assetOrId?.id;
+  if (/^flag-/.test(assetId)) {
+    return flagGlyphFromCode(assetId.slice(5).toUpperCase());
+  }
+  if (/^unicode-/.test(assetId)) {
+    return flagGlyphFromCode(assetId.slice(7).toUpperCase());
+  }
+  const nationId = String(assetId || "").replace(/^nation-/, "");
+  const code = FLAG_CODE_BY_NATION_ID.get(nationId);
+  return flagGlyphFromCode(code);
+}
 
 const AWARD_ALIASES = new Map([
   ["联赛冠军", "league-title"],
@@ -129,15 +179,16 @@ export function resolveKitAsset(clubOrId, variant = "home", options = {}) {
 }
 
 export function resolveNationAssets(primary, secondary, options = {}) {
-  const values = [primary, secondary]
-    .filter((value) => value !== undefined && value !== null && value !== "" && value !== "无")
-    .flatMap((value) => NATION_ASSET_IDS[value] || []);
-  const ids = [...new Set(values)];
-  if (!ids.length) ids.push("nation-neutral");
-  return ids.slice(0, 2).map((assetId) => {
-    const publicAsset = publicEntry(assetId);
-    const privateAsset = privateLookup([options.fmId, assetId, primary, secondary], "nation");
-    return privateAsset?.role === "flag" ? freezeResolved(privateAsset, { assetId, type: "nation", source: "private-fm26-exact", private: true, fallbackAssetId: assetId }) : publicAsset;
+  const parts = nationalityFlagParts(primary, secondary);
+  if (!parts.length) return [publicEntry("nation-neutral") || freezeResolved({ id: "nation-neutral", type: "nation", source: "neutral" }, { assetId: "nation-neutral", role: "flag", private: false })];
+  return parts.map(({ raw, code }) => {
+    const assetId = FLAG_ASSET_BY_CODE[code] || `unicode-${code}`;
+    const publicAsset = publicEntry(assetId)
+      || freezeResolved({ id: assetId, type: "nation", source: "unicode-rgi-flag", unicodeOnly: !FLAG_ASSET_BY_CODE[code] }, { assetId, flagCode: code, role: "flag", private: false });
+    const privateAsset = privateLookup([options.fmId, assetId, raw, code], "nation");
+    return privateAsset?.role === "flag"
+      ? freezeResolved(privateAsset, { assetId, type: "nation", source: "private-fm26-exact", private: true, fallbackAssetId: assetId, flagCode: code })
+      : freezeResolved(publicAsset, { assetId, flagCode: code, role: "flag", private: false });
   });
 }
 
@@ -148,7 +199,7 @@ export function resolveNationAsset(nation, options = {}) {
 export function resolveAssociationAsset(nationOrId, options = {}) {
   const name = typeof nationOrId === "object" ? nationOrId.name : nationOrId;
   const fmId = typeof nationOrId === "object" ? nationOrId.fmId : options.fmId;
-  const fallback = resolveNationAsset(name);
+  const fallback = publicEntry("association-neutral") || publicEntry("nation-neutral");
   const privateAsset = privateLookup([fmId, name, fallback?.assetId], "nation");
   if (privateAsset && privateAsset.role !== "flag") return freezeResolved(privateAsset, { assetId: privateAsset.assetId || fallback?.assetId, type: "nation", source: "private-fm26-exact", private: true, fallbackAssetId: fallback?.assetId || null });
   return fallback;

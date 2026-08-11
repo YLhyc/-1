@@ -70,7 +70,7 @@ import {
 import { createAudioEngine } from "./audio.js";
 import { generateSocialPost } from "./ai.js";
 import { CLUBS, COACH_JOBS, LEAGUES, NATIONAL_TEAMS, POSITIONS, SECOND_NATIONALITIES, TALENTS, TRAINING_PLANS, TRAITS } from "./data.js";
-import { listPrivateAssets, resolveAssociationAsset, resolveAwardAsset, resolveClubAsset, resolveCompetitionAsset, resolveKitAsset, resolveNationAssets } from "./assets.js";
+import { canonicalNationId, listPrivateAssets, nationDisplayName, nationFlagGlyph, nationRefForCode, resolveAssociationAsset, resolveAwardAsset, resolveClubAsset, resolveCompetitionAsset, resolveKitAsset, resolveNationAssets } from "./assets.js";
 import { clearPrivateAssetDb, importPrivateZip, loadPrivateAssets } from "./private-assets.js";
 
 const app = document.querySelector("#app");
@@ -149,8 +149,29 @@ function renderClubBadge(clubOrId, className = "entity-badge") {
 }
 
 function renderNationFlags(primary, secondary, className = "nation-flags") {
-  return `<span class="${className}" aria-label="${escapeHtml([primary, secondary].filter((value) => value && value !== "无").join("、") || "未列明国籍")}">${resolveNationAssets(primary, secondary).map((asset) => `<img src="${escapeHtml(asset.src)}" alt="${escapeHtml(asset.id.replace(/^nation-/, ""))}" data-asset-id="${escapeHtml(asset.assetId || "")}" loading="lazy" decoding="async">`).join("")}</span>`;
+  return `<span class="${className}" aria-label="${escapeHtml([primary, secondary].filter((value) => value && value !== "无").join("、") || "未列明国籍")}">${resolveNationAssets(primary, secondary).map((asset) => {
+    const glyph = nationFlagGlyph(asset);
+    const label = nationRefForCode(asset.flagCode)?.displayNameZh || asset.name || "未知国籍";
+    if (asset.unicodeOnly || (!asset.src && !asset.private)) {
+      return `<span class="nation-flag-emoji" role="img" aria-hidden="true" data-asset-id="${escapeHtml(asset.assetId || "")}" data-flag-code="${escapeHtml(asset.flagCode || "")}">${glyph || "未知国籍"}</span>`;
+    }
+    return `<img class="nation-flag-svg" src="${escapeHtml(asset.src)}" alt="${escapeHtml(label)}" data-asset-id="${escapeHtml(asset.assetId || "")}" data-flag-code="${escapeHtml(asset.flagCode || "")}" data-fallback-glyph="${escapeHtml(glyph)}" loading="lazy" decoding="async" onerror="window.fallbackNationFlag&&window.fallbackNationFlag(this)">`;
+  }).join("")}</span>`;
 }
+
+window.fallbackNationFlag = (node) => {
+  if (!node || node.dataset.fallbackApplied) return;
+  const glyph = node.dataset.fallbackGlyph || "";
+  const fallback = document.createElement("span");
+  fallback.className = "nation-flag-emoji nation-flag-fallback";
+  fallback.dataset.assetId = node.dataset.assetId || "";
+  fallback.dataset.flagCode = node.dataset.flagCode || "";
+  fallback.dataset.fallbackApplied = "true";
+  fallback.setAttribute("role", "img");
+  fallback.setAttribute("aria-hidden", "true");
+  fallback.textContent = glyph || "未知国籍";
+  node.replaceWith(fallback);
+};
 
 function renderAssociationBadge(team, className = "association-badge") {
   if (!team) return "";
@@ -227,6 +248,7 @@ function scrollTop() {
 function setView(view) {
   if (!state) return;
   commit({ ...state, ui: { ...state.ui, view } });
+  scrollTop();
 }
 
 function renderPlayerCard() {
@@ -591,7 +613,11 @@ function relationRows() {
 
 function renderPeople() {
   const committedName = state.nationalTeam.committedNation || state.player.nationality;
-  const committedTeam = NATIONAL_TEAMS.find((item) => item.name === committedName) || NATIONAL_TEAMS[0];
+  const committedId = state.nationalTeam.committedNationId || canonicalNationId(committedName);
+  const committedLabel = nationDisplayName(committedId);
+  const committedTeam = NATIONAL_TEAMS.find((item) => item.id === ({ cn: "chn", "gb-eng": "eng", es: "esp", ar: "arg", br: "bra" })[committedId])
+    || NATIONAL_TEAMS.find((item) => item.name === committedName)
+    || NATIONAL_TEAMS[0];
   const agent = state.agent || { name: "待分配", type: "未记录", resources: 0, loyalty: 0, interests: "未记录", history: [] };
   const activeTraits = (state.player.traits || []).map((id) => TRAITS.find((item) => item.id === id)).filter(Boolean);
   const availableTraits = TRAITS.filter((item) => !state.player.traits?.includes(item.id));
@@ -606,10 +632,10 @@ function renderPeople() {
         </article>
         <section class="people-strip surface-card">
           <h2>国家与家庭</h2>
-          <div class="national-card"><span>国家队</span><b>${renderAssociationBadge(committedTeam)}${renderNationFlags(committedName)}${escapeHtml(committedTeam.name)}</b><p>成年队出场 ${state.nationalTeam.caps} · 进球 ${state.nationalTeam.goals}</p></div>
+          <div class="national-card"><span>国家队</span><b>${renderAssociationBadge(committedTeam)}${renderNationFlags(committedName)}${escapeHtml(committedLabel)}</b><p>成年队出场 ${state.nationalTeam.caps} · 进球 ${state.nationalTeam.goals}</p></div>
           <div class="national-card"><span>第二国籍</span><b>${renderNationFlags(state.player.secondNationality)}${escapeHtml(state.player.secondNationality)}</b><p>${state.player.secondNationality === "无" ? "目前没有资格选择。" : "尚未代表成年队时仍可作出最终选择。"}</p></div>
            ${state.player.secondNationality && state.player.secondNationality !== "无" && state.nationalTeam.caps === 0 ? `
-             <label class="inline-control"><span>选择国家队协会</span><select id="nationalChoice"><option value="${escapeHtml(state.player.secondNationality)}">${escapeHtml(state.player.secondNationality)}</option></select></label>
+             <label class="inline-control"><span>选择国家队协会</span><select id="nationalChoice"><option value="${escapeHtml(state.player.secondNationalityId || canonicalNationId(state.player.secondNationality))}">${escapeHtml(nationDisplayName(state.player.secondNationalityId || canonicalNationId(state.player.secondNationality)))}</option></select></label>
              <button class="secondary-action" data-action="choose-national">作出最终选择</button>` : ""}
            <button class="secondary-action" data-action="national-captain">争夺队长袖标</button>
            ${renderPsychology()}
@@ -1023,6 +1049,7 @@ function createCareer() {
     seed: `ui-${Date.now()}-${Math.random().toString(16).slice(2)}`
   });
   commit(next, "生涯已创建，检查点会自动保存");
+  scrollTop();
 }
 
 function loadSave(id) {
@@ -1031,6 +1058,7 @@ function loadSave(id) {
     state = { ...next, ui: { ...next.ui, view: "overview" } };
     saveState(state, getStorage());
     render();
+    scrollTop();
   } catch {
     showToast("存档无法读取");
   }
@@ -1042,6 +1070,7 @@ function removeSave(id) {
     state = null;
   }
   render();
+  scrollTop();
 }
 
 function exportCurrent() {

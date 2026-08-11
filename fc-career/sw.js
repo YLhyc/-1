@@ -1,4 +1,4 @@
-const CACHE = "fc-career-v2026-08-10-3";
+const CACHE = "fc-career-v2026-08-11-5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -20,6 +20,9 @@ const ASSETS = [
   "./src/squads.js",
   "./src/asset-registry.js",
   "./src/assets.js",
+  "./src/nations.js",
+  "./src/nation-refs.js",
+  "./src/flag-manifest.js",
   "./src/honors.js",
   "./src/private-assets.js",
   "./src/career.js",
