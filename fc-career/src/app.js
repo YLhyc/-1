@@ -272,27 +272,50 @@ function renderCreate() {
   return `
     <section class="view create-view">
       <header class="view-heading"><div><span>NEW CAREER</span><h1>创建你的足球人生</h1></div><p>中国开档优先。所有自定义内容都会明确标记，你仍可获得游戏内成就。</p></header>
-      <form class="create-form surface-card" id="createForm">
-        <label><span>姓名</span><input id="newName" name="name" value="林骁" maxlength="20" autocomplete="off"></label>
-        <label><span>主打位置</span><select id="newPosition" name="position">${POSITIONS.map((item) => `<option value="${item.id}" ${item.id === "CAM" ? "selected" : ""}>${item.name}</option>`).join("")}</select></label>
-        <label><span>天赋倾向</span><select id="newTalent" name="talent">${TALENTS.map((item) => `<option value="${item.id}" ${item.id === "steady" ? "selected" : ""}>${item.name}</option>`).join("")}</select></label>
-        <label><span>技术偏置</span><select id="newTechBias">${[-3, -2, -1, 0, 1, 2, 3].map((value) => `<option value="${value}" ${value === 0 ? "selected" : ""}>${value > 0 ? "+" : ""}${value}</option>`).join("")}</select></label>
-        <label><span>身体偏置</span><select id="newPhysicalBias">${[-3, -2, -1, 0, 1, 2, 3].map((value) => `<option value="${value}" ${value === 0 ? "selected" : ""}>${value > 0 ? "+" : ""}${value}</option>`).join("")}</select></label>
-        <label><span>精神偏置</span><select id="newMentalBias">${[-3, -2, -1, 0, 1, 2, 3].map((value) => `<option value="${value}" ${value === 0 ? "selected" : ""}>${value > 0 ? "+" : ""}${value}</option>`).join("")}</select></label>
-        <label><span>潜力上限（70-99，留空自动）</span><input id="newPotential" type="number" min="70" max="99" value=""></label>
-        <label><span>伤病倾向（1-20，留空自动）</span><input id="newInjuryProneness" type="number" min="1" max="20" value=""></label>
-        <label><span>家庭背景</span><select id="newFamily" name="family"><option>工人家庭</option><option>中产家庭</option><option>足球世家</option><option>贫寒</option></select></label>
-        <label><span>国籍</span><select id="newNationality" name="nationality">${NATIONAL_TEAMS.map((item) => `<option value="${escapeHtml(item.name)}" ${item.id === "chn" ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}</select></label>
-        <label><span>第二国籍</span><select id="newSecondNationality" name="secondNationality">${SECOND_NATIONALITIES.map((item) => `<option value="${escapeHtml(item)}" ${item === "无" ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}</select></label>
-        <label><span>初始俱乐部</span><select id="newClub" name="club">${CLUBS.filter((item) => item.league === "csl").map((item) => `<option value="${item.id}" ${item.id === "shanghai-shenhua" ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}</select></label>
-        <label><span>出生年份</span><select id="newBirthYear" name="birthYear">${[2008, 2009, 2010, 2011, 2012].map((year) => `<option value="${year}" ${year === 2010 ? "selected" : ""}>${year}</option>`).join("")}</select></label>
-        <label><span>惯用脚</span><select id="newFoot" name="foot"><option>右脚</option><option>左脚</option><option>双脚</option></select></label>
-        <label><span>身高（cm）</span><input id="newHeight" type="number" min="155" max="205" value="176"></label>
-        <label><span>体重（kg）</span><input id="newWeight" type="number" min="50" max="100" value="66"></label>
-        <label><span>球衣号码</span><input id="newNumber" type="number" min="1" max="99" value="17"></label>
-        <label class="check-row"><input id="newCustomized" type="checkbox"><span>标记为自定义生涯</span></label>
-        <fieldset class="trait-picker"><legend>球员特性（最多 5 个）</legend>${TRAITS.map((item) => `<label><input type="checkbox" name="trait" value="${item.id}"><span>${escapeHtml(item.name)}</span></label>`).join("")}</fieldset>
-        <button class="primary-action" data-action="create" type="button">开始生涯</button>
+      <form class="create-form" id="createForm">
+        <section class="create-section surface-card">
+          <header class="create-section-heading"><div><span>IDENTITY</span><h2>球员身份</h2></div><p>先确定你是谁，以及你从哪里开始。</p></header>
+          <div class="create-fields identity-fields">
+            <label class="form-field field-wide"><span>姓名</span><input id="newName" name="name" value="林骁" maxlength="20" autocomplete="off"></label>
+            <label class="form-field"><span>主打位置</span><select id="newPosition" name="position">${POSITIONS.map((item) => `<option value="${item.id}" ${item.id === "CAM" ? "selected" : ""}>${item.name}</option>`).join("")}</select></label>
+            <label class="form-field"><span>天赋倾向</span><select id="newTalent" name="talent">${TALENTS.map((item) => `<option value="${item.id}" ${item.id === "steady" ? "selected" : ""}>${item.name}</option>`).join("")}</select></label>
+          </div>
+        </section>
+        <section class="create-section surface-card">
+          <header class="create-section-heading"><div><span>PROFILE</span><h2>能力塑形</h2></div><p>偏置只改变初始倾向，留空项由系统生成。</p></header>
+          <div class="create-fields bias-fields">
+            <label class="form-field"><span>技术偏置</span><select id="newTechBias">${[-3, -2, -1, 0, 1, 2, 3].map((value) => `<option value="${value}" ${value === 0 ? "selected" : ""}>${value > 0 ? "+" : ""}${value}</option>`).join("")}</select></label>
+            <label class="form-field"><span>身体偏置</span><select id="newPhysicalBias">${[-3, -2, -1, 0, 1, 2, 3].map((value) => `<option value="${value}" ${value === 0 ? "selected" : ""}>${value > 0 ? "+" : ""}${value}</option>`).join("")}</select></label>
+            <label class="form-field"><span>精神偏置</span><select id="newMentalBias">${[-3, -2, -1, 0, 1, 2, 3].map((value) => `<option value="${value}" ${value === 0 ? "selected" : ""}>${value > 0 ? "+" : ""}${value}</option>`).join("")}</select></label>
+            <label class="form-field"><span>潜力上限 <small>70–99，留空自动</small></span><input id="newPotential" type="number" min="70" max="99" value=""></label>
+            <label class="form-field"><span>伤病倾向 <small>1–20，留空自动</small></span><input id="newInjuryProneness" type="number" min="1" max="20" value=""></label>
+          </div>
+        </section>
+        <section class="create-section surface-card">
+          <header class="create-section-heading"><div><span>BACKGROUND</span><h2>出身与归属</h2></div><p>家庭、国籍和你的第一家俱乐部。</p></header>
+          <div class="create-fields background-fields">
+            <label class="form-field"><span>家庭背景</span><select id="newFamily" name="family"><option>工人家庭</option><option>中产家庭</option><option>足球世家</option><option>贫寒</option></select></label>
+            <label class="form-field"><span>国籍</span><select id="newNationality" name="nationality">${NATIONAL_TEAMS.map((item) => `<option value="${escapeHtml(item.name)}" ${item.id === "chn" ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}</select></label>
+            <label class="form-field"><span>第二国籍</span><select id="newSecondNationality" name="secondNationality">${SECOND_NATIONALITIES.map((item) => `<option value="${escapeHtml(item)}" ${item === "无" ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}</select></label>
+            <label class="form-field field-wide"><span>初始俱乐部</span><select id="newClub" name="club">${CLUBS.filter((item) => item.league === "csl").map((item) => `<option value="${item.id}" ${item.id === "shanghai-shenhua" ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}</select></label>
+          </div>
+        </section>
+        <section class="create-section surface-card">
+          <header class="create-section-heading"><div><span>BODY &amp; KIT</span><h2>身体资料</h2></div><p>这些资料会影响档案展示和生涯初始设定。</p></header>
+          <div class="create-fields body-fields">
+            <label class="form-field"><span>出生年份</span><select id="newBirthYear" name="birthYear">${[2008, 2009, 2010, 2011, 2012].map((year) => `<option value="${year}" ${year === 2010 ? "selected" : ""}>${year}</option>`).join("")}</select></label>
+            <label class="form-field"><span>惯用脚</span><select id="newFoot" name="foot"><option>右脚</option><option>左脚</option><option>双脚</option></select></label>
+            <label class="form-field"><span>身高（cm）</span><input id="newHeight" type="number" min="155" max="205" value="176"></label>
+            <label class="form-field"><span>体重（kg）</span><input id="newWeight" type="number" min="50" max="100" value="66"></label>
+            <label class="form-field"><span>球衣号码</span><input id="newNumber" type="number" min="1" max="99" value="17"></label>
+            <label class="check-row"><input id="newCustomized" type="checkbox"><span>标记为自定义生涯</span></label>
+          </div>
+        </section>
+        <section class="create-section create-section-wide surface-card">
+          <header class="create-section-heading"><div><span>TRAITS</span><h2>球员特性</h2></div><p>最多选择 5 个；特性会在比赛和长期成长中留下记忆。</p></header>
+          <fieldset class="trait-picker"><legend>最多选择 5 个</legend><div class="trait-options">${TRAITS.map((item) => `<label><input type="checkbox" name="trait" value="${item.id}"><span>${escapeHtml(item.name)}</span></label>`).join("")}</div></fieldset>
+          <footer class="create-actions"><p>所有字段都可以保留默认值，之后仍能通过训练、转会和事件改变你的生涯。</p><button class="primary-action" data-action="create" type="button">开始生涯</button></footer>
+        </section>
       </form>
       <section class="save-list surface-card">
         <h2>已有存档</h2>
@@ -924,7 +947,7 @@ function renderCurrentView() {
 
 function render() {
   if (!state) {
-    app.innerHTML = `<div class="game-shell">${renderCreate()}<div class="toast" id="toast" role="status" aria-live="polite"></div></div>`;
+    app.innerHTML = `<div class="game-shell create-shell">${renderCreate()}<div class="toast" id="toast" role="status" aria-live="polite"></div></div>`;
     return;
   }
   document.documentElement.dataset.theme = state.ui.theme;
