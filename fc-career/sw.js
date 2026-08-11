@@ -46,7 +46,7 @@ async function fetchWithRetry(url, attempts = 3) {
   throw lastError || new Error(`fetch failed for ${url}`);
 }
 
-async function cacheUrls(cache, urls, concurrency = 16) {
+async function cacheUrls(cache, urls, concurrency = 64) {
   let index = 0;
   async function worker() {
     while (index < urls.length) {
