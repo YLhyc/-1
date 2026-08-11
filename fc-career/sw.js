@@ -1,4 +1,4 @@
-const CACHE = "fc-career-v2026-08-11-6";
+const CACHE = "fc-career-v2026-08-11-7";
 const ASSETS = [
   "./",
   "./index.html",
@@ -66,7 +66,11 @@ self.addEventListener("install", (event) => {
     const registryResponse = await fetchWithRetry("./src/asset-registry.js");
     const registryText = await registryResponse.text();
     const publicAssets = [...registryText.matchAll(/\"path\":\s*\"([^\"]+)\"/g)].map((match) => match[1]);
-    await cacheUrls(cache, [...new Set([...ASSETS, ...publicAssets])]);
+    const offlineVisualAssets = publicAssets.filter((asset) => (
+      /^\.\/assets\/(flags|clubs|competitions|continents|awards|portraits|associations)\//.test(asset)
+      || /^\.\/assets\/flags\/(manifest\.json|LICENSE|SOURCE\.md)$/.test(asset)
+    ));
+    await cacheUrls(cache, [...new Set([...ASSETS, ...offlineVisualAssets])]);
   })());
   self.skipWaiting();
 });
