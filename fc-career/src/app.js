@@ -72,6 +72,15 @@ import { generateSocialPost } from "./ai.js";
 import { CLUBS, COACH_JOBS, LEAGUES, NATIONAL_TEAMS, POSITIONS, SECOND_NATIONALITIES, TALENTS, TRAINING_PLANS, TRAITS } from "./data.js";
 import { canonicalNationId, listPrivateAssets, nationDisplayName, nationFlagGlyph, nationRefForCode, resolveAssociationAsset, resolveAwardAsset, resolveClubAsset, resolveCompetitionAsset, resolveKitAsset, resolveNationAssets } from "./assets.js";
 import { clearPrivateAssetDb, importPrivateZip, loadPrivateAssets } from "./private-assets.js";
+import {
+  captureCreateDraft,
+  initAppUpdate,
+  refreshUpdateStatus,
+  renderSettingsUpdateCard,
+  renderUpdateWidget,
+  requestAppUpdate,
+  restoreCreateDraft
+} from "./update.js";
 
 const app = document.querySelector("#app");
 let storage;
@@ -231,6 +240,17 @@ function showToast(message) {
   toast.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+async function prepareForUpdate() {
+  try {
+    if (state) state = saveState(state, getStorage());
+    captureCreateDraft();
+    return true;
+  } catch {
+    showToast("更新前保存失败，已取消更新");
+    return false;
+  }
 }
 
 function commit(next, message = "") {
@@ -949,6 +969,7 @@ function renderSettings() {
           ${renderSaveList()}
           <button class="secondary-action" data-action="new">新建生涯</button>
         </section>
+        ${renderSettingsUpdateCard()}
         <section class="surface-card private-assets-card">
           <h2>私人 FM26 资源</h2>
           <p>只在本机 IndexedDB 保存精确 FM ID 匹配的队徽、球衣、赛事、国家和洲际资源，不会上传到 GitHub Pages。</p>
@@ -973,7 +994,9 @@ function renderCurrentView() {
 
 function render() {
   if (!state) {
-    app.innerHTML = `<div class="game-shell create-shell">${renderCreate()}<div class="toast" id="toast" role="status" aria-live="polite"></div></div>`;
+    app.innerHTML = `<div class="game-shell create-shell"><div class="app-update-bar">${renderUpdateWidget()}</div>${renderCreate()}<div class="toast" id="toast" role="status" aria-live="polite"></div></div>`;
+    restoreCreateDraft();
+    refreshUpdateStatus();
     return;
   }
   document.documentElement.dataset.theme = state.ui.theme;
@@ -994,6 +1017,7 @@ function render() {
         <div class="world-date"><span>存档内 · ${escapeHtml(state.world.date)}</span><b>${escapeHtml(state.player.club)}</b></div>
         <button class="theme-toggle" data-action="theme" aria-label="切换主题"><i>${state.ui.theme === "dark" ? "☀" : "☾"}</i><span>${state.ui.theme === "dark" ? "浅色" : "深色"}</span></button>
       </header>
+      <div class="app-update-bar">${renderUpdateWidget()}</div>
       <nav class="main-nav surface-card" aria-label="主要页面">
         ${navItems.map((item) => `<button class="${state.ui.view === item.id ? "active" : ""}" data-action="view" data-view="${item.id}"><i>${item.icon}</i><span>${item.label}</span></button>`).join("")}
         <div class="nav-spacer"></div>
@@ -1004,6 +1028,7 @@ function render() {
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
   if (audioEngine && state?.audio?.enabled) audioEngine.setPreferences(state.audio);
+  refreshUpdateStatus();
 }
 
 function createCareer() {
@@ -1448,6 +1473,8 @@ app.addEventListener("click", async (event) => {
     removeSave(button.dataset.id);
   } else if (action === "clear-private-assets") {
     clearPrivateFile();
+  } else if (action === "check-update") {
+    requestAppUpdate();
   }
 });
 
@@ -1466,11 +1493,4 @@ loadPrivateAssets().then((loaded) => {
   if (state) render();
 }).catch(() => {});
 
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      if (event.data?.type === "FC_CAREER_UPDATE") showToast("新版本已就绪，请刷新页面");
-    });
-  });
-}
+initAppUpdate({ beforeApply: prepareForUpdate });

@@ -1,4 +1,4 @@
-const CACHE = "fc-career-v2026-08-11-7";
+let CACHE = null;
 const ASSETS = [
   "./",
   "./index.html",
@@ -10,6 +10,8 @@ const ASSETS = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./src/app.js",
+  "./src/update.js",
+  "./src/version.js",
   "./src/content.js",
   "./src/engine.js",
   "./src/store.js",
@@ -31,11 +33,34 @@ const ASSETS = [
   "./src/audio.js"
 ];
 
-async function fetchWithRetry(url, attempts = 3) {
+const VERSION_PATTERN = /^\d+\.\d+\.\d+$/;
+
+function versionFromScriptUrl() {
+  try {
+    const params = new URL(self.location.href).searchParams;
+    const version = params.get("v");
+    return VERSION_PATTERN.test(version || "") ? version : null;
+  } catch {
+    return null;
+  }
+}
+
+async function resolveCacheName() {
+  const scriptVersion = versionFromScriptUrl();
+  if (scriptVersion) return `fc-career-${scriptVersion}`;
+  const response = await fetchWithRetry(`./version.json?t=${Date.now()}`, { cache: "no-store" });
+  const payload = await response.json();
+  if (!payload || !VERSION_PATTERN.test(payload.version)) {
+    throw new Error(`invalid version metadata: ${payload?.version}`);
+  }
+  return `fc-career-${payload.version}`;
+}
+
+async function fetchWithRetry(url, options = {}, attempts = 3) {
   let lastError;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      const response = await fetch(url, { ...options, signal: AbortSignal.timeout(12000) });
       if (response.ok) return response;
       lastError = new Error(`HTTP ${response.status} for ${url}`);
     } catch (error) {
@@ -62,6 +87,7 @@ async function cacheUrls(cache, urls, concurrency = 64) {
 
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
+    CACHE = await resolveCacheName();
     const cache = await caches.open(CACHE);
     const registryResponse = await fetchWithRetry("./src/asset-registry.js");
     const registryText = await registryResponse.text();
@@ -72,7 +98,6 @@ self.addEventListener("install", (event) => {
     ));
     await cacheUrls(cache, [...new Set([...ASSETS, ...offlineVisualAssets])]);
   })());
-  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -85,8 +110,21 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data === "skipWaiting" || event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+  if (event.data?.type === "GET_VERSION" && event.ports?.[0]) {
+    event.ports[0].postMessage({ version: CACHE ? CACHE.replace(/^fc-career-/, "") : null });
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (!CACHE) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   event.respondWith(
     fetch(event.request).then((response) => {
       const copy = response.clone();

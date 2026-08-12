@@ -490,3 +490,27 @@ h1, h2, h3 { text-wrap: balance; }
 .trait-picker input { min-width: 1.2rem; min-height: 1.2rem; }
 .ability-grid div b { font-size: 1.6rem; }
 .national-history { margin-top: .5rem; color: var(--muted); font-size: .78rem; line-height: 1.6; }
+
+.app-update-bar { grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; gap: .6rem; margin: 0 0 .65rem; }
+.app-update-widget { display: flex; align-items: center; gap: .55rem; min-width: 0; max-width: 100%; flex-wrap: wrap; }
+.version-badge { min-height: 44px; padding: .35rem .75rem; display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: .08rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); background: color-mix(in srgb, var(--surface-strong) 88%, var(--surface-soft)); cursor: pointer; text-align: left; }
+.update-badge-version { display: inline-flex; align-items: center; gap: .3rem; font-size: .76rem; font-weight: 850; line-height: 1.2; }
+.update-badge-cache { color: var(--muted); font-size: .64rem; font-weight: 750; line-height: 1.2; }
+.update-refresh-button { width: 44px; height: 44px; flex: 0 0 44px; display: inline-grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: var(--surface-soft); cursor: pointer; }
+.update-refresh-button svg { width: 20px; height: 20px; }
+.update-refresh-button.checking svg { animation: update-spin .8s linear infinite; }
+.version-badge.checking .update-badge-version::before { content: ""; width: .55rem; height: .55rem; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: update-spin .8s linear infinite; }
+.update-status { color: var(--muted); font-size: .68rem; line-height: 1.4; max-width: 24rem; }
+.update-status[data-kind="latest"] { color: var(--accent); }
+.update-status[data-kind="error"], .update-status[data-kind="offline"], .update-status[data-kind="older"], .update-status[data-kind="invalid"], .update-status[data-kind="timeout"], .update-status[data-kind="save-failed"] { color: var(--danger); }
+.update-card [data-update-build-time] { display: block; overflow-wrap: anywhere; }
+.update-card { grid-column: 1 / -1; }
+@keyframes update-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 850px) {
+  .app-update-bar { justify-content: stretch; margin: .25rem 0 .6rem; }
+  .app-update-widget { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: .45rem .55rem; }
+  .app-update-widget .version-badge { width: 100%; min-height: 44px; }
+  .app-update-widget .update-refresh-button { justify-self: end; }
+  .app-update-widget .update-status { grid-column: 1 / -1; max-width: none; }
+}
