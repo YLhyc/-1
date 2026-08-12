@@ -21,6 +21,7 @@ const ASSETS = [
   "./src/club-data.js",
   "./src/source-manifest.js",
   "./src/squads.js",
+  "./src/real-squads.js",
   "./src/asset-registry.js",
   "./src/assets.js",
   "./src/nations.js",
@@ -126,11 +127,14 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(fetch(event.request));
     return;
   }
+  const cacheUrl = new URL(event.request.url);
+  cacheUrl.search = "";
+  const cacheRequest = new Request(cacheUrl.href, { method: "GET" });
   event.respondWith(
     fetch(event.request).then((response) => {
       const copy = response.clone();
-      caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+      caches.open(CACHE).then((cache) => cache.put(cacheRequest, copy));
       return response;
-    }).catch(() => caches.match(event.request))
+    }).catch(() => caches.match(cacheRequest))
   );
 });
