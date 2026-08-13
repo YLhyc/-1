@@ -48,6 +48,114 @@ function validateGeneratedText(text, facts = {}) {
   return paragraphs.slice(0, 6);
 }
 
+function chapterPrompt(facts) {
+  const structured = {};
+  for (const key of [
+    "id", "date", "week", "season", "phase", "phaseLabel", "club", "opponent",
+    "venue", "weather", "title", "summary", "important", "score", "result",
+    "playerMoved", "newClub", "injuries", "retirement", "unemployment",
+    "national", "family", "media", "coach", "feed"
+  ]) {
+    if (facts?.[key] !== undefined) structured[key] = facts[key];
+  }
+  return [
+    "你是足球生涯模拟器的中文叙事作者。你只能表达下面结构化事实，不得新增比分、进球、伤病、关系、转会、合同或数值。",
+    `事实：${JSON.stringify(structured)}`,
+    "输出要求：连续四到六段第二人称现在时中文叙事；写实职业足球，重大时刻可提高文学性；不输出JSON、表格或解释；若事实不足就使用本地模板。",
+    "本地模板：完整本地章节已就绪。"
+  ].join("\n\n");
+}
+
+function parseChapterParagraphs(text) {
+  if (!text || typeof text !== "string") return null;
+  const paragraphs = text
+    .split(/\n+/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .filter((paragraph) => paragraph.length >= 20);
+  return paragraphs.length >= 4 ? paragraphs.slice(0, 6) : null;
+}
+
+function chapterFactsStillMatch(paragraphs, facts) {
+  const score = facts?.score;
+  if (score) {
+    for (const paragraph of paragraphs) {
+      for (const match of paragraph.matchAll(/(\d+)\s*[-—–:]\s*(\d+)/g)) {
+        if (Number(match[1]) !== Number(score.home) || Number(match[2]) !== Number(score.away)) return false;
+      }
+    }
+  }
+  const allowed = new Set([
+    String(facts?.week || ""),
+    String(facts?.season || ""),
+    ...((facts?.date || "").match(/\d+/g) || []),
+    ...((facts?.summary || "").match(/\d+/g) || []),
+    ...((facts?.feed || []).flatMap((item) => (item.text || "").match(/\d+/g) || [])),
+    ...((facts?.injuries || []).flatMap((item) => String(item.weeks || "")))
+  ].filter(Boolean));
+  if (score) {
+    allowed.add(String(score.home));
+    allowed.add(String(score.away));
+  }
+  for (const paragraph of paragraphs) {
+    for (const match of paragraph.matchAll(/(?<!\d)(\d+)(?!\d)/g)) {
+      if (!allowed.has(match[0])) return false;
+    }
+  }
+  return true;
+}
+
+export async function generateChapterNarrative({
+  chapter,
+  facts = chapter?.facts,
+  settings,
+  fetchImpl = globalThis.fetch,
+  timeoutMs = 12000
+}) {
+  if (!isConfigured(settings) || typeof fetchImpl !== "function" || !chapter || !facts) {
+    return { ok: false, reason: "not-configured" };
+  }
+  const { endpoint, model, key } = settings.ai;
+  const controller = new AbortController();
+  let timedOut = false;
+  try {
+    const fetchPromise = fetchImpl(endpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: chapterPrompt(facts) },
+          { role: "user", content: "请生成这一章的中文叙事段落。" }
+        ],
+        temperature: 0.4,
+        max_tokens: 1100
+      })
+    });
+    let timer;
+    const timeoutPromise = new Promise((resolve) => {
+      timer = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+        resolve(null);
+      }, timeoutMs);
+    });
+    fetchPromise.finally(() => clearTimeout(timer));
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
+    if (timedOut || response === null) return { ok: false, reason: "timeout" };
+    if (!response.ok) return { ok: false, reason: "endpoint" };
+    const data = await response.json();
+    if (timedOut) return { ok: false, reason: "timeout" };
+    const paragraphs = parseChapterParagraphs(data?.choices?.[0]?.message?.content || "");
+    if (!paragraphs) return { ok: false, reason: "format" };
+    if (!chapterFactsStillMatch(paragraphs, facts)) return { ok: false, reason: "validation" };
+    return { ok: true, paragraphs };
+  } catch {
+    return { ok: false, reason: timedOut ? "timeout" : "endpoint" };
+  }
+}
+
 export async function generateNarrative({ state, event, fallback = AI_DEFAULT_FALLBACK, fetchImpl = globalThis.fetch }) {
   const settings = state?.settings || {};
   if (!isConfigured(settings) || typeof fetchImpl !== "function") return fallback;

@@ -30,6 +30,7 @@ const ASSETS = [
   "./src/honors.js",
   "./src/private-assets.js",
   "./src/career.js",
+  "./src/narrative.js",
   "./src/systems.js",
   "./src/ai.js",
   "./src/audio.js"

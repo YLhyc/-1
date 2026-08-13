@@ -2,11 +2,15 @@ import {
   acceptCoachJob,
   acceptOffer,
   agentEvent,
+  advanceWeekWithChapter,
+  applyNarrativeChoice,
   applyPositionTraining,
   awardNomination,
   advanceWeek,
   buildLifeReport,
   buildErrorReport,
+  cacheAiChapter,
+  chapterLibrary,
   chooseNationalTeam,
   chooseMatchAction,
   classifyFocusFixture,
@@ -34,10 +38,12 @@ import {
   listSaves,
   loadState,
   markFocusFixture,
+  markChapterRead,
   mediaInterview,
   manageTrait,
   mentorApply,
   mentorTeach,
+  microSceneForAction,
   mindGame,
   moralChoice,
   nationalCaptain,
@@ -54,11 +60,13 @@ import {
   retireCoach,
   retirePlayer,
   saveState,
+  seasonMontage,
   selectTransferOffer,
   setAudioPreferences,
   ritualFlashback,
   simulateSeason,
   simulateToRetirement,
+  simulateToRetirementChunked,
   startComeback,
   startCurrentMatch,
   unemploymentPath,
@@ -68,7 +76,7 @@ import {
   worldChange
 } from "./career.js";
 import { createAudioEngine } from "./audio.js";
-import { generateSocialPost } from "./ai.js";
+import { generateChapterNarrative, generateSocialPost } from "./ai.js";
 import { CLUBS, COACH_JOBS, LEAGUES, NATIONAL_TEAMS, POSITIONS, SECOND_NATIONALITIES, TALENTS, TRAINING_PLANS, TRAITS } from "./data.js";
 import { canonicalNationId, listPrivateAssets, nationDisplayName, nationFlagGlyph, nationRefForCode, resolveAssociationAsset, resolveAwardAsset, resolveClubAsset, resolveCompetitionAsset, resolveKitAsset, resolveNationAssets } from "./assets.js";
 import { clearPrivateAssetDb, importPrivateZip, loadPrivateAssets } from "./private-assets.js";
@@ -88,6 +96,11 @@ let state = null;
 let toastTimer;
 let audioEngine = null;
 let privateAssetCount = 0;
+let fastForwardController = null;
+let fastForwardPanel = null;
+let narrativeAiController = null;
+let lastAction = null;
+let lastActionDetail = {};
 
 function getStorage() {
   if (storage) return storage;
@@ -242,6 +255,32 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
+function showFastForwardPanel(open) {
+  if (!fastForwardPanel) {
+    fastForwardPanel = document.createElement("div");
+    fastForwardPanel.className = "fast-forward-panel surface-card";
+    fastForwardPanel.innerHTML = `
+      <p class="eyebrow">FAST FORWARD</p>
+      <h2>正在分片推进</h2>
+      <div class="ai-progress"><span data-fast-progress></span></div>
+      <p data-fast-status>准备中…</p>
+      <button class="secondary-action danger" data-fast-cancel>取消推进</button>
+    `;
+    fastForwardPanel.hidden = true;
+    document.body.appendChild(fastForwardPanel);
+    fastForwardPanel.querySelector("[data-fast-cancel]").addEventListener("click", () => {
+      fastForwardController?.abort();
+    });
+  }
+  fastForwardPanel.hidden = !open;
+}
+
+function updateFastForwardProgress(payload) {
+  if (!fastForwardPanel) return;
+  fastForwardPanel.querySelector("[data-fast-progress]").style.width = `${payload.progress}%`;
+  fastForwardPanel.querySelector("[data-fast-status]").textContent = `第 ${payload.week} 周 · ${payload.phase} · 已处理 ${payload.iterations} 次`;
+}
+
 async function prepareForUpdate() {
   try {
     if (state) state = saveState(state, getStorage());
@@ -255,6 +294,10 @@ async function prepareForUpdate() {
 
 function commit(next, message = "") {
   if (!next) return;
+  const micro = lastAction ? microSceneForAction(next, lastAction, lastActionDetail) : null;
+  if (micro) next = { ...next, narrative: { ...next.narrative, pendingMicroScene: micro } };
+  lastAction = null;
+  lastActionDetail = {};
   state = saveState(next, getStorage());
   render();
   if (message) showToast(message);
@@ -377,6 +420,25 @@ function renderSaveList() {
     </article>`).join("")}</div>`;
 }
 
+function renderNarrativeEntry() {
+  if (!state?.narrative?.currentChapterId) return "";
+  const chapter = currentNarrativeChapter();
+  if (!chapter) return "";
+  return `<button class="primary-action" data-action="open-narrative">阅读最新章节：${escapeHtml(chapter.title)}</button>`;
+}
+
+function renderNarrativeMontage() {
+  const montage = state?.narrative?.montage;
+  if (!montage) return "";
+  return `
+    <section class="surface-card narrative-montage">
+      <p class="eyebrow">赛季蒙太奇</p>
+      <h2>${escapeHtml(montage.headline || "")}</h2>
+      <p>关键章节 ${montage.keyChapters?.length || 0} 篇：${(montage.keyChapters || []).map((item) => escapeHtml(item.title)).join("、") || "无"}</p>
+    </section>
+  `;
+}
+
 function renderOverview() {
   const phase = phaseLabel(state);
   const nextAction = nextActionCopy();
@@ -389,6 +451,7 @@ function renderOverview() {
           <h1>${nextAction.headline}</h1>
           <p>${nextAction.copy}</p>
           <button class="primary-action" data-action="${nextAction.action}" data-id="${nextAction.id || ""}">${nextAction.label}</button>
+          ${renderNarrativeEntry()}
         </section>
         <section class="overview-player">${renderPlayerCard()}</section>
          <section class="overview-metrics horizontal-scroll">
@@ -397,6 +460,7 @@ function renderOverview() {
           ${renderMetric("媒体声望", `${state.media.reputation}`, `${state.media.fans.toLocaleString("zh-CN")} 关注`, "")}
          </section>
         ${renderWorldSimulation()}
+        ${renderNarrativeMontage()}
          <section class="next-match surface-card">
           <header><div><span>下一节点</span><h2>${nextAction.label}</h2></div><b>${phase}</b></header>
           <p>${nextAction.copy}</p>
@@ -437,6 +501,7 @@ function renderWeek() {
   return `
     <section class="view week-view">
       <header class="view-heading"><div><span>${state.world.season} 赛季 · 第 ${state.world.week} 周</span><h1>本周计划</h1></div><p>训练、恢复、生活与商业的分配会进入存档，不会靠刷新重新随机。</p></header>
+      ${renderNarrativeEntry()}
       ${renderPsychology()}
       <section class="resource-strip horizontal-scroll">
         <article><span>可支配时间</span><b>${Math.round(state.resources.time)}</b><i><em style="width:${Math.min(100, state.resources.time)}%"></em></i></article>
@@ -910,6 +975,7 @@ function renderCareer() {
     <section class="view career-view">
       <header class="view-heading"><div><span>${state.world.phase === "coach" ? "COACH DESK" : "CAREER DESK"}</span><h1>${state.world.phase === "coach" ? "教练办公室" : state.world.phase === "final" ? "人生报告" : "职业档案"}</h1></div><p>球员生涯、合同、转会、财富和国家队记录都在这里。</p></header>
       ${body}
+      ${renderNarrativeEntry()}
       ${state.world.phase === "contract" ? "" : renderHonorsRoom()}
     </section>`;
 }
@@ -982,8 +1048,177 @@ function renderSettings() {
     </section>`;
 }
 
+function currentNarrativeChapter() {
+  if (!state?.narrative) return null;
+  const active = state.narrative.chapters?.find((chapter) => chapter.id === state.narrative.currentChapterId);
+  return active || state.narrative.chapters?.slice(-1)[0] || null;
+}
+
+function renderNarrativeChoices(choice, selectedChoiceId) {
+  const options = choice.options || [];
+  return `
+    <div class="narrative-choice-panel">
+      ${selectedChoiceId ? `<button class="primary-action narrative-inline-confirm" data-action="narrative-continue">继续</button>` : ""}
+      <p class="decision-cue">${escapeHtml(choice.intro || "")}</p>
+      <header class="choice-heading"><span>现在</span><h2>${escapeHtml(choice.prompt || "你如何回应本周？")}</h2></header>
+      <div class="decision-list">
+        ${options.map((item) => `
+          <button data-action="narrative-choice" data-id="${item.id}" ${selectedChoiceId === item.id ? "class='selected'" : ""}>
+            <span><b>${escapeHtml(item.title)}</b><em>${escapeHtml(item.intent)} · ${escapeHtml(item.risk)}</em></span>
+            <small>${escapeHtml(item.detail)}</small>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderNarrativeSettlement(settlement) {
+  if (!settlement) return "";
+  return `
+    <section class="narrative-settlement">
+      <h2>${escapeHtml(settlement.verdict || "")}</h2>
+      <details class="stats-fold"><summary>精确数据（展开）</summary><ul>${(settlement.stats || []).map(([label, value]) => `<li><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></li>`).join("")}</ul></details>
+      <div class="button-row narrative-settlement-actions">
+        <button class="secondary-action narrative-inline-library" data-action="narrative-library">书库</button>
+        <button class="secondary-action narrative-inline-ai" data-action="narrative-ai">AI增强</button>
+      </div>
+      <button class="primary-action narrative-inline-settle" data-action="narrative-continue">完成本章</button>
+    </section>
+  `;
+}
+
+function renderNarrativeLibrary() {
+  const library = chapterLibrary(state);
+  const hidden = state.ui.narrativeLibraryOpen ? "" : "hidden";
+  return `
+    <aside class="narrative-library surface-card" data-narrative-library ${hidden}>
+      <div class="library-header">
+        <div><p class="eyebrow">叙事书库</p><h2>全生涯章节</h2></div>
+        <button class="secondary-action" data-action="narrative-close-library">关闭</button>
+      </div>
+      ${library.length ? `<div class="library-list">${library.map((item) => `<button class="library-entry" data-action="narrative-library-select" data-id="${item.id}" data-read="${item.read}"><span>${item.phaseLabel || ""}</span><b>${escapeHtml(item.title)}</b><small>${escapeHtml(item.date)} · ${item.read ? "已读" : "未读"}</small></button>`).join("")}</div>` : `<p class="empty-copy">还没有章节。推进一周后，未读章节也会进入书库。</p>`}
+    </aside>
+  `;
+}
+
+function renderNarrative() {
+  const chapter = currentNarrativeChapter();
+  if (!chapter) {
+    return `
+      <section class="view narrative-view">
+        <article class="surface-card empty-copy">
+          还没有可读章节。先推进一周，章节会自动进入书库。
+          <button class="primary-action" data-action="advance">推进本周</button>
+        </article>
+      </section>`;
+  }
+  const reader = state.narrative.reader || { sceneIndex: 0, expanded: false, choice: null };
+  const scene = chapter.scenes?.[reader.sceneIndex] || chapter.scenes?.[0] || { kicker: "", title: chapter.title, paragraphs: [] };
+  const selectedChoice = reader.choice;
+  const visibleParagraphs = reader.expanded ? scene.paragraphs : (scene.paragraphs || []).slice(0, 1);
+  return `
+    <section class="view narrative-view ${scene.choice ? "has-choice" : ""} ${scene.settlement ? "is-settlement" : ""}">
+      <header class="view-heading">
+        <div><span>NARRATIVE · ${escapeHtml(chapter.phaseLabel)}</span><h1>${escapeHtml(chapter.title)}</h1></div>
+        <p>${chapter.important ? "重要章节" : "普通周"} · 场景 ${reader.sceneIndex + 1} / ${chapter.scenes?.length || 1}</p>
+      </header>
+      <div class="narrative-briefing">
+        <article class="narrative-main surface-card ${scene.choice ? "has-choice" : ""}">
+          <p class="eyebrow">${escapeHtml(scene.kicker || "")}</p>
+          <h2>${escapeHtml(scene.title || "")}</h2>
+          <div class="scene-prose">${scene.settlement ? "" : renderParagraphs(visibleParagraphs)}</div>
+          ${!reader.expanded && (scene.paragraphs?.length || 0) > 1 ? `<button class="secondary-action narrative-inline-expand" data-action="narrative-expand">展开全文</button>` : ""}
+          ${scene.choice ? renderNarrativeChoices(scene.choice, selectedChoice) : ""}
+          ${scene.settlement ? renderNarrativeSettlement(scene.settlement) : ""}
+          ${scene.settlement || scene.choice ? "" : `
+          <div class="narrative-facts-mini">
+            <p>连续第 ${chapter.week} 周 · ${chapter.important ? "关键节点" : "平静推进"} · 选择只影响后续连续性记忆，不改变已发生的比分、伤病、转会或数值。</p>
+          </div>
+          ${!scene.choice && reader.sceneIndex < (chapter.scenes?.length || 1) - 1 ? `<button class="primary-action narrative-inline-continue" data-action="narrative-continue">继续</button>` : ""}
+          `}
+        </article>
+        <aside class="narrative-side surface-card">
+          <p class="eyebrow">复盘 · 更衣室 · 董事会</p>
+          <h2>本周事实</h2>
+          <dl class="narrative-facts">
+            <div><dt>阶段</dt><dd>${escapeHtml(chapter.phaseLabel || "")}</dd></div>
+            <div><dt>日期</dt><dd>${escapeHtml(chapter.date || "")}</dd></div>
+            <div><dt>结果</dt><dd>${chapter.facts?.score ? `${chapter.facts.score.home}—${chapter.facts.score.away}` : chapter.facts?.result || (chapter.important ? "关键变化" : "平静的一周")}</dd></div>
+            <div><dt>连续性</dt><dd>连续第 ${chapter.week} 周</dd></div>
+          </dl>
+          <h2>最近章节</h2>
+          <div class="library-list compact">
+            ${chapterLibrary(state).slice(0, 4).map((item) => `<button class="library-entry" data-action="narrative-library-select" data-id="${item.id}" data-read="${item.read}"><span>${item.phaseLabel || ""}</span><b>${escapeHtml(item.title)}</b><small>${escapeHtml(item.date)} · ${item.read ? "已读" : "未读"}</small></button>`).join("")}
+          </div>
+        </aside>
+      </div>
+      <nav class="narrative-controls" aria-label="叙事流程">
+        <button class="secondary-action" data-action="narrative-back">返回</button>
+        <button class="secondary-action" data-action="narrative-expand">${reader.expanded ? "收起全文" : "展开全文"}</button>
+        <button class="primary-action" data-action="narrative-continue">继续</button>
+        <button class="secondary-action" data-action="narrative-skip">跳到结算</button>
+        <button class="secondary-action" data-action="narrative-ai" title="仅重大章节可用；普通章节使用本地完整版">AI增强</button>
+        <button class="secondary-action" data-action="narrative-library">书库</button>
+      </nav>
+      ${renderNarrativeLibrary()}
+      <section class="narrative-ai surface-card" data-narrative-ai ${state.ui.narrativeAiOpen ? "" : "hidden"}>
+        <p class="eyebrow">AI 增强</p>
+        <h2>重大章节增强（最多等待 12 秒）</h2>
+        <p>事实校验后永久缓存，不可重抽；超时或失败会立即使用完整本地章节。</p>
+        <div class="ai-progress"><span data-ai-progress></span></div>
+        <p class="ai-status" data-ai-status>${state.narrative.aiStatus === "cached" ? "已缓存，不可重抽" : state.narrative.aiStatus === "local" ? "本地完整章节已生效" : "等待中…"}</p>
+        <div class="button-row"><button class="primary-action" data-action="narrative-local-now">立即使用本地版</button><button class="secondary-action" data-action="narrative-close-ai">关闭</button></div>
+      </section>
+    </section>`;
+}
+
+async function startChapterAi(chapter) {
+  if (!chapter.important) {
+    commit({ ...state, ui: { ...state.ui, narrativeAiOpen: false }, narrative: { ...state.narrative, aiStatus: "local" } }, "普通章节使用完整本地版，AI 仅增强重大章节");
+    return;
+  }
+  narrativeAiController?.abort();
+  narrativeAiController = new AbortController();
+  const started = Date.now();
+  const timer = setInterval(() => {
+    const elapsed = Date.now() - started;
+    const progress = document.querySelector("[data-ai-progress]");
+    const status = document.querySelector("[data-ai-status]");
+    if (progress) progress.style.width = `${Math.min(100, (elapsed / 12000) * 100)}%`;
+    if (status) status.textContent = `等待中… ${(elapsed / 1000).toFixed(1)}s`;
+  }, 100);
+  const result = await generateChapterNarrative({
+    chapter,
+    facts: chapter.facts,
+    settings: state?.settings,
+    timeoutMs: 12000
+  });
+  clearInterval(timer);
+  if (narrativeAiController?.signal.aborted || !state) return;
+  if (result.ok) {
+    const next = cacheAiChapter(state, chapter.id, { paragraphs: result.paragraphs, cachedAt: Date.now() });
+    commit({ ...next, ui: { ...next.ui, narrativeAiOpen: false }, narrative: { ...next.narrative, aiStatus: "cached" } }, "AI 章节已校验并永久缓存，不可重抽");
+  } else {
+    commit({ ...state, ui: { ...state.ui, narrativeAiOpen: false }, narrative: { ...state.narrative, aiStatus: "local" } }, "AI 超时或校验失败，完整本地章节已接管");
+  }
+}
+
+function renderMicroScene() {
+  const micro = state?.narrative?.pendingMicroScene;
+  if (!micro) return "";
+  return `
+    <section class="micro-scene surface-card" data-micro-scene>
+      <p class="eyebrow">微场景</p>
+      <h2>${escapeHtml(micro.title || "")}</h2>
+      ${(micro.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+      <button class="secondary-action" data-action="micro-scene-dismiss">收起</button>
+    </section>`;
+}
+
 function renderCurrentView() {
   if (!state) return renderCreate();
+  if (state.ui.view === "narrative") return renderNarrative();
   if (state.ui.view === "week") return renderWeek();
   if (state.ui.view === "match") return renderMatch();
   if (state.ui.view === "people") return renderPeople();
@@ -1001,7 +1236,9 @@ function render() {
   }
   document.documentElement.dataset.theme = state.ui.theme;
   document.documentElement.classList.toggle("large-text", state.ui.largeText);
+  app.dataset.view = state.ui.view;
   document.querySelector("#themeColor")?.setAttribute("content", state.ui.theme === "dark" ? "#081019" : "#f2efe7");
+  const narrativeHostId = state.world?.phase === "coach" ? "career" : "overview";
   const navItems = [
     { id: "overview", icon: "◉", label: "生涯" },
     { id: "week", icon: "▦", label: "本周" },
@@ -1017,14 +1254,15 @@ function render() {
         <div class="world-date"><span>存档内 · ${escapeHtml(state.world.date)}</span><b>${escapeHtml(state.player.club)}</b></div>
         <button class="theme-toggle" data-action="theme" aria-label="切换主题"><i>${state.ui.theme === "dark" ? "☀" : "☾"}</i><span>${state.ui.theme === "dark" ? "浅色" : "深色"}</span></button>
       </header>
-      <div class="app-update-bar">${renderUpdateWidget()}</div>
+      ${state.ui.view === "narrative" ? "" : `<div class="app-update-bar">${renderUpdateWidget()}</div>`}
       <nav class="main-nav surface-card" aria-label="主要页面">
-        ${navItems.map((item) => `<button class="${state.ui.view === item.id ? "active" : ""}" data-action="view" data-view="${item.id}"><i>${item.icon}</i><span>${item.label}</span></button>`).join("")}
+        ${navItems.map((item) => `<button class="${state.ui.view === item.id || (state.ui.view === "narrative" && item.id === narrativeHostId) ? "active" : ""}" data-action="view" data-view="${item.id}"><i>${item.icon}</i><span>${item.label}</span></button>`).join("")}
         <div class="nav-spacer"></div>
         <button class="utility-button" data-action="view" data-view="settings"><i>⚙</i><span>设置</span></button>
         <button class="utility-button danger" data-action="new"><i>＋</i><span>新档</span></button>
       </nav>
       <main class="app-content" id="mainContent">${renderCurrentView()}</main>
+      ${renderMicroScene()}
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
   if (audioEngine && state?.audio?.enabled) audioEngine.setPreferences(state.audio);
@@ -1189,11 +1427,32 @@ function saveAiSettings() {
   commit(next, "AI 配置已保存在本机");
 }
 
+function actionDetail(action) {
+  const selectedPlan = document.querySelector(".activity-option.selected");
+  const positionSelect = document.querySelector("#positionTraining");
+  const coachFormation = document.querySelector("#coachFormation");
+  const coachTraining = document.querySelector("#coachTraining");
+  const traitTraining = document.querySelector("#traitTraining");
+  return {
+    planName: selectedPlan?.textContent?.trim() || "",
+    positionName: positionSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
+    formation: coachFormation?.value || "",
+    focus: coachTraining?.value || "",
+    traitName: traitTraining?.selectedOptions?.[0]?.textContent?.trim() || "",
+    club: state?.coach?.club || state?.player?.club || ""
+  };
+}
+
 app.addEventListener("click", async (event) => {
   const button = event.target.closest("[data-action]");
   if (!button || button.disabled) return;
   const action = button.dataset.action;
-  if (action === "create") createCareer();
+  lastAction = action;
+  lastActionDetail = actionDetail(action);
+  if (action === "micro-scene-dismiss") {
+    if (!state) return;
+    commit({ ...state, narrative: { ...state.narrative, pendingMicroScene: null } });
+  } else if (action === "create") createCareer();
   else if (action === "view") setView(button.dataset.view);
   else if (action === "plan") {
     if (!state) return;
@@ -1362,7 +1621,33 @@ app.addEventListener("click", async (event) => {
     commit(unemploymentPath(state, "abroad"), "海外机会已处理");
   } else if (action === "fast-forward-player") {
     if (!state) return;
-    commit(refreshMentalState(simulateToRetirement(state, { coach: true })), "已快速推进到教练世界");
+    if (fastForwardController) {
+      fastForwardController.abort();
+      return;
+    }
+    fastForwardController = new AbortController();
+    showFastForwardPanel(true);
+    const result = await simulateToRetirementChunked(state, {
+      coach: true,
+      signal: fastForwardController.signal,
+      onProgress: updateFastForwardProgress
+    });
+    fastForwardController = null;
+    showFastForwardPanel(false);
+    if (result.cancelled) {
+      showToast("快速推进已取消，存档未被修改");
+      return;
+    }
+    const completed = refreshMentalState(result.state);
+    const montage = seasonMontage(completed, completed.narrative?.chapters || []);
+    completed.feed = completed.feed || [];
+    completed.feed.unshift({
+      time: completed.world?.date || "快速推进",
+      title: "赛季蒙太奇",
+      text: `${montage.headline}。关键章节 ${montage.keyChapters.length} 篇：${montage.keyChapters.map((item) => item.title).join("、") || "无"}`
+    });
+    completed.narrative.montage = montage;
+    commit(completed, "快速推进完成，赛季蒙太奇与关键章目录已生成");
   } else if (action === "coach-formation") {
     if (!state) return;
     const formation = document.querySelector("#coachFormation")?.value;
@@ -1419,9 +1704,94 @@ app.addEventListener("click", async (event) => {
     commit({ ...state, player: { ...state.player, weakFoot }, training: { ...state.training, weakFoot: 1 } }, "逆足训练已加入本周计划");
   } else if (action === "advance") {
     if (!state) return;
-    const next = refreshMentalState(advanceWeek(state));
+    const next = refreshMentalState(advanceWeekWithChapter(state));
     const progressed = next.world.week !== state.world.week || next.world.phase !== state.world.phase || next.match?.id !== state.match?.id;
-    commit(next, progressed ? "一周已推进" : "当前节点需要你先处理");
+    commit(progressed ? next : next, progressed ? "一周已推进，新章节进入书库" : "当前节点需要你先处理");
+  } else if (action === "open-narrative") {
+    if (!state) return;
+    const chapter = currentNarrativeChapter();
+    if (!chapter) return;
+    const reader = { sceneIndex: 0, expanded: false, choice: null };
+    commit({ ...state, ui: { ...state.ui, view: "narrative", narrativeLibraryOpen: false, narrativeAiOpen: false }, narrative: { ...state.narrative, currentChapterId: chapter.id, reader } }, "已打开本章叙事");
+    scrollTop();
+  } else if (action === "narrative-back") {
+    if (!state) return;
+    const chapter = currentNarrativeChapter();
+    if (!chapter) return;
+    const reader = { ...(state.narrative.reader || {}), sceneIndex: Math.max(0, (state.narrative.reader?.sceneIndex || 0) - 1) };
+    commit({ ...state, narrative: { ...state.narrative, reader } });
+    scrollTop();
+  } else if (action === "narrative-continue") {
+    if (!state) return;
+    const chapter = currentNarrativeChapter();
+    if (!chapter) return;
+    const reader = { ...(state.narrative.reader || {}), sceneIndex: state.narrative.reader?.sceneIndex || 0 };
+    const scene = chapter.scenes?.[reader.sceneIndex];
+    if (scene?.choice && !reader.choice) {
+      showToast("请先做出选择；也可以跳到结算。");
+      return;
+    }
+    if (reader.sceneIndex < (chapter.scenes?.length || 1) - 1) {
+      reader.sceneIndex += 1;
+      commit({ ...state, narrative: { ...state.narrative, reader } });
+      scrollTop();
+    } else {
+      const next = markChapterRead(state, chapter.id);
+      commit({ ...next, ui: { ...next.ui, view: "overview" } }, "本章已读并进入书库");
+      scrollTop();
+    }
+  } else if (action === "narrative-expand") {
+    if (!state) return;
+    const reader = { ...(state.narrative.reader || {}), expanded: !(state.narrative.reader?.expanded || false) };
+    commit({ ...state, narrative: { ...state.narrative, reader } });
+  } else if (action === "narrative-skip") {
+    if (!state) return;
+    const chapter = currentNarrativeChapter();
+    if (!chapter) return;
+    const reader = { ...(state.narrative.reader || {}), sceneIndex: (chapter.scenes?.length || 1) - 1 };
+    commit({ ...state, narrative: { ...state.narrative, reader } }, "已跳到章节结算");
+    scrollTop();
+  } else if (action === "narrative-choice") {
+    if (!state) return;
+    const chapter = currentNarrativeChapter();
+    if (!chapter) return;
+    const next = applyNarrativeChoice(state, chapter.id, button.dataset.id);
+    const reader = { ...(next.narrative.reader || {}), choice: button.dataset.id };
+    commit({ ...next, narrative: { ...next.narrative, reader } }, "选择已写入连续性记忆");
+    scrollTop();
+  } else if (action === "narrative-library") {
+    if (!state) return;
+    commit({ ...state, ui: { ...state.ui, narrativeLibraryOpen: !state.ui.narrativeLibraryOpen } });
+  } else if (action === "narrative-close-library") {
+    if (!state) return;
+    commit({ ...state, ui: { ...state.ui, narrativeLibraryOpen: false } });
+  } else if (action === "narrative-library-select") {
+    if (!state) return;
+    const chapter = state.narrative?.chapters?.find((item) => item.id === button.dataset.id);
+    if (!chapter) return;
+    const reader = { sceneIndex: 0, expanded: false, choice: null };
+    commit({ ...state, ui: { ...state.ui, view: "narrative", narrativeLibraryOpen: false }, narrative: { ...state.narrative, currentChapterId: chapter.id, reader } }, "已打开书库章节");
+    scrollTop();
+  } else if (action === "narrative-ai") {
+    if (!state) return;
+    const chapter = currentNarrativeChapter();
+    if (!chapter) return;
+    if (chapter.ai) {
+      commit({ ...state, ui: { ...state.ui, narrativeAiOpen: true }, narrative: { ...state.narrative, aiStatus: "cached" } }, "AI 增强已永久缓存，不可重抽");
+      return;
+    }
+    commit({ ...state, ui: { ...state.ui, narrativeAiOpen: true }, narrative: { ...state.narrative, aiStatus: "waiting" } });
+    startChapterAi(chapter);
+  } else if (action === "narrative-local-now") {
+    if (!state) return;
+    narrativeAiController?.abort();
+    narrativeAiController = null;
+    commit({ ...state, ui: { ...state.ui, narrativeAiOpen: false }, narrative: { ...state.narrative, aiStatus: "local" } }, "本地完整章节已接管");
+  } else if (action === "narrative-close-ai") {
+    if (!state) return;
+    narrativeAiController?.abort();
+    narrativeAiController = null;
+    commit({ ...state, ui: { ...state.ui, narrativeAiOpen: false }, narrative: { ...state.narrative, aiStatus: state.narrative.aiStatus === "cached" ? "cached" : "local" } }, "AI 面板已关闭");
   } else if (action === "start-match") {
     commit(startCurrentMatch(state), "比赛开始：关键事实将自动保存");
     scrollTop();

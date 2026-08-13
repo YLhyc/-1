@@ -21,8 +21,14 @@ import { MATCH } from "./content.js";
 import { buildMatchSummary, deterministicRoll, resolveMoment } from "./engine.js";
 import { addHonor, migrateHonors } from "./honors.js";
 import { canonicalNationId, nationDisplayName, nationRefForCode } from "./nation-refs.js";
+import {
+  buildChapter,
+  collectWeeklyFacts,
+  defaultNarrativeState,
+  rememberChapter
+} from "./narrative.js";
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 export const SAVES_KEY = "fc-career-saves";
 
 function clamp(value, minimum, maximum) {
@@ -531,6 +537,8 @@ export function createInitialState(options = {}) {
       randomness: options.randomness ?? 1,
       economicPressure: options.economicPressure ?? 1,
       retireAge: options.retireAge ?? 34,
+      lengthMode: options.lengthMode ?? "standard",
+      mildMode: Boolean(options.mildMode),
       ai: { endpoint: "", model: "", key: "" }
     },
     world,
@@ -609,6 +617,7 @@ export function createInitialState(options = {}) {
     transferOffers: [],
     coach: null,
     match: null,
+    narrative: defaultNarrativeState(),
     feed: [
       { time: world.date, title: "青训开营", text: "你进入基地，第一份训练计划已经放在储物柜里。" },
       { time: world.date, title: "球探到场", text: "教练组确认，两家俱乐部将在青训结束时到场。" }
@@ -618,11 +627,16 @@ export function createInitialState(options = {}) {
 
 export function migrate(raw) {
   if (!raw || typeof raw !== "object") return createInitialState();
-    if (raw.version === SAVE_VERSION) {
+    if (raw.version === SAVE_VERSION || raw.version === 4) {
       const next = structuredClone(raw);
       next.player.traitMemory = next.player.traitMemory || [];
       next.agent = next.agent || initialAgent(next.seed || "migrated-agent");
       next.diagnostics = next.diagnostics || { errors: [] };
+      next.narrative = next.narrative || defaultNarrativeState();
+      next.settings = next.settings || {};
+      next.settings.lengthMode = next.settings.lengthMode || "standard";
+      next.settings.mildMode = Boolean(next.settings.mildMode);
+      next.version = SAVE_VERSION;
       migrateNationRefs(next, raw);
       migrateSeasonFocus(next);
       ensureWorldAuditState(next);
@@ -640,6 +654,9 @@ export function migrate(raw) {
     next.aiCache = next.aiCache || [];
     next.extensions = next.extensions || [];
     next.diagnostics = next.diagnostics || { errors: [] };
+    next.narrative = next.narrative || defaultNarrativeState();
+    next.settings = next.settings || {};
+    next.settings.lengthMode = next.settings.lengthMode || "standard";
     next.fanCulture = next.fanCulture || { groups: [], tifo: [], rituals: [] };
     next.peers = next.peers || [];
     next.awards = next.awards || [];
@@ -664,6 +681,9 @@ export function migrate(raw) {
     next.version = SAVE_VERSION;
     next.player = next.player || {};
     next.player.traitMemory = next.player.traitMemory || [];
+    next.narrative = next.narrative || defaultNarrativeState();
+    next.settings = next.settings || {};
+    next.settings.lengthMode = next.settings.lengthMode || "standard";
     next.nationalTeam = next.nationalTeam || {};
     next.nationalTeam.committedNation = next.nationalTeam.committedNation || next.player.nationality || "中国";
     migrateNationRefs(next, raw);
@@ -2091,7 +2111,8 @@ export function buildLifeReport(state) {
 }
 
 export function advanceWeek(state) {
-  let next = cloneState(state);
+  const before = cloneState(state);
+  let next = before;
   if (next.match?.status === "live") return next;
   if (next.match?.status === "ready") return next;
   if (next.world.phase === "academy") return advanceAcademyWeek(next);
@@ -2099,6 +2120,28 @@ export function advanceWeek(state) {
   if (next.world.phase === "offseason") return advanceOffseasonWeek(next);
   if (next.world.phase === "coach") return advanceCoachWeek(next);
   return next;
+}
+
+function attachWeeklyChapter(state, next) {
+  const facts = collectWeeklyFacts(state, next);
+  const chapter = buildChapter({
+    state: next,
+    facts,
+    lengthMode: next.settings?.lengthMode || "standard"
+  });
+  return rememberChapter(next, chapter);
+}
+
+export function advanceWeekWithChapter(state) {
+  const before = cloneState(state);
+  const next = advanceWeek(state);
+  const changed =
+    next.world?.date !== state.world?.date ||
+    next.world?.week !== state.world?.week ||
+    next.world?.phase !== state.world?.phase ||
+    (next.feed?.length || 0) !== (state.feed?.length || 0) ||
+    Boolean(next.match) !== Boolean(state.match);
+  return changed ? attachWeeklyChapter(before, next) : next;
 }
 
 export function simulateToRetirement(state, options = {}) {
@@ -2132,6 +2175,60 @@ export function simulateToRetirement(state, options = {}) {
     next = advanceWeek(next);
   }
   return next;
+}
+
+export async function simulateToRetirementChunked(state, options = {}) {
+  const {
+    coach = true,
+    chunkMs = 12,
+    frameMs = 1,
+    onProgress = null,
+    signal = null
+  } = options;
+  let next = structuredClone(state);
+  let safety = 0;
+  let cancelled = false;
+  const tick = () => new Promise((resolve) => setTimeout(resolve, frameMs));
+  while (!next.player.retired && safety < 20000 && !(signal?.aborted)) {
+    const started = performance.now();
+    while (performance.now() - started < chunkMs && safety < 20000 && !(signal?.aborted) && !next.player.retired) {
+      safety += 1;
+      if (next.match?.status === "live") {
+        if (next.match.screen === "decision") {
+          const moment = next.match.moments[next.match.currentMoment];
+          next = chooseMatchAction(next, moment.choices[0].id);
+        } else {
+          next = continueMatch(next);
+        }
+        continue;
+      }
+      if (next.match?.status === "ready") {
+        next = startCurrentMatch(next);
+        continue;
+      }
+      if (next.world.phase === "contract") {
+        next = acceptOffer(next, next.offers[0]?.id || "shenhua");
+        continue;
+      }
+      if (next.world.phase === "retirement") {
+        next = retirePlayer(next);
+        if (coach && next.coach?.jobOffers?.length) next = acceptCoachJob(next, next.coach.jobOffers[0].id);
+        else break;
+        continue;
+      }
+      next = advanceWeekWithChapter(next);
+    }
+    onProgress?.({
+      progress: Math.min(100, Math.round((safety / 20000) * 100)),
+      week: next.world?.week || 0,
+      phase: next.world?.phase || "",
+      iterations: safety,
+      durationMs: Math.round((performance.now() - started) * 100) / 100
+    });
+    await tick();
+  }
+  if (signal?.aborted) cancelled = true;
+  return { state: cancelled ? structuredClone(state) : next, cancelled };
 }
 
 export function simulateSeason(state, options = {}) {
@@ -2181,4 +2278,5 @@ export function importState(json, storage = globalThis.localStorage) {
 }
 
 export { DATA_SOURCE_NOTES };
+export { applyNarrativeChoice, cacheAiChapter, chapterLibrary, markChapterRead, microSceneForAction, seasonMontage } from "./narrative.js";
 export * from "./systems.js";
