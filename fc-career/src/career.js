@@ -20,6 +20,7 @@ import { SQUADS } from "./squads.js";
 import { MATCH } from "./content.js";
 import { buildMatchSummary, deterministicRoll, resolveMoment } from "./engine.js";
 import { addHonor, migrateHonors } from "./honors.js";
+import { resolveCoachSeasonAwards, resolveSeasonAwards } from "./awards.js";
 import { canonicalNationId, nationDisplayName, nationRefForCode } from "./nation-refs.js";
 import {
   buildChapter,
@@ -679,7 +680,7 @@ export function createInitialState(options = {}) {
       committedNationId: canonicalNationId(options.nationality || "中国")
     },
     career: {
-      seasonStats: { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, season: 2026 },
+      seasonStats: { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, cleanSheets: 0, wonderGoals: 0, season: 2026 },
       totalStats: { appearances: 0, goals: 0, assists: 0, minutes: 0, titles: [] },
       milestones: [],
       themeScores: {},
@@ -705,6 +706,8 @@ export function migrate(raw) {
       next.agent = next.agent || initialAgent(next.seed || "migrated-agent");
       next.diagnostics = next.diagnostics || { errors: [] };
       next.timing = ensureTiming(next);
+      next.career = next.career || {};
+      next.career.seasonStats = { cleanSheets: 0, wonderGoals: 0, ...(next.career.seasonStats || {}) };
       next.narrative = next.narrative || defaultNarrativeState();
       next.settings = next.settings || {};
       next.settings.lengthMode = next.settings.lengthMode || "standard";
@@ -718,6 +721,8 @@ export function migrate(raw) {
   if (raw.version === 2) {
     const next = structuredClone(raw);
     next.version = SAVE_VERSION;
+    next.career = next.career || {};
+    next.career.seasonStats = { cleanSheets: 0, wonderGoals: 0, ...(next.career.seasonStats || {}) };
     next.psychology = next.psychology || { energy: 80, state: "平静专注", trend: "稳定", advice: "保持训练与生活平衡。", scars: [] };
     next.club = next.club || { promises: [], politics: { influence: 0, unlocked: false, support: null, events: [] }, factions: [] };
     next.mentor = next.mentor || { mentor: null, disciples: [], learnedTraits: [] };
@@ -753,6 +758,8 @@ export function migrate(raw) {
   if (raw.version === 3) {
     const next = structuredClone(raw);
     next.version = SAVE_VERSION;
+    next.career = next.career || {};
+    next.career.seasonStats = { cleanSheets: 0, wonderGoals: 0, ...(next.career.seasonStats || {}) };
     next.player = next.player || {};
     next.player.traitMemory = next.player.traitMemory || [];
     next.timing = ensureTiming(next);
@@ -787,6 +794,7 @@ export function migrate(raw) {
     if (raw.season) next.season = structuredClone(raw.season);
     if (raw.world) next.world = { ...next.world, ...structuredClone(raw.world) };
     if (raw.career) next.career = { ...next.career, ...structuredClone(raw.career) };
+    next.career.seasonStats = { cleanSheets: 0, wonderGoals: 0, ...(next.career.seasonStats || {}) };
     if (raw.training) next.training.planId = raw.training.selected || next.training.planId;
     if (raw.resources) next.resources = { ...next.resources, ...raw.resources };
     if (raw.relations) next.relations = { ...next.relations, ...raw.relations };
@@ -1619,6 +1627,10 @@ function applyResultToCareer(state, result) {
   season.minutes += result.minutes || 90;
   season.ratingSum += result.rating || 6;
   if (result.motm) season.motm += 1;
+  // 个人荣誉奖项的最小确定性统计字段（game/src/awards.js 触发规则依赖）：
+  // 门将零封（GK 出场且失球为 0）与精彩进球（单场进球且评分 ≥ 8.4）
+  if (next.player.position === "GK" && (result.opponentGoals || 0) === 0) season.cleanSheets = (season.cleanSheets || 0) + 1;
+  if ((result.goals || 0) > 0 && (result.rating || 0) >= 8.4) season.wonderGoals = (season.wonderGoals || 0) + 1;
   next.career.totalStats.appearances += 1;
   next.career.totalStats.goals += result.goals || 0;
   next.career.totalStats.assists += result.assists || 0;
@@ -1786,6 +1798,9 @@ export function seasonEnd(state) {
   next = applyGrowthToAttributes(next);
   const stats = next.career.seasonStats;
   const average = stats.appearances ? stats.ratingSum / stats.appearances : 6;
+  // 个人荣誉奖项确定性结算（game/src/awards.js）：满足条件必得、不满足不得得、同赛季不重复。
+  // 在年龄递增前结算，使年龄限制奖项（U21/U23）按赛季内年龄判定。
+  next = resolveSeasonAwards(next);
   next.player.age += 1;
   if (next.player.age >= (next.settings.retireAge || 34)) {
     next.world.phase = "retirement";
@@ -1809,7 +1824,7 @@ export function seasonEnd(state) {
     next.records.push({ id: `record-goals-${next.world.season}`, record: `单赛季 ${stats.goals} 球`, date: next.world.date, season: next.world.season });
   }
   next = evolveWorld(next);
-  next.career.seasonStats = { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, season: next.world.season };
+  next.career.seasonStats = { appearances: 0, starts: 0, goals: 0, assists: 0, minutes: 0, ratingSum: 0, motm: 0, cleanSheets: 0, wonderGoals: 0, season: next.world.season };
   return next;
 }
 
@@ -2095,6 +2110,8 @@ function coachSeasonEnd(state) {
     next.feed.unshift({ time: next.world.date, title: "教练证书升级", text: "你通过 A 级教练证书考核，开始被列入更高级别候选名单。" });
   }
   next.career.milestones.push(`${next.world.season}:教练赛季结束，最终排名约第 ${finish} 位`);
+  // 教练个人奖项与晋级/冠军教练荣誉确定性结算（game/src/awards.js）
+  next = resolveCoachSeasonAwards(next);
   if (wonTitle) next.feed.unshift({ time: next.world.date, title: "教练赛季冠军", text: "你带队赢得赛季冠军，董事会和更衣室都认可你的计划。" });
   if (underPressure) next.feed.unshift({ time: next.world.date, title: "下课风险", text: "赛季末排名靠后，董事会开始评估你的位置。" });
   if (next.coach.contract.years <= 0) {

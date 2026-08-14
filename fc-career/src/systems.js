@@ -1,6 +1,7 @@
 import { CLUBS, POSITIONS, TRAITS } from "./data.js";
 import { deterministicRoll } from "./engine.js";
 import { addHonor } from "./honors.js";
+import { nominateAward } from "./awards.js";
 import { canonicalNationId, nationDisplayName } from "./nation-refs.js";
 
 function clamp(value, minimum, maximum) {
@@ -579,11 +580,14 @@ export function recordMilestone(state, record) {
 
 export function awardNomination(state, award) {
   const next = cloneState(state);
-  const id = `award-${next.world.season}-${award}-${next.awards.length + 1}`;
-  const won = deterministicRoll(`${next.seed}|award|${id}`) > 0.55;
-  next.awards.push({ id, award, season: next.world.season, won });
-  addHonor(next, { id: `honor-${id}`, award, awardId: award, season: next.world.season, category: "individual", won });
-  pushFeed(next, "年度评选", next.awards.at(-1).won ? `你赢得${award}，媒体开始写专题。` : `你入围${award}，最终没有获奖。`);
+  // 确定性奖项解析层（game/src/awards.js）：满足条件必得、不满足不得得、无随机发奖
+  const { definition, won } = nominateAward(next, award);
+  const title = definition?.title || award;
+  if (won) {
+    pushFeed(next, "年度评选", `你赢得${title}，媒体开始写专题。`);
+  } else {
+    pushFeed(next, "年度评选", `你入围${title}，最终没有获奖。`);
+  }
   return next;
 }
 
@@ -738,10 +742,9 @@ export function injuryRehab(state, pace) {
 
 export function goldenBall(state) {
   const next = cloneState(state);
-  const won = deterministicRoll(`${next.seed}|golden|${next.world.season}`) > 0.72;
-  next.awards.push({ id: `award-golden-${next.world.season}`, award: "金球奖", season: next.world.season, won });
-  addHonor(next, { id: `honor-golden-${next.world.season}`, award: "金球奖", awardId: "golden-ball", season: next.world.season, category: "individual", won });
-  if (won) {
+  // 金球奖确定性结算：满足条件必得、不满足不得得（game/src/awards.js）
+  const { definition, won } = nominateAward(next, "金球奖");
+  if (definition && won) {
     next.media.reputation = clamp(next.media.reputation + 8, 10, 99);
     next.media.fans = Math.round(next.media.fans * 1.25);
     pushFeed(next, "金球奖", "你赢得金球奖，全球媒体开始重写你的生涯叙事。");
