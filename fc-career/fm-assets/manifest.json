@@ -1,0 +1,3756 @@
+{
+  "name": "fc-career-fm-assets",
+  "description": "FM26 视觉审核通过的队徽/球衣/赛事标识/足协徽章公开同步包（审核记录见 docs/FM_ASSET_AUDIT.md）",
+  "bundleVersion": 1,
+  "generatedAt": "2026-08-13T17:10:06.592Z",
+  "baseUrl": "fm-assets/",
+  "approved": 416,
+  "excluded": 20,
+  "trophy": "FM trophy=0（无一对一映射，继续原创奖杯回退）",
+  "items": [
+    {
+      "url": "club/arsenal/logo.png",
+      "type": "club",
+      "target": "arsenal",
+      "variant": "logo",
+      "fmId": "602",
+      "bytes": 41850,
+      "sha256": "c42914e414be7b53aef1b5b5088a4d00bdb4e3f02f957de657eab2afb29d2806"
+    },
+    {
+      "url": "club/barcelona/logo.png",
+      "type": "club",
+      "target": "barcelona",
+      "variant": "logo",
+      "fmId": "1708",
+      "bytes": 33197,
+      "sha256": "25947110458294353fc0969aa9e2138c43b6d23c570685a296bbd691bd1a66f2"
+    },
+    {
+      "url": "club/bayern/logo.png",
+      "type": "club",
+      "target": "bayern",
+      "variant": "logo",
+      "fmId": "915",
+      "bytes": 44849,
+      "sha256": "3e31af37b5990982293799a63968c23117269b797fbe1bc752c418e83fccf2af"
+    },
+    {
+      "url": "club/beijing-guoan/logo.png",
+      "type": "club",
+      "target": "beijing-guoan",
+      "variant": "logo",
+      "fmId": "406",
+      "bytes": 50371,
+      "sha256": "5ba10bb983f20ebe9154531112eb4bc661b4510ce68c087238873fa314bbacf7"
+    },
+    {
+      "url": "club/bundesliga-augsburg/logo.png",
+      "type": "club",
+      "target": "bundesliga-augsburg",
+      "variant": "logo",
+      "fmId": "2238",
+      "bytes": 25902,
+      "sha256": "489d6e261feb0d060f6076609f4c81e854cf3d68ab22cb6c1172ec3715c57aed"
+    },
+    {
+      "url": "club/bundesliga-cologne/logo.png",
+      "type": "club",
+      "target": "bundesliga-cologne",
+      "variant": "logo",
+      "fmId": "916",
+      "bytes": 41043,
+      "sha256": "38b883e1a66ee16d6483eaa82642da4ad8fccac4ce78294e63bf1f44c830e62e"
+    },
+    {
+      "url": "club/bundesliga-dortmund/logo.png",
+      "type": "club",
+      "target": "bundesliga-dortmund",
+      "variant": "logo",
+      "fmId": "907",
+      "bytes": 34735,
+      "sha256": "05951203e8adf16f64e55bf94022f9bd8e0bb0732e6e81342eef259cc06a040f"
+    },
+    {
+      "url": "club/bundesliga-frankfurt/logo.png",
+      "type": "club",
+      "target": "bundesliga-frankfurt",
+      "variant": "logo",
+      "fmId": "912",
+      "bytes": 37037,
+      "sha256": "9bdbc1f35086ceb0a49e67338eae2c530aa8adb68075d48071d1a0495ad13e19"
+    },
+    {
+      "url": "club/bundesliga-freiburg/logo.png",
+      "type": "club",
+      "target": "bundesliga-freiburg",
+      "variant": "logo",
+      "fmId": "944",
+      "bytes": 23732,
+      "sha256": "c31744fea293082d179842ab1139090c5243e5fb1c9eb63b7c6bd06ea2c1fb16"
+    },
+    {
+      "url": "club/bundesliga-gladbach/logo.png",
+      "type": "club",
+      "target": "bundesliga-gladbach",
+      "variant": "logo",
+      "fmId": "908",
+      "bytes": 15245,
+      "sha256": "8a94e3e0f5e46a60e21e20aff7937ad6091d80a586bfe6f308a7265411802ad9"
+    },
+    {
+      "url": "club/bundesliga-hamburg/logo.png",
+      "type": "club",
+      "target": "bundesliga-hamburg",
+      "variant": "logo",
+      "fmId": "947",
+      "bytes": 12426,
+      "sha256": "f70c99b99efcebfe376378123b354c4b7b6ab2df1b01445531aad8e5794f90f7"
+    },
+    {
+      "url": "club/bundesliga-heidenheim/logo.png",
+      "type": "club",
+      "target": "bundesliga-heidenheim",
+      "variant": "logo",
+      "fmId": "880295",
+      "bytes": 30440,
+      "sha256": "146ecdc4f0974ea433e3f8cb90b15d493a96e80dba3b86a3e9480a05f1ad5df1"
+    },
+    {
+      "url": "club/bundesliga-hoffenheim/logo.png",
+      "type": "club",
+      "target": "bundesliga-hoffenheim",
+      "variant": "logo",
+      "fmId": "879226",
+      "bytes": 25392,
+      "sha256": "1b4cb2c72c0068c913aa4e86e2b6df9b4733b3ded70394fa3905ebf61413ac2f"
+    },
+    {
+      "url": "club/bundesliga-leipzig/logo.png",
+      "type": "club",
+      "target": "bundesliga-leipzig",
+      "variant": "logo",
+      "fmId": "91013388",
+      "bytes": 23026,
+      "sha256": "93e848ffa0c279b8d885eb98f2409df4e56ae7c481c177bf28535496d8880934"
+    },
+    {
+      "url": "club/bundesliga-leverkusen/logo.png",
+      "type": "club",
+      "target": "bundesliga-leverkusen",
+      "variant": "logo",
+      "fmId": "901",
+      "bytes": 37941,
+      "sha256": "0aec07535ae818f15f32068a4cb06a3a5d033279ba5ff30849749bd0a0f1f075"
+    },
+    {
+      "url": "club/bundesliga-mainz/logo.png",
+      "type": "club",
+      "target": "bundesliga-mainz",
+      "variant": "logo",
+      "fmId": "918",
+      "bytes": 31001,
+      "sha256": "618aba07a8c26bdccf2dd0f28722faadcbf08dd276e9bcef08ff935b9e6f5e1f"
+    },
+    {
+      "url": "club/bundesliga-st-pauli/logo.png",
+      "type": "club",
+      "target": "bundesliga-st-pauli",
+      "variant": "logo",
+      "fmId": "946",
+      "bytes": 43582,
+      "sha256": "8efcae5fe9a42dc997096a7168f29ea253486ba6f486d2f6428153570cee8423"
+    },
+    {
+      "url": "club/bundesliga-stuttgart/logo.png",
+      "type": "club",
+      "target": "bundesliga-stuttgart",
+      "variant": "logo",
+      "fmId": "960",
+      "bytes": 34514,
+      "sha256": "d366a9339bf6dcb3b2d3fcdc5a7ac6fb7bb548b585ae40121e3afe8718f375d4"
+    },
+    {
+      "url": "club/bundesliga-union-berlin/logo.png",
+      "type": "club",
+      "target": "bundesliga-union-berlin",
+      "variant": "logo",
+      "fmId": "121182",
+      "bytes": 17292,
+      "sha256": "b14db609494bf0a15b45ae8621baa38536fc08451316d4b413301f5c437135cf"
+    },
+    {
+      "url": "club/bundesliga-werder-bremen/logo.png",
+      "type": "club",
+      "target": "bundesliga-werder-bremen",
+      "variant": "logo",
+      "fmId": "948",
+      "bytes": 24398,
+      "sha256": "6e52fbf0a0b94e469d8b0f42c2ed85b67c836e810cd0ad8a691df06d2e8303eb"
+    },
+    {
+      "url": "club/bundesliga-wolfsburg/logo.png",
+      "type": "club",
+      "target": "bundesliga-wolfsburg",
+      "variant": "logo",
+      "fmId": "961",
+      "bytes": 25132,
+      "sha256": "0b15f58d18d936e2442a635bb4576dc550e2a275a5c9b5e411364106cdf34434"
+    },
+    {
+      "url": "club/changchun-yatai/logo.png",
+      "type": "club",
+      "target": "changchun-yatai",
+      "variant": "logo",
+      "fmId": "131135",
+      "bytes": 39160,
+      "sha256": "d0cdcc4d964d6f7a7d20098825b2aec982b87fba8920a03e4e96dc23870053db"
+    },
+    {
+      "url": "club/chengdu-rongcheng/logo.png",
+      "type": "club",
+      "target": "chengdu-rongcheng",
+      "variant": "logo",
+      "fmId": "23447397",
+      "bytes": 127567,
+      "sha256": "321cc5d26d6ba13f4a062bd36ffbecabe6aa082d796ba649fe9ed5d23dc9fe9b"
+    },
+    {
+      "url": "club/chongqing-tonglianglong/logo.png",
+      "type": "club",
+      "target": "chongqing-tonglianglong",
+      "variant": "logo",
+      "fmId": "2000208932",
+      "bytes": 50932,
+      "sha256": "fb94330aa91477cf71c3657e2b709a717219cbf723f4f65fee041cf182cec601"
+    },
+    {
+      "url": "club/csl2-beijing-ligong/logo.png",
+      "type": "club",
+      "target": "csl2-beijing-ligong",
+      "variant": "logo",
+      "fmId": "23009360",
+      "bytes": 51047,
+      "sha256": "984d0bfe2104b8e0668d3724bd2de926e833771648eecbdff4b3898582ab55bc"
+    },
+    {
+      "url": "club/csl2-changchun-xidu/logo.png",
+      "type": "club",
+      "target": "csl2-changchun-xidu",
+      "variant": "logo",
+      "fmId": "2000208910",
+      "bytes": 34916,
+      "sha256": "930d85e49b88b51c8b099da115b0572cb2f320e9a92360d37017e711a4f67755"
+    },
+    {
+      "url": "club/csl2-qingdao-red-lions/logo.png",
+      "type": "club",
+      "target": "csl2-qingdao-red-lions",
+      "variant": "logo",
+      "fmId": "23359269",
+      "bytes": 51275,
+      "sha256": "037aa75d46ccce36995436cb2882964823811a122ac60e1f9e66c85dd4603e03"
+    },
+    {
+      "url": "club/csl2-taian-tianguang/logo.png",
+      "type": "club",
+      "target": "csl2-taian-tianguang",
+      "variant": "logo",
+      "fmId": "2000183924",
+      "bytes": 33443,
+      "sha256": "da365a4c11788a8c98974e453bc9b9dd4528a0623f09eb1c0614e20eed146fda"
+    },
+    {
+      "url": "club/dalian-kuncheng/logo.png",
+      "type": "club",
+      "target": "dalian-kuncheng",
+      "variant": "logo",
+      "fmId": "2000337868",
+      "bytes": 142358,
+      "sha256": "c88b2db3bfb1bb4dc7c98564348d6ee7fd0b66b5ebb3c888893116491e9ff128"
+    },
+    {
+      "url": "club/dalian-yingbo/logo.png",
+      "type": "club",
+      "target": "dalian-yingbo",
+      "variant": "logo",
+      "fmId": "2000337865",
+      "bytes": 143963,
+      "sha256": "7bf45b1694c7da875c8613fde6cfb11980103bac6b4e43e401b9b4aa3086ab76"
+    },
+    {
+      "url": "club/dingnan-ganlian/logo.png",
+      "type": "club",
+      "target": "dingnan-ganlian",
+      "variant": "logo",
+      "fmId": "2000439194",
+      "bytes": 120904,
+      "sha256": "eab9b9ef88334026cc6d1b27cecc1cf98316886cca0b7e2bcfcee48228234b77"
+    },
+    {
+      "url": "club/epl-aston-villa/logo.png",
+      "type": "club",
+      "target": "epl-aston-villa",
+      "variant": "logo",
+      "fmId": "603",
+      "bytes": 30445,
+      "sha256": "da87aeab39883dd8739b8b576da817b56606ad6db4d1570bb70f0eb71e0b676f"
+    },
+    {
+      "url": "club/epl-bournemouth/logo.png",
+      "type": "club",
+      "target": "epl-bournemouth",
+      "variant": "logo",
+      "fmId": "600",
+      "bytes": 27598,
+      "sha256": "0ebaf5345ede0dc4f2a61b1734b864db5dc63b6bc5c5e462235f838f8705982c"
+    },
+    {
+      "url": "club/epl-brentford/logo.png",
+      "type": "club",
+      "target": "epl-brentford",
+      "variant": "logo",
+      "fmId": "617",
+      "bytes": 47022,
+      "sha256": "b2b1e381da823ff76ca011cfec7cff5726e0156593fbc67e969025178d54b068"
+    },
+    {
+      "url": "club/epl-brighton/logo.png",
+      "type": "club",
+      "target": "epl-brighton",
+      "variant": "logo",
+      "fmId": "618",
+      "bytes": 34896,
+      "sha256": "013eba92eb847525d40af0651479858bbf52d4fc609d7ed22e57747b6d9f8b19"
+    },
+    {
+      "url": "club/epl-burnley/logo.png",
+      "type": "club",
+      "target": "epl-burnley",
+      "variant": "logo",
+      "fmId": "622",
+      "bytes": 39549,
+      "sha256": "d678c194f1f2219c5a2d5834839424fa4a53fd8fc4b7a598ce843fab46e2fd5c"
+    },
+    {
+      "url": "club/epl-chelsea/logo.png",
+      "type": "club",
+      "target": "epl-chelsea",
+      "variant": "logo",
+      "fmId": "630",
+      "bytes": 52684,
+      "sha256": "3f5c019dc8c5d4a6a3eebfe6d4eca10b9e4f6eae1a2fd2bfa25e4a83ef48fd26"
+    },
+    {
+      "url": "club/epl-crystal-palace/logo.png",
+      "type": "club",
+      "target": "epl-crystal-palace",
+      "variant": "logo",
+      "fmId": "642",
+      "bytes": 42431,
+      "sha256": "148acb4ded5a329654205bfd1b221734f89cc45e9dd3403a805fe44aaa7544c7"
+    },
+    {
+      "url": "club/epl-everton/logo.png",
+      "type": "club",
+      "target": "epl-everton",
+      "variant": "logo",
+      "fmId": "650",
+      "bytes": 56222,
+      "sha256": "28118f6edaabdb7330479d63e8b3a7c1982615aa99ee8fb5f05b24f4f0ae9b38"
+    },
+    {
+      "url": "club/epl-fulham/logo.png",
+      "type": "club",
+      "target": "epl-fulham",
+      "variant": "logo",
+      "fmId": "654",
+      "bytes": 17324,
+      "sha256": "6483077a45738f99a05a219abe7eba60b0bd6906b4316fe346c852a2d6ef2a69"
+    },
+    {
+      "url": "club/epl-leeds/logo.png",
+      "type": "club",
+      "target": "epl-leeds",
+      "variant": "logo",
+      "fmId": "671",
+      "bytes": 34469,
+      "sha256": "34f87e4e5a762c2daf2097bab853c546b052d46213bb9d006d174f51c39c3af1"
+    },
+    {
+      "url": "club/epl-man-united/logo.png",
+      "type": "club",
+      "target": "epl-man-united",
+      "variant": "logo",
+      "fmId": "680",
+      "bytes": 51067,
+      "sha256": "ea5de5ee486453255c56677cb6958dc6f7aff2a636f3d4c1a7be408bd4026cb1"
+    },
+    {
+      "url": "club/epl-newcastle/logo.png",
+      "type": "club",
+      "target": "epl-newcastle",
+      "variant": "logo",
+      "fmId": "688",
+      "bytes": 61320,
+      "sha256": "ae3e7a8b7788e72fc795529257c84ff663f80ac91b34f9e1c5ebfd2f7953eab1"
+    },
+    {
+      "url": "club/epl-nottingham-forest/logo.png",
+      "type": "club",
+      "target": "epl-nottingham-forest",
+      "variant": "logo",
+      "fmId": "692",
+      "bytes": 20277,
+      "sha256": "61ea23361d286bfb720a32d4162ba9f4e41a151bfb396c0936bb4f76c571aaf4"
+    },
+    {
+      "url": "club/epl-sunderland/logo.png",
+      "type": "club",
+      "target": "epl-sunderland",
+      "variant": "logo",
+      "fmId": "722",
+      "bytes": 37719,
+      "sha256": "7b1c493a60da7a2453032835c92beb0c448798978f72f5188f2977bbcc5c4c11"
+    },
+    {
+      "url": "club/epl-tottenham/logo.png",
+      "type": "club",
+      "target": "epl-tottenham",
+      "variant": "logo",
+      "fmId": "728",
+      "bytes": 25036,
+      "sha256": "911e3b2c726ed935d1e79d3c35037a19f387f46bff14cb1700550a3e0f1c30ad"
+    },
+    {
+      "url": "club/epl-west-ham/logo.png",
+      "type": "club",
+      "target": "epl-west-ham",
+      "variant": "logo",
+      "fmId": "735",
+      "bytes": 39669,
+      "sha256": "6e44bd7d8d401f4d503cbd74b133aa9ceb0be6c4b4217e10e0b16ea82c5ae0d5"
+    },
+    {
+      "url": "club/epl-wolves/logo.png",
+      "type": "club",
+      "target": "epl-wolves",
+      "variant": "logo",
+      "fmId": "740",
+      "bytes": 21035,
+      "sha256": "5d6b88e88f1b33c73c17533d07de13341696be9af93dc3037be388621faa121f"
+    },
+    {
+      "url": "club/foshan-nanshi/logo.png",
+      "type": "club",
+      "target": "foshan-nanshi",
+      "variant": "logo",
+      "fmId": "2000328112",
+      "bytes": 82852,
+      "sha256": "a24f9b6faab45a2951095b0520a4db0afa2413870f7cb84d1b89890a73978690"
+    },
+    {
+      "url": "club/ganzhou-ruishi/logo.png",
+      "type": "club",
+      "target": "ganzhou-ruishi",
+      "variant": "logo",
+      "fmId": "2000337867",
+      "bytes": 168458,
+      "sha256": "977a49caa9f79b20ddbb9b0e3bd6ccea21db14ca2dff5c24a14d2b74a6ff470e"
+    },
+    {
+      "url": "club/guangdong-guangzhou-baoleopard/logo.png",
+      "type": "club",
+      "target": "guangdong-guangzhou-baoleopard",
+      "variant": "logo",
+      "fmId": "2000328121",
+      "bytes": 85101,
+      "sha256": "1ec9a577ab7aed5624ce224191a43f7d2fe26cf1c2e4a5e6726555c47bdeda8a"
+    },
+    {
+      "url": "club/guangxi-hengchen/logo.png",
+      "type": "club",
+      "target": "guangxi-hengchen",
+      "variant": "logo",
+      "fmId": "2000208927",
+      "bytes": 54770,
+      "sha256": "9b8add61a5b18a4c8ff6912a5c4822bc4a7ee9eaab2b2499a423e580a11902a6"
+    },
+    {
+      "url": "club/guangzhou-pugongying/logo.png",
+      "type": "club",
+      "target": "guangzhou-pugongying",
+      "variant": "logo",
+      "fmId": "2000439190",
+      "bytes": 146508,
+      "sha256": "89e3e20088faf476fa030e0d2306d1cf681e19979d2b2b150d722e0d42e52efd"
+    },
+    {
+      "url": "club/guizhou-guiyang-athletic/logo.png",
+      "type": "club",
+      "target": "guizhou-guiyang-athletic",
+      "variant": "logo",
+      "fmId": "2000337886",
+      "bytes": 153117,
+      "sha256": "bc3df9f49511a17a7b63b366a83b5b099f503c67c3839b57f223f599590456db"
+    },
+    {
+      "url": "club/hangzhou-linping-wuyue/logo.png",
+      "type": "club",
+      "target": "hangzhou-linping-wuyue",
+      "variant": "logo",
+      "fmId": "2000439191",
+      "bytes": 81102,
+      "sha256": "6d84afc5a244a5fb026af0f3262a8bf3d26df56bf777898b1021030638b8859d"
+    },
+    {
+      "url": "club/henan/logo.png",
+      "type": "club",
+      "target": "henan",
+      "variant": "logo",
+      "fmId": "131162",
+      "bytes": 43139,
+      "sha256": "cb231cf15ada613b76d7db15316a08bf9163b04a41dc264f647572b2ffdb6d2d"
+    },
+    {
+      "url": "club/hubei-qingnianxing/logo.png",
+      "type": "club",
+      "target": "hubei-qingnianxing",
+      "variant": "logo",
+      "fmId": "23385913",
+      "bytes": 28368,
+      "sha256": "78c0e8386ef358342559722b45895d4a344a2890d3019e56d0897a333cf6ee9b"
+    },
+    {
+      "url": "club/inter/logo.png",
+      "type": "club",
+      "target": "inter",
+      "variant": "logo",
+      "fmId": "1135",
+      "bytes": 30023,
+      "sha256": "929860e9b295fd35e86263fcb802953f7e01942e5d6e2c274e83c5b78fa0d067"
+    },
+    {
+      "url": "club/laliga-alaves/logo.png",
+      "type": "club",
+      "target": "laliga-alaves",
+      "variant": "logo",
+      "fmId": "1688",
+      "bytes": 48392,
+      "sha256": "7a6a093fd227db43b203018edc042f30e4b49604bd76794e7ed49e20bf0c9503"
+    },
+    {
+      "url": "club/laliga-athletic-bilbao/logo.png",
+      "type": "club",
+      "target": "laliga-athletic-bilbao",
+      "variant": "logo",
+      "fmId": "1664",
+      "bytes": 27590,
+      "sha256": "9d04c83eb984b7eaa19ce4f330e2b9bd7d386956231066ea3d938ed92b537e68"
+    },
+    {
+      "url": "club/laliga-atletico-madrid/logo.png",
+      "type": "club",
+      "target": "laliga-atletico-madrid",
+      "variant": "logo",
+      "fmId": "1687",
+      "bytes": 22129,
+      "sha256": "6962e8ec78bd9ee07689195124d5ba9b5cee95275d662a636a992385b93777a5"
+    },
+    {
+      "url": "club/laliga-betis/logo.png",
+      "type": "club",
+      "target": "laliga-betis",
+      "variant": "logo",
+      "fmId": "1733",
+      "bytes": 24166,
+      "sha256": "cb5441e94272ae5409500752c34c8e620c0ee34a598e1c2b882df8405c6ebed1"
+    },
+    {
+      "url": "club/laliga-celta-vigo/logo.png",
+      "type": "club",
+      "target": "laliga-celta-vigo",
+      "variant": "logo",
+      "fmId": "1724",
+      "bytes": 20418,
+      "sha256": "7fd0544739baf5d3210a2a79f5928202e11d6f0c984c1cd177cc3b3a4b660f46"
+    },
+    {
+      "url": "club/laliga-elche/logo.png",
+      "type": "club",
+      "target": "laliga-elche",
+      "variant": "logo",
+      "fmId": "1707",
+      "bytes": 37285,
+      "sha256": "b26afc0d760879012dba0d7decc9bd5480017d825dedb67506f3193d248f4f9b"
+    },
+    {
+      "url": "club/laliga-espanyol/logo.png",
+      "type": "club",
+      "target": "laliga-espanyol",
+      "variant": "logo",
+      "fmId": "1725",
+      "bytes": 33210,
+      "sha256": "14eeabf300ac0684fe971270da26c78e17f30ad7adbc9473bf0ff5726e74a182"
+    },
+    {
+      "url": "club/laliga-getafe/logo.png",
+      "type": "club",
+      "target": "laliga-getafe",
+      "variant": "logo",
+      "fmId": "1710",
+      "bytes": 49292,
+      "sha256": "491dc121e9bbb033e08d990907bae2b1ab2de7faf0a968a43fcbee74ddc514f8"
+    },
+    {
+      "url": "club/laliga-girona/logo.png",
+      "type": "club",
+      "target": "laliga-girona",
+      "variant": "logo",
+      "fmId": "814089",
+      "bytes": 47693,
+      "sha256": "9b184231a393f4e2afe570fa2fd29f5175980c8313ab085c33a308d6136c5e26"
+    },
+    {
+      "url": "club/laliga-levante/logo.png",
+      "type": "club",
+      "target": "laliga-levante",
+      "variant": "logo",
+      "fmId": "1717",
+      "bytes": 34869,
+      "sha256": "8d7c2b04711faaad5c5d1a67d06c5ab657b525179256b6c43a5e4429e47c901e"
+    },
+    {
+      "url": "club/laliga-mallorca/logo.png",
+      "type": "club",
+      "target": "laliga-mallorca",
+      "variant": "logo",
+      "fmId": "1726",
+      "bytes": 40635,
+      "sha256": "43aab1d8fd0f8584597950efb981154b5ba2327ec418a43a825653090570fde2"
+    },
+    {
+      "url": "club/laliga-osasuna/logo.png",
+      "type": "club",
+      "target": "laliga-osasuna",
+      "variant": "logo",
+      "fmId": "1685",
+      "bytes": 34705,
+      "sha256": "9e2a57cfcb5e09a8040bf5afed7604f99e4a2cfb816dc71c2f0c61fab25b42ca"
+    },
+    {
+      "url": "club/laliga-oviedo/logo.png",
+      "type": "club",
+      "target": "laliga-oviedo",
+      "variant": "logo",
+      "fmId": "1741",
+      "bytes": 19396,
+      "sha256": "2e0eec6ae1d55ad52fefa762e26818561ca3ac8fe986d9cf87ff99af5b9d5540"
+    },
+    {
+      "url": "club/laliga-rayo-vallecano/logo.png",
+      "type": "club",
+      "target": "laliga-rayo-vallecano",
+      "variant": "logo",
+      "fmId": "1729",
+      "bytes": 35547,
+      "sha256": "d265908d801a180621384cd374cab98ae1da8ad215b8fb1303fc321d2e11196d"
+    },
+    {
+      "url": "club/laliga-real-sociedad/logo.png",
+      "type": "club",
+      "target": "laliga-real-sociedad",
+      "variant": "logo",
+      "fmId": "1742",
+      "bytes": 42929,
+      "sha256": "ae4edcf2b00d2932ef6c23cd98d9f7d03d44784232aa4a3f9fa888c94acd63ee"
+    },
+    {
+      "url": "club/laliga-sevilla/logo.png",
+      "type": "club",
+      "target": "laliga-sevilla",
+      "variant": "logo",
+      "fmId": "1759",
+      "bytes": 36639,
+      "sha256": "6f1ed4f2989a9fa948d4b580d57b5ed318e10bf4d2944cc726b81d6c0c14b0b8"
+    },
+    {
+      "url": "club/laliga-valencia/logo.png",
+      "type": "club",
+      "target": "laliga-valencia",
+      "variant": "logo",
+      "fmId": "1775",
+      "bytes": 28822,
+      "sha256": "89a6e57f6d54d27b1f9609294a7b10edc156281c809e7ccc9cf0d30d30be6599"
+    },
+    {
+      "url": "club/laliga-villarreal/logo.png",
+      "type": "club",
+      "target": "laliga-villarreal",
+      "variant": "logo",
+      "fmId": "1777",
+      "bytes": 36864,
+      "sha256": "b52916280b2fd1749f6ceabf6a56df071ddd7812ec95585a3f2235fb608f1d84"
+    },
+    {
+      "url": "club/liaoning-tieren/logo.png",
+      "type": "club",
+      "target": "liaoning-tieren",
+      "variant": "logo",
+      "fmId": "2000337864",
+      "bytes": 170402,
+      "sha256": "ae2aa2f92fd9aab8771a35bc62e7d60e5f2eb923a805e5efb6f19f640918501a"
+    },
+    {
+      "url": "club/ligue1-angers/logo.png",
+      "type": "club",
+      "target": "ligue1-angers",
+      "variant": "logo",
+      "fmId": "875",
+      "bytes": 23597,
+      "sha256": "6ca777df4fa5072c8e8b7a4260a71a7c4bb0993f577d38977c3d67859a1f39f7"
+    },
+    {
+      "url": "club/ligue1-auxerre/logo.png",
+      "type": "club",
+      "target": "ligue1-auxerre",
+      "variant": "logo",
+      "fmId": "824",
+      "bytes": 27916,
+      "sha256": "623ce906260903a230b771699e5d61a69b2df3e83f038ab7f33c4574614be831"
+    },
+    {
+      "url": "club/ligue1-brest/logo.png",
+      "type": "club",
+      "target": "ligue1-brest",
+      "variant": "logo",
+      "fmId": "2061",
+      "bytes": 36498,
+      "sha256": "0c4b4dd52c1e28626f286c1207119acfee1225005b88221cb6efa43a03515677"
+    },
+    {
+      "url": "club/ligue1-le-havre/logo.png",
+      "type": "club",
+      "target": "ligue1-le-havre",
+      "variant": "logo",
+      "fmId": "856",
+      "bytes": 39992,
+      "sha256": "a13d75368dbfb7389e5f1f68f6d5cead1d44033a112726af9d2cc9b430f287aa"
+    },
+    {
+      "url": "club/ligue1-lens/logo.png",
+      "type": "club",
+      "target": "ligue1-lens",
+      "variant": "logo",
+      "fmId": "871",
+      "bytes": 30048,
+      "sha256": "24f58c2d07d0e3810ebef1cf42a9e9ff5e57ffb5d571e8094c58f4da473eaad2"
+    },
+    {
+      "url": "club/ligue1-lille/logo.png",
+      "type": "club",
+      "target": "ligue1-lille",
+      "variant": "logo",
+      "fmId": "858",
+      "bytes": 31723,
+      "sha256": "db4650db246ec7e557d7319333fb3c298f2a93222f3138816428d034f3b1ce0d"
+    },
+    {
+      "url": "club/ligue1-lorient/logo.png",
+      "type": "club",
+      "target": "ligue1-lorient",
+      "variant": "logo",
+      "fmId": "2005",
+      "bytes": 30605,
+      "sha256": "3f5d2c5fb9e49a1d7c7d3ca92e89a3d85bf3a92e0c488e82aeeae38e1d95a893"
+    },
+    {
+      "url": "club/ligue1-lyon/logo.png",
+      "type": "club",
+      "target": "ligue1-lyon",
+      "variant": "logo",
+      "fmId": "865",
+      "bytes": 30065,
+      "sha256": "000d10abed155476feb390355f482e178e673bf8eecec113aa1399c0c8623ae3"
+    },
+    {
+      "url": "club/ligue1-marseille/logo.png",
+      "type": "club",
+      "target": "ligue1-marseille",
+      "variant": "logo",
+      "fmId": "866",
+      "bytes": 27577,
+      "sha256": "421a1a7951891b54b3b8cc0d54020ee6483f7eeb35fbd2d3f8c40d2619b9e0b0"
+    },
+    {
+      "url": "club/ligue1-metz/logo.png",
+      "type": "club",
+      "target": "ligue1-metz",
+      "variant": "logo",
+      "fmId": "844",
+      "bytes": 13467,
+      "sha256": "d35facc5d5c919b3dd074b1b886d6f734868c90989025b173babc3bcf2ccf7a1"
+    },
+    {
+      "url": "club/ligue1-monaco/logo.png",
+      "type": "club",
+      "target": "ligue1-monaco",
+      "variant": "logo",
+      "fmId": "826",
+      "bytes": 25300,
+      "sha256": "aad2a97bfa3b45388a2c4f5631a6ae6725a30258f1a7755694421841ddde0659"
+    },
+    {
+      "url": "club/ligue1-nantes/logo.png",
+      "type": "club",
+      "target": "ligue1-nantes",
+      "variant": "logo",
+      "fmId": "846",
+      "bytes": 23619,
+      "sha256": "54097dba24774abf56bf829579a7384cfea95fbb6c0321705f78712fd4ca99e8"
+    },
+    {
+      "url": "club/ligue1-nice/logo.png",
+      "type": "club",
+      "target": "ligue1-nice",
+      "variant": "logo",
+      "fmId": "862",
+      "bytes": 47493,
+      "sha256": "4c2743fe8049ec520b39072ec2a4883e72840369d9dce49bca51bea46b35fa4e"
+    },
+    {
+      "url": "club/ligue1-paris-fc/logo.png",
+      "type": "club",
+      "target": "ligue1-paris-fc",
+      "variant": "logo",
+      "fmId": "867",
+      "bytes": 40957,
+      "sha256": "e12e238ca98cb00f1a14be65ced808b4fabad1d4ba40bc7e2f13f7938c2c7ffd"
+    },
+    {
+      "url": "club/ligue1-rennes/logo.png",
+      "type": "club",
+      "target": "ligue1-rennes",
+      "variant": "logo",
+      "fmId": "884",
+      "bytes": 32706,
+      "sha256": "05f2f972160af3589b942bd4cd5f1e2ce6e4a16ffd732fece3a0f1f4981c99f2"
+    },
+    {
+      "url": "club/ligue1-strasbourg/logo.png",
+      "type": "club",
+      "target": "ligue1-strasbourg",
+      "variant": "logo",
+      "fmId": "872",
+      "bytes": 44709,
+      "sha256": "eaf3769cd958b8d8280ded62e0fcbf914ca186fc235f3369b49db3170a2c3c92"
+    },
+    {
+      "url": "club/ligue1-toulouse/logo.png",
+      "type": "club",
+      "target": "ligue1-toulouse",
+      "variant": "logo",
+      "fmId": "886",
+      "bytes": 58143,
+      "sha256": "0a34aa9bb6ad0980d7ebe60f6dcd8eeae11e3ce69bcb964fe17d417a4327b5d6"
+    },
+    {
+      "url": "club/liverpool/logo.png",
+      "type": "club",
+      "target": "liverpool",
+      "variant": "logo",
+      "fmId": "676",
+      "bytes": 49518,
+      "sha256": "dc728fc1ac0c6e24d0b54f45f69d30b852b13f20bc193d6f1149eb1e297d6177"
+    },
+    {
+      "url": "club/man-city/logo.png",
+      "type": "club",
+      "target": "man-city",
+      "variant": "logo",
+      "fmId": "679",
+      "bytes": 52284,
+      "sha256": "fa039b34068e322cfba58b5f764e8746d4261e9befc3f64ee047cb6c5b85d9ee"
+    },
+    {
+      "url": "club/meizhou-hakka/logo.png",
+      "type": "club",
+      "target": "meizhou-hakka",
+      "variant": "logo",
+      "fmId": "23199255",
+      "bytes": 46594,
+      "sha256": "a0b8166ea45a189f88e16d6c9e0d32d1132391bd37d7722ea4a1c7915090c63a"
+    },
+    {
+      "url": "club/nanjing-city/logo.png",
+      "type": "club",
+      "target": "nanjing-city",
+      "variant": "logo",
+      "fmId": "34039002",
+      "bytes": 44297,
+      "sha256": "8dccdba0552ec387a4e89242f4cd9eb562a7836db430a07a2949f2eb11ebb173"
+    },
+    {
+      "url": "club/nantong-zhiyun/logo.png",
+      "type": "club",
+      "target": "nantong-zhiyun",
+      "variant": "logo",
+      "fmId": "23340823",
+      "bytes": 39297,
+      "sha256": "be6b5f7a337240dfdbb670c692194841e45ad122e12a992a9e673a28be3d3a73"
+    },
+    {
+      "url": "club/psg/logo.png",
+      "type": "club",
+      "target": "psg",
+      "variant": "logo",
+      "fmId": "868",
+      "bytes": 47828,
+      "sha256": "f6f42a5fbb2d441d54c489e81f0e480733e5b28ba86bc023dc393a30855ece7f"
+    },
+    {
+      "url": "club/qingdao-hainiu/logo.png",
+      "type": "club",
+      "target": "qingdao-hainiu",
+      "variant": "logo",
+      "fmId": "412",
+      "bytes": 44666,
+      "sha256": "fd142c7dd4b09dd52fc491f89b17e985695b64180902ccf659073703d5cd12a9"
+    },
+    {
+      "url": "club/qingdao-west-coast/logo.png",
+      "type": "club",
+      "target": "qingdao-west-coast",
+      "variant": "logo",
+      "fmId": "34039025",
+      "bytes": 50182,
+      "sha256": "7a83e3cc5e2254990d7c1d5111d39b76079d85e4f1f2f069f1b7033e9c2e2d05"
+    },
+    {
+      "url": "club/real-madrid/logo.png",
+      "type": "club",
+      "target": "real-madrid",
+      "variant": "logo",
+      "fmId": "1736",
+      "bytes": 42932,
+      "sha256": "a451966a1f3a394f3fbf7ba58eef8f5881682a78cc9a7ecc320bedcdf0c527f2"
+    },
+    {
+      "url": "club/seriea-ac-milan/logo.png",
+      "type": "club",
+      "target": "seriea-ac-milan",
+      "variant": "logo",
+      "fmId": "1099",
+      "bytes": 42349,
+      "sha256": "7110dc756fb56e59db303cdec22d0d5e61d84941cd5cdbf270e3c68639e7f33e"
+    },
+    {
+      "url": "club/seriea-atalanta/logo.png",
+      "type": "club",
+      "target": "seriea-atalanta",
+      "variant": "logo",
+      "fmId": "1106",
+      "bytes": 29847,
+      "sha256": "fb4014d91fbbf47424a566e961079670d0c5ddc806281731ed00ef4ae9062110"
+    },
+    {
+      "url": "club/seriea-bologna/logo.png",
+      "type": "club",
+      "target": "seriea-bologna",
+      "variant": "logo",
+      "fmId": "1111",
+      "bytes": 20009,
+      "sha256": "73b12cca17046791b8055c164dc547f4fa1ef70c9c4b51334f551f6ddbf46739"
+    },
+    {
+      "url": "club/seriea-cagliari/logo.png",
+      "type": "club",
+      "target": "seriea-cagliari",
+      "variant": "logo",
+      "fmId": "1114",
+      "bytes": 31414,
+      "sha256": "3261591ba191ef4b1dfaa3b78969a2dd0d90e890965d1ff41676e63d6c22e3a3"
+    },
+    {
+      "url": "club/seriea-como/logo.png",
+      "type": "club",
+      "target": "seriea-como",
+      "variant": "logo",
+      "fmId": "1123",
+      "bytes": 21809,
+      "sha256": "712a5a2d6fb4e108b3cee36d537a8021f362346792bbf5547a8fd51786d1af9e"
+    },
+    {
+      "url": "club/seriea-cremonese/logo.png",
+      "type": "club",
+      "target": "seriea-cremonese",
+      "variant": "logo",
+      "fmId": "1125",
+      "bytes": 36091,
+      "sha256": "d7484861c7800561a7e300682cbd1734db65e67056884559352259e1ea6aff74"
+    },
+    {
+      "url": "club/seriea-fiorentina/logo.png",
+      "type": "club",
+      "target": "seriea-fiorentina",
+      "variant": "logo",
+      "fmId": "1129",
+      "bytes": 30414,
+      "sha256": "c0d02df14d0f370774a2a51295ebffc8f704d35fed9bf9a7b7cd071527007269"
+    },
+    {
+      "url": "club/seriea-genoa/logo.png",
+      "type": "club",
+      "target": "seriea-genoa",
+      "variant": "logo",
+      "fmId": "1132",
+      "bytes": 20957,
+      "sha256": "6a50ab14f3c4f80233ecc282ffa0bb86911f3e76d487e911a00e9cef9717b673"
+    },
+    {
+      "url": "club/seriea-juventus/logo.png",
+      "type": "club",
+      "target": "seriea-juventus",
+      "variant": "logo",
+      "fmId": "1139",
+      "bytes": 10042,
+      "sha256": "1e6304759c38efdaf57330a5d94eb5cb51bd72c796ad41c63d32674a67e5f386"
+    },
+    {
+      "url": "club/seriea-lazio/logo.png",
+      "type": "club",
+      "target": "seriea-lazio",
+      "variant": "logo",
+      "fmId": "1140",
+      "bytes": 16190,
+      "sha256": "713ae23551c99afb1b235bb5c98a1fc07052beff9ae0af4c78bda853ee353c94"
+    },
+    {
+      "url": "club/seriea-lecce/logo.png",
+      "type": "club",
+      "target": "seriea-lecce",
+      "variant": "logo",
+      "fmId": "1141",
+      "bytes": 39385,
+      "sha256": "598cf9beb902bac8d617897242d542e88965e5fa2ac69377a6fd72fcbf439fd5"
+    },
+    {
+      "url": "club/seriea-napoli/logo.png",
+      "type": "club",
+      "target": "seriea-napoli",
+      "variant": "logo",
+      "fmId": "1150",
+      "bytes": 36472,
+      "sha256": "3663370abc80ff6411f24c6c07ae393f52083536bf351de6ecdb4800fc4f3bde"
+    },
+    {
+      "url": "club/seriea-parma/logo.png",
+      "type": "club",
+      "target": "seriea-parma",
+      "variant": "logo",
+      "fmId": "1156",
+      "bytes": 25555,
+      "sha256": "e887da4ef1d1a91b14c773d0d76f63e3d4436d3a635a138a267e6e40b1e593cf"
+    },
+    {
+      "url": "club/seriea-pisa/logo.png",
+      "type": "club",
+      "target": "seriea-pisa",
+      "variant": "logo",
+      "fmId": "2215",
+      "bytes": 37982,
+      "sha256": "ca65d1b4c31bc736e8fa6936c774e932923317d29cf420c37414458fb8d5bda5"
+    },
+    {
+      "url": "club/seriea-roma/logo.png",
+      "type": "club",
+      "target": "seriea-roma",
+      "variant": "logo",
+      "fmId": "1100",
+      "bytes": 36694,
+      "sha256": "6af99bee3ea98849cc18a0eb573e71d64186bd8de9ee01128dbc434af396afc8"
+    },
+    {
+      "url": "club/seriea-sassuolo/logo.png",
+      "type": "club",
+      "target": "seriea-sassuolo",
+      "variant": "logo",
+      "fmId": "3800256",
+      "bytes": 34462,
+      "sha256": "eec31c1771fac3863add4ae4d39cd44578ab2b109a5195bc3ae3c7529f0260ba"
+    },
+    {
+      "url": "club/seriea-torino/logo.png",
+      "type": "club",
+      "target": "seriea-torino",
+      "variant": "logo",
+      "fmId": "1174",
+      "bytes": 33381,
+      "sha256": "43216c81db671a634501eb53267f7d476342912c64dc1238a1ce55bf8d69686f"
+    },
+    {
+      "url": "club/seriea-udinese/logo.png",
+      "type": "club",
+      "target": "seriea-udinese",
+      "variant": "logo",
+      "fmId": "1178",
+      "bytes": 54787,
+      "sha256": "faccd8a682e0c221af984b53b91152feb346daa7727bfbdaf1183d30f8c284f6"
+    },
+    {
+      "url": "club/seriea-verona/logo.png",
+      "type": "club",
+      "target": "seriea-verona",
+      "variant": "logo",
+      "fmId": "2201",
+      "bytes": 23166,
+      "sha256": "e72d0f366b53df833a4ea425066fe124758799960d90f1ade0c06542c19e3705"
+    },
+    {
+      "url": "club/shaanxi-union/logo.png",
+      "type": "club",
+      "target": "shaanxi-union",
+      "variant": "logo",
+      "fmId": "2000290298",
+      "bytes": 121700,
+      "sha256": "4b466426143938cd04d653b99f366394649ce668c35a392159be1aef95d241ce"
+    },
+    {
+      "url": "club/shandong-taishan/logo.png",
+      "type": "club",
+      "target": "shandong-taishan",
+      "variant": "logo",
+      "fmId": "116403",
+      "bytes": 28718,
+      "sha256": "d537cb870abbef0dc811e0a9a2d7a088fd0bd90cd3c93fd1a07ba0c8adb7367a"
+    },
+    {
+      "url": "club/shanghai-port/logo.png",
+      "type": "club",
+      "target": "shanghai-port",
+      "variant": "logo",
+      "fmId": "23292170",
+      "bytes": 89310,
+      "sha256": "e672f3eb9c14495ad316e064334bbc0dbd1725f09ef00aecd2f1aeb71a886591"
+    },
+    {
+      "url": "club/shanghai-shenhua/logo.png",
+      "type": "club",
+      "target": "shanghai-shenhua",
+      "variant": "logo",
+      "fmId": "414",
+      "bytes": 42564,
+      "sha256": "a304f47ea390d353e01830b89aab72a7f91d0d3bc7fb0ce40de44318bbcaba8d"
+    },
+    {
+      "url": "club/shenzhen-juniors/logo.png",
+      "type": "club",
+      "target": "shenzhen-juniors",
+      "variant": "logo",
+      "fmId": "2000260967",
+      "bytes": 174282,
+      "sha256": "9ddf0216868f6b9f8c737480decef58ef55662aa1603a5f7702d43b5368ea4f5"
+    },
+    {
+      "url": "club/shenzhen-pengcity/logo.png",
+      "type": "club",
+      "target": "shenzhen-pengcity",
+      "variant": "logo",
+      "fmId": "2000328113",
+      "bytes": 168993,
+      "sha256": "42b8a461eddc0c624bb5c046575c1979b53640157708be3f4d5e8002dce17789"
+    },
+    {
+      "url": "club/shijiazhuang-gongfu/logo.png",
+      "type": "club",
+      "target": "shijiazhuang-gongfu",
+      "variant": "logo",
+      "fmId": "2000183928",
+      "bytes": 48183,
+      "sha256": "9bdbf64644a04f75de0eb86ffc0f2d79e6df8e6ba21cecb3ba44c72ea3a1c058"
+    },
+    {
+      "url": "club/suzhou-dongwu/logo.png",
+      "type": "club",
+      "target": "suzhou-dongwu",
+      "variant": "logo",
+      "fmId": "23318347",
+      "bytes": 74328,
+      "sha256": "8db5a5d4e79f416cdac77ef8fa4d3bfd9f9203a7477ff0e047e04d3c8c407d8e"
+    },
+    {
+      "url": "club/tianjin-jinmen/logo.png",
+      "type": "club",
+      "target": "tianjin-jinmen",
+      "variant": "logo",
+      "fmId": "416",
+      "bytes": 54636,
+      "sha256": "ada635e88284037053e0cd46e7771c549208649366d44bde8847a9cced1cc9f7"
+    },
+    {
+      "url": "club/wenzhou/logo.png",
+      "type": "club",
+      "target": "wenzhou",
+      "variant": "logo",
+      "fmId": "2000439192",
+      "bytes": 85478,
+      "sha256": "7abffad40821737d917a9ddb5709ff3f55690384aa2a841861343c9c0a01d217"
+    },
+    {
+      "url": "club/wuhan-three-towns/logo.png",
+      "type": "club",
+      "target": "wuhan-three-towns",
+      "variant": "logo",
+      "fmId": "23487243",
+      "bytes": 59553,
+      "sha256": "08f9fa963b11558d4ed78d519fca9cb2cf1f2ec0b98ee18c4504215d444198e2"
+    },
+    {
+      "url": "club/wuxi-wugou/logo.png",
+      "type": "club",
+      "target": "wuxi-wugou",
+      "variant": "logo",
+      "fmId": "2000082648",
+      "bytes": 43072,
+      "sha256": "b7081e0746ee58ce5d44cfcd7f1b2862bf99155a0f17e8115120c4871b720fbc"
+    },
+    {
+      "url": "club/yunnan-yukun/logo.png",
+      "type": "club",
+      "target": "yunnan-yukun",
+      "variant": "logo",
+      "fmId": "2000319417",
+      "bytes": 115208,
+      "sha256": "09229d21f035abbc3177471587a56c072b568fe94594cc6ed3f14a847874117d"
+    },
+    {
+      "url": "club/zhejiang/logo.png",
+      "type": "club",
+      "target": "zhejiang",
+      "variant": "logo",
+      "fmId": "131229",
+      "bytes": 45683,
+      "sha256": "07fd1e6c72d4924c65517a147817cddc9c3b502a31e0b0a8a625cb5503ff0b89"
+    },
+    {
+      "url": "competition/cfl/logo.png",
+      "type": "competition",
+      "target": "cfl",
+      "variant": "logo",
+      "fmId": "131126",
+      "bytes": 15417,
+      "sha256": "c2ba1b585b5f31ad76f9e02cde737d7b09153d3e6f0d6a7694efbb8cc43e7aab"
+    },
+    {
+      "url": "competition/csl/logo.png",
+      "type": "competition",
+      "target": "csl",
+      "variant": "logo",
+      "fmId": "130931",
+      "bytes": 25392,
+      "sha256": "dbd9eb11acc4490618db6b4234ddf1e74078df61ce1f5878afb739e26bfa99db"
+    },
+    {
+      "url": "competition/seriea/logo.png",
+      "type": "competition",
+      "target": "seriea",
+      "variant": "logo",
+      "fmId": "32",
+      "bytes": 16997,
+      "sha256": "b6fd575c0e44e7e80be0e337311a7258ef4927ce2789b1625302c93d253535e9"
+    },
+    {
+      "url": "kit/arsenal/away.png",
+      "type": "kit",
+      "target": "arsenal",
+      "variant": "away",
+      "fmId": "602",
+      "bytes": 373995,
+      "sha256": "16ba9e71f97f20ecc1ae693977c35c04f98df715248920439358785cacc04953"
+    },
+    {
+      "url": "kit/arsenal/home.png",
+      "type": "kit",
+      "target": "arsenal",
+      "variant": "home",
+      "fmId": "602",
+      "bytes": 352482,
+      "sha256": "57f2676c6dcdca31f2717237176f0990849c3c0473380b557a47264aea85c13b"
+    },
+    {
+      "url": "kit/arsenal/third.png",
+      "type": "kit",
+      "target": "arsenal",
+      "variant": "third",
+      "fmId": "602",
+      "bytes": 366532,
+      "sha256": "926e7a6941779314f217bfdbf9d7f9cafca5b4fa95c6985850aca9ba023bd776"
+    },
+    {
+      "url": "kit/barcelona/away.png",
+      "type": "kit",
+      "target": "barcelona",
+      "variant": "away",
+      "fmId": "1708",
+      "bytes": 159450,
+      "sha256": "99dfbca21fadf8d1a4006f5fd3016fe7a6c3baf06d9497a099a038f4237a8d00"
+    },
+    {
+      "url": "kit/barcelona/home.png",
+      "type": "kit",
+      "target": "barcelona",
+      "variant": "home",
+      "fmId": "1708",
+      "bytes": 163296,
+      "sha256": "162a9231af7e9212f3650af9b21933f8f9875c3cc240fefa73b830646b2ae0d3"
+    },
+    {
+      "url": "kit/barcelona/third.png",
+      "type": "kit",
+      "target": "barcelona",
+      "variant": "third",
+      "fmId": "1708",
+      "bytes": 154393,
+      "sha256": "0c4aacc9b1f0541d8bf07b7214f8fe1b6728efba9eaff76dc5cab8303ed6bdcf"
+    },
+    {
+      "url": "kit/bayern/away.png",
+      "type": "kit",
+      "target": "bayern",
+      "variant": "away",
+      "fmId": "915",
+      "bytes": 166127,
+      "sha256": "591359fa451316bbf9d15286fe9e1c942c222e0da1812d272db00bae6562028a"
+    },
+    {
+      "url": "kit/bayern/home.png",
+      "type": "kit",
+      "target": "bayern",
+      "variant": "home",
+      "fmId": "915",
+      "bytes": 122881,
+      "sha256": "93e73c4b4d4aac3c3963dafea83b62f1d20b54b25f49f9c8644a7ef4f098ee8f"
+    },
+    {
+      "url": "kit/bayern/third.png",
+      "type": "kit",
+      "target": "bayern",
+      "variant": "third",
+      "fmId": "915",
+      "bytes": 92150,
+      "sha256": "fd376343abe6e2078c5c6752fcc7bf3e00cf1247296e9e4ff39a580613c54dc2"
+    },
+    {
+      "url": "kit/bundesliga-augsburg/away.png",
+      "type": "kit",
+      "target": "bundesliga-augsburg",
+      "variant": "away",
+      "fmId": "2238",
+      "bytes": 125844,
+      "sha256": "ff45611358e8d515261a862adf659b0a1d4b3d423c5e7121f55e0a7f38902f6f"
+    },
+    {
+      "url": "kit/bundesliga-augsburg/home.png",
+      "type": "kit",
+      "target": "bundesliga-augsburg",
+      "variant": "home",
+      "fmId": "2238",
+      "bytes": 97840,
+      "sha256": "d08d075c6df02cd839e24145ebb172be4b0e52f4527cde0fcf1776114a826ae9"
+    },
+    {
+      "url": "kit/bundesliga-augsburg/third.png",
+      "type": "kit",
+      "target": "bundesliga-augsburg",
+      "variant": "third",
+      "fmId": "2238",
+      "bytes": 117894,
+      "sha256": "995c475e2c500120abd8d57dbdd89db4ae8be82ab76c4df96e88195caf32e086"
+    },
+    {
+      "url": "kit/bundesliga-cologne/away.png",
+      "type": "kit",
+      "target": "bundesliga-cologne",
+      "variant": "away",
+      "fmId": "916",
+      "bytes": 159186,
+      "sha256": "81ff8b75f3aa848ca6bc6111a8b4f365f1f707c3272aef90b84f90d5246d5d02"
+    },
+    {
+      "url": "kit/bundesliga-cologne/home.png",
+      "type": "kit",
+      "target": "bundesliga-cologne",
+      "variant": "home",
+      "fmId": "916",
+      "bytes": 116605,
+      "sha256": "a44ce261f038c0a6027ab2a1b6addbdaf1e230b2fad9161503b779fd5870e9a2"
+    },
+    {
+      "url": "kit/bundesliga-cologne/third.png",
+      "type": "kit",
+      "target": "bundesliga-cologne",
+      "variant": "third",
+      "fmId": "916",
+      "bytes": 100770,
+      "sha256": "7c3f973fc5982b9ef2d7b61175623e3c654d0e211c1592047735cf2fbddaf407"
+    },
+    {
+      "url": "kit/bundesliga-dortmund/away.png",
+      "type": "kit",
+      "target": "bundesliga-dortmund",
+      "variant": "away",
+      "fmId": "907",
+      "bytes": 129367,
+      "sha256": "ce703c7e5d479efcc63d00efd20edc4a9b08f9843c5507cbaeb879698b3a32dd"
+    },
+    {
+      "url": "kit/bundesliga-dortmund/home.png",
+      "type": "kit",
+      "target": "bundesliga-dortmund",
+      "variant": "home",
+      "fmId": "907",
+      "bytes": 110442,
+      "sha256": "263dd54ff5d030d56cde089faf212e5abc2b0e5297a5546fc156c60bb8771e67"
+    },
+    {
+      "url": "kit/bundesliga-dortmund/third.png",
+      "type": "kit",
+      "target": "bundesliga-dortmund",
+      "variant": "third",
+      "fmId": "907",
+      "bytes": 120492,
+      "sha256": "2020b04ebdcc3e8dd8374359c83a34796ab4debd27a5c1b9311b2de53499fc52"
+    },
+    {
+      "url": "kit/bundesliga-frankfurt/away.png",
+      "type": "kit",
+      "target": "bundesliga-frankfurt",
+      "variant": "away",
+      "fmId": "912",
+      "bytes": 98493,
+      "sha256": "d6723419ea4e8bb96b605fad3592e0791780a435666b2bdb465ea918e6ad5c8e"
+    },
+    {
+      "url": "kit/bundesliga-frankfurt/home.png",
+      "type": "kit",
+      "target": "bundesliga-frankfurt",
+      "variant": "home",
+      "fmId": "912",
+      "bytes": 111521,
+      "sha256": "191c04645fa0b9155be37f787962b9be503e172f22e19121b2e683a75262d0e1"
+    },
+    {
+      "url": "kit/bundesliga-frankfurt/third.png",
+      "type": "kit",
+      "target": "bundesliga-frankfurt",
+      "variant": "third",
+      "fmId": "912",
+      "bytes": 142459,
+      "sha256": "dc54f35e45b88d57d5ef9e89285dec657c5393720ba4d4e264e66265f7291863"
+    },
+    {
+      "url": "kit/bundesliga-freiburg/away.png",
+      "type": "kit",
+      "target": "bundesliga-freiburg",
+      "variant": "away",
+      "fmId": "944",
+      "bytes": 105995,
+      "sha256": "0ba5ba48eadd55c46845eaf6519b48a065f3f478d3a6fa563a8187b37274c128"
+    },
+    {
+      "url": "kit/bundesliga-freiburg/home.png",
+      "type": "kit",
+      "target": "bundesliga-freiburg",
+      "variant": "home",
+      "fmId": "944",
+      "bytes": 164113,
+      "sha256": "3029f6b32bcc52d14e03ada232e2d5609c58b48d2825353e289298b4cfc52b2d"
+    },
+    {
+      "url": "kit/bundesliga-freiburg/third.png",
+      "type": "kit",
+      "target": "bundesliga-freiburg",
+      "variant": "third",
+      "fmId": "944",
+      "bytes": 149510,
+      "sha256": "d3b5a76e0f6c969444dd9a05b7c8178d08d337e6ae4482c31eeafff9cc002f7a"
+    },
+    {
+      "url": "kit/bundesliga-gladbach/away.png",
+      "type": "kit",
+      "target": "bundesliga-gladbach",
+      "variant": "away",
+      "fmId": "908",
+      "bytes": 108666,
+      "sha256": "b621a0f6e9518d52fa24d4242e8256ad189108da00b3e56d4190ec24619a6581"
+    },
+    {
+      "url": "kit/bundesliga-gladbach/home.png",
+      "type": "kit",
+      "target": "bundesliga-gladbach",
+      "variant": "home",
+      "fmId": "908",
+      "bytes": 87492,
+      "sha256": "5a61e603aa7b9a7301959f65a45a4f5adf07e2fc82de245f85a9dca7f09e261c"
+    },
+    {
+      "url": "kit/bundesliga-gladbach/third.png",
+      "type": "kit",
+      "target": "bundesliga-gladbach",
+      "variant": "third",
+      "fmId": "908",
+      "bytes": 94918,
+      "sha256": "d7dbcdb61cc9af82398477c6f0778100deb63f76e295ef30627c6b7e5099c515"
+    },
+    {
+      "url": "kit/bundesliga-hamburg/away.png",
+      "type": "kit",
+      "target": "bundesliga-hamburg",
+      "variant": "away",
+      "fmId": "947",
+      "bytes": 104662,
+      "sha256": "1c26c4fdd9e5dc6fecb5ec62135a714dbd5d32a4d5b7beb4ce35bcb4437f74a6"
+    },
+    {
+      "url": "kit/bundesliga-hamburg/home.png",
+      "type": "kit",
+      "target": "bundesliga-hamburg",
+      "variant": "home",
+      "fmId": "947",
+      "bytes": 113116,
+      "sha256": "1ac4c4212a6199f652d7194a7a02fccb4d59ec84a9f916ae67b7aee9b8a978bf"
+    },
+    {
+      "url": "kit/bundesliga-hamburg/third.png",
+      "type": "kit",
+      "target": "bundesliga-hamburg",
+      "variant": "third",
+      "fmId": "947",
+      "bytes": 84486,
+      "sha256": "05071b95b8ac9770149ee22412971426bcd24a73a3f582307fa18286cab5f73a"
+    },
+    {
+      "url": "kit/bundesliga-heidenheim/away.png",
+      "type": "kit",
+      "target": "bundesliga-heidenheim",
+      "variant": "away",
+      "fmId": "880295",
+      "bytes": 137418,
+      "sha256": "f800f7435b064dac232d9c099afc8382b6e0e273d128ca2a3339e2abcb8f9662"
+    },
+    {
+      "url": "kit/bundesliga-heidenheim/home.png",
+      "type": "kit",
+      "target": "bundesliga-heidenheim",
+      "variant": "home",
+      "fmId": "880295",
+      "bytes": 103506,
+      "sha256": "e4c043943d4d98f4b002491d6ac3caa50bca84e2e1b8c617ed80c0b8f3de72f4"
+    },
+    {
+      "url": "kit/bundesliga-heidenheim/third.png",
+      "type": "kit",
+      "target": "bundesliga-heidenheim",
+      "variant": "third",
+      "fmId": "880295",
+      "bytes": 101812,
+      "sha256": "f827478ea5ab78116322b050038aeb9a9057e595b38076f01c52c0ec40524a56"
+    },
+    {
+      "url": "kit/bundesliga-hoffenheim/away.png",
+      "type": "kit",
+      "target": "bundesliga-hoffenheim",
+      "variant": "away",
+      "fmId": "879226",
+      "bytes": 147714,
+      "sha256": "74d83bbe195c6dd086837347c03185b67f1143148a9e9875cbb6e5b9352f34d5"
+    },
+    {
+      "url": "kit/bundesliga-hoffenheim/home.png",
+      "type": "kit",
+      "target": "bundesliga-hoffenheim",
+      "variant": "home",
+      "fmId": "879226",
+      "bytes": 137252,
+      "sha256": "4e75f31fa9b6494c1eaf5df377a1f75d0dfc4398c78f930b2c6010d242f77253"
+    },
+    {
+      "url": "kit/bundesliga-hoffenheim/third.png",
+      "type": "kit",
+      "target": "bundesliga-hoffenheim",
+      "variant": "third",
+      "fmId": "879226",
+      "bytes": 132755,
+      "sha256": "eb8f819957759cc09ac059faf19721d1a55b29227ea18bddec98206d14b864f9"
+    },
+    {
+      "url": "kit/bundesliga-leipzig/away.png",
+      "type": "kit",
+      "target": "bundesliga-leipzig",
+      "variant": "away",
+      "fmId": "91013388",
+      "bytes": 127963,
+      "sha256": "499e211e91e87655ee34451af6e18b75b1d134d53f9ebc9e4874c8cfd287dd5a"
+    },
+    {
+      "url": "kit/bundesliga-leipzig/home.png",
+      "type": "kit",
+      "target": "bundesliga-leipzig",
+      "variant": "home",
+      "fmId": "91013388",
+      "bytes": 138595,
+      "sha256": "08c6e38b501ade6cd4ab8ac83c264748fd067ee3d9e6bbb8d8b0ba477ce609a6"
+    },
+    {
+      "url": "kit/bundesliga-leipzig/third.png",
+      "type": "kit",
+      "target": "bundesliga-leipzig",
+      "variant": "third",
+      "fmId": "91013388",
+      "bytes": 167472,
+      "sha256": "c12a775baf05231a96c37897c62010d8b2bf3187c312a856cea3da0513b53d2a"
+    },
+    {
+      "url": "kit/bundesliga-leverkusen/away.png",
+      "type": "kit",
+      "target": "bundesliga-leverkusen",
+      "variant": "away",
+      "fmId": "901",
+      "bytes": 135652,
+      "sha256": "5e9664198f572475adf5d62134abc6ac4233b33ae8421fddec7ecbb4204523c8"
+    },
+    {
+      "url": "kit/bundesliga-leverkusen/home.png",
+      "type": "kit",
+      "target": "bundesliga-leverkusen",
+      "variant": "home",
+      "fmId": "901",
+      "bytes": 121371,
+      "sha256": "dc51f971d31337bde2f7290b9484af0a4608f6d260f07fe2e5a2084408297b77"
+    },
+    {
+      "url": "kit/bundesliga-leverkusen/third.png",
+      "type": "kit",
+      "target": "bundesliga-leverkusen",
+      "variant": "third",
+      "fmId": "901",
+      "bytes": 120768,
+      "sha256": "101fe097aa459c0a6c0c0f1360a41e17241534798fb0e0806223dae17a1e319d"
+    },
+    {
+      "url": "kit/bundesliga-mainz/away.png",
+      "type": "kit",
+      "target": "bundesliga-mainz",
+      "variant": "away",
+      "fmId": "918",
+      "bytes": 110343,
+      "sha256": "354d7805f0b990268a2ddb480d80788b1f0af1b63c4de7aa23c433655fb7d102"
+    },
+    {
+      "url": "kit/bundesliga-mainz/home.png",
+      "type": "kit",
+      "target": "bundesliga-mainz",
+      "variant": "home",
+      "fmId": "918",
+      "bytes": 128516,
+      "sha256": "44fab39b648a4bc34f4e0ad15bca001cef2b1304d52451c45c560f91f1ebe6ab"
+    },
+    {
+      "url": "kit/bundesliga-mainz/third.png",
+      "type": "kit",
+      "target": "bundesliga-mainz",
+      "variant": "third",
+      "fmId": "918",
+      "bytes": 105715,
+      "sha256": "de154d9875b6cd5281e3b070d5cfadf32741eb95d68b87abf3b07b4238aa98ff"
+    },
+    {
+      "url": "kit/bundesliga-st-pauli/away.png",
+      "type": "kit",
+      "target": "bundesliga-st-pauli",
+      "variant": "away",
+      "fmId": "946",
+      "bytes": 100521,
+      "sha256": "e43a93a7d1479d94ec787a4454991e08fdbb75feb16788c2ca8a2ed021f3e092"
+    },
+    {
+      "url": "kit/bundesliga-st-pauli/home.png",
+      "type": "kit",
+      "target": "bundesliga-st-pauli",
+      "variant": "home",
+      "fmId": "946",
+      "bytes": 111989,
+      "sha256": "bb092ff4ac89492ce38303c8fa803166be8150ddf1c7e5ccede58a28db50980c"
+    },
+    {
+      "url": "kit/bundesliga-st-pauli/third.png",
+      "type": "kit",
+      "target": "bundesliga-st-pauli",
+      "variant": "third",
+      "fmId": "946",
+      "bytes": 94451,
+      "sha256": "2a2e1500ffd76828ea0a8ef25fa84908e7697b7cb3791d186f00570ec17ed5aa"
+    },
+    {
+      "url": "kit/bundesliga-stuttgart/away.png",
+      "type": "kit",
+      "target": "bundesliga-stuttgart",
+      "variant": "away",
+      "fmId": "960",
+      "bytes": 154273,
+      "sha256": "748dd90650e1a9917c1acfcc0b354ec4a7aa6e21d305e84ee4b68a6b15d61c31"
+    },
+    {
+      "url": "kit/bundesliga-stuttgart/home.png",
+      "type": "kit",
+      "target": "bundesliga-stuttgart",
+      "variant": "home",
+      "fmId": "960",
+      "bytes": 109973,
+      "sha256": "6123878f2c70a3b25e9e876628baa6464922c6a2a172003e8ebf01290b542406"
+    },
+    {
+      "url": "kit/bundesliga-stuttgart/third.png",
+      "type": "kit",
+      "target": "bundesliga-stuttgart",
+      "variant": "third",
+      "fmId": "960",
+      "bytes": 105241,
+      "sha256": "4e1edda0fe0904404377aaece91dd9bbc9e8e7c535d6bd14c2bc8775eda2a6c2"
+    },
+    {
+      "url": "kit/bundesliga-union-berlin/away.png",
+      "type": "kit",
+      "target": "bundesliga-union-berlin",
+      "variant": "away",
+      "fmId": "121182",
+      "bytes": 120035,
+      "sha256": "c825445347e7db0854f06705cdf9abad98b735f109125b9f75aad1c7ab28edc7"
+    },
+    {
+      "url": "kit/bundesliga-union-berlin/home.png",
+      "type": "kit",
+      "target": "bundesliga-union-berlin",
+      "variant": "home",
+      "fmId": "121182",
+      "bytes": 115044,
+      "sha256": "4b227283b46996906e25d7e2ce1a2a4fa0d448e707316de5b884c00c5d128b2b"
+    },
+    {
+      "url": "kit/bundesliga-union-berlin/third.png",
+      "type": "kit",
+      "target": "bundesliga-union-berlin",
+      "variant": "third",
+      "fmId": "121182",
+      "bytes": 120275,
+      "sha256": "7ed0cc41effe765219ed21df23487f1c3769187df3c5397113f06904791f9def"
+    },
+    {
+      "url": "kit/bundesliga-werder-bremen/away.png",
+      "type": "kit",
+      "target": "bundesliga-werder-bremen",
+      "variant": "away",
+      "fmId": "948",
+      "bytes": 99227,
+      "sha256": "2a23bec46326fbed29a9d65f88b058ed15b691cff1dcb94eda50fed1f3e4054c"
+    },
+    {
+      "url": "kit/bundesliga-werder-bremen/home.png",
+      "type": "kit",
+      "target": "bundesliga-werder-bremen",
+      "variant": "home",
+      "fmId": "948",
+      "bytes": 131091,
+      "sha256": "5e276158cb46222068a271249d60218f258057fad60d020be25387068614a481"
+    },
+    {
+      "url": "kit/bundesliga-werder-bremen/third.png",
+      "type": "kit",
+      "target": "bundesliga-werder-bremen",
+      "variant": "third",
+      "fmId": "948",
+      "bytes": 93117,
+      "sha256": "7bb8abbfa84b5fd7f0ed5c89d8ccdab302674b04ee6358f8b618b837c0d91c3b"
+    },
+    {
+      "url": "kit/bundesliga-wolfsburg/away.png",
+      "type": "kit",
+      "target": "bundesliga-wolfsburg",
+      "variant": "away",
+      "fmId": "961",
+      "bytes": 191975,
+      "sha256": "64a64c6b58f3aed749d96dce69c94aab3f0fad013a40c2c2bdd438df7629fdf5"
+    },
+    {
+      "url": "kit/bundesliga-wolfsburg/home.png",
+      "type": "kit",
+      "target": "bundesliga-wolfsburg",
+      "variant": "home",
+      "fmId": "961",
+      "bytes": 183311,
+      "sha256": "3337ef9ed232e6f23cd5d503127fbbeb7d496849e67aeb9d3b18d04e78cead9f"
+    },
+    {
+      "url": "kit/bundesliga-wolfsburg/third.png",
+      "type": "kit",
+      "target": "bundesliga-wolfsburg",
+      "variant": "third",
+      "fmId": "961",
+      "bytes": 115207,
+      "sha256": "4787d14fd0fa35488ce668c41fcb485cb59c4f8ef130897e8c47ccfd1979ccb4"
+    },
+    {
+      "url": "kit/epl-aston-villa/away.png",
+      "type": "kit",
+      "target": "epl-aston-villa",
+      "variant": "away",
+      "fmId": "603",
+      "bytes": 307164,
+      "sha256": "24ab853b2c4e3cf28bb2206797110421141d7cf7002dd3782e2830c23f9deb28"
+    },
+    {
+      "url": "kit/epl-aston-villa/home.png",
+      "type": "kit",
+      "target": "epl-aston-villa",
+      "variant": "home",
+      "fmId": "603",
+      "bytes": 364028,
+      "sha256": "000e357a4543b871e84d1f9fb62d7b75cb641d8ec012b8de343c1d3d6fc330ab"
+    },
+    {
+      "url": "kit/epl-aston-villa/third.png",
+      "type": "kit",
+      "target": "epl-aston-villa",
+      "variant": "third",
+      "fmId": "603",
+      "bytes": 378110,
+      "sha256": "f55c2cf2a5737aabe80a15328521bc63e71eecdcea311830acfbcfdc5bce9200"
+    },
+    {
+      "url": "kit/epl-bournemouth/away.png",
+      "type": "kit",
+      "target": "epl-bournemouth",
+      "variant": "away",
+      "fmId": "600",
+      "bytes": 90050,
+      "sha256": "5ae865e8fb1ee42accdd4690af9be5c797f4faca53f6732ec7fd75fb141e204d"
+    },
+    {
+      "url": "kit/epl-bournemouth/home.png",
+      "type": "kit",
+      "target": "epl-bournemouth",
+      "variant": "home",
+      "fmId": "600",
+      "bytes": 94575,
+      "sha256": "0d02ac9f8ff0edac1ff8b84bdf3f3e63093280908b88cd8ebc589c173a9e4d74"
+    },
+    {
+      "url": "kit/epl-bournemouth/third.png",
+      "type": "kit",
+      "target": "epl-bournemouth",
+      "variant": "third",
+      "fmId": "600",
+      "bytes": 107006,
+      "sha256": "d3fe42156b85bc3caeeaec747a089e5342adb2d820c07e80c4161d9ddc274fed"
+    },
+    {
+      "url": "kit/epl-brentford/away.png",
+      "type": "kit",
+      "target": "epl-brentford",
+      "variant": "away",
+      "fmId": "617",
+      "bytes": 146456,
+      "sha256": "fc4ad814c9a51bacc7143e40601900a91198720f8768f69d2d11315d2cbdcbc1"
+    },
+    {
+      "url": "kit/epl-brentford/home.png",
+      "type": "kit",
+      "target": "epl-brentford",
+      "variant": "home",
+      "fmId": "617",
+      "bytes": 139733,
+      "sha256": "1a8338a8e83a4d55886a06747fc8d9ab7d6ee83ade6fbfc2c1096f47be853d26"
+    },
+    {
+      "url": "kit/epl-brentford/third.png",
+      "type": "kit",
+      "target": "epl-brentford",
+      "variant": "third",
+      "fmId": "617",
+      "bytes": 107566,
+      "sha256": "ca1268922567eae56541e24899faf7439b33d26798e45f070426465c9cd71363"
+    },
+    {
+      "url": "kit/epl-brighton/away.png",
+      "type": "kit",
+      "target": "epl-brighton",
+      "variant": "away",
+      "fmId": "618",
+      "bytes": 133801,
+      "sha256": "30a8d4fba06be2e244423f30927aedc71f9404e0d6c6e2e552a256f45e712709"
+    },
+    {
+      "url": "kit/epl-brighton/home.png",
+      "type": "kit",
+      "target": "epl-brighton",
+      "variant": "home",
+      "fmId": "618",
+      "bytes": 149783,
+      "sha256": "9d318354fbd777475a5d03a2e33955a4ea7605e003ced3a9b873db819ff069bb"
+    },
+    {
+      "url": "kit/epl-brighton/third.png",
+      "type": "kit",
+      "target": "epl-brighton",
+      "variant": "third",
+      "fmId": "618",
+      "bytes": 130233,
+      "sha256": "b3b3b6a90d388383438f26a0a35570489abe0e6e9fe6813b7d757556c8e4faae"
+    },
+    {
+      "url": "kit/epl-burnley/away.png",
+      "type": "kit",
+      "target": "epl-burnley",
+      "variant": "away",
+      "fmId": "622",
+      "bytes": 318232,
+      "sha256": "c5650d00baffc9cbca27eb63a364dcd97eb62d37dfa5672212d308ca4c4133b7"
+    },
+    {
+      "url": "kit/epl-burnley/home.png",
+      "type": "kit",
+      "target": "epl-burnley",
+      "variant": "home",
+      "fmId": "622",
+      "bytes": 297078,
+      "sha256": "26aa79b786cc036a33c5ca360fabe91ed39abfce4572e865e7cc78b0d4b622a5"
+    },
+    {
+      "url": "kit/epl-burnley/third.png",
+      "type": "kit",
+      "target": "epl-burnley",
+      "variant": "third",
+      "fmId": "622",
+      "bytes": 235340,
+      "sha256": "a65c8e25a7d9db051d1949342bceab7c1cdff518beb9675c3f3e8b3e16d75b7f"
+    },
+    {
+      "url": "kit/epl-chelsea/away.png",
+      "type": "kit",
+      "target": "epl-chelsea",
+      "variant": "away",
+      "fmId": "630",
+      "bytes": 150875,
+      "sha256": "7b8daa0b8dcd6a299f6ec8ba6ccd99b5d2467635b7bfebb5ebea19ea9bf0f7bc"
+    },
+    {
+      "url": "kit/epl-chelsea/home.png",
+      "type": "kit",
+      "target": "epl-chelsea",
+      "variant": "home",
+      "fmId": "630",
+      "bytes": 187526,
+      "sha256": "21823b81000354b23ac1a6c9ab9def8a19622aff7c6e2fa110a846cc21e17271"
+    },
+    {
+      "url": "kit/epl-chelsea/third.png",
+      "type": "kit",
+      "target": "epl-chelsea",
+      "variant": "third",
+      "fmId": "630",
+      "bytes": 106054,
+      "sha256": "3849953b23cbb8c4f21479025ccd9d710f0c5f2780bfd41b3a6d069017fb16a0"
+    },
+    {
+      "url": "kit/epl-crystal-palace/away.png",
+      "type": "kit",
+      "target": "epl-crystal-palace",
+      "variant": "away",
+      "fmId": "642",
+      "bytes": 146840,
+      "sha256": "43634a5372129975cd780a6b6f798915066fd6d81fac8f47db9f61048e8704f6"
+    },
+    {
+      "url": "kit/epl-crystal-palace/home.png",
+      "type": "kit",
+      "target": "epl-crystal-palace",
+      "variant": "home",
+      "fmId": "642",
+      "bytes": 132251,
+      "sha256": "63cfebae75268afab375c4148ff4dc9427e24392eb4e20c820c386b03edacc44"
+    },
+    {
+      "url": "kit/epl-crystal-palace/third.png",
+      "type": "kit",
+      "target": "epl-crystal-palace",
+      "variant": "third",
+      "fmId": "642",
+      "bytes": 155911,
+      "sha256": "7cc8abff8d38dee2679e71ef3baec73a2722e2db84c0e2661d61abab3d24daa3"
+    },
+    {
+      "url": "kit/epl-everton/away.png",
+      "type": "kit",
+      "target": "epl-everton",
+      "variant": "away",
+      "fmId": "650",
+      "bytes": 266380,
+      "sha256": "b02dd75509a6cdc1b0929c9579cdfc4d82130ccccf0a36bdd28e3346034e87fa"
+    },
+    {
+      "url": "kit/epl-everton/home.png",
+      "type": "kit",
+      "target": "epl-everton",
+      "variant": "home",
+      "fmId": "650",
+      "bytes": 296578,
+      "sha256": "f9027b296fd573d4435304fb3aa641643b3d5c770d25a61baa7f7275cbdfb6ff"
+    },
+    {
+      "url": "kit/epl-everton/third.png",
+      "type": "kit",
+      "target": "epl-everton",
+      "variant": "third",
+      "fmId": "650",
+      "bytes": 238042,
+      "sha256": "e147a651bab2524338a02a98d8b75be6e7e4d38e4b0572050c10015fef4bef34"
+    },
+    {
+      "url": "kit/epl-fulham/away.png",
+      "type": "kit",
+      "target": "epl-fulham",
+      "variant": "away",
+      "fmId": "654",
+      "bytes": 115359,
+      "sha256": "56bcf191a9546a59398d6abd4ac5356501ff59fdbff31ece15b9993e7709853c"
+    },
+    {
+      "url": "kit/epl-fulham/home.png",
+      "type": "kit",
+      "target": "epl-fulham",
+      "variant": "home",
+      "fmId": "654",
+      "bytes": 115678,
+      "sha256": "7208c029b568693bf81befd2de08bb93e2fb453d7cc25789ed18fba10cb3f6d3"
+    },
+    {
+      "url": "kit/epl-fulham/third.png",
+      "type": "kit",
+      "target": "epl-fulham",
+      "variant": "third",
+      "fmId": "654",
+      "bytes": 74830,
+      "sha256": "230db96e2778f846838b32c5903d7b5a10aff3f7374dfde91d23a07771af5ef6"
+    },
+    {
+      "url": "kit/epl-man-united/away.png",
+      "type": "kit",
+      "target": "epl-man-united",
+      "variant": "away",
+      "fmId": "680",
+      "bytes": 132977,
+      "sha256": "e249f1ac97dc241776a0dddfb2411d955e0c075c2217ea2805e48fc22e2c44e2"
+    },
+    {
+      "url": "kit/epl-man-united/home.png",
+      "type": "kit",
+      "target": "epl-man-united",
+      "variant": "home",
+      "fmId": "680",
+      "bytes": 122889,
+      "sha256": "8bd34300a277167a270d0283987c797e0daa584caa9ad3cca9cdde1b2fca51c6"
+    },
+    {
+      "url": "kit/epl-man-united/third.png",
+      "type": "kit",
+      "target": "epl-man-united",
+      "variant": "third",
+      "fmId": "680",
+      "bytes": 83840,
+      "sha256": "eca14b325af585c7f9432d7c298ccba7acbef09e05e7572e1941af5201317b9a"
+    },
+    {
+      "url": "kit/epl-newcastle/away.png",
+      "type": "kit",
+      "target": "epl-newcastle",
+      "variant": "away",
+      "fmId": "688",
+      "bytes": 354343,
+      "sha256": "eca680f7265fe280bcebb98f10a655c038c9609b6440c2da45063b8fb7331ad9"
+    },
+    {
+      "url": "kit/epl-newcastle/home.png",
+      "type": "kit",
+      "target": "epl-newcastle",
+      "variant": "home",
+      "fmId": "688",
+      "bytes": 332961,
+      "sha256": "9bdf7dad78b489c4b6e99053f36c2828881b8cd99e3a50e104d329bae695f61e"
+    },
+    {
+      "url": "kit/epl-newcastle/third.png",
+      "type": "kit",
+      "target": "epl-newcastle",
+      "variant": "third",
+      "fmId": "688",
+      "bytes": 329389,
+      "sha256": "18b5f6d89e41e840f7b7174c293a28a58c4155d6eef7811943fbd96e27134127"
+    },
+    {
+      "url": "kit/epl-nottingham-forest/away.png",
+      "type": "kit",
+      "target": "epl-nottingham-forest",
+      "variant": "away",
+      "fmId": "692",
+      "bytes": 386226,
+      "sha256": "41ef463dde40a0fc374fce73c16f6116575f59eda8c6d58eeea8605e6d002ce9"
+    },
+    {
+      "url": "kit/epl-nottingham-forest/home.png",
+      "type": "kit",
+      "target": "epl-nottingham-forest",
+      "variant": "home",
+      "fmId": "692",
+      "bytes": 333218,
+      "sha256": "302127c0778bdf9abf309d1c7091f783212bb2c85546ee16f8b779dcc6be4224"
+    },
+    {
+      "url": "kit/epl-nottingham-forest/third.png",
+      "type": "kit",
+      "target": "epl-nottingham-forest",
+      "variant": "third",
+      "fmId": "692",
+      "bytes": 368526,
+      "sha256": "940e613d54364a004844dbc100ec5d1b4c0d9d4f625ddcfa7068e92605f97dc0"
+    },
+    {
+      "url": "kit/epl-sunderland/away.png",
+      "type": "kit",
+      "target": "epl-sunderland",
+      "variant": "away",
+      "fmId": "722",
+      "bytes": 139320,
+      "sha256": "9a8c4a17a5bb5bf41fa9118c6b36a53991db6839a825c7fffc534f61e910fd6b"
+    },
+    {
+      "url": "kit/epl-sunderland/home.png",
+      "type": "kit",
+      "target": "epl-sunderland",
+      "variant": "home",
+      "fmId": "722",
+      "bytes": 106290,
+      "sha256": "03ed23944d7d86392fed3083a685d1505795735b1fa2e37cc52e39f9512510eb"
+    },
+    {
+      "url": "kit/epl-sunderland/third.png",
+      "type": "kit",
+      "target": "epl-sunderland",
+      "variant": "third",
+      "fmId": "722",
+      "bytes": 77346,
+      "sha256": "4ca0803e6d8787588b8c9fe97090fd0d864af26b480d380584e6898d9981f1bc"
+    },
+    {
+      "url": "kit/epl-tottenham/away.png",
+      "type": "kit",
+      "target": "epl-tottenham",
+      "variant": "away",
+      "fmId": "728",
+      "bytes": 127377,
+      "sha256": "965f049e3f2b0200a4f0b6dada0d19d8588d6a351a1aabc9b0f596f6a6339c09"
+    },
+    {
+      "url": "kit/epl-tottenham/home.png",
+      "type": "kit",
+      "target": "epl-tottenham",
+      "variant": "home",
+      "fmId": "728",
+      "bytes": 138295,
+      "sha256": "8c650897d94e3e8c23ad061fa654fe73c35cd9aa421f361363bc633b10f34655"
+    },
+    {
+      "url": "kit/epl-tottenham/third.png",
+      "type": "kit",
+      "target": "epl-tottenham",
+      "variant": "third",
+      "fmId": "728",
+      "bytes": 165093,
+      "sha256": "450c1bc24534f7213de219bcd186e768498db5f29a546c0acca9adeeb3a6314f"
+    },
+    {
+      "url": "kit/epl-west-ham/away.png",
+      "type": "kit",
+      "target": "epl-west-ham",
+      "variant": "away",
+      "fmId": "735",
+      "bytes": 109373,
+      "sha256": "a88ce0334f61484e810f12a87e002e21ac35bd9849be987bb893c69633b48a3f"
+    },
+    {
+      "url": "kit/epl-west-ham/home.png",
+      "type": "kit",
+      "target": "epl-west-ham",
+      "variant": "home",
+      "fmId": "735",
+      "bytes": 96485,
+      "sha256": "510bcdeefbab39fbb6eb7688478f695c3edbf8e980eeabee33b28763355e3b96"
+    },
+    {
+      "url": "kit/epl-west-ham/third.png",
+      "type": "kit",
+      "target": "epl-west-ham",
+      "variant": "third",
+      "fmId": "735",
+      "bytes": 152026,
+      "sha256": "7b7603c3b89333f5298962f09d42621b6de372c48659826db4572f6e315428ca"
+    },
+    {
+      "url": "kit/epl-wolves/away.png",
+      "type": "kit",
+      "target": "epl-wolves",
+      "variant": "away",
+      "fmId": "740",
+      "bytes": 119834,
+      "sha256": "95f4991ea2bd3851cc1657f7268d71b1e1846c551327a795f3f624be3233c464"
+    },
+    {
+      "url": "kit/epl-wolves/home.png",
+      "type": "kit",
+      "target": "epl-wolves",
+      "variant": "home",
+      "fmId": "740",
+      "bytes": 123294,
+      "sha256": "351e0c3bbafa04d50f876095358b65916161bf8c1f3adad95f410f7fc60d3c8c"
+    },
+    {
+      "url": "kit/epl-wolves/third.png",
+      "type": "kit",
+      "target": "epl-wolves",
+      "variant": "third",
+      "fmId": "740",
+      "bytes": 198527,
+      "sha256": "8b20ff9f9191de2a60ed3ee05156a58af62078e400240c95d44f092dc8e04137"
+    },
+    {
+      "url": "kit/inter/away.png",
+      "type": "kit",
+      "target": "inter",
+      "variant": "away",
+      "fmId": "1135",
+      "bytes": 159069,
+      "sha256": "300c648c33db519deb3578e29c259240d10e5e92fa920e91dd954294185d2513"
+    },
+    {
+      "url": "kit/inter/home.png",
+      "type": "kit",
+      "target": "inter",
+      "variant": "home",
+      "fmId": "1135",
+      "bytes": 122220,
+      "sha256": "68ca93e15a6af7042100c0969cb4ddd250c85ba8f34599ef6d42027b9f5bb9d2"
+    },
+    {
+      "url": "kit/inter/third.png",
+      "type": "kit",
+      "target": "inter",
+      "variant": "third",
+      "fmId": "1135",
+      "bytes": 125345,
+      "sha256": "192c038aac64a19943ab3922fd88ea29c07763ae95c03f7811279c7d59e626ac"
+    },
+    {
+      "url": "kit/laliga-alaves/away.png",
+      "type": "kit",
+      "target": "laliga-alaves",
+      "variant": "away",
+      "fmId": "1688",
+      "bytes": 118258,
+      "sha256": "96e0025ceb3664c56540f73f9d1779d1a3037872fb475ae683aa9f7f8604188d"
+    },
+    {
+      "url": "kit/laliga-alaves/home.png",
+      "type": "kit",
+      "target": "laliga-alaves",
+      "variant": "home",
+      "fmId": "1688",
+      "bytes": 136111,
+      "sha256": "cea00cc6a9fa81fdc4acdb4db3459a680e4b3a6d9e6db41808c87babb9a7bff7"
+    },
+    {
+      "url": "kit/laliga-alaves/third.png",
+      "type": "kit",
+      "target": "laliga-alaves",
+      "variant": "third",
+      "fmId": "1688",
+      "bytes": 127848,
+      "sha256": "d38436e9c425e494a96ebe89e44b6a810606282b2c50e7c80f2efbc3c1289d14"
+    },
+    {
+      "url": "kit/laliga-athletic-bilbao/away.png",
+      "type": "kit",
+      "target": "laliga-athletic-bilbao",
+      "variant": "away",
+      "fmId": "1664",
+      "bytes": 96983,
+      "sha256": "6b7d3f351a731a10422df4fc704fc8d45a7e5c028df7495d89d47739a2024845"
+    },
+    {
+      "url": "kit/laliga-athletic-bilbao/home.png",
+      "type": "kit",
+      "target": "laliga-athletic-bilbao",
+      "variant": "home",
+      "fmId": "1664",
+      "bytes": 100088,
+      "sha256": "ad47676fc09039a6c3beb9e3aac117508ff53d1eaa0303fd4647cbfd819e2a82"
+    },
+    {
+      "url": "kit/laliga-athletic-bilbao/third.png",
+      "type": "kit",
+      "target": "laliga-athletic-bilbao",
+      "variant": "third",
+      "fmId": "1664",
+      "bytes": 138847,
+      "sha256": "d88e5d65e4e88b50a5b357ce646cc739bb9383d0bdb4e40dd0ed3c9d673bcefc"
+    },
+    {
+      "url": "kit/laliga-atletico-madrid/away.png",
+      "type": "kit",
+      "target": "laliga-atletico-madrid",
+      "variant": "away",
+      "fmId": "1687",
+      "bytes": 167169,
+      "sha256": "f11f9f11faaee9e05d921f50c164bd33d013aae04beef0cb6e6f0462cfce004f"
+    },
+    {
+      "url": "kit/laliga-atletico-madrid/home.png",
+      "type": "kit",
+      "target": "laliga-atletico-madrid",
+      "variant": "home",
+      "fmId": "1687",
+      "bytes": 151527,
+      "sha256": "a598d596b71f92d4b51bd1c36d2f119e70db46ef67d948bc7fef52bf2d6c2473"
+    },
+    {
+      "url": "kit/laliga-atletico-madrid/third.png",
+      "type": "kit",
+      "target": "laliga-atletico-madrid",
+      "variant": "third",
+      "fmId": "1687",
+      "bytes": 159736,
+      "sha256": "483fb948a13c852c8a501b0e04ef68751455eae5d79a0684f696fa860db42b7f"
+    },
+    {
+      "url": "kit/laliga-betis/away.png",
+      "type": "kit",
+      "target": "laliga-betis",
+      "variant": "away",
+      "fmId": "1733",
+      "bytes": 132610,
+      "sha256": "245d153c0637d4206fd9b90e22f22c20533fdcb717671df60029aff5418699ab"
+    },
+    {
+      "url": "kit/laliga-betis/home.png",
+      "type": "kit",
+      "target": "laliga-betis",
+      "variant": "home",
+      "fmId": "1733",
+      "bytes": 148309,
+      "sha256": "1587b437fa31d2ce6f16fe639c3f4436613bde69b5d0ab66d573526b24650a36"
+    },
+    {
+      "url": "kit/laliga-betis/third.png",
+      "type": "kit",
+      "target": "laliga-betis",
+      "variant": "third",
+      "fmId": "1733",
+      "bytes": 89713,
+      "sha256": "b11440c47ae4df47ae872da4f558d4f8119aa08beb358579845e6ee59cd8fddd"
+    },
+    {
+      "url": "kit/laliga-celta-vigo/away.png",
+      "type": "kit",
+      "target": "laliga-celta-vigo",
+      "variant": "away",
+      "fmId": "1724",
+      "bytes": 164442,
+      "sha256": "8d5c573827f29a8c5ed6f7fd35f98b3451879aad9d16c618c48434d62b84e99a"
+    },
+    {
+      "url": "kit/laliga-celta-vigo/home.png",
+      "type": "kit",
+      "target": "laliga-celta-vigo",
+      "variant": "home",
+      "fmId": "1724",
+      "bytes": 159725,
+      "sha256": "fb5164e08a43ec890733f0d02aee93c16a7f724a05eeb7e85361e0029c02e211"
+    },
+    {
+      "url": "kit/laliga-celta-vigo/third.png",
+      "type": "kit",
+      "target": "laliga-celta-vigo",
+      "variant": "third",
+      "fmId": "1724",
+      "bytes": 129081,
+      "sha256": "ce166f9e03b55baf853a8e69fa6ff6025b4c7a7e528c5a3082dbfdf839e17026"
+    },
+    {
+      "url": "kit/laliga-elche/away.png",
+      "type": "kit",
+      "target": "laliga-elche",
+      "variant": "away",
+      "fmId": "1707",
+      "bytes": 164165,
+      "sha256": "a672837de6e56f4214470b0bfe40f0d4b5a321d2b277b9fe6a9eebea2c23a7a5"
+    },
+    {
+      "url": "kit/laliga-elche/home.png",
+      "type": "kit",
+      "target": "laliga-elche",
+      "variant": "home",
+      "fmId": "1707",
+      "bytes": 143313,
+      "sha256": "20ee6508d47ae4a74282ee1a5fdca2f5c1106a1a614887445be0ed68b4676a45"
+    },
+    {
+      "url": "kit/laliga-elche/third.png",
+      "type": "kit",
+      "target": "laliga-elche",
+      "variant": "third",
+      "fmId": "1707",
+      "bytes": 140481,
+      "sha256": "7fc87a5942eea2bcd5a2178625e8b3d3fe54f303af32038b71a5e14a8fdb3141"
+    },
+    {
+      "url": "kit/laliga-espanyol/away.png",
+      "type": "kit",
+      "target": "laliga-espanyol",
+      "variant": "away",
+      "fmId": "1725",
+      "bytes": 118927,
+      "sha256": "3f5d09e46847eed664d9b5cee575df0b9da5b968e3f44110bc0b2c9680a09d92"
+    },
+    {
+      "url": "kit/laliga-espanyol/home.png",
+      "type": "kit",
+      "target": "laliga-espanyol",
+      "variant": "home",
+      "fmId": "1725",
+      "bytes": 129289,
+      "sha256": "e710452e677511b4e9a1537fa17adc2b8e64b7d4f113af048560c2adf8899d14"
+    },
+    {
+      "url": "kit/laliga-espanyol/third.png",
+      "type": "kit",
+      "target": "laliga-espanyol",
+      "variant": "third",
+      "fmId": "1725",
+      "bytes": 130119,
+      "sha256": "6720b3cc8a9bc338b99472e2256fc03d41cf78b05a4459e9748a8f55c02c4661"
+    },
+    {
+      "url": "kit/laliga-getafe/away.png",
+      "type": "kit",
+      "target": "laliga-getafe",
+      "variant": "away",
+      "fmId": "1710",
+      "bytes": 120812,
+      "sha256": "cb64df11e58578fddcdf31ec5b44528152f842d0b855c5ab8dc953cb4def201f"
+    },
+    {
+      "url": "kit/laliga-getafe/home.png",
+      "type": "kit",
+      "target": "laliga-getafe",
+      "variant": "home",
+      "fmId": "1710",
+      "bytes": 118011,
+      "sha256": "450fcbcd4390aa6ee20590b9f7a6e20cc6148539f8d602903f6956e21ebff549"
+    },
+    {
+      "url": "kit/laliga-getafe/third.png",
+      "type": "kit",
+      "target": "laliga-getafe",
+      "variant": "third",
+      "fmId": "1710",
+      "bytes": 126080,
+      "sha256": "9c52b2e57b21c210933c346fc1f3145784bef8e7d76fab7c479c17be600f37c2"
+    },
+    {
+      "url": "kit/laliga-girona/away.png",
+      "type": "kit",
+      "target": "laliga-girona",
+      "variant": "away",
+      "fmId": "814089",
+      "bytes": 124393,
+      "sha256": "ed42546487f47c0313f51222b95cfecacace3dd850b11eee22c24145a7869df3"
+    },
+    {
+      "url": "kit/laliga-girona/home.png",
+      "type": "kit",
+      "target": "laliga-girona",
+      "variant": "home",
+      "fmId": "814089",
+      "bytes": 116530,
+      "sha256": "439b7ad31fa0e9d74cd86c0dc1ac996e01bafe3c6b5a561d98c3b74d0b791827"
+    },
+    {
+      "url": "kit/laliga-girona/third.png",
+      "type": "kit",
+      "target": "laliga-girona",
+      "variant": "third",
+      "fmId": "814089",
+      "bytes": 88378,
+      "sha256": "cf16596321e6691a898834cbeb1d41db33d269b30b57969f32f51cee57baad34"
+    },
+    {
+      "url": "kit/laliga-levante/away.png",
+      "type": "kit",
+      "target": "laliga-levante",
+      "variant": "away",
+      "fmId": "1717",
+      "bytes": 164417,
+      "sha256": "eb9243cf6916284507690703ed0120e34578e4045711e059018c16ac6fafce7c"
+    },
+    {
+      "url": "kit/laliga-levante/home.png",
+      "type": "kit",
+      "target": "laliga-levante",
+      "variant": "home",
+      "fmId": "1717",
+      "bytes": 173784,
+      "sha256": "6e55e9e3afbe90f38aeb8c72597571645bb2383454ebc3f35d4f334acae6283d"
+    },
+    {
+      "url": "kit/laliga-levante/third.png",
+      "type": "kit",
+      "target": "laliga-levante",
+      "variant": "third",
+      "fmId": "1717",
+      "bytes": 177935,
+      "sha256": "49d794d8db3f8580d9b1985a163252f090dc0d558bdde021db1519b95e59d48b"
+    },
+    {
+      "url": "kit/laliga-mallorca/away.png",
+      "type": "kit",
+      "target": "laliga-mallorca",
+      "variant": "away",
+      "fmId": "1726",
+      "bytes": 93795,
+      "sha256": "3d307b064dc1a2419ea09a14267027ffcfc405118ecfc17394efeee43f19b8d9"
+    },
+    {
+      "url": "kit/laliga-mallorca/home.png",
+      "type": "kit",
+      "target": "laliga-mallorca",
+      "variant": "home",
+      "fmId": "1726",
+      "bytes": 91290,
+      "sha256": "c4163a31a8069da4d903e1217d423f107ec0bb22a1ee0b658dc97887397522be"
+    },
+    {
+      "url": "kit/laliga-mallorca/third.png",
+      "type": "kit",
+      "target": "laliga-mallorca",
+      "variant": "third",
+      "fmId": "1726",
+      "bytes": 69890,
+      "sha256": "96c1364b6bef053b6187689a02a52e8860b970dd7bbbdf4ae2ec49b725e70b8a"
+    },
+    {
+      "url": "kit/laliga-osasuna/away.png",
+      "type": "kit",
+      "target": "laliga-osasuna",
+      "variant": "away",
+      "fmId": "1685",
+      "bytes": 108330,
+      "sha256": "390be870ef433833df88aab6a038461eb748de2986c450a93da2e37227755040"
+    },
+    {
+      "url": "kit/laliga-osasuna/home.png",
+      "type": "kit",
+      "target": "laliga-osasuna",
+      "variant": "home",
+      "fmId": "1685",
+      "bytes": 93781,
+      "sha256": "7be624251a145f168299e8a0063bd42c389a4bcc17bfb0204b83b0228c45f61e"
+    },
+    {
+      "url": "kit/laliga-osasuna/third.png",
+      "type": "kit",
+      "target": "laliga-osasuna",
+      "variant": "third",
+      "fmId": "1685",
+      "bytes": 139129,
+      "sha256": "fa4e429e8c234ad196e554ab42d94ab72ca5b3a10e55d4e40fb56e773533e729"
+    },
+    {
+      "url": "kit/laliga-oviedo/away.png",
+      "type": "kit",
+      "target": "laliga-oviedo",
+      "variant": "away",
+      "fmId": "1741",
+      "bytes": 120238,
+      "sha256": "b0b6ae451289581f53f5ea24c65ffa4fb8aca7c0128e4d7227656cdb064d3400"
+    },
+    {
+      "url": "kit/laliga-oviedo/home.png",
+      "type": "kit",
+      "target": "laliga-oviedo",
+      "variant": "home",
+      "fmId": "1741",
+      "bytes": 116014,
+      "sha256": "d7f50a4ab9aaf4c7272585030b9ad7d089d71294b948df93987f7d516831c8ca"
+    },
+    {
+      "url": "kit/laliga-oviedo/third.png",
+      "type": "kit",
+      "target": "laliga-oviedo",
+      "variant": "third",
+      "fmId": "1741",
+      "bytes": 120285,
+      "sha256": "b27bcdd1bffedeeec5fe8d0da83a0d26b821c665c962dc373913e5f50325d983"
+    },
+    {
+      "url": "kit/laliga-rayo-vallecano/away.png",
+      "type": "kit",
+      "target": "laliga-rayo-vallecano",
+      "variant": "away",
+      "fmId": "1729",
+      "bytes": 101396,
+      "sha256": "09b8cc1f2a5447e0808ea288985413e07b1bf82825f8890be7ee0024c0263f63"
+    },
+    {
+      "url": "kit/laliga-rayo-vallecano/home.png",
+      "type": "kit",
+      "target": "laliga-rayo-vallecano",
+      "variant": "home",
+      "fmId": "1729",
+      "bytes": 106699,
+      "sha256": "a75b19b6d26260f073f42dd1670b452c45447cb5379af0d717730396a6a169c1"
+    },
+    {
+      "url": "kit/laliga-rayo-vallecano/third.png",
+      "type": "kit",
+      "target": "laliga-rayo-vallecano",
+      "variant": "third",
+      "fmId": "1729",
+      "bytes": 92707,
+      "sha256": "518cb13c64dd8d67e2e94e2d5b940764476ed922edc655934692a29e360c7845"
+    },
+    {
+      "url": "kit/laliga-real-sociedad/away.png",
+      "type": "kit",
+      "target": "laliga-real-sociedad",
+      "variant": "away",
+      "fmId": "1742",
+      "bytes": 128517,
+      "sha256": "48a0da5dc8b1b328166f40f47e7a698e99e1d4d1732fd0091318677015177071"
+    },
+    {
+      "url": "kit/laliga-real-sociedad/home.png",
+      "type": "kit",
+      "target": "laliga-real-sociedad",
+      "variant": "home",
+      "fmId": "1742",
+      "bytes": 173467,
+      "sha256": "57d671655b79c3594cfcf2e0ad151570dc5e2e7844ada1a1e92b97ad8b49d651"
+    },
+    {
+      "url": "kit/laliga-real-sociedad/third.png",
+      "type": "kit",
+      "target": "laliga-real-sociedad",
+      "variant": "third",
+      "fmId": "1742",
+      "bytes": 124841,
+      "sha256": "080ec4acac76ee7a4ebdcd0879c3fce9d413136b40f6fe4cbf3fe9b9c514900e"
+    },
+    {
+      "url": "kit/laliga-sevilla/away.png",
+      "type": "kit",
+      "target": "laliga-sevilla",
+      "variant": "away",
+      "fmId": "1759",
+      "bytes": 109410,
+      "sha256": "abd4a4bda5b611757a089d1cd0ff48d48201a3d00a2b601797dc0d7cc4f89ddb"
+    },
+    {
+      "url": "kit/laliga-sevilla/home.png",
+      "type": "kit",
+      "target": "laliga-sevilla",
+      "variant": "home",
+      "fmId": "1759",
+      "bytes": 100028,
+      "sha256": "8af2d9970f438a53aa1a25a67e96005315be3087eb6c644e965362960f57a1fc"
+    },
+    {
+      "url": "kit/laliga-sevilla/third.png",
+      "type": "kit",
+      "target": "laliga-sevilla",
+      "variant": "third",
+      "fmId": "1759",
+      "bytes": 75037,
+      "sha256": "29d1ea90a35173a715c673fedabb729ad1448bb4d3d4971c9877cc454d3c9896"
+    },
+    {
+      "url": "kit/laliga-valencia/away.png",
+      "type": "kit",
+      "target": "laliga-valencia",
+      "variant": "away",
+      "fmId": "1775",
+      "bytes": 132476,
+      "sha256": "9ad67614bb4cf97f8f5a74e7f56749093347222f7489a5852cc667fb2006ed21"
+    },
+    {
+      "url": "kit/laliga-valencia/home.png",
+      "type": "kit",
+      "target": "laliga-valencia",
+      "variant": "home",
+      "fmId": "1775",
+      "bytes": 102639,
+      "sha256": "f125ec508c03e1f3367f80dabcfb05818131f7d4ca11ac2b6d466f774561c80a"
+    },
+    {
+      "url": "kit/laliga-valencia/third.png",
+      "type": "kit",
+      "target": "laliga-valencia",
+      "variant": "third",
+      "fmId": "1775",
+      "bytes": 131037,
+      "sha256": "0983246d9f64ec5827b1c4c9683014fe6b63d322e24db0e9df66e489defafc4c"
+    },
+    {
+      "url": "kit/laliga-villarreal/away.png",
+      "type": "kit",
+      "target": "laliga-villarreal",
+      "variant": "away",
+      "fmId": "1777",
+      "bytes": 152931,
+      "sha256": "26c7bea7fbcceaa6c1e3471da6ca087f2264a8cd2aa6618eea16ebc24f923beb"
+    },
+    {
+      "url": "kit/laliga-villarreal/home.png",
+      "type": "kit",
+      "target": "laliga-villarreal",
+      "variant": "home",
+      "fmId": "1777",
+      "bytes": 163021,
+      "sha256": "f42d8bf48b4acfd8f2ba8112f451c17a4938b95e6844b340acaf4be804ed679f"
+    },
+    {
+      "url": "kit/laliga-villarreal/third.png",
+      "type": "kit",
+      "target": "laliga-villarreal",
+      "variant": "third",
+      "fmId": "1777",
+      "bytes": 99915,
+      "sha256": "7504f1cbad901cc752eb7fabe5faebb7e171403ea0aed04ec4f4fd60f159fa10"
+    },
+    {
+      "url": "kit/ligue1-angers/away.png",
+      "type": "kit",
+      "target": "ligue1-angers",
+      "variant": "away",
+      "fmId": "875",
+      "bytes": 109662,
+      "sha256": "40176e968f3d4b4396789dff506d50b96147834989599019518a4841815aab8c"
+    },
+    {
+      "url": "kit/ligue1-angers/home.png",
+      "type": "kit",
+      "target": "ligue1-angers",
+      "variant": "home",
+      "fmId": "875",
+      "bytes": 102837,
+      "sha256": "24485129f3770918457d2eb83f86afe677910988a3fc82ef66bb249793152577"
+    },
+    {
+      "url": "kit/ligue1-brest/away.png",
+      "type": "kit",
+      "target": "ligue1-brest",
+      "variant": "away",
+      "fmId": "2061",
+      "bytes": 320507,
+      "sha256": "6659e32872757746df901253d43e9617f9aca6b15d57dd1eb4104383c8193843"
+    },
+    {
+      "url": "kit/ligue1-brest/home.png",
+      "type": "kit",
+      "target": "ligue1-brest",
+      "variant": "home",
+      "fmId": "2061",
+      "bytes": 339381,
+      "sha256": "724b698c2eb1d752e62bfed564c024d9bd44e2944f2c5d812d83ffea7107335f"
+    },
+    {
+      "url": "kit/ligue1-brest/third.png",
+      "type": "kit",
+      "target": "ligue1-brest",
+      "variant": "third",
+      "fmId": "2061",
+      "bytes": 330360,
+      "sha256": "325de1972e4451268453a02d576484784fb1fb41c2a12e1270e1de6d05849a98"
+    },
+    {
+      "url": "kit/ligue1-le-havre/away.png",
+      "type": "kit",
+      "target": "ligue1-le-havre",
+      "variant": "away",
+      "fmId": "856",
+      "bytes": 133183,
+      "sha256": "624b231033892de4e905806b12379ac0ba887e54bd42235f7150733ec13ce949"
+    },
+    {
+      "url": "kit/ligue1-le-havre/home.png",
+      "type": "kit",
+      "target": "ligue1-le-havre",
+      "variant": "home",
+      "fmId": "856",
+      "bytes": 116184,
+      "sha256": "9ea226951f792cef0bbb109919d5549ee901960ea141c4f85ea642f2f13aff73"
+    },
+    {
+      "url": "kit/ligue1-lens/away.png",
+      "type": "kit",
+      "target": "ligue1-lens",
+      "variant": "away",
+      "fmId": "871",
+      "bytes": 133906,
+      "sha256": "5d765a014ecb7b4b887eaf62516ef6a7e8134c284e1bdf5e5765681597eeeeb6"
+    },
+    {
+      "url": "kit/ligue1-lens/home.png",
+      "type": "kit",
+      "target": "ligue1-lens",
+      "variant": "home",
+      "fmId": "871",
+      "bytes": 115336,
+      "sha256": "10e5ca7836c63efce76224ecc6b408df082f652cbe80c657cede7a569aaaf013"
+    },
+    {
+      "url": "kit/ligue1-lens/third.png",
+      "type": "kit",
+      "target": "ligue1-lens",
+      "variant": "third",
+      "fmId": "871",
+      "bytes": 120450,
+      "sha256": "4580e7fac94a387f83741742b34853179c79701722951785cdbc6ded21077626"
+    },
+    {
+      "url": "kit/ligue1-lille/away.png",
+      "type": "kit",
+      "target": "ligue1-lille",
+      "variant": "away",
+      "fmId": "858",
+      "bytes": 137872,
+      "sha256": "ccd1900a3db38975a0ae1065d338e3c985aaa79c95b1ba5db770cef5c74f1f74"
+    },
+    {
+      "url": "kit/ligue1-lille/home.png",
+      "type": "kit",
+      "target": "ligue1-lille",
+      "variant": "home",
+      "fmId": "858",
+      "bytes": 124560,
+      "sha256": "68ada93909b3590b5697e4f99ef47e92b4e4079f1c8b2f9fc56950da6a318b51"
+    },
+    {
+      "url": "kit/ligue1-lille/third.png",
+      "type": "kit",
+      "target": "ligue1-lille",
+      "variant": "third",
+      "fmId": "858",
+      "bytes": 165058,
+      "sha256": "e1ac2d7178a20a647aec7fa997bfa1cfb06cccf395121262e9d13891203a948f"
+    },
+    {
+      "url": "kit/ligue1-lorient/away.png",
+      "type": "kit",
+      "target": "ligue1-lorient",
+      "variant": "away",
+      "fmId": "2005",
+      "bytes": 128663,
+      "sha256": "dfdf1886d930aca8bf29ee16a99d1a93ebacfdfb1cb5baa856f56a65804d8229"
+    },
+    {
+      "url": "kit/ligue1-lorient/home.png",
+      "type": "kit",
+      "target": "ligue1-lorient",
+      "variant": "home",
+      "fmId": "2005",
+      "bytes": 92702,
+      "sha256": "c3749672f13405756b741634fc1738895e6223e5a860e1a98670e171d4aa586d"
+    },
+    {
+      "url": "kit/ligue1-lorient/third.png",
+      "type": "kit",
+      "target": "ligue1-lorient",
+      "variant": "third",
+      "fmId": "2005",
+      "bytes": 93349,
+      "sha256": "c4e21210eaa78adfd83d7407f8c6f0eb103a437df8b7d710c65524f83b450689"
+    },
+    {
+      "url": "kit/ligue1-lyon/away.png",
+      "type": "kit",
+      "target": "ligue1-lyon",
+      "variant": "away",
+      "fmId": "865",
+      "bytes": 325649,
+      "sha256": "236ab3c8c261bd5595e9ceb5cfa382f4a375a82afdd3ce0376de41cd33d9f6a4"
+    },
+    {
+      "url": "kit/ligue1-lyon/home.png",
+      "type": "kit",
+      "target": "ligue1-lyon",
+      "variant": "home",
+      "fmId": "865",
+      "bytes": 354507,
+      "sha256": "bf3e14a1b5b6a35d1d68b3280837796b7813163065530a2ed4017460ef19e1d4"
+    },
+    {
+      "url": "kit/ligue1-lyon/third.png",
+      "type": "kit",
+      "target": "ligue1-lyon",
+      "variant": "third",
+      "fmId": "865",
+      "bytes": 349223,
+      "sha256": "12962746a313248f711965b902a0dc2b719cb5091c56b0049be891f1254c05d9"
+    },
+    {
+      "url": "kit/ligue1-marseille/away.png",
+      "type": "kit",
+      "target": "ligue1-marseille",
+      "variant": "away",
+      "fmId": "866",
+      "bytes": 142537,
+      "sha256": "2e6319bcd8adbd046842639fc60abba784bdc46958fbfabe6e7d675551a4f78b"
+    },
+    {
+      "url": "kit/ligue1-marseille/home.png",
+      "type": "kit",
+      "target": "ligue1-marseille",
+      "variant": "home",
+      "fmId": "866",
+      "bytes": 115320,
+      "sha256": "a9ed94ad2c70d5d59d71067b1a846e904f81b5ecd464ef20e7ac0669bdfc4e8a"
+    },
+    {
+      "url": "kit/ligue1-marseille/third.png",
+      "type": "kit",
+      "target": "ligue1-marseille",
+      "variant": "third",
+      "fmId": "866",
+      "bytes": 191196,
+      "sha256": "3cd8d34165d0fe05f1efb4379304ef92536cbff6208b627b3c41b0b151b8cd91"
+    },
+    {
+      "url": "kit/ligue1-metz/away.png",
+      "type": "kit",
+      "target": "ligue1-metz",
+      "variant": "away",
+      "fmId": "844",
+      "bytes": 421152,
+      "sha256": "52ce23188423272a1cf183be6e2830af62771a771d927e80638ec61f9ce75346"
+    },
+    {
+      "url": "kit/ligue1-metz/home.png",
+      "type": "kit",
+      "target": "ligue1-metz",
+      "variant": "home",
+      "fmId": "844",
+      "bytes": 383914,
+      "sha256": "5305708c7eab7f2591ec1ddafccebc7176b240932615977680e9924c2640829d"
+    },
+    {
+      "url": "kit/ligue1-metz/third.png",
+      "type": "kit",
+      "target": "ligue1-metz",
+      "variant": "third",
+      "fmId": "844",
+      "bytes": 384875,
+      "sha256": "bb4b12dd4775a36127715cd1c65f92272550be473749d4319fd508b431a7fa1d"
+    },
+    {
+      "url": "kit/ligue1-monaco/away.png",
+      "type": "kit",
+      "target": "ligue1-monaco",
+      "variant": "away",
+      "fmId": "826",
+      "bytes": 136857,
+      "sha256": "12cbc8372137629f339c2138c82092a8fda129afd17b206dea155838a42d342c"
+    },
+    {
+      "url": "kit/ligue1-monaco/home.png",
+      "type": "kit",
+      "target": "ligue1-monaco",
+      "variant": "home",
+      "fmId": "826",
+      "bytes": 103007,
+      "sha256": "4cd9a8931dc20882069bcb3f2678192390f33a1ac0967e728ee60af8292bb6d6"
+    },
+    {
+      "url": "kit/ligue1-monaco/third.png",
+      "type": "kit",
+      "target": "ligue1-monaco",
+      "variant": "third",
+      "fmId": "826",
+      "bytes": 131254,
+      "sha256": "85e84d0440c3f3657ad1519df655dcf5af726e6d7f7e30e1d10dce76aced7e0f"
+    },
+    {
+      "url": "kit/ligue1-nantes/away.png",
+      "type": "kit",
+      "target": "ligue1-nantes",
+      "variant": "away",
+      "fmId": "846",
+      "bytes": 184799,
+      "sha256": "dd424e2acec45555ad1e636e077ac5e2b779b76a4ea05e18a2b4c024983c2a49"
+    },
+    {
+      "url": "kit/ligue1-nantes/home.png",
+      "type": "kit",
+      "target": "ligue1-nantes",
+      "variant": "home",
+      "fmId": "846",
+      "bytes": 128234,
+      "sha256": "4d43f33ccec3b0f8737f9e57d05caa704703aad2e40bf927ad29be5ddaa624ed"
+    },
+    {
+      "url": "kit/ligue1-nice/away.png",
+      "type": "kit",
+      "target": "ligue1-nice",
+      "variant": "away",
+      "fmId": "862",
+      "bytes": 377164,
+      "sha256": "655509e2ad526218aa8619686a2d751952cbadb46e22d410eaa5306f5b94de4f"
+    },
+    {
+      "url": "kit/ligue1-nice/home.png",
+      "type": "kit",
+      "target": "ligue1-nice",
+      "variant": "home",
+      "fmId": "862",
+      "bytes": 357322,
+      "sha256": "7517d87c0d0434c89738491f202a1446db5604ebd0a955e0a252027a6da1891a"
+    },
+    {
+      "url": "kit/ligue1-nice/third.png",
+      "type": "kit",
+      "target": "ligue1-nice",
+      "variant": "third",
+      "fmId": "862",
+      "bytes": 379116,
+      "sha256": "cc29941e342083596208c72451a50122acdbd56d63f1f7034b74a52e4400be03"
+    },
+    {
+      "url": "kit/ligue1-paris-fc/away.png",
+      "type": "kit",
+      "target": "ligue1-paris-fc",
+      "variant": "away",
+      "fmId": "867",
+      "bytes": 340087,
+      "sha256": "2f1b722badd5b5a73f800fde09cc5849a3efdb115134a95f031f6ae99434f5ac"
+    },
+    {
+      "url": "kit/ligue1-paris-fc/home.png",
+      "type": "kit",
+      "target": "ligue1-paris-fc",
+      "variant": "home",
+      "fmId": "867",
+      "bytes": 327469,
+      "sha256": "124d03966febd7e424a1a70ed901d7ecfc54851f2c538a5def8c20cf51bafa07"
+    },
+    {
+      "url": "kit/ligue1-paris-fc/third.png",
+      "type": "kit",
+      "target": "ligue1-paris-fc",
+      "variant": "third",
+      "fmId": "867",
+      "bytes": 362744,
+      "sha256": "95688fc800aab0de1bc5dc1d38cd01965233311d6bb782fda8bfcae1368b7cd4"
+    },
+    {
+      "url": "kit/ligue1-rennes/away.png",
+      "type": "kit",
+      "target": "ligue1-rennes",
+      "variant": "away",
+      "fmId": "884",
+      "bytes": 101018,
+      "sha256": "14f23af1bfa4da172b34905d71950f9af64083a12d49541e0af7f9da3973ccdb"
+    },
+    {
+      "url": "kit/ligue1-rennes/home.png",
+      "type": "kit",
+      "target": "ligue1-rennes",
+      "variant": "home",
+      "fmId": "884",
+      "bytes": 105580,
+      "sha256": "4eb0659a9a869fa1aafc429ae5569747132c189a7e61f1af5ae81efbed404cc9"
+    },
+    {
+      "url": "kit/ligue1-rennes/third.png",
+      "type": "kit",
+      "target": "ligue1-rennes",
+      "variant": "third",
+      "fmId": "884",
+      "bytes": 75202,
+      "sha256": "cc49bfdc4ec43ef1b3dada7ea5768cb63293f87d1d8f1821e43031a2d3adcfba"
+    },
+    {
+      "url": "kit/ligue1-strasbourg/away.png",
+      "type": "kit",
+      "target": "ligue1-strasbourg",
+      "variant": "away",
+      "fmId": "872",
+      "bytes": 331550,
+      "sha256": "d5d57625b178b3f82f2b5a5c6b5254d989046199520c7850b874080c3f696f4f"
+    },
+    {
+      "url": "kit/ligue1-strasbourg/home.png",
+      "type": "kit",
+      "target": "ligue1-strasbourg",
+      "variant": "home",
+      "fmId": "872",
+      "bytes": 356733,
+      "sha256": "510caa0ce1ca41eadc4e977e1cedee59be84e33c3be43bdec3c0fb8bfda9802f"
+    },
+    {
+      "url": "kit/ligue1-strasbourg/third.png",
+      "type": "kit",
+      "target": "ligue1-strasbourg",
+      "variant": "third",
+      "fmId": "872",
+      "bytes": 306400,
+      "sha256": "5c80b96b42ab9fd657ad40e0a3af726eed53c2962ac13b69b032eeace0f1a60f"
+    },
+    {
+      "url": "kit/ligue1-toulouse/away.png",
+      "type": "kit",
+      "target": "ligue1-toulouse",
+      "variant": "away",
+      "fmId": "886",
+      "bytes": 164899,
+      "sha256": "c5dc30edcbbe56a4d98d10ab0883cffb4041f31cdd100b64a747835be57b3e27"
+    },
+    {
+      "url": "kit/ligue1-toulouse/home.png",
+      "type": "kit",
+      "target": "ligue1-toulouse",
+      "variant": "home",
+      "fmId": "886",
+      "bytes": 95071,
+      "sha256": "4032059dcd3c11e6386a56be05fd9e328f2dad161e05cd554e44ad0b98c7059a"
+    },
+    {
+      "url": "kit/liverpool/away.png",
+      "type": "kit",
+      "target": "liverpool",
+      "variant": "away",
+      "fmId": "676",
+      "bytes": 349590,
+      "sha256": "60972b6fe97be25ecc0d548a82378df7a29911d818b1ce5bcbbd041db557b9b8"
+    },
+    {
+      "url": "kit/liverpool/home.png",
+      "type": "kit",
+      "target": "liverpool",
+      "variant": "home",
+      "fmId": "676",
+      "bytes": 342195,
+      "sha256": "1bf3e8e1afd5200cc150752f320edc70581aa2d5c6e4345872f19aeb176863c5"
+    },
+    {
+      "url": "kit/liverpool/third.png",
+      "type": "kit",
+      "target": "liverpool",
+      "variant": "third",
+      "fmId": "676",
+      "bytes": 326965,
+      "sha256": "d296a142d56d194b87ef7b57062894cb3309e3957dee05ce29e3816d5d9eeafa"
+    },
+    {
+      "url": "kit/man-city/away.png",
+      "type": "kit",
+      "target": "man-city",
+      "variant": "away",
+      "fmId": "679",
+      "bytes": 68230,
+      "sha256": "8d79181d9beede49e5a30ac0ab62b5378bc8ac770b258303e352e1be6501c3fa"
+    },
+    {
+      "url": "kit/man-city/home.png",
+      "type": "kit",
+      "target": "man-city",
+      "variant": "home",
+      "fmId": "679",
+      "bytes": 140717,
+      "sha256": "52dea95f2d1cf137a2016b848356153c2cadf1b2f544c482895211456f496fef"
+    },
+    {
+      "url": "kit/man-city/third.png",
+      "type": "kit",
+      "target": "man-city",
+      "variant": "third",
+      "fmId": "679",
+      "bytes": 185060,
+      "sha256": "f0a1b7068547db2c8db29a31c03c9f4962479ccca815054f0cfed685124fedae"
+    },
+    {
+      "url": "kit/psg/away.png",
+      "type": "kit",
+      "target": "psg",
+      "variant": "away",
+      "fmId": "868",
+      "bytes": 124388,
+      "sha256": "edbe079744189858bb4953e336f35f9a2c151152e718add6d28ab0ead829aa4f"
+    },
+    {
+      "url": "kit/psg/home.png",
+      "type": "kit",
+      "target": "psg",
+      "variant": "home",
+      "fmId": "868",
+      "bytes": 178107,
+      "sha256": "04033577e3050ef7d791071e02029996c1178b4078ee3c6bfcca350eedd0f1e5"
+    },
+    {
+      "url": "kit/psg/third.png",
+      "type": "kit",
+      "target": "psg",
+      "variant": "third",
+      "fmId": "868",
+      "bytes": 126211,
+      "sha256": "7b4a465568f8e01aa94992300e8c6f88376162b54170d36ae46aad399388da4b"
+    },
+    {
+      "url": "kit/real-madrid/away.png",
+      "type": "kit",
+      "target": "real-madrid",
+      "variant": "away",
+      "fmId": "1736",
+      "bytes": 158911,
+      "sha256": "7fbe89c526bc6d2a97ae8e572ff79f7cc119d15f2da4041d029d14d15657ea81"
+    },
+    {
+      "url": "kit/real-madrid/home.png",
+      "type": "kit",
+      "target": "real-madrid",
+      "variant": "home",
+      "fmId": "1736",
+      "bytes": 108238,
+      "sha256": "8259d4926e8effc7e8e1edb472fcdb7115c72f45db1023ee2068345393e990c9"
+    },
+    {
+      "url": "kit/real-madrid/third.png",
+      "type": "kit",
+      "target": "real-madrid",
+      "variant": "third",
+      "fmId": "1736",
+      "bytes": 112866,
+      "sha256": "d58642cc4e6ad9ce4af0da63d84f2662cb4282602ff5d1b6e7930da7a8c1ecde"
+    },
+    {
+      "url": "kit/seriea-ac-milan/away.png",
+      "type": "kit",
+      "target": "seriea-ac-milan",
+      "variant": "away",
+      "fmId": "1099",
+      "bytes": 91777,
+      "sha256": "bd61dd239dad5145de184fee6d4c62e23c5471a732a5ebd4597b57b7823e312b"
+    },
+    {
+      "url": "kit/seriea-ac-milan/home.png",
+      "type": "kit",
+      "target": "seriea-ac-milan",
+      "variant": "home",
+      "fmId": "1099",
+      "bytes": 118900,
+      "sha256": "a2e7c70d97bd64f0ee9f2fa5ce2b0b429e28426eac56453b310da1bc9af24fe6"
+    },
+    {
+      "url": "kit/seriea-ac-milan/third.png",
+      "type": "kit",
+      "target": "seriea-ac-milan",
+      "variant": "third",
+      "fmId": "1099",
+      "bytes": 137545,
+      "sha256": "8c6d6548bdc09e54d1305adcc332996d816245541d5ca5323520a546e9205c1f"
+    },
+    {
+      "url": "kit/seriea-atalanta/away.png",
+      "type": "kit",
+      "target": "seriea-atalanta",
+      "variant": "away",
+      "fmId": "1106",
+      "bytes": 113520,
+      "sha256": "32a8fd7d18964a420703e1938ab3703b52b2f894f325460673149c0cdcaef52f"
+    },
+    {
+      "url": "kit/seriea-atalanta/home.png",
+      "type": "kit",
+      "target": "seriea-atalanta",
+      "variant": "home",
+      "fmId": "1106",
+      "bytes": 148677,
+      "sha256": "868905f5dd89ae1c80b1de1c7f580e24fe016b5292e3010b368fab354adb18c5"
+    },
+    {
+      "url": "kit/seriea-atalanta/third.png",
+      "type": "kit",
+      "target": "seriea-atalanta",
+      "variant": "third",
+      "fmId": "1106",
+      "bytes": 194190,
+      "sha256": "17bef860cab92f4c77e9e2baddd2a7f8a27592c96784df58b54e66e8f7c7fafc"
+    },
+    {
+      "url": "kit/seriea-bologna/away.png",
+      "type": "kit",
+      "target": "seriea-bologna",
+      "variant": "away",
+      "fmId": "1111",
+      "bytes": 141490,
+      "sha256": "6cd4a2c2dfde02115e8bc6e3857c23d070c64f221eb91d520b3b51b5df063e04"
+    },
+    {
+      "url": "kit/seriea-bologna/home.png",
+      "type": "kit",
+      "target": "seriea-bologna",
+      "variant": "home",
+      "fmId": "1111",
+      "bytes": 172059,
+      "sha256": "4a077d0825ef3e4e3eeba0a5cae1630179095e464f785794e3e9f66f1e8e6d5d"
+    },
+    {
+      "url": "kit/seriea-bologna/third.png",
+      "type": "kit",
+      "target": "seriea-bologna",
+      "variant": "third",
+      "fmId": "1111",
+      "bytes": 188398,
+      "sha256": "e7f9b1c4b5bf84198519e696b16134a76ff409a645c70c065011e511a0330233"
+    },
+    {
+      "url": "kit/seriea-cagliari/away.png",
+      "type": "kit",
+      "target": "seriea-cagliari",
+      "variant": "away",
+      "fmId": "1114",
+      "bytes": 158801,
+      "sha256": "89a8e8510ee807d107ba4b9890d4ee71620bc1b666a452871dd6b21f5e536d44"
+    },
+    {
+      "url": "kit/seriea-cagliari/home.png",
+      "type": "kit",
+      "target": "seriea-cagliari",
+      "variant": "home",
+      "fmId": "1114",
+      "bytes": 156750,
+      "sha256": "9eee2a231e926c3642da9ad0c520ce248769ce1cdfc13ab37044317d4a89cf71"
+    },
+    {
+      "url": "kit/seriea-cagliari/third.png",
+      "type": "kit",
+      "target": "seriea-cagliari",
+      "variant": "third",
+      "fmId": "1114",
+      "bytes": 165426,
+      "sha256": "9b7bef604d51efb0dc2d34c548768aae0e2e6d6c7c65f326123f6f30c3beea8b"
+    },
+    {
+      "url": "kit/seriea-como/away.png",
+      "type": "kit",
+      "target": "seriea-como",
+      "variant": "away",
+      "fmId": "1123",
+      "bytes": 112315,
+      "sha256": "2eda875bf19e08010d14aa37d363db5674a3313ef3ad3a216f7c938ed7bf5037"
+    },
+    {
+      "url": "kit/seriea-como/home.png",
+      "type": "kit",
+      "target": "seriea-como",
+      "variant": "home",
+      "fmId": "1123",
+      "bytes": 182603,
+      "sha256": "87accde60a3fd25f55b84ce111472b4ab8f896399e8f4a4ccc7ddb2186c743ae"
+    },
+    {
+      "url": "kit/seriea-cremonese/away.png",
+      "type": "kit",
+      "target": "seriea-cremonese",
+      "variant": "away",
+      "fmId": "1125",
+      "bytes": 310529,
+      "sha256": "d440ae61d9e2d0246380d19dc9cabf1f8cc13918e2983b097b8ec5a8a33ed554"
+    },
+    {
+      "url": "kit/seriea-cremonese/home.png",
+      "type": "kit",
+      "target": "seriea-cremonese",
+      "variant": "home",
+      "fmId": "1125",
+      "bytes": 343815,
+      "sha256": "09b48994e65a7478a2325d71581c507fd6f0893cdf57c9c9261b1c0d48254945"
+    },
+    {
+      "url": "kit/seriea-cremonese/third.png",
+      "type": "kit",
+      "target": "seriea-cremonese",
+      "variant": "third",
+      "fmId": "1125",
+      "bytes": 289734,
+      "sha256": "774ef36bc16f537d8820c2db4a78bd7662a743b9fe6244cc58c9a37c8bd4c3d5"
+    },
+    {
+      "url": "kit/seriea-fiorentina/away.png",
+      "type": "kit",
+      "target": "seriea-fiorentina",
+      "variant": "away",
+      "fmId": "1129",
+      "bytes": 411028,
+      "sha256": "6518b5b61fda38bcca5bd935aaf171587c240c9a0103cc5a7a63df680fda2f40"
+    },
+    {
+      "url": "kit/seriea-fiorentina/home.png",
+      "type": "kit",
+      "target": "seriea-fiorentina",
+      "variant": "home",
+      "fmId": "1129",
+      "bytes": 381678,
+      "sha256": "e95f7fef1058c68138b92dd72e8c599f256388d1b8146be83bbee7be49411b93"
+    },
+    {
+      "url": "kit/seriea-fiorentina/third.png",
+      "type": "kit",
+      "target": "seriea-fiorentina",
+      "variant": "third",
+      "fmId": "1129",
+      "bytes": 413365,
+      "sha256": "d50539a2ed7db27091e57e5cc51e7bf023448812bd4bc5665c030be85212aad7"
+    },
+    {
+      "url": "kit/seriea-genoa/away.png",
+      "type": "kit",
+      "target": "seriea-genoa",
+      "variant": "away",
+      "fmId": "1132",
+      "bytes": 370336,
+      "sha256": "2c00f2624b3a30e525fc5bfd5c4864568122f5c2a3551fad07707b21955159d5"
+    },
+    {
+      "url": "kit/seriea-genoa/home.png",
+      "type": "kit",
+      "target": "seriea-genoa",
+      "variant": "home",
+      "fmId": "1132",
+      "bytes": 382303,
+      "sha256": "de90a97494f73c529fa30912f7d1fc657de541bc39cd9753d6e8bfd2a4450d62"
+    },
+    {
+      "url": "kit/seriea-genoa/third.png",
+      "type": "kit",
+      "target": "seriea-genoa",
+      "variant": "third",
+      "fmId": "1132",
+      "bytes": 393103,
+      "sha256": "6a5dfe9035cafe8328df89a0ea3319844aff3698caa23667d133f3b547d4d5e1"
+    },
+    {
+      "url": "kit/seriea-juventus/away.png",
+      "type": "kit",
+      "target": "seriea-juventus",
+      "variant": "away",
+      "fmId": "1139",
+      "bytes": 398589,
+      "sha256": "3aad96fe593018b773abfac0e407928fa5c375e1de54e84ba3ecfc10ee8a6c30"
+    },
+    {
+      "url": "kit/seriea-juventus/home.png",
+      "type": "kit",
+      "target": "seriea-juventus",
+      "variant": "home",
+      "fmId": "1139",
+      "bytes": 350759,
+      "sha256": "c8ee79323804b1db8b144d78cb4a24eeaeab7e698acfc47c2824b6ef4b0cb948"
+    },
+    {
+      "url": "kit/seriea-juventus/third.png",
+      "type": "kit",
+      "target": "seriea-juventus",
+      "variant": "third",
+      "fmId": "1139",
+      "bytes": 346380,
+      "sha256": "229622e212b10e37190c5718559c2b032a1c3e2d0d8e15a5948b71e1ddc09315"
+    },
+    {
+      "url": "kit/seriea-lazio/away.png",
+      "type": "kit",
+      "target": "seriea-lazio",
+      "variant": "away",
+      "fmId": "1140",
+      "bytes": 432868,
+      "sha256": "f441d71481716a10fcb6dee0331e0940de6bc694cd78f548b9e758d7dc065bb0"
+    },
+    {
+      "url": "kit/seriea-lazio/home.png",
+      "type": "kit",
+      "target": "seriea-lazio",
+      "variant": "home",
+      "fmId": "1140",
+      "bytes": 380710,
+      "sha256": "90f9987f534d67d9e89681bbfa29cc72a415ced3dc6b9c6e93324770a3713ecf"
+    },
+    {
+      "url": "kit/seriea-lazio/third.png",
+      "type": "kit",
+      "target": "seriea-lazio",
+      "variant": "third",
+      "fmId": "1140",
+      "bytes": 397083,
+      "sha256": "3a2925a045d19d6c167eb6852edb5005b425cdfb546599026df02b938e17d016"
+    },
+    {
+      "url": "kit/seriea-lecce/away.png",
+      "type": "kit",
+      "target": "seriea-lecce",
+      "variant": "away",
+      "fmId": "1141",
+      "bytes": 142573,
+      "sha256": "6197ca5c74041a1c90ae950b19ef3b35753ada178e8b58439db9c095df690e12"
+    },
+    {
+      "url": "kit/seriea-lecce/home.png",
+      "type": "kit",
+      "target": "seriea-lecce",
+      "variant": "home",
+      "fmId": "1141",
+      "bytes": 152519,
+      "sha256": "419f1b2c8d95fdfa87788819a7567e35530ef052c4e7607c57a755a056ca9e42"
+    },
+    {
+      "url": "kit/seriea-lecce/third.png",
+      "type": "kit",
+      "target": "seriea-lecce",
+      "variant": "third",
+      "fmId": "1141",
+      "bytes": 145487,
+      "sha256": "11dd7fec13f4125a1d8e763bbf1935fff8a3ef758f0f71f227a9d9f9e53a66fd"
+    },
+    {
+      "url": "kit/seriea-napoli/away.png",
+      "type": "kit",
+      "target": "seriea-napoli",
+      "variant": "away",
+      "fmId": "1150",
+      "bytes": 111421,
+      "sha256": "b4c73a7dfe05815cd6222a6399b26fe36c2f91562755b6780730c136e80f8a88"
+    },
+    {
+      "url": "kit/seriea-napoli/home.png",
+      "type": "kit",
+      "target": "seriea-napoli",
+      "variant": "home",
+      "fmId": "1150",
+      "bytes": 134630,
+      "sha256": "85374a86fa30374813120206ba2d49b048e38770c87ea74a64a2495a7892eeeb"
+    },
+    {
+      "url": "kit/seriea-napoli/third.png",
+      "type": "kit",
+      "target": "seriea-napoli",
+      "variant": "third",
+      "fmId": "1150",
+      "bytes": 118987,
+      "sha256": "5d933538edf066fdc1a88636bbdccebff46d582acc69dd870c4a83ab5fa42c18"
+    },
+    {
+      "url": "kit/seriea-parma/away.png",
+      "type": "kit",
+      "target": "seriea-parma",
+      "variant": "away",
+      "fmId": "1156",
+      "bytes": 158934,
+      "sha256": "aa3924fd7313d43d1b2ae591bec18188497e33904d5a2dbec4fbbf398e588749"
+    },
+    {
+      "url": "kit/seriea-parma/home.png",
+      "type": "kit",
+      "target": "seriea-parma",
+      "variant": "home",
+      "fmId": "1156",
+      "bytes": 92889,
+      "sha256": "5c3d01d8d289469f95ecd4539c5a3797e92cb764cbc49c0fb7091754101ab832"
+    },
+    {
+      "url": "kit/seriea-parma/third.png",
+      "type": "kit",
+      "target": "seriea-parma",
+      "variant": "third",
+      "fmId": "1156",
+      "bytes": 129287,
+      "sha256": "420c97bd8f727909e557e5050b47262be71b7de4e5cabb997b7009bfb42d17e1"
+    },
+    {
+      "url": "kit/seriea-pisa/away.png",
+      "type": "kit",
+      "target": "seriea-pisa",
+      "variant": "away",
+      "fmId": "2215",
+      "bytes": 118429,
+      "sha256": "d981d123a28d4f71bcadb895d6ce40149c03925ff151cf9b2bb4dd5e42aec098"
+    },
+    {
+      "url": "kit/seriea-pisa/home.png",
+      "type": "kit",
+      "target": "seriea-pisa",
+      "variant": "home",
+      "fmId": "2215",
+      "bytes": 105287,
+      "sha256": "328030e8dad85078f541e35dfb7e013668109b26f829db136ffe27689522026b"
+    },
+    {
+      "url": "kit/seriea-pisa/third.png",
+      "type": "kit",
+      "target": "seriea-pisa",
+      "variant": "third",
+      "fmId": "2215",
+      "bytes": 100703,
+      "sha256": "dfe5b2d42f77278be283e1bc9f6e2fd9103270d8894fafd177c5996944ae9f63"
+    },
+    {
+      "url": "kit/seriea-roma/away.png",
+      "type": "kit",
+      "target": "seriea-roma",
+      "variant": "away",
+      "fmId": "1100",
+      "bytes": 125036,
+      "sha256": "ed22fc259fe4c1d6b2b7c1bfc09d3a8292d8f31cb7feef9609e2d831dfb40595"
+    },
+    {
+      "url": "kit/seriea-roma/home.png",
+      "type": "kit",
+      "target": "seriea-roma",
+      "variant": "home",
+      "fmId": "1100",
+      "bytes": 115952,
+      "sha256": "92f109705974f4a395e199dad9011f55d914de22eb062c8f6c12498789e546ec"
+    },
+    {
+      "url": "kit/seriea-roma/third.png",
+      "type": "kit",
+      "target": "seriea-roma",
+      "variant": "third",
+      "fmId": "1100",
+      "bytes": 104301,
+      "sha256": "07f65d7beef4bc045e85f178dd30671d36de6f7f7d432514a02a7f1b517f787d"
+    },
+    {
+      "url": "kit/seriea-sassuolo/away.png",
+      "type": "kit",
+      "target": "seriea-sassuolo",
+      "variant": "away",
+      "fmId": "3800256",
+      "bytes": 103507,
+      "sha256": "3bc7e06584883e6b497759c51a2b3febd88c10074423e9c24ee026eaa589b5a8"
+    },
+    {
+      "url": "kit/seriea-sassuolo/home.png",
+      "type": "kit",
+      "target": "seriea-sassuolo",
+      "variant": "home",
+      "fmId": "3800256",
+      "bytes": 114167,
+      "sha256": "53bb1ca92d4b1b2bee932882f1726c18cc6fcd08b9c8471b468d154849027bbd"
+    },
+    {
+      "url": "kit/seriea-sassuolo/third.png",
+      "type": "kit",
+      "target": "seriea-sassuolo",
+      "variant": "third",
+      "fmId": "3800256",
+      "bytes": 148784,
+      "sha256": "ff0ff4260c74c7f11164ae7b5f2cdc647c8ac1f6317697edf730bffee45ca662"
+    },
+    {
+      "url": "kit/seriea-torino/away.png",
+      "type": "kit",
+      "target": "seriea-torino",
+      "variant": "away",
+      "fmId": "1174",
+      "bytes": 112518,
+      "sha256": "6586b5a8b96a1dade97fd3ffc48e5a940d3956f4b7c59e47029426a039ca832c"
+    },
+    {
+      "url": "kit/seriea-torino/home.png",
+      "type": "kit",
+      "target": "seriea-torino",
+      "variant": "home",
+      "fmId": "1174",
+      "bytes": 126251,
+      "sha256": "256fc6796ab01157c2374df6e0d8ef66dacd4b9ebe17f6127d91b64b36c00277"
+    },
+    {
+      "url": "kit/seriea-torino/third.png",
+      "type": "kit",
+      "target": "seriea-torino",
+      "variant": "third",
+      "fmId": "1174",
+      "bytes": 98677,
+      "sha256": "37070b9058613bc54a8383b3f9b27f85daea5f94852e740ba65f6514da1beb28"
+    },
+    {
+      "url": "kit/seriea-udinese/away.png",
+      "type": "kit",
+      "target": "seriea-udinese",
+      "variant": "away",
+      "fmId": "1178",
+      "bytes": 206444,
+      "sha256": "0f05f026a868b6e911955a0fd29509ff5568c3c28fd0ffa1275a695a06cc3a72"
+    },
+    {
+      "url": "kit/seriea-udinese/home.png",
+      "type": "kit",
+      "target": "seriea-udinese",
+      "variant": "home",
+      "fmId": "1178",
+      "bytes": 153123,
+      "sha256": "647fff55ca153e138364e149da869c6db8dc6e489df6118f53196e5d6738bf70"
+    },
+    {
+      "url": "kit/seriea-udinese/third.png",
+      "type": "kit",
+      "target": "seriea-udinese",
+      "variant": "third",
+      "fmId": "1178",
+      "bytes": 166652,
+      "sha256": "4fc3161b733e0bcfc012bee24808c03df05221ecef0f18c85661c9d45c4c4cab"
+    },
+    {
+      "url": "kit/seriea-verona/away.png",
+      "type": "kit",
+      "target": "seriea-verona",
+      "variant": "away",
+      "fmId": "2201",
+      "bytes": 108241,
+      "sha256": "0edf0fcdb6bfbcdca400ec9a3ede0b0391152ed00bb37f98dfa3ff847e8e36c2"
+    },
+    {
+      "url": "kit/seriea-verona/home.png",
+      "type": "kit",
+      "target": "seriea-verona",
+      "variant": "home",
+      "fmId": "2201",
+      "bytes": 137230,
+      "sha256": "43c9bc5e4dd28c343b0fa65e88e981c6ed7a20b05c4aaa5c85ae3ca37db301cb"
+    },
+    {
+      "url": "kit/seriea-verona/third.png",
+      "type": "kit",
+      "target": "seriea-verona",
+      "variant": "third",
+      "fmId": "2201",
+      "bytes": 109980,
+      "sha256": "0a82a518fc38be23eed94b8f0efc683b15f4c5a1e47e5b5adb42f93065ec25d9"
+    }
+  ]
+}

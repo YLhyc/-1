@@ -158,6 +158,20 @@ export function clearPrivateAssets() {
   PRIVATE_ASSETS.clear();
 }
 
+export function unregisterPrivateAssets(assets = []) {
+  if (!Array.isArray(assets)) throw new TypeError("private assets must be an array");
+  for (const asset of assets) {
+    if (!asset || typeof asset !== "object") continue;
+    const type = String(asset.type || "");
+    const key = asset.fmId ?? asset.assetId ?? asset.clubId ?? asset.id;
+    if (key === undefined || key === null) continue;
+    PRIVATE_ASSETS.delete(`${type}:${String(key)}`);
+    if (asset.fmId && asset.variant) PRIVATE_ASSETS.delete(`${type}:${String(asset.fmId)}:${String(asset.variant)}`);
+    if (asset.assetId) PRIVATE_ASSETS.delete(String(asset.assetId));
+    if (asset.clubId) PRIVATE_ASSETS.delete(`${type}:${String(asset.clubId)}`);
+  }
+}
+
 export function listPrivateAssets() {
   return [...new Set(PRIVATE_ASSETS.values())];
 }

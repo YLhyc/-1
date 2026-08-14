@@ -124,6 +124,12 @@ self.addEventListener("message", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // 公网 FM 资源约 30MB：不写入 SW 运行时缓存（避免 CacheStorage 配额膨胀），
+  // 离线展示由 IndexedDB 中的 SHA-256 校验副本（Blob URL）承担。
+  if (new URL(event.request.url).pathname.includes("/fm-assets/")) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
   if (!CACHE) {
     event.respondWith(fetch(event.request));
     return;

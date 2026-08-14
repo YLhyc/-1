@@ -79,7 +79,7 @@ import { createAudioEngine } from "./audio.js";
 import { generateChapterNarrative, generateSocialPost } from "./ai.js";
 import { CLUBS, COACH_JOBS, LEAGUES, NATIONAL_TEAMS, POSITIONS, SECOND_NATIONALITIES, TALENTS, TRAINING_PLANS, TRAITS } from "./data.js";
 import { canonicalNationId, listPrivateAssets, nationDisplayName, nationFlagGlyph, nationRefForCode, resolveAssociationAsset, resolveAwardAsset, resolveClubAsset, resolveCompetitionAsset, resolveKitAsset, resolveNationAssets } from "./assets.js";
-import { clearPrivateAssetDb, importPrivateZip, loadPrivateAssets } from "./private-assets.js";
+import { clearPrivateAssetDb, importPrivateZip, loadPrivateAssets, clearPublicFmAssets, loadPublicFmAssets, readPublicFmStatus, syncPublicFmAssets } from "./private-assets.js";
 import {
   captureCreateDraft,
   initAppUpdate,
@@ -101,6 +101,8 @@ let fastForwardPanel = null;
 let narrativeAiController = null;
 let lastAction = null;
 let lastActionDetail = {};
+let publicFmSync = { status: "idle", done: 0, total: 0, failed: 0, bundleVersion: 0, running: false };
+let publicFmController = null;
 
 function getStorage() {
   if (storage) return storage;
@@ -1044,8 +1046,34 @@ function renderSettings() {
           <p class="section-note">当前设备已加载 ${privateAssetCount} 个私人资源；找不到匹配时自动使用公开原创回退。</p>
           ${renderPrivateAssetPreview()}
         </section>
+        <section class="surface-card public-fm-sync-card">
+          <h2>公网 FM26 资源同步</h2>
+          <p>视觉审核通过的 ${publicFmSync.total || "—"} 项队徽/球衣/赛事/足协资源后台小批量下载，SHA-256 校验后存入本机，供离线使用；不进入安装预缓存。</p>
+          <div class="public-fm-progress"><span class="public-fm-status" data-public-fm-status>${publicFmStatusLabel()}</span><progress max="${publicFmSync.total || 1}" value="${publicFmSync.done || 0}"></progress><span>${publicFmSync.done || 0}/${publicFmSync.total || "—"}${publicFmSync.failed ? ` · 失败 ${publicFmSync.failed}` : ""}${publicFmSync.bundleVersion ? ` · bundle v${publicFmSync.bundleVersion}` : ""}</span></div>
+          <div class="public-fm-actions">
+            <button class="secondary-action" data-action="public-fm-start" ${publicFmSync.running ? "disabled" : ""}>立即同步</button>
+            <button class="secondary-action" data-action="public-fm-pause" ${publicFmSync.running ? "" : "disabled"}>暂停</button>
+            <button class="secondary-action" data-action="public-fm-resume">继续</button>
+            <button class="secondary-action" data-action="public-fm-retry" ${publicFmSync.running ? "disabled" : ""}>重试失败项</button>
+            <button class="secondary-action danger" data-action="public-fm-clear">清除本机副本</button>
+          </div>
+          <p class="section-note">断点续传、暂停/继续、刷新复用与离线回退；清除后立即回到公开原创回退。</p>
+        </section>
       </div>
     </section>`;
+}
+
+function publicFmStatusLabel() {
+  const label = {
+    idle: "待同步",
+    syncing: "后台下载中",
+    paused: "已暂停（可继续断点续传）",
+    done: "同步完成（已离线可用）",
+    reused: "复用本机已校验副本",
+    error: "同步出错",
+    unavailable: "本机 IndexedDB 不可用"
+  };
+  return label[publicFmSync.status] || publicFmSync.status;
 }
 
 function currentNarrativeChapter() {
@@ -1412,6 +1440,66 @@ async function clearPrivateFile() {
     showToast("本机私人包已删除，公开回退已恢复");
   } catch {
     showToast("私人包删除失败");
+  }
+}
+
+// 公网 FM 资源同步（S3）：核心先启动，资源小批量后台下载，SHA-256 校验后写入 IndexedDB。
+async function refreshPublicFmStatus() {
+  try {
+    const status = await readPublicFmStatus();
+    publicFmSync = { ...publicFmSync, ...status };
+  } catch {
+    publicFmSync = { ...publicFmSync, status: "unavailable" };
+  }
+  if (state) render();
+}
+
+async function startPublicFmSync(options = {}) {
+  if (publicFmSync.running) return;
+  publicFmSync = { ...publicFmSync, running: true, status: "syncing", paused: false };
+  if (state) render();
+  publicFmController = new AbortController();
+  try {
+    const result = await syncPublicFmAssets({
+      signal: publicFmController.signal,
+      force: options.force,
+      onProgress: (progress) => {
+        publicFmSync = { ...publicFmSync, running: true, status: progress.phase, done: progress.done, total: progress.total, failed: progress.failed, bundleVersion: progress.bundleVersion, paused: progress.phase === "paused" };
+        if (state && document.querySelector(".public-fm-sync-card")) render();
+      }
+    });
+    if (result.status === "done" || result.status === "reused") {
+      await loadPublicFmAssets().catch(() => {});
+    }
+    publicFmSync = { ...publicFmSync, running: false, status: result.status === "paused" ? "paused" : result.status === "reused" ? "reused" : "done", paused: result.status === "paused", done: result.done, total: result.total, failed: result.failed || 0, bundleVersion: result.bundleVersion || publicFmSync.bundleVersion };
+  } catch (error) {
+    publicFmSync = { ...publicFmSync, running: false, status: error?.name === "AbortError" ? "paused" : "error", paused: error?.name === "AbortError" };
+  }
+  publicFmController = null;
+  if (state) render();
+}
+
+function pausePublicFmSync() {
+  if (!publicFmSync.running || !publicFmController) return;
+  publicFmController.abort();
+  publicFmSync = { ...publicFmSync, status: "paused", paused: true };
+  if (state) render();
+}
+
+async function retryPublicFmSync() {
+  await refreshPublicFmStatus();
+  await startPublicFmSync({ force: true });
+}
+
+async function clearPublicFmFile() {
+  try {
+    publicFmController?.abort();
+    await clearPublicFmAssets();
+    publicFmSync = { status: "idle", done: 0, total: 0, failed: 0, bundleVersion: 0, running: false };
+    if (state) render();
+    showToast("公网 FM 资源已清除，下次同步将重新下载");
+  } catch {
+    showToast("公网 FM 资源清除失败");
   }
 }
 
@@ -1843,6 +1931,16 @@ app.addEventListener("click", async (event) => {
     removeSave(button.dataset.id);
   } else if (action === "clear-private-assets") {
     clearPrivateFile();
+  } else if (action === "public-fm-start") {
+    startPublicFmSync({ force: true });
+  } else if (action === "public-fm-pause") {
+    pausePublicFmSync();
+  } else if (action === "public-fm-resume") {
+    startPublicFmSync({ force: true });
+  } else if (action === "public-fm-retry") {
+    retryPublicFmSync();
+  } else if (action === "public-fm-clear") {
+    clearPublicFmFile();
   } else if (action === "check-update") {
     requestAppUpdate();
   }
@@ -1862,5 +1960,15 @@ loadPrivateAssets().then((loaded) => {
   privateAssetCount = loaded.length;
   if (state) render();
 }).catch(() => {});
+
+// 公网 FM 资源：先复用本机已校验副本，再小批量后台同步（PWA 核心已先启动）。
+loadPublicFmAssets().then(() => readPublicFmStatus()).then((status) => {
+  publicFmSync = { ...publicFmSync, ...status, status: status.done > 0 ? "reused" : "idle" };
+  if (state) render();
+  if (!status.paused) startPublicFmSync();
+}).catch(() => {
+  publicFmSync = { ...publicFmSync, status: "unavailable" };
+  if (state) render();
+});
 
 initAppUpdate({ beforeApply: prepareForUpdate });

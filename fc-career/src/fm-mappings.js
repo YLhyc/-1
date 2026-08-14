@@ -187,7 +187,7 @@ const VERIFIED = Object.freeze([
   verified("competition", "epl", "English Premier Division", "11", "sortitoutsi FM26 competition 11; local TCM England competition config targets competition/11/logo", "2026-08-10"),
   verified("competition", "laliga", "Spanish First Division", "67", "sortitoutsi FM26 competition 67; local TCM Spain competition config targets competition/67/logo", "2026-08-10"),
   verified("competition", "bundesliga", "Bundesliga", "22", "sortitoutsi FM26 competition 22; local TCM Germany competition config targets competition/22/logo", "2026-08-10"),
-  verified("competition", "seriea", "Italian Serie A", "37", "sortitoutsi FM26 competition 37; local TCM Italy competition config targets competition/37/logo", "2026-08-10"),
+  verified("competition", "seriea", "Italian Serie A", "32", "sortitoutsi FM26 competition 32 (Italian Serie A); local TCM Italy competition config targets competition/32/logo; vision 2026-08-13 dual evidence: 32.png=SERIE A, 37.png=SERIE C (docs/FM_ASSET_AUDIT.md)", "2026-08-13"),
   verified("competition", "ligue1", "French Ligue 1", "16", "sortitoutsi FM26 competition 16; local TCM France competition config targets competition/16/logo", "2026-08-10"),
   verified("nation", "chn", "People's Republic of China", "110", "sortitoutsi FM26 nation record", "2026-08-10"),
   verified("nation", "eng", "England", "765", "sortitoutsi FM26 nation record", "2026-08-10"),
@@ -197,6 +197,12 @@ const VERIFIED = Object.freeze([
 ]);
 
 const VERIFIED_BY_KEY = new Map(VERIFIED.map((record) => [`${record.type}:${record.target}`, record]));
+
+// 旧版私人 ZIP 使用的历史 fmId（错误映射），导入时兼容接受但不会覆盖当前实体资产：
+// seriea 曾错误使用 37（SERIE C），2026-08-13 修正为 32（SERIE A）。
+export const LEGACY_FM_ALIASES = Object.freeze({
+  "competition:seriea": Object.freeze(["37"])
+});
 
 function unverified(type, target, entityName, reason) {
   return Object.freeze({
