@@ -28,8 +28,79 @@ import {
   rememberChapter
 } from "./narrative.js";
 
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 export const SAVES_KEY = "fc-career-saves";
+export const TIMING_IDLE_MS = 5 * 60 * 1000;
+export const TIMING_TICK_MS = 10 * 1000;
+
+export function defaultTimingState() {
+  return {
+    cumulativeMs: 0,
+    seasonMs: 0,
+    sessions: 0,
+    seasonReports: []
+  };
+}
+
+export function ensureTiming(state) {
+  const timing = state.timing && typeof state.timing === "object" ? state.timing : defaultTimingState();
+  timing.cumulativeMs = Number.isFinite(timing.cumulativeMs) ? timing.cumulativeMs : 0;
+  timing.seasonMs = Number.isFinite(timing.seasonMs) ? timing.seasonMs : 0;
+  timing.sessions = Number.isFinite(timing.sessions) ? timing.sessions : 0;
+  timing.seasonReports = Array.isArray(timing.seasonReports) ? timing.seasonReports : [];
+  state.timing = timing;
+  return timing;
+}
+
+export function applyForegroundTick(state, { nowMs, visible, lastInteractionMs, tickMs = TIMING_TICK_MS }) {
+  const next = cloneState(state);
+  const timing = ensureTiming(next);
+  const now = Number.isFinite(nowMs) ? nowMs : Date.now();
+  const sinceInteraction = Math.max(0, now - (Number.isFinite(lastInteractionMs) ? lastInteractionMs : now));
+  const idle = sinceInteraction > TIMING_IDLE_MS;
+  if (!visible || idle) return { state: next, accruedMs: 0, idle };
+  const amount = Math.min(Number.isFinite(tickMs) ? Math.max(0, tickMs) : 0, TIMING_IDLE_MS);
+  if (amount > 0) {
+    timing.seasonMs += amount;
+    timing.cumulativeMs += amount;
+  }
+  return { state: next, accruedMs: amount, idle };
+}
+
+export function beginForegroundSession(state) {
+  const next = cloneState(state);
+  ensureTiming(next).sessions += 1;
+  return next;
+}
+
+export function freezeSeasonTiming(state, phase = "player") {
+  const next = cloneState(state);
+  const timing = ensureTiming(next);
+  const season = next.world?.season ?? 2026;
+  const phaseLabel = phase === "coach" ? "coach" : "player";
+  if (!timing.seasonReports.some((report) => report.season === season && report.phase === phaseLabel)) {
+    timing.seasonReports.push({
+      season,
+      phase: phaseLabel,
+      ms: Math.round(timing.seasonMs),
+      cumulativeMs: Math.round(timing.cumulativeMs),
+      sessions: timing.sessions,
+      at: next.world?.date || ""
+    });
+  }
+  timing.seasonMs = 0;
+  return next;
+}
+
+export function formatActiveDuration(ms) {
+  const totalSeconds = Math.max(0, Math.round((Number.isFinite(ms) ? ms : 0) / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) return `${hours} 小时 ${minutes} 分钟`;
+  if (minutes > 0) return `${minutes} 分钟 ${seconds} 秒`;
+  return `${seconds} 秒`;
+}
 
 function clamp(value, minimum, maximum) {
   return Math.max(minimum, Math.min(maximum, value));
@@ -565,6 +636,7 @@ export function createInitialState(options = {}) {
     aiCache: [],
     extensions: [],
     diagnostics: { errors: [] },
+    timing: defaultTimingState(),
     fanCulture: { groups: [], tifo: [], rituals: [player.ritual] },
     peers: [],
     awards: [],
@@ -627,11 +699,12 @@ export function createInitialState(options = {}) {
 
 export function migrate(raw) {
   if (!raw || typeof raw !== "object") return createInitialState();
-    if (raw.version === SAVE_VERSION || raw.version === 4) {
+    if (raw.version === SAVE_VERSION || raw.version === 5 || raw.version === 4) {
       const next = structuredClone(raw);
       next.player.traitMemory = next.player.traitMemory || [];
       next.agent = next.agent || initialAgent(next.seed || "migrated-agent");
       next.diagnostics = next.diagnostics || { errors: [] };
+      next.timing = ensureTiming(next);
       next.narrative = next.narrative || defaultNarrativeState();
       next.settings = next.settings || {};
       next.settings.lengthMode = next.settings.lengthMode || "standard";
@@ -654,6 +727,7 @@ export function migrate(raw) {
     next.aiCache = next.aiCache || [];
     next.extensions = next.extensions || [];
     next.diagnostics = next.diagnostics || { errors: [] };
+    next.timing = ensureTiming(next);
     next.narrative = next.narrative || defaultNarrativeState();
     next.settings = next.settings || {};
     next.settings.lengthMode = next.settings.lengthMode || "standard";
@@ -681,6 +755,7 @@ export function migrate(raw) {
     next.version = SAVE_VERSION;
     next.player = next.player || {};
     next.player.traitMemory = next.player.traitMemory || [];
+    next.timing = ensureTiming(next);
     next.narrative = next.narrative || defaultNarrativeState();
     next.settings = next.settings || {};
     next.settings.lengthMode = next.settings.lengthMode || "standard";
@@ -1698,7 +1773,7 @@ function generateTransferOffers(state) {
 }
 
 export function seasonEnd(state) {
-  let next = cloneState(state);
+  let next = freezeSeasonTiming(state, "player");
   ensureWorldAuditState(next);
   for (const simulation of next.world.leagueSimulations) {
     if (!simulation.awards.some((award) => award.season === next.world.season)) {
@@ -1999,7 +2074,7 @@ export function acceptCoachJob(state, jobId) {
 }
 
 function coachSeasonEnd(state) {
-  let next = cloneState(state);
+  let next = freezeSeasonTiming(state, "coach");
   const stats = next.coach.seasonStats || { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
   next.coach.careerStats = next.coach.careerStats || { wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, matches: 0 };
   next.coach.careerStats.wins += stats.wins || 0;

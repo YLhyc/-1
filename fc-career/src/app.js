@@ -7,6 +7,8 @@ import {
   applyPositionTraining,
   awardNomination,
   advanceWeek,
+  applyForegroundTick,
+  beginForegroundSession,
   buildLifeReport,
   buildErrorReport,
   cacheAiChapter,
@@ -30,6 +32,7 @@ import {
   exportState,
   fanEvent,
   familyNextGen,
+  formatActiveDuration,
   goldenBall,
   halftimeChoice,
   importExtensionPack,
@@ -91,6 +94,8 @@ import {
 } from "./update.js";
 
 const app = document.querySelector("#app");
+const browserTestParams = new URLSearchParams(globalThis.location?.search || "");
+const disablePublicFmAutoSync = browserTestParams.get("fc-test-disable-public-fm-sync") === "1";
 let storage;
 let state = null;
 let toastTimer;
@@ -103,6 +108,58 @@ let lastAction = null;
 let lastActionDetail = {};
 let publicFmSync = { status: "idle", done: 0, total: 0, failed: 0, bundleVersion: 0, running: false };
 let publicFmController = null;
+let lastInteractionAt = Date.now();
+let lastTickAt = Date.now();
+let timingTimer = null;
+
+function touchInteraction() {
+  lastInteractionAt = Date.now();
+}
+
+["pointerdown", "keydown", "touchstart", "wheel"].forEach((name) => {
+  window.addEventListener(name, touchInteraction, { passive: true, capture: true });
+});
+
+function tickForegroundTiming(forceVisible = false) {
+  if (!state) {
+    lastTickAt = Date.now();
+    return;
+  }
+  const nowMs = Date.now();
+  const result = applyForegroundTick(state, {
+    nowMs,
+    visible: forceVisible || document.visibilityState === "visible",
+    lastInteractionMs: lastInteractionAt,
+    tickMs: nowMs - lastTickAt
+  });
+  lastTickAt = nowMs;
+  if (result.accruedMs > 0) {
+    state = saveState(result.state, getStorage());
+    if (state.ui.view === "career") render();
+  }
+}
+
+function beginForegroundSessionIfVisible() {
+  if (!state || document.visibilityState !== "visible") return;
+  state = saveState(beginForegroundSession(state), getStorage());
+  if (state.ui.view === "career") render();
+}
+
+function startForegroundTiming() {
+  if (timingTimer) return;
+  lastInteractionAt = Date.now();
+  lastTickAt = Date.now();
+  timingTimer = setInterval(tickForegroundTiming, 10000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      beginForegroundSessionIfVisible();
+    } else {
+      tickForegroundTiming(true);
+    }
+  });
+  window.addEventListener("pagehide", () => tickForegroundTiming(true));
+  beginForegroundSessionIfVisible();
+}
 
 function getStorage() {
   if (storage) return storage;
@@ -714,7 +771,7 @@ function renderPeople() {
       <div class="people-layout">
         <article class="relationship-detail surface-card">
           <p class="eyebrow">关系网</p><h1>${escapeHtml(state.player.name)}</h1>
-          <p class="relation-summary">${escapeHtml(state.player.family)}出生，国家队资格：${escapeHtml(state.nationalTeam.status)}。媒体声望 ${state.media.reputation}，球迷 ${state.media.fans.toLocaleString("zh-CN")}。</p>
+          <p class="relation-summary">${escapeHtml(state.player.family)}出生，国家队资格：${escapeHtml(nationalStatusLabel(state.nationalTeam.status))}。媒体声望 ${state.media.reputation}，球迷 ${state.media.fans.toLocaleString("zh-CN")}。</p>
           <div class="relation-bars">${relationRows()}</div>
         </article>
         <section class="people-strip surface-card">
@@ -858,6 +915,30 @@ function renderHonorsRoom() {
   }).join("")}</div></section>`;
 }
 
+function nationalStatusLabel(status) {
+  return { eligible: "可选（尚未绑定）", youth: "青年队阶段", committed: "已绑定" }[status] || status;
+}
+
+function renderActiveTimingCard() {
+  const timing = state.timing || {};
+  const reports = timing.seasonReports || [];
+  return `
+    <section class="timing-card surface-card">
+      <h2>本机活跃时长</h2>
+      <p class="timing-note">仅记录本机前台活跃时间：页面隐藏或连续 5 分钟无操作不会累计。该统计是本地体验记录，不替代真人赛季时长验收。</p>
+      <div class="summary-grid">
+        <div><span>本赛季活跃</span><b>${formatActiveDuration(timing.seasonMs || 0)}</b></div>
+        <div><span>累计活跃</span><b>${formatActiveDuration(timing.cumulativeMs || 0)}</b></div>
+        <div><span>前台会话</span><b>${timing.sessions || 0} 次</b></div>
+      </div>
+      ${reports.length ? `
+      <h3 class="timing-sub">历史赛季报告</h3>
+      <ul class="memory-list timing-reports">
+        ${reports.map((report) => `<li><b>${report.season} 赛季${report.phase === "coach" ? "（执教）" : ""}</b><span>${formatActiveDuration(report.ms)} · 会话 ${report.sessions} · 累计 ${formatActiveDuration(report.cumulativeMs)}</span></li>`).join("")}
+      </ul>` : ""}
+    </section>`;
+}
+
 function renderCareer() {
   const stats = state.career.totalStats;
   const season = state.career.seasonStats;
@@ -968,7 +1049,7 @@ function renderCareer() {
       </section>
       <section class="national-card surface-card">
         <h2>国家队</h2>
-        <p>${renderNationFlags(state.player.nationality, state.player.secondNationality)}${state.player.nationality} · 成年队 ${state.nationalTeam.caps} 场 ${state.nationalTeam.goals} 球 · 青年队 ${state.nationalTeam.youthCaps} 场 · 资格 ${escapeHtml(state.nationalTeam.status)}</p>
+        <p>${renderNationFlags(state.player.nationality, state.player.secondNationality)}${state.player.nationality} · 成年队 ${state.nationalTeam.caps} 场 ${state.nationalTeam.goals} 球 · 青年队 ${state.nationalTeam.youthCaps} 场 · 资格 ${escapeHtml(nationalStatusLabel(state.nationalTeam.status))}</p>
         ${state.nationalTeam.history.slice(-3).map((entry) => `<p class="national-history">${escapeHtml(entry.date)} ${escapeHtml(entry.stage)} ${entry.caps} 场 ${entry.goals} 球 · 评分 ${entry.rating.toFixed(1)}</p>`).join("")}
         <button class="secondary-action danger" data-action="retire">提前结束球员生涯</button>
       </section>`;
@@ -977,6 +1058,7 @@ function renderCareer() {
     <section class="view career-view">
       <header class="view-heading"><div><span>${state.world.phase === "coach" ? "COACH DESK" : "CAREER DESK"}</span><h1>${state.world.phase === "coach" ? "教练办公室" : state.world.phase === "final" ? "人生报告" : "职业档案"}</h1></div><p>球员生涯、合同、转会、财富和国家队记录都在这里。</p></header>
       ${body}
+      ${renderActiveTimingCard()}
       ${renderNarrativeEntry()}
       ${state.world.phase === "contract" ? "" : renderHonorsRoom()}
     </section>`;
@@ -1965,10 +2047,13 @@ loadPrivateAssets().then((loaded) => {
 loadPublicFmAssets().then(() => readPublicFmStatus()).then((status) => {
   publicFmSync = { ...publicFmSync, ...status, status: status.done > 0 ? "reused" : "idle" };
   if (state) render();
-  if (!status.paused) startPublicFmSync();
+  if (!status.paused && !disablePublicFmAutoSync) startPublicFmSync();
 }).catch(() => {
   publicFmSync = { ...publicFmSync, status: "unavailable" };
   if (state) render();
 });
 
 initAppUpdate({ beforeApply: prepareForUpdate });
+
+// 本机前台活跃计时：页面隐藏或连续 5 分钟无操作不计时（数据在存档 timing 字段）。
+startForegroundTiming();

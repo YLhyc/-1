@@ -88,12 +88,19 @@ export function renderUpdateWidget() {
     </div>`;
 }
 
+function formatBuildTime(value) {
+  if (!value || value === "读取中") return value || "读取中";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("zh-CN", { hour12: false });
+}
+
 export function renderSettingsUpdateCard() {
   return `
     <section class="surface-card update-card" data-update-card>
       <h2>应用与更新</h2>
-      <p>当前版本 <b data-update-version>${escapeHtml(APP_VERSION)}</b> · 缓存 <b data-update-cache>${escapeHtml(cacheLabel())}</b></p>
-      <p>构建时间 <span data-update-build-time>${escapeHtml(buildTime || "读取中")}</span></p>
+      <p>当前版本 <b data-update-version>${escapeHtml(APP_VERSION)}</b> · <b data-update-cache>${escapeHtml(cacheLabel())}</b></p>
+      <p>构建时间 <span data-update-build-time>${escapeHtml(formatBuildTime(buildTime))}</span></p>
       ${renderUpdateWidget()}
       <p class="section-note">只有点击按钮才会接管新版；比赛与长叙事不会自动重载，接管前会先保存当前生涯与未提交草稿。</p>
     </section>`;
@@ -107,7 +114,7 @@ export function refreshUpdateStatus() {
     node.textContent = cacheLabel();
   });
   document.querySelectorAll("[data-update-build-time]").forEach((node) => {
-    node.textContent = buildTime || "读取中";
+    node.textContent = formatBuildTime(buildTime);
   });
   document.querySelectorAll("[data-update-status]").forEach((node) => {
     node.textContent = status.text;
