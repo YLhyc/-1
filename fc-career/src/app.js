@@ -135,14 +135,23 @@ function tickForegroundTiming(forceVisible = false) {
   lastTickAt = nowMs;
   if (result.accruedMs > 0) {
     state = saveState(result.state, getStorage());
-    if (state.ui.view === "career") render();
+    if (state.ui.view === "career" && canRefreshCareerView()) render();
   }
 }
 
 function beginForegroundSessionIfVisible() {
   if (!state || document.visibilityState !== "visible") return;
   state = saveState(beginForegroundSession(state), getStorage());
-  if (state.ui.view === "career") render();
+  if (state.ui.view === "career" && canRefreshCareerView()) render();
+}
+
+// The 10s foreground-timing heartbeat re-renders the career view to keep the
+// timing card live. Re-rendering rebuilds every form control from state, which
+// would silently discard a half-typed lineup/social draft, so skip the refresh
+// while a text field has focus; the next commit or tick redraws it.
+function canRefreshCareerView() {
+  const active = document.activeElement;
+  return !(active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA"));
 }
 
 function startForegroundTiming() {
@@ -1318,12 +1327,15 @@ function renderMicroScene() {
   const micro = state?.narrative?.pendingMicroScene;
   if (!micro) return "";
   return `
-    <section class="micro-scene surface-card" data-micro-scene>
-      <p class="eyebrow">微场景</p>
-      <h2>${escapeHtml(micro.title || "")}</h2>
-      ${(micro.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
-      <button class="secondary-action" data-action="micro-scene-dismiss">收起</button>
-    </section>`;
+    <div class="micro-scene-layer" data-micro-scene-layer>
+      <section class="micro-scene surface-card" data-micro-scene role="dialog" aria-modal="true" aria-labelledby="microSceneTitle">
+        <header>
+          <div><p class="eyebrow">微场景</p><h2 id="microSceneTitle">${escapeHtml(micro.title || "")}</h2></div>
+          <button class="secondary-action" data-action="micro-scene-dismiss" aria-label="收起微场景">收起</button>
+        </header>
+        ${(micro.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+      </section>
+    </div>`;
 }
 
 function renderCurrentView() {
