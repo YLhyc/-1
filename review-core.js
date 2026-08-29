@@ -7,6 +7,14 @@
   var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
   var DAY_MS = 86400000;
   var excludedCache = null;
+  var reviewMetaPrunedForDay = '';
+
+  function safeSetItem(key, value) {
+    try { localStorage.setItem(key, value); return true; } catch(e) { return false; }
+  }
+  function safeRemoveItem(key) {
+    try { localStorage.removeItem(key); } catch(e) {}
+  }
 
   function safeJson(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
@@ -18,7 +26,22 @@
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
   function loadReviewMeta() { return safeJson(REVIEW_META_KEY, {}); }
-  function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta || {})); }
+  function saveReviewMeta(meta) {
+    meta = meta || {};
+    var pruneDay = localDayKey();
+    if (reviewMetaPrunedForDay !== pruneDay) {
+      reviewMetaPrunedForDay = pruneDay;
+      var cutoff = Date.now() - 365 * DAY_MS;
+      var cleaned = {}, dropped = 0;
+      Object.keys(meta).forEach(function(key) {
+        var entry = meta[key];
+        if (entry && Number(entry.lastReviewAt) >= cutoff) cleaned[key] = entry;
+        else dropped++;
+      });
+      if (dropped) meta = cleaned;
+    }
+    safeSetItem(REVIEW_META_KEY, JSON.stringify(meta));
+  }
   function loadExcluded() {
     if (excludedCache) return excludedCache;
     excludedCache = safeJson(EXCLUDED_KEY, {});
@@ -26,9 +49,9 @@
   }
   function saveExcluded(data) {
     excludedCache = data || {};
-    if (data && Object.keys(data).length) localStorage.setItem(EXCLUDED_KEY, JSON.stringify(data));
-    else localStorage.removeItem(EXCLUDED_KEY);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (data && Object.keys(data).length) safeSetItem(EXCLUDED_KEY, JSON.stringify(data));
+    else safeRemoveItem(EXCLUDED_KEY);
+    safeSetItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
   if (global.addEventListener) {
     global.addEventListener('storage', function(event) {
@@ -55,7 +78,7 @@
       oldReview: meta[key] ? cloneValue(meta[key]) : null
     };
     prefs[en] = 'hidden';
-    localStorage.setItem(prefsKey, JSON.stringify(prefs));
+    safeSetItem(prefsKey, JSON.stringify(prefs));
     if (meta[key]) { delete meta[key]; saveReviewMeta(meta); }
     saveExcluded(excluded);
     return excluded[key];
@@ -67,8 +90,8 @@
     var prefsKey = preferenceStorageKey(canonical), prefs = safeJson(prefsKey, {});
     if (entry.hadPref) prefs[en] = entry.oldPref;
     else delete prefs[en];
-    if (Object.keys(prefs).length) localStorage.setItem(prefsKey, JSON.stringify(prefs));
-    else localStorage.removeItem(prefsKey);
+    if (Object.keys(prefs).length) safeSetItem(prefsKey, JSON.stringify(prefs));
+    else safeRemoveItem(prefsKey);
     var meta = loadReviewMeta();
     var now = Date.now();
     if (entry.oldReview && isObject(entry.oldReview)) {
@@ -96,8 +119,8 @@
     var hadPref = Object.prototype.hasOwnProperty.call(prefs, en);
     var oldPref = hadPref ? prefs[en] : null;
     prefs[en] = familiar ? 'familiar' : 'hard';
-    localStorage.setItem(storageKey, JSON.stringify(prefs));
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeSetItem(storageKey, JSON.stringify(prefs));
+    safeSetItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
     var opts = options || {}, oldReview = null, reviewApplied = false;
     var canonicalSource = reviewSource(source);
     var reviewBefore = mode === 'recite' ? loadReviewMeta()[canonicalSource + ':' + en] : null;
@@ -125,9 +148,9 @@
     var storageKey = preferenceStorageKey(state.source), prefs = safeJson(storageKey, {});
     if (state.hadPref) prefs[state.en] = state.oldPref;
     else delete prefs[state.en];
-    if (Object.keys(prefs).length) localStorage.setItem(storageKey, JSON.stringify(prefs));
-    else localStorage.removeItem(storageKey);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (Object.keys(prefs).length) safeSetItem(storageKey, JSON.stringify(prefs));
+    else safeRemoveItem(storageKey);
+    safeSetItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
     if (state.reviewApplied) undoReview(state.source, state.en, state.oldReview || {});
     if (state.recallOutcome) undoRecallOutcome(state.recallOutcome);
   }
@@ -167,7 +190,7 @@
   function undoReview(source, en, old) {
     var meta = loadReviewMeta(), key = source + ':' + en;
     if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
-    if (Object.keys(meta).length) saveReviewMeta(meta); else localStorage.removeItem(REVIEW_META_KEY);
+    if (Object.keys(meta).length) saveReviewMeta(meta); else safeRemoveItem(REVIEW_META_KEY);
   }
   function loadRecallQuality() { return safeJson(RECALL_KEY, { days: {} }); }
   function saveRecallQuality(data) {
@@ -177,9 +200,9 @@
       var ts = new Date(day + 'T00:00:00').getTime();
       if (!isFinite(ts) || ts < cutoff) delete days[day];
     });
-    if (Object.keys(days).length) localStorage.setItem(RECALL_KEY, JSON.stringify({ days: days }));
-    else localStorage.removeItem(RECALL_KEY);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (Object.keys(days).length) safeSetItem(RECALL_KEY, JSON.stringify({ days: days }));
+    else safeRemoveItem(RECALL_KEY);
+    safeSetItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
   function wasScheduledRecall(entry, at) {
     if (!isObject(entry) || !Number(entry.lastReviewAt)) return false;
@@ -274,7 +297,7 @@
       var ts = new Date(day + 'T00:00:00').getTime();
       if (!isFinite(ts) || ts < cutoff) delete days[day];
     });
-    localStorage.setItem(ACTIVITY_KEY, JSON.stringify({ days: days }));
+    safeSetItem(ACTIVITY_KEY, JSON.stringify({ days: days }));
   }
   function recordLearningActivity(source, en, mode) {
     if (!source || !en) return;
@@ -291,7 +314,7 @@
     bucket.updatedAt = Date.now();
     activity.days[day] = bucket;
     saveLearningActivity(activity);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeSetItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
   function undoLearningActivity(source, en, mode) {
     var activity = loadLearningActivity(), day = localDayKey();
@@ -306,7 +329,7 @@
     bucket.updatedAt = Date.now();
     if (!Object.keys(bucket.words).length) delete activity.days[day];
     saveLearningActivity(activity);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeSetItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
 
   global.ReviewCore = {

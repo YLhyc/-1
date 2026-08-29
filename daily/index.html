@@ -803,10 +803,28 @@ function toggleSubjAudio(event, subjectId, dateStr) {
 
 function playAudio(url, btn) {
   var a = new Audio(url);
-  a.onplay = function() { btn.classList.add('playing'); btn.textContent = '⏸️'; curAudio = a; curBtn = btn; };
-  a.onended = function() { resetBtn(btn); curAudio = null; curBtn = null; };
-  a.onerror = function() { resetBtn(btn); curAudio = null; curBtn = null; /* 静默失败 */ };
-  a.play().catch(function() { resetBtn(btn); });
+  // Watchdog: an element whose play() resolved but which never fires
+  // playing/ended/error (typical after an iOS media interruption) must not
+  // leave the button stuck on ⏸️ forever.
+  var wd = null, snap = 0;
+  function finish() {
+    if (wd) { clearTimeout(wd); wd = null; }
+    resetBtn(btn); curAudio = null; curBtn = null;
+  }
+  function arm() {
+    if (wd) clearTimeout(wd);
+    snap = isFinite(a.currentTime) ? a.currentTime : 0;
+    wd = setTimeout(function() {
+      wd = null;
+      if (curAudio !== a) return;
+      if (isFinite(a.currentTime) && a.currentTime > snap + 0.05) { arm(); return; }
+      finish();
+    }, 8000);
+  }
+  a.onplay = function() { btn.classList.add('playing'); btn.textContent = '⏸️'; curAudio = a; curBtn = btn; arm(); };
+  a.onended = finish;
+  a.onerror = finish;
+  a.play().catch(finish);
 }
 
 function stopAll() {
@@ -887,6 +905,7 @@ function pickVoice(lang) {
   return v;
 }
 
+var _speakFinish = null;
 function speak(text, subjectId, btn) {
   var u = new SpeechSynthesisUtterance(text);
   var lang = subjectId === 'english' ? 'en-US' : 'zh-CN';
@@ -895,13 +914,38 @@ function speak(text, subjectId, btn) {
   // 始终尝试选语音（不依赖 voicesReady，避免事件未触发导致永远用默认语音）
   var voice = pickVoice(lang);
   if (voice) u.voice = voice;
-  u.onstart = () => { btn.classList.add('playing'); btn.textContent='⏸️'; curBtn=btn; curUtt=u; };
-  u.onend = () => resetBtn(btn);
-  u.onerror = () => resetBtn(btn);
+  // iOS/Chrome 偶发 onend/onerror 永不触发：启动守卫 + 朗读中巡逻兜底
+  var settled = false, started = false, patrol = null, startGuard = null;
+  function finishSpeak() {
+    if (settled) return;
+    settled = true;
+    clearTimeout(startGuard);
+    if (patrol) clearInterval(patrol);
+    if (_speakFinish === finishSpeak) _speakFinish = null;
+    resetBtn(btn);
+  }
+  _speakFinish = finishSpeak;
+  u.onstart = () => {
+    if (started) return;
+    started = true;
+    clearTimeout(startGuard);
+    btn.classList.add('playing'); btn.textContent='⏸️'; curBtn=btn; curUtt=u;
+    patrol = setInterval(function() {
+      if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) finishSpeak();
+    }, 3000);
+  };
+  startGuard = setTimeout(function() { if (!started) finishSpeak(); }, 10000);
+  u.onend = finishSpeak;
+  u.onerror = finishSpeak;
   window.speechSynthesis.speak(u);
 }
 
-function stopTts() { window.speechSynthesis.cancel(); if (curBtn) resetBtn(curBtn); curUtt=null; curBtn=null; }
+function stopTts() {
+  window.speechSynthesis.cancel();
+  if (_speakFinish) _speakFinish();
+  if (curBtn) resetBtn(curBtn);
+  curUtt=null; curBtn=null;
+}
 function resetBtn(btn) { btn.classList.remove('playing'); btn.textContent='▶️ 朗读复习'; }
 
 // ====== READ ALL ======

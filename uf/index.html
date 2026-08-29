@@ -201,11 +201,11 @@ body{background:linear-gradient(145deg,#ccebf4 0,#e8f6f8 47%,#f7f9f8 72%,#edf6f3
 </div>
 
 <div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
-<script src="../review-core.js?v=2.0.16"></script>
-<script src="../focus-core.js?v=2.0.16"></script>
-<script src="../study-copy.js?v=2.0.16"></script>
-<script src="../audio-cache.js?v=2.0.16"></script>
-<script src="../ui-motion.js?v=2.0.16"></script>
+<script src="../review-core.js?v=2.0.17"></script>
+<script src="../focus-core.js?v=2.0.17"></script>
+<script src="../study-copy.js?v=2.0.17"></script>
+<script src="../audio-cache.js?v=2.0.17"></script>
+<script src="../ui-motion.js?v=2.0.17"></script>
 <script>
 var StudyCopy = window.StudyCopy || { buttonHTML:function(){return '';}, updateButton:function(){} };
 window.onerror = function(msg, url, line, col, err) {
@@ -961,6 +961,7 @@ function nextStepAfter(g, ns, nw) {
 }
 
 function stop() {
+  clearListenWatchdog();
   listenPlaybackToken++;
   listenAudioAttemptSerial++;
   if (auA) { auA.onended=null; auA.onerror=null; auA.onplaying=null; auA.pause(); auA.removeAttribute('src'); }
@@ -975,6 +976,7 @@ function stop() {
 }
 
 function done() {
+  clearListenWatchdog();
   listenPlaybackToken++;
   listenAudioAttemptSerial++;
   listenAudioFailed = false;
@@ -1018,6 +1020,7 @@ function markListenStarted(token, unit, group, currentWord, currentStep, attempt
 }
 
 function pauseListenForFailure(token, unit, group, currentWord, currentStep, slot, au, err, retry, attemptId) {
+  clearListenWatchdog();
   if (!listenStateIsCurrent(token, unit, group, currentWord, currentStep)) return false;
   if (attemptId != null && attemptId !== listenAudioAttemptSerial) return false;
   if (au && !listenAttemptIsCurrent(token, unit, group, currentWord, currentStep, slot, au, attemptId)) return false;
@@ -1037,6 +1040,9 @@ function pauseListenForFailure(token, unit, group, currentWord, currentStep, slo
   return true;
 }
 
+
+var listenWatchdogTimer = null;
+function clearListenWatchdog() { if (listenWatchdogTimer) { clearTimeout(listenWatchdogTimer); listenWatchdogTimer = null; } }
 function playListenSegmentAt(slot) {
   var ws = wordsInGroup(curGroup);
   if (wIdx >= ws.length) { done(); return Promise.resolve(false); }
@@ -1093,10 +1099,11 @@ function playListenSegmentAt(slot) {
     pauseListenForFailure(token, unit, group, currentWord, currentStep, slot, au, err, null, attemptId);
     return false;
   }
-  au.onplaying = function() { markListenStarted(token, unit, group, currentWord, currentStep, attemptId); };
+  au.onplaying = function() { markListenStarted(token, unit, group, currentWord, currentStep, attemptId); armStallWatchdog(); };
   au.onended = function() {
     if (settled || !listenAttemptIsCurrent(token, unit, group, currentWord, currentStep, slot, au, attemptId)) return;
     settled = true;
+    clearListenWatchdog();
     au.onended = null; au.onerror = null; au.onplaying = null;
     var nx = nextStepAfter(group, currentStep, currentWord);
     if (!nx) { done(); return; }
@@ -1104,6 +1111,27 @@ function playListenSegmentAt(slot) {
     onSegEnd();
   };
   au.onerror = function() { fail(au.error || { name: 'AudioError' }); };
+  // Progress watchdog: play() resolving is not "audible" — an element wedged
+  // by an OS media interruption never fires playing/ended/error. Healthy
+  // playback keeps advancing currentTime and re-arms; a frozen one fails.
+  var watchdogBaseline = 0;
+  function armStallWatchdog() {
+    if (settled) return;
+    if (listenWatchdogTimer) clearTimeout(listenWatchdogTimer);
+    watchdogBaseline = isFinite(au.currentTime) ? au.currentTime : 0;
+    listenWatchdogTimer = setTimeout(function() {
+      listenWatchdogTimer = null;
+      if (settled || !listenAttemptIsCurrent(token, unit, group, currentWord, currentStep, slot, au, attemptId)) return;
+      if (au.ended || paused) return;
+      var now = isFinite(au.currentTime) ? au.currentTime : 0;
+      if (!au.paused && now > watchdogBaseline + 0.05) { armStallWatchdog(); return; }
+      fail({ name: au.paused ? 'AudioPaused' : 'AudioTimeout' });
+    }, 8000);
+  }
+  au.onwaiting = function() { if (!settled) armStallWatchdog(); };
+  au.ontimeupdate = function() { if (!settled) armStallWatchdog(); };
+  au.onstalled = function() { if (!settled) armStallWatchdog(); };
+  armStallWatchdog();
   var playP;
   try {
     playP = au.play();

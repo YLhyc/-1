@@ -1468,7 +1468,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.16 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.0.17 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1871,11 +1871,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.16"></script>
-<script src="focus-core.js?v=2.0.16"></script>
-<script src="study-copy.js?v=2.0.16"></script>
-<script src="audio-cache.js?v=2.0.16"></script>
-<script src="ui-motion.js?v=2.0.16"></script>
+<script src="review-core.js?v=2.0.17"></script>
+<script src="focus-core.js?v=2.0.17"></script>
+<script src="study-copy.js?v=2.0.17"></script>
+<script src="audio-cache.js?v=2.0.17"></script>
+<script src="ui-motion.js?v=2.0.17"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1960,8 +1960,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.16";
-var BUILD_TS = 1786588134;
+var APP_BUILD_ID = "2.0.17";
+var BUILD_TS = 1787983282;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -2203,16 +2203,22 @@ function countsKey() { return currentDict === 'vocab' ? 'vv_counts' : 'hb_counts
 function loadPrefs(dict) {
   try { return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_prefs' : 'hb_prefs') || '{}'); } catch(e) { return {}; }
 }
+// localStorage quota-exceeded must never abort a learning-data write path:
+// a rating/recite click that throws loses its state update AND the
+// cloud-backup dirty mark, silently. Migration/backup code intentionally
+// does NOT use this (aborting there preserves the original data).
+function safeLS(key, value) { try { localStorage.setItem(key, value); } catch(e) {} }
+
 function savePrefs(dict, obj) {
-  localStorage.setItem(dict === 'vocab' ? 'vv_prefs' : dict === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs', JSON.stringify(obj));
-  localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
+  safeLS(dict === 'vocab' ? 'vv_prefs' : dict === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs', JSON.stringify(obj));
+  safeLS('learning_activity_dirty_v1', String(Date.now()));
 }
 function loadCounts(dict) {
   try { return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_counts' : 'hb_counts') || '{}'); } catch(e) { return {}; }
 }
 function saveCounts(dict, obj) {
-  localStorage.setItem(dict === 'vocab' ? 'vv_counts' : dict === 'hongbaoshu' ? 'hb_counts' : 'vv_counts', JSON.stringify(obj));
-  localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
+  safeLS(dict === 'vocab' ? 'vv_counts' : dict === 'hongbaoshu' ? 'hb_counts' : 'vv_counts', JSON.stringify(obj));
+  safeLS('learning_activity_dirty_v1', String(Date.now()));
 }
 
 // ═══════════ WORDS ═══════════
@@ -2549,7 +2555,7 @@ function saveLearningResume(source, unitIdx, mode, itemIdx, order) {
   };
   var savedOrder = Array.isArray(order) ? order : (source === 'vocab' && vocabCardOrderUnit === unitIdx ? vocabCardOrder : null);
   if (Array.isArray(savedOrder)) payload.order = savedOrder.slice();
-  localStorage.setItem(LEARNING_RESUME_KEY, JSON.stringify(payload));
+  safeLS(LEARNING_RESUME_KEY, JSON.stringify(payload));
 }
 function loadLearningResume() {
   var r = safeJsonFromStorage(LEARNING_RESUME_KEY, null);
@@ -2705,8 +2711,8 @@ function loadTodayReciteSettings() {
 }
 function saveTodayReciteLimit(limit) {
   limit = Number(limit); if ([20,30,50,60].indexOf(limit) < 0) limit = 30;
-  localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify({ limit: limit }));
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  safeLS(TODAY_RECITE_SETTINGS_KEY, JSON.stringify({ limit: limit }));
+  safeLS(ACTIVITY_DIRTY_KEY, String(Date.now()));
   return limit;
 }
 function loadTodayReciteRotation() {
@@ -2716,8 +2722,8 @@ function loadTodayReciteRotation() {
   return state;
 }
 function saveTodayReciteRotation(state) {
-  localStorage.setItem(TODAY_RECITE_ROTATION_KEY, JSON.stringify({ cursor: Math.max(0, Math.floor(Number(state && state.cursor) || 0)), updatedAt: Date.now() }));
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  safeLS(TODAY_RECITE_ROTATION_KEY, JSON.stringify({ cursor: Math.max(0, Math.floor(Number(state && state.cursor) || 0)), updatedAt: Date.now() }));
+  safeLS(ACTIVITY_DIRTY_KEY, String(Date.now()));
 }
 function loadTodayReciteDaily() {
   var data = safeJsonFromStorage(TODAY_RECITE_DAILY_KEY, { days: {}, rated: {} });
@@ -2735,8 +2741,8 @@ function saveTodayReciteDaily(data) {
     var ts = new Date(day + 'T00:00:00').getTime();
     if (!isFinite(ts) || ts < cutoff) delete data.rated[day];
   });
-  localStorage.setItem(TODAY_RECITE_DAILY_KEY, JSON.stringify(data));
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  safeLS(TODAY_RECITE_DAILY_KEY, JSON.stringify(data));
+  safeLS(ACTIVITY_DIRTY_KEY, String(Date.now()));
 }
 function todayReciteEntryKey(source, en) { return source + ':' + en; }
 function getTodayReciteRated() {
@@ -2796,12 +2802,12 @@ function saveTodayReciteSession() {
       activityMode: todayReciteUndo.activityMode, familiar: !!todayReciteUndo.familiar, practiceOnly: !!todayReciteUndo.practiceOnly
     };
   }
-  localStorage.setItem(TODAY_RECITE_SESSION_KEY, JSON.stringify({
+  safeLS(TODAY_RECITE_SESSION_KEY, JSON.stringify({
     date: localDayKey(), id: todayReciteStats.id, limit: todayReciteStats.target,
     items: todayReciteItems.map(packTodayReciteEntry), idx: todayReciteIdx,
     stats: todayReciteStats, practiceOnly: !!todayRecitePracticeOnly, undo: undo, updatedAt: Date.now()
   }));
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  safeLS(ACTIVITY_DIRTY_KEY, String(Date.now()));
 }
 function clearTodayReciteSession() { localStorage.removeItem(TODAY_RECITE_SESSION_KEY); }
 function restoreTodayReciteSession() {
@@ -3065,7 +3071,7 @@ function openDueReview(source, en) {
       for (var k = 0; k < entries.length; k++) if (entries[k].localIdx === localIndex) { cardIndex = k; break; }
     }
     vocabCardIdx = Math.max(0, cardIndex);
-    localStorage.setItem('vocab_study_mode_v1', 'recite');
+    safeLS('vocab_study_mode_v1', 'recite');
     saveLearningResume('vocab', unit, 'recite', vocabCardIdx);
     renderVocabCardMode();
   }
@@ -3450,7 +3456,7 @@ function vocabCardCurrentPref() {
   return loadPrefs('vocab')[prefKey('vocab', gw)] || '';
 }
 
-function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false; localStorage.setItem('vocab_study_mode_v1',mode); saveLearningResume('vocab', currentUnit, mode, vocabCardIdx); renderVocabCardMode(); }
+function setVocabStudyMode(mode) { vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false; safeLS('vocab_study_mode_v1',mode); saveLearningResume('vocab', currentUnit, mode, vocabCardIdx); renderVocabCardMode(); }
 function renderVocabRecite(entries) {
   var e=entries[vocabCardIdx], w=e.item, hidden=vocabReciteShown?'':' recite-hidden', c=document.getElementById('groupContainer');
   if (vocabReciteDone) { c.innerHTML='<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元已完成</div><div class="vocab-card-controls"><button class="vc-btn" onclick="vocabReciteUndoLast()">↶</button></div></div>'; return; }
@@ -3951,6 +3957,7 @@ function audioIsReady(gIdx, wIdx) {
 }
 
 // ═══════════ AUDIO: RED BOOK (Web Speech API) ═══════════
+var ttsKeepPaused = false; // user pressed pause: keepAlive must not resurrect TTS
 function speakWeb(text, lang, onEnd) {
   var onStart = arguments.length > 3 ? arguments[3] : null;
   if (!window.speechSynthesis) { onEnd({ name: 'SpeechUnavailable' }); return; }
@@ -3959,6 +3966,7 @@ function speakWeb(text, lang, onEnd) {
   u.lang = lang;
   u.rate = 0.85;
   var keepAlive = setInterval(function() {
+    if (ttsKeepPaused) return;
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.pause();
       window.speechSynthesis.resume();
@@ -3968,9 +3976,12 @@ function speakWeb(text, lang, onEnd) {
   var done = function(err) {
     if (settled) return;
     settled = true;
+    clearTimeout(stallGuard);
     clearInterval(keepAlive);
     onEnd(err || null);
   };
+  // Chrome/iOS occasionally never fire onend/onerror: fail safe to onEnd.
+  var stallGuard = setTimeout(function() { done({ name: 'SpeechTimeout' }); }, 30000);
   u.onstart = function() { if (onStart) onStart(); };
   u.onend = function() { done(null); };
   u.onerror = function(event) { done({ name: event && event.error ? 'SpeechError:' + event.error : 'SpeechError' }); };
@@ -4100,6 +4111,7 @@ function stopAll() {
   auA = null; auB = null;
   auUrlA = null; auUrlB = null;
   if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
+  ttsKeepPaused = false;
   vocabCardPlaying = false;
   vocabAudioFailed = false;
   vocabRetryPlayback = null;
@@ -4122,6 +4134,7 @@ function finishGroup() {
   clearHighlight();
   setBtnState(currentGroup, false, false, false);
   if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
+  ttsKeepPaused = false;
   vocabAudioFailed = false;
   vocabRetryPlayback = null;
   currentGroup = -1; wordIdx = 0; step = 0; paused = false; singleWordMode = false; curAuSlot = 0;
@@ -4386,6 +4399,7 @@ function startVocabPlayback(gIdx) {
 
 function resumeVocabPlayback(gIdx) {
   if (currentGroup !== gIdx) return Promise.resolve(false);
+  ttsKeepPaused = false;
   if (vocabAudioFailed && vocabRetryPlayback) {
     var retry = vocabRetryPlayback;
     vocabAudioFailed = false;
@@ -4426,6 +4440,7 @@ function togglePlay(gIdx) {
     var activeAu = getAu(curAuSlot);
     if (activeAu) activeAu.pause();
     if (window.speechSynthesis) { window.speechSynthesis.pause(); }
+    ttsKeepPaused = true;
     paused = true;
     setBtnState(gIdx, false, true, false);
   } else if (currentGroup === gIdx && paused) {
@@ -4458,6 +4473,7 @@ function togglePause(gIdx) {
     var activeAu = getAu(curAuSlot);
     if (activeAu) activeAu.pause();
     if (window.speechSynthesis) { window.speechSynthesis.pause(); }
+    ttsKeepPaused = true;
     paused = true;
     setBtnState(gIdx, false, true, false);
   }
@@ -4753,6 +4769,8 @@ var GITHUB_BACKUP_CONFIG_KEY = 'github_backup_config_v1';
 var GITHUB_BACKUP_LAST_KEY = 'github_backup_last_v1';
 var GITHUB_BACKUP_ERROR_KEY = 'github_backup_error_v1';
 var GITHUB_BACKUP_FILE = 'kaoyan-english-review-backup.json';
+var GITHUB_BACKUP_FAIL_KEY = 'github_backup_fail_v1';
+var GITHUB_BACKUP_PART_SUFFIX = '-part';
 var GITHUB_BACKUP_INTERVAL_MS = 6 * 60 * 60 * 1000;
 var GITHUB_BACKUP_POLL_MS = 5 * 60 * 1000;
 var githubAutoBackupPromise = null;
@@ -5026,9 +5044,34 @@ function openBackupCenter() {
   showBackupMsg('', '');
 }
 
+// Token obfuscation: a purely static PWA has no real secret storage, so the
+// token can't be truly encrypted. XOR+base64 keeps it out of plain-text
+// scans and clipboard snooping; pair it with a fine-grained (gist-only) PAT.
+// Legacy plaintext configs still read back.
+var GITHUB_TOKEN_OBFUSCATION_KEY = 'kaoyan-english-review-helper';
+function obfuscateGithubToken(token) {
+  var t = String(token || '');
+  try {
+    var bytes = [];
+    for (var i = 0; i < t.length; i++) bytes.push(t.charCodeAt(i) ^ GITHUB_TOKEN_OBFUSCATION_KEY.charCodeAt(i % GITHUB_TOKEN_OBFUSCATION_KEY.length));
+    return 'v1:' + btoa(String.fromCharCode.apply(null, bytes));
+  } catch(e) { return t; }
+}
+function deobfuscateGithubToken(stored) {
+  var s = String(stored || '');
+  if (s.indexOf('v1:') !== 0) return s;
+  try {
+    var raw = atob(s.slice(3)), out = '';
+    for (var j = 0; j < raw.length; j++) out += String.fromCharCode(raw.charCodeAt(j) ^ GITHUB_TOKEN_OBFUSCATION_KEY.charCodeAt(j % GITHUB_TOKEN_OBFUSCATION_KEY.length));
+    return out;
+  } catch(e) { return ''; }
+}
+
 function loadGithubBackupConfig() {
   var config = safeJsonFromStorage(GITHUB_BACKUP_CONFIG_KEY, {});
-  return isPlainObject(config) ? config : {};
+  config = isPlainObject(config) ? config : {};
+  if (config.token) config.token = deobfuscateGithubToken(config.token);
+  return config;
 }
 
 function normalizeGistId(value) {
@@ -5039,8 +5082,8 @@ function normalizeGistId(value) {
 }
 
 function saveGithubBackupConfig(config) {
-  localStorage.setItem(GITHUB_BACKUP_CONFIG_KEY, JSON.stringify({
-    token: String(config.token || '').trim(),
+  safeLS(GITHUB_BACKUP_CONFIG_KEY, JSON.stringify({
+    token: obfuscateGithubToken(String(config.token || '').trim()),
     gistId: normalizeGistId(config.gistId),
     auto: config.auto !== false
   }));
@@ -5105,14 +5148,77 @@ function githubApiRequest(url, options, token) {
   });
 }
 
+// Gist API caps a single file at ~1MB. Keep each part comfortably below it;
+// the payload splits across '<name>-part2.json', '-part3.json', … when the
+// snapshot outgrows one file. Old single-file gists download unchanged.
+var GITHUB_BACKUP_MAX_FILE_BYTES = 700 * 1024;
+function splitBackupPayload(snapshot) {
+  var single = JSON.stringify(snapshot);
+  if (single.length <= GITHUB_BACKUP_MAX_FILE_BYTES) return [single];
+  var keys = Object.keys(snapshot.data);
+  var parts = [], cur = {}, curSize = 0;
+  var overhead = 320; // envelope fields + JSON punctuation
+  keys.forEach(function(k) {
+    var chunk = JSON.stringify(snapshot.data[k]);
+    if (curSize && curSize + chunk.length + overhead > GITHUB_BACKUP_MAX_FILE_BYTES) {
+      parts.push(cur); cur = {}; curSize = 0;
+    }
+    cur[k] = snapshot.data[k];
+    curSize += chunk.length;
+  });
+  if (Object.keys(cur).length) parts.push(cur);
+  return parts.map(function(dataSubset, i) {
+    var obj = { app: snapshot.app, v: snapshot.v, exportedAt: snapshot.exportedAt, exportedAtMs: snapshot.exportedAtMs, data: dataSubset };
+    if (i < parts.length - 1) obj.__more = true;
+    return JSON.stringify(obj);
+  });
+}
+function gistBackupPartName(index) {
+  return GITHUB_BACKUP_FILE.replace(/[.]json$/, GITHUB_BACKUP_PART_SUFFIX + index + '.json');
+}
+function gistFileContent(file, token) {
+  if (file.truncated && file.raw_url) {
+    return githubApiRequest(file.raw_url, { method: 'GET' }, token).then(function(raw) {
+      return typeof raw === 'string' ? raw : (raw.raw || JSON.stringify(raw));
+    });
+  }
+  return Promise.resolve(file.content || '');
+}
+
+// Serialize backup work across tabs. If Web Locks is unavailable (old
+// browsers) proceed unlocked — the remote-stamp check below still guards
+// against blind overwrites.
+function withBackupLock(fn) {
+  if (navigator.locks && navigator.locks.request) {
+    return navigator.locks.request('learning-backup-v1', { ifAvailable: true }, function(lock) {
+      if (!lock) return null;
+      return fn();
+    }).then(function(result) { return { result: result }; });
+  }
+  return fn().then(function(result) { return { result: result }; });
+}
+
 function uploadGithubBackup(config) {
+  // Another tab may have created the gist while we were idle — reuse it.
+  if (!config.gistId) {
+    var latest = loadGithubBackupConfig();
+    if (latest.gistId) config.gistId = latest.gistId;
+  }
   var snapshot = createLearningBackup();
   var body = {
     description: '考研英语复习助手学习记录备份',
     public: false,
     files: {}
   };
-  body.files[GITHUB_BACKUP_FILE] = { content: JSON.stringify(snapshot) };
+  var contents = splitBackupPayload(snapshot);
+  body.files[GITHUB_BACKUP_FILE] = { content: contents[0] };
+  for (var pi = 1; pi < contents.length; pi++) {
+    body.files[gistBackupPartName(pi + 1)] = { content: contents[pi] };
+  }
+  // Delete stale part files left over from a previous larger split.
+  for (var p = contents.length + 1; p <= 6; p++) {
+    body.files[gistBackupPartName(p)] = { content: null };
+  }
   var url = 'https://api.github.com/gists' + (config.gistId ? '/' + encodeURIComponent(config.gistId) : '');
   return githubApiRequest(url, {
     method: config.gistId ? 'PATCH' : 'POST',
@@ -5124,6 +5230,7 @@ function uploadGithubBackup(config) {
     localStorage.setItem(GITHUB_BACKUP_LAST_KEY, String(Date.now()));
     localStorage.removeItem(ACTIVITY_DIRTY_KEY);
     localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+    localStorage.removeItem(GITHUB_BACKUP_FAIL_KEY);
     return config;
   });
 }
@@ -5140,16 +5247,39 @@ function downloadGithubBackup(config) {
       });
     }
     if (!file) throw new Error('Gist 中没有找到学习记录备份文件');
-    if (file.truncated && file.raw_url) {
-      return githubApiRequest(file.raw_url, { method: 'GET' }, config.token).then(function(raw) {
-        return typeof raw === 'string' ? raw : (raw.raw || JSON.stringify(raw));
+    var base = GITHUB_BACKUP_FILE.replace(/[.]json$/, '');
+    var partRegex = new RegExp('^' + base + GITHUB_BACKUP_PART_SUFFIX + '(\\d+)[.]json$');
+    var partNames = Object.keys(files).filter(function(name) { return partRegex.test(name); })
+      .sort(function(a, b) { return Number(a.match(partRegex)[1]) - Number(b.match(partRegex)[1]); });
+    return gistFileContent(file, config.token).then(function(main) {
+      var payload = typeof main === 'string' ? JSON.parse(main) : main;
+      var chain = Promise.resolve(payload);
+      partNames.forEach(function(name) {
+        chain = chain.then(function(p) {
+          return gistFileContent(files[name], config.token).then(function(content) {
+            var part = typeof content === 'string' ? JSON.parse(content) : content;
+            if (isPlainObject(part) && isPlainObject(part.data) && isPlainObject(p.data)) {
+              Object.keys(part.data).forEach(function(k) { p.data[k] = part.data[k]; });
+            }
+            return p;
+          });
+        });
       });
-    }
-    return file.content || '';
-  }).then(function(content) {
-    var payload = typeof content === 'string' ? JSON.parse(content) : content;
+      return chain;
+    });
+  }).then(function(payload) {
     var all = normalizeBackupPayload(payload);
     validateLearningBackup(all);
+    // Keep the remote stamp available to auto-backup without changing the restore shape.
+    try {
+      Object.defineProperty(all, 'exportedAtMs', {
+        value: Number(payload && payload.exportedAtMs) || 0,
+        enumerable: false,
+        configurable: true
+      });
+    } catch(e) {
+      all.exportedAtMs = Number(payload && payload.exportedAtMs) || 0;
+    }
     return all;
   });
 }
@@ -5181,7 +5311,16 @@ function githubBackupNow() {
   saveGithubBackupConfig(config);
   setGithubBackupBusy(true);
   showGithubBackupStatus('正在上传私有备份…', '');
-  uploadGithubBackup(config).then(function(saved) {
+  withBackupLock(function() {
+    return uploadGithubBackup(config);
+  }).then(function(outcome) {
+    if (!outcome || !outcome.result) { // another tab owns the backup right now
+      setGithubBackupBusy(false);
+      updateGithubBackupUI();
+      showGithubBackupStatus('另一个标签页正在备份，请稍后再试。', 'err');
+      return;
+    }
+    var saved = outcome.result;
     var gistEl = document.getElementById('githubGistInput');
     if (gistEl) gistEl.value = saved.gistId;
     setGithubBackupBusy(false);
@@ -5236,20 +5375,43 @@ function maybeAutoGithubBackup() {
     return Promise.resolve(null);
   }
   if (!isInitial && last && Date.now() - last < GITHUB_BACKUP_INTERVAL_MS) return Promise.resolve(null);
+  // Backoff after failures (e.g. a 413 from an oversized gist): retrying on
+  // every poll just burns API quota and re-raises the same error.
+  var failState = safeJsonFromStorage(GITHUB_BACKUP_FAIL_KEY, {});
+  if (isPlainObject(failState) && Number(failState.until) > Date.now()) return Promise.resolve(null);
   if (isInitial) {
     setGithubBackupBusy(true);
     showGithubBackupStatus('正在自动创建首份私有备份…', '');
   }
-  githubAutoBackupPromise = uploadGithubBackup(config).then(function(saved) {
+  githubAutoBackupPromise = withBackupLock(function() {
+    // A newer remote backup means another device already covered our local
+    // changes — uploading our older snapshot would clobber it.
+    var remoteCheck = isInitial ? Promise.resolve(null)
+      : downloadGithubBackup(config).then(function(remote) { return Number(remote && remote.exportedAtMs) || 0; })
+        .catch(function() { return 0; }); // unreadable/empty remote → just upload
+    return remoteCheck.then(function(remoteMs) {
+      if (remoteMs && remoteMs >= dirty) {
+        localStorage.setItem(GITHUB_BACKUP_LAST_KEY, String(remoteMs));
+        localStorage.removeItem(ACTIVITY_DIRTY_KEY);
+        localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+        return null;
+      }
+      return uploadGithubBackup(config);
+    });
+  }).then(function(outcome) {
+    var result = outcome ? outcome.result : null;
     if (isInitial) {
       setGithubBackupBusy(false);
       updateGithubBackupUI();
-      showGithubBackupStatus('首份云备份已自动创建 · ' + formatLocalTime(Date.now()), 'ok');
+      if (result) showGithubBackupStatus('首份云备份已自动创建 · ' + formatLocalTime(Date.now()), 'ok');
     }
-    return saved;
+    return result;
   }).catch(function(error) {
     if (isInitial) setGithubBackupBusy(false);
     localStorage.setItem(GITHUB_BACKUP_ERROR_KEY, error.message || String(error));
+    var n = Number((isPlainObject(failState) && failState.n) || 0) + 1;
+    var delayMs = Math.min(n * n * 30 * 60 * 1000, 24 * 60 * 60 * 1000);
+    safeLS(GITHUB_BACKUP_FAIL_KEY, JSON.stringify({ n: n, until: Date.now() + delayMs }));
     showGithubBackupStatus('自动备份失败：' + (error.message || String(error)), 'err');
     return null;
   }).then(function(result) {
@@ -5926,10 +6088,29 @@ var MOR_KEYS = {
 };
 
 // ── Data layer ──
+// morning_meta_v1 grows one entry per word ever heard. Words untouched for a
+// full year are abandoned: drop them (once per day, throttled) so the store —
+// and the GitHub snapshot that embeds it — stays bounded. Resetting an
+// abandoned word to "fresh" is harmless; intervalDays caps at 30 days anyway.
+var morningMetaPrunedForDay = '';
+function pruneMorningMeta(meta) {
+  var pruneDay = todayKey();
+  if (morningMetaPrunedForDay === pruneDay) return meta;
+  morningMetaPrunedForDay = pruneDay;
+  var cutoff = Date.now() - 365 * 86400000;
+  var cleaned = {}, dropped = 0;
+  for (var k in meta) {
+    var m = meta[k];
+    if (m && Number(m.lastAt) >= cutoff) cleaned[k] = m;
+    else dropped++;
+  }
+  return dropped ? cleaned : meta;
+}
 function loadMorningMeta() {
   try { return JSON.parse(localStorage.getItem(MOR_KEYS.meta) || '{}'); } catch(e) { return {}; }
 }
 function saveMorningMeta(obj) {
+  obj = pruneMorningMeta(obj || {});
   try { localStorage.setItem(MOR_KEYS.meta, JSON.stringify(obj)); } catch(e) {}
 }
 function loadMorningSettings() {
