@@ -11,8 +11,8 @@
     cards: [], topics: [], currentSubject: '706', currentTopic: null, currentCard: null,
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
     cardMode: 'memorize', revealed: true, hintLevel: 0, searchSubjectFilter: 'all', searchMasteryFilter: 'all',
-    session: null, pausedSessions: {}, reviewDurationMinutes: 10, reviewingSession: false, timer: null,
-    cardStartedAt: 0, cardStartedSeconds: 0, freeElapsed: 0, editorCard: null,
+    session: null, pausedSessions: {}, reviewDurationMinutes: 10, reviewingSession: false,
+    cardStartedAt: 0, editorCard: null,
     deviceId: null, syncing: false, ratingInProgress: false, syncRetryTimer: null, lastForegroundRefreshAt: 0, pairingTransfer: null, activeConflict: null
   };
   const $ = selector => document.querySelector(selector);
@@ -36,7 +36,6 @@
   }
   function masteryLevel(card) { return CardsRender.masteryInfo(card.schedule && card.schedule.mastery).level; }
   function averageLevel(cards) { return cards.length ? Math.round(cards.reduce((sum, card) => sum + masteryLevel(card), 0) / cards.length) : 0; }
-  function elapsedLabel(seconds) { const mins = Math.floor(seconds / 60); const secs = Math.round(seconds % 60); return mins ? `${mins}:${String(secs).padStart(2,'0')}` : `${secs}秒`; }
   function localDateKey(value) { const date=value?new Date(value):new Date(); return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
   function recommendedRating() { if(state.hintLevel<=0)return'mastered';if(state.hintLevel===1)return'familiar';if(state.hintLevel===2)return'fuzzy';return'forgot'; }
 
@@ -49,7 +48,7 @@
   }
 
   function navigate(route) {
-    if (state.route === 'card' && route !== 'card') pauseTimer();
+    if (state.route === 'card' && route !== 'card') { if (window.CardsTTS) CardsTTS.stop(); }
     state.route = route;
     $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === route));
     const primaryRoute = ['home','today','subject','topic','card'].includes(route) ? 'home' : route === 'trash' ? 'settings' : route;
@@ -106,7 +105,6 @@
   }
   async function pauseActiveSession() {
     if (!state.session || state.session.status !== 'active') return null;
-    await pauseTimer({ persist: false });
     const paused = { ...state.session, status: 'paused', updated_at: new Date().toISOString() };
     await CardsDB.put('sessions', paused);
     state.pausedSessions[sessionKey(paused)] = paused;
@@ -217,12 +215,23 @@
     const restored = options && options.restore;
     state.cardMode = restored && restored.mode ? restored.mode : sessionMode ? 'recall' : 'memorize';
     state.revealed = restored && typeof restored.revealed === 'boolean' ? restored.revealed : !sessionMode;
-    state.hintLevel = restored ? Number(restored.hint_level || 0) : 0; state.cardStartedAt = Date.now(); state.freeElapsed = 0;
-    renderCard(); navigate('card'); if (options && options.animateEntry) playCardEnter(); startTimer(); state.cardStartedSeconds = state.timer ? state.timer.getSeconds() : 0; await saveResumePosition(restoreScroll || 0);
+    state.hintLevel = restored ? Number(restored.hint_level || 0) : 0; state.cardStartedAt = Date.now();
+    renderCard(); navigate('card'); if (options && options.animateEntry) playCardEnter(); await saveResumePosition(restoreScroll || 0);
     requestAnimationFrame(() => $('#mainContent').scrollTo(0, restoreScroll || 0));
   }
   function renderCard() {
+    const tts = window.CardsTTS ? CardsTTS.state() : null;
+    if (tts && tts.status !== 'idle' && state.currentCard && String(state.currentCard.id) !== tts.key) CardsTTS.stop();
     $('#cardArticle').innerHTML = CardsRender.cardArticle(state.currentCard, state.currentTopic, { mode: state.cardMode, revealed: state.revealed, hintLevel: state.hintLevel });
+    const ttsButton = $('#cardArticle .tts-button');
+    if (ttsButton) {
+      CardsTTS.applyButton(ttsButton);
+      ttsButton.onclick = () => {
+        const examFold = $('#cardArticle .exam-fold');
+        CardsTTS.toggleCard(state.currentCard, { examExpanded: Boolean(examFold && examFold.open) });
+        CardsTTS.applyButton(ttsButton);
+      };
+    }
     $$('.mode-switch button').forEach(button => { const active=button.dataset.mode===state.cardMode;button.classList.toggle('active',active);button.setAttribute('aria-pressed',active?'true':'false'); });
     const recall = state.cardMode === 'recall'; $('#recallControls').hidden = !recall; $('#hintButton').hidden = state.revealed || state.hintLevel >= (state.currentCard.hints || []).length;
     $('#revealButton').hidden = state.revealed; $('#ratingPanel').hidden = !state.revealed;
@@ -232,7 +241,7 @@
     $('#pauseSessionButton').hidden = !(state.reviewingSession && state.session && state.session.status === 'active');
     if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(state.currentCard.id)) {
       const index = state.session.current_index + 1, total = state.session.card_ids.length;
-      $('#reviewMeta').textContent = `${index} / ${total} · ${elapsedLabel(state.timer ? state.timer.getSeconds() : state.session.seconds)}`;
+      $('#reviewMeta').textContent = `${index} / ${total}`;
       $('#reviewProgress').hidden = false; $('#reviewProgress span').style.width = `${(index - 1) / total * 100}%`;
     } else { $('#reviewMeta').textContent = '自由浏览'; $('#reviewProgress').hidden = true; }
   }
@@ -258,24 +267,6 @@
     });
   }
 
-  function startTimer() {
-    if (!state.currentCard || state.route !== 'card' || document.visibilityState !== 'visible' || state.timer) return;
-    const sessionActive = state.reviewingSession && state.session && state.session.status === 'active';
-    const initialSeconds = sessionActive ? state.session.seconds || 0 : state.freeElapsed || 0;
-    state.timer = new CardsTimer.ActivityTimer({ initialSeconds, onTick: seconds => {
-      if (sessionActive) {
-        state.session.seconds = Math.round(seconds); $('#reviewMeta').textContent = `${state.session.current_index + 1} / ${state.session.card_ids.length} · ${elapsedLabel(seconds)}`;
-        if (Math.round(seconds) % 15 === 0) persistSession();
-      } else state.freeElapsed = Math.round(seconds);
-    }}); state.timer.start();
-  }
-  async function pauseTimer(options) {
-    if (!state.timer) return;
-    const timer = state.timer; state.timer = null;
-    const seconds = timer.stop();
-    if (state.reviewingSession && state.session) state.session.seconds = seconds; else state.freeElapsed = seconds;
-    if (state.reviewingSession && (!options || options.persist !== false)) await persistSession();
-  }
   async function persistSession() {
     if (!state.session) return; state.session.updated_at = new Date().toISOString(); await CardsDB.put('sessions', state.session);
     await CardsDB.setSetting('active_review_session', state.session.status === 'active' ? state.session : null);
@@ -287,20 +278,19 @@
     const committingButton = $(`.rating-grid [data-rating="${rating}"]`);
     if (committingButton) committingButton.classList.add('committing');
     try {
-      await pauseTimer();
-      const activeElapsed = state.reviewingSession && state.session ? state.session.seconds - state.cardStartedSeconds : state.freeElapsed;
-      const elapsed = Math.max(10, Math.round(activeElapsed));
       const baseRevision = Number(state.currentCard.revision && state.currentCard.revision.version || 0);
-      const updated = CardsScheduler.rate(state.currentCard, rating, new Date(), elapsed);
+      // 已移除实时有效计时：调度时长使用卡片历史估算（首次为固定 75 秒），队列预算同源。
+      const updated = CardsScheduler.rate(state.currentCard, rating, new Date());
       updated.revision.device_id = state.deviceId;
       await CardsDB.put('cards', updated);
       state.cards[state.cards.findIndex(card => card.id === updated.id)] = updated; state.currentCard = updated;
-      const reviewEvent = { event_id: uid('review'), card_id: updated.id, subject: updated.subject, rating, elapsed_seconds: elapsed, reviewed_at: updated.schedule.last_reviewed_at, session_id: state.reviewingSession && state.session && state.session.status === 'active' ? state.session.id : null, next_due_at: updated.schedule.due_at };
+      const effectiveSeconds = Math.round(Number(updated.schedule.average_seconds || 75));
+      const reviewEvent = { event_id: uid('review'), card_id: updated.id, subject: updated.subject, rating, elapsed_seconds: effectiveSeconds, reviewed_at: updated.schedule.last_reviewed_at, session_id: state.reviewingSession && state.session && state.session.status === 'active' ? state.session.id : null, next_due_at: updated.schedule.due_at };
       await CardsDB.put('review_events', reviewEvent);
       await CardsSync.enqueue('review_rated', updated.id, { card: updated, review_event: reviewEvent }, baseRevision);
       if (!state.reviewingSession) {
         const now = new Date().toISOString();
-        const freeSession = { id:uid('session'), kind:'free', subject:updated.subject, card_ids:[updated.id], current_index:1, reviewed_card_ids:[updated.id], seconds:elapsed, started_at:new Date(state.cardStartedAt).toISOString(), updated_at:now, completed_at:now, status:'completed' };
+        const freeSession = { id:uid('session'), kind:'free', subject:updated.subject, card_ids:[updated.id], current_index:1, reviewed_card_ids:[updated.id], seconds:0, started_at:new Date(state.cardStartedAt).toISOString(), updated_at:now, completed_at:now, status:'completed' };
         await CardsDB.put('sessions', freeSession); await CardsSync.enqueue('session_completed', freeSession.id, { session:freeSession });
       }
       if (state.reviewingSession && state.session && state.session.status === 'active' && state.session.card_ids.includes(updated.id)) {
@@ -308,7 +298,7 @@
         state.session.current_index += 1;
         if (state.session.current_index >= state.session.card_ids.length) {
           state.session.status = 'completed'; state.session.completed_at = new Date().toISOString(); state.session.current_card_state = null;
-          await pauseTimer({ persist: false }); await persistSession();
+          await persistSession();
           await CardsSync.enqueue('session_completed', state.session.id, { session: state.session });
           await CardsSync.enqueue('setting_changed', 'active_review_session', { setting: { id:'active_review_session', value:null, updated_at:new Date().toISOString() } });
           const completedSession=state.session;showToast(`本次完成 ${state.session.reviewed_card_ids.length} 张卡`);await playCardExit();state.session = null; renderHome(); if(completedSession.kind==='topic'&&completedSession.topic_id)openTopic(completedSession.topic_id);else navigate('today'); return;
@@ -316,7 +306,7 @@
         state.session.current_card_state = null; await persistSession();
         await playCardExit();refreshDerivedViews();return openCard(state.session.card_ids[state.session.current_index],0,{session:true,animateEntry:true});
       }
-      showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); state.freeElapsed=0;state.cardStartedAt=Date.now();await refreshDerivedViews(); renderCard(); startTimer();
+      showToast(`已安排：${CardsScheduler.formatDue(updated.schedule.due_at)}`); state.cardStartedAt=Date.now();await refreshDerivedViews(); renderCard();
     } finally {
       state.ratingInProgress = false;
       $$('.rating-grid [data-rating]').forEach(button => { button.disabled = false; button.classList.remove('committing'); });
@@ -358,18 +348,18 @@
   }
 
   async function renderStats() {
-    const events = await CardsDB.getAll('review_events'), sessions = await CardsDB.getAll('sessions');
+    const events = await CardsDB.getAll('review_events');
     const ratingEvents = events.filter(e => e.rating);
-    const today = localDateKey(), todayEvents = ratingEvents.filter(e => localDateKey(e.reviewed_at) === today), todaySessions = sessions.filter(s => localDateKey(s.completed_at||s.updated_at||s.started_at) === today);
+    const today = localDateKey(), todayEvents = ratingEvents.filter(e => localDateKey(e.reviewed_at) === today);
     const todayUniqueCards = new Set(todayEvents.map(event=>event.card_id)).size;
-    $('#statsTodayCards').textContent = todayUniqueCards; $('#statsTodayTime').textContent = `${Math.round(todaySessions.reduce((sum,s)=>sum+Number(s.seconds||0),0)/60)} 分`;
+    $('#statsTodayCards').textContent = todayUniqueCards; $('#statsRatedCards').textContent = state.cards.filter(card=>masteryLevel(card)>0).length;
     const dates = new Set(ratingEvents.map(e=>localDateKey(e.reviewed_at))); let streak = 0, cursor = new Date();
     if (!dates.has(localDateKey(cursor))) cursor.setDate(cursor.getDate()-1);
     while (dates.has(localDateKey(cursor))) { streak++; cursor.setDate(cursor.getDate()-1); }
     $('#statsStreak').textContent = `${streak} 天`; $('#statsDue').textContent = state.cards.filter(card=>CardsScheduler.isDue(card)).length;
     const groups = ['unrated','forgot','fuzzy','familiar','mastered'].map(key=>({ key, label:CardsRender.masteryInfo(key).label, count:state.cards.filter(c=>(c.schedule&&c.schedule.mastery||'unrated')===key).length }));
     $('#masteryChart').innerHTML = groups.map(g=>`<div class="chart-row"><span>${g.label}</span><i><b style="width:${state.cards.length ? g.count/state.cards.length*100 : 0}%"></b></i><em>${g.count}</em></div>`).join('');
-    $('#subjectStats').innerHTML=Object.keys(subjectLabels).map(subject=>{const subjectEvents=todayEvents.filter(event=>event.subject===subject),count=new Set(subjectEvents.map(event=>event.card_id)).size,seconds=todaySessions.filter(session=>session.subject===subject).reduce((sum,session)=>sum+Number(session.seconds||0),0);return`<div class="chart-row"><span>${subject==='politics'?'政治':subject}</span><i><b style="width:${todayUniqueCards?count/todayUniqueCards*100:0}%"></b></i><em>${count}张 · ${Math.round(seconds/60)}分</em></div>`;}).join('');
+    $('#subjectStats').innerHTML=Object.keys(subjectLabels).map(subject=>{const subjectEvents=todayEvents.filter(event=>event.subject===subject),count=new Set(subjectEvents.map(event=>event.card_id)).size;return`<div class="chart-row"><span>${subject==='politics'?'政治':subject}</span><i><b style="width:${todayUniqueCards?count/todayUniqueCards*100:0}%"></b></i><em>${count}张</em></div>`;}).join('');
     const recentDays=Array.from({length:7},(_,index)=>{const date=new Date();date.setDate(date.getDate()-(6-index));const key=localDateKey(date),count=ratingEvents.filter(event=>localDateKey(event.reviewed_at)===key).length;return{key,count,label:`${date.getMonth()+1}/${date.getDate()}`};}),maxDay=Math.max(1,...recentDays.map(day=>day.count));
     $('#trendChart').innerHTML=recentDays.map(day=>`<div class="trend-day"><i><b style="height:${Math.max(3,day.count/maxDay*100)}%"></b></i><strong>${day.count}</strong><small>${day.label}</small></div>`).join('');
     const thirtyStart=new Date();thirtyStart.setHours(0,0,0,0);thirtyStart.setDate(thirtyStart.getDate()-29);const thirtyEvents=ratingEvents.filter(event=>new Date(event.reviewed_at)>=thirtyStart);$('#trend30Summary').textContent=`近 30 天 ${thirtyEvents.length} 张`;
@@ -537,7 +527,7 @@
     $$('#reviewDurationPicker [data-review-minutes]').forEach(button => button.onclick = async () => {
       state.reviewDurationMinutes=Number(button.dataset.reviewMinutes);renderToday();const setting=await CardsDB.setSetting('review_duration_minutes',state.reviewDurationMinutes);await CardsSync.enqueue('setting_changed','review_duration_minutes',{setting});
     });
-    $$('.mode-switch button').forEach(button => button.onclick = () => { state.cardMode=button.dataset.mode; state.revealed=state.cardMode==='memorize'; state.hintLevel=0; renderCard(); saveResumePosition($('#mainContent').scrollTop); });
+    $$('.mode-switch button').forEach(button => button.onclick = () => { CardsTTS.stop(); state.cardMode=button.dataset.mode; state.revealed=state.cardMode==='memorize'; state.hintLevel=0; renderCard(); saveResumePosition($('#mainContent').scrollTop); });
     $('#hintButton').onclick = () => { state.hintLevel=Math.min((state.currentCard.hints||[]).length,state.hintLevel+1); renderCard(); saveResumePosition($('#mainContent').scrollTop); };
     $('#revealButton').onclick = () => { state.revealed=true; renderCard(); saveResumePosition($('#mainContent').scrollTop); };
     $$('.rating-grid [data-rating]').forEach(button => button.onclick = () => rateCurrent(button.dataset.rating));
@@ -567,10 +557,11 @@
     main.addEventListener('touchend',event=>{if(!edgeStart)return;const touch=event.changedTouches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,progress=edgeStart.side==='left'?dx:-dx,complete=progress>=72&&progress>Math.abs(dy)*1.2;edgeStart=null;indicator.classList.remove('active','from-right');if(complete)edgeBack();},{passive:true});
     main.addEventListener('touchcancel',()=>{edgeStart=null;indicator.classList.remove('active','from-right');},{passive:true});
     window.addEventListener('cards-sync-status',renderSyncStatus);
+    if (window.CardsTTS) CardsTTS.setOnChange(() => CardsTTS.applyButton($('#cardArticle .tts-button')));
     window.addEventListener('cards-sync-applied',async()=>{await loadState();await setTheme(await CardsDB.getSetting('theme',document.body.classList.contains('dark')?'dark':'light'),false);await renderSyncStatus();});
     window.addEventListener('online',()=>runSync(false));
     $('#mainContent').addEventListener('scroll',()=>{if(state.route!=='card'||!state.currentCard)return;clearTimeout(state.scrollSaveTimer);state.scrollSaveTimer=setTimeout(()=>saveResumePosition($('#mainContent').scrollTop),450);},{passive:true});
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){if(state.route==='card')saveResumePosition($('#mainContent').scrollTop);pauseTimer();}else{if(state.route==='card')startTimer();refreshOnForeground();}});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){if(state.route==='card')saveResumePosition($('#mainContent').scrollTop);}else{refreshOnForeground();}});
     window.addEventListener('pageshow',refreshOnForeground);
     window.addEventListener('focus',refreshOnForeground);
   }

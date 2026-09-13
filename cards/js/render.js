@@ -81,6 +81,9 @@
       : '';
     const tags = (card.tags || []).map(tag => `<span>#${escapeHtml(tag)}</span>`).join(' ');
     const path = `${card.subject} / ${card.module} / ${(topic && topic.title) || card.topic_id}`;
+    const speakButton = config.mode !== 'recall' && window.CardsTTS && CardsTTS.supported()
+      ? `<button class="tts-button" type="button" data-tts-key="${escapeHtml(card.id)}" aria-pressed="false" aria-label="朗读本卡" title="朗读本卡"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"></polygon><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg></button>`
+      : '';
 
     const visibleHints = (card.hints || []).filter(h => Number(h.level) <= config.hintLevel);
     const recallHints = config.mode === 'recall' && !config.revealed
@@ -90,7 +93,7 @@
         <header class="card-cover">
           <div class="card-path">${escapeHtml(path)}</div>
           ${answerTypeTicket(card.exam_answer_type)}
-          <div class="card-title-line"><h1>${escapeHtml(card.title)}</h1>${ring(card.schedule && card.schedule.mastery)}</div>
+          <div class="card-title-line"><h1>${escapeHtml(card.title)}</h1><span class="title-actions">${speakButton}${ring(card.schedule && card.schedule.mastery)}</span></div>
           <div class="card-prompt"><span>RECALL PROMPT</span>${richText(card.prompt)}</div>
           ${recallHints}
         </header>
