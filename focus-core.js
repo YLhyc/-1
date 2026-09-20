@@ -45,11 +45,8 @@
   }
   function save(data, action) {
     data = isObject(data) ? data : {};
-    // Quota-exceeded must not abort the toggle click that called us.
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      localStorage.setItem(DIRTY_KEY, String(Date.now()));
-    } catch(e) {}
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(DIRTY_KEY, String(Date.now()));
     emit(data, action);
     return data;
   }
