@@ -1871,11 +1871,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.23"></script>
-<script src="focus-core.js?v=2.0.23"></script>
-<script src="study-copy.js?v=2.0.23"></script>
-<script src="audio-cache.js?v=2.0.23"></script>
-<script src="ui-motion.js?v=2.0.23"></script>
+<script src="review-core.js?v=2.0.24"></script>
+<script src="focus-core.js?v=2.0.24"></script>
+<script src="study-copy.js?v=2.0.24"></script>
+<script src="audio-cache.js?v=2.0.24"></script>
+<script src="ui-motion.js?v=2.0.24"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1960,8 +1960,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.23";
-var BUILD_TS = 1790710000;
+var APP_BUILD_ID = "2.0.24";
+var BUILD_TS = 1790715000;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -6956,10 +6956,12 @@ function loadMorningVocabFile(fileIdx, cb) {
     return;
   }
   if (_mVocabLoading[fileIdx]) {
-    // Poll until loaded or failed
+    // Poll until loaded or failed (max 15s)
+    var pollCount = 0;
     var check = setInterval(function() {
+      pollCount++;
       if (_mVocabAudio[fileIdx]) { clearInterval(check); cb(null); }
-      else if (!_mVocabLoading[fileIdx]) { clearInterval(check); cb('err'); }
+      else if (!_mVocabLoading[fileIdx] || pollCount >= 150) { clearInterval(check); cb('err'); }
     }, 100);
     return;
   }
@@ -6992,9 +6994,11 @@ function loadMorningHbUnit(unitIdx, cb) {
     return;
   }
   if (_mHbLoading[unitIdx]) {
+    var pollCount = 0;
     var check = setInterval(function() {
+      pollCount++;
       if (_mHbAudio[unitIdx]) { clearInterval(check); cb(null); }
-      else if (!_mHbLoading[unitIdx]) { clearInterval(check); cb('err'); }
+      else if (!_mHbLoading[unitIdx] || pollCount >= 150) { clearInterval(check); cb('err'); }
     }, 100);
     return;
   }
@@ -7453,10 +7457,10 @@ function setupMorningMediaSession() {
       if (!morningPaused) toggleMorningPause();
     });
     navigator.mediaSession.setActionHandler('previoustrack', function() {
-      if (morningPos > 0) prevMorningWord();
+      if (morningPlaying && !morningEnded && morningPos > 0) prevMorningWord();
     });
     navigator.mediaSession.setActionHandler('nexttrack', function() {
-      if (morningPos < morningQueue.length - 1) skipMorningWord();
+      if (morningPlaying && !morningEnded && morningPos < morningQueue.length - 1) nextMorningWord();
     });
   } catch(e) {}
 }
@@ -7484,7 +7488,17 @@ function primeMorningAudioElements() {
       var au = morningGetAu(slot);
       if (!au.src) {
         au.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-        if (typeof au.load === 'function') au.load();
+      }
+      au.muted = true;
+      var p = au.play();
+      if (p && typeof p.then === 'function') {
+        p.then(function() {
+          au.pause();
+          au.currentTime = 0;
+          au.muted = false;
+        }).catch(function() {
+          au.muted = false;
+        });
       }
     } catch(e) {}
   });
@@ -7653,16 +7667,6 @@ function playMorningCurrent() {
     return;
   }
 
-  // Check time budget BEFORE playing the next word
-  if (morningPos > 0) {
-    var elapsed = morningElapsedMs();
-    var budgetMs = morningSettings.durationMin * 60 * 1000;
-    if (elapsed >= budgetMs) {
-      endMorningSession('timeout');
-      return;
-    }
-  }
-
   _morningPlayToken++;
   var token = _morningPlayToken;
   var item = morningQueue[morningPos];
@@ -7759,6 +7763,7 @@ function playMorningCurrent() {
             morningAudioWatchdog = null;
             if (!isCurrentAttempt() || au.ended || morningPaused || morningEnded) return;
             var currentTime = isFinite(au.currentTime) ? au.currentTime : 0;
+            if (isFinite(au.duration) && au.duration > 0 && currentTime >= au.duration - 0.25) return;
             if (!au.paused && currentTime > watchdogTime + 0.05) {
               armWatchdog();
               return;
@@ -8249,7 +8254,7 @@ function attemptMorningResume(restartIfStale) {
 function syncMorningPlayback() {
   if (!morningPlaying || morningEnded || morningPaused || morningPos >= morningQueue.length) return;
   var au = morningGetAu(morningSlot);
-  if (au && au.paused) attemptMorningResume(false);
+  if (au && au.paused) attemptMorningResume(true);
   else updateMorningPlayerUI();
 }
 
@@ -8447,10 +8452,10 @@ function confirmEndMorning() {
   if (!morningPlaying || morningEnded) { showMorningHome(); return; }
   morningExitShouldResume = !morningPaused;
   if (!morningPaused) {
-    var au = morningGetAu(morningSlot);
-    if (au) au.pause();
     pauseMorningClock();
     morningPaused = true;
+    var au = morningGetAu(morningSlot);
+    if (au) au.pause();
   }
   var meta = document.getElementById('morningExitMeta');
   if (meta) meta.textContent = '已完成 ' + morningSessionCompleted + ' 词 · ' + formatMorningClock(morningElapsedMs() / 1000) + ' 有效晨听时间会保留。';
