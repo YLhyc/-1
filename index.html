@@ -1871,11 +1871,11 @@
 </nav>
 </div>
 
-<script src="review-core.js?v=2.0.25"></script>
-<script src="focus-core.js?v=2.0.25"></script>
-<script src="study-copy.js?v=2.0.25"></script>
-<script src="audio-cache.js?v=2.0.25"></script>
-<script src="ui-motion.js?v=2.0.25"></script>
+<script src="review-core.js?v=2.0.26"></script>
+<script src="focus-core.js?v=2.0.26"></script>
+<script src="study-copy.js?v=2.0.26"></script>
+<script src="audio-cache.js?v=2.0.26"></script>
+<script src="ui-motion.js?v=2.0.26"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -1960,8 +1960,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.0.25";
-var BUILD_TS = 1791093511;
+var APP_BUILD_ID = "2.0.26";
+var BUILD_TS = 1791444400;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -7121,7 +7121,7 @@ var morningPlaying = false;
 var _morningPlayToken = 0; // prevents stale async callbacks
 var morningPos = 0;       // index in morningQueue
 var morningStep = 0;      // current step within word
-var morningSlot = 0;      // 0 or 1 (AB-slot)
+var morningSlot = 0;      // primary (0) plays; standby (1) only preloads
 var morningAuA = null;
 var morningAuB = null;
 var morningAuUrlA = null;
@@ -7475,20 +7475,21 @@ function morningDetachAu(au) {
 function morningLoadAu(slot, url, force) {
   var au = morningGetAu(slot);
   var loaded = slot === 0 ? morningAuUrlA : morningAuUrlB;
-  if (!force && loaded === url && au.src && au.src === url) return au;
-  // Tear down the previous source completely before pointing at the new one.
+  var sameSource = loaded === url && au.src === url;
+  // Keep the user-authorized element. Repeated en/en or cn/cn segments still
+  // need a rewind, but must not unload and rebuild the media pipeline.
   morningDetachAu(au);
   try { au.pause(); } catch (e) {}
   try { au.currentTime = 0; } catch (e) {}
-  try { au.removeAttribute('src'); } catch (e) {}
-  try { if (typeof au.load === 'function') au.load(); } catch (e) {}
   // Never leave the slot mute-locked from an old prime.
   try { au.muted = false; } catch (e) {}
   try { au.volume = 1; } catch (e) {}
   if (slot === 0) morningAuUrlA = url;
   else morningAuUrlB = url;
-  au.src = url;
-  try { if (typeof au.load === 'function') au.load(); } catch (e) {}
+  if (force || !sameSource) {
+    au.src = url;
+    try { if (typeof au.load === 'function') au.load(); } catch (e) {}
+  }
   return au;
 }
 
@@ -7505,16 +7506,9 @@ function morningPreloadAu(slot, url) {
 function morningResetAu(slot) {
   var au = morningGetAu(slot);
   releaseAudioElement(au);
-  var fresh = new Audio();
-  fresh.preload = 'auto';
-  if (slot === 0) {
-    morningAuA = fresh;
-    morningAuUrlA = null;
-  } else {
-    morningAuB = fresh;
-    morningAuUrlB = null;
-  }
-  return fresh;
+  if (slot === 0) morningAuUrlA = null;
+  else morningAuUrlB = null;
+  return au;
 }
 
 function morningStopAudio() {
@@ -7563,8 +7557,10 @@ function pauseMorningForAudioFailure(token, item, retry) {
   invalidateMorningPlayPromise();
   morningResumePromise = null;
   morningResumeInFlight = null;
+  morningRecoveryProbeArmed = false;
   morningPauseReason = 'audio-error';
   setMorningAudioFailed(retry || null);
+  try { morningGetAu(morningSlot).pause(); } catch (e) {}
   saveMorningActiveSession('audio_error');
   return true;
 }
@@ -7629,35 +7625,28 @@ function clearMorningMediaSession() {
   } catch(e) {}
 }
 
-// Warm-up is only ever allowed after the user pressed "开始晨听".
-// It must always settle back to a clean, unmuted, rewound element so the real
-// segment can never lose the play() race to a silent placeholder.
-// The probe element is intentionally detached: it must never share state with
-// the A/B slot elements that carry real audio.
+// Unlock the actual primary element synchronously inside the start click.
+// A detached or muted probe cannot grant this element permission to play later.
+// Cleanup owns only the placeholder source, never the real segment that replaced it.
 function primeMorningAudioElements() {
-  [0, 1].forEach(function(slot) {
-    try {
-      var probe = new Audio();
-      probe.preload = 'auto';
-      probe.muted = true;
-      probe.src = MORNING_PRIME_SILENCE;
-      var settle = function() {
-        try { probe.pause(); } catch (e) {}
-        try { probe.currentTime = 0; } catch (e) {}
-        try { probe.removeAttribute('src'); } catch (e) {}
-        try { if (typeof probe.load === 'function') probe.load(); } catch (e) {}
-      };
-      var p;
-      try { p = probe.play(); } catch (e) { return; }
-      if (p && typeof p.then === 'function') p.then(settle).catch(settle);
-      else settle();
-    } catch(e) {}
-  });
-  // Whatever happened, the slot elements owning real audio stay clean.
-  [morningAuA, morningAuB].forEach(function(au) {
-    if (!au) return;
-    try { if (au.muted) au.muted = false; } catch (e) {}
-  });
+  var au = morningGetAu(0);
+  // Never replace a real source during an incidental repeated call.
+  if (au.src && au.src !== MORNING_PRIME_SILENCE) return;
+  var token = _morningPlayToken;
+  var attempt = morningAudioAttemptSerial;
+  try {
+    au.muted = false;
+    au.volume = 1;
+    au.src = MORNING_PRIME_SILENCE;
+    var settle = function() {
+      if (morningAuA !== au || token !== _morningPlayToken || attempt !== morningAudioAttemptSerial || au.src !== MORNING_PRIME_SILENCE) return;
+      try { au.pause(); } catch (e) {}
+      try { au.currentTime = 0; } catch (e) {}
+    };
+    var p = au.play();
+    if (p && typeof p.then === 'function') p.then(settle, settle);
+    else settle();
+  } catch (e) {}
 }
 
 function updateMorningPlayerUI() {
@@ -7918,6 +7907,7 @@ function playMorningCurrent() {
         }
 
         function armWatchdog() {
+          if (!isCurrentAttempt() || morningPlaybackIntent !== 'playing' || morningPaused || morningEnded) return;
           morningClearAudioWatchdog();
           watchdogTime = isFinite(au.currentTime) ? au.currentTime : 0;
           morningAudioWatchdog = setTimeout(function() {
@@ -7926,7 +7916,6 @@ function playMorningCurrent() {
             if (morningPlaybackIntent !== 'playing') return;
             if (morningAudioState === 'paused' || morningAudioState === 'error') return;
             var currentTime = isFinite(au.currentTime) ? au.currentTime : 0;
-            if (isFinite(au.duration) && au.duration > 0 && currentTime >= au.duration - 0.25) return;
             if (!au.paused && currentTime > watchdogTime + 0.05) { armWatchdog(); return; }
             // A resume probe is already watching this element; do not fight it.
             if (au.paused && morningRecoveryProbeArmed) { armWatchdog(); return; }
@@ -7984,8 +7973,8 @@ function playMorningCurrent() {
           if (!isCurrentAttempt() || !morningPlayPromiseIsCurrent(morningCurrentPlayPromiseId)) return;
           if (morningPlaybackIntent !== 'playing' || morningPaused) return;
           morningClearResumeVerification();
+          morningRecoveryProbeArmed = false;
           armWatchdog();
-          segmentResumeAttempts = 0;
           morningSegmentPlayingAt = Date.now();
           setMorningAudioState('playing');
           var loadSec = morningSegmentLoadStartedAt ? Math.max(0, (morningSegmentPlayingAt - morningSegmentLoadStartedAt) / 1000) : 0;
@@ -8004,6 +7993,9 @@ function playMorningCurrent() {
           }
           // Slot hand-off / teardown in progress — not an unexpected stop.
           if (morningEnded || morningGetAu(morningSlot) !== au) return;
+          // pause/load events are queued. An event from the old source must
+          // not be mistaken for an interruption of the already-playing source.
+          if (!au.paused) return;
           if (au.seeking) return;
           if (isFinite(au.duration) && au.duration > 0 && au.currentTime >= au.duration - 0.15) return;
           if (segmentResumeAttempts >= 1) {
@@ -8040,7 +8032,7 @@ function playMorningCurrent() {
           updateMorningProgressUI();
         };
         au.onended = function() {
-          if (!isCurrentAttempt()) return;
+          if (!isCurrentAttempt() || !au.ended) return;
           morningClearAudioWatchdog();
           morningClearResumeVerification();
           morningDetachAu(au);
@@ -8050,11 +8042,14 @@ function playMorningCurrent() {
           if (morningPlaybackIntent !== 'playing' || morningPaused || morningEnded) return;
           morningStep++;
           morningCurrentWordCompletedSteps++;
-          morningSlot = 1 - segmentSlot;
+          // All audible segments reuse the click-authorized primary element.
+          // B is preload-only; swapping elements loses per-element permission.
+          morningSlot = 0;
           playSegment();
         };
         au.onerror = function() {
           if (morningPlaybackIntent !== 'playing' || morningPaused) return;
+          if (!au.error) return;
           handleFailure(au.error || { name: 'AudioError' });
         };
         updateMorningPlayerUI();
@@ -8405,12 +8400,14 @@ function attemptMorningResume(restartIfStale) {
     morningAudioFailed = false;
     morningRetryCurrentSegment = null;
     setMorningAudioState('loading');
-    return trackMorningResumePromise(Promise.resolve().then(function() {
-      return retry();
-    }).then(function(result) {
+    var retryResult;
+    try { retryResult = retry(); }
+    catch (e) { holdMorningResumeFailure(_morningPlayToken, item); return Promise.resolve(false); }
+    var retryToken = _morningPlayToken;
+    return trackMorningResumePromise(Promise.resolve(retryResult).then(function(result) {
       return result !== false;
     }).catch(function() {
-      setMorningAudioState('error');
+      if (retryToken === _morningPlayToken && item === morningQueue[morningPos]) holdMorningResumeFailure(retryToken, item);
       return false;
     }));
   }
@@ -8487,23 +8484,29 @@ function attemptMorningResume(restartIfStale) {
 
 // Shared proof-of-progress check used when a fresh segment starts.
 function verifySegmentStartProgress(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId) {
-  verifyMorningResumeProgress(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId, 0,
-    morningSegmentLoadStartedAt || Date.now());
+  if (morningSegmentPlayingAt && !au.paused && isMorningAttemptCurrent(audioAttemptId, token, item, segmentStep, segmentSlot, au) && morningPlayPromiseIsCurrent(playPromiseId)) {
+    morningRecoveryProbeArmed = false;
+    return;
+  }
+  verifyMorningResumeProgress(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId, 0, Date.now());
 }
 
 // A resolved play() promise is not proof of sound: confirm that currentTime
 // actually advances (or that onplaying already confirmed) before claiming playing.
 function verifyMorningResumeProgress(au, token, item, segmentStep, segmentSlot, audioAttemptId, playPromiseId, baselineTime, resumeStartedAt) {
+  if (!isMorningSegmentCurrent(audioAttemptId, token, item, segmentStep, segmentSlot, au) || !morningPlayPromiseIsCurrent(playPromiseId)) return;
+  morningClearResumeVerification();
   if (morningSegmentPlayingAt && morningSegmentPlayingAt >= resumeStartedAt) { morningRecoveryProbeArmed = false; return; }
   var baseline = baselineTime;
   var deadline = resumeStartedAt + MORNING_RESUME_PROGRESS_TIMEOUT_MS;
   function check() {
     var current = isMorningSegmentCurrent(audioAttemptId, token, item, segmentStep, segmentSlot, au) &&
       morningPlayPromiseIsCurrent(playPromiseId);
-    if (!current) { morningRecoveryProbeArmed = false; return; }
+    if (!current) return;
+    morningResumeVerificationTimer = null;
     if (morningPaused || morningPlaybackIntent !== 'playing' || morningEnded) { morningRecoveryProbeArmed = false; return; }
     if (au.paused) {
-      if (Date.now() < deadline) { setTimeout(check, 150); return; }
+      if (Date.now() < deadline) { morningResumeVerificationTimer = setTimeout(check, 150); return; }
       morningRecoveryProbeArmed = false;
       holdMorningResumeFailure(token, item);
       return;
@@ -8514,11 +8517,11 @@ function verifyMorningResumeProgress(au, token, item, segmentStep, segmentSlot, 
       setMorningAudioState('playing');
       return;
     }
-    if (Date.now() < deadline) { setTimeout(check, 150); return; }
+    if (Date.now() < deadline) { morningResumeVerificationTimer = setTimeout(check, 150); return; }
     morningRecoveryProbeArmed = false;
     holdMorningResumeFailure(token, item);
   }
-  setTimeout(check, 120);
+  morningResumeVerificationTimer = setTimeout(check, 120);
 }
 
 // The only entry point for the user (or Media Session) pressing "play".
