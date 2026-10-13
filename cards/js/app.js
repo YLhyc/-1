@@ -44,6 +44,28 @@
       await CardsSync.enqueue('setting_changed', 'theme', { setting });
     }
   }
+  async function setFontFamily(font, persist) {
+    const valid = ['song', 'kai', 'fangsong', 'system'].includes(font) ? font : 'song';
+    document.body.dataset.font = valid;
+    $$('#fontPicker [data-font]').forEach(btn => {
+      const active = btn.dataset.font === valid;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    const labels = {
+      song: '试卷宋体 (考研排版)',
+      kai: '清雅楷体 (人文手读)',
+      fangsong: '公文仿宋 (规范表述)',
+      system: '现代黑体 (系统默认)'
+    };
+    const labelEl = $('#currentFontLabel');
+    if (labelEl) labelEl.textContent = labels[valid] || '试卷宋体';
+    localStorage.setItem('cards-font', valid);
+    if (persist) {
+      const setting = await CardsDB.setSetting('font_family', valid);
+      await CardsSync.enqueue('setting_changed', 'font_family', { setting });
+    }
+  }
   function masteryLevel(card) { return CardsRender.masteryInfo(card.schedule && card.schedule.mastery).level; }
   function averageLevel(cards) { return cards.length ? Math.round(cards.reduce((sum, card) => sum + masteryLevel(card), 0) / cards.length) : 0; }
   function localDateKey(value) { const date=value?new Date(value):new Date(); return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
@@ -673,6 +695,9 @@
     $('#cardEditorForm').addEventListener('submit', async event => { event.preventDefault(); if (!state.editorCard) return; const data=new FormData(event.currentTarget), topic=state.topics.find(item=>item.id===data.get('topic_id')), action=state.editorCard.topic_id===data.get('topic_id')?'edited':'moved', eventType=action==='moved'?'card_moved':'card_updated', baseRevision=Number(state.editorCard.revision&&state.editorCard.revision.version||0), updated={...state.editorCard,title:data.get('title'),prompt:data.get('prompt'),summary:data.get('summary'),exam_wording:data.get('exam_wording'),topic_id:data.get('topic_id'),module:topic?topic.module:state.editorCard.module,revision:{...(state.editorCard.revision||{}),version:baseRevision+1,updated_at:new Date().toISOString(),device_id:state.deviceId}}; await CardsDB.put('cards',updated); state.cards[state.cards.findIndex(c=>c.id===updated.id)]=updated; if(state.currentCard&&state.currentCard.id===updated.id)state.currentCard=updated; await CardsDB.put('review_events',{event_id:uid('manage'),card_id:updated.id,action,subject:updated.subject,topic_id:updated.topic_id,reviewed_at:new Date().toISOString()}); await CardsSync.enqueue(eventType, updated.id, {card:updated,topic}, baseRevision); state.editorCard=null; $('#cardEditor').close(); await refreshDerivedViews(); showToast('知识卡已保存'); });
     const closeEditor=()=>{state.editorCard=null;$('#cardEditor').close();}; $('#closeCardEditor').onclick=closeEditor; $('#cancelCardEditor').onclick=closeEditor;
     const toggleTheme=()=>setTheme(document.body.classList.contains('dark')?'light':'dark',true); $('#themeButton').onclick=toggleTheme; $('#themeToggle').onclick=toggleTheme;
+    $$('#fontPicker [data-font]').forEach(button => {
+      button.onclick = () => setFontFamily(button.dataset.font, true);
+    });
     $('#exportButton').onclick=async()=>{downloadJson(await CardsDB.exportSnapshot());showToast('本地数据已导出');}; $('#importButton').onclick=()=>$('#importFile').click();
     $('#importFile').onchange=async event=>{const file=event.target.files[0];if(!file)return;try{await CardsDB.importSnapshot(JSON.parse(await file.text()));await loadState();showToast('导入完成，导入前备份已保留');navigate('home');}catch(error){showToast(error.message||'导入失败');}finally{event.target.value='';}};
   $('#saveSyncButton').onclick=async()=>{try{await CardsSync.configure($('#syncUrl').value.trim(),$('#syncKey').value);$('#syncKey').value='';await renderSyncStatus();showToast('同步配置已保存');}catch(error){showToast(error.message||'配置无效');}};
@@ -728,7 +753,7 @@
     main.addEventListener('touchcancel',()=>{edgeStart=null;indicator.classList.remove('active','from-right');},{passive:true});
     window.addEventListener('cards-sync-status',renderSyncStatus);
     if (window.CardsTTS) CardsTTS.setOnChange(() => CardsTTS.applyButton($('#cardArticle .tts-button')));
-    window.addEventListener('cards-sync-applied',async()=>{await loadState();await setTheme(await CardsDB.getSetting('theme',document.body.classList.contains('dark')?'dark':'light'),false);await renderSyncStatus();});
+    window.addEventListener('cards-sync-applied',async()=>{await loadState();await setTheme(await CardsDB.getSetting('theme',document.body.classList.contains('dark')?'dark':'light'),false);await setFontFamily(await CardsDB.getSetting('font_family','song'),false);await renderSyncStatus();});
     window.addEventListener('online',()=>runSync(false));
     $('#mainContent').addEventListener('scroll',()=>{if(state.route!=='card'||!state.currentCard)return;clearTimeout(state.scrollSaveTimer);state.scrollSaveTimer=setTimeout(()=>saveResumePosition($('#mainContent').scrollTop),450);},{passive:true});
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){if(state.route==='card')saveResumePosition($('#mainContent').scrollTop);}else{refreshOnForeground();}});
@@ -789,6 +814,6 @@
       $('#offlineStatus').textContent='注册失败，请检查控制台';
     }
   }
-  async function init(){try{await CardsDB.open();const seeded=await CardsDB.seedIfEmpty(CardsSeed);if(!seeded)await CardsDB.upgradeSeedContent(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();startSyncRetryWatch();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
+  async function init(){try{await CardsDB.open();const seeded=await CardsDB.seedIfEmpty(CardsSeed);if(!seeded)await CardsDB.upgradeSeedContent(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await setFontFamily(localStorage.getItem('cards-font')||await CardsDB.getSetting('font_family','song'),false);await loadState();bindEvents();startSyncRetryWatch();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
   document.addEventListener('DOMContentLoaded',init);
 })();

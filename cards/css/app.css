@@ -16,10 +16,12 @@
   --success-soft: #dcefe2;
   --shadow: 0 16px 44px rgba(62, 45, 35, .10);
   --mono: "JetBrainsMono NFM", ui-monospace, SFMono-Regular, Consolas, monospace;
-  --serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, "Noto Serif SC", serif;
-  --font-song: "SimSun", "Songti SC", "Noto Serif SC", "Source Han Serif SC", STSong, "宋体", serif;
-  --font-kai: "KaiTi", "Kaiti SC", "STKaiti", "楷体", "楷体_GB2312", "DFKai-SB", serif;
-  --font-fangsong: "FangSong", "FangSong_GB2312", "STFangsong", "仿宋", "仿宋_GB2312", serif;
+  --font-song: "Songti SC", "STSong", "SimSun", "Noto Serif SC", "Source Han Serif SC", "宋体", serif;
+  --font-kai: "Kaiti SC", "STKaiti", "KaiTi", "楷体", "楷体_GB2312", "DFKai-SB", serif;
+  --font-fangsong: "FangSong", "FangSong_GB2312", "STFangsong", "Songti SC", "仿宋", "仿宋_GB2312", serif;
+  --font-system: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --serif: var(--font-song);
+  --content-font: var(--font-song);
   --motion-press: 120ms;
   --motion-ui: 220ms;
   --motion-dialog: 260ms;
@@ -28,6 +30,11 @@
   --ease-drawer: cubic-bezier(.32, .72, 0, 1);
   color-scheme: light;
 }
+
+body[data-font="song"] { --content-font: var(--font-song); }
+body[data-font="kai"] { --content-font: var(--font-kai); }
+body[data-font="fangsong"] { --content-font: var(--font-fangsong); }
+body[data-font="system"] { --content-font: var(--font-system); }
 
 body.dark {
   --accent: #e18465;
@@ -58,8 +65,9 @@ body {
   overflow: hidden;
   background: var(--surface);
   color: var(--ink);
-  font-family: var(--serif);
+  font-family: var(--content-font);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   transition: background var(--motion-ui) var(--ease-out), color var(--motion-ui) var(--ease-out);
 }
 button, input, textarea, select { font: inherit; }
@@ -245,7 +253,7 @@ h2 { margin: 3px 0 0; font-size: 21px; letter-spacing: -.025em; }
   border-radius: 999px;
   cursor: pointer;
   user-select: none;
-  font-family: var(--font-song);
+  font-family: var(--content-font);
   transition: all 0.22s var(--ease-out);
   position: relative;
   background: repeating-linear-gradient(
@@ -660,3 +668,34 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   body { background: color-mix(in srgb,var(--surface) 88%,var(--ink)); }
   .app-shell { border-inline: 1px solid var(--line); box-shadow: 0 0 80px rgba(0,0,0,.08); }
 }
+
+/* 字体切换器与预览样式 */
+.font-picker {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+.font-chip {
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all var(--motion-press) var(--ease-out);
+}
+.font-chip.active {
+  background: var(--paper);
+  color: var(--accent-deep);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+  font-weight: 800;
+}
+.font-chip[data-font="song"] { font-family: var(--font-song); }
+.font-chip[data-font="kai"] { font-family: var(--font-kai); }
+.font-chip[data-font="fangsong"] { font-family: var(--font-fangsong); }
+.font-chip[data-font="system"] { font-family: var(--font-system); }

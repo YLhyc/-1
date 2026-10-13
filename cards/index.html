@@ -143,6 +143,15 @@
             <button class="toggle" id="themeToggle" type="button" aria-pressed="false"><span></span></button>
           </div>
           <div class="setting-row">
+            <div><strong>排版字体</strong><small id="currentFontLabel">试卷宋体 (考研排版)</small></div>
+            <div class="font-picker" id="fontPicker" role="radiogroup" aria-label="排版字体选择">
+              <button type="button" class="font-chip active" data-font="song" aria-pressed="true">宋体</button>
+              <button type="button" class="font-chip" data-font="kai" aria-pressed="false">楷体</button>
+              <button type="button" class="font-chip" data-font="fangsong" aria-pressed="false">仿宋</button>
+              <button type="button" class="font-chip" data-font="system" aria-pressed="false">黑体</button>
+            </div>
+          </div>
+          <div class="setting-row">
             <div><strong>回收站</strong><small>删除的卡片可恢复到原专题和位置</small></div>
             <button class="secondary-button" id="trashButton" type="button">查看</button>
           </div>
