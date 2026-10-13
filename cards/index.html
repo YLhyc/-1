@@ -189,11 +189,11 @@
           </div>
           <div class="setting-row">
             <div><strong>离线应用壳</strong><small id="offlineStatus">检查中</small></div>
-            <span class="status-dot"></span>
+            <button class="secondary-button compact-button" id="forceUpdateAppButton" type="button" style="padding: 6px 12px; font-size: 13px;">强制刷新</button>
           </div>
           <div class="setting-row no-border">
-            <div><strong>数据版本</strong><small>IndexedDB schema</small></div>
-            <code>v1</code>
+            <div><strong>卡片库版本</strong><small id="appVersionMeta">正在读取…</small></div>
+            <button class="secondary-button compact-button" id="resyncSeedButton" type="button" style="padding: 6px 12px; font-size: 13px;">补齐最新卡片</button>
           </div>
         </div>
       </section>

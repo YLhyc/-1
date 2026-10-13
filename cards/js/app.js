@@ -555,8 +555,12 @@
     $('#syncConflicts').textContent = String(status.conflicts || 0);
     $('#syncLastSuccess').textContent = diagnosticTime(status.last_synced_at);
     $('#syncLastAttempt').textContent = diagnosticTime(status.last_attempt_at);
-    $('#syncDeviceId').textContent = status.device_id || '—';
-    $('#updateState').textContent = shellMatches ? '已是当前发布版本' : '应用壳正在后台更新，关闭后重新打开即可生效';
+    $('#updateState').textContent = shellMatches ? '已是当前发布版本' : '应用壳有新版本，点击【强制刷新】或重启生效';
+    const polCards = state.cards.filter(c => c.subject === 'politics');
+    const metaEl = $('#appVersionMeta');
+    if (metaEl) {
+      metaEl.textContent = `全库 ${state.cards.length} 张 · 马原 ${polCards.length} 张`;
+    }
     $('#syncLastError').hidden = !status.last_error;
     $('#syncLastError').textContent = status.last_error ? `最近错误：${status.last_error}` : '';
     await renderConflicts();
@@ -682,6 +686,41 @@
   $('#pasteSyncPairButton').onclick=async()=>{try{const value=(await navigator.clipboard.readText()).trim(),encoded=value.startsWith('cards-pair:')?value.slice(11):new URLSearchParams(value.replace(/^#/, '')).get('pair');if(!encoded)throw new Error('剪贴板中没有 Cards 配对信息');const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);$('#syncUrl').value=pairing.url;$('#syncKey').value='';try{await navigator.clipboard.writeText('');}catch(error){}await renderSyncStatus();showToast('主屏幕 Cards 已完成配对');runSync(false);}catch(error){showToast(error.message||'导入配对失败');}};
     $('#restoreSyncButton').onclick=()=>restoreCloudSnapshot(null);
     $('#refreshSnapshotsButton').onclick=()=>renderSnapshotHistory(true);
+    const forceUpdateBtn = $('#forceUpdateAppButton');
+    if (forceUpdateBtn) {
+      forceUpdateBtn.onclick = async () => {
+        showToast('正在清理应用缓存并强制重新获取…');
+        try {
+          if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            for (const r of regs) await r.unregister();
+          }
+          if ('caches' in window) {
+            const keys = await caches.keys();
+            for (const k of keys) {
+              if (!k.startsWith('cards-tts-')) await caches.delete(k);
+            }
+          }
+          if (window.CardsSeed) {
+            await CardsDB.forceResyncSeed(CardsSeed);
+          }
+        } catch (e) {
+          console.warn('Force update error', e);
+        }
+        setTimeout(() => { window.location.reload(true); }, 500);
+      };
+    }
+    const resyncSeedBtn = $('#resyncSeedButton');
+    if (resyncSeedBtn) {
+      resyncSeedBtn.onclick = async () => {
+        if (!window.CardsSeed) { showToast('当前未载入内置种子'); return; }
+        const count = await CardsDB.forceResyncSeed(CardsSeed);
+        await loadState();
+        await refreshDerivedViews();
+        await renderDiagnostics();
+        showToast(`已补齐 ${count} 项卡片与专题更新`);
+      };
+    }
     const main=$('#mainContent'),indicator=$('#edgeBackIndicator');let edgeStart=null;
     main.addEventListener('touchstart',event=>{const touch=event.touches[0],bounds=main.getBoundingClientRect(),side=touch.clientX<=bounds.left+28?'left':touch.clientX>=bounds.right-28?'right':null;edgeStart=canEdgeBack()&&side?{x:touch.clientX,y:touch.clientY,side}:null;indicator.classList.toggle('from-right',Boolean(edgeStart&&side==='right'));},{passive:true});
     main.addEventListener('touchmove',event=>{if(!edgeStart)return;const touch=event.touches[0],dx=touch.clientX-edgeStart.x,dy=touch.clientY-edgeStart.y,progress=edgeStart.side==='left'?dx:-dx;if(progress>10&&progress>Math.abs(dy)*1.15){event.preventDefault();indicator.classList.add('active');}},{passive:false});
@@ -701,6 +740,9 @@
     if(document.visibilityState!=='visible')return;
     const now=Date.now();if(now-state.lastForegroundRefreshAt<500)return;state.lastForegroundRefreshAt=now;
     try{
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.getRegistration().then(reg => reg && reg.update()).catch(()=>{});
+      }
       await loadState();
       if(state.currentTopic)state.currentTopic=state.topics.find(topic=>topic.id===state.currentTopic.id)||state.currentTopic;
       if(state.currentCard){const latest=state.cards.find(card=>card.id===state.currentCard.id);if(latest){state.currentCard=latest;if(state.route==='card')renderCard();}}
@@ -715,7 +757,38 @@
     try{const pairing=decodePairing(encoded);await CardsSync.configure(pairing.url,pairing.key);state.pairingTransfer=`cards-pair:${encoded}`;history.replaceState(null,'',`${location.pathname}${location.search}`);return true;}
     catch(error){history.replaceState(null,'',`${location.pathname}${location.search}`);throw new Error(`同步配对失败：${error.message||error}`);}
   }
-  async function registerServiceWorker(){if(!('serviceWorker'in navigator)||location.protocol==='file:'){$('#offlineStatus').textContent=location.protocol==='file:'?'请通过本地服务器验证离线缓存':'当前浏览器不支持';return;}try{await navigator.serviceWorker.register('./service-worker.js');$('#offlineStatus').textContent='应用壳已注册，可离线启动';}catch(error){$('#offlineStatus').textContent='注册失败，请检查控制台';}}
+  let swRefreshing = false;
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (swRefreshing) return;
+      swRefreshing = true;
+      showToast('应用壳已更新，正在重载…');
+      setTimeout(() => { window.location.reload(); }, 600);
+    });
+  }
+  async function registerServiceWorker(){
+    if(!('serviceWorker'in navigator)||location.protocol==='file:'){
+      $('#offlineStatus').textContent=location.protocol==='file:'?'请通过本地服务器验证离线缓存':'当前浏览器不支持';
+      return;
+    }
+    try{
+      const reg = await navigator.serviceWorker.register('./service-worker.js');
+      reg.update().catch(()=>{});
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              showToast('新版本应用壳下载完成，即将激活');
+            }
+          });
+        }
+      });
+      $('#offlineStatus').textContent='应用壳已就绪 (可离线)';
+    }catch(error){
+      $('#offlineStatus').textContent='注册失败，请检查控制台';
+    }
+  }
   async function init(){try{await CardsDB.open();const seeded=await CardsDB.seedIfEmpty(CardsSeed);if(!seeded)await CardsDB.upgradeSeedContent(CardsSeed);const paired=await consumePairingLink();state.deviceId=(await CardsSync.status()).device_id;await setTheme(localStorage.getItem('cards-theme')||await CardsDB.getSetting('theme','light'),false);await loadState();bindEvents();startSyncRetryWatch();await renderSyncStatus();await registerServiceWorker();setSaveState('本地已保存');if(paired)showToast('同步设备已安全配对');if((await CardsSync.status()).configured&&navigator.onLine)runSync(false);}catch(error){console.error(error);setSaveState('载入失败');showToast(error.message||'Cards 初始化失败');}}
   document.addEventListener('DOMContentLoaded',init);
 })();

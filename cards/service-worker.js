@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cards-shell-v6-ef1e075ab228';
+const CACHE_NAME = 'cards-shell-v6-5e2ed9a3da86';
 // 朗读音频独立缓存：不随应用壳发版清理，首次播放后长期离线可用。
 const TTS_CACHE = 'cards-tts-v1';
 const APP_SHELL = [
@@ -31,6 +31,12 @@ self.addEventListener('activate', event => {
       .then(keys => Promise.all(keys.filter(key => key.startsWith('cards-shell-') && key !== CACHE_NAME).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', event => {

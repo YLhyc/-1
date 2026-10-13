@@ -131,37 +131,97 @@
     return true;
   }
 
-  async function upgradeSeedContent(seed) {
-    const version = String(seed && seed.content_version || seed && seed.exam_wording_version || '');
-    if (!version || await getSetting('seed_content_version', '') === version) return 0;
+  async function upgradeSeedContent(seed, force = false) {
+    if (!seed) return 0;
+    const version = String(seed.content_version || seed.exam_wording_version || '');
+    const releaseId = String(seed.release_id || '');
+    const currentReleaseId = await getSetting('seed_release_id', '');
     const currentContentVersion = await getSetting('seed_content_version', '');
     const currentExamVersion = await getSetting('seed_exam_wording_version', '');
-    const trustedReplace = (seed.replace_content_versions || []).includes(currentContentVersion)
-      || (seed.replace_exam_wording_versions || []).includes(currentExamVersion);
-    const [cards, events] = await Promise.all([getAll('cards'), getAll('review_events')]);
+
+    const [cards, topics, tombstones, events] = await Promise.all([
+      getAll('cards'), getAll('topics'), getAll('tombstones'), getAll('review_events')
+    ]);
+
+    const localCardsCount = cards.length;
+    const seedCardsCount = (seed.cards || []).length;
+    const isNewRelease = (releaseId && releaseId !== currentReleaseId) || (version && version !== currentContentVersion);
+    const hasMissingCards = localCardsCount < seedCardsCount;
+
+    if (!force && !isNewRelease && !hasMissingCards) return 0;
+
+    const trustedReplace = force
+      || (seed.replace_content_versions || []).includes(currentContentVersion)
+      || (seed.replace_exam_wording_versions || []).includes(currentExamVersion)
+      || isNewRelease;
+
+    // 1. 同步缺失的专题 (topics)
+    const localTopicById = new Map(topics.map(t => [t.id, t]));
+    const missingTopics = (seed.topics || []).filter(t => !localTopicById.has(t.id));
+    if (missingTopics.length) {
+      await putMany('topics', missingTopics);
+    }
+
+    // 2. 统计已删除的卡片 (tombstones)，避免死灰复燃
+    const deletedCardIds = new Set(
+      tombstones.filter(t => t && t.card_id && !t.restored_at).map(t => String(t.card_id))
+    );
+
+    // 3. 统计用户主动编辑和移动过的卡片
     const localById = new Map(cards.map(card => [card.id, card]));
-    const userEdited = new Set(events
-      .filter(event => ['edited', 'restored'].includes(event.action))
-      .map(event => event.card_id));
-    const userMoved = new Set(events.filter(event => event.action === 'moved').map(event => event.card_id));
-    const updates = [];
+    const userEdited = new Set(
+      events.filter(e => ['edited', 'restored'].includes(e.action)).map(e => e.card_id)
+    );
+    const userMoved = new Set(
+      events.filter(e => e.action === 'moved').map(e => e.card_id)
+    );
+
+    const cardsToPut = [];
     for (const released of seed.cards || []) {
       const local = localById.get(released.id);
-      const releasedAnswer = String(released.exam_wording || '').trim();
-      const localAnswer = String(local && local.exam_wording || '').trim();
-      if (!local || userEdited.has(local.id)) continue;
-      if (!trustedReplace && (releasedAnswer.length < 80 || localAnswer.length >= 120)) continue;
-      const updated = { ...released, schedule: local.schedule, revision: local.revision };
-      if (userMoved.has(local.id)) {
-        updated.subject = local.subject; updated.module = local.module;
-        updated.topic_id = local.topic_id; updated.order = local.order;
+      if (!local) {
+        // 全新发布的卡片：如果不在回收站中，直接入库
+        if (!deletedCardIds.has(String(released.id))) {
+          cardsToPut.push(released);
+        }
+        continue;
       }
-      updates.push(updated);
+
+      // 已有卡片：若用户手动编辑过，绝对保留用户版本
+      if (userEdited.has(local.id)) continue;
+
+      const releasedAnswer = String(released.exam_wording || '').trim();
+      const localAnswer = String(local.exam_wording || '').trim();
+      if (!trustedReplace && (releasedAnswer.length < 80 || localAnswer.length >= 120)) continue;
+
+      const updated = {
+        ...released,
+        schedule: local.schedule,
+        revision: local.revision
+      };
+      if (userMoved.has(local.id)) {
+        updated.subject = local.subject;
+        updated.module = local.module;
+        updated.topic_id = local.topic_id;
+        updated.order = local.order;
+      }
+      cardsToPut.push(updated);
     }
-    await putMany('cards', updates);
-    await setSetting('seed_content_version', version);
-    await setSetting('seed_exam_wording_version', seed.exam_wording_version || version);
-    return updates.length;
+
+    if (cardsToPut.length) {
+      await putMany('cards', cardsToPut);
+    }
+
+    const now = new Date().toISOString();
+    if (releaseId) await setSetting('seed_release_id', releaseId);
+    if (version) await setSetting('seed_content_version', version);
+    if (seed.exam_wording_version) await setSetting('seed_exam_wording_version', seed.exam_wording_version);
+
+    return cardsToPut.length;
+  }
+
+  async function forceResyncSeed(seed) {
+    return upgradeSeedContent(seed, true);
   }
 
   async function exportSnapshot() {
@@ -255,6 +315,7 @@
     setSetting,
     seedIfEmpty,
     upgradeSeedContent,
+    forceResyncSeed,
     exportSnapshot,
     importSnapshot,
     saveResume
