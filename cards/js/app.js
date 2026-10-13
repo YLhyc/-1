@@ -6,9 +6,19 @@
     '807': ['现当代文学与评论写作', '现当代文学 · 评论写作'],
     politics: ['思想政治理论', '马原 · 毛中特 · 史纲 · 思修']
   };
+  const politicsMayuanChapters = [
+    { id: '00_马原·导论', num: 'CHAPTER 00', title: '00 · 马原导论', desc: '马克思主义的创立、特征与当代价值' },
+    { id: '01_马原·辩证唯物论', num: 'CHAPTER 01 · 重点', title: '01 · 辩证唯物论', desc: '物质观、时空运动观、意识观与物质统一性', highlight: true },
+    { id: '02_马原·唯物辩证法', num: 'CHAPTER 02 · 重点', title: '02 · 唯物辩证法', desc: '对立统一规律、三大规律与五对基本范畴', highlight: true },
+    { id: '03_马原·认识论', num: 'CHAPTER 03', title: '03 · 认识论', desc: '实践与认识的辩证运动、真理与价值' },
+    { id: '04_马原·唯物史观', num: 'CHAPTER 04', title: '04 · 唯物史观', desc: '社会基本矛盾、阶级斗争与人民群众作用' },
+    { id: '05_马原·政经', num: 'CHAPTER 05', title: '05 · 资本主义政治经济学', desc: '劳动价值论、剩余价值论与垄断资本主义' },
+    { id: '06_马原·科社', num: 'CHAPTER 06', title: '06 · 科学社会主义', desc: '社会主义发展历史与共产主义崇高理想' }
+  ];
   const syncRetryIntervalMs = Number(window.CARDS_SYNC_RETRY_INTERVAL_MS || 15000);
   const state = {
     cards: [], topics: [], currentSubject: '706', currentTopic: null, currentCard: null,
+    politicsView: 'portal', politicsChapter: null,
     route: 'home', sortByMastery: false, resume: null, scrollSaveTimer: null,
     cardMode: 'memorize', revealed: true, hintLevel: 0, searchSubjectFilter: 'all', searchMasteryFilter: 'all',
     session: null, pausedSessions: {}, reviewDurationMinutes: 10, reviewingSession: false,
@@ -162,17 +172,113 @@
     await CardsDB.put('sessions',state.session);await CardsDB.setSetting('active_review_session',state.session);openCard(queue.ids[0],0,{session:true});
   }
 
+  function setSubjectReturnBar(label, meta, handler) {
+    const btn = $('#backFromSubject');
+    if (btn) {
+      const strong = btn.querySelector('strong');
+      if (strong) strong.textContent = label;
+      btn.onclick = handler;
+    }
+    const metaEl = $('.page[data-page="subject"] .context-return-bar > small');
+    if (metaEl) metaEl.textContent = meta;
+  }
+
   function openSubject(subject) {
-    state.currentSubject = subject; const cards = state.cards.filter(card => card.subject === subject);
-    $('#subjectCode').textContent = subject === 'politics' ? 'POLITICS' : subject; $('#subjectTitle').textContent = subjectLabels[subject][0];
-    const level = averageLevel(cards); $('#subjectRing').dataset.level = String(level); $('#subjectRing').style.setProperty('--level', level);
+    state.currentSubject = subject;
+    const cards = state.cards.filter(card => card.subject === subject);
+    const level = averageLevel(cards);
+    $('#subjectRing').dataset.level = String(level);
+    $('#subjectRing').style.setProperty('--level', level);
+
+    if (subject === 'politics') {
+      return renderPoliticsPortal();
+    }
+
+    $('#subjectCode').textContent = subject;
+    $('#subjectTitle').textContent = subjectLabels[subject][0];
+    const descEl = $('.page[data-page="subject"] .page-description');
+    if (descEl) descEl.textContent = '按知识结构进入章节专题，熟悉度会随每次复习评价即时更新。';
+    setSubjectReturnBar('科目目录', 'SUBJECTS', () => navigate('home'));
     const topics = state.topics.filter(topic => topic.subject === subject).sort((a,b)=>a.order-b.order);
     $('#topicList').innerHTML = topics.map(topic => CardsRender.topicRow(topic, cards.filter(card => card.topic_id === topic.id))).join('');
-    $$('#topicList [data-topic]').forEach(button => button.onclick = () => openTopic(button.dataset.topic)); navigate('subject');
+    $$('#topicList [data-topic]').forEach(button => button.onclick = () => openTopic(button.dataset.topic));
+    navigate('subject');
   }
+
+  function renderPoliticsPortal() {
+    state.politicsView = 'portal';
+    state.politicsChapter = null;
+    const cards = state.cards.filter(card => card.subject === 'politics');
+    $('#subjectCode').textContent = 'POLITICS · 全国统考';
+    $('#subjectTitle').textContent = '思想政治理论';
+    const descEl = $('.page[data-page="subject"] .page-description');
+    if (descEl) descEl.textContent = '当前阶段聚焦马原攻坚，先搭建最低可运行闭环。';
+    setSubjectReturnBar('Cards 首页', 'POLITICS', () => navigate('home'));
+
+    $('#topicList').innerHTML = CardsRender.politicsPortal(cards.length);
+    const btnEnter = $('#btnEnterMayuan');
+    if (btnEnter) btnEnter.onclick = () => renderPoliticsChapters();
+    navigate('subject');
+  }
+
+  function renderPoliticsChapters() {
+    state.politicsView = 'chapters';
+    state.politicsChapter = null;
+    const cards = state.cards.filter(card => card.subject === 'politics');
+    $('#subjectCode').textContent = 'SECTION BREAKDOWN';
+    $('#subjectTitle').textContent = '马克思主义基本原理';
+    const descEl = $('.page[data-page="subject"] .page-description');
+    if (descEl) descEl.textContent = '点击章群深入查看具体知识专题：';
+    setSubjectReturnBar('返回政治大门', 'POLITICS / MAYUAN', () => renderPoliticsPortal());
+
+    $('#topicList').innerHTML = `<div class="chapter-list">${politicsMayuanChapters.map(ch => {
+      const chCards = cards.filter(c => c.module === ch.id);
+      return CardsRender.chapterRow(ch, chCards.length);
+    }).join('')}</div>`;
+
+    $$('#topicList [data-chapter]').forEach(button => {
+      const chapterId = button.dataset.chapter;
+      const count = cards.filter(c => c.module === chapterId).length;
+      if (count > 0) {
+        button.onclick = () => renderPoliticsChapterTopics(chapterId);
+      }
+    });
+    navigate('subject');
+  }
+
+  function renderPoliticsChapterTopics(chapterId) {
+    state.politicsView = 'topics';
+    state.politicsChapter = chapterId;
+    const cards = state.cards.filter(card => card.subject === 'politics');
+    const chInfo = politicsMayuanChapters.find(ch => ch.id === chapterId) || { num: 'CHAPTER', title: chapterId };
+    const chCards = cards.filter(c => c.module === chapterId);
+
+    $('#subjectCode').textContent = chInfo.num;
+    $('#subjectTitle').textContent = chInfo.title;
+    const descEl = $('.page[data-page="subject"] .page-description');
+    if (descEl) descEl.textContent = `共收录 ${chCards.length} 张卡片，点击具体专题进入卡片学习：`;
+    setSubjectReturnBar('返回马原章群', 'MAYUAN / CHAPTER', () => renderPoliticsChapters());
+
+    const topics = state.topics.filter(t => t.subject === 'politics' && t.module === chapterId).sort((a,b)=>a.order-b.order);
+    $('#topicList').innerHTML = topics.map(topic => CardsRender.topicRow(topic, chCards.filter(card => card.topic_id === topic.id))).join('');
+    $$('#topicList [data-topic]').forEach(button => button.onclick = () => openTopic(button.dataset.topic));
+    navigate('subject');
+  }
+
   function openTopic(topicId) {
     state.currentTopic = state.topics.find(topic => topic.id === topicId); if (!state.currentTopic) return;
-    state.currentSubject = state.currentTopic.subject; $('#topicPath').textContent = `${state.currentTopic.subject} / ${state.currentTopic.module}`; $('#topicTitle').textContent = state.currentTopic.title; $('#topicParentLabel').textContent = `${state.currentTopic.module}专题`; $('#topicParentMeta').textContent = state.currentTopic.subject === 'politics' ? 'POLITICS' : state.currentTopic.subject;
+    state.currentSubject = state.currentTopic.subject;
+    $('#topicPath').textContent = `${state.currentTopic.subject} / ${state.currentTopic.module}`;
+    $('#topicTitle').textContent = state.currentTopic.title;
+    if (state.currentSubject === 'politics') {
+      $('#topicParentLabel').textContent = '返回章群专题';
+      $('#topicParentMeta').textContent = 'CHAPTER';
+      $('#backToSubject').onclick = () => renderPoliticsChapterTopics(state.currentTopic.module);
+    } else {
+      $('#topicParentLabel').textContent = `${state.currentTopic.module}专题`;
+      $('#topicParentMeta').textContent = state.currentTopic.subject;
+      $('#backToSubject').onclick = () => openSubject(state.currentSubject);
+    }
     renderTopicCards(); navigate('topic');
   }
   function bindCardRows(container) {
@@ -331,7 +437,24 @@
     if(paused&&paused.kind==='topic'&&paused.topic_id)openTopic(paused.topic_id);else navigate('today');
   }
   function canEdgeBack(){return ['today','subject','topic','card','trash'].includes(state.route);}
-  async function edgeBack(){if(state.route==='card')return returnFromCard();if(state.route==='topic')return openSubject(state.currentSubject);if(state.route==='subject'||state.route==='today')return navigate('home');if(state.route==='trash')return navigate('settings');}
+  async function edgeBack(){
+    if (state.route === 'card') return returnFromCard();
+    if (state.route === 'topic') {
+      if (state.currentSubject === 'politics') {
+        return renderPoliticsChapterTopics(state.politicsChapter || (state.currentTopic && state.currentTopic.module));
+      }
+      return openSubject(state.currentSubject);
+    }
+    if (state.route === 'subject') {
+      if (state.currentSubject === 'politics') {
+        if (state.politicsView === 'topics') return renderPoliticsChapters();
+        if (state.politicsView === 'chapters') return renderPoliticsPortal();
+      }
+      return navigate('home');
+    }
+    if (state.route === 'today') return navigate('home');
+    if (state.route === 'trash') return navigate('settings');
+  }
 
   function renderSearch(query) {
     const normalized = query.trim().toLowerCase(); if (!normalized) { $('#searchResults').innerHTML = '<div class="empty-state">输入关键词开始搜索</div>'; return; }
@@ -519,7 +642,15 @@
   function bindEvents() {
     $$('[data-route]').forEach(button => button.onclick = () => navigate(button.dataset.route));
     $('#resumeButton').onclick = () => state.session && state.session.status==='active' ? resumeActiveSession() : navigate('today');
-    $('#backToSubject').onclick = () => openSubject(state.currentSubject);
+    const backSub = $('#backFromSubject');
+    if (backSub) backSub.onclick = () => navigate('home');
+    $('#backToSubject').onclick = () => {
+      if (state.currentSubject === 'politics') {
+        renderPoliticsChapterTopics(state.politicsChapter || (state.currentTopic && state.currentTopic.module));
+      } else {
+        openSubject(state.currentSubject);
+      }
+    };
     $('#backFromCard').onclick = returnFromCard;
     $('#sortCardsButton').onclick = () => { state.sortByMastery=!state.sortByMastery; renderTopicCards(); };
     $('#reviewTopicButton').onclick = startTopicReview;

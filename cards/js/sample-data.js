@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   window.CardsSeed = {
-  "exam_wording_version": "e1654eb19cab",
-  "content_version": "9cbe2bc1b9bc",
+  "exam_wording_version": "acdef1319bd8",
+  "content_version": "32e41a29b48f",
   "replace_exam_wording_versions": [
     "a380b6dab3b5"
   ],
@@ -272,66 +272,82 @@
     {
       "id": "topic_politics_46ff92e5305b",
       "subject": "politics",
-      "module": "马原",
-      "title": "导论",
+      "module": "00_马原·导论",
+      "title": "马克思主义的创立与鲜明特征",
       "order": 10,
       "description": "马克思主义的构成、立场与方法"
     },
     {
       "id": "topic_politics_ce5a75105850",
       "subject": "politics",
-      "module": "马原",
-      "title": "哲学及其基本问题",
-      "order": 20,
+      "module": "01_马原·辩证唯物论",
+      "title": "哲学基本问题与唯物主义一元论",
+      "order": 10,
       "description": "物质意识、唯物唯心与可知不可知"
+    },
+    {
+      "id": "topic_politics_unity_opposites",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "title": "对立统一规律（根本规律）",
+      "order": 10,
+      "description": "矛盾规律、矛盾分析法及同一性斗争性、共性个性、主次矛盾辨析"
+    },
+    {
+      "id": "topic_politics_matter_consciousness",
+      "subject": "politics",
+      "module": "01_马原·辩证唯物论",
+      "title": "物质范畴与意识观（肖徐融合标杆）",
+      "order": 15,
+      "description": "肖秀荣题眼避坑与徐涛因果逻辑链深度融合，覆盖唯一特性、运动时空、意识本质与统一性"
+    },
+    {
+      "id": "topic_politics_two_laws",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "title": "量变质变与否定之否定规律（两大发展规律）",
+      "order": 15,
+      "description": "度的关节点与适度原则、辩证否定观（扬弃）、波浪式前进与螺旋式上升"
+    },
+    {
+      "id": "topic_politics_basic_categories",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "title": "唯物辩证法五对基本范畴",
+      "order": 20,
+      "description": "内容与形式、本质与现象、原因与结果、必然与偶然、现实与可能的关系及辨析"
     },
     {
       "id": "topic_politics_materialism",
       "subject": "politics",
-      "module": "马原",
-      "title": "物质观",
+      "module": "01_马原·辩证唯物论",
+      "title": "马克思主义物质观与可知论",
       "order": 20,
       "description": "物质、运动、时空、意识及自然界与人类社会的关系"
     },
     {
       "id": "topic_politics_9a290f0fa9d7",
       "subject": "politics",
-      "module": "马原",
-      "title": "物质观",
-      "order": 30,
+      "module": "01_马原·辩证唯物论",
+      "title": "物质客观实在性与自然科学概念",
+      "order": 25,
       "description": "物质、运动、静止与时空"
     },
     {
       "id": "topic_politics_material_motion",
       "subject": "politics",
-      "module": "马原·唯物论",
-      "title": "物质运动与意识活动",
+      "module": "01_马原·辩证唯物论",
+      "title": "物质运动与时空观（绝对与相对）",
       "order": 30,
       "description": "区分物质运动、意识活动及其物质基础"
     },
     {
       "id": "topic_politics_consciousness",
       "subject": "politics",
-      "module": "马原",
-      "title": "意识观与世界的物质统一性",
+      "module": "01_马原·辩证唯物论",
+      "title": "意识本质、能动作用与物质统一性",
       "order": 40,
       "description": "意识的起源和本质、能动作用、人工智能边界与世界的物质统一性"
-    },
-    {
-      "id": "topic_politics_unity_opposites",
-      "subject": "politics",
-      "module": "马原",
-      "title": "对立统一规律",
-      "order": 60,
-      "description": "矛盾规律、矛盾分析法及同一性斗争性、共性个性、主次矛盾辨析"
-    },
-    {
-      "id": "topic_politics_basic_categories",
-      "subject": "politics",
-      "module": "马原",
-      "title": "唯物辩证法五对基本范畴",
-      "order": 70,
-      "description": "内容与形式、本质与现象、原因与结果、必然与偶然、现实与可能的关系及辨析"
     }
   ],
   "cards": [
@@ -5728,7 +5744,7 @@
     {
       "id": "card_politics_b6cbf99b7869f305",
       "subject": "politics",
-      "module": "马原",
+      "module": "00_马原·导论",
       "topic_id": "topic_politics_46ff92e5305b",
       "order": 10,
       "title": "马克思主义的三大组成部分",
@@ -5808,7 +5824,7 @@
     {
       "id": "card_politics_dca1ec842306c2fb",
       "subject": "politics",
-      "module": "马原",
+      "module": "00_马原·导论",
       "topic_id": "topic_politics_46ff92e5305b",
       "order": 20,
       "title": "马克思主义的基本立场、观点和方法",
@@ -5888,7 +5904,7 @@
     {
       "id": "card_politics_01100df6391835a2",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_9a290f0fa9d7",
       "order": 10,
       "title": "列宁的物质定义与客观实在性",
@@ -5968,7 +5984,7 @@
     {
       "id": "card_politics_7a6a02aa72cc7835",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_basic_categories",
       "order": 10,
       "title": "内容与形式的辩证关系及形式主义边界",
@@ -6045,7 +6061,7 @@
     {
       "id": "card_politics_9a624c3e808fe77a",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_basic_categories",
       "order": 20,
       "title": "本质、现象、真象、假象与错觉如何区分",
@@ -6123,7 +6139,7 @@
     {
       "id": "card_politics_d23a9e7364cd675a",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_basic_categories",
       "order": 30,
       "title": "原因与结果的辩证关系及因果识别",
@@ -6200,7 +6216,7 @@
     {
       "id": "card_politics_2190ef51e5afb26e",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_basic_categories",
       "order": 40,
       "title": "必然与偶然的关系及判断边界",
@@ -6277,7 +6293,7 @@
     {
       "id": "card_politics_9a78b405388309dd",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_basic_categories",
       "order": 50,
       "title": "现实可能、抽象可能与不可能的区分",
@@ -6355,7 +6371,7 @@
     {
       "id": "card_politics_64ec0ef20b5e7333",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_ce5a75105850",
       "order": 10,
       "title": "哲学基本问题的两个方面",
@@ -6436,7 +6452,7 @@
     {
       "id": "card_politics_f92e8489827056e4",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_ce5a75105850",
       "order": 20,
       "title": "旧唯物主义的“半截子”局限",
@@ -6516,7 +6532,7 @@
     {
       "id": "card_politics_5c04f99e0d2f854d",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_consciousness",
       "order": 10,
       "title": "意识的起源和本质",
@@ -6595,7 +6611,7 @@
     {
       "id": "card_politics_a12e43f7109b546c",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_consciousness",
       "order": 20,
       "title": "意识能动作用与客观规律性",
@@ -6678,7 +6694,7 @@
     {
       "id": "card_politics_c7fda79c64ef3357",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_consciousness",
       "order": 30,
       "title": "人工智能与人类意识的边界",
@@ -6757,7 +6773,7 @@
     {
       "id": "card_politics_5aaf9aabde7cf578",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_consciousness",
       "order": 40,
       "title": "世界的物质统一性原理",
@@ -6836,7 +6852,7 @@
     {
       "id": "card_politics_f396ea06de5fe50f",
       "subject": "politics",
-      "module": "马原·唯物论",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_material_motion",
       "order": 10,
       "title": "意识能不能运动？",
@@ -6908,7 +6924,7 @@
     {
       "id": "card_politics_16802f8826e810c8",
       "subject": "politics",
-      "module": "马原·唯物论",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_material_motion",
       "order": 20,
       "title": "‘意识完全不能运动’为什么错？",
@@ -6979,7 +6995,7 @@
     {
       "id": "card_politics_356679a94c1f1f00",
       "subject": "politics",
-      "module": "马原·唯物论",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_material_motion",
       "order": 20,
       "title": "物质、运动与相对静止",
@@ -7059,7 +7075,7 @@
     {
       "id": "card_politics_ac34c7b93373d3de",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_materialism",
       "order": 21,
       "title": "物质与运动为什么不可分割",
@@ -7133,7 +7149,7 @@
     {
       "id": "card_politics_b863d4e75f0227c7",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_materialism",
       "order": 22,
       "title": "时间和空间的客观性",
@@ -7207,7 +7223,7 @@
     {
       "id": "card_politics_aedb3175306c6ead",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_materialism",
       "order": 23,
       "title": "意识的能动性与人工智能边界",
@@ -7282,7 +7298,7 @@
     {
       "id": "card_politics_21ae1c5994363e41",
       "subject": "politics",
-      "module": "马原",
+      "module": "01_马原·辩证唯物论",
       "topic_id": "topic_politics_materialism",
       "order": 24,
       "title": "自然界与人类社会的关系",
@@ -7355,9 +7371,800 @@
       }
     },
     {
+      "id": "card_politics_mat_substance_v1",
+      "subject": "politics",
+      "module": "01_马原·辩证唯物论",
+      "topic_id": "topic_politics_matter_consciousness",
+      "order": 10,
+      "title": "物质的唯一特性与未知世界辨析",
+      "prompt": "什么是物质的唯一特性？哲学物质与实物有何区别？如何驳斥不可知论？",
+      "summary": "物质的唯一特性是{{accent|客观实在性}}。世界上只有{{accent|尚未认识之物}}，绝无不可认识之物。磁场等无形存在同样是客观实在。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "从【物质唯一特性】切入，进而展开【可知论与未知世界】的辩证统一与本质区分。"
+      },
+      "outline": [
+        {
+          "heading": "物质唯一特性",
+          "text": "客观实在性是物质的唯一特性，不依人的意志为转移，坚持唯物主义一元论。"
+        },
+        {
+          "heading": "可知论与未知世界",
+          "text": "未知世界与已知世界同具客观实在性，世界上只有尚未认识之物，没有不可认识之物。"
+        }
+      ],
+      "examples": [
+        "【肖秀荣点拨】：物质不等于肉眼可见的实物，磁场需仪器感知也是客观实在。",
+        "【防坑雷区】：混淆未知与不可知，认为世界存在根本无法认识之物属于不可知论。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别界定唯一特性与可知论断语。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：客观实在性、尚未认识之物、不可知论。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，物质的唯一特性是客观实在性……"
+        }
+      ],
+      "exam_answer_type": "quick",
+      "exam_wording": "首先，物质唯一特性是客观实在性，它不依赖人类意识而存在并能为意识所反映，坚持了唯物主义一元论。\n\n其次，可知论与未知世界表明，未知世界与已知世界都具客观实在性。人能在实践中认识世界，世界上只有尚未认识之物，没有不可认识之物。由此可见，将未知事物神秘化的观点在哲学上是站不住脚的。",
+      "tags": [
+        "马原",
+        "唯物论",
+        "物质观",
+        "可知论",
+        "肖秀荣题眼"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:\\AAA考研\\AA科目\\政治\\MD\\27版肖秀荣-背诵手册【上册】.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:02:29+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T11:02:29+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:02:29+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_mat_motion_space_v1",
+      "subject": "politics",
+      "module": "01_马原·辩证唯物论",
+      "topic_id": "topic_politics_matter_consciousness",
+      "order": 20,
+      "title": "物质运动与时空的绝对性与相对性",
+      "prompt": "物质与运动的关系是什么？为什么说时空的客观实在性是绝对的而特性是相对的？",
+      "summary": "运动是物质的根本属性和{{accent|存在方式}}；时空是运动物质的{{accent|基本存在形式}}。时空的客观实在性是绝对的，具体物理特性的变化是相对的。",
+      "outline_logic": {
+        "type": "contrast",
+        "description": "围绕【物质与运动关系】展开，进而深入剖析【时空绝对性与相对性】的辩证统一。"
+      },
+      "outline": [
+        {
+          "heading": "物质与运动关系",
+          "text": "物质是运动的承担者，运动是物质的固有属性；设想没有运动的物质是形而上学，设想没有物质的运动是唯心主义。"
+        },
+        {
+          "heading": "时空绝对性与相对性",
+          "text": "时空客观实在性是绝对的，不依意识转移；具体物理测量特性随速度引力而变是相对的。"
+        }
+      ],
+      "examples": [
+        "【生活化类比】：约同学复习必须讲清周日下午两点（时间持续）和图书馆三楼（空间延展）。",
+        "【肖秀荣点拨】：相对论证明时空特性变化，绝不意味着时空是主观建构的。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "两步走：物质运动不可分 ➔ 时空绝对相对统一。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：存在方式、承担者、客观实在性、具体特性。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，从物质与运动关系来看……"
+        }
+      ],
+      "exam_answer_type": "term",
+      "exam_wording": "首先，从物质与运动关系来看，运动是物质的存在方式和根本属性，物质是一切运动的实在承担者。设想脱离运动的物质会导致形而上学，设想脱离物质的运动必然陷入唯心主义。\n\n其次，从时空绝对性与相对性来看，时间和空间是运动着的物质的基本存在形式。时空的客观实在性是绝对的，不以人的意志为转移；同时，具体时空特性依物质运动状态而改变，体现出相对性。由此可见，辩证唯物主义实现了时空客观性与变动性的辩证统一。",
+      "tags": [
+        "马原",
+        "唯物论",
+        "运动观",
+        "时空观",
+        "徐涛逻辑"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:\\AAA考研\\AA科目\\政治\\MD\\27版肖秀荣-背诵手册【上册】.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:02:29+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T11:02:29+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:02:29+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_mat_consciousness_v1",
+      "subject": "politics",
+      "module": "01_马原·辩证唯物论",
+      "topic_id": "topic_politics_matter_consciousness",
+      "order": 30,
+      "title": "意识的起源、本质及其能动作用",
+      "prompt": "简述意识产生的决定性环节、本质特征，说明人脑能否凭空产生虚幻观念以及意识能动作用的表现。",
+      "summary": "意识是人脑机能和{{accent|客观世界主观映象}}。劳动在意识产生中起决定作用。观念是移入人脑改造过的物质，虚幻观念仍源于现实。意识通过实践反作用于客观世界，坚持{{accent|尊重规律与发挥能动性统一}}。",
+      "outline_logic": {
+        "type": "progressive",
+        "description": "遵循【意识起源与劳动作用】到【意识本质与主观映象】，最终落脚于【意识能动作用与实践转化】的三阶逻辑推进。"
+      },
+      "outline": [
+        {
+          "heading": "意识起源与劳动作用",
+          "text": "意识是自然界长期发展的产物，更是在劳动中形成的社会产物，劳动起决定性作用。"
+        },
+        {
+          "heading": "意识本质与主观映象",
+          "text": "人脑是意识器官，意识是客观内容与主观形式的统一，虚幻观念亦是对现实的歪曲反映。"
+        },
+        {
+          "heading": "意识能动作用与实践转化",
+          "text": "意识具有目的性、创造性，指导实践改造世界，调控人的生理行为，必须以尊重客观规律为前提。"
+        }
+      ],
+      "examples": [
+        "【形象类比】：画家画龙无论多么神奇，角来自鹿、鳞来自鱼，原材料全来自现实客观世界。",
+        "【避坑雷区】：意识不能直接改变客观世界，必须通过实践这一客观物质性中介。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "按徐涛三阶推进：起源（劳动决定） ➔ 本质（人脑机能+主观映象） ➔ 能动作用4点。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：主观映象、移入人脑、目的性、实践中介、客观规律。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，从意识起源与劳动作用来看……"
+        }
+      ],
+      "exam_answer_type": "essay",
+      "exam_wording": "首先，从意识起源与劳动作用来看，意识是自然界长期发展的产物，更是社会劳动的产物。劳动不仅促使直立行走和人脑形成，还催生了语言交往，在意识产生和发展中起到了决定性作用。\n\n其次，从意识本质与主观映象来看，意识是人脑的机能和属性，是客观世界的主观映象。马克思指出，“观念的东西不外是移入人的头脑并在人的头脑中改造过的物质的东西而已”。意识的内容是客观的，形式是主观的。即便鬼神等虚幻观念，也是对现实事物的歪曲反映，人脑绝不能凭空创造出脱离现实素材的纯精神世界。\n\n再次，从意识能动作用与实践转化来看，意识不仅能动地反映世界，更在实践中能动地反作用于客观世界。其突出表现为：第一，意识活动具有明确的目的性和计划性；第二，意识活动具有超越现实的创造性；第三，意识通过指导实践改造客观世界；第四，意识对人的生理和行为活动具有指导调控功能。\n\n由此可见，发挥主观能动性必须以尊重客观规律为前提，二者是辩证统一的。在认识和改造世界过程中，既要反对唯意志论，又要克服机械消极的宿命论倾向。",
+      "tags": [
+        "马原",
+        "唯物论",
+        "意识观",
+        "主观能动性",
+        "徐涛因果链",
+        "材料分析题"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:\\AAA考研\\AA科目\\政治\\MD\\27版肖秀荣-背诵手册【上册】.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:02:29+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T11:02:29+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:02:29+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_mat_world_unity_v1",
+      "subject": "politics",
+      "module": "01_马原·辩证唯物论",
+      "topic_id": "topic_politics_matter_consciousness",
+      "order": 40,
+      "title": "世界的物质统一性原理及其实践意义",
+      "prompt": "世界的真正统一性在于什么？简述该原理的核心内容及其方法论指导意义。",
+      "summary": "世界的真正统一性在于它的物质性。自然界、人类社会和意识形态都统一于物质。它是马克思主义哲学的基石，要求想问题办事情必须坚持{{accent|一切从实际出发}}，把主观愿望统摄于客观实际。",
+      "outline_logic": {
+        "type": "parallel",
+        "description": "围绕【世界物质统一性内涵】与【一切从实际出发方法论】两个基本维度并列论述。"
+      },
+      "outline": [
+        {
+          "heading": "世界物质统一性内涵",
+          "text": "自然界是客观物质的；人类社会本质上也是物质的；人的意识不仅是物质产物而且统一于物质。"
+        },
+        {
+          "heading": "一切从实际出发方法论",
+          "text": "世界物质统一性原理是唯物主义哲学的基石，是党的思想路线的理论依据，要求一切从实际出发、实事求是。"
+        }
+      ],
+      "examples": [
+        "【肖秀荣点拨】：世界统一于物质，而非统一于存在；杜林折中主张世界统一于存在是错误的。",
+        "【通俗类比】：做复习规划必须扎根自身体力与基础这个物质地基，尊重客观规律才能改造现实。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "原理三层面（自然+社会+意识） ➔ 方法论要求（实事求是）。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：真正统一性、生产方式、一切从实际出发、思想路线。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，从世界物质统一性内涵来看……"
+        }
+      ],
+      "exam_answer_type": "short_answer",
+      "exam_wording": "首先，从世界物质统一性内涵来看，马克思主义哲学认为世界的真正统一性在于它的物质性。第一，自然界是客观的物质世界，先于人类意识而存在；第二，人类社会在本质上也是物质的，物质资料生产方式是社会历史存在与发展的决定力量；第三，人的意识统一于物质，是客观现实在人脑中的主观反映。\n\n其次，从一切从实际出发方法论来看，世界物质统一性原理是马克思主义哲学的基石，是我们党一切工作的哲学依据。\n\n由此可见，在社会主义现代化建设和个人实践中，必须坚持一切从实际出发、理论联系实际、实事求是，在实践中检验真理并不断发展真理。",
+      "tags": [
+        "马原",
+        "唯物论",
+        "物质统一性",
+        "一切从实际出发",
+        "肖秀荣题眼"
+      ],
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:\\AAA考研\\AA科目\\政治\\MD\\27版肖秀荣-背诵手册【上册】.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:02:29+08:00"
+      },
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T11:02:29+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:02:29+08:00",
+        "device_id": "assistant-politics"
+      }
+    },
+    {
+      "id": "card_politics_dialectic_quality_quantity_v1",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "topic_id": "topic_politics_two_laws",
+      "title": "量变质变规律与适度原则",
+      "order": 1,
+      "exam_answer_type": "short_answer",
+      "prompt": "什么是量变和质变？二者的辩证关系是什么？为什么在实际工作中要坚持适度原则？",
+      "summary": "质是一事物区别于他事物的内在规定性，度是事物保持质的稳定性的数量界限。量变是质变的必要准备，质变是量变的必然结果。方法论要求坚持{{accent|适度原则}}，掌握分寸，{{accent|防止过犹不及}}。",
+      "outline": [
+        {
+          "heading": "质、量、度与关节点界定",
+          "text": "质是内在规定性，量是规模速度等数量规定性；度是保持质的稳定性的界限，两端为关节点。"
+        },
+        {
+          "heading": "量变与质变的辩证统一",
+          "text": "量变是质变的必要准备，质变是量变的必然结果；质变巩固量变成果并开辟新量变道路。"
+        },
+        {
+          "heading": "坚持适度原则的方法论要求",
+          "text": "掌握分寸与适度原则，防止过犹不及；在需要根本飞跃时勇于抓住机遇促成质变。"
+        }
+      ],
+      "outline_logic": {
+        "type": "progressive",
+        "description": "辩证法首先进行质、量、度与关节点界定，进而阐述量变与质变的辩证统一，最后引申出坚持适度原则的方法论要求。"
+      },
+      "examples": [
+        "【肖秀荣考点点拨】：度是质和量的统一。在度的范围之内，事物的质保持稳定；一旦突破关节点，事物的质发生根本变化。区分量变与质变看是否突破度的界限。",
+        "【徐涛通俗类比】：水在 0℃ 到 100℃ 间升温是量变，保持液态；达到 100℃ 变水蒸气是质变。“过犹不及”“掌握火候”就是适度原则的生活化体现。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别界定质、量、度，阐述量变质变关系及适度原则要求。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：内在规定性、度的界限、关节点、必要准备、适度原则。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，质、量、度与关节点界定是把握事物状态变化的前提……"
+        }
+      ],
+      "exam_wording": "首先，质、量、度与关节点界定是把握事物状态变化的前提。质是一事物成为自身并区别于他事物的内在规定性；量是事物的规模、程度和速度等可以用数量表示的规定性；度是事物保持其质的稳定性的数量界限，度的两端是关节点。\n\n其次，量变与质变的辩证统一揭示了事物发展的形式与状态。量变是事物数量的增减和组成要素排列次序的变动，是质变的必要准备；质变是事物性质的根本变化，是量变的必然结果。质变体现并巩固着量变的成果，并为新的量变开辟道路。\n\n由此可见，坚持适度原则的方法论要求具有极其重要的实践指导意义。在实际工作和认识事物中，必须准确把握事物的度，掌握分寸，注意适度原则，防止过犹不及；同时，当需要实现根本飞跃时，要勇于抓住机遇促成质变。",
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:/AAA考研/AA科目/政治/MD/27版肖秀荣精讲精练.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:33:58.180839+08:00"
+      },
+      "tags": [
+        "马原",
+        "三大规律",
+        "量变质变规律",
+        "适度原则",
+        "肖徐融合标杆"
+      ],
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T12:00:00+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:33:58.180839+08:00",
+        "device_id": "desktop-seed"
+      }
+    },
+    {
+      "id": "card_politics_dialectic_negation_negation_v1",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "topic_id": "topic_politics_two_laws",
+      "title": "否定之否定规律与辩证否定观（扬弃）",
+      "order": 2,
+      "exam_answer_type": "short_answer",
+      "prompt": "辩证否定观的实质是什么？为什么说否定之否定规律揭示了事物发展是前进性与曲折性的统一？",
+      "summary": "辩证否定是事物的自我否定，是发展的环节和联系的环节。其实质是{{accent|“扬弃”}}，即既克服又保留。否定之否定规律揭示了事物发展的总趋势是{{accent|前进性与曲折性的统一}}，呈螺旋式上升。",
+      "outline": [
+        {
+          "heading": "辩证否定观的实质是扬弃",
+          "text": "辩证否定是事物的自我否定，是发展与联系的环节；其实质是扬弃，即既克服又保留。"
+        },
+        {
+          "heading": "两次否定三个阶段的完整周期",
+          "text": "经历肯定、否定、否定之否定三个阶段与两次否定；仿佛回到出发点，实为更高阶段的回复。"
+        },
+        {
+          "heading": "前进性与曲折性的辩证统一",
+          "text": "事物发展呈波浪式前进与螺旋式上升；总趋势是前进上升的，道路是曲折迂回的。"
+        }
+      ],
+      "outline_logic": {
+        "type": "progressive",
+        "description": "首先明确辩证否定观的实质是扬弃，进而剖析两次否定三个阶段的完整周期，最终确立前进性与曲折性的辩证统一。"
+      },
+      "examples": [
+        "【肖秀荣避坑题眼】：辩证否定不是外力强加的否定（那是形而上学否定观），而是自我否定；扬弃是既克服又保留，绝不是全盘抛弃或全盘肯定。",
+        "【徐涛经典例子】：麦粒（肯定）➔ 植株长出（否定）➔ 结出几十颗新麦粒（否定之否定）。仿佛回到起点，但品质与数量实现跃迁。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别阐明辩证否定实质是扬弃、两次否定三个阶段及前进性曲折性统一。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：自我否定、扬弃、既克服又保留、螺旋式上升、前进性与曲折性。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，辩证否定观的实质是扬弃……"
+        }
+      ],
+      "exam_wording": "首先，辩证否定观的实质是扬弃。辩证否定是事物的自我否定，是事物内部矛盾运动的结果。辩证否定是发展的环节，是新事物产生旧事物灭亡的飞跃；同时它是联系的环节，新事物孕育产生于旧事物中。辩证否定的实质是扬弃，即克服旧事物中消极腐朽的东西，保留其中合理的积极因素。\n\n其次，两次否定三个阶段的完整周期揭示了发展的形式。事物的发展经过肯定、否定、否定之否定三个阶段，包含两次否定。事物在否定之否定阶段仿佛回到了原来的出发点，但这是在更高阶段和更高级基础上的回复。\n\n由此可见，前进性与曲折性的辩证统一体现了事物发展的波浪式前进与螺旋式上升。事物发展的总趋势是前进的、上升的，而道路是曲折的、迂回的。我们既要坚信前途光明，又要准备走曲折的道路。",
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:/AAA考研/AA科目/政治/MD/27版肖秀荣精讲精练.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:33:58.180839+08:00"
+      },
+      "tags": [
+        "马原",
+        "三大规律",
+        "否定之否定规律",
+        "辩证否定观",
+        "扬弃",
+        "肖徐融合标杆"
+      ],
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T12:00:00+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:33:58.180839+08:00",
+        "device_id": "desktop-seed"
+      }
+    },
+    {
+      "id": "card_politics_contradiction_unity_struggle_v1",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "topic_id": "topic_politics_unity_opposites",
+      "title": "矛盾的同一性和斗争性及其辩证关系",
+      "order": 1,
+      "exam_answer_type": "short_answer",
+      "prompt": "什么是矛盾的同一性和斗争性？二者的辩证关系是什么？为什么说“斗争性寓于同一性之中”？",
+      "summary": "矛盾是事物内部或事物之间的对立统一。同一性指矛盾双方{{accent|相互依存与相互贯通}}；斗争性指矛盾双方相互排斥与分离。同一性是相对的，斗争性是绝对的；{{accent|斗争性寓于同一性之中}}。",
+      "outline": [
+        {
+          "heading": "矛盾的基本属性界定",
+          "text": "同一性与斗争性是矛盾的两种基本属性。同一性是双方相互依存、贯通；斗争性是双方相互排斥、分离。"
+        },
+        {
+          "heading": "同一性与斗争性的辩证统一",
+          "text": "同一性是有条件的、相对的；斗争性是无条件的、绝对的。二者相互联结、相辅相成。"
+        },
+        {
+          "heading": "斗争性寓于同一性之中",
+          "text": "斗争性不能脱离同一性而存在，斗争受同一性制约；必须在对立中把握统一，在统一中把握对立。"
+        }
+      ],
+      "outline_logic": {
+        "type": "progressive",
+        "description": "辩证法首先进行矛盾的基本属性界定，进而阐明同一性与斗争性的辩证统一，最终落脚于斗争性寓于同一性之中。"
+      },
+      "examples": [
+        "【徐涛名师口诀】：“一对双方看同斗，各种矛盾看普特”。同一性和斗争性关注一对矛盾双方怎样相处，不能与矛盾问题的精髓相混淆。",
+        "【肖秀荣避坑点拨】：多选题常考干扰项“矛盾的一方只有克服另一方才能达到统一（×）”。解决矛盾形式多种多样，包括协同运动、融合为新事物等。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别界定矛盾基本属性、辩证关系及斗争性寓于同一性之中。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：相互依存、贯通、绝对与相对、斗争性寓于同一性。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，辩证法进行矛盾的基本属性界定……"
+        }
+      ],
+      "exam_wording": "首先，辩证法进行矛盾的基本属性界定。矛盾是反映事物内部和事物之间对立统一关系的哲学范畴。同一性和斗争性是矛盾的两种基本属性。同一性是指矛盾双方相互依存、互为前提，并在一定条件下相互贯通、相互转化的性质；斗争性是指矛盾双方相互排斥、相互分离的性质。\n\n其次，同一性与斗争性的辩证统一体现为对立面之间的相互联结。矛盾的同一性是有条件的、相对的，矛盾的斗争性是无条件的、绝对的。没有同一性就没有矛盾双方的相互依存，也就没有冲突与斗争；没有斗争性，事物就不能转化与发展。\n\n由此可见，斗争性寓于同一性之中。斗争性不能脱离同一性而孤立存在，斗争受同一性的制约与限定。我们在分析事物时必须在对立中把握统一，在统一中把握对立。",
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:/AAA考研/AA科目/政治/MD/27版肖秀荣精讲精练.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:33:58.180839+08:00"
+      },
+      "tags": [
+        "马原",
+        "对立统一规律",
+        "矛盾同一性",
+        "矛盾斗争性",
+        "肖徐融合标杆"
+      ],
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T12:00:00+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:33:58.180839+08:00",
+        "device_id": "desktop-seed"
+      }
+    },
+    {
+      "id": "card_politics_contradiction_dynamics_v1",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "topic_id": "topic_politics_unity_opposites",
+      "title": "矛盾同一性与斗争性在事物发展中的作用",
+      "order": 2,
+      "exam_answer_type": "short_answer",
+      "prompt": "矛盾的同一性和斗争性在事物发展中分别起什么作用？事物发展的根本动力是什么？",
+      "summary": "事物发展的根本动力是矛盾。同一性使双方{{accent|互为存在和发展的条件}}、相互吸取有利因素并规定转化趋势；斗争性推动双方力量对比变化，促成旧事物向新事物飞跃。二者{{accent|相结合共同推动事物发展}}。",
+      "outline": [
+        {
+          "heading": "矛盾同一性的推动作用",
+          "text": "互为存在和发展前提；吸取有利于自身因素；规定事物向对立面转化的基本趋势。"
+        },
+        {
+          "heading": "矛盾斗争性的推动作用",
+          "text": "量变阶段推动双方力量对比消长；质变阶段突破旧对立面限制促成新旧更替。"
+        },
+        {
+          "heading": "事物发展的内生动力机制",
+          "text": "事物发展的动力是矛盾双方对立统一；内因是根本动力，推动事物螺旋上升。"
+        }
+      ],
+      "outline_logic": {
+        "type": "total_sub",
+        "description": "由矛盾同一性的推动作用与矛盾斗争性的推动作用共同构成事物发展的内生动力机制。"
+      },
+      "examples": [
+        "【徐涛通俗类比】：高校中“教”与“学”的矛盾，师生互为发展条件；期末考核要求与差距（斗争性）推动学术能力跃迁。",
+        "【肖秀荣考场题眼】：同一性在事物发展中不起决定作用，不能说“同一性是事物发展的根本动力”或“同一性始终处于主要方面”。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别阐明同一性推动作用、斗争性推动作用与内生动力机制。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：互为前提、吸取因素、力量消长、质变飞跃、根本动力。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，矛盾同一性的推动作用表现在三个方面……"
+        }
+      ],
+      "exam_wording": "首先，矛盾同一性的推动作用表现在三个方面。第一，同一性使矛盾双方互为存在和发展的前提，在相互依存中得到发展；第二，同一性使矛盾双方相互吸取有利于自身的因素，在相互贯通中各自壮大；第三，同一性规定着事物向自己对立面转化的基本趋势。\n\n其次，矛盾斗争性的推动作用表现在量变与质变两个阶段。在事物量变过程中，斗争性推动矛盾双方力量对比发生此消彼长的变化；在事物质变过程中，斗争性突破旧的对立面限制，促使旧事物灭亡和新事物产生。\n\n由此可见，事物发展的内生动力机制正是同一性与斗争性相结合的结果。内因是事物发展的根本动力，矛盾双方既同一又斗争，共同驱动事物由低级向高级运动发展。",
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:/AAA考研/AA科目/政治/MD/27版肖秀荣精讲精练.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:33:58.180839+08:00"
+      },
+      "tags": [
+        "马原",
+        "对立统一规律",
+        "矛盾动力",
+        "内因外因",
+        "肖徐融合标杆"
+      ],
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T12:00:00+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:33:58.180839+08:00",
+        "device_id": "desktop-seed"
+      }
+    },
+    {
+      "id": "card_politics_contradiction_general_specific_v1",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "topic_id": "topic_politics_unity_opposites",
+      "title": "矛盾的普遍性与特殊性辩证关系及矛盾问题精髓",
+      "order": 3,
+      "exam_answer_type": "short_answer",
+      "prompt": "为什么说矛盾的普遍性和特殊性辩证关系是矛盾问题的精髓？共性与个性的关系是什么？",
+      "summary": "矛盾普遍性即共性，特殊性即个性。二者相互区别又相互联结：{{accent|共性寓于个性之中}}，个性包含共性。这一辩证关系是矛盾问题的精髓，是坚持{{accent|马克思主义中国化时代化}}的哲学基础。",
+      "outline": [
+        {
+          "heading": "共性与个性的内涵界定",
+          "text": "普遍性指矛盾无处不在、无时不有，是共性、绝对的；特殊性指具体矛盾各有特点，是个性、相对的。"
+        },
+        {
+          "heading": "共性寓于个性之中的辩证统一",
+          "text": "现实事物是共性与个性的统一。共性只能存在于个性之中并通过个性表现，个性包含并表现共性。"
+        },
+        {
+          "heading": "矛盾问题精髓的方法论意义",
+          "text": "是具体问题具体分析的哲学依据，也是马克思主义基本原理同中国具体实际相结合的哲学基础。"
+        }
+      ],
+      "outline_logic": {
+        "type": "progressive",
+        "description": "由共性与个性的内涵界定展开，推导共性寓于个性之中的辩证统一，最后确立矛盾问题精髓的方法论意义。"
+      },
+      "examples": [
+        "【肖秀荣权威题眼】：【必考干扰项】“可以说共性寓于个性之中，不能说个性寓于共性之中”，因为个性永远比共性更丰富。",
+        "【徐涛经典例析】：“白马非马”之所以是诡辩，就在于割裂了白马（个性）与马（共性）的辩证统一，把个性当成拒绝共性的借口。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别界定共性个性、共性寓于个性之中及精髓方法论意义。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：共性寓于个性、白马非马、具体问题具体分析、中国化时代化。"
+        },
+        {
+          "level": 3,
+          "kind": "starter",
+          "text": "首先，共性与个性的内涵界定是理解矛盾精髓的前提……"
+        }
+      ],
+      "exam_wording": "首先，共性与个性的内涵界定是理解矛盾精髓的前提。矛盾的普遍性指矛盾无处不在、无时不有，是矛盾的共性、无条件和绝对的；矛盾的特殊性指具体事物的矛盾及其各方面各有特点，是矛盾的个性、有条件和相对的。\n\n其次，共性寓于个性之中的辩证统一是客观规律。任何现实存在的事物都是共性与个性的有机统一。共性只能存在于个性之中并通过个性表现出来，没有离开个性的纯粹共性；同时，个性必然包含并表现着共性。个性比共性更丰富，因此绝对不能反过来说个性寓于共性之中。\n\n由此可见，矛盾问题精髓的方法论意义极其深远。它是具体问题具体分析这一马克思主义活的灵魂的哲学依据，也是把马克思主义基本原理同中国具体实际相结合、推进马克思主义中国化时代化的根本哲学基础。",
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:/AAA考研/AA科目/政治/MD/27版肖秀荣精讲精练.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:33:58.180839+08:00"
+      },
+      "tags": [
+        "马原",
+        "对立统一规律",
+        "矛盾问题精髓",
+        "共性个性",
+        "肖徐融合标杆"
+      ],
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T12:00:00+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:33:58.180839+08:00",
+        "device_id": "desktop-seed"
+      }
+    },
+    {
+      "id": "card_politics_contradiction_two_points_focus_v1",
+      "subject": "politics",
+      "module": "02_马原·唯物辩证法",
+      "topic_id": "topic_politics_unity_opposites",
+      "title": "两点论和重点论的统一及主次矛盾辨析",
+      "order": 4,
+      "exam_answer_type": "quick",
+      "prompt": "主要矛盾与次要矛盾、矛盾的主要方面与次要方面如何区分？两点论与重点论的关系是什么？",
+      "summary": "事物发展由{{accent|主要矛盾}}决定，事物性质由{{accent|主要矛盾的主要方面}}决定。方法论是两点论与重点论统一：既全面看主次，又突出重心，反对平均主义与单打一。",
+      "outline": [
+        {
+          "heading": "主次矛盾与主次方面的区分标准",
+          "text": "决定事物发展进程的是主要矛盾；决定事物性质的是主要矛盾的主要方面。"
+        },
+        {
+          "heading": "两点论与重点论辩证统一",
+          "text": "两点论反对单打一，重点论反对平均主义；看问题既要全面，又要抓重点与主流。"
+        }
+      ],
+      "outline_logic": {
+        "type": "progressive",
+        "description": "首先明确主次矛盾与主次方面的区分标准，进而推导出两点论与重点论辩证统一的方法论要求。"
+      },
+      "examples": [
+        "【肖秀荣真题防坑】：题干问“事物的性质由什么决定”，必选“主要矛盾的主要方面”；题干问“解决问题、推动工作重心”，必选“抓主要矛盾”。",
+        "【徐涛生活化理解】：考研期间复习政治英语专业课是主要矛盾，必须重点倾斜；但保持身体健康和作息是次要矛盾，不能完全断绝。"
+      ],
+      "hints": [
+        {
+          "level": 1,
+          "kind": "structure",
+          "text": "分别阐述区分标准与两点论重点论辩证统一。"
+        },
+        {
+          "level": 2,
+          "kind": "keywords",
+          "text": "关键词：发展进程看主要矛盾、事物性质看主要方面、全面与重点。"
+        }
+      ],
+      "exam_wording": "首先，主次矛盾与主次方面的区分标准在于：在复杂事物发展过程中，决定事物发展进程的是主要矛盾；而在每一对具体矛盾中，决定事物性质的是主要矛盾的主要方面。\n\n由此可见，两点论与重点论辩证统一要求我们看问题既要全面看到主次矛盾和矛盾双方，又要着重抓住主要矛盾和主流，反对折中主义的平均用力与形而上学的单打一。",
+      "source": {
+        "assistant": "politics",
+        "study_date": "2026-10-13",
+        "note_path": "D:/AAA考研/AA科目/政治/MD/27版肖秀荣精讲精练.md",
+        "session_id": null,
+        "created_at": "2026-10-13T11:33:58.180839+08:00"
+      },
+      "tags": [
+        "马原",
+        "对立统一规律",
+        "两点论重点论",
+        "主次矛盾",
+        "肖徐融合标杆"
+      ],
+      "schedule": {
+        "mastery": "unrated",
+        "state": "new",
+        "due_at": "2026-10-13T12:00:00+08:00",
+        "last_reviewed_at": null,
+        "reps": 0,
+        "lapses": 0,
+        "difficulty": null,
+        "stability": null,
+        "average_seconds": 75
+      },
+      "revision": {
+        "version": 1,
+        "updated_at": "2026-10-13T11:33:58.180839+08:00",
+        "device_id": "desktop-seed"
+      }
+    },
+    {
       "id": "card_politics_c96e47031faa537b",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_unity_opposites",
       "order": 10,
       "title": "对立统一规律为什么是唯物辩证法的实质和核心",
@@ -7430,7 +8237,7 @@
     {
       "id": "card_politics_33f1c3df8f65cfed",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_unity_opposites",
       "order": 20,
       "title": "矛盾的同一性和斗争性关系",
@@ -7513,7 +8320,7 @@
     {
       "id": "card_politics_4fc195b016ba55c4",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_unity_opposites",
       "order": 25,
       "title": "矛盾同一性在事物发展中的三方面作用",
@@ -7592,7 +8399,7 @@
     {
       "id": "card_politics_a51885ec724a817f",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_unity_opposites",
       "order": 30,
       "title": "矛盾的普遍性和特殊性关系",
@@ -7671,7 +8478,7 @@
     {
       "id": "card_politics_7e494f5482d51907",
       "subject": "politics",
-      "module": "马原",
+      "module": "02_马原·唯物辩证法",
       "topic_id": "topic_politics_unity_opposites",
       "order": 40,
       "title": "两点论和重点论统一",
@@ -7753,6 +8560,6 @@
       }
     }
   ],
-  "release_id": "50cc8aedc498"
+  "release_id": "ef1e075ab228"
 };
 })();

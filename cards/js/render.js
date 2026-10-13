@@ -20,7 +20,8 @@
 
   function richText(value) {
     let safe = escapeHtml(value);
-    safe = safe.replace(/\{\{(accent|danger|success|muted)\|(.+?)\}\}/g, '<span class="rich-$1">$2</span>');
+    safe = safe.replace(/\{\{accent\|(.+?)\}\}/g, '<span class="rich-accent cloze-capsule" onclick="this.classList.toggle(\'revealed\')" title="点击刮开/遮盖">$1</span>');
+    safe = safe.replace(/\{\{(danger|success|muted)\|(.+?)\}\}/g, '<span class="rich-$1">$2</span>');
     safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong class="rich-strong">$1</strong>');
     safe = safe.replace(/==(.+?)==/g, '<mark class="rich-highlight">$1</mark>');
     return safe;
@@ -128,5 +129,65 @@
     return `<div class="swipe-row answer-type-row ${answerType.className}" data-row-card="${escapeHtml(card.id)}"><div class="swipe-actions"><button data-action="edit" data-id="${escapeHtml(card.id)}">编辑</button><button data-action="move" data-id="${escapeHtml(card.id)}">移动</button><button class="delete" data-action="delete" data-id="${escapeHtml(card.id)}">删除</button></div><button class="card-title-row swipe-content" type="button" data-card="${escapeHtml(card.id)}"><span class="card-title-copy">${answerTypeTicket(card.exam_answer_type)}<strong>${escapeHtml(card.title)}</strong><small>${info.label} · ${due}</small></span>${ring(card.schedule && card.schedule.mastery)}</button></div>`;
   }
 
-  window.CardsRender = { escapeHtml, richText, masteryInfo, ring, cardArticle, subjectRow, topicRow, cardTitleRow };
+  function politicsPortal(mayuanCardCount) {
+    return `
+      <article class="module-hero-card" id="btnEnterMayuan" role="button" tabindex="0">
+        <div class="module-badge-row">
+          <span class="module-tag-current">★ 当前复习主线</span>
+          <span style="font:800 11px var(--mono);color:var(--accent-deep);">统考 24 分</span>
+        </div>
+        <h2 class="module-hero-title">马克思主义基本原理 (马原)</h2>
+        <p class="module-hero-desc">包含哲学、政经与科社三大支柱。重在深入理解因果底层逻辑与概念边界，多选题与分析题拉分核心。</p>
+        <div class="module-hero-footer">
+          <span>已收录 ${mayuanCardCount} 张卡片 · 7 大章群</span>
+          <span class="enter-btn-chip">点此进入分级 ›</span>
+        </div>
+      </article>
+
+      <div class="locked-section-title">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        后续规划板块 (后期突击集中开启)
+      </div>
+      <div class="locked-grid">
+        <div class="locked-row">
+          <span>毛中特与新思想 (24分)</span>
+          <small>待开启 · 紧密结合当年时政</small>
+        </div>
+        <div class="locked-row">
+          <span>中国近现代史纲要 (20分)</span>
+          <small>待开启 · 时间线与因果线索</small>
+        </div>
+        <div class="locked-row">
+          <span>思想道德与法治 (16分)</span>
+          <small>待开启 · 概念记忆相对规整</small>
+        </div>
+        <div class="locked-row">
+          <span>形势与政策以及当代 (16分)</span>
+          <small>待开启 · 11-12月全量突击</small>
+        </div>
+      </div>
+    `;
+  }
+
+  function chapterRow(chapter, cardCount) {
+    const activeClass = chapter.highlight ? 'active-chapter' : '';
+    const disabledClass = cardCount === 0 ? 'disabled-chapter' : '';
+    const badgeHtml = cardCount > 0 
+      ? `<span class="card-count-badge" ${chapter.highlight ? 'style="color:var(--accent-deep);background:var(--accent-soft);"' : ''}>${cardCount} 张卡</span><span style="color:${chapter.highlight ? 'var(--accent)' : 'var(--muted)'};font-weight:900;">›</span>`
+      : `<span class="card-count-badge">即将开启</span>`;
+    return `
+      <div class="chapter-item-card ${activeClass} ${disabledClass}" data-chapter="${escapeHtml(chapter.id)}" role="button" tabindex="0">
+        <div class="chapter-left">
+          <span class="chapter-num">${escapeHtml(chapter.num)}</span>
+          <strong class="chapter-name">${escapeHtml(chapter.title)}</strong>
+          <span class="chapter-sub">${escapeHtml(chapter.desc)}</span>
+        </div>
+        <div class="chapter-right">
+          ${badgeHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  window.CardsRender = { escapeHtml, richText, masteryInfo, ring, cardArticle, subjectRow, topicRow, cardTitleRow, politicsPortal, chapterRow };
 })();
