@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cards-shell-v6-f49c2d4ee4ac';
+const CACHE_NAME = 'cards-shell-v6-18e65f402757';
 // 朗读音频独立缓存：不随应用壳发版清理，首次播放后长期离线可用。
 const TTS_CACHE = 'cards-tts-v1';
 const APP_SHELL = [
