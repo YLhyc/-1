@@ -1,108 +1,88 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8E1C16"/>
-      <stop offset="45%" stop-color="#5E100D"/>
-      <stop offset="100%" stop-color="#360806"/>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E33"/>
+      <stop offset="50%" stop-color="#0E1626"/>
+      <stop offset="100%" stop-color="#060A12"/>
     </linearGradient>
-    <linearGradient id="gold1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F9E498"/>
-      <stop offset="40%" stop-color="#D4AF37"/>
-      <stop offset="70%" stop-color="#AA8018"/>
-      <stop offset="100%" stop-color="#D4AF37"/>
+    <radialGradient id="lampGlow5" cx="50%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#FFE082" stop-opacity="1"/>
+      <stop offset="30%" stop-color="#FFB300" stop-opacity="0.6"/>
+      <stop offset="60%" stop-color="#FF8F00" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#FF8F00" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldPen5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF9C4"/>
+      <stop offset="50%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FF8F00"/>
     </linearGradient>
-    <linearGradient id="parchment1" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ECE5D4"/>
-      <stop offset="10%" stop-color="#FAF7EE"/>
-      <stop offset="50%" stop-color="#FFFDF9"/>
-      <stop offset="90%" stop-color="#FAF7EE"/>
-      <stop offset="100%" stop-color="#E5DCBF"/>
+    <linearGradient id="bookPage5" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#E8DEC5"/>
     </linearGradient>
-    <linearGradient id="wood1" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#3A1C0E"/>
-      <stop offset="50%" stop-color="#1E0B04"/>
-      <stop offset="100%" stop-color="#3A1C0E"/>
-    </linearGradient>
-    <filter id="shadow1" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.45"/>
-    </filter>
-    <filter id="sealShadow1" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="2" dy="5" stdDeviation="5" flood-color="#2A0503" flood-opacity="0.5"/>
+    <filter id="lampShadow5" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.65"/>
     </filter>
   </defs>
 
-  <!-- 纯色沉香底色，避免透明镂空 -->
-  <rect width="512" height="512" fill="url(#bg1)"/>
+  <!-- 沉静夜读暗蓝底色 -->
+  <rect width="512" height="512" fill="url(#bg5)"/>
 
-  <!-- 暗底同心纹与双金线边框 -->
-  <circle cx="256" cy="256" r="236" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-opacity="0.25"/>
-  <rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="url(#gold1)" stroke-width="2.5" stroke-opacity="0.4"/>
-  <rect x="32" y="32" width="448" height="448" rx="84" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="4 6" stroke-opacity="0.25"/>
+  <!-- 细金边框 -->
+  <rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="#FFD54F" stroke-width="1.8" stroke-opacity="0.4"/>
 
-  <!-- 四角如意云纹角花 -->
-  <g stroke="url(#gold1)" stroke-width="2" fill="none" opacity="0.45">
-    <path d="M 50 74 C 50 60, 60 50, 74 50"/>
-    <path d="M 462 74 C 462 60, 452 50, 438 50"/>
-    <path d="M 50 438 C 50 452, 60 462, 74 462"/>
-    <path d="M 462 438 C 462 452, 452 462, 438 462"/>
-  </g>
+  <!-- 青灯暖光晕照射层 (从上方笼罩至书卷) -->
+  <circle cx="256" cy="180" r="180" fill="url(#lampGlow5)"/>
 
-  <!-- 主体：展开的古典横披手卷 (filter shadow) -->
-  <g filter="url(#shadow1)">
-    <!-- 卷轴底部两端木轴与金箍 -->
-    <!-- 左轴头 -->
-    <rect x="68" y="112" width="22" height="288" rx="5" fill="url(#wood1)"/>
-    <rect x="65" y="102" width="28" height="18" rx="4" fill="url(#gold1)"/>
-    <rect x="65" y="392" width="28" height="18" rx="4" fill="url(#gold1)"/>
-    <!-- 右轴头 -->
-    <rect x="422" y="112" width="22" height="288" rx="5" fill="url(#wood1)"/>
-    <rect x="419" y="102" width="28" height="18" rx="4" fill="url(#gold1)"/>
-    <rect x="419" y="392" width="28" height="18" rx="4" fill="url(#gold1)"/>
-
-    <!-- 宣纸手卷画心展开曲面 -->
-    <path d="M 85 130 Q 256 120 427 130 L 427 382 Q 256 372 85 382 Z" fill="url(#parchment1)"/>
+  <!-- 考研青灯灯盏造型 -->
+  <g filter="url(#lampShadow5)">
+    <!-- 灯顶吊环与灯顶盖 -->
+    <path d="M 244 54 C 244 45, 268 45, 268 54 Z" fill="#FFD54F"/>
+    <path d="M 226 68 L 286 68 L 274 88 L 238 88 Z" fill="#DDA01E"/>
     
-    <!-- 卷轴上下古金锦绫包边 -->
-    <path d="M 85 130 Q 256 120 427 130 L 427 146 Q 256 136 85 146 Z" fill="#CBB279"/>
-    <path d="M 85 366 Q 256 356 427 366 L 427 382 Q 256 372 85 382 Z" fill="#CBB279"/>
-
-    <!-- 卷面文字排印与逻辑流横线示意 -->
-    <g stroke="#C5B89F" stroke-width="2" stroke-linecap="round" opacity="0.6">
-      <line x1="125" y1="172" x2="250" y2="170"/>
-      <line x1="125" y1="192" x2="385" y2="190"/>
-      <line x1="125" y1="212" x2="350" y2="210"/>
-      
-      <line x1="125" y1="244" x2="280" y2="242"/>
-      <line x1="125" y1="264" x2="385" y2="262"/>
-      <line x1="125" y1="284" x2="320" y2="282"/>
-      
-      <line x1="125" y1="316" x2="240" y2="314"/>
-      <line x1="125" y1="336" x2="300" y2="334"/>
-    </g>
-
-    <!-- 考研重点荧光黄微高光标 -->
-    <rect x="125" y="186" width="70" height="9" rx="2" fill="#E8B839" opacity="0.45"/>
-    <rect x="235" y="258" width="85" height="9" rx="2" fill="#C0392B" opacity="0.35"/>
-
-    <!-- 右下角金石朱砂御印“政治·背诵” -->
-    <g filter="url(#sealShadow1)">
-      <!-- 印章外框与内双线 -->
-      <rect x="306" y="258" width="94" height="94" rx="8" fill="#B3241C" stroke="url(#gold1)" stroke-width="3"/>
-      <rect x="313" y="265" width="80" height="80" rx="4" fill="none" stroke="#FAF7EE" stroke-width="1.8" stroke-opacity="0.85"/>
-      <!-- 印章篆刻核心“政”字 -->
-      <text x="353" y="322" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="54" font-weight="900" fill="#FAF7EE" text-anchor="middle">政</text>
-      <!-- 印泥微光芒 -->
-      <circle cx="388" cy="270" r="3" fill="url(#gold1)"/>
-    </g>
-
-    <!-- 飘落的朱红书签丝带 -->
-    <path d="M 235 125 C 240 180, 210 240, 222 396 C 224 415, 238 425, 245 428 L 222 418 L 205 428 C 212 415, 215 390, 218 360" fill="#C0392B"/>
-    <!-- 丝带金穗 -->
-    <circle cx="225" cy="420" r="4" fill="url(#gold1)"/>
+    <!-- 灯芯炽盛明光 -->
+    <circle cx="256" cy="116" r="14" fill="#FFFFFF"/>
+    <circle cx="256" cy="116" r="22" fill="#FFE082" opacity="0.6"/>
   </g>
 
-  <!-- 顶部典雅题额 -->
-  <text x="256" y="94" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="24" font-weight="700" letter-spacing="12" fill="url(#gold1)" text-anchor="middle">精要背诵手卷</text>
-  <!-- 底部考试年份纪年 -->
-  <text x="256" y="445" font-family="-apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="4" fill="#C5A059" text-anchor="middle">KYZZ · 72 CORE EXAM POINTS</text>
+  <!-- 灯光下展开的玉质古卷与金钢笔 -->
+  <g filter="url(#lampShadow5)">
+    <!-- 展开的书卷曲面 -->
+    <path d="M 90 280 C 160 255, 235 270, 256 280 C 277 270, 352 255, 422 280 L 422 370 C 352 345, 277 360, 256 370 C 235 360, 160 345, 90 370 Z" fill="url(#bookPage5)"/>
+    <!-- 书脊中缝线 -->
+    <line x1="256" y1="280" x2="256" y2="370" stroke="#C5BA9F" stroke-width="2"/>
+
+    <!-- 书面排印行文 -->
+    <g stroke="#B3A588" stroke-width="2" stroke-linecap="round" opacity="0.7">
+      <line x1="120" y1="300" x2="225" y2="300"/>
+      <line x1="120" y1="316" x2="235" y2="316"/>
+      <line x1="120" y1="332" x2="200" y2="332"/>
+      <line x1="120" y1="348" x2="220" y2="348"/>
+      
+      <line x1="277" y1="300" x2="390" y2="300"/>
+      <line x1="277" y1="316" x2="375" y2="316"/>
+      <line x1="277" y1="332" x2="385" y2="332"/>
+    </g>
+
+    <!-- 经典红色采分高光印记 -->
+    <rect x="277" y="312" width="65" height="7" rx="2" fill="#E53935" opacity="0.5"/>
+
+    <!-- 破局之笔：斜插在书页上的金色笔尖 (金榜题名寓意) -->
+    <g transform="translate(300, 235) rotate(-35)">
+      <!-- 笔身 -->
+      <path d="M -10 -80 L 10 -80 L 8 0 L -8 0 Z" fill="#1C2333" stroke="url(#goldPen5)" stroke-width="2"/>
+      <!-- 笔握与笔舌 -->
+      <path d="M -8 0 L 8 0 L 10 16 L -10 16 Z" fill="url(#goldPen5)"/>
+      <!-- 经典黄金笔尖 (Nib) -->
+      <path d="M -10 16 C -10 32, -4 46, 0 54 C 4 46, 10 32, 10 16 Z" fill="url(#goldPen5)"/>
+      <!-- 笔尖中缝刻线与呼吸孔 -->
+      <line x1="0" y1="20" x2="0" y2="48" stroke="#7A5200" stroke-width="1.2"/>
+      <circle cx="0" cy="28" r="2.5" fill="#7A5200"/>
+    </g>
+  </g>
+
+  <!-- 顶部题辞 -->
+  <text x="256" y="210" font-family="'Noto Serif SC', serif" font-size="20" font-weight="700" letter-spacing="8" fill="#FFE082" text-anchor="middle">青灯黄卷 · 破晓成硕</text>
+  <!-- 底部微字 -->
+  <text x="256" y="445" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#7F94B0" text-anchor="middle">NIGHT CANDLE &amp; DAWN · KYZZ 2027</text>
 </svg>

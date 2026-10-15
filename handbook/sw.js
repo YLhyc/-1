@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kyzz-handbook-v1';
+const CACHE_NAME = 'kyzz-handbook-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
