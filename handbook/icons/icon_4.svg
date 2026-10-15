@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E222D"/>
+      <stop offset="50%" stop-color="#13161F"/>
+      <stop offset="100%" stop-color="#090B0F"/>
+    </linearGradient>
+    <linearGradient id="redLoop4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5252"/>
+      <stop offset="50%" stop-color="#D32F2F"/>
+      <stop offset="100%" stop-color="#8B0000"/>
+    </linearGradient>
+    <linearGradient id="greenLoop4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4CAF50"/>
+      <stop offset="50%" stop-color="#2E7D32"/>
+      <stop offset="100%" stop-color="#1B5E20"/>
+    </linearGradient>
+    <linearGradient id="goldStar4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF9C4"/>
+      <stop offset="50%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FFA000"/>
+    </linearGradient>
+    <filter id="glow4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- 沉香玄石暗黑背景 -->
+  <rect width="512" height="512" fill="url(#bg4)"/>
+
+  <!-- 科技金石细边框 -->
+  <rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="url(#goldStar4)" stroke-width="1.5" stroke-opacity="0.35"/>
+  <rect x="34" y="34" width="444" height="444" rx="82" fill="none" stroke="#4A5568" stroke-width="1" stroke-opacity="0.25"/>
+
+  <!-- 辩证法“对立统一 / 莫比乌斯环 / 无限循环 ∞”象征逻辑链闭环 -->
+  <g filter="url(#glow4)">
+    <!-- 唯物论红环 (左侧循环) -->
+    <path d="M 256 256 C 210 190, 130 170, 96 220 C 60 270, 80 340, 145 340 C 200 340, 235 295, 256 256 Z" fill="none" stroke="url(#redLoop4)" stroke-width="32" stroke-linecap="round"/>
+    
+    <!-- 辩证法绿环 (右侧循环，两者在中枢交织) -->
+    <path d="M 256 256 C 302 322, 382 342, 416 292 C 452 242, 432 172, 367 172 C 312 172, 277 217, 256 256 Z" fill="none" stroke="url(#greenLoop4)" stroke-width="32" stroke-linecap="round"/>
+
+    <!-- 衬底展开的玉白背诵卷轴剪影 -->
+    <path d="M 160 135 Q 256 120 352 135 L 340 180 Q 256 165 172 180 Z" fill="#F4EDE0" opacity="0.9"/>
+    
+    <!-- 中枢破局金星 / 采分之匙 (象征唯物辩证法核心) -->
+    <g transform="translate(256, 256)">
+      <!-- 光晕 -->
+      <circle cx="0" cy="0" r="28" fill="url(#goldStar4)" opacity="0.3"/>
+      <!-- 四角菱形星标 -->
+      <path d="M 0 -22 L 6 -6 L 22 0 L 6 6 L 0 22 L -6 6 L -22 0 L -6 -6 Z" fill="url(#goldStar4)"/>
+      <circle cx="0" cy="0" r="5" fill="#FFF"/>
+    </g>
+
+    <!-- 逻辑节点小圆点标 -->
+    <circle cx="110" cy="245" r="7" fill="#FFCDD2"/>
+    <circle cx="402" cy="265" r="7" fill="#C8E6C9"/>
+  </g>
+
+  <!-- 顶部哲学立意 -->
+  <text x="256" y="92" font-family="'Noto Serif SC', serif" font-size="22" font-weight="700" letter-spacing="8" fill="url(#goldStar4)" text-anchor="middle">唯物辩证 · 逻辑全景</text>
+  <!-- 底部说明 -->
+  <text x="256" y="445" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#A0AEC0" text-anchor="middle">INFINITY LOGIC CHAIN · 72 POINTS</text>
+</svg>

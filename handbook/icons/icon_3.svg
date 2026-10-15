@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBF8F1"/>
+      <stop offset="50%" stop-color="#F4EFE2"/>
+      <stop offset="100%" stop-color="#E7DFC9"/>
+    </linearGradient>
+    <linearGradient id="sealRed3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#BD261B"/>
+      <stop offset="50%" stop-color="#9C1A11"/>
+      <stop offset="100%" stop-color="#7B1009"/>
+    </linearGradient>
+    <filter id="sealDeboss3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="8" stdDeviation="10" flood-color="#6E5039" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- 护眼宣纸原色底衬（与背诵手册阅读界面100%同色融合） -->
+  <rect width="512" height="512" fill="url(#bg3)"/>
+
+  <!-- 宣纸双古铜细边框与四角回纹花饰 -->
+  <rect x="28" y="28" width="456" height="456" rx="88" fill="none" stroke="#7A6550" stroke-width="2" stroke-opacity="0.4"/>
+  <rect x="38" y="38" width="436" height="436" rx="78" fill="none" stroke="#7A6550" stroke-width="1" stroke-dasharray="6 6" stroke-opacity="0.25"/>
+
+  <!-- 典雅角花装饰 -->
+  <g stroke="#7A6550" stroke-width="1.8" fill="none" opacity="0.5">
+    <path d="M 52 70 L 70 70 L 70 52"/>
+    <path d="M 460 70 L 442 70 L 442 52"/>
+    <path d="M 52 442 L 70 442 L 70 460"/>
+    <path d="M 460 442 L 442 442 L 442 460"/>
+  </g>
+
+  <!-- 居中：硕大传神的金石汉印“政治/背诵” (四象限篆印) -->
+  <g filter="url(#sealDeboss3)">
+    <!-- 红色印泥外方框 -->
+    <rect x="106" y="96" width="300" height="300" rx="24" fill="url(#sealRed3)"/>
+    <!-- 内层凹凸双金边与古印边栏 -->
+    <rect x="122" y="112" width="268" height="268" rx="16" fill="none" stroke="#FBF8F1" stroke-width="5" stroke-opacity="0.9"/>
+    <!-- 十字分割边栏 (古印四格界格) -->
+    <line x1="256" y1="112" x2="256" y2="380" stroke="#FBF8F1" stroke-width="5" stroke-opacity="0.85"/>
+    <line x1="122" y1="246" x2="388" y2="246" stroke="#FBF8F1" stroke-width="5" stroke-opacity="0.85"/>
+
+    <!-- 4个象限的大雅篆书字: 右上"政", 左上"治", 右下"背", 左下"诵" -->
+    <!-- 象限1: 右上 "政" -->
+    <text x="322" y="210" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="88" font-weight="900" fill="#FBF8F1" text-anchor="middle">政</text>
+    <!-- 象限2: 左上 "治" -->
+    <text x="189" y="210" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="88" font-weight="900" fill="#FBF8F1" text-anchor="middle">治</text>
+    <!-- 象限3: 右下 "背" -->
+    <text x="322" y="344" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="88" font-weight="900" fill="#FBF8F1" text-anchor="middle">背</text>
+    <!-- 象限4: 左下 "诵" -->
+    <text x="189" y="344" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="88" font-weight="900" fill="#FBF8F1" text-anchor="middle">诵</text>
+
+    <!-- 古印风化斑驳微质感（金石残破韵味） -->
+    <circle cx="122" cy="190" r="3" fill="url(#bg3)"/>
+    <circle cx="388" cy="300" r="4" fill="url(#bg3)"/>
+    <circle cx="256" cy="112" r="3" fill="url(#bg3)"/>
+  </g>
+
+  <!-- 印章下方文人题跋字样 -->
+  <text x="256" y="432" font-family="'Noto Serif SC', serif" font-size="20" font-weight="700" letter-spacing="8" fill="#523A25" text-anchor="middle">考研政治 · 精要手卷</text>
+  <text x="256" y="460" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" letter-spacing="3" fill="#8F7862" text-anchor="middle">MASTERY HANDBOOK · 2027</text>
+</svg>

@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1F4231"/>
+      <stop offset="50%" stop-color="#142C20"/>
+      <stop offset="100%" stop-color="#09150E"/>
+    </linearGradient>
+    <linearGradient id="gold2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3E5AB"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#997A1E"/>
+    </linearGradient>
+    <linearGradient id="pageLeft2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E8E2D2"/>
+      <stop offset="85%" stop-color="#FAF8F2"/>
+      <stop offset="100%" stop-color="#DFD7C4"/>
+    </linearGradient>
+    <linearGradient id="pageRight2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DFD7C4"/>
+      <stop offset="15%" stop-color="#FAF8F2"/>
+      <stop offset="100%" stop-color="#E8E2D2"/>
+    </linearGradient>
+    <filter id="bookShadow2" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#020804" flood-opacity="0.6"/>
+    </filter>
+    <filter id="sealGlow2" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- 墨玉青缃底色 -->
+  <rect width="512" height="512" fill="url(#bg2)"/>
+
+  <!-- 雅致双细金边框 -->
+  <rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="url(#gold2)" stroke-width="2" stroke-opacity="0.45"/>
+  <rect x="34" y="34" width="444" height="444" rx="82" fill="none" stroke="#5E8C73" stroke-width="1" stroke-opacity="0.3"/>
+
+  <!-- 核心开卷图书造型 (filter) -->
+  <g filter="url(#bookShadow2)">
+    <!-- 书本底部硬壳精装底衬 (深红木/铜金) -->
+    <path d="M 70 368 C 160 382, 235 372, 256 364 C 277 372, 352 382, 442 368 L 442 380 C 352 394, 277 384, 256 376 C 235 384, 160 394, 70 380 Z" fill="#8C2D19"/>
+
+    <!-- 书页层叠厚度厚边 -->
+    <path d="M 72 358 C 160 372, 235 362, 256 354 C 277 362, 352 372, 440 358 L 442 368 C 352 382, 277 372, 256 364 C 235 372, 160 382, 70 368 Z" fill="#D3C7AE"/>
+
+    <!-- 左开页 -->
+    <path d="M 256 142 C 230 134, 150 120, 76 138 C 72 210, 72 290, 72 358 C 150 340, 230 350, 256 354 Z" fill="url(#pageLeft2)"/>
+    <!-- 右开页 -->
+    <path d="M 256 142 C 282 134, 362 120, 436 138 C 440 210, 440 290, 440 358 C 362 340, 282 350, 256 354 Z" fill="url(#pageRight2)"/>
+
+    <!-- 中缝阴影立体线 -->
+    <path d="M 253 142 L 253 354 L 259 354 L 259 142 Z" fill="#B5A992" opacity="0.8"/>
+
+    <!-- 左页排版条纹 (章节标题 + 逻辑链) -->
+    <rect x="105" y="172" width="75" height="7" rx="2" fill="#1F4231" opacity="0.8"/>
+    <g stroke="#B8AC97" stroke-width="2.5" stroke-linecap="round" opacity="0.6">
+      <line x1="105" y1="198" x2="225" y2="198"/>
+      <line x1="105" y1="218" x2="215" y2="218"/>
+      <line x1="105" y1="238" x2="230" y2="238"/>
+      <line x1="105" y1="258" x2="190" y2="258"/>
+      <line x1="105" y1="284" x2="220" y2="284"/>
+      <line x1="105" y1="304" x2="230" y2="304"/>
+      <line x1="105" y1="324" x2="180" y2="324"/>
+    </g>
+
+    <!-- 右页排版条纹 -->
+    <rect x="282" y="172" width="90" height="7" rx="2" fill="#8C2D19" opacity="0.8"/>
+    <g stroke="#B8AC97" stroke-width="2.5" stroke-linecap="round" opacity="0.6">
+      <line x1="282" y1="198" x2="405" y2="198"/>
+      <line x1="282" y1="218" x2="380" y2="218"/>
+      <line x1="282" y1="238" x2="400" y2="238"/>
+      <line x1="282" y1="264" x2="395" y2="264"/>
+      <line x1="282" y1="284" x2="370" y2="284"/>
+    </g>
+
+    <!-- 双色复习荧光笔标记 (马原核心采分句) -->
+    <rect x="105" y="214" width="70" height="9" rx="2" fill="#E5B232" opacity="0.45"/>
+    <rect x="282" y="234" width="85" height="9" rx="2" fill="#C0392B" opacity="0.35"/>
+
+    <!-- 右页朱红押缝方印“采分” -->
+    <g filter="url(#sealGlow2)">
+      <rect x="330" y="278" width="68" height="68" rx="6" fill="#A8281E" stroke="url(#gold2)" stroke-width="2"/>
+      <text x="364" y="325" font-family="'Noto Serif SC', serif" font-size="34" font-weight="900" fill="#FAF8F2" text-anchor="middle">采分</text>
+    </g>
+
+    <!-- 飘垂的朱砂丝带书签 (贯穿中缝) -->
+    <path d="M 256 128 C 265 170, 245 220, 260 380 C 265 410, 275 425, 282 430 L 260 415 L 244 430 C 250 415, 252 390, 253 360" fill="#D32F2F"/>
+    <circle cx="262" cy="415" r="4" fill="url(#gold2)"/>
+  </g>
+
+  <!-- 顶部青缃文字 -->
+  <text x="256" y="92" font-family="'Noto Serif SC', serif" font-size="22" font-weight="700" letter-spacing="10" fill="url(#gold2)" text-anchor="middle">青山开卷 · 政治带背</text>
+  <!-- 底部微字 -->
+  <text x="256" y="455" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#8BB89F" text-anchor="middle">72 EXAM POINTS · PWA READER</text>
+</svg>

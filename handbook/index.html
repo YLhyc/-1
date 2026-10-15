@@ -9,6 +9,12 @@
   <meta name="theme-color" content="#f4f1ea">
   <title>考研政治精要背诵手卷 · 研学强化版</title>
 
+  <!-- PWA 与 iOS 主屏幕图标 -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
   <!-- 引入云端高质感字体：霞鹜文楷 (名师口诀/例解) + 思源宋体 (试卷正文) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -6083,6 +6089,15 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 3000);
+    }
+
+    // PWA Service Worker 注册 (支持 iPhone 离线阅读)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.warn('SW register fail:', err);
+        });
+      });
     }
   </script>
 </body>
