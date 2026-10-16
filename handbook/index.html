@@ -221,24 +221,32 @@
       gap: 6px;
     }
 
-    /* 夜读/日间主题切换按钮 (Feature 6) */
+    /* 夜读/日间主题切换按钮 (Feature 6 - 纯矢量 SVG) */
     .theme-toggle-btn {
       background: rgba(222, 216, 200, 0.45);
-      border: none;
+      border: 1px solid var(--line);
       border-radius: 6px;
-      padding: 3px 6px;
-      font-size: 13px;
+      padding: 4px;
+      width: 28px;
+      height: 28px;
+      color: var(--sub);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       touch-action: manipulation;
       transition: all 0.15s ease;
-      line-height: 1;
     }
     .theme-toggle-btn:active { transform: scale(0.9); }
-    .theme-icon-dark { display: none; }
-    body.theme-dark .theme-icon-light { display: none; }
-    body.theme-dark .theme-icon-dark { display: inline; }
+    .theme-svg-moon { display: block; width: 15px; height: 15px; }
+    .theme-svg-sun { display: none; width: 15px; height: 15px; }
+    body.theme-dark .theme-svg-moon { display: none; }
+    body.theme-dark .theme-svg-sun { display: block; }
+    body.theme-dark .theme-toggle-btn {
+      background: #252a27;
+      border-color: #38423c;
+      color: #dfd8cb;
+    }
 
     /* 字号调节按钮组 (A- / A+) */
     .font-zoom-ctrl {
@@ -414,7 +422,7 @@
     .container {
       max-width: 780px;
       margin: 0 auto;
-      padding: 20px 14px 40px;
+      padding: 20px 14px calc(80px + env(safe-area-inset-bottom, 24px));
     }
 
     /* 卷头 */
@@ -562,17 +570,25 @@
       box-shadow: 0 0 0 1px rgba(142, 35, 23, 0.15), inset 0 0 0 1px rgba(142, 35, 23, 0.2);
       transform: rotate(-1.2deg);
     }
-    .seal-stamp-btn .seal-icon {
-      width: 13px;
-      height: 13px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid currentColor;
-      border-radius: 2px;
-      font-size: 9px;
-      font-weight: 900;
-      line-height: 1;
+    .seal-stamp-btn .seal-icon-svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    .seal-stamp-btn:not(.stamped) .seal-check-path {
+      display: none;
+    }
+    .seal-stamp-btn.stamped .seal-check-path {
+      display: block;
+    }
+    body.theme-dark .seal-stamp-btn {
+      border-color: #4a544d;
+      color: #aebdb2;
+    }
+    body.theme-dark .seal-stamp-btn.stamped {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
     }
     .point-badge {
       font-family: var(--font-sans);
@@ -999,6 +1015,46 @@
       color: var(--accent);
       border-color: var(--accent);
     }
+    .drawer-voice-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 12px 6px 12px;
+      padding: 8px 12px;
+      background: rgba(185, 56, 44, 0.06);
+      border: 1px solid rgba(185, 56, 44, 0.22);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .drawer-voice-link:active {
+      background: rgba(185, 56, 44, 0.12);
+      transform: scale(0.98);
+    }
+    .drawer-voice-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .drawer-voice-link .ui-svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    .drawer-voice-link .arrow-icon {
+      width: 12px;
+      height: 12px;
+      color: var(--muted);
+    }
+    body.theme-dark .drawer-voice-link {
+      background: rgba(210, 73, 61, 0.12);
+      border-color: rgba(210, 73, 61, 0.35);
+      color: #df8076;
+    }
     .toc-list {
       flex: 1;
       overflow-y: auto;
@@ -1101,50 +1157,51 @@
       color: var(--accent);
     }
 
-    /* 底部常驻微型状态与单手操作岛 (Feature 3: 黄金大拇指热区) */
+    /* 底部常驻微型状态与单手操作岛 (Feature 3: 黄金大拇指热区 - 居中对称紧凑布局) */
     .bottom-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       z-index: 95;
-      background: rgba(244, 241, 234, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(244, 241, 234, 0.96);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border-top: 1px solid var(--line-subtle);
-      padding: 6px 14px calc(7px + env(safe-area-inset-bottom, 12px));
-      box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
-      transition: background-color 0.25s ease;
+      padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 16px));
+      box-shadow: 0 -2px 14px rgba(0,0,0,0.05);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+    body.theme-dark .bottom-bar {
+      background: rgba(24, 28, 25, 0.96);
+      border-top-color: #2b332d;
+      box-shadow: 0 -2px 14px rgba(0,0,0,0.3);
     }
     .bottom-wrap {
-      max-width: 780px;
+      max-width: 600px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-    }
-    .thumb-actions-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
+      gap: 4px;
     }
     .thumb-btn {
       border: 1px solid var(--line);
       background: #fff;
       color: var(--sub);
       font-family: var(--font-sans);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 5px 9px;
+      padding: 5px 7px;
       border-radius: 7px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      gap: 3px;
       touch-action: manipulation;
       white-space: nowrap;
+      flex: 0 0 auto;
       transition: all 0.14s ease;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
@@ -1154,7 +1211,7 @@
       color: #c5cec7;
     }
     .thumb-btn:active {
-      transform: scale(0.94);
+      transform: scale(0.93);
     }
     .thumb-btn.primary {
       background: var(--ink-black);
@@ -1170,12 +1227,39 @@
       color: var(--accent);
       background: var(--accent-soft);
     }
-    .thumb-stats-line {
+    /* 核心改进 ②：居中研毕进度胶囊 (防iPhone边角遮挡) */
+    .thumb-center-stat {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      padding: 4.5px 8px;
+      border-radius: 999px;
       font-family: var(--font-sans);
-      font-size: 11.5px;
-      color: var(--sub);
+      font-size: 11px;
+      font-weight: 600;
       white-space: nowrap;
-      flex-shrink: 0;
+      cursor: pointer;
+      flex: 1 1 auto;
+      max-width: 140px;
+      min-width: 100px;
+      touch-action: manipulation;
+      transition: all 0.14s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .thumb-center-stat:active {
+      transform: scale(0.95);
+    }
+    body.theme-dark .thumb-center-stat {
+      background: rgba(223, 88, 67, 0.15);
+      border-color: rgba(223, 88, 67, 0.35);
+      color: #f07b68;
+    }
+    .studied-num-badge {
+      font-weight: 700;
     }
     .top-studied-badge {
       background: var(--accent);
@@ -1192,7 +1276,8 @@
     /* 碎片化功能 1：上次阅毕 · 续卷定位悬浮浮标 */
     .resume-pill {
       position: fixed;
-      bottom: calc(54px + env(safe-area-inset-bottom, 12px));
+      bottom: calc(56px + env(safe-area-inset-bottom, 16px));
+      left: 14px;
       right: 14px;
       z-index: 92;
       background: #fff;
@@ -1201,9 +1286,10 @@
       box-shadow: 0 4px 18px rgba(142, 35, 23, 0.16);
       display: flex;
       align-items: center;
-      padding: 4px 6px 4px 11px;
+      padding: 4px 6px 4px 10px;
       gap: 6px;
-      max-width: min(320px, calc(100vw - 28px));
+      max-width: 360px;
+      margin: 0 auto;
       animation: slideUpPill 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       touch-action: manipulation;
     }
@@ -1568,10 +1654,13 @@
       </div>
 
       <div class="top-actions">
-        <!-- 深色夜读模式切换 (Feature 6) -->
         <button type="button" class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()" title="切换夜读/宣纸模式">
-          <span class="theme-icon-light">🌙</span>
-          <span class="theme-icon-dark">☀️</span>
+          <svg class="ui-svg sm theme-svg-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="ui-svg sm theme-svg-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
         </button>
 
         <!-- 极简字号缩放 A- / A+ -->
@@ -1674,6 +1763,21 @@
           <button type="button" class="btn-reset-study" onclick="resetStudyProgress()" title="清空印记开启新一轮复习">重置</button>
         </span>
       </div>
+
+      <!-- 声音多方案选听入口 -->
+      <a href="voice_picker.html" class="drawer-voice-link">
+        <span class="drawer-voice-left">
+          <svg class="ui-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+          <span>朗读声音多方案选听与调优</span>
+        </span>
+        <svg class="ui-svg arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
 
       <ul class="toc-list">
         
@@ -2570,7 +2674,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_b6cbf99b7869f305" data-point-id="card_politics_b6cbf99b7869f305" data-mod-id="mod_00" onclick="toggleSeal('card_politics_b6cbf99b7869f305', 'mod_00')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -2639,7 +2746,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_dca1ec842306c2fb" data-point-id="card_politics_dca1ec842306c2fb" data-mod-id="mod_00" onclick="toggleSeal('card_politics_dca1ec842306c2fb', 'mod_00')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -2722,7 +2832,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_01100df6391835a2" data-point-id="card_politics_01100df6391835a2" data-mod-id="mod_01" onclick="toggleSeal('card_politics_01100df6391835a2', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -2791,7 +2904,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_64ec0ef20b5e7333" data-point-id="card_politics_64ec0ef20b5e7333" data-mod-id="mod_01" onclick="toggleSeal('card_politics_64ec0ef20b5e7333', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -2860,7 +2976,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_5c04f99e0d2f854d" data-point-id="card_politics_5c04f99e0d2f854d" data-mod-id="mod_01" onclick="toggleSeal('card_politics_5c04f99e0d2f854d', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -2930,7 +3049,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_f396ea06de5fe50f" data-point-id="card_politics_f396ea06de5fe50f" data-mod-id="mod_01" onclick="toggleSeal('card_politics_f396ea06de5fe50f', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -2993,7 +3115,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_substance_v1" data-point-id="card_politics_mat_substance_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_substance_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3056,7 +3181,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_f92e8489827056e4" data-point-id="card_politics_f92e8489827056e4" data-mod-id="mod_01" onclick="toggleSeal('card_politics_f92e8489827056e4', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3125,7 +3253,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_a12e43f7109b546c" data-point-id="card_politics_a12e43f7109b546c" data-mod-id="mod_01" onclick="toggleSeal('card_politics_a12e43f7109b546c', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3196,7 +3327,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_16802f8826e810c8" data-point-id="card_politics_16802f8826e810c8" data-mod-id="mod_01" onclick="toggleSeal('card_politics_16802f8826e810c8', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3259,7 +3393,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_356679a94c1f1f00" data-point-id="card_politics_356679a94c1f1f00" data-mod-id="mod_01" onclick="toggleSeal('card_politics_356679a94c1f1f00', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3328,7 +3465,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_motion_space_v1" data-point-id="card_politics_mat_motion_space_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_motion_space_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3391,7 +3531,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_ac34c7b93373d3de" data-point-id="card_politics_ac34c7b93373d3de" data-mod-id="mod_01" onclick="toggleSeal('card_politics_ac34c7b93373d3de', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3460,7 +3603,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_b863d4e75f0227c7" data-point-id="card_politics_b863d4e75f0227c7" data-mod-id="mod_01" onclick="toggleSeal('card_politics_b863d4e75f0227c7', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3529,7 +3675,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_aedb3175306c6ead" data-point-id="card_politics_aedb3175306c6ead" data-mod-id="mod_01" onclick="toggleSeal('card_politics_aedb3175306c6ead', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3598,7 +3747,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_21ae1c5994363e41" data-point-id="card_politics_21ae1c5994363e41" data-mod-id="mod_01" onclick="toggleSeal('card_politics_21ae1c5994363e41', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3667,7 +3819,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_c7fda79c64ef3357" data-point-id="card_politics_c7fda79c64ef3357" data-mod-id="mod_01" onclick="toggleSeal('card_politics_c7fda79c64ef3357', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3737,7 +3892,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_consciousness_v1" data-point-id="card_politics_mat_consciousness_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_consciousness_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3806,7 +3964,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_5aaf9aabde7cf578" data-point-id="card_politics_5aaf9aabde7cf578" data-mod-id="mod_01" onclick="toggleSeal('card_politics_5aaf9aabde7cf578', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3876,7 +4037,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_world_unity_v1" data-point-id="card_politics_mat_world_unity_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_world_unity_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -3958,7 +4122,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_dialectic_quality_quantity_v1" data-point-id="card_politics_dialectic_quality_quantity_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_dialectic_quality_quantity_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4027,7 +4194,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_unity_struggle_v1" data-point-id="card_politics_contradiction_unity_struggle_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_unity_struggle_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4096,7 +4266,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_dialectic_negation_negation_v1" data-point-id="card_politics_dialectic_negation_negation_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_dialectic_negation_negation_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4165,7 +4338,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_dynamics_v1" data-point-id="card_politics_contradiction_dynamics_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_dynamics_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4234,7 +4410,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_general_specific_v1" data-point-id="card_politics_contradiction_general_specific_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_general_specific_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4303,7 +4482,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_two_points_focus_v1" data-point-id="card_politics_contradiction_two_points_focus_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_two_points_focus_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4366,7 +4548,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_7a6a02aa72cc7835" data-point-id="card_politics_7a6a02aa72cc7835" data-mod-id="mod_02" onclick="toggleSeal('card_politics_7a6a02aa72cc7835', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4436,7 +4621,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_c96e47031faa537b" data-point-id="card_politics_c96e47031faa537b" data-mod-id="mod_02" onclick="toggleSeal('card_politics_c96e47031faa537b', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4505,7 +4693,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_9a624c3e808fe77a" data-point-id="card_politics_9a624c3e808fe77a" data-mod-id="mod_02" onclick="toggleSeal('card_politics_9a624c3e808fe77a', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4575,7 +4766,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_33f1c3df8f65cfed" data-point-id="card_politics_33f1c3df8f65cfed" data-mod-id="mod_02" onclick="toggleSeal('card_politics_33f1c3df8f65cfed', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4645,7 +4839,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_4fc195b016ba55c4" data-point-id="card_politics_4fc195b016ba55c4" data-mod-id="mod_02" onclick="toggleSeal('card_politics_4fc195b016ba55c4', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4714,7 +4911,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_d23a9e7364cd675a" data-point-id="card_politics_d23a9e7364cd675a" data-mod-id="mod_02" onclick="toggleSeal('card_politics_d23a9e7364cd675a', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4784,7 +4984,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_a51885ec724a817f" data-point-id="card_politics_a51885ec724a817f" data-mod-id="mod_02" onclick="toggleSeal('card_politics_a51885ec724a817f', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4854,7 +5057,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_2190ef51e5afb26e" data-point-id="card_politics_2190ef51e5afb26e" data-mod-id="mod_02" onclick="toggleSeal('card_politics_2190ef51e5afb26e', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4924,7 +5130,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_7e494f5482d51907" data-point-id="card_politics_7e494f5482d51907" data-mod-id="mod_02" onclick="toggleSeal('card_politics_7e494f5482d51907', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -4989,7 +5198,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_politics_9a78b405388309dd" data-point-id="card_politics_9a78b405388309dd" data-mod-id="mod_02" onclick="toggleSeal('card_politics_9a78b405388309dd', 'mod_02')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5073,7 +5285,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_nature" data-point-id="card_pol_epi_practice_nature" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_nature', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5143,7 +5358,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_structure" data-point-id="card_pol_epi_practice_structure" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_structure', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5212,7 +5430,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_determines" data-point-id="card_pol_epi_practice_determines" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_determines', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5282,7 +5503,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_essence_of_cognition" data-point-id="card_pol_epi_essence_of_cognition" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_essence_of_cognition', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5351,7 +5575,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_two_leaps" data-point-id="card_pol_epi_two_leaps" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_two_leaps', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5420,7 +5647,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_rational_irrational" data-point-id="card_pol_epi_rational_irrational" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_rational_irrational', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5489,7 +5719,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_objective_absolute_relative" data-point-id="card_pol_epi_truth_objective_absolute_relative" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_objective_absolute_relative', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5559,7 +5792,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_error" data-point-id="card_pol_epi_truth_error" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_error', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5628,7 +5864,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_criterion" data-point-id="card_pol_epi_practice_criterion" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_criterion', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5697,7 +5936,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_value" data-point-id="card_pol_epi_truth_value" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_value', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5766,7 +6008,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_necessity_freedom" data-point-id="card_pol_epi_necessity_freedom" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_necessity_freedom', 'mod_03')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5849,7 +6094,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_being_consciousness" data-point-id="card_pol_hist_social_being_consciousness" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_being_consciousness', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5918,7 +6166,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_consciousness_autonomy" data-point-id="card_pol_hist_social_consciousness_autonomy" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_consciousness_autonomy', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -5988,7 +6239,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_productive_forces_relations" data-point-id="card_pol_hist_productive_forces_relations" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_productive_forces_relations', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6058,7 +6312,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_economic_base_superstructure" data-point-id="card_pol_hist_economic_base_superstructure" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_economic_base_superstructure', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6128,7 +6385,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_formation_evolution" data-point-id="card_pol_hist_social_formation_evolution" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_formation_evolution', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6197,7 +6457,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_basic_contradiction_fundamental_force" data-point-id="card_pol_hist_basic_contradiction_fundamental_force" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_basic_contradiction_fundamental_force', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6266,7 +6529,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_science_technology_revolution" data-point-id="card_pol_hist_science_technology_revolution" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_science_technology_revolution', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6335,7 +6601,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_people_creator_of_history" data-point-id="card_pol_hist_people_creator_of_history" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_people_creator_of_history', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6404,7 +6673,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_individual_historical_role" data-point-id="card_pol_hist_individual_historical_role" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_individual_historical_role', 'mod_04')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6487,7 +6759,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_commodity_dual_nature" data-point-id="card_pol_econ_commodity_dual_nature" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_commodity_dual_nature', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6556,7 +6831,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_labor_dual_nature" data-point-id="card_pol_econ_labor_dual_nature" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_labor_dual_nature', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6625,7 +6903,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_value_quantity_determination" data-point-id="card_pol_econ_value_quantity_determination" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_value_quantity_determination', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6694,7 +6975,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_law_of_value" data-point-id="card_pol_econ_law_of_value" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_law_of_value', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6763,7 +7047,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_labor_power_commodity" data-point-id="card_pol_econ_labor_power_commodity" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_labor_power_commodity', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6832,7 +7119,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_constant_variable_capital" data-point-id="card_pol_econ_constant_variable_capital" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_constant_variable_capital', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6901,7 +7191,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_absolute_relative_surplus_value" data-point-id="card_pol_econ_absolute_relative_surplus_value" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_absolute_relative_surplus_value', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -6970,7 +7263,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_capital_accumulation_organic_composition" data-point-id="card_pol_econ_capital_accumulation_organic_composition" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_capital_accumulation_organic_composition', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7039,7 +7335,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_capital_circuit_turnover" data-point-id="card_pol_econ_capital_circuit_turnover" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_capital_circuit_turnover', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7109,7 +7408,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_fixed_circulating_capital" data-point-id="card_pol_econ_fixed_circulating_capital" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_fixed_circulating_capital', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7178,7 +7480,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_social_reproduction_core_problem" data-point-id="card_pol_econ_social_reproduction_core_problem" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_social_reproduction_core_problem', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7247,7 +7552,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_profit_average_profit" data-point-id="card_pol_econ_profit_average_profit" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_profit_average_profit', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7316,7 +7624,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_monopoly_capitalism" data-point-id="card_pol_econ_monopoly_capitalism" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_monopoly_capitalism', 'mod_05')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7399,7 +7710,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_scientific_socialism_foundations" data-point-id="card_pol_soc_scientific_socialism_foundations" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_scientific_socialism_foundations', 'mod_06')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7468,7 +7782,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_socialist_development_path" data-point-id="card_pol_soc_socialist_development_path" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_socialist_development_path', 'mod_06')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7537,7 +7854,10 @@
                 </div>
                 <div class="point-actions">
                   <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_communist_ideal_features" data-point-id="card_pol_soc_communist_ideal_features" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_communist_ideal_features', 'mod_06')" title="落印为记：记录当前考点研习进度">
-                    <span class="seal-icon">印</span>
+                    <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <path class="seal-check-path" d="M7 12l3 3 7-7"/>
+                    </svg>
                     <span class="seal-label">拟研</span>
                   </button>
                   <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
@@ -7619,28 +7939,45 @@
 
   </main>
 
-  <!-- 碎片化功能 1：上次阅毕 · 续卷定位悬浮浮标 -->
+  <!-- 碎片化功能 1：上次阅毕 · 续卷定位悬浮浮标 (纯矢量 SVG) -->
   <div class="resume-pill" id="resumePill" style="display: none;">
     <div class="resume-pill-main" onclick="scrollToLastRead()">
-      <span class="resume-icon">📖</span>
+      <svg class="ui-svg sm resume-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11v14a2 2 0 0 0 2 2z"/><path d="M19 20a2 2 0 0 0 2-2V8l-4-4"/>
+      </svg>
       <div class="resume-text-wrap">
         <span class="resume-hint">续卷研习</span>
         <strong class="resume-card-title" id="resumeCardTitle">...</strong>
       </div>
-      <span class="resume-arrow">➔</span>
+      <svg class="ui-svg xs resume-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
     </div>
-    <button type="button" class="resume-dismiss-btn" onclick="dismissResumePill(event)" title="暂不续卷">✕</button>
+    <button type="button" class="resume-dismiss-btn" onclick="dismissResumePill(event)" title="暂不续卷">
+      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
   </div>
 
-  <!-- 碎片化功能 2：碎片盲盒 · 随机抽背一题 (3分钟排队闪卡模态) -->
+  <!-- 碎片化功能 2：碎片盲盒 · 随机抽背一题 (纯矢量 SVG) -->
   <div class="flashcard-overlay" id="flashcardModal" style="display: none;" onclick="handleFcBackdropClick(event)">
     <div class="flashcard-dialog">
       <div class="flashcard-top-bar">
         <div class="flashcard-badge-row">
           <span class="flashcard-mod-tag" id="fcModTag">马原</span>
-          <span class="flashcard-blindbox-label">🎲 碎片盲盒 · 随机抽测</span>
+          <span class="flashcard-blindbox-label">
+            <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="18" height="13" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M12 8H7.5a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8z"/><path d="M12 8h4.5a2.5 2.5 0 0 0 0-5C13 3 12 8 12 8z"/>
+            </svg>
+            碎片盲盒 · 随机抽测
+          </span>
         </div>
-        <button type="button" class="flashcard-close" onclick="closeFlashcardModal()" title="退出抽背">✕</button>
+        <button type="button" class="flashcard-close" onclick="closeFlashcardModal()" title="退出抽背">
+          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
 
       <div class="flashcard-main">
@@ -7660,64 +7997,83 @@
 
       <div class="flashcard-actions">
         <button type="button" class="fc-action-btn fc-reveal" id="fcBtnReveal" onclick="toggleFcReveal()">
-          <span id="fcRevealIcon">👁</span>
+          <span id="fcRevealIcon">
+            <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </span>
           <span id="fcRevealText">揭晓答案</span>
         </button>
         <button type="button" class="fc-action-btn fc-stamp" id="fcBtnStamp" onclick="stampCurrentFc()">
-          <span class="seal-icon">印</span>
+          <svg class="ui-svg sm fc-stamp-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+            <path d="M7 12l3 3 7-7"/>
+          </svg>
           <span id="fcStampText">落印研毕</span>
         </button>
         <button type="button" class="fc-action-btn fc-next" onclick="drawNextRandomFc()">
-          <span>➔ 下一抽</span>
+          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/><line x1="3" y1="12" x2="15" y2="12"/>
+          </svg>
+          <span>下一抽</span>
         </button>
         <button type="button" class="fc-action-btn fc-jump" onclick="jumpToCurrentFc()" title="定位到长卷深入研读">
-          <span>↗ 进卷</span>
+          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          <span>进卷</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 底部常驻微型操作与状态栏 (Feature 3: 黄金大拇指热区) -->
+  <!-- 底部常驻微型操作与状态栏 (Feature 3: 居中对称紧凑布局，解决 iPhone 右下角遮挡) -->
   <footer class="bottom-bar">
     <div class="bottom-wrap">
-      <!-- 拇指核心功能组 -->
-      <div class="thumb-actions-group">
-        <button type="button" class="thumb-btn" onclick="openDrawerFromBottom()" title="大纲目录与全景研习进度">
-          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="7" x2="21" y2="7"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="17" x2="15" y2="17"/>
-          </svg>
-          <span>目录</span>
-        </button>
+      <button type="button" class="thumb-btn" onclick="openDrawerFromBottom()" title="大纲目录与全景研习进度">
+        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="15" y2="18"/>
+        </svg>
+        <span>目录</span>
+      </button>
 
-        <button type="button" class="thumb-btn primary" onclick="scrollToNextUnstudied()" title="一键滑向下一个未研毕考点">
-          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-          <span>下一未研</span>
-        </button>
+      <button type="button" class="thumb-btn primary" onclick="scrollToNextUnstudied()" title="一键滑向下一个未研毕考点">
+        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/><line x1="3" y1="12" x2="15" y2="12"/>
+        </svg>
+        <span>未研</span>
+      </button>
 
-        <button type="button" class="thumb-btn random-btn" onclick="openRandomFlashcard()" title="3分钟碎片抽题盲盒">
-          <span>🎲</span>
-          <span>抽背</span>
-        </button>
-
-        <button type="button" class="thumb-btn" onclick="generateAndCopyDoubts()" title="疑难回传清单">
-          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-          </svg>
-          <span>疑难(<span id="bottomDoubtCount">0</span>)</span>
-        </button>
+      <!-- 居中研毕进度胶囊 (防iPhone边角遮挡，点击查看大纲进度) -->
+      <div class="thumb-center-stat" onclick="openDrawerFromBottom()" title="点击查看大纲研习进度详情">
+        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+          <path d="M7 12l3 3 7-7"/>
+        </svg>
+        <span class="stat-text">已研毕 <strong class="studied-num-badge" id="bottomStudiedCount">0</strong>/72</span>
+        <span class="stat-pct" id="bottomPercentBadge">0%</span>
       </div>
 
-      <!-- 研习功名状态小计数 -->
-      <div class="thumb-stats-line">
-        <span>已研毕 <strong class="studied-num-badge" id="bottomStudiedCount">0</strong> / 72</span>
-        <span class="stat-divider">·</span>
-        <span id="bottomPercentBadge">0%</span>
-      </div>
+      <button type="button" class="thumb-btn random-btn" onclick="openRandomFlashcard()" title="3分钟碎片抽题盲盒">
+        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="4" ry="4"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+          <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/>
+          <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/>
+        </svg>
+        <span>抽背</span>
+      </button>
+
+      <button type="button" class="thumb-btn" onclick="generateAndCopyDoubts()" title="疑难回传清单">
+        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          <path d="M9 12h6"/><path d="M9 16h4"/>
+        </svg>
+        <span>疑难(<span id="bottomDoubtCount">0</span>)</span>
+      </button>
     </div>
   </footer>
 
@@ -7748,6 +8104,17 @@
     }
 
     // 主题模式 (Feature 6)
+    function initTheme() {
+      const saved = localStorage.getItem('handbook_theme');
+      const isDark = (saved === 'dark') || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.body.classList.add('theme-dark');
+      } else {
+        document.body.classList.remove('theme-dark');
+      }
+      updateThemeMeta(isDark);
+    }
+
     function toggleTheme() {
       const isDark = document.body.classList.toggle('theme-dark');
       try {
@@ -7760,6 +8127,90 @@
     function updateThemeMeta(isDark) {
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', isDark ? '#181c19' : '#f4f1ea');
+    }
+
+    // 朱砂落印核心交互 (落印为记 / 研毕状态切换)
+    function toggleSeal(pid, modId) {
+      if (!pid) return;
+      const isStudied = studiedPointIds.has(pid);
+      if (isStudied) {
+        studiedPointIds.delete(pid);
+        showToast('已取消研毕落印');
+      } else {
+        studiedPointIds.add(pid);
+        showToast('已落印研毕！功名录 +1 🈴');
+      }
+
+      try {
+        localStorage.setItem('handbook_studied_points_set', JSON.stringify([...studiedPointIds]));
+      } catch(e) {}
+
+      updateAllSealUI();
+    }
+
+    function updateAllSealUI() {
+      const allCards = pointEntries.length || 72;
+      const studiedCount = studiedPointIds.size;
+
+      // 1. 卡片自身印章状态
+      document.querySelectorAll('.point-entry').forEach(card => {
+        const pid = card.id;
+        const isStudied = studiedPointIds.has(pid);
+        card.classList.toggle('is-studied', isStudied);
+        const btn = document.getElementById('seal_' + pid);
+        if (btn) {
+          btn.classList.toggle('stamped', isStudied);
+          const label = btn.querySelector('.seal-label');
+          if (label) label.textContent = isStudied ? '已研毕' : '拟研';
+        }
+      });
+
+      // 2. 目录抽屉中的各条目状态
+      document.querySelectorAll('.toc-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href || !href.startsWith('#')) return;
+        const pid = href.slice(1);
+        const isStudied = studiedPointIds.has(pid);
+        link.classList.toggle('is-studied', isStudied);
+        const mark = document.getElementById('mark_' + pid);
+        if (mark) {
+          mark.textContent = isStudied ? '已研毕' : '待研';
+        }
+        const dot = link.querySelector('.toc-dot');
+        if (dot) {
+          dot.className = isStudied ? 'toc-dot dot-studied' : 'toc-dot dot-unstudied';
+        }
+      });
+
+      // 3. 底部操作岛居中已研毕徽章
+      const bottomCount = document.getElementById('bottomStudiedCount');
+      if (bottomCount) bottomCount.textContent = studiedCount;
+      const bottomPct = document.getElementById('bottomPercentBadge');
+      if (bottomPct) {
+        bottomPct.textContent = `${Math.round(studiedCount / Math.max(1, allCards) * 100)}%`;
+      }
+
+      // 4. 大纲抽屉总研毕统计
+      const drawerTotal = document.getElementById('drawerTotalStudied');
+      if (drawerTotal) drawerTotal.textContent = `${studiedCount} / ${allCards}`;
+
+      // 5. 各科目头部和目录折叠头部统计
+      document.querySelectorAll('.chapter-block').forEach(chap => {
+        const modId = chap.dataset.modId;
+        if (!modId) return;
+        const chapCards = chap.querySelectorAll('.point-entry');
+        const chapStudied = Array.from(chapCards).filter(c => studiedPointIds.has(c.id)).length;
+        const chapTotal = chapCards.length;
+
+        const chapStat = document.getElementById('chap_stat_' + modId);
+        if (chapStat) chapStat.textContent = `${chapStudied}/${chapTotal} 研毕`;
+
+        const tocStat = document.getElementById('toc_mod_' + modId);
+        if (tocStat) tocStat.textContent = `${chapStudied}/${chapTotal} 研毕`;
+      });
+
+      // 6. 顶部筛选胶囊计数
+      updateFilterBadges();
     }
 
     // 上次阅读记忆追踪器 (Feature 1)
@@ -7947,7 +8398,8 @@
       contentBox.classList.remove('revealed');
 
       document.getElementById('fcRevealText').textContent = '揭晓答案';
-      document.getElementById('fcRevealIcon').textContent = '👁';
+      const iconWrap = document.getElementById('fcRevealIcon');
+      if (iconWrap) iconWrap.innerHTML = `<svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 
       const stampBtn = document.getElementById('fcBtnStamp');
       stampBtn.classList.toggle('stamped', isStudied);
@@ -7961,7 +8413,12 @@
       box.classList.toggle('revealed');
       const isRev = box.classList.contains('revealed');
       document.getElementById('fcRevealText').textContent = isRev ? '遮盖题眼' : '揭晓答案';
-      document.getElementById('fcRevealIcon').textContent = isRev ? '🙈' : '👁';
+      const iconWrap = document.getElementById('fcRevealIcon');
+      if (iconWrap) {
+        iconWrap.innerHTML = isRev
+          ? `<svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+          : `<svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      }
     }
 
     function stampCurrentFc() {
@@ -8272,6 +8729,17 @@
         toast.classList.remove('show');
       }, 3000);
     }
+
+    // 页面就绪后统一初始化各模块
+    window.addEventListener('DOMContentLoaded', () => {
+      pointEntries = Array.from(document.querySelectorAll('.point-entry'));
+      clozeElements = Array.from(document.querySelectorAll('.cloze'));
+      initTheme();
+      initResumeTracker();
+      updateAllSealUI();
+      updateClozeStats();
+      updateDoubtStats();
+    });
 
     // PWA Service Worker 注册 (支持 iPhone 离线阅读)
     if ('serviceWorker' in navigator) {
