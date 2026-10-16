@@ -33,11 +33,27 @@
       --line: #ded8c8;
       --line-subtle: rgba(222, 216, 200, 0.65);
 
-      /* 考研经典雅致配色 */
-      --accent: #1e5e4a;          /* 沉稳墨绿 */
-      --accent-soft: #eaf3ee;
-      --seal-red: #a33827;        /* 试卷朱砂印红 */
-      --seal-soft: #faedea;
+      /* 考研经典雅致配色：金石朱墨 · 宣纸文雅 (彻底杜绝红绿冲突) */
+      --accent: #8e2317;          /* 核心朱砂红 - 唯一重点提亮色 */
+      --accent-soft: #fbf0ec;     /* 极淡朱砂宣纸晕 */
+      --accent-border: #edd1c9;
+      --accent-deep: #6e160c;     /* 沉厚深朱红 */
+      --seal-red: #8e2317;        /* 试卷朱砂印红 */
+      --seal-soft: #fbf0ec;
+
+      /* 沉香茶木与玄石青墨 (彻底替代原绿色，古典大雅) */
+      --wood-brown: #6b5541;      /* 沉香茶木色 - 用于名师口诀/章节辅助 */
+      --wood-soft: #f8f3ec;
+      --wood-border: #e3d8cc;
+
+      --stone-tag: #52473a;       /* 逻辑脉络深古茶色 */
+      --stone-soft: #ede5d6;      /* 逻辑脉络浅底 */
+      --stone-border: #dcd0bd;
+
+      --ink-black: #24292e;       /* 墨锭玄石黑 - 用于底栏强调按钮、模式激活 */
+      --ink-black-hover: #161a1e;
+
+      /* 题眼微黄与琥珀金 */
       --mark-amber: #b87414;      /* 疑难琥珀金 */
       --mark-soft: #fbf5e6;
       --mark-border: #ebd1af;
@@ -234,7 +250,7 @@
     .mod-pill:hover { color: var(--accent); }
     .mod-pill.active {
       background: var(--accent-soft);
-      border-color: rgba(30, 94, 74, 0.25);
+      border-color: var(--accent-border);
       color: var(--accent);
     }
 
@@ -322,13 +338,13 @@
     .chapter-heading-wrap {
       margin-bottom: 16px;
       padding-bottom: 7px;
-      border-bottom: 2px solid var(--accent);
+      border-bottom: 1.5px solid var(--wood-brown);
     }
     .chapter-heading {
       font-family: var(--font-song);
       font-size: 19px;
       font-weight: 700;
-      color: var(--accent-deep);
+      color: var(--ink);
       letter-spacing: 0.02em;
       margin-bottom: 3px;
     }
@@ -380,12 +396,14 @@
       font-weight: 600;
       padding: 1px 6px;
       border-radius: 4px;
-      background: rgba(30, 94, 74, 0.08);
-      color: var(--accent);
+      background: rgba(107, 85, 65, 0.08);
+      color: var(--wood-brown);
     }
     .point-badge.must {
-      background: rgba(163, 56, 39, 0.08);
-      color: var(--seal-red);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      font-weight: 700;
     }
     .point-title {
       font-family: var(--font-song);
@@ -401,7 +419,8 @@
       gap: 8px;
       margin: 8px 0 12px;
       padding: 5px 9px;
-      background: rgba(222, 216, 200, 0.28);
+      background: var(--stone-soft);
+      border: 1px solid var(--stone-border);
       border-radius: 6px;
       font-size: 12px;
       overflow-x: auto;
@@ -413,8 +432,8 @@
       font-family: var(--font-sans);
       font-size: 10.5px;
       font-weight: 700;
-      color: var(--accent);
-      background: var(--accent-soft);
+      color: var(--stone-tag);
+      background: rgba(82, 71, 58, 0.08);
       padding: 1px 6px;
       border-radius: 3px;
       flex-shrink: 0;
@@ -430,15 +449,15 @@
     }
     .chain-node { color: var(--ink); }
     .chain-arrow {
-      color: var(--seal-red);
+      color: var(--muted);
       font-weight: 700;
       font-size: 11px;
     }
 
     /* 大题必背金句框 (Golden Sentence Quotation) */
     .golden-sentence {
-      border-left: 3px solid var(--seal-red);
-      background: rgba(163, 56, 39, 0.025);
+      border-left: 3px solid var(--accent);
+      background: rgba(142, 35, 23, 0.035);
       padding: 8px 12px;
       margin-bottom: 12px;
       border-radius: 0 6px 6px 0;
@@ -447,7 +466,7 @@
       font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 700;
-      color: var(--seal-red);
+      color: var(--accent);
       letter-spacing: 0.03em;
       margin-bottom: 3px;
       display: block;
@@ -521,22 +540,30 @@
       font-size: 14.5px;
       line-height: 1.75;
     }
+    /* 肖秀荣与徐涛特色区分 */
+    .quote-note {
+      margin: 10px 0 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14.5px;
+      line-height: 1.75;
+    }
     .quote-note.xiao {
-      background: rgba(30, 94, 74, 0.04);
-      border-left: 3px solid var(--accent);
+      background: var(--wood-soft);
+      border-left: 3px solid var(--wood-brown);
       font-family: var(--font-song);
     }
     .quote-note.xiao .note-author {
       font-family: var(--font-sans);
       font-weight: 700;
       font-size: 11.5px;
-      color: var(--accent);
+      color: var(--wood-brown);
       margin-bottom: 2px;
       display: block;
     }
     .quote-note.xt {
-      background: rgba(163, 56, 39, 0.04);
-      border-left: 3px solid var(--seal-red);
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
       font-family: var(--font-kai);
       font-size: 15px;
     }
@@ -544,18 +571,18 @@
       font-family: var(--font-sans);
       font-weight: 700;
       font-size: 11.5px;
-      color: var(--seal-red);
+      color: var(--accent);
       margin-bottom: 2px;
       display: block;
     }
     .note-author.trap-tag {
-      color: #b23a48;
+      color: var(--accent-deep);
     }
     .formula-line {
       font-family: var(--font-kai);
       font-size: 15.5px;
       font-weight: 600;
-      color: #792415;
+      color: #6e160c;
       display: block;
       margin: 2px 0;
       letter-spacing: 0.02em;
@@ -569,13 +596,13 @@
     }
     body.mode-read .cloze {
       font-weight: 700;
-      color: #134234;
-      border-bottom: 1.5px solid rgba(30, 94, 74, 0.35);
+      color: var(--accent);
+      border-bottom: 1.5px solid rgba(142, 35, 23, 0.35);
       padding: 0 1px;
     }
     body.mode-read .cloze.must {
-      color: var(--seal-red);
-      border-bottom-color: rgba(163, 56, 39, 0.45);
+      color: var(--accent-deep);
+      border-bottom: 1.8px solid rgba(110, 22, 12, 0.55);
     }
 
     /* 背诵模式下胶囊 */
@@ -615,11 +642,11 @@
       pointer-events: none;
     }
 
-    /* 刮开揭晓后的样式 */
+    /* 刮开揭晓后的样式 (统一朱墨微纸红，彻底杜绝红绿混杂) */
     body.mode-recite .cloze.revealed {
       background: var(--accent-soft);
-      border-color: #a7cfbe;
-      color: var(--accent-deep) !important;
+      border-color: var(--accent-border);
+      color: var(--accent) !important;
       min-width: auto;
       min-height: auto;
       vertical-align: baseline;
@@ -628,9 +655,9 @@
       animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     body.mode-recite .cloze.must.revealed {
-      background: var(--seal-soft);
-      border-color: #f2c1b6;
-      color: var(--seal-red) !important;
+      background: #faece6;
+      border-color: #e8b8ac;
+      color: var(--accent-deep) !important;
     }
 
     @keyframes popIn {
@@ -760,7 +787,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(30, 94, 74, 0.15);
+      border-bottom: 1px solid var(--line);
     }
     .toc-count {
       font-size: 11px;
@@ -828,9 +855,10 @@
     }
     .btn-export-doubts {
       font-family: var(--font-sans);
-      background: var(--accent);
+      background: var(--ink-black);
       color: #fff;
-      border: none;
+      border: 1px solid #161a1e;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
       padding: 7px 15px;
       border-radius: 7px;
       font-size: 12.5px;
@@ -842,7 +870,8 @@
       transition: all 0.14s ease;
       touch-action: manipulation;
     }
-    .btn-export-doubts:active { background: #154637; }
+    .btn-export-doubts:hover { background: var(--ink-black-hover); }
+    .btn-export-doubts:active { background: #000; transform: scale(0.97); }
 
     /* 浮动 Toast 弹窗 */
     .toast-notice {
@@ -952,6 +981,14 @@
         padding-top: max(20px, env(safe-area-inset-top, 20px));
         padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
       }
+    }
+
+    /* 仿真器环境动态安全区垫高 (防灵动岛遮挡) */
+    html.ios-simulated-env .top-bar {
+      padding-top: 50px !important;
+    }
+    html.ios-simulated-env .bottom-bar {
+      padding-bottom: 26px !important;
     }
   </style>
 </head>
@@ -5837,7 +5874,7 @@
 
   <!-- 浮动复制成功 Toast 弹窗 -->
   <div class="toast-notice" id="toastNotice">
-    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="#e0af68" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="20 6 9 17 4 12"/>
     </svg>
     <span id="toastMessage">疑难清单已复制！直接在对话框粘贴发送给我即可集中答疑</span>
@@ -5851,6 +5888,11 @@
     let baseFontSize = 16.5;
 
     window.addEventListener('DOMContentLoaded', () => {
+      // 仿真器或内嵌环境识别，动态垫高安全区
+      if (window !== window.top || window.location.search.includes('sim=1')) {
+        document.documentElement.classList.add('ios-simulated-env');
+      }
+
       clozeElements = Array.from(document.querySelectorAll('.cloze'));
       pointEntries = Array.from(document.querySelectorAll('.point-entry'));
 
