@@ -7772,18 +7772,22 @@
           resumeCardData = JSON.parse(raw);
           if (resumeCardData && resumeCardData.id) {
             const card = document.getElementById(resumeCardData.id);
-            if (card) {
-              const rect = card.getBoundingClientRect();
-              if (window.scrollY < 200 && rect.top > 400) {
-                const titleEl = document.getElementById('resumeCardTitle');
-                if (titleEl) titleEl.textContent = resumeCardData.title || '上次研习考点';
-                const pill = document.getElementById('resumePill');
-                if (pill) pill.style.display = 'flex';
-              }
+            const firstCard = document.querySelector('.point-entry');
+            if (card && card !== firstCard && window.scrollY < 300) {
+              const titleEl = document.getElementById('resumeCardTitle');
+              if (titleEl) titleEl.textContent = resumeCardData.title || '上次研习考点';
+              const pill = document.getElementById('resumePill');
+              if (pill) pill.style.display = 'flex';
             }
           }
         }
       } catch(e) {}
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 600) {
+          dismissResumePill();
+        }
+      }, { passive: true });
 
       let debounceTimer = null;
       if ('IntersectionObserver' in window) {
