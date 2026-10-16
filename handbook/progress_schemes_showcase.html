@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>考研政治背诵手卷 · 学习进度记录 3 大方案对比评测看板</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+    
+    body {
+      font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+      background-color: #16181d;
+      color: #e2e8f0;
+    }
+
+    /* 真实 iPhone 16 Pro 样机 (393 x 852) */
+    .iphone-device {
+      width: 393px;
+      height: 780px;
+      background: #000;
+      border-radius: 52px;
+      box-shadow: 
+        0 0 0 10px #2a2b30,
+        0 0 0 12px #1f2024,
+        0 30px 60px -12px rgba(0, 0, 0, 0.75);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* 灵动岛 */
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 116px;
+      height: 32px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* 状态栏时间 */
+    .ios-status-bar {
+      position: absolute;
+      top: 12px;
+      left: 28px;
+      right: 28px;
+      height: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #1f2421;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 998;
+      pointer-events: none;
+    }
+
+    /* Home 横条 */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 4.5px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 999px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .device-screen {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #f4f1ea;
+      padding-top: 44px;
+      box-sizing: border-box;
+    }
+
+    /* 方案切换 Tab 样式 */
+    .tab-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #8e2317;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(142, 35, 23, 0.35);
+      border-color: #8e2317;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+
+  <!-- 顶部标题与方案选择 Tab -->
+  <div class="max-w-5xl w-full mb-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold tracking-wider mb-1.5">
+          <span>●</span> 交互原型评测与选型
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+          《考研政治背诵手卷》学习进度功能 · 3 大设计方案
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">
+          已分别生成独立 HTML 原型，支持在左侧 iPhone 模型中直接触控试玩，或点击右上角独立全屏体验
+        </p>
+      </div>
+
+      <!-- 独立打开快捷链接 -->
+      <div class="flex items-center gap-2">
+        <a id="btnOpenCurrentTab" href="scheme_a_seal.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          全屏独立打开此方案
+        </a>
+      </div>
+    </div>
+
+    <!-- 方案三选一 Tab 导航条 -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800">
+      <button type="button" class="tab-btn active px-4 py-3 rounded-xl border border-transparent text-left flex flex-col gap-1" onclick="switchScheme('a')">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold">方案 A · 朱砂落印</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/25">🌟 推荐</span>
+        </div>
+        <div class="text-[11px] opacity-85">金石研毕 · 古法批校盖章</div>
+      </button>
+
+      <button type="button" class="tab-btn px-4 py-3 rounded-xl border border-transparent text-left flex flex-col gap-1 text-slate-400 hover:text-slate-200" onclick="switchScheme('b')">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold">方案 B · 艾宾浩斯研习条</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/25">多轮冲刺</span>
+        </div>
+        <div class="text-[11px] opacity-85">三态切换 · 目录支持筛选</div>
+      </button>
+
+      <button type="button" class="tab-btn px-4 py-3 rounded-xl border border-transparent text-left flex flex-col gap-1 text-slate-400 hover:text-slate-200" onclick="switchScheme('c')">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold">方案 C · 纸卷勾点</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/25">极简素雅</span>
+        </div>
+        <div class="text-[11px] opacity-85">铅笔画勾 · 零视觉打扰</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- 主体对比体验区：左侧真机模拟，右侧方案特性深度解析 -->
+  <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start justify-items-center">
+    
+    <!-- 左侧：iPhone 16 Pro 交互样机 -->
+    <div class="lg:col-span-6 flex flex-col items-center">
+      <div class="iphone-device relative">
+        <div class="dynamic-island"></div>
+        <div class="ios-status-bar">
+          <span>9:41</span>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+            <div class="w-4.5 h-2.5 rounded-xs border border-current flex items-center p-0.5"><div class="w-full h-full bg-current rounded-2xs"></div></div>
+          </div>
+        </div>
+
+        <!-- 嵌入当前选中的方案 iframe -->
+        <iframe id="schemeFrame" src="scheme_a_seal.html" class="device-screen" title="方案实景体验"></iframe>
+        
+        <div class="home-indicator"></div>
+      </div>
+      <div class="text-xs text-slate-500 mt-3 text-center">
+        可以在手机模型中直接点按【盖印/切换】、滑动浏览以及展开右上角【目录】体验联动
+      </div>
+    </div>
+
+    <!-- 右侧：当前选中方案的特性、优缺点与考研场景适配 -->
+    <div class="lg:col-span-6 space-y-5 text-slate-300 w-full">
+
+      <!-- 方案 A 解读卡片 -->
+      <div id="descCardA" class="scheme-desc space-y-4">
+        <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 shadow-sm space-y-3.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              方案 A【朱砂落印 · 金石研毕】设计解析
+            </h3>
+            <span class="text-xs text-rose-400 font-semibold">仪式感最强 · 极度契合宣纸</span>
+          </div>
+
+          <div class="space-y-3 text-xs leading-relaxed">
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-rose-300 block mb-1">① 考点卡片落印交互</span>
+              卡片右上角呈现虚线印戳 <code>[ 拟研 ]</code>，背完后轻点即可“盖印”，立刻变为朱砂篆刻印章 <code>[ 已研毕 ]</code>，带有微光落印动效，成就感极强！
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-rose-300 block mb-1">② 目录朱印标记与印泥胶囊</span>
+              展开目录后，每个章节标题侧边显示印泥进度（如 <code>1/2 研毕</code>）；已学考点前亮起纯正朱砂实心圆点 <code>●</code> 并带有 <code>[已研毕]</code> 印信，未学为细空心圆 <code>○</code>，黑白分明。
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-rose-300 block mb-1">③ 心理学正反馈机制</span>
+              考研政治内容枯燥，每背完一个核心考点“亲手盖章确认”，能够带来持续学习的心流激励，防止半途而废。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 方案 B 解读卡片 (默认隐藏) -->
+      <div id="descCardB" class="scheme-desc space-y-4 hidden">
+        <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 shadow-sm space-y-3.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              方案 B【多轮进阶 · 艾宾浩斯研习条】设计解析
+            </h3>
+            <span class="text-xs text-amber-400 font-semibold">应试提分派 · 支持目录筛选</span>
+          </div>
+
+          <div class="space-y-3 text-xs leading-relaxed">
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-amber-300 block mb-1">① 三态循序循环（未学 ➔ 通读 ➔ 熟记）</span>
+              点击卡片胶囊循环切换三种备考深度。通读为沉香茶木色 <code>◐ 通读</code>，背熟为朱砂满圆 <code>✓ 熟记</code>，完美契合多轮复习。
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-amber-300 block mb-1">② 目录总览双色仪表盘</span>
+              目录顶部内嵌红褐双色进度条，直观反映当前“熟记”与“通读”占比，宏观把控复习火候。
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-amber-300 block mb-1">③ 目录专属功能：一键过滤已熟记考点</span>
+              支持点击 <code>[ 仅看薄弱待背 ]</code>，目录立即自动收起所有背熟考点，后期冲刺查漏补缺效率极高！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 方案 C 解读卡片 (默认隐藏) -->
+      <div id="descCardC" class="scheme-desc space-y-4 hidden">
+        <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 shadow-sm space-y-3.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              方案 C【纸卷勾点 · 极简不打扰】设计解析
+            </h3>
+            <span class="text-xs text-emerald-400 font-semibold">素雅低干扰 · 还原纸质书画勾</span>
+          </div>
+
+          <div class="space-y-3 text-xs leading-relaxed">
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-emerald-300 block mb-1">① 融于标题行的素雅圆圈</span>
+              不增加任何冗余按钮与文字，仅在考点大标题前放置一个轻盈小圆圈，轻点即打黑墨铅笔勾，零视觉噪点。
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-emerald-300 block mb-1">② 目录双向勾选联动</span>
+              打开目录后，每一条考点前也是微型勾选圆圈，不仅能看进度，还支持在目录里直接随手勾选！
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <span class="font-bold text-emerald-300 block mb-1">③ 极致轻量</span>
+              占用屏幕像素最少，特别适合喜欢原生纸卷纯粹阅读、不希望被复杂按钮打扰的同学。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部选型建议 -->
+      <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400">
+        <div class="font-bold text-white mb-1.5 flex items-center gap-1.5">
+          <span>📌</span> 快速选型指引：
+        </div>
+        <ul class="space-y-1 list-disc list-inside">
+          <li>想要<strong>最有读书成就感、古籍批校味</strong>：选 <strong>方案 A</strong></li>
+          <li>想要<strong>多轮滚动复习、目录一键筛未背</strong>：选 <strong>方案 B</strong></li>
+          <li>想要<strong>最干净纯粹、极简不占空间</strong>：选 <strong>方案 C</strong></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const schemeUrls = {
+      a: 'scheme_a_seal.html',
+      b: 'scheme_b_ladder.html',
+      c: 'scheme_c_minimal.html'
+    };
+
+    function switchScheme(schemeKey) {
+      // 切换 iframe
+      document.getElementById('schemeFrame').src = schemeUrls[schemeKey];
+      document.getElementById('btnOpenCurrentTab').href = schemeUrls[schemeKey];
+
+      // 切换 tab 高亮
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabs.forEach((tab, index) => {
+        const keys = ['a', 'b', 'c'];
+        if (keys[index] === schemeKey) {
+          tab.classList.add('active');
+          tab.classList.remove('text-slate-400');
+        } else {
+          tab.classList.remove('active');
+          tab.classList.add('text-slate-400');
+        }
+      });
+
+      // 切换说明卡片
+      document.getElementById('descCardA').classList.toggle('hidden', schemeKey !== 'a');
+      document.getElementById('descCardB').classList.toggle('hidden', schemeKey !== 'b');
+      document.getElementById('descCardC').classList.toggle('hidden', schemeKey !== 'c');
+    }
+  </script>
+</body>
+</html>
