@@ -1,4 +1,5 @@
-const CACHE_NAME = 'kyzz-handbook-v2';
+// 考研政治背诵手卷 · 极速离线 PWA Service Worker (V3 极速冷启动引擎)
+const CACHE_NAME = 'kyzz-handbook-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -36,26 +37,49 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // 针对同源资源或 GET 请求提供 Stale-While-Revalidate / Cache-First 策略
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request)
-        .then((networkResponse) => {
+  const url = new URL(event.request.url);
+
+  // 1. 核心加速：iOS/手机桌面 PWA 启动瞬间的主文档导航 (0ms 离线快照，绝无白屏)
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('./index.html').then((cachedIndex) => {
+        // 后台静默发起网络拉取以更新缓存 (Stale-While-Revalidate)，绝不阻塞当前界面秒开
+        const networkFetch = fetch(event.request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
+            const responseClone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
+              cache.put('./index.html', responseClone);
             });
           }
           return networkResponse;
-        })
-        .catch(() => {
-          return cachedResponse;
-        });
+        }).catch(() => null);
 
-      return cachedResponse || fetchPromise;
+        // 如果本地已预存，0ms 瞬间返给浏览器；未预存时回退网络
+        return cachedIndex || networkFetch || fetch(event.request);
+      })
+    );
+    return;
+  }
+
+  // 2. 静态资源（图标、manifest、样式等）：Cache-First 策略，忽略 URL 上的 hash 或 query 干扰
+  event.respondWith(
+    caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && event.request.url.startsWith(self.location.origin)) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return networkResponse;
+      }).catch((err) => {
+        return cachedResponse;
+      });
     })
   );
 });
