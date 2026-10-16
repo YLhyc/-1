@@ -348,6 +348,30 @@
       border: 0.5px solid rgba(185, 56, 44, 0.25);
     }
 
+    .badge-dashscope-gov {
+      background: rgba(234, 88, 12, 0.12);
+      color: #EA580C;
+      border: 0.5px solid rgba(234, 88, 12, 0.28);
+    }
+
+    [data-theme="dark"] .badge-dashscope-gov {
+      background: rgba(251, 146, 60, 0.18);
+      color: #FB923C;
+      border-color: rgba(251, 146, 60, 0.35);
+    }
+
+    .badge-dashscope-book {
+      background: rgba(13, 148, 136, 0.12);
+      color: #0D9488;
+      border: 0.5px solid rgba(13, 148, 136, 0.28);
+    }
+
+    [data-theme="dark"] .badge-dashscope-book {
+      background: rgba(45, 212, 191, 0.18);
+      color: #5EEAD4;
+      border-color: rgba(94, 234, 212, 0.35);
+    }
+
     .badge-google {
       background: rgba(66, 133, 244, 0.12);
       color: #2F6ED4;
@@ -358,30 +382,6 @@
       background: rgba(66, 133, 244, 0.18);
       color: #6BA5FF;
       border-color: rgba(107, 165, 255, 0.35);
-    }
-
-    .badge-google-deep {
-      background: rgba(123, 31, 162, 0.12);
-      color: #7B1FA2;
-      border: 0.5px solid rgba(123, 31, 162, 0.28);
-    }
-
-    [data-theme="dark"] .badge-google-deep {
-      background: rgba(186, 104, 200, 0.18);
-      color: #CE93D8;
-      border-color: rgba(206, 147, 216, 0.35);
-    }
-
-    .badge-google-journey {
-      background: rgba(13, 148, 136, 0.12);
-      color: #0D9488;
-      border: 0.5px solid rgba(13, 148, 136, 0.28);
-    }
-
-    [data-theme="dark"] .badge-google-journey {
-      background: rgba(45, 212, 191, 0.18);
-      color: #5EEAD4;
-      border-color: rgba(94, 234, 212, 0.35);
     }
 
     .badge-news {
@@ -779,7 +779,7 @@
       </div>
       <h2 class="header-title">请在 iPhone 上试听挑选专属朗读音色</h2>
       <p class="header-desc">
-        已为您扩充并生成 7 款涵盖 <strong>Google 深度学习原声体系</strong> 与 <strong>微软/Words 经典体系</strong> 的高水准神经网络朗读音频。您可以点击试听卡片感受语调、重音、情感沉浸与断句节奏。选定您最中意的声音后，点击底部的“选定并复制”，即可将决定回传给助手进行全量 72 题朗读库构建。
+        已为您扩充并生成 7 款涵盖 <strong>阿里达摩院顶级大模型人声</strong>、<strong>Google 官方原声</strong> 与 <strong>微软/Words 经典系列</strong> 的高水准神经网络朗读音频（声纹彻底独立，绝无重复）。您可以点击试听卡片感受声腔共鸣、重音与断句节奏。选定您最中意的声音后，点击底部的“选定并复制”，即可将决定回传给助手进行全量 72 题朗读库构建。
       </p>
 
       <div class="sample-text-box">
@@ -808,16 +808,146 @@
     <!-- 声音方案卡片列表 -->
     <section class="voice-list">
 
-      <!-- 分组 1：Google 体系语音方案 · 智能拟真前沿 -->
+      <!-- 分组 1：阿里达摩院 · 顶级中文大模型人声 -->
       <div class="category-header">
+        <div class="category-title">
+          <!-- 纯 SVG：层级/学府标志 -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 17px; height: 17px; color: #EA580C;">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          <span>阿里达摩院 · 顶级中文人声</span>
+        </div>
+        <span class="category-badge">新引入 2 款 · 独立声纹</span>
+      </div>
+
+      <!-- 方案 D1：知远（阿里达摩院国家级政论播音男声） -->
+      <article class="voice-card" data-voice-id="zhiyuan" data-voice-title="知远（阿里达摩院政论大咖）" data-audio-src="audio_samples/sample_dashscope_zhiyuan.mp3">
+        <div class="voice-header">
+          <div class="voice-title-group">
+            <div class="voice-name-row">
+              <h3 class="voice-title">知远 · 庄严权威</h3>
+              <span class="voice-badge badge-dashscope-gov">达摩院 · 国级政论大咖</span>
+            </div>
+            <span class="voice-engine-id">sambert-zhiyuan-v1 · 男声</span>
+          </div>
+        </div>
+
+        <div class="player-action-row">
+          <button class="play-btn" aria-label="播放试听" title="播放/暂停">
+            <svg class="play-icon" viewBox="0 0 24 24">
+              <polygon points="6,4 20,12 6,20"/>
+            </svg>
+            <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+              <rect x="6" y="4" width="4" height="16" rx="1"/>
+              <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </button>
+
+          <div class="player-timeline-wrapper">
+            <div class="timeline-info">
+              <span class="time-current">00:00</span>
+              <div class="waveform-visualizer">
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+              </div>
+              <span class="time-duration">00:20</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="voice-description">
+          <strong>音色特征：</strong>阿里达摩院国家级政论新闻权威男声，声腔厚实雄浑、字字千钧、重音落点极稳。具有强大的理论说服力与考场信服感，专治马原与史纲大题背诵。
+        </p>
+
+        <div class="card-footer">
+          <div class="select-status">
+            <svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7" style="display:none;"/>
+            </svg>
+            <span class="status-text">待选择</span>
+          </div>
+          <button class="select-action-btn">
+            <span>选定此音色</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- 方案 D2：知墨（阿里达摩院有声长文叙事男声） -->
+      <article class="voice-card" data-voice-id="zhimo" data-voice-title="知墨（阿里达摩院有声长文）" data-audio-src="audio_samples/sample_dashscope_zhimo.mp3">
+        <div class="voice-header">
+          <div class="voice-title-group">
+            <div class="voice-name-row">
+              <h3 class="voice-title">知墨 · 磁性叙事</h3>
+              <span class="voice-badge badge-dashscope-book">达摩院 · 深度有声长文</span>
+            </div>
+            <span class="voice-engine-id">sambert-zhimo-v1 · 男声</span>
+          </div>
+        </div>
+
+        <div class="player-action-row">
+          <button class="play-btn" aria-label="播放试听" title="播放/暂停">
+            <svg class="play-icon" viewBox="0 0 24 24">
+              <polygon points="6,4 20,12 6,20"/>
+            </svg>
+            <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
+              <rect x="6" y="4" width="4" height="16" rx="1"/>
+              <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </button>
+
+          <div class="player-timeline-wrapper">
+            <div class="timeline-info">
+              <span class="time-current">00:00</span>
+              <div class="waveform-visualizer">
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+              </div>
+              <span class="time-duration">00:20</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="voice-description">
+          <strong>音色特征：</strong>专为长文连贯叙事训练的顶级有声书男声。低频磁性浓郁，起承转合间呼吸感自然松弛，如同在安静书房中为您娓娓道来，长时间听记极度入脑。
+        </p>
+
+        <div class="card-footer">
+          <div class="select-status">
+            <svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7" style="display:none;"/>
+            </svg>
+            <span class="status-text">待选择</span>
+          </div>
+          <button class="select-action-btn">
+            <span>选定此音色</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- 分组 2：Google 体系 · 智能拟真原声 -->
+      <div class="category-header" style="margin-top: 10px;">
         <div class="category-title">
           <!-- 纯 SVG：Google/AI 晶体星芒标志 -->
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 17px; height: 17px; color: #4285F4;">
             <path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8-6.8-2.4 6.8-2.4L12 2z"/>
           </svg>
-          <span>Google 体系 · 智能拟真前沿</span>
+          <span>Google 体系 · 智能拟真原声</span>
         </div>
-        <span class="category-badge">新扩充 3 款</span>
+        <span class="category-badge">官方正品 1 款</span>
       </div>
 
       <!-- 方案 G1：Google 官方智能原声（Google Neural Speech · 自然纯正） -->
@@ -879,125 +1009,7 @@
         </div>
       </article>
 
-      <!-- 方案 G2：Google 深度政论片解说风（Google Neural2-C 风格 · 权威磅礴） -->
-      <article class="voice-card" data-voice-id="google_neural" data-voice-title="Google 深度政论片解说风（权威磅礴）" data-audio-src="audio_samples/sample_google_neural.mp3">
-        <div class="voice-header">
-          <div class="voice-title-group">
-            <div class="voice-name-row">
-              <h3 class="voice-title">Google 深度政论解说风</h3>
-              <span class="voice-badge badge-google-deep">政论纪录片腔 · 强气场</span>
-            </div>
-            <span class="voice-engine-id">cmn-CN-Neural2-C · 男声</span>
-          </div>
-        </div>
-
-        <div class="player-action-row">
-          <button class="play-btn" aria-label="播放试听" title="播放/暂停">
-            <svg class="play-icon" viewBox="0 0 24 24">
-              <polygon points="6,4 20,12 6,20"/>
-            </svg>
-            <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
-              <rect x="6" y="4" width="4" height="16" rx="1"/>
-              <rect x="14" y="4" width="4" height="16" rx="1"/>
-            </svg>
-          </button>
-
-          <div class="player-timeline-wrapper">
-            <div class="timeline-info">
-              <span class="time-current">00:00</span>
-              <div class="waveform-visualizer">
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-              </div>
-              <span class="time-duration">00:19</span>
-            </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar-fill"></div>
-            </div>
-          </div>
-        </div>
-
-        <p class="voice-description">
-          <strong>音色特征：</strong>调优重现大型政论专题片解说质感，胸腔共鸣浑厚、低频沉稳有力、气场庄严雄浑。在马原核心规律、毛中特大题等宏大理论内容中极具思想感染力与考场威严感。
-        </p>
-
-        <div class="card-footer">
-          <div class="select-status">
-            <svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="3"/>
-              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7" style="display:none;"/>
-            </svg>
-            <span class="status-text">待选择</span>
-          </div>
-          <button class="select-action-btn">
-            <span>选定此音色</span>
-          </button>
-        </div>
-      </article>
-
-      <!-- 方案 G3：Google 有声书长文叙事风（Google Journey-D 风格 · 温润深情） -->
-      <article class="voice-card" data-voice-id="google_journey" data-voice-title="Google 有声书长文叙事风（温润深情）" data-audio-src="audio_samples/sample_google_journey.mp3">
-        <div class="voice-header">
-          <div class="voice-title-group">
-            <div class="voice-name-row">
-              <h3 class="voice-title">Google 有声书长文叙事风</h3>
-              <span class="voice-badge badge-google-journey">长文叙事 · 有声书天花板</span>
-            </div>
-            <span class="voice-engine-id">cmn-CN-Journey-D · 男声</span>
-          </div>
-        </div>
-
-        <div class="player-action-row">
-          <button class="play-btn" aria-label="播放试听" title="播放/暂停">
-            <svg class="play-icon" viewBox="0 0 24 24">
-              <polygon points="6,4 20,12 6,20"/>
-            </svg>
-            <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;">
-              <rect x="6" y="4" width="4" height="16" rx="1"/>
-              <rect x="14" y="4" width="4" height="16" rx="1"/>
-            </svg>
-          </button>
-
-          <div class="player-timeline-wrapper">
-            <div class="timeline-info">
-              <span class="time-current">00:00</span>
-              <div class="waveform-visualizer">
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-                <span class="wave-bar"></span>
-              </div>
-              <span class="time-duration">00:20</span>
-            </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar-fill"></div>
-            </div>
-          </div>
-        </div>
-
-        <p class="voice-description">
-          <strong>音色特征：</strong>专为长文连贯叙事深度调优，语流呼吸起伏温润细腻，断句如讲故事般丝滑入脑。背诵近代史纲要事件脉络或思修长段材料时，沉浸感极强，入耳即化。
-        </p>
-
-        <div class="card-footer">
-          <div class="select-status">
-            <svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="3"/>
-              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7" style="display:none;"/>
-            </svg>
-            <span class="status-text">待选择</span>
-          </div>
-          <button class="select-action-btn">
-            <span>选定此音色</span>
-          </button>
-        </div>
-      </article>
-
-      <!-- 分组 2：微软与 Words 经典系列 -->
+      <!-- 分组 3：微软与 Words 经典系列 -->
       <div class="category-header" style="margin-top: 10px;">
         <div class="category-title">
           <!-- 纯 SVG：微软方格标志 -->
