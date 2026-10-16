@@ -340,6 +340,13 @@
       padding-bottom: 7px;
       border-bottom: 1.5px solid var(--wood-brown);
     }
+    .chapter-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
     .chapter-heading {
       font-family: var(--font-song);
       font-size: 19px;
@@ -347,6 +354,13 @@
       color: var(--ink);
       letter-spacing: 0.02em;
       margin-bottom: 3px;
+    }
+    .chapter-seal-stat {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wood-brown);
+      white-space: nowrap;
     }
     .chapter-desc {
       font-family: var(--font-kai);
@@ -360,12 +374,16 @@
       margin-bottom: 26px;
       padding-bottom: 22px;
       border-bottom: 1px dashed var(--line-subtle);
-      transition: background 0.16s ease;
+      transition: all 0.2s ease;
+      border-radius: 8px;
     }
     .point-entry:last-child {
       border-bottom: none;
       margin-bottom: 8px;
       padding-bottom: 0;
+    }
+    .point-entry.is-studied {
+      background: rgba(251, 248, 243, 0.7);
     }
     .point-entry.is-marked {
       background: rgba(251, 245, 230, 0.45);
@@ -376,7 +394,7 @@
       border: 1px solid var(--mark-border);
     }
 
-    /* 考点标题栏 */
+    /* 考点标题栏与右侧操作按钮群 */
     .point-header {
       display: flex;
       align-items: center;
@@ -389,6 +407,55 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+      flex: 1;
+    }
+    .point-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* 方案 A 核心：朱砂印章按钮 (落印为记) */
+    .seal-stamp-btn {
+      flex-shrink: 0;
+      font-family: var(--font-sans);
+      background: transparent;
+      border: 1.2px dashed #b5a995;
+      color: #7d7260;
+      padding: 3.5px 8px;
+      border-radius: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .seal-stamp-btn:active {
+      transform: scale(0.93);
+    }
+    .seal-stamp-btn.stamped {
+      border: 1.5px solid var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(142, 35, 23, 0.15), inset 0 0 0 1px rgba(142, 35, 23, 0.2);
+      transform: rotate(-1.2deg);
+    }
+    .seal-stamp-btn .seal-icon {
+      width: 13px;
+      height: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
     }
     .point-badge {
       font-family: var(--font-sans);
@@ -755,12 +822,26 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: var(--paper);
     }
     .drawer-title {
       font-family: var(--font-song);
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 700;
       color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .seal-badge-mini {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 1px 5px;
+      border-radius: 3px;
     }
     .close-drawer {
       border: none;
@@ -769,11 +850,43 @@
       color: var(--muted);
       cursor: pointer;
     }
+    .toc-overview {
+      background: var(--accent-soft);
+      border-bottom: 1px solid var(--accent-border);
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--sub);
+      flex-shrink: 0;
+    }
+    .toc-overview-num {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 13.5px;
+    }
+    .btn-reset-study {
+      background: transparent;
+      border: 1px solid #d5cdbe;
+      color: var(--muted);
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-reset-study:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
     .toc-list {
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding: 10px 14px;
+      padding: 10px 12px;
       list-style: none;
     }
     .toc-group { margin-bottom: 14px; }
@@ -789,20 +902,26 @@
       justify-content: space-between;
       border-bottom: 1px solid var(--line);
     }
-    .toc-count {
+    .toc-group-seal-count {
       font-size: 11px;
-      background: var(--accent-soft);
+      font-weight: 600;
       color: var(--accent);
-      padding: 1px 6px;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 1px 7px;
       border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: 6px;
     }
     .toc-sub-list {
       list-style: none;
-      padding: 4px 0 0 6px;
+      padding: 4px 0 0 2px;
     }
     .toc-link {
       display: flex;
-      align-items: baseline;
+      align-items: center;
+      justify-content: space-between;
       gap: 6px;
       padding: 6px 8px;
       border-radius: 5px;
@@ -810,11 +929,55 @@
       text-decoration: none;
       font-family: var(--font-sans);
       font-size: 12.5px;
+      transition: background 0.15s ease;
     }
-    .toc-link span {
+    .toc-link-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .toc-dot.dot-unstudied {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1.2px solid var(--muted);
+      flex-shrink: 0;
+    }
+    .toc-dot.dot-studied {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+      flex-shrink: 0;
+    }
+    .toc-idx {
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--muted);
+      flex-shrink: 0;
+    }
+    .toc-title-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .toc-seal-mark {
+      font-size: 10.5px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .toc-link.is-studied .toc-seal-mark {
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 0 4px;
+      border-radius: 3px;
     }
     .toc-link:hover, .toc-link:active {
       background: var(--accent-soft);
@@ -847,11 +1010,35 @@
       font-family: var(--font-sans);
       font-size: 12px;
       color: var(--sub);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+    .studied-num-badge {
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 2px;
+    }
+    .stat-divider {
+      margin: 0 5px;
+      color: var(--muted);
     }
     .marked-badge {
       font-weight: 700;
       color: var(--mark-amber);
       margin: 0 2px;
+    }
+    .top-studied-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 0 5px;
+      border-radius: 999px;
+      margin-left: 2px;
+      line-height: 1.4;
+      display: inline-block;
     }
     .btn-export-doubts {
       font-family: var(--font-sans);
@@ -1028,13 +1215,14 @@
         </div>
 
         <!-- 目录按钮 -->
-        <button type="button" class="drawer-btn" id="btnDrawer">
+        <button type="button" class="drawer-btn" id="btnDrawer" title="大纲目录与学习进度">
           <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="7" x2="21" y2="7"/>
             <line x1="3" y1="12" x2="21" y2="12"/>
             <line x1="3" y1="17" x2="15" y2="17"/>
           </svg>
           <span>目录</span>
+          <span class="top-studied-badge" id="topBadgeStudied">0/72</span>
         </button>
       </div>
     </div>
@@ -1077,7 +1265,10 @@
   <div class="drawer-overlay" id="drawerOverlay">
     <div class="toc-drawer">
       <div class="drawer-head">
-        <div class="drawer-title">全书考点目录</div>
+        <div class="drawer-title">
+          <span class="seal-badge-mini">朱砂印谱</span>
+          <span>全书大纲考点目录</span>
+        </div>
         <button type="button" class="close-drawer" id="btnCloseDrawer">
           <svg class="ui-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -1085,141 +1276,872 @@
           </svg>
         </button>
       </div>
+
+      <!-- 方案 A：全卷研习功名录概览条 -->
+      <div class="toc-overview">
+        <span>全卷研习功名录</span>
+        <span>
+          已研毕 <strong class="toc-overview-num" id="drawerTotalStudied">0 / 72</strong> 
+          <span id="drawerTotalPercent" style="color: var(--muted); font-size: 11.5px;">(0%)</span>
+          <button type="button" class="btn-reset-study" onclick="resetStudyProgress()" title="清空印记开启新一轮复习">重置</button>
+        </span>
+      </div>
+
       <ul class="toc-list">
         
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_00">
           <div class="toc-group-title" onclick="scrollToId('mod_00')">
             <span>00 导论：马克思主义创立与鲜明特征</span>
-            <span class="toc-count">2</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_00">0/2 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_politics_b6cbf99b7869f305" class="toc-link" onclick="closeDrawer()"><span>01</span> 马克思主义的三大组成部分</a></li>
-<li><a href="#card_politics_dca1ec842306c2fb" class="toc-link" onclick="closeDrawer()"><span>02</span> 马克思主义的基本立场、观点和方法</a></li>
+
+            <li>
+              <a href="#card_politics_b6cbf99b7869f305" class="toc-link" id="toc_link_card_politics_b6cbf99b7869f305" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_b6cbf99b7869f305"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">马克思主义的三大组成部分</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_b6cbf99b7869f305">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_dca1ec842306c2fb" class="toc-link" id="toc_link_card_politics_dca1ec842306c2fb" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_dca1ec842306c2fb"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">马克思主义的基本立场、观点和方法</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_dca1ec842306c2fb">待研</span>
+              </a>
+            </li>
 </ul></li>
 
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_01">
           <div class="toc-group-title" onclick="scrollToId('mod_01')">
             <span>01 唯物论：物质、意识与世界的物质统一性</span>
-            <span class="toc-count">18</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_01">0/18 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_politics_01100df6391835a2" class="toc-link" onclick="closeDrawer()"><span>01</span> 列宁的物质定义与客观实在性</a></li>
-<li><a href="#card_politics_64ec0ef20b5e7333" class="toc-link" onclick="closeDrawer()"><span>02</span> 哲学基本问题的两个方面</a></li>
-<li><a href="#card_politics_5c04f99e0d2f854d" class="toc-link" onclick="closeDrawer()"><span>03</span> 意识的起源和本质</a></li>
-<li><a href="#card_politics_f396ea06de5fe50f" class="toc-link" onclick="closeDrawer()"><span>04</span> 意识能不能运动？</a></li>
-<li><a href="#card_politics_mat_substance_v1" class="toc-link" onclick="closeDrawer()"><span>05</span> 物质的唯一特性与未知世界辨析</a></li>
-<li><a href="#card_politics_f92e8489827056e4" class="toc-link" onclick="closeDrawer()"><span>06</span> 旧唯物主义的“半截子”局限</a></li>
-<li><a href="#card_politics_a12e43f7109b546c" class="toc-link" onclick="closeDrawer()"><span>07</span> 意识能动作用与客观规律性</a></li>
-<li><a href="#card_politics_16802f8826e810c8" class="toc-link" onclick="closeDrawer()"><span>08</span> ‘意识完全不能运动’为什么错？</a></li>
-<li><a href="#card_politics_356679a94c1f1f00" class="toc-link" onclick="closeDrawer()"><span>09</span> 物质、运动与相对静止</a></li>
-<li><a href="#card_politics_mat_motion_space_v1" class="toc-link" onclick="closeDrawer()"><span>10</span> 物质运动与时空的绝对性与相对性</a></li>
-<li><a href="#card_politics_ac34c7b93373d3de" class="toc-link" onclick="closeDrawer()"><span>11</span> 物质与运动为什么不可分割</a></li>
-<li><a href="#card_politics_b863d4e75f0227c7" class="toc-link" onclick="closeDrawer()"><span>12</span> 时间和空间的客观性</a></li>
-<li><a href="#card_politics_aedb3175306c6ead" class="toc-link" onclick="closeDrawer()"><span>13</span> 意识的能动性与人工智能边界</a></li>
-<li><a href="#card_politics_21ae1c5994363e41" class="toc-link" onclick="closeDrawer()"><span>14</span> 自然界与人类社会的关系</a></li>
-<li><a href="#card_politics_c7fda79c64ef3357" class="toc-link" onclick="closeDrawer()"><span>15</span> 人工智能与人类意识的边界</a></li>
-<li><a href="#card_politics_mat_consciousness_v1" class="toc-link" onclick="closeDrawer()"><span>16</span> 意识的起源、本质及其能动作用</a></li>
-<li><a href="#card_politics_5aaf9aabde7cf578" class="toc-link" onclick="closeDrawer()"><span>17</span> 世界的物质统一性原理</a></li>
-<li><a href="#card_politics_mat_world_unity_v1" class="toc-link" onclick="closeDrawer()"><span>18</span> 世界的物质统一性原理及其实践意义</a></li>
+
+            <li>
+              <a href="#card_politics_01100df6391835a2" class="toc-link" id="toc_link_card_politics_01100df6391835a2" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_01100df6391835a2"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">列宁的物质定义与客观实在性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_01100df6391835a2">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_64ec0ef20b5e7333" class="toc-link" id="toc_link_card_politics_64ec0ef20b5e7333" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_64ec0ef20b5e7333"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">哲学基本问题的两个方面</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_64ec0ef20b5e7333">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_5c04f99e0d2f854d" class="toc-link" id="toc_link_card_politics_5c04f99e0d2f854d" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_5c04f99e0d2f854d"></span>
+                  <span class="toc-idx">03</span>
+                  <span class="toc-title-text">意识的起源和本质</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_5c04f99e0d2f854d">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_f396ea06de5fe50f" class="toc-link" id="toc_link_card_politics_f396ea06de5fe50f" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_f396ea06de5fe50f"></span>
+                  <span class="toc-idx">04</span>
+                  <span class="toc-title-text">意识能不能运动？</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_f396ea06de5fe50f">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_mat_substance_v1" class="toc-link" id="toc_link_card_politics_mat_substance_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_mat_substance_v1"></span>
+                  <span class="toc-idx">05</span>
+                  <span class="toc-title-text">物质的唯一特性与未知世界辨析</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_mat_substance_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_f92e8489827056e4" class="toc-link" id="toc_link_card_politics_f92e8489827056e4" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_f92e8489827056e4"></span>
+                  <span class="toc-idx">06</span>
+                  <span class="toc-title-text">旧唯物主义的“半截子”局限</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_f92e8489827056e4">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_a12e43f7109b546c" class="toc-link" id="toc_link_card_politics_a12e43f7109b546c" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_a12e43f7109b546c"></span>
+                  <span class="toc-idx">07</span>
+                  <span class="toc-title-text">意识能动作用与客观规律性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_a12e43f7109b546c">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_16802f8826e810c8" class="toc-link" id="toc_link_card_politics_16802f8826e810c8" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_16802f8826e810c8"></span>
+                  <span class="toc-idx">08</span>
+                  <span class="toc-title-text">‘意识完全不能运动’为什么错？</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_16802f8826e810c8">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_356679a94c1f1f00" class="toc-link" id="toc_link_card_politics_356679a94c1f1f00" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_356679a94c1f1f00"></span>
+                  <span class="toc-idx">09</span>
+                  <span class="toc-title-text">物质、运动与相对静止</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_356679a94c1f1f00">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_mat_motion_space_v1" class="toc-link" id="toc_link_card_politics_mat_motion_space_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_mat_motion_space_v1"></span>
+                  <span class="toc-idx">10</span>
+                  <span class="toc-title-text">物质运动与时空的绝对性与相对性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_mat_motion_space_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_ac34c7b93373d3de" class="toc-link" id="toc_link_card_politics_ac34c7b93373d3de" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_ac34c7b93373d3de"></span>
+                  <span class="toc-idx">11</span>
+                  <span class="toc-title-text">物质与运动为什么不可分割</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_ac34c7b93373d3de">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_b863d4e75f0227c7" class="toc-link" id="toc_link_card_politics_b863d4e75f0227c7" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_b863d4e75f0227c7"></span>
+                  <span class="toc-idx">12</span>
+                  <span class="toc-title-text">时间和空间的客观性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_b863d4e75f0227c7">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_aedb3175306c6ead" class="toc-link" id="toc_link_card_politics_aedb3175306c6ead" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_aedb3175306c6ead"></span>
+                  <span class="toc-idx">13</span>
+                  <span class="toc-title-text">意识的能动性与人工智能边界</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_aedb3175306c6ead">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_21ae1c5994363e41" class="toc-link" id="toc_link_card_politics_21ae1c5994363e41" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_21ae1c5994363e41"></span>
+                  <span class="toc-idx">14</span>
+                  <span class="toc-title-text">自然界与人类社会的关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_21ae1c5994363e41">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_c7fda79c64ef3357" class="toc-link" id="toc_link_card_politics_c7fda79c64ef3357" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_c7fda79c64ef3357"></span>
+                  <span class="toc-idx">15</span>
+                  <span class="toc-title-text">人工智能与人类意识的边界</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_c7fda79c64ef3357">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_mat_consciousness_v1" class="toc-link" id="toc_link_card_politics_mat_consciousness_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_mat_consciousness_v1"></span>
+                  <span class="toc-idx">16</span>
+                  <span class="toc-title-text">意识的起源、本质及其能动作用</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_mat_consciousness_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_5aaf9aabde7cf578" class="toc-link" id="toc_link_card_politics_5aaf9aabde7cf578" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_5aaf9aabde7cf578"></span>
+                  <span class="toc-idx">17</span>
+                  <span class="toc-title-text">世界的物质统一性原理</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_5aaf9aabde7cf578">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_mat_world_unity_v1" class="toc-link" id="toc_link_card_politics_mat_world_unity_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_mat_world_unity_v1"></span>
+                  <span class="toc-idx">18</span>
+                  <span class="toc-title-text">世界的物质统一性原理及其实践意义</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_mat_world_unity_v1">待研</span>
+              </a>
+            </li>
 </ul></li>
 
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_02">
           <div class="toc-group-title" onclick="scrollToId('mod_02')">
             <span>02 辩证法：两大总特征、三大规律与五对范畴</span>
-            <span class="toc-count">16</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_02">0/16 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_politics_dialectic_quality_quantity_v1" class="toc-link" onclick="closeDrawer()"><span>01</span> 量变质变规律与适度原则</a></li>
-<li><a href="#card_politics_contradiction_unity_struggle_v1" class="toc-link" onclick="closeDrawer()"><span>02</span> 矛盾的同一性和斗争性及其辩证关系</a></li>
-<li><a href="#card_politics_dialectic_negation_negation_v1" class="toc-link" onclick="closeDrawer()"><span>03</span> 否定之否定规律与辩证否定观（扬弃）</a></li>
-<li><a href="#card_politics_contradiction_dynamics_v1" class="toc-link" onclick="closeDrawer()"><span>04</span> 矛盾同一性与斗争性在事物发展中的作用</a></li>
-<li><a href="#card_politics_contradiction_general_specific_v1" class="toc-link" onclick="closeDrawer()"><span>05</span> 矛盾的普遍性与特殊性辩证关系及矛盾问题精髓</a></li>
-<li><a href="#card_politics_contradiction_two_points_focus_v1" class="toc-link" onclick="closeDrawer()"><span>06</span> 两点论和重点论的统一及主次矛盾辨析</a></li>
-<li><a href="#card_politics_7a6a02aa72cc7835" class="toc-link" onclick="closeDrawer()"><span>07</span> 内容与形式的辩证关系及形式主义边界</a></li>
-<li><a href="#card_politics_c96e47031faa537b" class="toc-link" onclick="closeDrawer()"><span>08</span> 对立统一规律为什么是唯物辩证法的实质和核心</a></li>
-<li><a href="#card_politics_9a624c3e808fe77a" class="toc-link" onclick="closeDrawer()"><span>09</span> 本质、现象、真象、假象与错觉如何区分</a></li>
-<li><a href="#card_politics_33f1c3df8f65cfed" class="toc-link" onclick="closeDrawer()"><span>10</span> 矛盾的同一性和斗争性关系</a></li>
-<li><a href="#card_politics_4fc195b016ba55c4" class="toc-link" onclick="closeDrawer()"><span>11</span> 矛盾同一性在事物发展中的三方面作用</a></li>
-<li><a href="#card_politics_d23a9e7364cd675a" class="toc-link" onclick="closeDrawer()"><span>12</span> 原因与结果的辩证关系及因果识别</a></li>
-<li><a href="#card_politics_a51885ec724a817f" class="toc-link" onclick="closeDrawer()"><span>13</span> 矛盾的普遍性和特殊性关系</a></li>
-<li><a href="#card_politics_2190ef51e5afb26e" class="toc-link" onclick="closeDrawer()"><span>14</span> 必然与偶然的关系及判断边界</a></li>
-<li><a href="#card_politics_7e494f5482d51907" class="toc-link" onclick="closeDrawer()"><span>15</span> 两点论和重点论统一</a></li>
-<li><a href="#card_politics_9a78b405388309dd" class="toc-link" onclick="closeDrawer()"><span>16</span> 现实可能、抽象可能与不可能的区分</a></li>
+
+            <li>
+              <a href="#card_politics_dialectic_quality_quantity_v1" class="toc-link" id="toc_link_card_politics_dialectic_quality_quantity_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_dialectic_quality_quantity_v1"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">量变质变规律与适度原则</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_dialectic_quality_quantity_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_contradiction_unity_struggle_v1" class="toc-link" id="toc_link_card_politics_contradiction_unity_struggle_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_contradiction_unity_struggle_v1"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">矛盾的同一性和斗争性及其辩证关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_contradiction_unity_struggle_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_dialectic_negation_negation_v1" class="toc-link" id="toc_link_card_politics_dialectic_negation_negation_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_dialectic_negation_negation_v1"></span>
+                  <span class="toc-idx">03</span>
+                  <span class="toc-title-text">否定之否定规律与辩证否定观（扬弃）</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_dialectic_negation_negation_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_contradiction_dynamics_v1" class="toc-link" id="toc_link_card_politics_contradiction_dynamics_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_contradiction_dynamics_v1"></span>
+                  <span class="toc-idx">04</span>
+                  <span class="toc-title-text">矛盾同一性与斗争性在事物发展中的作用</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_contradiction_dynamics_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_contradiction_general_specific_v1" class="toc-link" id="toc_link_card_politics_contradiction_general_specific_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_contradiction_general_specific_v1"></span>
+                  <span class="toc-idx">05</span>
+                  <span class="toc-title-text">矛盾的普遍性与特殊性辩证关系及矛盾问题精髓</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_contradiction_general_specific_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_contradiction_two_points_focus_v1" class="toc-link" id="toc_link_card_politics_contradiction_two_points_focus_v1" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_contradiction_two_points_focus_v1"></span>
+                  <span class="toc-idx">06</span>
+                  <span class="toc-title-text">两点论和重点论的统一及主次矛盾辨析</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_contradiction_two_points_focus_v1">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_7a6a02aa72cc7835" class="toc-link" id="toc_link_card_politics_7a6a02aa72cc7835" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_7a6a02aa72cc7835"></span>
+                  <span class="toc-idx">07</span>
+                  <span class="toc-title-text">内容与形式的辩证关系及形式主义边界</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_7a6a02aa72cc7835">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_c96e47031faa537b" class="toc-link" id="toc_link_card_politics_c96e47031faa537b" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_c96e47031faa537b"></span>
+                  <span class="toc-idx">08</span>
+                  <span class="toc-title-text">对立统一规律为什么是唯物辩证法的实质和核心</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_c96e47031faa537b">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_9a624c3e808fe77a" class="toc-link" id="toc_link_card_politics_9a624c3e808fe77a" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_9a624c3e808fe77a"></span>
+                  <span class="toc-idx">09</span>
+                  <span class="toc-title-text">本质、现象、真象、假象与错觉如何区分</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_9a624c3e808fe77a">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_33f1c3df8f65cfed" class="toc-link" id="toc_link_card_politics_33f1c3df8f65cfed" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_33f1c3df8f65cfed"></span>
+                  <span class="toc-idx">10</span>
+                  <span class="toc-title-text">矛盾的同一性和斗争性关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_33f1c3df8f65cfed">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_4fc195b016ba55c4" class="toc-link" id="toc_link_card_politics_4fc195b016ba55c4" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_4fc195b016ba55c4"></span>
+                  <span class="toc-idx">11</span>
+                  <span class="toc-title-text">矛盾同一性在事物发展中的三方面作用</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_4fc195b016ba55c4">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_d23a9e7364cd675a" class="toc-link" id="toc_link_card_politics_d23a9e7364cd675a" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_d23a9e7364cd675a"></span>
+                  <span class="toc-idx">12</span>
+                  <span class="toc-title-text">原因与结果的辩证关系及因果识别</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_d23a9e7364cd675a">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_a51885ec724a817f" class="toc-link" id="toc_link_card_politics_a51885ec724a817f" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_a51885ec724a817f"></span>
+                  <span class="toc-idx">13</span>
+                  <span class="toc-title-text">矛盾的普遍性和特殊性关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_a51885ec724a817f">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_2190ef51e5afb26e" class="toc-link" id="toc_link_card_politics_2190ef51e5afb26e" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_2190ef51e5afb26e"></span>
+                  <span class="toc-idx">14</span>
+                  <span class="toc-title-text">必然与偶然的关系及判断边界</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_2190ef51e5afb26e">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_7e494f5482d51907" class="toc-link" id="toc_link_card_politics_7e494f5482d51907" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_7e494f5482d51907"></span>
+                  <span class="toc-idx">15</span>
+                  <span class="toc-title-text">两点论和重点论统一</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_7e494f5482d51907">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_politics_9a78b405388309dd" class="toc-link" id="toc_link_card_politics_9a78b405388309dd" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_politics_9a78b405388309dd"></span>
+                  <span class="toc-idx">16</span>
+                  <span class="toc-title-text">现实可能、抽象可能与不可能的区分</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_politics_9a78b405388309dd">待研</span>
+              </a>
+            </li>
 </ul></li>
 
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_03">
           <div class="toc-group-title" onclick="scrollToId('mod_03')">
             <span>03 认识论：实践、认识、真理与价值</span>
-            <span class="toc-count">11</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_03">0/11 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_pol_epi_practice_nature" class="toc-link" onclick="closeDrawer()"><span>01</span> 实践的本质与三大基本特征</a></li>
-<li><a href="#card_pol_epi_practice_structure" class="toc-link" onclick="closeDrawer()"><span>02</span> 实践的基本结构与运行机制</a></li>
-<li><a href="#card_pol_epi_practice_determines" class="toc-link" onclick="closeDrawer()"><span>03</span> 实践对认识的决定作用</a></li>
-<li><a href="#card_pol_epi_essence_of_cognition" class="toc-link" onclick="closeDrawer()"><span>04</span> 认识的本质是能动反映</a></li>
-<li><a href="#card_pol_epi_two_leaps" class="toc-link" onclick="closeDrawer()"><span>05</span> 认识运动的两次飞跃及其辩证过程</a></li>
-<li><a href="#card_pol_epi_rational_irrational" class="toc-link" onclick="closeDrawer()"><span>06</span> 认识过程中的理性因素与非理性因素</a></li>
-<li><a href="#card_pol_epi_truth_objective_absolute_relative" class="toc-link" onclick="closeDrawer()"><span>07</span> 真理的客观性、绝对性与相对性</a></li>
-<li><a href="#card_pol_epi_truth_error" class="toc-link" onclick="closeDrawer()"><span>08</span> 真理与谬误的对立统一关系</a></li>
-<li><a href="#card_pol_epi_practice_criterion" class="toc-link" onclick="closeDrawer()"><span>09</span> 实践是检验真理的唯一标准及其确定性与不确定性</a></li>
-<li><a href="#card_pol_epi_truth_value" class="toc-link" onclick="closeDrawer()"><span>10</span> 真理尺度与价值尺度的辩证统一</a></li>
-<li><a href="#card_pol_epi_necessity_freedom" class="toc-link" onclick="closeDrawer()"><span>11</span> 认识世界与改造世界：从必然走向自由</a></li>
+
+            <li>
+              <a href="#card_pol_epi_practice_nature" class="toc-link" id="toc_link_card_pol_epi_practice_nature" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_practice_nature"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">实践的本质与三大基本特征</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_practice_nature">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_practice_structure" class="toc-link" id="toc_link_card_pol_epi_practice_structure" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_practice_structure"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">实践的基本结构与运行机制</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_practice_structure">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_practice_determines" class="toc-link" id="toc_link_card_pol_epi_practice_determines" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_practice_determines"></span>
+                  <span class="toc-idx">03</span>
+                  <span class="toc-title-text">实践对认识的决定作用</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_practice_determines">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_essence_of_cognition" class="toc-link" id="toc_link_card_pol_epi_essence_of_cognition" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_essence_of_cognition"></span>
+                  <span class="toc-idx">04</span>
+                  <span class="toc-title-text">认识的本质是能动反映</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_essence_of_cognition">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_two_leaps" class="toc-link" id="toc_link_card_pol_epi_two_leaps" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_two_leaps"></span>
+                  <span class="toc-idx">05</span>
+                  <span class="toc-title-text">认识运动的两次飞跃及其辩证过程</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_two_leaps">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_rational_irrational" class="toc-link" id="toc_link_card_pol_epi_rational_irrational" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_rational_irrational"></span>
+                  <span class="toc-idx">06</span>
+                  <span class="toc-title-text">认识过程中的理性因素与非理性因素</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_rational_irrational">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_truth_objective_absolute_relative" class="toc-link" id="toc_link_card_pol_epi_truth_objective_absolute_relative" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_truth_objective_absolute_relative"></span>
+                  <span class="toc-idx">07</span>
+                  <span class="toc-title-text">真理的客观性、绝对性与相对性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_truth_objective_absolute_relative">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_truth_error" class="toc-link" id="toc_link_card_pol_epi_truth_error" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_truth_error"></span>
+                  <span class="toc-idx">08</span>
+                  <span class="toc-title-text">真理与谬误的对立统一关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_truth_error">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_practice_criterion" class="toc-link" id="toc_link_card_pol_epi_practice_criterion" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_practice_criterion"></span>
+                  <span class="toc-idx">09</span>
+                  <span class="toc-title-text">实践是检验真理的唯一标准及其确定性与不确定性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_practice_criterion">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_truth_value" class="toc-link" id="toc_link_card_pol_epi_truth_value" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_truth_value"></span>
+                  <span class="toc-idx">10</span>
+                  <span class="toc-title-text">真理尺度与价值尺度的辩证统一</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_truth_value">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_epi_necessity_freedom" class="toc-link" id="toc_link_card_pol_epi_necessity_freedom" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_epi_necessity_freedom"></span>
+                  <span class="toc-idx">11</span>
+                  <span class="toc-title-text">认识世界与改造世界：从必然走向自由</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_epi_necessity_freedom">待研</span>
+              </a>
+            </li>
 </ul></li>
 
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_04">
           <div class="toc-group-title" onclick="scrollToId('mod_04')">
             <span>04 唯物史观：社会基本矛盾、发展动力与群众史观</span>
-            <span class="toc-count">9</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_04">0/9 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_pol_hist_social_being_consciousness" class="toc-link" onclick="closeDrawer()"><span>01</span> 社会存在与社会意识的辩证关系</a></li>
-<li><a href="#card_pol_hist_social_consciousness_autonomy" class="toc-link" onclick="closeDrawer()"><span>02</span> 社会意识的相对独立性及其反作用</a></li>
-<li><a href="#card_pol_hist_productive_forces_relations" class="toc-link" onclick="closeDrawer()"><span>03</span> 生产力与生产关系的矛盾运动规律</a></li>
-<li><a href="#card_pol_hist_economic_base_superstructure" class="toc-link" onclick="closeDrawer()"><span>04</span> 经济基础与上层建筑的矛盾运动规律</a></li>
-<li><a href="#card_pol_hist_social_formation_evolution" class="toc-link" onclick="closeDrawer()"><span>05</span> 社会形态更替的一般规律与统一性多样性</a></li>
-<li><a href="#card_pol_hist_basic_contradiction_fundamental_force" class="toc-link" onclick="closeDrawer()"><span>06</span> 社会基本矛盾是历史发展的根本动力</a></li>
-<li><a href="#card_pol_hist_science_technology_revolution" class="toc-link" onclick="closeDrawer()"><span>07</span> 科学技术革命在社会发展中的作用及其双刃剑本质</a></li>
-<li><a href="#card_pol_hist_people_creator_of_history" class="toc-link" onclick="closeDrawer()"><span>08</span> 人民群众是历史的创造者及党的群众路线</a></li>
-<li><a href="#card_pol_hist_individual_historical_role" class="toc-link" onclick="closeDrawer()"><span>09</span> 个人在社会历史中的作用及评价历史人物的原则</a></li>
+
+            <li>
+              <a href="#card_pol_hist_social_being_consciousness" class="toc-link" id="toc_link_card_pol_hist_social_being_consciousness" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_social_being_consciousness"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">社会存在与社会意识的辩证关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_social_being_consciousness">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_social_consciousness_autonomy" class="toc-link" id="toc_link_card_pol_hist_social_consciousness_autonomy" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_social_consciousness_autonomy"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">社会意识的相对独立性及其反作用</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_social_consciousness_autonomy">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_productive_forces_relations" class="toc-link" id="toc_link_card_pol_hist_productive_forces_relations" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_productive_forces_relations"></span>
+                  <span class="toc-idx">03</span>
+                  <span class="toc-title-text">生产力与生产关系的矛盾运动规律</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_productive_forces_relations">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_economic_base_superstructure" class="toc-link" id="toc_link_card_pol_hist_economic_base_superstructure" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_economic_base_superstructure"></span>
+                  <span class="toc-idx">04</span>
+                  <span class="toc-title-text">经济基础与上层建筑的矛盾运动规律</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_economic_base_superstructure">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_social_formation_evolution" class="toc-link" id="toc_link_card_pol_hist_social_formation_evolution" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_social_formation_evolution"></span>
+                  <span class="toc-idx">05</span>
+                  <span class="toc-title-text">社会形态更替的一般规律与统一性多样性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_social_formation_evolution">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_basic_contradiction_fundamental_force" class="toc-link" id="toc_link_card_pol_hist_basic_contradiction_fundamental_force" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_basic_contradiction_fundamental_force"></span>
+                  <span class="toc-idx">06</span>
+                  <span class="toc-title-text">社会基本矛盾是历史发展的根本动力</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_basic_contradiction_fundamental_force">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_science_technology_revolution" class="toc-link" id="toc_link_card_pol_hist_science_technology_revolution" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_science_technology_revolution"></span>
+                  <span class="toc-idx">07</span>
+                  <span class="toc-title-text">科学技术革命在社会发展中的作用及其双刃剑本质</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_science_technology_revolution">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_people_creator_of_history" class="toc-link" id="toc_link_card_pol_hist_people_creator_of_history" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_people_creator_of_history"></span>
+                  <span class="toc-idx">08</span>
+                  <span class="toc-title-text">人民群众是历史的创造者及党的群众路线</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_people_creator_of_history">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_hist_individual_historical_role" class="toc-link" id="toc_link_card_pol_hist_individual_historical_role" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_hist_individual_historical_role"></span>
+                  <span class="toc-idx">09</span>
+                  <span class="toc-title-text">个人在社会历史中的作用及评价历史人物的原则</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_hist_individual_historical_role">待研</span>
+              </a>
+            </li>
 </ul></li>
 
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_05">
           <div class="toc-group-title" onclick="scrollToId('mod_05')">
             <span>05 政治经济学：劳动价值论与剩余价值学说</span>
-            <span class="toc-count">13</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_05">0/13 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_pol_econ_commodity_dual_nature" class="toc-link" onclick="closeDrawer()"><span>01</span> 商品的二重性：使用价值与价值</a></li>
-<li><a href="#card_pol_econ_labor_dual_nature" class="toc-link" onclick="closeDrawer()"><span>02</span> 劳动的二重性：具体劳动与抽象劳动</a></li>
-<li><a href="#card_pol_econ_value_quantity_determination" class="toc-link" onclick="closeDrawer()"><span>03</span> 商品价值量的决定与劳动生产率的关系</a></li>
-<li><a href="#card_pol_econ_law_of_value" class="toc-link" onclick="closeDrawer()"><span>04</span> 价值规律的内容、表现形式与作用机制</a></li>
-<li><a href="#card_pol_econ_labor_power_commodity" class="toc-link" onclick="closeDrawer()"><span>05</span> 劳动力成为商品与货币转化为资本</a></li>
-<li><a href="#card_pol_econ_constant_variable_capital" class="toc-link" onclick="closeDrawer()"><span>06</span> 不变资本与可变资本的划分及剩余价值率</a></li>
-<li><a href="#card_pol_econ_absolute_relative_surplus_value" class="toc-link" onclick="closeDrawer()"><span>07</span> 剩余价值生产的两种方法：绝对剩余价值与相对剩余价值</a></li>
-<li><a href="#card_pol_econ_capital_accumulation_organic_composition" class="toc-link" onclick="closeDrawer()"><span>08</span> 资本积累与资本有机构成的提高</a></li>
-<li><a href="#card_pol_econ_capital_circuit_turnover" class="toc-link" onclick="closeDrawer()"><span>09</span> 产业资本循环的三个阶段与三种职能形式</a></li>
-<li><a href="#card_pol_econ_fixed_circulating_capital" class="toc-link" onclick="closeDrawer()"><span>10</span> 固定资本与流动资本的划分及资本周转速度</a></li>
-<li><a href="#card_pol_econ_social_reproduction_core_problem" class="toc-link" onclick="closeDrawer()"><span>11</span> 社会总资本再生产的核心问题与实现条件</a></li>
-<li><a href="#card_pol_econ_profit_average_profit" class="toc-link" onclick="closeDrawer()"><span>12</span> 剩余价值转化为利润与平均利润率的形成</a></li>
-<li><a href="#card_pol_econ_monopoly_capitalism" class="toc-link" onclick="closeDrawer()"><span>13</span> 垄断资本主义的形成与国家垄断资本主义的实质</a></li>
+
+            <li>
+              <a href="#card_pol_econ_commodity_dual_nature" class="toc-link" id="toc_link_card_pol_econ_commodity_dual_nature" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_commodity_dual_nature"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">商品的二重性：使用价值与价值</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_commodity_dual_nature">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_labor_dual_nature" class="toc-link" id="toc_link_card_pol_econ_labor_dual_nature" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_labor_dual_nature"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">劳动的二重性：具体劳动与抽象劳动</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_labor_dual_nature">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_value_quantity_determination" class="toc-link" id="toc_link_card_pol_econ_value_quantity_determination" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_value_quantity_determination"></span>
+                  <span class="toc-idx">03</span>
+                  <span class="toc-title-text">商品价值量的决定与劳动生产率的关系</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_value_quantity_determination">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_law_of_value" class="toc-link" id="toc_link_card_pol_econ_law_of_value" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_law_of_value"></span>
+                  <span class="toc-idx">04</span>
+                  <span class="toc-title-text">价值规律的内容、表现形式与作用机制</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_law_of_value">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_labor_power_commodity" class="toc-link" id="toc_link_card_pol_econ_labor_power_commodity" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_labor_power_commodity"></span>
+                  <span class="toc-idx">05</span>
+                  <span class="toc-title-text">劳动力成为商品与货币转化为资本</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_labor_power_commodity">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_constant_variable_capital" class="toc-link" id="toc_link_card_pol_econ_constant_variable_capital" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_constant_variable_capital"></span>
+                  <span class="toc-idx">06</span>
+                  <span class="toc-title-text">不变资本与可变资本的划分及剩余价值率</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_constant_variable_capital">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_absolute_relative_surplus_value" class="toc-link" id="toc_link_card_pol_econ_absolute_relative_surplus_value" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_absolute_relative_surplus_value"></span>
+                  <span class="toc-idx">07</span>
+                  <span class="toc-title-text">剩余价值生产的两种方法：绝对剩余价值与相对剩余价值</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_absolute_relative_surplus_value">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_capital_accumulation_organic_composition" class="toc-link" id="toc_link_card_pol_econ_capital_accumulation_organic_composition" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_capital_accumulation_organic_composition"></span>
+                  <span class="toc-idx">08</span>
+                  <span class="toc-title-text">资本积累与资本有机构成的提高</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_capital_accumulation_organic_composition">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_capital_circuit_turnover" class="toc-link" id="toc_link_card_pol_econ_capital_circuit_turnover" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_capital_circuit_turnover"></span>
+                  <span class="toc-idx">09</span>
+                  <span class="toc-title-text">产业资本循环的三个阶段与三种职能形式</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_capital_circuit_turnover">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_fixed_circulating_capital" class="toc-link" id="toc_link_card_pol_econ_fixed_circulating_capital" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_fixed_circulating_capital"></span>
+                  <span class="toc-idx">10</span>
+                  <span class="toc-title-text">固定资本与流动资本的划分及资本周转速度</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_fixed_circulating_capital">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_social_reproduction_core_problem" class="toc-link" id="toc_link_card_pol_econ_social_reproduction_core_problem" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_social_reproduction_core_problem"></span>
+                  <span class="toc-idx">11</span>
+                  <span class="toc-title-text">社会总资本再生产的核心问题与实现条件</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_social_reproduction_core_problem">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_profit_average_profit" class="toc-link" id="toc_link_card_pol_econ_profit_average_profit" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_profit_average_profit"></span>
+                  <span class="toc-idx">12</span>
+                  <span class="toc-title-text">剩余价值转化为利润与平均利润率的形成</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_profit_average_profit">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_econ_monopoly_capitalism" class="toc-link" id="toc_link_card_pol_econ_monopoly_capitalism" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_econ_monopoly_capitalism"></span>
+                  <span class="toc-idx">13</span>
+                  <span class="toc-title-text">垄断资本主义的形成与国家垄断资本主义的实质</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_econ_monopoly_capitalism">待研</span>
+              </a>
+            </li>
 </ul></li>
 
-        <li class="toc-group">
+        <li class="toc-group" data-mod-id="mod_06">
           <div class="toc-group-title" onclick="scrollToId('mod_06')">
             <span>06 科学社会主义：从空想到科学与共产主义理想</span>
-            <span class="toc-count">3</span>
+            <span class="toc-group-seal-count" id="toc_mod_mod_06">0/3 研毕</span>
           </div>
           <ul class="toc-sub-list">
         
-<li><a href="#card_pol_soc_scientific_socialism_foundations" class="toc-link" onclick="closeDrawer()"><span>01</span> 空想社会主义的局限与科学社会主义的创立标志</a></li>
-<li><a href="#card_pol_soc_socialist_development_path" class="toc-link" onclick="closeDrawer()"><span>02</span> 社会主义建设的长期性、曲折性与多样性</a></li>
-<li><a href="#card_pol_soc_communist_ideal_features" class="toc-link" onclick="closeDrawer()"><span>03</span> 共产主义社会的基本特征与人的自由全面发展</a></li>
+
+            <li>
+              <a href="#card_pol_soc_scientific_socialism_foundations" class="toc-link" id="toc_link_card_pol_soc_scientific_socialism_foundations" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_soc_scientific_socialism_foundations"></span>
+                  <span class="toc-idx">01</span>
+                  <span class="toc-title-text">空想社会主义的局限与科学社会主义的创立标志</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_soc_scientific_socialism_foundations">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_soc_socialist_development_path" class="toc-link" id="toc_link_card_pol_soc_socialist_development_path" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_soc_socialist_development_path"></span>
+                  <span class="toc-idx">02</span>
+                  <span class="toc-title-text">社会主义建设的长期性、曲折性与多样性</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_soc_socialist_development_path">待研</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#card_pol_soc_communist_ideal_features" class="toc-link" id="toc_link_card_pol_soc_communist_ideal_features" onclick="closeDrawer()">
+                <div class="toc-link-left">
+                  <span class="toc-dot dot-unstudied" id="toc_dot_card_pol_soc_communist_ideal_features"></span>
+                  <span class="toc-idx">03</span>
+                  <span class="toc-title-text">共产主义社会的基本特征与人的自由全面发展</span>
+                </div>
+                <span class="toc-seal-mark" id="toc_mark_card_pol_soc_communist_ideal_features">待研</span>
+              </a>
+            </li>
 </ul></li>
       </ul>
     </div>
@@ -1244,7 +2166,10 @@
     
         <section class="chapter-block" id="mod_00" data-mod-id="mod_00">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">00 导论：马克思主义创立与鲜明特征</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">00 导论：马克思主义创立与鲜明特征</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_00">0/2 研毕</span>
+            </div>
             <p class="chapter-desc">三大组成部分、基本立场观点方法及其当代价值。</p>
           </div>
           <div class="chapter-points-container">
@@ -1255,12 +2180,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 马克思主义的三大组成部分</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_b6cbf99b7869f305" data-point-id="card_politics_b6cbf99b7869f305" data-mod-id="mod_00" onclick="toggleSeal('card_politics_b6cbf99b7869f305', 'mod_00')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1318,12 +2249,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 马克思主义的基本立场、观点和方法</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_dca1ec842306c2fb" data-point-id="card_politics_dca1ec842306c2fb" data-mod-id="mod_00" onclick="toggleSeal('card_politics_dca1ec842306c2fb', 'mod_00')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1381,7 +2318,10 @@
 
         <section class="chapter-block" id="mod_01" data-mod-id="mod_01">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">01 唯物论：物质、意识与世界的物质统一性</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">01 唯物论：物质、意识与世界的物质统一性</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_01">0/18 研毕</span>
+            </div>
             <p class="chapter-desc">哲学基本问题、物质客观实在性、意识起源本质、时空观、世界物质统一性。</p>
           </div>
           <div class="chapter-points-container">
@@ -1392,12 +2332,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 列宁的物质定义与客观实在性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_01100df6391835a2" data-point-id="card_politics_01100df6391835a2" data-mod-id="mod_01" onclick="toggleSeal('card_politics_01100df6391835a2', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1455,12 +2401,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 哲学基本问题的两个方面</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_64ec0ef20b5e7333" data-point-id="card_politics_64ec0ef20b5e7333" data-mod-id="mod_01" onclick="toggleSeal('card_politics_64ec0ef20b5e7333', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1518,12 +2470,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">03 意识的起源和本质</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_5c04f99e0d2f854d" data-point-id="card_politics_5c04f99e0d2f854d" data-mod-id="mod_01" onclick="toggleSeal('card_politics_5c04f99e0d2f854d', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1582,12 +2540,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">04 意识能不能运动？</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_f396ea06de5fe50f" data-point-id="card_politics_f396ea06de5fe50f" data-mod-id="mod_01" onclick="toggleSeal('card_politics_f396ea06de5fe50f', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1639,12 +2603,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">05 物质的唯一特性与未知世界辨析</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_substance_v1" data-point-id="card_politics_mat_substance_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_substance_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1696,12 +2666,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">06 旧唯物主义的“半截子”局限</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_f92e8489827056e4" data-point-id="card_politics_f92e8489827056e4" data-mod-id="mod_01" onclick="toggleSeal('card_politics_f92e8489827056e4', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1759,12 +2735,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">07 意识能动作用与客观规律性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_a12e43f7109b546c" data-point-id="card_politics_a12e43f7109b546c" data-mod-id="mod_01" onclick="toggleSeal('card_politics_a12e43f7109b546c', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1824,12 +2806,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">08 ‘意识完全不能运动’为什么错？</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_16802f8826e810c8" data-point-id="card_politics_16802f8826e810c8" data-mod-id="mod_01" onclick="toggleSeal('card_politics_16802f8826e810c8', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1881,12 +2869,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">09 物质、运动与相对静止</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_356679a94c1f1f00" data-point-id="card_politics_356679a94c1f1f00" data-mod-id="mod_01" onclick="toggleSeal('card_politics_356679a94c1f1f00', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -1944,12 +2938,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">10 物质运动与时空的绝对性与相对性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_motion_space_v1" data-point-id="card_politics_mat_motion_space_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_motion_space_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2001,12 +3001,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">11 物质与运动为什么不可分割</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_ac34c7b93373d3de" data-point-id="card_politics_ac34c7b93373d3de" data-mod-id="mod_01" onclick="toggleSeal('card_politics_ac34c7b93373d3de', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2064,12 +3070,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">12 时间和空间的客观性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_b863d4e75f0227c7" data-point-id="card_politics_b863d4e75f0227c7" data-mod-id="mod_01" onclick="toggleSeal('card_politics_b863d4e75f0227c7', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2127,12 +3139,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">13 意识的能动性与人工智能边界</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_aedb3175306c6ead" data-point-id="card_politics_aedb3175306c6ead" data-mod-id="mod_01" onclick="toggleSeal('card_politics_aedb3175306c6ead', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2190,12 +3208,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">14 自然界与人类社会的关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_21ae1c5994363e41" data-point-id="card_politics_21ae1c5994363e41" data-mod-id="mod_01" onclick="toggleSeal('card_politics_21ae1c5994363e41', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2253,12 +3277,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">15 人工智能与人类意识的边界</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_c7fda79c64ef3357" data-point-id="card_politics_c7fda79c64ef3357" data-mod-id="mod_01" onclick="toggleSeal('card_politics_c7fda79c64ef3357', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2317,12 +3347,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">16 意识的起源、本质及其能动作用</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_consciousness_v1" data-point-id="card_politics_mat_consciousness_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_consciousness_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2380,12 +3416,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">17 世界的物质统一性原理</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_5aaf9aabde7cf578" data-point-id="card_politics_5aaf9aabde7cf578" data-mod-id="mod_01" onclick="toggleSeal('card_politics_5aaf9aabde7cf578', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2444,12 +3486,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">18 世界的物质统一性原理及其实践意义</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_world_unity_v1" data-point-id="card_politics_mat_world_unity_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_world_unity_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2506,7 +3554,10 @@
 
         <section class="chapter-block" id="mod_02" data-mod-id="mod_02">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">02 辩证法：两大总特征、三大规律与五对范畴</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">02 辩证法：两大总特征、三大规律与五对范畴</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_02">0/16 研毕</span>
+            </div>
             <p class="chapter-desc">普遍联系与永恒发展、对立统一规律（核心）、量变质变、否定之否定、五对基本范畴。</p>
           </div>
           <div class="chapter-points-container">
@@ -2517,12 +3568,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 量变质变规律与适度原则</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_dialectic_quality_quantity_v1" data-point-id="card_politics_dialectic_quality_quantity_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_dialectic_quality_quantity_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2580,12 +3637,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 矛盾的同一性和斗争性及其辩证关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_unity_struggle_v1" data-point-id="card_politics_contradiction_unity_struggle_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_unity_struggle_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2643,12 +3706,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">03 否定之否定规律与辩证否定观（扬弃）</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_dialectic_negation_negation_v1" data-point-id="card_politics_dialectic_negation_negation_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_dialectic_negation_negation_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2706,12 +3775,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">04 矛盾同一性与斗争性在事物发展中的作用</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_dynamics_v1" data-point-id="card_politics_contradiction_dynamics_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_dynamics_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2769,12 +3844,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">05 矛盾的普遍性与特殊性辩证关系及矛盾问题精髓</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_general_specific_v1" data-point-id="card_politics_contradiction_general_specific_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_general_specific_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2832,12 +3913,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">06 两点论和重点论的统一及主次矛盾辨析</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_two_points_focus_v1" data-point-id="card_politics_contradiction_two_points_focus_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_two_points_focus_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2889,12 +3976,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">07 内容与形式的辩证关系及形式主义边界</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_7a6a02aa72cc7835" data-point-id="card_politics_7a6a02aa72cc7835" data-mod-id="mod_02" onclick="toggleSeal('card_politics_7a6a02aa72cc7835', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -2953,12 +4046,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">08 对立统一规律为什么是唯物辩证法的实质和核心</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_c96e47031faa537b" data-point-id="card_politics_c96e47031faa537b" data-mod-id="mod_02" onclick="toggleSeal('card_politics_c96e47031faa537b', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3016,12 +4115,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">09 本质、现象、真象、假象与错觉如何区分</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_9a624c3e808fe77a" data-point-id="card_politics_9a624c3e808fe77a" data-mod-id="mod_02" onclick="toggleSeal('card_politics_9a624c3e808fe77a', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3080,12 +4185,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">10 矛盾的同一性和斗争性关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_33f1c3df8f65cfed" data-point-id="card_politics_33f1c3df8f65cfed" data-mod-id="mod_02" onclick="toggleSeal('card_politics_33f1c3df8f65cfed', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3144,12 +4255,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">11 矛盾同一性在事物发展中的三方面作用</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_4fc195b016ba55c4" data-point-id="card_politics_4fc195b016ba55c4" data-mod-id="mod_02" onclick="toggleSeal('card_politics_4fc195b016ba55c4', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3207,12 +4324,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">12 原因与结果的辩证关系及因果识别</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_d23a9e7364cd675a" data-point-id="card_politics_d23a9e7364cd675a" data-mod-id="mod_02" onclick="toggleSeal('card_politics_d23a9e7364cd675a', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3271,12 +4394,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">13 矛盾的普遍性和特殊性关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_a51885ec724a817f" data-point-id="card_politics_a51885ec724a817f" data-mod-id="mod_02" onclick="toggleSeal('card_politics_a51885ec724a817f', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3335,12 +4464,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">14 必然与偶然的关系及判断边界</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_2190ef51e5afb26e" data-point-id="card_politics_2190ef51e5afb26e" data-mod-id="mod_02" onclick="toggleSeal('card_politics_2190ef51e5afb26e', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3399,12 +4534,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">15 两点论和重点论统一</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_7e494f5482d51907" data-point-id="card_politics_7e494f5482d51907" data-mod-id="mod_02" onclick="toggleSeal('card_politics_7e494f5482d51907', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3458,12 +4599,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">16 现实可能、抽象可能与不可能的区分</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_politics_9a78b405388309dd" data-point-id="card_politics_9a78b405388309dd" data-mod-id="mod_02" onclick="toggleSeal('card_politics_9a78b405388309dd', 'mod_02')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3522,7 +4669,10 @@
 
         <section class="chapter-block" id="mod_03" data-mod-id="mod_03">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">03 认识论：实践、认识、真理与价值</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">03 认识论：实践、认识、真理与价值</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_03">0/11 研毕</span>
+            </div>
             <p class="chapter-desc">科学实践观、认识两次能动飞跃、真理绝对性相对性、实践检验标准、从必然走向自由。</p>
           </div>
           <div class="chapter-points-container">
@@ -3533,12 +4683,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 实践的本质与三大基本特征</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_nature" data-point-id="card_pol_epi_practice_nature" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_nature', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3597,12 +4753,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 实践的基本结构与运行机制</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_structure" data-point-id="card_pol_epi_practice_structure" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_structure', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3660,12 +4822,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">03 实践对认识的决定作用</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_determines" data-point-id="card_pol_epi_practice_determines" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_determines', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3724,12 +4892,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">04 认识的本质是能动反映</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_essence_of_cognition" data-point-id="card_pol_epi_essence_of_cognition" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_essence_of_cognition', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3787,12 +4961,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">05 认识运动的两次飞跃及其辩证过程</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_two_leaps" data-point-id="card_pol_epi_two_leaps" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_two_leaps', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3850,12 +5030,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">06 认识过程中的理性因素与非理性因素</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_rational_irrational" data-point-id="card_pol_epi_rational_irrational" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_rational_irrational', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3913,12 +5099,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">07 真理的客观性、绝对性与相对性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_objective_absolute_relative" data-point-id="card_pol_epi_truth_objective_absolute_relative" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_objective_absolute_relative', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -3977,12 +5169,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">08 真理与谬误的对立统一关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_error" data-point-id="card_pol_epi_truth_error" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_error', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4040,12 +5238,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">09 实践是检验真理的唯一标准及其确定性与不确定性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_criterion" data-point-id="card_pol_epi_practice_criterion" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_criterion', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4103,12 +5307,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">10 真理尺度与价值尺度的辩证统一</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_value" data-point-id="card_pol_epi_truth_value" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_value', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4166,12 +5376,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">11 认识世界与改造世界：从必然走向自由</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_necessity_freedom" data-point-id="card_pol_epi_necessity_freedom" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_necessity_freedom', 'mod_03')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4229,7 +5445,10 @@
 
         <section class="chapter-block" id="mod_04" data-mod-id="mod_04">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">04 唯物史观：社会基本矛盾、发展动力与群众史观</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">04 唯物史观：社会基本矛盾、发展动力与群众史观</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_04">0/9 研毕</span>
+            </div>
             <p class="chapter-desc">社会存在与意识、生产力与生产关系、经济基础与上层建筑、历史动力系统、人民群众地位。</p>
           </div>
           <div class="chapter-points-container">
@@ -4240,12 +5459,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 社会存在与社会意识的辩证关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_being_consciousness" data-point-id="card_pol_hist_social_being_consciousness" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_being_consciousness', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4303,12 +5528,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 社会意识的相对独立性及其反作用</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_consciousness_autonomy" data-point-id="card_pol_hist_social_consciousness_autonomy" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_consciousness_autonomy', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4367,12 +5598,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">03 生产力与生产关系的矛盾运动规律</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_productive_forces_relations" data-point-id="card_pol_hist_productive_forces_relations" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_productive_forces_relations', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4431,12 +5668,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">04 经济基础与上层建筑的矛盾运动规律</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_economic_base_superstructure" data-point-id="card_pol_hist_economic_base_superstructure" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_economic_base_superstructure', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4495,12 +5738,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">05 社会形态更替的一般规律与统一性多样性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_formation_evolution" data-point-id="card_pol_hist_social_formation_evolution" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_formation_evolution', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4558,12 +5807,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">06 社会基本矛盾是历史发展的根本动力</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_basic_contradiction_fundamental_force" data-point-id="card_pol_hist_basic_contradiction_fundamental_force" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_basic_contradiction_fundamental_force', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4621,12 +5876,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">07 科学技术革命在社会发展中的作用及其双刃剑本质</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_science_technology_revolution" data-point-id="card_pol_hist_science_technology_revolution" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_science_technology_revolution', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4684,12 +5945,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">08 人民群众是历史的创造者及党的群众路线</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_people_creator_of_history" data-point-id="card_pol_hist_people_creator_of_history" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_people_creator_of_history', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4747,12 +6014,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">09 个人在社会历史中的作用及评价历史人物的原则</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_individual_historical_role" data-point-id="card_pol_hist_individual_historical_role" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_individual_historical_role', 'mod_04')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4810,7 +6083,10 @@
 
         <section class="chapter-block" id="mod_05" data-mod-id="mod_05">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">05 政治经济学：劳动价值论与剩余价值学说</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">05 政治经济学：劳动价值论与剩余价值学说</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_05">0/13 研毕</span>
+            </div>
             <p class="chapter-desc">商品与劳动二重性、价值规律、劳动力成为商品、剩余价值生产积累、资本周转再生产、垄断资本。</p>
           </div>
           <div class="chapter-points-container">
@@ -4821,12 +6097,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 商品的二重性：使用价值与价值</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_commodity_dual_nature" data-point-id="card_pol_econ_commodity_dual_nature" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_commodity_dual_nature', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4884,12 +6166,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 劳动的二重性：具体劳动与抽象劳动</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_labor_dual_nature" data-point-id="card_pol_econ_labor_dual_nature" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_labor_dual_nature', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -4947,12 +6235,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">03 商品价值量的决定与劳动生产率的关系</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_value_quantity_determination" data-point-id="card_pol_econ_value_quantity_determination" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_value_quantity_determination', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5010,12 +6304,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">04 价值规律的内容、表现形式与作用机制</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_law_of_value" data-point-id="card_pol_econ_law_of_value" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_law_of_value', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5073,12 +6373,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">05 劳动力成为商品与货币转化为资本</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_labor_power_commodity" data-point-id="card_pol_econ_labor_power_commodity" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_labor_power_commodity', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5136,12 +6442,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">06 不变资本与可变资本的划分及剩余价值率</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_constant_variable_capital" data-point-id="card_pol_econ_constant_variable_capital" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_constant_variable_capital', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5199,12 +6511,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">07 剩余价值生产的两种方法：绝对剩余价值与相对剩余价值</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_absolute_relative_surplus_value" data-point-id="card_pol_econ_absolute_relative_surplus_value" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_absolute_relative_surplus_value', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5262,12 +6580,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">08 资本积累与资本有机构成的提高</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_capital_accumulation_organic_composition" data-point-id="card_pol_econ_capital_accumulation_organic_composition" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_capital_accumulation_organic_composition', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5325,12 +6649,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">09 产业资本循环的三个阶段与三种职能形式</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_capital_circuit_turnover" data-point-id="card_pol_econ_capital_circuit_turnover" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_capital_circuit_turnover', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5389,12 +6719,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">10 固定资本与流动资本的划分及资本周转速度</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_fixed_circulating_capital" data-point-id="card_pol_econ_fixed_circulating_capital" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_fixed_circulating_capital', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5452,12 +6788,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">11 社会总资本再生产的核心问题与实现条件</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_social_reproduction_core_problem" data-point-id="card_pol_econ_social_reproduction_core_problem" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_social_reproduction_core_problem', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5515,12 +6857,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">12 剩余价值转化为利润与平均利润率的形成</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_profit_average_profit" data-point-id="card_pol_econ_profit_average_profit" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_profit_average_profit', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5578,12 +6926,18 @@
                   <span class="point-badge ">核心考点</span>
                   <h3 class="point-title">13 垄断资本主义的形成与国家垄断资本主义的实质</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_monopoly_capitalism" data-point-id="card_pol_econ_monopoly_capitalism" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_monopoly_capitalism', 'mod_05')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5641,7 +6995,10 @@
 
         <section class="chapter-block" id="mod_06" data-mod-id="mod_06">
           <div class="chapter-heading-wrap">
-            <h2 class="chapter-heading">06 科学社会主义：从空想到科学与共产主义理想</h2>
+            <div class="chapter-title-row">
+              <h2 class="chapter-heading">06 科学社会主义：从空想到科学与共产主义理想</h2>
+              <span class="chapter-seal-stat" id="chap_stat_mod_06">0/3 研毕</span>
+            </div>
             <p class="chapter-desc">空想社会主义局限与两大科学发现、社会主义建设长期性、共产主义社会基本特征。</p>
           </div>
           <div class="chapter-points-container">
@@ -5652,12 +7009,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">01 空想社会主义的局限与科学社会主义的创立标志</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_scientific_socialism_foundations" data-point-id="card_pol_soc_scientific_socialism_foundations" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_scientific_socialism_foundations', 'mod_06')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5715,12 +7078,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">02 社会主义建设的长期性、曲折性与多样性</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_socialist_development_path" data-point-id="card_pol_soc_socialist_development_path" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_socialist_development_path', 'mod_06')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5778,12 +7147,18 @@
                   <span class="point-badge must">核心考点</span>
                   <h3 class="point-title">03 共产主义社会的基本特征与人的自由全面发展</h3>
                 </div>
-                <button type="button" class="doubt-btn" onclick="toggleDoubt(this)">
-                  <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  <span>标疑</span>
-                </button>
+                <div class="point-actions">
+                  <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_communist_ideal_features" data-point-id="card_pol_soc_communist_ideal_features" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_communist_ideal_features', 'mod_06')" title="落印为记：记录当前考点研习进度">
+                    <span class="seal-icon">印</span>
+                    <span class="seal-label">拟研</span>
+                  </button>
+                  <button type="button" class="doubt-btn" onclick="toggleDoubt(this)" title="记录疑问或盲区">
+                    <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>标疑</span>
+                  </button>
+                </div>
               </div>
 
               <!-- 极简逻辑脉络单行图 -->
@@ -5860,6 +7235,8 @@
   <footer class="bottom-bar">
     <div class="bottom-wrap">
       <div class="marked-stats-text">
+        <span>已研毕：<strong class="studied-num-badge" id="bottomStudiedCount">0</strong> / 72 处</span>
+        <span class="stat-divider">·</span>
         <span>已标疑：<span class="marked-badge" id="markedCountBadge">0</span> 处</span>
       </div>
       <button type="button" class="btn-export-doubts" onclick="generateAndCopyDoubts()">
@@ -5886,6 +7263,17 @@
     let pointEntries = [];
     let ghostHintActive = false;
     let baseFontSize = 16.5;
+
+    // 研习进度持久化 (已研毕考点 ID 集合)
+    let studiedPointIds = new Set();
+    try {
+      const savedStudied = localStorage.getItem('handbook_studied_points_set');
+      if (savedStudied) {
+        studiedPointIds = new Set(JSON.parse(savedStudied));
+      }
+    } catch(e) {
+      studiedPointIds = new Set();
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       // 仿真器或内嵌环境识别，动态垫高安全区
@@ -5960,7 +7348,100 @@
 
       updateClozeStats();
       updateDoubtStats();
+      updateStudyProgressUI();
     });
+
+    // 方案 A：朱砂盖印核心交互
+    function toggleSeal(pointId, modId) {
+      if (studiedPointIds.has(pointId)) {
+        studiedPointIds.delete(pointId);
+        showToast('已撤销该考点研毕印记');
+      } else {
+        studiedPointIds.add(pointId);
+        showToast('已落印研毕！好记性不如烂笔头');
+      }
+      saveStudiedPoints();
+      updateStudyProgressUI();
+    }
+
+    function saveStudiedPoints() {
+      try {
+        localStorage.setItem('handbook_studied_points_set', JSON.stringify(Array.from(studiedPointIds)));
+      } catch(e) {}
+    }
+
+    function updateStudyProgressUI() {
+      const totalAll = pointEntries.length;
+      const totalStudied = studiedPointIds.size;
+
+      // 更新卡片按钮与卡片状态
+      pointEntries.forEach(entry => {
+        const pid = entry.id;
+        const isStudied = studiedPointIds.has(pid);
+        entry.classList.toggle('is-studied', isStudied);
+
+        const btn = document.getElementById('seal_' + pid);
+        if (btn) {
+          btn.classList.toggle('stamped', isStudied);
+          const label = btn.querySelector('.seal-label');
+          if (label) label.textContent = isStudied ? '已研毕' : '拟研';
+        }
+
+        // 更新抽屉目录中的对应条目
+        const tocLink = document.getElementById('toc_link_' + pid);
+        const tocDot = document.getElementById('toc_dot_' + pid);
+        const tocMark = document.getElementById('toc_mark_' + pid);
+
+        if (tocLink) tocLink.classList.toggle('is-studied', isStudied);
+        if (tocDot) tocDot.className = 'toc-dot ' + (isStudied ? 'dot-studied' : 'dot-unstudied');
+        if (tocMark) tocMark.textContent = isStudied ? '已研毕' : '待研';
+      });
+
+      // 更新各模块章节进度统计
+      document.querySelectorAll('.chapter-block').forEach(sec => {
+        const modId = sec.dataset.modId;
+        const cardsInMod = sec.querySelectorAll('.point-entry');
+        const totalMod = cardsInMod.length;
+        const studiedMod = Array.from(cardsInMod).filter(e => studiedPointIds.has(e.id)).length;
+
+        const chapStat = document.getElementById('chap_stat_' + modId);
+        if (chapStat) chapStat.textContent = `${studiedMod}/${totalMod} 研毕`;
+
+        const tocModStat = document.getElementById('toc_mod_' + modId);
+        if (tocModStat) tocModStat.textContent = `${studiedMod}/${totalMod} 研毕`;
+      });
+
+      // 更新顶栏角标
+      const topBadge = document.getElementById('topBadgeStudied');
+      if (topBadge) topBadge.textContent = `${totalStudied}/${totalAll}`;
+
+      // 更新抽屉总览
+      const drawerTotal = document.getElementById('drawerTotalStudied');
+      if (drawerTotal) drawerTotal.textContent = `${totalStudied} / ${totalAll}`;
+      const drawerPct = document.getElementById('drawerTotalPercent');
+      if (drawerPct) {
+        const pct = Math.round(totalStudied / Math.max(1, totalAll) * 100);
+        drawerPct.textContent = `(${pct}%)`;
+      }
+
+      // 更新底栏已研毕计数
+      const bottomStudied = document.getElementById('bottomStudiedCount');
+      if (bottomStudied) bottomStudied.textContent = totalStudied;
+    }
+
+    // 重置研习进度开启新一轮复习
+    function resetStudyProgress() {
+      if (studiedPointIds.size === 0) {
+        showToast('目前尚无已研毕记录');
+        return;
+      }
+      if (confirm('确定要清空所有已盖印记，开启新一轮全景冲刺复习吗？')) {
+        studiedPointIds.clear();
+        saveStudiedPoints();
+        updateStudyProgressUI();
+        showToast('已清空研毕印记，开启新一轮复习！');
+      }
+    }
 
     // 字号缩放
     function adjustFontSize(delta) {
