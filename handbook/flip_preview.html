@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>翻页动效方案对比与高度统一评测 · 考研政治背诵手卷</title>
+  <style>
+    :root {
+      --paper: #f9f6ef;
+      --paper-card: #ffffff;
+      --ink: #2c241b;
+      --sub: #6e6559;
+      --muted: #9e9486;
+      --line: #e2dcd0;
+      --line-subtle: rgba(180, 165, 140, 0.25);
+      --accent: #b9382c;
+      --accent-soft: rgba(185, 56, 44, 0.08);
+      --wood-brown: #8e6c46;
+      --hl-yellow: #fff3a8;
+      --font-song: "Songti SC", "SimSun", "STSong", serif;
+      --font-kai: "Kaiti SC", "KaiTi", "STKaiti", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-song);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 顶部方案说明与动效切换 Tab 栏 */
+    .eval-header {
+      background: rgba(249, 246, 239, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 14px 8px 14px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .eval-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .eval-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .eval-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: var(--font-kai);
+    }
+    .back-home-link {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* 4 大翻页方案快捷切换胶囊 */
+    .mode-tab-group {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      background: rgba(220, 212, 198, 0.45);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .mode-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--sub);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 2px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.25;
+      transition: all 0.18s ease;
+    }
+    .mode-tab-btn.active {
+      background: #ffffff;
+      color: var(--accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      font-weight: 700;
+    }
+
+    /* 当前方案评价要点提示条 */
+    .scheme-desc-bar {
+      margin-top: 6px;
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      color: var(--wood-brown);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 8px;
+      background: rgba(142, 108, 70, 0.08);
+      border-radius: 6px;
+    }
+    .scheme-desc-text { flex: 1; }
+
+    /* ========================================================
+       核心解法：【统一定高视口舞台 (Uniform Stage)】
+       彻底解决“翻页后卡片高度不一致导致屏幕与底栏疯狂跳跃”
+       ======================================================== */
+    .stage-container {
+      flex: 1;
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+      padding: 10px 14px calc(76px + env(safe-area-inset-bottom, 16px)) 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      perspective: 1600px; /* 供 3D 翻书动效使用 */
+      position: relative;
+    }
+
+    .book-stage {
+      width: 100%;
+      /* 严格计算的黄金视口高度，锁定页面高宽，彻底杜绝跳跃抖动 */
+      height: calc(100dvh - 175px);
+      max-height: 700px;
+      min-height: 480px;
+      position: relative;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 单张纸卷卡片规范 */
+    .page-sheet {
+      position: absolute;
+      inset: 0;
+      background: var(--paper-card);
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      user-select: none;
+      touch-action: pan-y;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    /* 装订线立体阴影折痕 */
+    .page-sheet::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 6px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.08), transparent);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* 卡片内部固定顶栏与底栏 */
+    .sheet-fixed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px 16px;
+      border-bottom: 1px dashed var(--line-subtle);
+      background: #ffffff;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .sheet-mod-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .sheet-page-tag {
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      color: var(--sub);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 内容自适应平滑滚动区（超长考点优雅滚动，底端柔和渐变羽化） */
+    .sheet-scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px 16px 20px 16px;
+      mask-image: linear-gradient(to bottom, black calc(100% - 24px), transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 24px), transparent 100%);
+    }
+    .sheet-scroll-body::-webkit-scrollbar { width: 3px; }
+    .sheet-scroll-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+    .sheet-fixed-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      border-top: 1px solid var(--line-subtle);
+      background: rgba(249, 246, 239, 0.6);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--muted);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    /* 考点内部样式 */
+    .point-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .point-title-wrap { flex: 1; }
+    .point-badge {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: rgba(142, 108, 70, 0.12);
+      color: var(--wood-brown);
+      margin-bottom: 4px;
+    }
+    .point-badge.must {
+      background: var(--accent);
+      color: #fff;
+    }
+    .point-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .demo-seal-btn {
+      font-family: var(--font-sans);
+      border: 1px dashed var(--muted);
+      background: transparent;
+      color: var(--sub);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .demo-seal-btn.stamped {
+      border-style: solid;
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .logic-chain {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding: 5px 8px;
+      background: rgba(110, 101, 89, 0.06);
+      border-radius: 5px;
+      font-size: 11.5px;
+    }
+    .chain-tag {
+      background: rgba(82, 71, 58, 0.1);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 10px;
+    }
+    .chain-flow { font-family: var(--font-sans); color: var(--sub); white-space: nowrap; overflow-x: auto; }
+    .chain-arrow { color: var(--accent); }
+
+    .golden-sentence {
+      border-left: 3px solid var(--accent);
+      background: rgba(185, 56, 44, 0.04);
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border-radius: 0 6px 6px 0;
+    }
+    .golden-badge {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .golden-sentence p {
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 600;
+    }
+
+    .point-content-text p {
+      font-size: 14.5px;
+      line-height: 1.8;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+    .quote-note {
+      border: 1px solid var(--line);
+      background: rgba(249, 246, 239, 0.8);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .note-author {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--wood-brown);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .hl-term {
+      background: var(--hl-yellow);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    .cloze.must {
+      background: rgba(185, 56, 44, 0.12);
+      color: var(--accent);
+      font-weight: 700;
+      padding: 0 3px;
+      border-radius: 3px;
+    }
+
+    /* ========================================================
+       4 大经典翻页动效 CSS 规则定义
+       ======================================================== */
+
+    /* 方案 1: 微信读书 / 覆盖平移 (Cover & Layered Slide with Shadow) */
+    body.mode-wechat .page-sheet {
+      transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.25, 1), box-shadow 0.32s ease, opacity 0.32s ease;
+      z-index: 1;
+    }
+    body.mode-wechat .page-sheet.active {
+      transform: translateX(0) scale(1);
+      z-index: 10;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    body.mode-wechat .page-sheet.prev-exit {
+      transform: translateX(-105%) scale(0.98);
+      z-index: 15;
+      box-shadow: 12px 0 30px rgba(0, 0, 0, 0.25);
+      opacity: 1;
+      pointer-events: none;
+    }
+    body.mode-wechat .page-sheet.next-ready {
+      transform: translateX(0) scale(0.95);
+      z-index: 5;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    body.mode-wechat .page-sheet.hidden {
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 方案 2: 3D 书轴立体翻页 (3D Origami Book Flip) */
+    body.mode-bookflip .book-stage {
+      perspective: 1800px;
+    }
+    body.mode-bookflip .page-sheet {
+      transform-origin: left center;
+      transition: transform 0.42s cubic-bezier(0.25, 1, 0.35, 1), box-shadow 0.42s ease, opacity 0.42s ease;
+      z-index: 1;
+    }
+    body.mode-bookflip .page-sheet.active {
+      transform: rotateY(0deg);
+      z-index: 10;
+      opacity: 1;
+      pointer-events: auto;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+    body.mode-bookflip .page-sheet.prev-exit {
+      transform: rotateY(-130deg);
+      opacity: 0;
+      z-index: 12;
+      pointer-events: none;
+    }
+    body.mode-bookflip .page-sheet.next-ready {
+      transform: rotateY(0deg) scale(0.97);
+      opacity: 0.4;
+      z-index: 4;
+      pointer-events: none;
+    }
+    body.mode-bookflip .page-sheet.hidden {
+      transform: rotateY(90deg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 方案 3: 仿真实体纸张卷角 (Realistic Page Curl Simulation) */
+    body.mode-pagecurl .page-sheet {
+      transition: clip-path 0.38s cubic-bezier(0.2, 0.8, 0.25, 1), transform 0.38s ease, opacity 0.38s ease;
+      z-index: 1;
+    }
+    body.mode-pagecurl .page-sheet.active {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      opacity: 1;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    body.mode-pagecurl .page-sheet.prev-exit {
+      clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+      opacity: 0.8;
+      z-index: 12;
+      pointer-events: none;
+    }
+    body.mode-pagecurl .page-sheet.next-ready {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      opacity: 1;
+      z-index: 5;
+      pointer-events: none;
+    }
+    body.mode-pagecurl .page-sheet.hidden {
+      clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 方案 4: 抽认卡片层叠栈 (Cards Stack & Depth) */
+    body.mode-cardsdeck .page-sheet {
+      transition: transform 0.32s cubic-bezier(0.18, 0.89, 0.32, 1.2), opacity 0.32s ease, box-shadow 0.32s ease;
+      z-index: 1;
+    }
+    body.mode-cardsdeck .page-sheet.active {
+      transform: translate3d(0, 0, 0) scale(1);
+      z-index: 10;
+      opacity: 1;
+      pointer-events: auto;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    }
+    body.mode-cardsdeck .page-sheet.prev-exit {
+      transform: translate3d(-120%, 20px, 0) rotate(-10deg);
+      opacity: 0;
+      z-index: 15;
+      pointer-events: none;
+    }
+    body.mode-cardsdeck .page-sheet.next-ready {
+      transform: translate3d(0, 14px, 0) scale(0.95);
+      opacity: 0.85;
+      z-index: 6;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      pointer-events: none;
+    }
+    body.mode-cardsdeck .page-sheet.hidden {
+      transform: translate3d(0, 26px, 0) scale(0.9);
+      opacity: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* 底部通用微操控制栏 */
+    .eval-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(249, 246, 239, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--line);
+      padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 16px));
+      z-index: 100;
+    }
+    .eval-dock-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .nav-btn {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--sub);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .nav-btn:active { transform: scale(0.95); }
+    .nav-btn.primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+    .progress-pill {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--wood-brown);
+      background: rgba(142, 108, 70, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .ui-svg {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .ui-svg.xs { width: 13px; height: 13px; }
+    .ui-svg.sm { width: 15px; height: 15px; }
+  </style>
+</head>
+<body class="mode-wechat">
+
+  <!-- 顶部对比控制看板 -->
+  <header class="eval-header">
+    <div class="eval-title-row">
+      <div class="eval-title">
+        <span class="eval-badge">对比评测</span>
+        <span>4 款主流翻页动效实机体验</span>
+      </div>
+      <a href="index.html" class="back-home-link">
+        <span>返回正卷</span>
+        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- 4 大模式选择按键 -->
+    <div class="mode-tab-group">
+      <button type="button" class="mode-tab-btn active" onclick="switchEffect('wechat', this)">
+        ① 覆盖平移<br><span style="font-size:9.5px; opacity:0.8;">微信读书款</span>
+      </button>
+      <button type="button" class="mode-tab-btn" onclick="switchEffect('bookflip', this)">
+        ② 3D书轴<br><span style="font-size:9.5px; opacity:0.8;">硬书翻页款</span>
+      </button>
+      <button type="button" class="mode-tab-btn" onclick="switchEffect('pagecurl', this)">
+        ③ 仿真实体<br><span style="font-size:9.5px; opacity:0.8;">卷角折纸款</span>
+      </button>
+      <button type="button" class="mode-tab-btn" onclick="switchEffect('cardsdeck', this)">
+        ④ 抽认栈叠<br><span style="font-size:9.5px; opacity:0.8;">背诵卡片款</span>
+      </button>
+    </div>
+
+    <!-- 当前动效解说 -->
+    <div class="scheme-desc-bar">
+      <span class="scheme-desc-text" id="schemeDescText">
+        ★ <b>方案 A (微信读书款)</b>：上层纸张滑开，下层轻微视差显露，附带纸张侧边立体落阴。流畅不晕眩，适合高频阅读。
+      </span>
+    </div>
+  </header>
+
+  <!-- 统一高度舞台主体 (Stage) -->
+  <main class="stage-container">
+    <div class="book-stage" id="bookStage">
+      
+    <div class="page-sheet" data-page-index="0" id="sheet_0">
+      <!-- 单页卡片固定顶栏 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-header">
+        <span class="sheet-mod-tag">01 唯物论 · 核心考点</span>
+        <span class="sheet-page-tag">第 <strong>1</strong> / 5 页</span>
+      </div>
+
+      <!-- 单页卡片内容滚动区 (彻底杜绝高度跳跃，长文内滑羽化) -->
+      <div class="sheet-scroll-body">
+        <div class="point-header">
+          <div class="point-title-wrap">
+            <span class="point-badge must">核心考点</span>
+            <h3 class="point-title">01 马克思主义的三大组成部分</h3>
+          </div>
+          <div class="point-actions">
+            <button type="button" class="demo-seal-btn" onclick="toggleDemoSeal(this)">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                <path d="M7 12l3 3 7-7"/>
+              </svg>
+              <span>拟研</span>
+            </button>
+          </div>
+        </div>
+
+        
+        <div class="logic-chain">
+          <span class="chain-tag">逻辑脉络</span>
+          <div class="chain-flow"><span class="chain-node">哲学</span> <span class='chain-arrow'>➔</span> <span class="chain-node">政治经济学</span> <span class='chain-arrow'>➔</span> <span class="chain-node">科学社会主义</span></div>
+        </div>
+        
+        
+        <div class="golden-sentence">
+          <span class="golden-badge">〔分析大题 · 采分金句〕</span>
+          <p><span class="cloze must" data-text="马克思主义通常由">马克思主义通常由</span>马克思主义哲学、马克思主义政治经济学和科学社会主义三大部分构成。三者分别提供世界观和方法论、资本主义经济结构分析以及社会主义由理论走向现实的科学依据。</p>
+        </div>
+        
+        <div class="point-content-text">
+          <p><strong>【哲学】</strong>回答世界是什么、怎样认识和改造世界，提供总体的世界观和方法论基础。</p>
+<p><strong>【政治经济学】</strong>分析商品、资本和资本主义生产关系，揭示资本运行和剥削机制。</p>
+<p><strong>【科学社会主义】</strong>说明资本主义向社会主义发展的历史条件、现实道路和最终方向。</p>
+        </div>
+        
+        <div class="quote-note xt">
+          <span class="note-author">〔徐涛 · 名师口诀例解〕</span>
+          <div class="formula-line">记忆口诀“德资共反”对应导论中的经典著作线索，不等同于三大组成部分。</div>
+        </div>
+        
+      </div>
+
+      <!-- 单页卡片底部导引 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-footer">
+        <span class="footer-hint">左右轻滑或按下方按键翻页</span>
+        <span class="footer-len">本页约 496 字</span>
+      </div>
+
+      <!-- 仿真翻页高光与阴影蒙层 (不同动效动态启用) -->
+      <div class="page-curl-corner" title="卷角折痕示意"></div>
+      <div class="page-shadow-overlay"></div>
+    </div>
+    
+
+    <div class="page-sheet" data-page-index="1" id="sheet_1">
+      <!-- 单页卡片固定顶栏 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-header">
+        <span class="sheet-mod-tag">01 唯物论 · 核心考点</span>
+        <span class="sheet-page-tag">第 <strong>2</strong> / 5 页</span>
+      </div>
+
+      <!-- 单页卡片内容滚动区 (彻底杜绝高度跳跃，长文内滑羽化) -->
+      <div class="sheet-scroll-body">
+        <div class="point-header">
+          <div class="point-title-wrap">
+            <span class="point-badge must">核心考点</span>
+            <h3 class="point-title">02 马克思主义的基本立场、观点和方法</h3>
+          </div>
+          <div class="point-actions">
+            <button type="button" class="demo-seal-btn" onclick="toggleDemoSeal(this)">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                <path d="M7 12l3 3 7-7"/>
+              </svg>
+              <span>拟研</span>
+            </button>
+          </div>
+        </div>
+
+        
+        <div class="logic-chain">
+          <span class="chain-tag">逻辑脉络</span>
+          <div class="chain-flow"><span class="chain-node">基本立场</span> <span class='chain-arrow'>➔</span> <span class="chain-node">基本观点</span> <span class='chain-arrow'>➔</span> <span class="chain-node">基本方法</span></div>
+        </div>
+        
+        
+        <div class="golden-sentence">
+          <span class="golden-badge">〔分析大题 · 采分金句〕</span>
+          <p><span class="cloze must" data-text="基本立场回答站在谁的立场上">基本立场回答站在谁的立场上</span>，核心是人民立场；基本观点回答认识什么，涉及自然、社会和思维发展的规律；基本方法回答怎样分析和实践，强调实事求是、矛盾分析和实践检验。</p>
+        </div>
+        
+        <div class="point-content-text">
+          <p><strong>【基本立场】</strong>站在无产阶级和最广大人民立场上，追求人的解放与全面发展。</p>
+<p><strong>【基本观点】</strong>关于自然、社会和思维运动规律的理论认识，如生产力与生产关系等。</p>
+<p><strong>【基本方法】</strong>以实践为基础，实事求是、具体问题具体分析，并在实践中检验和发展认识。</p>
+        </div>
+        
+        <div class="quote-note xt">
+          <span class="note-author">〔徐涛 · 名师口诀例解〕</span>
+          <div class="formula-line">“站谁一边、认识什么、怎么分析”是三者的生活化记忆框架。</div>
+        </div>
+        
+      </div>
+
+      <!-- 单页卡片底部导引 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-footer">
+        <span class="footer-hint">左右轻滑或按下方按键翻页</span>
+        <span class="footer-len">本页约 484 字</span>
+      </div>
+
+      <!-- 仿真翻页高光与阴影蒙层 (不同动效动态启用) -->
+      <div class="page-curl-corner" title="卷角折痕示意"></div>
+      <div class="page-shadow-overlay"></div>
+    </div>
+    
+
+    <div class="page-sheet" data-page-index="2" id="sheet_2">
+      <!-- 单页卡片固定顶栏 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-header">
+        <span class="sheet-mod-tag">01 唯物论 · 核心考点</span>
+        <span class="sheet-page-tag">第 <strong>3</strong> / 5 页</span>
+      </div>
+
+      <!-- 单页卡片内容滚动区 (彻底杜绝高度跳跃，长文内滑羽化) -->
+      <div class="sheet-scroll-body">
+        <div class="point-header">
+          <div class="point-title-wrap">
+            <span class="point-badge ">核心考点</span>
+            <h3 class="point-title">03 列宁的物质定义与客观实在性</h3>
+          </div>
+          <div class="point-actions">
+            <button type="button" class="demo-seal-btn" onclick="toggleDemoSeal(this)">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                <path d="M7 12l3 3 7-7"/>
+              </svg>
+              <span>拟研</span>
+            </button>
+          </div>
+        </div>
+
+        
+        <div class="logic-chain">
+          <span class="chain-tag">逻辑脉络</span>
+          <div class="chain-flow"><span class="chain-node">共同本质</span> <span class='chain-arrow'>➔</span> <span class="chain-node">客观实在</span> <span class='chain-arrow'>➔</span> <span class="chain-node">理论意义</span></div>
+        </div>
+        
+        
+        <div class="golden-sentence">
+          <span class="golden-badge">〔分析大题 · 采分金句〕</span>
+          <p><span class="cloze must" data-text="物质是标志客观实在的哲学范畴">物质是标志客观实在的哲学范畴</span>，这种客观实在不依赖人的感觉而存在，并能被感觉所反映。它是对各种具体事物共同本质的抽象，不等于原子、粒子或看得见摸得着的实体。</p>
+        </div>
+        
+        <div class="point-content-text">
+          <p><strong>【共同本质】</strong>物质概念从各种具体物中抽象出共同特性，不把水、火、原子等某一种具体形态当作物质本身。</p>
+<p><strong>【客观实在】</strong>是否独立于人的意识而存在是核心标准，磁场等不可直接看见的对象也可具有<mark class="hl-term">客观实在性</mark>。</p>
+<p><strong>【理论意义】</strong>定义避免把物质理解为某种永恒不变的实体，为认识科学发展和世界统一性提供哲学基础。</p>
+        </div>
+        
+        <div class="quote-note xt">
+          <span class="note-author">〔徐涛 · 名师口诀例解〕</span>
+          <div class="formula-line">“物质的共同特性是<mark class="hl-term">客观实在性</mark>，运动是物质的<mark class="hl-term">根本属性</mark>”是高频辨析句。</div>
+        </div>
+        
+      </div>
+
+      <!-- 单页卡片底部导引 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-footer">
+        <span class="footer-hint">左右轻滑或按下方按键翻页</span>
+        <span class="footer-len">本页约 472 字</span>
+      </div>
+
+      <!-- 仿真翻页高光与阴影蒙层 (不同动效动态启用) -->
+      <div class="page-curl-corner" title="卷角折痕示意"></div>
+      <div class="page-shadow-overlay"></div>
+    </div>
+    
+
+    <div class="page-sheet" data-page-index="3" id="sheet_3">
+      <!-- 单页卡片固定顶栏 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-header">
+        <span class="sheet-mod-tag">01 唯物论 · 核心考点</span>
+        <span class="sheet-page-tag">第 <strong>4</strong> / 5 页</span>
+      </div>
+
+      <!-- 单页卡片内容滚动区 (彻底杜绝高度跳跃，长文内滑羽化) -->
+      <div class="sheet-scroll-body">
+        <div class="point-header">
+          <div class="point-title-wrap">
+            <span class="point-badge ">核心考点</span>
+            <h3 class="point-title">04 本质、现象、真象、假象与错觉如何区分</h3>
+          </div>
+          <div class="point-actions">
+            <button type="button" class="demo-seal-btn" onclick="toggleDemoSeal(this)">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                <path d="M7 12l3 3 7-7"/>
+              </svg>
+              <span>拟研</span>
+            </button>
+          </div>
+        </div>
+
+        
+        <div class="logic-chain">
+          <span class="chain-tag">逻辑脉络</span>
+          <div class="chain-flow"><span class="chain-node">本质与现象</span> <span class='chain-arrow'>➔</span> <span class="chain-node">真象与假象</span> <span class='chain-arrow'>➔</span> <span class="chain-node">假象与错觉</span> <span class='chain-arrow'>➔</span> <span class="chain-node">认识方法</span></div>
+        </div>
+        
+        
+        <div class="golden-sentence">
+          <span class="golden-badge">〔分析大题 · 采分金句〕</span>
+          <p>本质是根本性质和内部联系，现象是外部联系和表面特征；真象和假象都是客观现象，分别正面或歪曲表现本质，{{danger|错觉则是主观错误认识}}。</p>
+        </div>
+        
+        <div class="point-content-text">
+          <p><strong>【本质与现象】</strong>本质是事物的根本性质和内部联系，现象是本质的外部联系和表面表现。</p>
+<p><strong>【真象与假象】</strong>真象从正面直接表现本质，假象从反面歪曲地表现本质，二者都是客观现象。</p>
+<p><strong>【假象与错觉】</strong>假象属于客观现象，错觉是主体产生的错误感觉或认识，不能把二者混同。</p>
+<p><strong>【认识方法】</strong>认识不能停留在现象表面，应透过现象把握本质，同时承认假象也有客观根据。</p>
+        </div>
+        
+        <div class="quote-note xt">
+          <span class="note-author">〔徐涛 · 名师口诀例解〕</span>
+          <div class="formula-line">水中筷子看似弯折是光的折射形成的假象，认为筷子真的弯了则是人的错觉；假象仍表现了光传播的客观规律。</div>
+        </div>
+        
+      </div>
+
+      <!-- 单页卡片底部导引 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-footer">
+        <span class="footer-hint">左右轻滑或按下方按键翻页</span>
+        <span class="footer-len">本页约 408 字</span>
+      </div>
+
+      <!-- 仿真翻页高光与阴影蒙层 (不同动效动态启用) -->
+      <div class="page-curl-corner" title="卷角折痕示意"></div>
+      <div class="page-shadow-overlay"></div>
+    </div>
+    
+
+    <div class="page-sheet" data-page-index="4" id="sheet_4">
+      <!-- 单页卡片固定顶栏 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-header">
+        <span class="sheet-mod-tag">01 唯物论 · 核心考点</span>
+        <span class="sheet-page-tag">第 <strong>5</strong> / 5 页</span>
+      </div>
+
+      <!-- 单页卡片内容滚动区 (彻底杜绝高度跳跃，长文内滑羽化) -->
+      <div class="sheet-scroll-body">
+        <div class="point-header">
+          <div class="point-title-wrap">
+            <span class="point-badge ">核心考点</span>
+            <h3 class="point-title">05 人工智能与人类意识的边界</h3>
+          </div>
+          <div class="point-actions">
+            <button type="button" class="demo-seal-btn" onclick="toggleDemoSeal(this)">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                <path d="M7 12l3 3 7-7"/>
+              </svg>
+              <span>拟研</span>
+            </button>
+          </div>
+        </div>
+
+        
+        <div class="logic-chain">
+          <span class="chain-tag">逻辑脉络</span>
+          <div class="chain-flow"><span class="chain-node">技术实质</span> <span class='chain-arrow'>➔</span> <span class="chain-node">知情意差异</span> <span class='chain-arrow'>➔</span> <span class="chain-node">社会属性差异</span> <span class='chain-arrow'>➔</span> <span class="chain-node">理解与化约边界</span></div>
+        </div>
+        
+        
+        <div class="golden-sentence">
+          <span class="golden-badge">〔分析大题 · 采分金句〕</span>
+          <p>人工智能是人的部分智能活动的机器化，是人类智能的物化和意识能动性的特殊表现；它在特定能力上可以超过人类，但<mark class="hl-term">不能真正具有人的意识，也不能全面取代人类智能</mark>。</p>
+        </div>
+        
+        <div class="point-content-text">
+          <p><strong>【技术实质】</strong>人工智能是对人脑组织结构与思维运行机制的模仿，是人类智能的物化。</p>
+<p><strong>【知情意差异】</strong>人的意识是知情意的统一体，人工智能主要模拟和扩展理性智能。</p>
+<p><strong>【社会属性差异】</strong>社会性是人的意识所固有的本质属性，人工智能不能真正具备人的社会属性。</p>
+<p><strong>【理解与化约边界】</strong>人工智能难以完全理解自然语言真实意义，人的意识也不能全部化约为数字信号。</p>
+        </div>
+        
+        <div class="quote-note xt">
+          <span class="note-author">〔徐涛 · 名师口诀例解〕</span>
+          <div class="formula-line">脑机接口把部分意识活动物化为机器运动，能够延伸意识器官功能，但并未使机器获得人的情感、信念和意志。</div>
+        </div>
+        
+      </div>
+
+      <!-- 单页卡片底部导引 (统一定高舞台内锁定) -->
+      <div class="sheet-fixed-footer">
+        <span class="footer-hint">左右轻滑或按下方按键翻页</span>
+        <span class="footer-len">本页约 440 字</span>
+      </div>
+
+      <!-- 仿真翻页高光与阴影蒙层 (不同动效动态启用) -->
+      <div class="page-curl-corner" title="卷角折痕示意"></div>
+      <div class="page-shadow-overlay"></div>
+    </div>
+    
+    </div>
+  </main>
+
+  <!-- 底部微操与翻页控制 -->
+  <footer class="eval-dock">
+    <div class="eval-dock-wrap">
+      <button type="button" class="nav-btn" id="btnPrev" onclick="prevPage()">
+        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>上页</span>
+      </button>
+
+      <div class="progress-pill">
+        第 <span id="curPageNum">1</span> / <span id="totalPageNum">5</span> 页
+      </div>
+
+      <button type="button" class="nav-btn primary" id="btnNext" onclick="nextPage()">
+        <span>下页</span>
+        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    const totalPages = 5;
+    let currentIndex = 0;
+    let currentMode = 'wechat';
+
+    const descMap = {
+      'wechat': '★ <b>方案 A (微信读书款)</b>：上层纸张滑开，下层轻微视差显露，附带纸张侧边立体落阴。流畅不晕眩，极力推荐。',
+      'bookflip': '★ <b>方案 B (3D硬书翻页款)</b>：以左侧装订中缝为 3D 轴心向外折转 180°，古籍翻阅仪式感极强。',
+      'pagecurl': '★ <b>方案 C (仿真实体卷角款)</b>：模拟 StPageFlip 物理纸张从右下角向左上翻卷，拟真度高。',
+      'cardsdeck': '★ <b>方案 D (抽认背诵卡片款)</b>：Tinder/Quizlet 风格层叠卡片栈，背完一张向左推飞，刷题正向反馈爽快。'
+    };
+
+    function updatePagesState() {
+      const sheets = document.querySelectorAll('.page-sheet');
+      sheets.forEach((sheet, idx) => {
+        sheet.classList.remove('active', 'prev-exit', 'next-ready', 'hidden');
+        if (idx === currentIndex) {
+          sheet.classList.add('active');
+        } else if (idx < currentIndex) {
+          sheet.classList.add('prev-exit');
+        } else if (idx === currentIndex + 1) {
+          sheet.classList.add('next-ready');
+        } else {
+          sheet.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('curPageNum').textContent = currentIndex + 1;
+      document.getElementById('btnPrev').disabled = (currentIndex === 0);
+      document.getElementById('btnNext').disabled = (currentIndex === totalPages - 1);
+    }
+
+    function nextPage() {
+      if (currentIndex < totalPages - 1) {
+        currentIndex++;
+        updatePagesState();
+      }
+    }
+
+    function prevPage() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updatePagesState();
+      }
+    }
+
+    function switchEffect(mode, btn) {
+      currentMode = mode;
+      document.body.className = 'mode-' + mode;
+      document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      document.getElementById('schemeDescText').innerHTML = descMap[mode] || '';
+      updatePagesState();
+    }
+
+    function toggleDemoSeal(btn) {
+      btn.classList.toggle('stamped');
+      const span = btn.querySelector('span');
+      if (btn.classList.contains('stamped')) {
+        span.textContent = '已研';
+      } else {
+        span.textContent = '拟研';
+      }
+    }
+
+    // 手势支持 (左滑下一页，右滑上一页)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const stage = document.getElementById('bookStage');
+
+    stage.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }, { passive: true });
+
+    stage.addEventListener('touchend', e => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        if (dx < 0) nextPage();
+        else prevPage();
+      }
+    }, { passive: true });
+
+    // 键盘支持
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') nextPage();
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevPage();
+    });
+
+    // 初始化
+    updatePagesState();
+  </script>
+</body>
+</html>
