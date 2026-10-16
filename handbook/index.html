@@ -904,15 +904,54 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 手机端极速响应 */
+    /* iPhone 与移动端极速自适应适配 */
     @media (max-width: 640px) {
-      .container { padding: 16px 12px 34px; }
-      .point-title { font-size: 16.5px; }
-      .main-heading { font-size: 21px; }
-      .top-wrap { padding: 8px 12px; }
-      .module-nav-wrap { padding: 6px 12px; }
-      .quote-note { padding: 7px 10px; font-size: 14px; }
-      .formula-line { font-size: 15px; }
+      .container { padding: 14px 12px 30px; }
+      .point-title { font-size: 16px; }
+      .main-heading { font-size: 20px; }
+      .lead-text { font-size: 14px; line-height: 1.7; }
+      
+      /* 顶栏极致紧凑防溢出 */
+      .top-wrap { padding: 6px 10px; gap: 4px; }
+      .seal-badge { display: none; } /* 手机端隐藏多余装饰印章，彻底释放横向空间 */
+      .book-title { font-size: 13.5px; font-weight: 700; }
+      .top-actions { gap: 3.5px; }
+      .zoom-btn { padding: 2px 4px; font-size: 10px; }
+      .mode-btn { padding: 3px 6px; font-size: 11px; gap: 2px; }
+      .mode-btn svg { width: 12px; height: 12px; }
+      .drawer-btn { padding: 3px 6px; font-size: 11px; gap: 2px; }
+      .drawer-btn svg { width: 12px; height: 12px; }
+      
+      /* 模块滑动条与背诵副栏 */
+      .module-nav-wrap { padding: 5px 10px; gap: 4px; }
+      .mod-pill { font-size: 11.5px; padding: 2.5px 8px; }
+      .recite-sub-bar { padding: 5px 10px; }
+      .recite-sub-wrap { font-size: 11px; gap: 4px; }
+      .cloze-tool-links { gap: 5px; }
+      .link-btn { font-size: 11px; }
+
+      /* 例解与金句 */
+      .quote-note { padding: 6px 9px; font-size: 13.5px; }
+      .formula-line { font-size: 14px; }
+      .golden-sentence { padding: 6px 10px 8px; }
+      .golden-badge { font-size: 10.5px; }
+      
+      /* 底栏紧凑适配 */
+      .bottom-bar { padding: 6px 12px; padding-bottom: calc(6px + env(safe-area-inset-bottom, 16px)); }
+      .bottom-wrap { gap: 8px; }
+      .marked-stats-text { font-size: 11.5px; }
+      .btn-export-doubts { padding: 5px 10px; font-size: 11.5px; }
+    }
+
+    /* iOS 全面屏与 PWA 独立窗口安全区微调 */
+    @supports (padding-top: env(safe-area-inset-top)) {
+      .top-bar {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      .drawer-content {
+        padding-top: max(20px, env(safe-area-inset-top, 20px));
+        padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+      }
     }
   </style>
 </head>

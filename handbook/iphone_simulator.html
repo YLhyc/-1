@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>考研政治背诵手卷 · iPhone 真实实景仿真器</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+    
+    body {
+      font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+      background-color: #1a1b20;
+      color: #e2e8f0;
+    }
+
+    /* 真实 iPhone 16 Pro 机身模型 (393 x 852 物理基准，等比缩放) */
+    .iphone-device {
+      width: 393px;
+      height: 852px;
+      background: #000;
+      border-radius: 54px;
+      box-shadow: 
+        0 0 0 10px #2a2b30,
+        0 0 0 12px #1f2024,
+        0 30px 60px -12px rgba(0, 0, 0, 0.75),
+        0 18px 36px -18px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* 灵动岛 (Dynamic Island) */
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 35px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* 顶部 iOS 状态栏 (9:41, 信号, WiFi, 电池) */
+    .ios-status-bar {
+      position: absolute;
+      top: 13px;
+      left: 28px;
+      right: 28px;
+      height: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #1f2421;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 998;
+      pointer-events: none;
+    }
+
+    /* 底部 Home 条 */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 138px;
+      height: 4.5px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 999px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* 嵌入式页面 iframe */
+    .device-screen {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #f4f1ea;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+  
+  <div class="max-w-5xl w-full mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold tracking-wider mb-1.5">
+        <span>●</span> iPhone 视网膜屏真机渲染仿真
+      </div>
+      <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+        《考研政治精要背诵手卷》iPhone 实景模拟器
+      </h1>
+      <p class="text-xs text-slate-400 mt-1">
+        已针对 iPhone 16 Pro (393×852)、iPhone 13 mini (375×667) 及灵动岛全面优化顶栏自适应与触控体验
+      </p>
+    </div>
+
+    <!-- 顶部快捷操作 -->
+    <div class="flex items-center gap-3">
+      <a href="index.html" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium shadow-sm transition flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        全屏独立打开
+      </a>
+      <a href="icon_preview.html" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition">
+        查看 5 款图标看板
+      </a>
+    </div>
+  </div>
+
+  <!-- 主体工作区：中间为 iPhone 真机，右侧为优化点检视 -->
+  <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start justify-items-center">
+    
+    <!-- 左侧：真实 iPhone 16 Pro 样机 -->
+    <div class="lg:col-span-6 flex justify-center">
+      <div class="iphone-device relative">
+        <!-- 灵动岛 -->
+        <div class="dynamic-island"></div>
+
+        <!-- iOS 顶栏状态指示 -->
+        <div class="ios-status-bar">
+          <span>9:41</span>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+            <div class="w-4.5 h-2.5 rounded-xs border border-current flex items-center p-0.5"><div class="w-full h-full bg-current rounded-2xs"></div></div>
+          </div>
+        </div>
+
+        <!-- 内部实景运行 iframe (可直接交互、滑动、点按遮盖胶囊) -->
+        <iframe src="index.html" class="device-screen" title="iPhone 实景阅读器"></iframe>
+
+        <!-- 底部 Home 横条 -->
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- 右侧：iPhone 专属细节改进解读清单 -->
+    <div class="lg:col-span-6 space-y-5 text-slate-300 w-full">
+      <div class="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          针对 iPhone 的 5 项专项视觉与交互改进
+        </h3>
+
+        <div class="space-y-3.5 text-xs">
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-700/60">
+            <div class="font-bold text-emerald-300 flex items-center gap-1.5 mb-1">
+              <span>①</span> 顶栏极致紧凑重构（彻底解决右侧按钮截断）
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              在宽度 ≤ 520px 的移动端，自动隐藏冗余的装饰角标“试卷宋体”，释放 60px 横向净空间。缩减【A-/A+】、【通读/背诵】及【目录】按钮的内边距，确保即使在 375px 小屏 iPhone（SE/13 mini）上，所有控制按键均完整可见、绝无遮挡。
+            </p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-700/60">
+            <div class="font-bold text-emerald-300 flex items-center gap-1.5 mb-1">
+              <span>②</span> 背诵模式副栏适配（弱提示与统计单行排布）
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              重构“已刮开统计”、“弱提示开关”、“全部揭开/遮盖”的流式布局，在手机端保持单行舒适呼吸感，杜绝文字换行与右侧溢出。
+            </p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-700/60">
+            <div class="font-bold text-emerald-300 flex items-center gap-1.5 mb-1">
+              <span>③</span> iOS Safe Area 安全区全面覆盖（灵动岛与小黑条避让）
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              采用 <code class="text-amber-300 font-mono">env(safe-area-inset-top)</code> 与 <code class="text-amber-300 font-mono">env(safe-area-inset-bottom)</code> 动态计算，当添加到主屏幕以全屏独立 PWA 运行时，顶栏温润宣纸色自然延伸至灵动岛背后，底部一键复制疑难回传栏完美避开手势小黑条。
+            </p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-700/60">
+            <div class="font-bold text-emerald-300 flex items-center gap-1.5 mb-1">
+              <span>④</span> 触控高频点按防抖与防误缩放
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              全面注入 <code class="text-amber-300 font-mono">touch-action: manipulation;</code> 与 <code class="text-amber-300 font-mono">-webkit-tap-highlight-color: transparent;</code>，消除 iOS Safari 自带的 300ms 点击延迟，防止背诵时快速刮开遮盖胶囊触发页面双击误放大。
+            </p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-700/60">
+            <div class="font-bold text-emerald-300 flex items-center gap-1.5 mb-1">
+              <span>⑤</span> 弹性橡皮筋回弹防露白
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              将 html 与 body 根背景统一锁定为护眼宣纸色 <code class="text-amber-300 font-mono">#f4f1ea</code>，彻底消除在 iPhone 快速下拉滚动回弹时露出的刺眼纯白底色。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-slate-500 text-center">
+        左侧模型支持实时手指/鼠标滚动、切换章节与直接点击胶囊测试背诵反馈
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
