@@ -80,6 +80,74 @@
       --font-mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
     }
 
+    /* 玄石黛墨 · 宣纸深色夜读模式 (Feature 6: 熄灯被窝护眼不眩光) */
+    body.theme-dark {
+      --bg: #181c19;
+      --paper: #212522;
+      --paper-raised: #2a302c;
+      --ink: #dfd8cb;
+      --sub: #9caaa0;
+      --muted: #6b7a70;
+      --line: #2e3630;
+      --line-subtle: rgba(220, 216, 200, 0.12);
+
+      --accent: #df5843;
+      --accent-soft: rgba(223, 88, 67, 0.18);
+      --accent-border: #74342a;
+      --accent-deep: #eb715d;
+      --seal-red: #df5843;
+      --seal-soft: rgba(223, 88, 67, 0.18);
+
+      --wood-brown: #c7a783;
+      --wood-soft: rgba(199, 167, 131, 0.12);
+      --wood-border: #4d4033;
+
+      --stone-tag: #d5c7b3;
+      --stone-soft: #2b2721;
+      --stone-border: #4a4338;
+
+      --ink-black: #121513;
+      --ink-black-hover: #0a0d0b;
+
+      --mark-amber: #e5a43b;
+      --mark-soft: rgba(229, 164, 59, 0.14);
+      --mark-border: #5e4726;
+
+      --stripe-bg: repeating-linear-gradient(
+        135deg,
+        #2a2e2b,
+        #2a2e2b 4px,
+        #343935 4px,
+        #343935 8px
+      );
+    }
+
+    /* 夜读模式局部适配 */
+    body.theme-dark .top-bar { background: rgba(24, 28, 25, 0.94); }
+    body.theme-dark .module-nav-bar { background: rgba(24, 28, 25, 0.88); }
+    body.theme-dark .recite-sub-bar { background: #212522; }
+    body.theme-dark .drawer-btn { background: #252a26; border-color: #38423b; color: #c5cec7; }
+    body.theme-dark .mode-btn.active { background: #2a312d; color: var(--accent); }
+    body.theme-dark .zoom-btn:active { background: #2a312d; }
+    body.theme-dark .toc-drawer { background: #1b1e1c; }
+    body.theme-dark .toc-overview { background: #232724; border-color: #353d37; }
+    body.theme-dark .point-entry.is-studied { background: rgba(36, 42, 38, 0.6); }
+    body.theme-dark .point-entry.is-marked { background: rgba(45, 38, 26, 0.45); border-color: var(--mark-border); }
+    body.theme-dark .doubt-panel { background: #232825; border-color: #38423c; }
+    body.theme-dark .doubt-input { background: #1a1e1c; color: #e0dcce; border-color: #38423c; }
+    body.theme-dark .export-preview-card { background: #202422; border-color: #353c37; }
+    body.theme-dark #exportClipboardPreview { background: #191c1a; color: #c5cec7; border-color: #333a35; }
+    body.theme-dark .seal-stamp-btn { border-color: #555047; color: #a39c8e; }
+    body.theme-dark .doubt-btn { border-color: #3d463f; background: #252b27; color: #a1ada4; }
+    body.theme-dark .chapter-heading-wrap { border-bottom-color: var(--wood-brown); }
+    body.theme-dark .chapter-desc { color: #8e9e92; }
+    body.theme-dark .main-heading { color: #f0ece3; }
+    body.theme-dark .golden-sentence { background: var(--wood-soft); border-left-color: var(--accent); }
+    body.theme-dark .quote-note.xt { background: var(--wood-soft); border-left-color: var(--wood-brown); }
+    body.theme-dark .quote-note.xiao { background: rgba(220, 216, 200, 0.05); border-left-color: var(--stone-tag); }
+    body.theme-dark .logic-chain { background: var(--stone-soft); border-color: var(--stone-border); }
+    body.theme-dark .chain-node { background: #222623; border-color: var(--stone-border); color: #d5c7b3; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background-color: var(--bg); }
     body {
@@ -89,9 +157,10 @@
       line-height: 1.95;
       font-size: var(--font-scale);
       -webkit-font-smoothing: antialiased;
-      padding-bottom: calc(90px + env(safe-area-inset-bottom, 20px));
+      padding-bottom: calc(105px + env(safe-area-inset-bottom, 20px));
       -webkit-tap-highlight-color: transparent;
       margin: 0;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
     /* 矢量 SVG 通用 */
@@ -151,6 +220,25 @@
       align-items: center;
       gap: 6px;
     }
+
+    /* 夜读/日间主题切换按钮 (Feature 6) */
+    .theme-toggle-btn {
+      background: rgba(222, 216, 200, 0.45);
+      border: none;
+      border-radius: 6px;
+      padding: 3px 6px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+      line-height: 1;
+    }
+    .theme-toggle-btn:active { transform: scale(0.9); }
+    .theme-icon-dark { display: none; }
+    body.theme-dark .theme-icon-light { display: none; }
+    body.theme-dark .theme-icon-dark { display: inline; }
 
     /* 字号调节按钮组 (A- / A+) */
     .font-zoom-ctrl {
@@ -253,6 +341,28 @@
     }
     .mod-pill:hover { color: var(--accent); }
     .mod-pill.active {
+      background: var(--accent-soft);
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+    .nav-divider {
+      display: inline-block;
+      width: 1px;
+      height: 14px;
+      background: var(--line);
+      margin: 0 4px;
+      align-self: center;
+      flex-shrink: 0;
+    }
+    .mod-pill.pill-status {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.5);
+    }
+    body.theme-dark .mod-pill.pill-status {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #38423c;
+    }
+    .mod-pill.pill-status.active {
       background: var(--accent-soft);
       border-color: var(--accent-border);
       color: var(--accent);
@@ -991,19 +1101,20 @@
       color: var(--accent);
     }
 
-    /* 底部常驻微型状态栏 */
+    /* 底部常驻微型状态与单手操作岛 (Feature 3: 黄金大拇指热区) */
     .bottom-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 90;
-      background: rgba(244, 241, 234, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      z-index: 95;
+      background: rgba(244, 241, 234, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--line-subtle);
-      padding: 8px 16px;
-      padding-bottom: calc(8px + env(safe-area-inset-bottom, 16px));
+      padding: 6px 14px calc(7px + env(safe-area-inset-bottom, 12px));
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+      transition: background-color 0.25s ease;
     }
     .bottom-wrap {
       max-width: 780px;
@@ -1011,30 +1122,60 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
     }
-    .marked-stats-text {
-      font-family: var(--font-sans);
-      font-size: 12px;
-      color: var(--sub);
+    .thumb-actions-group {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 2px;
+      gap: 6px;
+      flex-wrap: nowrap;
     }
-    .studied-num-badge {
-      font-weight: 700;
+    .thumb-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--sub);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      touch-action: manipulation;
+      white-space: nowrap;
+      transition: all 0.14s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    body.theme-dark .thumb-btn {
+      background: #252a27;
+      border-color: #38423c;
+      color: #c5cec7;
+    }
+    .thumb-btn:active {
+      transform: scale(0.94);
+    }
+    .thumb-btn.primary {
+      background: var(--ink-black);
+      color: #fff;
+      border-color: transparent;
+    }
+    body.theme-dark .thumb-btn.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .thumb-btn.random-btn {
+      border-color: var(--accent-border);
       color: var(--accent);
-      margin: 0 2px;
+      background: var(--accent-soft);
     }
-    .stat-divider {
-      margin: 0 5px;
-      color: var(--muted);
-    }
-    .marked-badge {
-      font-weight: 700;
-      color: var(--mark-amber);
-      margin: 0 2px;
+    .thumb-stats-line {
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      color: var(--sub);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .top-studied-badge {
       background: var(--accent);
@@ -1047,25 +1188,255 @@
       line-height: 1.4;
       display: inline-block;
     }
-    .btn-export-doubts {
+
+    /* 碎片化功能 1：上次阅毕 · 续卷定位悬浮浮标 */
+    .resume-pill {
+      position: fixed;
+      bottom: calc(54px + env(safe-area-inset-bottom, 12px));
+      right: 14px;
+      z-index: 92;
+      background: #fff;
+      border: 1.2px solid var(--accent-border);
+      border-radius: 999px;
+      box-shadow: 0 4px 18px rgba(142, 35, 23, 0.16);
+      display: flex;
+      align-items: center;
+      padding: 4px 6px 4px 11px;
+      gap: 6px;
+      max-width: min(320px, calc(100vw - 28px));
+      animation: slideUpPill 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      touch-action: manipulation;
+    }
+    body.theme-dark .resume-pill {
+      background: #252b27;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+    }
+    @keyframes slideUpPill {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .resume-pill-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .resume-icon { font-size: 13.5px; flex-shrink: 0; }
+    .resume-text-wrap {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       font-family: var(--font-sans);
-      background: var(--ink-black);
-      color: #fff;
-      border: 1px solid #161a1e;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-      padding: 7px 15px;
-      border-radius: 7px;
-      font-size: 12.5px;
+      font-size: 11.5px;
+      color: var(--ink);
+    }
+    .resume-hint { color: var(--accent); font-weight: 700; margin-right: 3px; }
+    .resume-arrow { font-size: 11px; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+    .resume-dismiss-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 3px 5px;
+      border-radius: 50%;
+      line-height: 1;
+    }
+    .resume-target-highlight {
+      animation: resumeGlow 2.4s ease-out;
+    }
+    @keyframes resumeGlow {
+      0% { box-shadow: 0 0 0 0 rgba(142, 35, 23, 0.7); }
+      35% { box-shadow: 0 0 0 7px rgba(142, 35, 23, 0.28); }
+      100% { box-shadow: 0 0 0 0 rgba(142, 35, 23, 0); }
+    }
+
+    /* 碎片化功能 2：碎片盲盒 · 随机抽背闪卡模态 */
+    .flashcard-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(18, 22, 19, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeInFc 0.2s ease;
+    }
+    @keyframes fadeInFc { from { opacity: 0; } to { opacity: 1; } }
+    .flashcard-dialog {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: scaleUpFc 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes scaleUpFc { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .flashcard-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line-subtle);
+      background: var(--bg);
+    }
+    .flashcard-badge-row { display: flex; align-items: center; gap: 6px; }
+    .flashcard-mod-tag {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .flashcard-blindbox-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--sub);
+    }
+    .flashcard-close {
+      background: none;
+      border: none;
+      font-size: 16px;
+      color: var(--sub);
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .flashcard-main {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .flashcard-idx-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .flashcard-num {
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      color: var(--muted);
       font-weight: 600;
+    }
+    .flashcard-status-badge {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid #b5a995;
+      color: var(--sub);
+    }
+    .flashcard-status-badge.stamped {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .flashcard-title {
+      font-family: var(--font-song);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .flashcard-logic {
+      margin-bottom: 12px;
+    }
+    .flashcard-prompt-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 10px 0 6px;
+    }
+    .flashcard-content-box {
+      background: var(--bg);
+      border: 1px solid var(--line-subtle);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--ink);
+    }
+    .flashcard-content-box .cloze {
+      background: var(--stripe-bg);
+      color: transparent !important;
+      border-radius: 4px;
+      padding: 1px 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      display: inline-block;
+      line-height: 1.5;
+      margin: 0 1px;
+    }
+    .flashcard-content-box.revealed .cloze {
+      background: var(--accent-soft) !important;
+      color: var(--accent) !important;
+    }
+    .flashcard-actions {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 1fr auto;
+      gap: 6px;
+      padding: 10px 14px;
+      background: var(--bg);
+      border-top: 1px solid var(--line-subtle);
+    }
+    .fc-action-btn {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 4px;
+      border-radius: 7px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      transition: all 0.14s ease;
+      justify-content: center;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
       touch-action: manipulation;
+      white-space: nowrap;
+      transition: all 0.14s ease;
     }
-    .btn-export-doubts:hover { background: var(--ink-black-hover); }
-    .btn-export-doubts:active { background: #000; transform: scale(0.97); }
+    .fc-action-btn:active { transform: scale(0.95); }
+    .fc-action-btn.fc-reveal {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent-border);
+    }
+    .fc-action-btn.fc-stamp.stamped {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .fc-action-btn.fc-next {
+      background: var(--ink-black);
+      color: #fff;
+      border-color: var(--ink-black);
+    }
+    body.theme-dark .fc-action-btn.fc-next {
+      background: #39423c;
+      border-color: #4a574f;
+    }
+    .fc-action-btn.fc-jump {
+      padding: 8px 8px;
+    }
 
     /* 浮动 Toast 弹窗 */
     .toast-notice {
@@ -1197,6 +1568,12 @@
       </div>
 
       <div class="top-actions">
+        <!-- 深色夜读模式切换 (Feature 6) -->
+        <button type="button" class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()" title="切换夜读/宣纸模式">
+          <span class="theme-icon-light">🌙</span>
+          <span class="theme-icon-dark">☀️</span>
+        </button>
+
         <!-- 极简字号缩放 A- / A+ -->
         <div class="font-zoom-ctrl">
           <button type="button" class="zoom-btn" onclick="adjustFontSize(-1)" title="缩小字号">A-</button>
@@ -1237,14 +1614,18 @@
     <!-- 模块横向滑动快速导航 -->
     <nav class="module-nav-bar">
       <div class="module-nav-wrap">
-        <button type="button" class="mod-pill active" onclick="filterModule('all', this)">全部 (72)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_00', this)">导论 (2)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_01', this)">唯物论 (18)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_02', this)">辩证法 (16)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_03', this)">认识论 (11)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_04', this)">唯物史观 (9)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_05', this)">政经 (13)</button>
-<button type="button" class="mod-pill" onclick="filterModule('mod_06', this)">科社 (3)</button>
+        <button type="button" class="mod-pill active" data-filter-type="status" onclick="filterStatus('all', this)">全部 (72)</button>
+<button type="button" class="mod-pill pill-status" data-filter-type="status" onclick="filterStatus('unstudied', this)">待研毕 (<span id="pillUnstudiedCount">72</span>)</button>
+<button type="button" class="mod-pill pill-status" data-filter-type="status" onclick="filterStatus('doubt', this)">已标疑 (<span id="pillDoubtCount">0</span>)</button>
+<button type="button" class="mod-pill pill-status" data-filter-type="status" onclick="filterStatus('must', this)">大题必背 (66)</button>
+<span class="nav-divider"></span>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_00', this)">导论 (2)</button>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_01', this)">唯物论 (18)</button>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_02', this)">辩证法 (16)</button>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_03', this)">认识论 (11)</button>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_04', this)">唯物史观 (9)</button>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_05', this)">政经 (13)</button>
+<button type="button" class="mod-pill" data-filter-type="module" onclick="filterModule('mod_06', this)">科社 (3)</button>
       </div>
     </nav>
 
@@ -2181,7 +2562,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_politics_b6cbf99b7869f305" data-mod="mod_00" data-topic-id="card_politics_b6cbf99b7869f305" data-topic-title="马克思主义的三大组成部分">
+            <article class="point-entry" id="card_politics_b6cbf99b7869f305" data-mod="mod_00" data-mod-title="导论" data-topic-id="card_politics_b6cbf99b7869f305" data-topic-title="马克思主义的三大组成部分" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -2250,7 +2631,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_dca1ec842306c2fb" data-mod="mod_00" data-topic-id="card_politics_dca1ec842306c2fb" data-topic-title="马克思主义的基本立场、观点和方法">
+            <article class="point-entry" id="card_politics_dca1ec842306c2fb" data-mod="mod_00" data-mod-title="导论" data-topic-id="card_politics_dca1ec842306c2fb" data-topic-title="马克思主义的基本立场、观点和方法" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -2333,7 +2714,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_politics_01100df6391835a2" data-mod="mod_01" data-topic-id="card_politics_01100df6391835a2" data-topic-title="列宁的物质定义与客观实在性">
+            <article class="point-entry" id="card_politics_01100df6391835a2" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_01100df6391835a2" data-topic-title="列宁的物质定义与客观实在性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -2402,7 +2783,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_64ec0ef20b5e7333" data-mod="mod_01" data-topic-id="card_politics_64ec0ef20b5e7333" data-topic-title="哲学基本问题的两个方面">
+            <article class="point-entry" id="card_politics_64ec0ef20b5e7333" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_64ec0ef20b5e7333" data-topic-title="哲学基本问题的两个方面" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -2471,7 +2852,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_5c04f99e0d2f854d" data-mod="mod_01" data-topic-id="card_politics_5c04f99e0d2f854d" data-topic-title="意识的起源和本质">
+            <article class="point-entry" id="card_politics_5c04f99e0d2f854d" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_5c04f99e0d2f854d" data-topic-title="意识的起源和本质" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -2541,7 +2922,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_f396ea06de5fe50f" data-mod="mod_01" data-topic-id="card_politics_f396ea06de5fe50f" data-topic-title="意识能不能运动？">
+            <article class="point-entry" id="card_politics_f396ea06de5fe50f" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_f396ea06de5fe50f" data-topic-title="意识能不能运动？" data-is-must="0">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -2604,7 +2985,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_mat_substance_v1" data-mod="mod_01" data-topic-id="card_politics_mat_substance_v1" data-topic-title="物质的唯一特性与未知世界辨析">
+            <article class="point-entry" id="card_politics_mat_substance_v1" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_mat_substance_v1" data-topic-title="物质的唯一特性与未知世界辨析" data-is-must="0">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -2667,7 +3048,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_f92e8489827056e4" data-mod="mod_01" data-topic-id="card_politics_f92e8489827056e4" data-topic-title="旧唯物主义的“半截子”局限">
+            <article class="point-entry" id="card_politics_f92e8489827056e4" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_f92e8489827056e4" data-topic-title="旧唯物主义的“半截子”局限" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -2736,7 +3117,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_a12e43f7109b546c" data-mod="mod_01" data-topic-id="card_politics_a12e43f7109b546c" data-topic-title="意识能动作用与客观规律性">
+            <article class="point-entry" id="card_politics_a12e43f7109b546c" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_a12e43f7109b546c" data-topic-title="意识能动作用与客观规律性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -2807,7 +3188,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_16802f8826e810c8" data-mod="mod_01" data-topic-id="card_politics_16802f8826e810c8" data-topic-title="‘意识完全不能运动’为什么错？">
+            <article class="point-entry" id="card_politics_16802f8826e810c8" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_16802f8826e810c8" data-topic-title="‘意识完全不能运动’为什么错？" data-is-must="0">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -2870,7 +3251,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_356679a94c1f1f00" data-mod="mod_01" data-topic-id="card_politics_356679a94c1f1f00" data-topic-title="物质、运动与相对静止">
+            <article class="point-entry" id="card_politics_356679a94c1f1f00" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_356679a94c1f1f00" data-topic-title="物质、运动与相对静止" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -2939,7 +3320,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_mat_motion_space_v1" data-mod="mod_01" data-topic-id="card_politics_mat_motion_space_v1" data-topic-title="物质运动与时空的绝对性与相对性">
+            <article class="point-entry" id="card_politics_mat_motion_space_v1" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_mat_motion_space_v1" data-topic-title="物质运动与时空的绝对性与相对性" data-is-must="0">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3002,7 +3383,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_ac34c7b93373d3de" data-mod="mod_01" data-topic-id="card_politics_ac34c7b93373d3de" data-topic-title="物质与运动为什么不可分割">
+            <article class="point-entry" id="card_politics_ac34c7b93373d3de" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_ac34c7b93373d3de" data-topic-title="物质与运动为什么不可分割" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3071,7 +3452,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_b863d4e75f0227c7" data-mod="mod_01" data-topic-id="card_politics_b863d4e75f0227c7" data-topic-title="时间和空间的客观性">
+            <article class="point-entry" id="card_politics_b863d4e75f0227c7" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_b863d4e75f0227c7" data-topic-title="时间和空间的客观性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3140,7 +3521,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_aedb3175306c6ead" data-mod="mod_01" data-topic-id="card_politics_aedb3175306c6ead" data-topic-title="意识的能动性与人工智能边界">
+            <article class="point-entry" id="card_politics_aedb3175306c6ead" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_aedb3175306c6ead" data-topic-title="意识的能动性与人工智能边界" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3209,7 +3590,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_21ae1c5994363e41" data-mod="mod_01" data-topic-id="card_politics_21ae1c5994363e41" data-topic-title="自然界与人类社会的关系">
+            <article class="point-entry" id="card_politics_21ae1c5994363e41" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_21ae1c5994363e41" data-topic-title="自然界与人类社会的关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3278,7 +3659,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_c7fda79c64ef3357" data-mod="mod_01" data-topic-id="card_politics_c7fda79c64ef3357" data-topic-title="人工智能与人类意识的边界">
+            <article class="point-entry" id="card_politics_c7fda79c64ef3357" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_c7fda79c64ef3357" data-topic-title="人工智能与人类意识的边界" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3348,7 +3729,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_mat_consciousness_v1" data-mod="mod_01" data-topic-id="card_politics_mat_consciousness_v1" data-topic-title="意识的起源、本质及其能动作用">
+            <article class="point-entry" id="card_politics_mat_consciousness_v1" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_mat_consciousness_v1" data-topic-title="意识的起源、本质及其能动作用" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3417,7 +3798,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_5aaf9aabde7cf578" data-mod="mod_01" data-topic-id="card_politics_5aaf9aabde7cf578" data-topic-title="世界的物质统一性原理">
+            <article class="point-entry" id="card_politics_5aaf9aabde7cf578" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_5aaf9aabde7cf578" data-topic-title="世界的物质统一性原理" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3487,7 +3868,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_mat_world_unity_v1" data-mod="mod_01" data-topic-id="card_politics_mat_world_unity_v1" data-topic-title="世界的物质统一性原理及其实践意义">
+            <article class="point-entry" id="card_politics_mat_world_unity_v1" data-mod="mod_01" data-mod-title="唯物论" data-topic-id="card_politics_mat_world_unity_v1" data-topic-title="世界的物质统一性原理及其实践意义" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3569,7 +3950,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_politics_dialectic_quality_quantity_v1" data-mod="mod_02" data-topic-id="card_politics_dialectic_quality_quantity_v1" data-topic-title="量变质变规律与适度原则">
+            <article class="point-entry" id="card_politics_dialectic_quality_quantity_v1" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_dialectic_quality_quantity_v1" data-topic-title="量变质变规律与适度原则" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -3638,7 +4019,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_contradiction_unity_struggle_v1" data-mod="mod_02" data-topic-id="card_politics_contradiction_unity_struggle_v1" data-topic-title="矛盾的同一性和斗争性及其辩证关系">
+            <article class="point-entry" id="card_politics_contradiction_unity_struggle_v1" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_contradiction_unity_struggle_v1" data-topic-title="矛盾的同一性和斗争性及其辩证关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -3707,7 +4088,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_dialectic_negation_negation_v1" data-mod="mod_02" data-topic-id="card_politics_dialectic_negation_negation_v1" data-topic-title="否定之否定规律与辩证否定观（扬弃）">
+            <article class="point-entry" id="card_politics_dialectic_negation_negation_v1" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_dialectic_negation_negation_v1" data-topic-title="否定之否定规律与辩证否定观（扬弃）" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -3776,7 +4157,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_contradiction_dynamics_v1" data-mod="mod_02" data-topic-id="card_politics_contradiction_dynamics_v1" data-topic-title="矛盾同一性与斗争性在事物发展中的作用">
+            <article class="point-entry" id="card_politics_contradiction_dynamics_v1" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_contradiction_dynamics_v1" data-topic-title="矛盾同一性与斗争性在事物发展中的作用" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3845,7 +4226,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_contradiction_general_specific_v1" data-mod="mod_02" data-topic-id="card_politics_contradiction_general_specific_v1" data-topic-title="矛盾的普遍性与特殊性辩证关系及矛盾问题精髓">
+            <article class="point-entry" id="card_politics_contradiction_general_specific_v1" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_contradiction_general_specific_v1" data-topic-title="矛盾的普遍性与特殊性辩证关系及矛盾问题精髓" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3914,7 +4295,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_contradiction_two_points_focus_v1" data-mod="mod_02" data-topic-id="card_politics_contradiction_two_points_focus_v1" data-topic-title="两点论和重点论的统一及主次矛盾辨析">
+            <article class="point-entry" id="card_politics_contradiction_two_points_focus_v1" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_contradiction_two_points_focus_v1" data-topic-title="两点论和重点论的统一及主次矛盾辨析" data-is-must="0">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -3977,7 +4358,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_7a6a02aa72cc7835" data-mod="mod_02" data-topic-id="card_politics_7a6a02aa72cc7835" data-topic-title="内容与形式的辩证关系及形式主义边界">
+            <article class="point-entry" id="card_politics_7a6a02aa72cc7835" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_7a6a02aa72cc7835" data-topic-title="内容与形式的辩证关系及形式主义边界" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4047,7 +4428,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_c96e47031faa537b" data-mod="mod_02" data-topic-id="card_politics_c96e47031faa537b" data-topic-title="对立统一规律为什么是唯物辩证法的实质和核心">
+            <article class="point-entry" id="card_politics_c96e47031faa537b" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_c96e47031faa537b" data-topic-title="对立统一规律为什么是唯物辩证法的实质和核心" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4116,7 +4497,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_9a624c3e808fe77a" data-mod="mod_02" data-topic-id="card_politics_9a624c3e808fe77a" data-topic-title="本质、现象、真象、假象与错觉如何区分">
+            <article class="point-entry" id="card_politics_9a624c3e808fe77a" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_9a624c3e808fe77a" data-topic-title="本质、现象、真象、假象与错觉如何区分" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4186,7 +4567,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_33f1c3df8f65cfed" data-mod="mod_02" data-topic-id="card_politics_33f1c3df8f65cfed" data-topic-title="矛盾的同一性和斗争性关系">
+            <article class="point-entry" id="card_politics_33f1c3df8f65cfed" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_33f1c3df8f65cfed" data-topic-title="矛盾的同一性和斗争性关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4256,7 +4637,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_4fc195b016ba55c4" data-mod="mod_02" data-topic-id="card_politics_4fc195b016ba55c4" data-topic-title="矛盾同一性在事物发展中的三方面作用">
+            <article class="point-entry" id="card_politics_4fc195b016ba55c4" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_4fc195b016ba55c4" data-topic-title="矛盾同一性在事物发展中的三方面作用" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4325,7 +4706,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_d23a9e7364cd675a" data-mod="mod_02" data-topic-id="card_politics_d23a9e7364cd675a" data-topic-title="原因与结果的辩证关系及因果识别">
+            <article class="point-entry" id="card_politics_d23a9e7364cd675a" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_d23a9e7364cd675a" data-topic-title="原因与结果的辩证关系及因果识别" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4395,7 +4776,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_a51885ec724a817f" data-mod="mod_02" data-topic-id="card_politics_a51885ec724a817f" data-topic-title="矛盾的普遍性和特殊性关系">
+            <article class="point-entry" id="card_politics_a51885ec724a817f" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_a51885ec724a817f" data-topic-title="矛盾的普遍性和特殊性关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4465,7 +4846,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_2190ef51e5afb26e" data-mod="mod_02" data-topic-id="card_politics_2190ef51e5afb26e" data-topic-title="必然与偶然的关系及判断边界">
+            <article class="point-entry" id="card_politics_2190ef51e5afb26e" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_2190ef51e5afb26e" data-topic-title="必然与偶然的关系及判断边界" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4535,7 +4916,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_7e494f5482d51907" data-mod="mod_02" data-topic-id="card_politics_7e494f5482d51907" data-topic-title="两点论和重点论统一">
+            <article class="point-entry" id="card_politics_7e494f5482d51907" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_7e494f5482d51907" data-topic-title="两点论和重点论统一" data-is-must="0">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4600,7 +4981,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_politics_9a78b405388309dd" data-mod="mod_02" data-topic-id="card_politics_9a78b405388309dd" data-topic-title="现实可能、抽象可能与不可能的区分">
+            <article class="point-entry" id="card_politics_9a78b405388309dd" data-mod="mod_02" data-mod-title="辩证法" data-topic-id="card_politics_9a78b405388309dd" data-topic-title="现实可能、抽象可能与不可能的区分" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4684,7 +5065,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_pol_epi_practice_nature" data-mod="mod_03" data-topic-id="card_pol_epi_practice_nature" data-topic-title="实践的本质与三大基本特征">
+            <article class="point-entry" id="card_pol_epi_practice_nature" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_practice_nature" data-topic-title="实践的本质与三大基本特征" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -4754,7 +5135,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_practice_structure" data-mod="mod_03" data-topic-id="card_pol_epi_practice_structure" data-topic-title="实践的基本结构与运行机制">
+            <article class="point-entry" id="card_pol_epi_practice_structure" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_practice_structure" data-topic-title="实践的基本结构与运行机制" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -4823,7 +5204,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_practice_determines" data-mod="mod_03" data-topic-id="card_pol_epi_practice_determines" data-topic-title="实践对认识的决定作用">
+            <article class="point-entry" id="card_pol_epi_practice_determines" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_practice_determines" data-topic-title="实践对认识的决定作用" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -4893,7 +5274,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_essence_of_cognition" data-mod="mod_03" data-topic-id="card_pol_epi_essence_of_cognition" data-topic-title="认识的本质是能动反映">
+            <article class="point-entry" id="card_pol_epi_essence_of_cognition" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_essence_of_cognition" data-topic-title="认识的本质是能动反映" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -4962,7 +5343,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_two_leaps" data-mod="mod_03" data-topic-id="card_pol_epi_two_leaps" data-topic-title="认识运动的两次飞跃及其辩证过程">
+            <article class="point-entry" id="card_pol_epi_two_leaps" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_two_leaps" data-topic-title="认识运动的两次飞跃及其辩证过程" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5031,7 +5412,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_rational_irrational" data-mod="mod_03" data-topic-id="card_pol_epi_rational_irrational" data-topic-title="认识过程中的理性因素与非理性因素">
+            <article class="point-entry" id="card_pol_epi_rational_irrational" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_rational_irrational" data-topic-title="认识过程中的理性因素与非理性因素" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5100,7 +5481,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_truth_objective_absolute_relative" data-mod="mod_03" data-topic-id="card_pol_epi_truth_objective_absolute_relative" data-topic-title="真理的客观性、绝对性与相对性">
+            <article class="point-entry" id="card_pol_epi_truth_objective_absolute_relative" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_truth_objective_absolute_relative" data-topic-title="真理的客观性、绝对性与相对性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5170,7 +5551,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_truth_error" data-mod="mod_03" data-topic-id="card_pol_epi_truth_error" data-topic-title="真理与谬误的对立统一关系">
+            <article class="point-entry" id="card_pol_epi_truth_error" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_truth_error" data-topic-title="真理与谬误的对立统一关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5239,7 +5620,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_practice_criterion" data-mod="mod_03" data-topic-id="card_pol_epi_practice_criterion" data-topic-title="实践是检验真理的唯一标准及其确定性与不确定性">
+            <article class="point-entry" id="card_pol_epi_practice_criterion" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_practice_criterion" data-topic-title="实践是检验真理的唯一标准及其确定性与不确定性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5308,7 +5689,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_truth_value" data-mod="mod_03" data-topic-id="card_pol_epi_truth_value" data-topic-title="真理尺度与价值尺度的辩证统一">
+            <article class="point-entry" id="card_pol_epi_truth_value" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_truth_value" data-topic-title="真理尺度与价值尺度的辩证统一" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5377,7 +5758,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_epi_necessity_freedom" data-mod="mod_03" data-topic-id="card_pol_epi_necessity_freedom" data-topic-title="认识世界与改造世界：从必然走向自由">
+            <article class="point-entry" id="card_pol_epi_necessity_freedom" data-mod="mod_03" data-mod-title="认识论" data-topic-id="card_pol_epi_necessity_freedom" data-topic-title="认识世界与改造世界：从必然走向自由" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5460,7 +5841,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_pol_hist_social_being_consciousness" data-mod="mod_04" data-topic-id="card_pol_hist_social_being_consciousness" data-topic-title="社会存在与社会意识的辩证关系">
+            <article class="point-entry" id="card_pol_hist_social_being_consciousness" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_social_being_consciousness" data-topic-title="社会存在与社会意识的辩证关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -5529,7 +5910,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_social_consciousness_autonomy" data-mod="mod_04" data-topic-id="card_pol_hist_social_consciousness_autonomy" data-topic-title="社会意识的相对独立性及其反作用">
+            <article class="point-entry" id="card_pol_hist_social_consciousness_autonomy" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_social_consciousness_autonomy" data-topic-title="社会意识的相对独立性及其反作用" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -5599,7 +5980,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_productive_forces_relations" data-mod="mod_04" data-topic-id="card_pol_hist_productive_forces_relations" data-topic-title="生产力与生产关系的矛盾运动规律">
+            <article class="point-entry" id="card_pol_hist_productive_forces_relations" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_productive_forces_relations" data-topic-title="生产力与生产关系的矛盾运动规律" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -5669,7 +6050,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_economic_base_superstructure" data-mod="mod_04" data-topic-id="card_pol_hist_economic_base_superstructure" data-topic-title="经济基础与上层建筑的矛盾运动规律">
+            <article class="point-entry" id="card_pol_hist_economic_base_superstructure" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_economic_base_superstructure" data-topic-title="经济基础与上层建筑的矛盾运动规律" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5739,7 +6120,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_social_formation_evolution" data-mod="mod_04" data-topic-id="card_pol_hist_social_formation_evolution" data-topic-title="社会形态更替的一般规律与统一性多样性">
+            <article class="point-entry" id="card_pol_hist_social_formation_evolution" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_social_formation_evolution" data-topic-title="社会形态更替的一般规律与统一性多样性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5808,7 +6189,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_basic_contradiction_fundamental_force" data-mod="mod_04" data-topic-id="card_pol_hist_basic_contradiction_fundamental_force" data-topic-title="社会基本矛盾是历史发展的根本动力">
+            <article class="point-entry" id="card_pol_hist_basic_contradiction_fundamental_force" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_basic_contradiction_fundamental_force" data-topic-title="社会基本矛盾是历史发展的根本动力" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5877,7 +6258,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_science_technology_revolution" data-mod="mod_04" data-topic-id="card_pol_hist_science_technology_revolution" data-topic-title="科学技术革命在社会发展中的作用及其双刃剑本质">
+            <article class="point-entry" id="card_pol_hist_science_technology_revolution" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_science_technology_revolution" data-topic-title="科学技术革命在社会发展中的作用及其双刃剑本质" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -5946,7 +6327,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_people_creator_of_history" data-mod="mod_04" data-topic-id="card_pol_hist_people_creator_of_history" data-topic-title="人民群众是历史的创造者及党的群众路线">
+            <article class="point-entry" id="card_pol_hist_people_creator_of_history" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_people_creator_of_history" data-topic-title="人民群众是历史的创造者及党的群众路线" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -6015,7 +6396,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_hist_individual_historical_role" data-mod="mod_04" data-topic-id="card_pol_hist_individual_historical_role" data-topic-title="个人在社会历史中的作用及评价历史人物的原则">
+            <article class="point-entry" id="card_pol_hist_individual_historical_role" data-mod="mod_04" data-mod-title="唯物史观" data-topic-id="card_pol_hist_individual_historical_role" data-topic-title="个人在社会历史中的作用及评价历史人物的原则" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6098,7 +6479,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_pol_econ_commodity_dual_nature" data-mod="mod_05" data-topic-id="card_pol_econ_commodity_dual_nature" data-topic-title="商品的二重性：使用价值与价值">
+            <article class="point-entry" id="card_pol_econ_commodity_dual_nature" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_commodity_dual_nature" data-topic-title="商品的二重性：使用价值与价值" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -6167,7 +6548,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_labor_dual_nature" data-mod="mod_05" data-topic-id="card_pol_econ_labor_dual_nature" data-topic-title="劳动的二重性：具体劳动与抽象劳动">
+            <article class="point-entry" id="card_pol_econ_labor_dual_nature" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_labor_dual_nature" data-topic-title="劳动的二重性：具体劳动与抽象劳动" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -6236,7 +6617,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_value_quantity_determination" data-mod="mod_05" data-topic-id="card_pol_econ_value_quantity_determination" data-topic-title="商品价值量的决定与劳动生产率的关系">
+            <article class="point-entry" id="card_pol_econ_value_quantity_determination" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_value_quantity_determination" data-topic-title="商品价值量的决定与劳动生产率的关系" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -6305,7 +6686,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_law_of_value" data-mod="mod_05" data-topic-id="card_pol_econ_law_of_value" data-topic-title="价值规律的内容、表现形式与作用机制">
+            <article class="point-entry" id="card_pol_econ_law_of_value" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_law_of_value" data-topic-title="价值规律的内容、表现形式与作用机制" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6374,7 +6755,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_labor_power_commodity" data-mod="mod_05" data-topic-id="card_pol_econ_labor_power_commodity" data-topic-title="劳动力成为商品与货币转化为资本">
+            <article class="point-entry" id="card_pol_econ_labor_power_commodity" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_labor_power_commodity" data-topic-title="劳动力成为商品与货币转化为资本" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6443,7 +6824,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_constant_variable_capital" data-mod="mod_05" data-topic-id="card_pol_econ_constant_variable_capital" data-topic-title="不变资本与可变资本的划分及剩余价值率">
+            <article class="point-entry" id="card_pol_econ_constant_variable_capital" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_constant_variable_capital" data-topic-title="不变资本与可变资本的划分及剩余价值率" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6512,7 +6893,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_absolute_relative_surplus_value" data-mod="mod_05" data-topic-id="card_pol_econ_absolute_relative_surplus_value" data-topic-title="剩余价值生产的两种方法：绝对剩余价值与相对剩余价值">
+            <article class="point-entry" id="card_pol_econ_absolute_relative_surplus_value" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_absolute_relative_surplus_value" data-topic-title="剩余价值生产的两种方法：绝对剩余价值与相对剩余价值" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6581,7 +6962,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_capital_accumulation_organic_composition" data-mod="mod_05" data-topic-id="card_pol_econ_capital_accumulation_organic_composition" data-topic-title="资本积累与资本有机构成的提高">
+            <article class="point-entry" id="card_pol_econ_capital_accumulation_organic_composition" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_capital_accumulation_organic_composition" data-topic-title="资本积累与资本有机构成的提高" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6650,7 +7031,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_capital_circuit_turnover" data-mod="mod_05" data-topic-id="card_pol_econ_capital_circuit_turnover" data-topic-title="产业资本循环的三个阶段与三种职能形式">
+            <article class="point-entry" id="card_pol_econ_capital_circuit_turnover" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_capital_circuit_turnover" data-topic-title="产业资本循环的三个阶段与三种职能形式" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6720,7 +7101,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_fixed_circulating_capital" data-mod="mod_05" data-topic-id="card_pol_econ_fixed_circulating_capital" data-topic-title="固定资本与流动资本的划分及资本周转速度">
+            <article class="point-entry" id="card_pol_econ_fixed_circulating_capital" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_fixed_circulating_capital" data-topic-title="固定资本与流动资本的划分及资本周转速度" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6789,7 +7170,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_social_reproduction_core_problem" data-mod="mod_05" data-topic-id="card_pol_econ_social_reproduction_core_problem" data-topic-title="社会总资本再生产的核心问题与实现条件">
+            <article class="point-entry" id="card_pol_econ_social_reproduction_core_problem" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_social_reproduction_core_problem" data-topic-title="社会总资本再生产的核心问题与实现条件" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6858,7 +7239,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_profit_average_profit" data-mod="mod_05" data-topic-id="card_pol_econ_profit_average_profit" data-topic-title="剩余价值转化为利润与平均利润率的形成">
+            <article class="point-entry" id="card_pol_econ_profit_average_profit" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_profit_average_profit" data-topic-title="剩余价值转化为利润与平均利润率的形成" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -6927,7 +7308,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_econ_monopoly_capitalism" data-mod="mod_05" data-topic-id="card_pol_econ_monopoly_capitalism" data-topic-title="垄断资本主义的形成与国家垄断资本主义的实质">
+            <article class="point-entry" id="card_pol_econ_monopoly_capitalism" data-mod="mod_05" data-mod-title="政经" data-topic-id="card_pol_econ_monopoly_capitalism" data-topic-title="垄断资本主义的形成与国家垄断资本主义的实质" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge ">核心考点</span>
@@ -7010,7 +7391,7 @@
           </div>
           <div class="chapter-points-container">
             
-            <article class="point-entry" id="card_pol_soc_scientific_socialism_foundations" data-mod="mod_06" data-topic-id="card_pol_soc_scientific_socialism_foundations" data-topic-title="空想社会主义的局限与科学社会主义的创立标志">
+            <article class="point-entry" id="card_pol_soc_scientific_socialism_foundations" data-mod="mod_06" data-mod-title="科社" data-topic-id="card_pol_soc_scientific_socialism_foundations" data-topic-title="空想社会主义的局限与科学社会主义的创立标志" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -7079,7 +7460,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_soc_socialist_development_path" data-mod="mod_06" data-topic-id="card_pol_soc_socialist_development_path" data-topic-title="社会主义建设的长期性、曲折性与多样性">
+            <article class="point-entry" id="card_pol_soc_socialist_development_path" data-mod="mod_06" data-mod-title="科社" data-topic-id="card_pol_soc_socialist_development_path" data-topic-title="社会主义建设的长期性、曲折性与多样性" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -7148,7 +7529,7 @@
               </div>
             </article>
             
-            <article class="point-entry" id="card_pol_soc_communist_ideal_features" data-mod="mod_06" data-topic-id="card_pol_soc_communist_ideal_features" data-topic-title="共产主义社会的基本特征与人的自由全面发展">
+            <article class="point-entry" id="card_pol_soc_communist_ideal_features" data-mod="mod_06" data-mod-title="科社" data-topic-id="card_pol_soc_communist_ideal_features" data-topic-title="共产主义社会的基本特征与人的自由全面发展" data-is-must="1">
               <div class="point-header">
                 <div class="point-title-wrap">
                   <span class="point-badge must">核心考点</span>
@@ -7238,21 +7619,105 @@
 
   </main>
 
-  <!-- 底部常驻微型状态栏 -->
+  <!-- 碎片化功能 1：上次阅毕 · 续卷定位悬浮浮标 -->
+  <div class="resume-pill" id="resumePill" style="display: none;">
+    <div class="resume-pill-main" onclick="scrollToLastRead()">
+      <span class="resume-icon">📖</span>
+      <div class="resume-text-wrap">
+        <span class="resume-hint">续卷研习</span>
+        <strong class="resume-card-title" id="resumeCardTitle">...</strong>
+      </div>
+      <span class="resume-arrow">➔</span>
+    </div>
+    <button type="button" class="resume-dismiss-btn" onclick="dismissResumePill(event)" title="暂不续卷">✕</button>
+  </div>
+
+  <!-- 碎片化功能 2：碎片盲盒 · 随机抽背一题 (3分钟排队闪卡模态) -->
+  <div class="flashcard-overlay" id="flashcardModal" style="display: none;" onclick="handleFcBackdropClick(event)">
+    <div class="flashcard-dialog">
+      <div class="flashcard-top-bar">
+        <div class="flashcard-badge-row">
+          <span class="flashcard-mod-tag" id="fcModTag">马原</span>
+          <span class="flashcard-blindbox-label">🎲 碎片盲盒 · 随机抽测</span>
+        </div>
+        <button type="button" class="flashcard-close" onclick="closeFlashcardModal()" title="退出抽背">✕</button>
+      </div>
+
+      <div class="flashcard-main">
+        <div class="flashcard-idx-row">
+          <span class="flashcard-num" id="fcNum">考点 01</span>
+          <span class="flashcard-status-badge" id="fcStatusBadge">待研</span>
+        </div>
+        <h3 class="flashcard-title" id="fcTitle">...</h3>
+        
+        <div class="flashcard-logic" id="fcLogicChain"></div>
+
+        <div class="flashcard-prompt-label">〔请在脑海中主动回忆以下核心词句〕</div>
+        <div class="flashcard-content-box" id="fcContentBox">
+          <!-- 动态填入金句或纲要 -->
+        </div>
+      </div>
+
+      <div class="flashcard-actions">
+        <button type="button" class="fc-action-btn fc-reveal" id="fcBtnReveal" onclick="toggleFcReveal()">
+          <span id="fcRevealIcon">👁</span>
+          <span id="fcRevealText">揭晓答案</span>
+        </button>
+        <button type="button" class="fc-action-btn fc-stamp" id="fcBtnStamp" onclick="stampCurrentFc()">
+          <span class="seal-icon">印</span>
+          <span id="fcStampText">落印研毕</span>
+        </button>
+        <button type="button" class="fc-action-btn fc-next" onclick="drawNextRandomFc()">
+          <span>➔ 下一抽</span>
+        </button>
+        <button type="button" class="fc-action-btn fc-jump" onclick="jumpToCurrentFc()" title="定位到长卷深入研读">
+          <span>↗ 进卷</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部常驻微型操作与状态栏 (Feature 3: 黄金大拇指热区) -->
   <footer class="bottom-bar">
     <div class="bottom-wrap">
-      <div class="marked-stats-text">
-        <span>已研毕：<strong class="studied-num-badge" id="bottomStudiedCount">0</strong> / 72 处</span>
-        <span class="stat-divider">·</span>
-        <span>已标疑：<span class="marked-badge" id="markedCountBadge">0</span> 处</span>
+      <!-- 拇指核心功能组 -->
+      <div class="thumb-actions-group">
+        <button type="button" class="thumb-btn" onclick="openDrawerFromBottom()" title="大纲目录与全景研习进度">
+          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="7" x2="21" y2="7"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="17" x2="15" y2="17"/>
+          </svg>
+          <span>目录</span>
+        </button>
+
+        <button type="button" class="thumb-btn primary" onclick="scrollToNextUnstudied()" title="一键滑向下一个未研毕考点">
+          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+          <span>下一未研</span>
+        </button>
+
+        <button type="button" class="thumb-btn random-btn" onclick="openRandomFlashcard()" title="3分钟碎片抽题盲盒">
+          <span>🎲</span>
+          <span>抽背</span>
+        </button>
+
+        <button type="button" class="thumb-btn" onclick="generateAndCopyDoubts()" title="疑难回传清单">
+          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          </svg>
+          <span>疑难(<span id="bottomDoubtCount">0</span>)</span>
+        </button>
       </div>
-      <button type="button" class="btn-export-doubts" onclick="generateAndCopyDoubts()">
-        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-        </svg>
-        <span>一键复制疑难回传</span>
-      </button>
+
+      <!-- 研习功名状态小计数 -->
+      <div class="thumb-stats-line">
+        <span>已研毕 <strong class="studied-num-badge" id="bottomStudiedCount">0</strong> / 72</span>
+        <span class="stat-divider">·</span>
+        <span id="bottomPercentBadge">0%</span>
+      </div>
     </div>
   </footer>
 
@@ -7282,180 +7747,335 @@
       studiedPointIds = new Set();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      // 仿真器或内嵌环境识别，动态垫高安全区
-      if (window !== window.top || window.location.search.includes('sim=1')) {
-        document.documentElement.classList.add('ios-simulated-env');
-      }
-
-      pointEntries = Array.from(document.querySelectorAll('.point-entry'));
-
-      // 初始化字号记忆
-      const savedFontSize = localStorage.getItem('handbook_font_scale');
-      if (savedFontSize) {
-        baseFontSize = parseFloat(savedFontSize);
-        document.documentElement.style.setProperty('--font-scale', baseFontSize + 'px');
-      }
-
-      // 绑定模式切换
-      const btnRead = document.getElementById('btnModeRead');
-      const btnRecite = document.getElementById('btnModeRecite');
-
-      btnRead.addEventListener('click', () => setMode('read'));
-      btnRecite.addEventListener('click', () => setMode('recite'));
-
-      // 事件代理：单次监听顶层容器点击，彻底替代 800+ 独立监听器，冷启动耗时直降为 0
-      document.addEventListener('click', (e) => {
-        const cloze = e.target.closest('.cloze');
-        if (cloze && currentMode === 'recite') {
-          cloze.classList.toggle('revealed');
-          updateClozeStats();
-        }
-      });
-
-      // 揭开全部与遮盖全部
-      document.getElementById('btnRevealAll').addEventListener('click', () => {
-        document.querySelectorAll('.cloze').forEach(el => el.classList.add('revealed'));
-        updateClozeStats();
-      });
-      document.getElementById('btnMaskAll').addEventListener('click', () => {
-        document.querySelectorAll('.cloze').forEach(el => el.classList.remove('revealed'));
-        updateClozeStats();
-      });
-
-      // 抽屉导航
-      const drawerOverlay = document.getElementById('drawerOverlay');
-      document.getElementById('btnDrawer').addEventListener('click', () => {
-        drawerOverlay.classList.add('active');
-      });
-      document.getElementById('btnOpenDrawer').addEventListener('click', () => {
-        drawerOverlay.classList.add('active');
-      });
-      document.getElementById('btnCloseDrawer').addEventListener('click', closeDrawer);
-      drawerOverlay.addEventListener('click', (e) => {
-        if (e.target === drawerOverlay) closeDrawer();
-      });
-
-      // 实时监听输入 (延迟按需绑定)
-      document.querySelectorAll('.doubt-input').forEach(input => {
-        input.addEventListener('input', updateDoubtStats);
-      });
-
-      initStudyProgressUI();
-    });
-
-    // 单考点毫秒级状态同步 (无全局重排重绘)
-    function applyCardStudiedState(pid, isStudied) {
-      const entry = document.getElementById(pid);
-      if (entry) entry.classList.toggle('is-studied', isStudied);
-
-      const btn = document.getElementById('seal_' + pid);
-      if (btn) {
-        btn.classList.toggle('stamped', isStudied);
-        const label = btn.querySelector('.seal-label');
-        if (label) label.textContent = isStudied ? '已研毕' : '拟研';
-      }
-
-      const tocLink = document.getElementById('toc_link_' + pid);
-      const tocDot = document.getElementById('toc_dot_' + pid);
-      const tocMark = document.getElementById('toc_mark_' + pid);
-
-      if (tocLink) tocLink.classList.toggle('is-studied', isStudied);
-      if (tocDot) tocDot.className = 'toc-dot ' + (isStudied ? 'dot-studied' : 'dot-unstudied');
-      if (tocMark) tocMark.textContent = isStudied ? '已研毕' : '待研';
-    }
-
-    // 单章节进度统计更新
-    function updateChapterStats(modId) {
-      const sec = document.getElementById(modId);
-      if (!sec) return;
-      const cardsInMod = sec.querySelectorAll('.point-entry');
-      const totalMod = cardsInMod.length;
-      let studiedMod = 0;
-      cardsInMod.forEach(c => {
-        if (studiedPointIds.has(c.id)) studiedMod++;
-      });
-
-      const chapStat = document.getElementById('chap_stat_' + modId);
-      if (chapStat) chapStat.textContent = `${studiedMod}/${totalMod} 研毕`;
-
-      const tocModStat = document.getElementById('toc_mod_' + modId);
-      if (tocModStat) tocModStat.textContent = `${studiedMod}/${totalMod} 研毕`;
-    }
-
-    // 全局计数器与顶栏/底栏角标更新
-    function updateGlobalCounters() {
-      const totalAll = pointEntries.length || 72;
-      const totalStudied = studiedPointIds.size;
-
-      const topBadge = document.getElementById('topBadgeStudied');
-      if (topBadge) topBadge.textContent = `${totalStudied}/${totalAll}`;
-
-      const drawerTotal = document.getElementById('drawerTotalStudied');
-      if (drawerTotal) drawerTotal.textContent = `${totalStudied} / ${totalAll}`;
-      const drawerPct = document.getElementById('drawerTotalPercent');
-      if (drawerPct) {
-        const pct = Math.round(totalStudied / Math.max(1, totalAll) * 100);
-        drawerPct.textContent = `(${pct}%)`;
-      }
-
-      const bottomStudied = document.getElementById('bottomStudiedCount');
-      if (bottomStudied) bottomStudied.textContent = totalStudied;
-    }
-
-    // 首屏超轻量初始化研习进度
-    function initStudyProgressUI() {
-      if (studiedPointIds.size > 0) {
-        studiedPointIds.forEach(pid => {
-          applyCardStudiedState(pid, true);
-        });
-        document.querySelectorAll('.chapter-block').forEach(sec => {
-          updateChapterStats(sec.dataset.modId);
-        });
-      }
-      updateGlobalCounters();
-    }
-
-    // 方案 A：朱砂盖印单点增量更新交互 (60fps 瞬时响应)
-    function toggleSeal(pointId, modId) {
-      const isNowStudied = !studiedPointIds.has(pointId);
-      if (isNowStudied) {
-        studiedPointIds.add(pointId);
-        showToast('已落印研毕！好记性不如烂笔头');
-      } else {
-        studiedPointIds.delete(pointId);
-        showToast('已撤销该考点研毕印记');
-      }
-      saveStudiedPoints();
-
-      applyCardStudiedState(pointId, isNowStudied);
-      updateChapterStats(modId);
-      updateGlobalCounters();
-    }
-
-    function saveStudiedPoints() {
+    // 主题模式 (Feature 6)
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('theme-dark');
       try {
-        localStorage.setItem('handbook_studied_points_set', JSON.stringify(Array.from(studiedPointIds)));
+        localStorage.setItem('handbook_theme', isDark ? 'dark' : 'light');
       } catch(e) {}
+      updateThemeMeta(isDark);
+      showToast(isDark ? '已开启「玄石黛墨 · 夜读模式」' : '已恢复「金石宣纸 · 日读模式」');
     }
 
-    // 重置研习进度开启新一轮复习
-    function resetStudyProgress() {
-      if (studiedPointIds.size === 0) {
-        showToast('目前尚无已研毕记录');
+    function updateThemeMeta(isDark) {
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', isDark ? '#181c19' : '#f4f1ea');
+    }
+
+    // 上次阅读记忆追踪器 (Feature 1)
+    let resumeCardData = null;
+
+    function initResumeTracker() {
+      try {
+        const raw = localStorage.getItem('handbook_last_read');
+        if (raw) {
+          resumeCardData = JSON.parse(raw);
+          if (resumeCardData && resumeCardData.id) {
+            const card = document.getElementById(resumeCardData.id);
+            if (card) {
+              const rect = card.getBoundingClientRect();
+              if (window.scrollY < 200 && rect.top > 400) {
+                const titleEl = document.getElementById('resumeCardTitle');
+                if (titleEl) titleEl.textContent = resumeCardData.title || '上次研习考点';
+                const pill = document.getElementById('resumePill');
+                if (pill) pill.style.display = 'flex';
+              }
+            }
+          }
+        }
+      } catch(e) {}
+
+      let debounceTimer = null;
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+              clearTimeout(debounceTimer);
+              debounceTimer = setTimeout(() => {
+                const card = entry.target;
+                const data = {
+                  id: card.id,
+                  title: card.dataset.topicTitle || (card.querySelector('.point-title') ? card.querySelector('.point-title').textContent.trim() : ''),
+                  modId: card.dataset.mod,
+                  time: Date.now()
+                };
+                resumeCardData = data;
+                try {
+                  localStorage.setItem('handbook_last_read', JSON.stringify(data));
+                } catch(e) {}
+              }, 1200);
+            }
+          });
+        }, { threshold: [0.5] });
+
+        document.querySelectorAll('.point-entry').forEach(card => observer.observe(card));
+      }
+    }
+
+    function scrollToLastRead() {
+      if (!resumeCardData || !resumeCardData.id) return;
+      const card = document.getElementById(resumeCardData.id);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('resume-target-highlight');
+        setTimeout(() => card.classList.remove('resume-target-highlight'), 2400);
+        showToast('已为您直达上次研读处');
+      }
+      dismissResumePill();
+    }
+
+    function dismissResumePill(e) {
+      if (e) e.stopPropagation();
+      const pill = document.getElementById('resumePill');
+      if (pill) pill.style.display = 'none';
+    }
+
+    // 单手大拇指下移操作岛 (Feature 3)
+    function openDrawerFromBottom() {
+      document.getElementById('drawerOverlay').classList.add('active');
+    }
+
+    function scrollToNextUnstudied() {
+      const unstudiedCards = Array.from(document.querySelectorAll('.point-entry')).filter(c => !studiedPointIds.has(c.id));
+      if (unstudiedCards.length === 0) {
+        showToast('全卷 72 考点已全部研毕，功名圆满！🎉');
         return;
       }
-      if (confirm('确定要清空所有已盖印记，开启新一轮全景冲刺复习吗？')) {
-        studiedPointIds.forEach(pid => {
-          applyCardStudiedState(pid, false);
+
+      let nextCard = unstudiedCards.find(c => {
+        const rect = c.getBoundingClientRect();
+        return rect.top > 90;
+      });
+
+      if (!nextCard) {
+        nextCard = unstudiedCards[0];
+        showToast('已循环定位至卷首待研考点');
+      } else {
+        showToast('已滑向下一处待研考点');
+      }
+
+      nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      nextCard.classList.add('resume-target-highlight');
+      setTimeout(() => nextCard.classList.remove('resume-target-highlight'), 2400);
+    }
+
+    // 碎片盲盒 · 随机抽背一题 (Feature 2)
+    let currentFcCardEl = null;
+
+    function openRandomFlashcard() {
+      const cards = Array.from(document.querySelectorAll('.point-entry'));
+      if (cards.length === 0) return;
+
+      // 优先级：待研考点优先 > 标疑考点 > 全量
+      let candidates = cards.filter(c => !studiedPointIds.has(c.id));
+      if (candidates.length === 0) {
+        candidates = cards;
+      }
+
+      const randomIndex = Math.floor(Math.random() * candidates.length);
+      renderFlashcardModal(candidates[randomIndex]);
+    }
+
+    function drawNextRandomFc() {
+      const cards = Array.from(document.querySelectorAll('.point-entry'));
+      if (cards.length <= 1) return;
+
+      let candidates = cards.filter(c => !studiedPointIds.has(c.id));
+      if (candidates.length === 0) candidates = cards;
+
+      if (currentFcCardEl && candidates.length > 1) {
+        candidates = candidates.filter(c => c.id !== currentFcCardEl.id);
+      }
+
+      const randomIndex = Math.floor(Math.random() * candidates.length);
+      renderFlashcardModal(candidates[randomIndex]);
+    }
+
+    function renderFlashcardModal(cardEl) {
+      if (!cardEl) return;
+      currentFcCardEl = cardEl;
+
+      const modTag = cardEl.dataset.modTitle || '考点';
+      const pid = cardEl.id;
+      const title = cardEl.querySelector('.point-title') ? cardEl.querySelector('.point-title').textContent.trim() : '';
+      const isStudied = studiedPointIds.has(pid);
+
+      document.getElementById('fcModTag').textContent = '马原 · ' + modTag;
+      const badgeEl = cardEl.querySelector('.point-badge');
+      document.getElementById('fcNum').textContent = badgeEl ? badgeEl.textContent.trim() : '核心考点';
+      document.getElementById('fcTitle').textContent = title;
+
+      const statusBadge = document.getElementById('fcStatusBadge');
+      statusBadge.textContent = isStudied ? '已研毕' : '待研';
+      statusBadge.classList.toggle('stamped', isStudied);
+
+      // 逻辑链展示
+      const logicEl = cardEl.querySelector('.logic-chain');
+      const fcLogicBox = document.getElementById('fcLogicChain');
+      if (logicEl) {
+        fcLogicBox.innerHTML = logicEl.innerHTML;
+        fcLogicBox.style.display = 'block';
+      } else {
+        fcLogicBox.innerHTML = '';
+        fcLogicBox.style.display = 'none';
+      }
+
+      // 核心内容提取：优先采分金句，其次主体第一段
+      const golden = cardEl.querySelector('.golden-sentence');
+      const firstP = cardEl.querySelector('.point-body p');
+      const formula = cardEl.querySelector('.formula-line');
+
+      let contentHtml = '';
+      if (golden) {
+        contentHtml = golden.innerHTML;
+      } else if (firstP) {
+        contentHtml = `<p>${firstP.innerHTML}</p>`;
+      } else {
+        contentHtml = cardEl.querySelector('.point-body') ? cardEl.querySelector('.point-body').innerHTML : '';
+      }
+
+      if (formula) {
+        contentHtml += `<div class="quote-note xt" style="margin-top: 8px;">${formula.innerHTML}</div>`;
+      }
+
+      const contentBox = document.getElementById('fcContentBox');
+      contentBox.innerHTML = contentHtml;
+      contentBox.classList.remove('revealed');
+
+      document.getElementById('fcRevealText').textContent = '揭晓答案';
+      document.getElementById('fcRevealIcon').textContent = '👁';
+
+      const stampBtn = document.getElementById('fcBtnStamp');
+      stampBtn.classList.toggle('stamped', isStudied);
+      document.getElementById('fcStampText').textContent = isStudied ? '已研毕' : '落印研毕';
+
+      document.getElementById('flashcardModal').style.display = 'flex';
+    }
+
+    function toggleFcReveal() {
+      const box = document.getElementById('fcContentBox');
+      box.classList.toggle('revealed');
+      const isRev = box.classList.contains('revealed');
+      document.getElementById('fcRevealText').textContent = isRev ? '遮盖题眼' : '揭晓答案';
+      document.getElementById('fcRevealIcon').textContent = isRev ? '🙈' : '👁';
+    }
+
+    function stampCurrentFc() {
+      if (!currentFcCardEl) return;
+      const pid = currentFcCardEl.id;
+      const modId = currentFcCardEl.dataset.mod;
+      toggleSeal(pid, modId);
+
+      const isStudied = studiedPointIds.has(pid);
+      const statusBadge = document.getElementById('fcStatusBadge');
+      statusBadge.textContent = isStudied ? '已研毕' : '待研';
+      statusBadge.classList.toggle('stamped', isStudied);
+
+      const stampBtn = document.getElementById('fcBtnStamp');
+      stampBtn.classList.toggle('stamped', isStudied);
+      document.getElementById('fcStampText').textContent = isStudied ? '已研毕' : '落印研毕';
+    }
+
+    function jumpToCurrentFc() {
+      if (!currentFcCardEl) return;
+      const target = currentFcCardEl;
+      closeFlashcardModal();
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('resume-target-highlight');
+        setTimeout(() => target.classList.remove('resume-target-highlight'), 2400);
+      }, 150);
+    }
+
+    function closeFlashcardModal() {
+      document.getElementById('flashcardModal').style.display = 'none';
+    }
+
+    function handleFcBackdropClick(e) {
+      if (e.target.id === 'flashcardModal') {
+        closeFlashcardModal();
+      }
+    }
+
+    // 碎片减负筛卷系统 (Feature 4)
+    let currentStatusFilter = 'all';
+    let currentModuleFilter = 'all';
+
+    function applyCombinedFilters() {
+      const sections = document.querySelectorAll('.chapter-block');
+
+      sections.forEach(sec => {
+        const modId = sec.dataset.modId;
+        const matchMod = (currentModuleFilter === 'all' || modId === currentModuleFilter);
+
+        const cards = sec.querySelectorAll('.point-entry');
+        let cardsVisibleInMod = 0;
+
+        cards.forEach(card => {
+          let matchStatus = true;
+          if (currentStatusFilter === 'unstudied') {
+            matchStatus = !studiedPointIds.has(card.id);
+          } else if (currentStatusFilter === 'doubt') {
+            const txt = card.querySelector('.doubt-input');
+            matchStatus = card.classList.contains('is-marked') || (txt && txt.value.trim().length > 0);
+          } else if (currentStatusFilter === 'must') {
+            matchStatus = (card.dataset.isMust === '1');
+          }
+
+          if (matchMod && matchStatus) {
+            card.style.display = 'block';
+            cardsVisibleInMod++;
+          } else {
+            card.style.display = 'none';
+          }
         });
-        studiedPointIds.clear();
-        saveStudiedPoints();
-        document.querySelectorAll('.chapter-block').forEach(sec => {
-          updateChapterStats(sec.dataset.modId);
-        });
-        updateGlobalCounters();
-        showToast('已清空研毕印记，开启新一轮复习！');
+
+        sec.style.display = (cardsVisibleInMod > 0) ? 'block' : 'none';
+      });
+
+      updateClozeStats();
+      updateFilterBadges();
+    }
+
+    function filterStatus(status, btn) {
+      currentStatusFilter = status;
+      document.querySelectorAll('.mod-pill[data-filter-type="status"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyCombinedFilters();
+      if (status !== 'all') {
+        window.scrollTo({ top: 90, behavior: 'smooth' });
+      }
+    }
+
+    function filterModule(modId, btn) {
+      currentModuleFilter = modId;
+      document.querySelectorAll('.mod-pill[data-filter-type="module"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyCombinedFilters();
+      if (modId !== 'all') {
+        const el = document.getElementById(modId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function updateFilterBadges() {
+      const allCards = pointEntries.length || 72;
+      const unstudiedCount = allCards - studiedPointIds.size;
+      const doubtCount = collectDoubts().length;
+
+      const pillUnstudied = document.getElementById('pillUnstudiedCount');
+      if (pillUnstudied) pillUnstudied.textContent = Math.max(0, unstudiedCount);
+
+      const pillDoubt = document.getElementById('pillDoubtCount');
+      if (pillDoubt) pillDoubt.textContent = doubtCount;
+
+      const bottomDoubt = document.getElementById('bottomDoubtCount');
+      if (bottomDoubt) bottomDoubt.textContent = doubtCount;
+
+      const bottomPct = document.getElementById('bottomPercentBadge');
+      if (bottomPct) {
+        const pct = Math.round(studiedPointIds.size / Math.max(1, allCards) * 100);
+        bottomPct.textContent = `${pct}%`;
       }
     }
 
@@ -7495,26 +8115,6 @@
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
-    }
-
-    function filterModule(modId, btn) {
-      document.querySelectorAll('.mod-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const sections = document.querySelectorAll('.chapter-block');
-      if (modId === 'all') {
-        sections.forEach(s => s.style.display = 'block');
-      } else {
-        sections.forEach(s => {
-          if (s.dataset.modId === modId) {
-            s.style.display = 'block';
-            s.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            s.style.display = 'none';
-          }
-        });
-      }
-      updateClozeStats();
     }
 
     function setMode(mode) {
