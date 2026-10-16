@@ -443,7 +443,7 @@
       font-size: 22px;
       font-weight: 700;
       letter-spacing: 0.02em;
-      color: #151a17;
+      color: var(--ink);
       margin-bottom: 6px;
     }
     .lead-text {
@@ -609,7 +609,7 @@
       font-family: var(--font-song);
       font-size: 17px;
       font-weight: 700;
-      color: #171c19;
+      color: var(--ink);
     }
 
     /* 极简逻辑脉络单行图 (Logic Chain Flow) */
@@ -677,7 +677,7 @@
       font-size: 15.5px;
       line-height: 1.85;
       font-weight: 600;
-      color: #1a1e1b;
+      color: var(--ink);
     }
 
     /* 极简标疑按键 */
@@ -706,6 +706,253 @@
       background: var(--mark-amber);
       border-color: var(--mark-amber);
       color: #fff;
+    }
+
+    /* 考点卡片云扬朗读按键 */
+    .card-audio-btn {
+      font-family: var(--font-sans);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--sub);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.14s ease;
+      touch-action: manipulation;
+    }
+    .card-audio-btn:hover, .card-audio-btn:active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .card-audio-btn.playing {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(185, 56, 44, 0.25);
+    }
+    .card-audio-btn .audio-btn-wave {
+      display: none;
+      align-items: center;
+      gap: 2px;
+      height: 10px;
+    }
+    .card-audio-btn.playing .audio-btn-wave {
+      display: inline-flex;
+    }
+    .card-audio-btn.playing .audio-btn-icon {
+      display: none;
+    }
+    .card-audio-btn .ab-bar {
+      width: 2px;
+      height: 3px;
+      background: currentColor;
+      border-radius: 1px;
+    }
+    .card-audio-btn.playing .ab-bar {
+      animation: abWavePulse 0.8s ease-in-out infinite alternate;
+    }
+    .card-audio-btn.playing .ab-bar:nth-child(2) { animation-delay: 0.2s; }
+    .card-audio-btn.playing .ab-bar:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes abWavePulse {
+      0% { height: 3px; }
+      100% { height: 10px; }
+    }
+
+    body.theme-dark .card-audio-btn {
+      background: rgba(39, 36, 34, 0.8);
+      border-color: var(--line);
+      color: var(--muted);
+    }
+    body.theme-dark .card-audio-btn.playing {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* 全局云扬带背浮动播控坞 */
+    .audio-float-dock {
+      position: fixed;
+      bottom: calc(52px + env(safe-area-inset-bottom, 16px));
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 16px);
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(44, 33, 22, 0.12);
+      z-index: 102;
+      overflow: hidden;
+      animation: dockSlideUp 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    body.theme-dark .audio-float-dock {
+      background: rgba(32, 30, 28, 0.95);
+      border-color: #383430;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    @keyframes dockSlideUp {
+      from { transform: translate(-50%, 20px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    .audio-dock-progress-track {
+      width: 100%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      position: relative;
+    }
+    body.theme-dark .audio-dock-progress-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .audio-dock-progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      transition: width 0.1s linear;
+    }
+
+    .audio-dock-main {
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .audio-dock-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .audio-dock-waveform {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+    .audio-wave-bar {
+      width: 2.2px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+      transition: height 0.15s ease;
+    }
+    .audio-float-dock.playing .audio-wave-bar {
+      animation: wavePulseDock 0.8s ease-in-out infinite alternate;
+    }
+    .audio-float-dock.playing .audio-wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .audio-float-dock.playing .audio-wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .audio-float-dock.playing .audio-wave-bar:nth-child(4) { animation-delay: 0.45s; }
+
+    @keyframes wavePulseDock {
+      0% { height: 3px; }
+      100% { height: 13px; }
+    }
+
+    .audio-dock-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+    .audio-dock-title {
+      font-family: var(--font-song);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.25;
+    }
+    .audio-dock-sub {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+    .audio-dock-voice-tag {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 0 4px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 9.5px;
+    }
+    .audio-dock-time {
+      font-variant-numeric: tabular-nums;
+      font-size: 10px;
+    }
+
+    .audio-dock-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .audio-dock-btn {
+      border: 1px solid var(--line);
+      background: var(--bg-card);
+      color: var(--ink);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .audio-dock-btn:active {
+      transform: scale(0.92);
+    }
+    .audio-dock-btn.audio-speed-pill {
+      border-radius: 12px;
+      width: auto;
+      height: 24px;
+      padding: 0 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-color: rgba(185, 56, 44, 0.25);
+    }
+    .audio-dock-btn.audio-play-toggle {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 2px 6px rgba(185, 56, 44, 0.3);
+    }
+    .audio-dock-btn.audio-play-toggle:active {
+      background: var(--accent-hover);
+    }
+    .audio-dock-btn.audio-close-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      width: 24px;
+      height: 24px;
     }
 
     /* 正文主体 */
@@ -2189,7 +2436,7 @@
             <circle cx="6" cy="18" r="3"/>
             <circle cx="18" cy="16" r="3"/>
           </svg>
-          <span>朗读声音多方案选听与调优</span>
+          <span>已选音色：云扬（新闻播报 · 权威男声）</span>
         </span>
         <svg class="ui-svg arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"/>
@@ -3129,6 +3376,18 @@
                     <h3 class="point-title">01 马克思主义的三大组成部分</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_b6cbf99b7869f305" data-card-id="card_politics_b6cbf99b7869f305" onclick="toggleCardAudio('card_politics_b6cbf99b7869f305')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_b6cbf99b7869f305" data-point-id="card_politics_b6cbf99b7869f305" data-mod-id="mod_00" onclick="toggleSeal('card_politics_b6cbf99b7869f305', 'mod_00')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3230,6 +3489,18 @@
                     <h3 class="point-title">02 马克思主义的基本立场、观点和方法</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_dca1ec842306c2fb" data-card-id="card_politics_dca1ec842306c2fb" onclick="toggleCardAudio('card_politics_dca1ec842306c2fb')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_dca1ec842306c2fb" data-point-id="card_politics_dca1ec842306c2fb" data-mod-id="mod_00" onclick="toggleSeal('card_politics_dca1ec842306c2fb', 'mod_00')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3345,6 +3616,18 @@
                     <h3 class="point-title">01 列宁的物质定义与客观实在性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_01100df6391835a2" data-card-id="card_politics_01100df6391835a2" onclick="toggleCardAudio('card_politics_01100df6391835a2')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_01100df6391835a2" data-point-id="card_politics_01100df6391835a2" data-mod-id="mod_01" onclick="toggleSeal('card_politics_01100df6391835a2', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3446,6 +3729,18 @@
                     <h3 class="point-title">02 哲学基本问题的两个方面</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_64ec0ef20b5e7333" data-card-id="card_politics_64ec0ef20b5e7333" onclick="toggleCardAudio('card_politics_64ec0ef20b5e7333')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_64ec0ef20b5e7333" data-point-id="card_politics_64ec0ef20b5e7333" data-mod-id="mod_01" onclick="toggleSeal('card_politics_64ec0ef20b5e7333', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3547,6 +3842,18 @@
                     <h3 class="point-title">03 意识的起源和本质</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_5c04f99e0d2f854d" data-card-id="card_politics_5c04f99e0d2f854d" onclick="toggleCardAudio('card_politics_5c04f99e0d2f854d')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_5c04f99e0d2f854d" data-point-id="card_politics_5c04f99e0d2f854d" data-mod-id="mod_01" onclick="toggleSeal('card_politics_5c04f99e0d2f854d', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3649,6 +3956,18 @@
                     <h3 class="point-title">04 意识能不能运动？</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_f396ea06de5fe50f" data-card-id="card_politics_f396ea06de5fe50f" onclick="toggleCardAudio('card_politics_f396ea06de5fe50f')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_f396ea06de5fe50f" data-point-id="card_politics_f396ea06de5fe50f" data-mod-id="mod_01" onclick="toggleSeal('card_politics_f396ea06de5fe50f', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3744,6 +4063,18 @@
                     <h3 class="point-title">05 物质的唯一特性与未知世界辨析</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_mat_substance_v1" data-card-id="card_politics_mat_substance_v1" onclick="toggleCardAudio('card_politics_mat_substance_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_substance_v1" data-point-id="card_politics_mat_substance_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_substance_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3839,6 +4170,18 @@
                     <h3 class="point-title">06 旧唯物主义的“半截子”局限</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_f92e8489827056e4" data-card-id="card_politics_f92e8489827056e4" onclick="toggleCardAudio('card_politics_f92e8489827056e4')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_f92e8489827056e4" data-point-id="card_politics_f92e8489827056e4" data-mod-id="mod_01" onclick="toggleSeal('card_politics_f92e8489827056e4', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -3940,6 +4283,18 @@
                     <h3 class="point-title">07 意识能动作用与客观规律性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_a12e43f7109b546c" data-card-id="card_politics_a12e43f7109b546c" onclick="toggleCardAudio('card_politics_a12e43f7109b546c')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_a12e43f7109b546c" data-point-id="card_politics_a12e43f7109b546c" data-mod-id="mod_01" onclick="toggleSeal('card_politics_a12e43f7109b546c', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4043,6 +4398,18 @@
                     <h3 class="point-title">08 ‘意识完全不能运动’为什么错？</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_16802f8826e810c8" data-card-id="card_politics_16802f8826e810c8" onclick="toggleCardAudio('card_politics_16802f8826e810c8')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_16802f8826e810c8" data-point-id="card_politics_16802f8826e810c8" data-mod-id="mod_01" onclick="toggleSeal('card_politics_16802f8826e810c8', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4138,6 +4505,18 @@
                     <h3 class="point-title">09 物质、运动与相对静止</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_356679a94c1f1f00" data-card-id="card_politics_356679a94c1f1f00" onclick="toggleCardAudio('card_politics_356679a94c1f1f00')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_356679a94c1f1f00" data-point-id="card_politics_356679a94c1f1f00" data-mod-id="mod_01" onclick="toggleSeal('card_politics_356679a94c1f1f00', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4239,6 +4618,18 @@
                     <h3 class="point-title">10 物质运动与时空的绝对性与相对性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_mat_motion_space_v1" data-card-id="card_politics_mat_motion_space_v1" onclick="toggleCardAudio('card_politics_mat_motion_space_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_motion_space_v1" data-point-id="card_politics_mat_motion_space_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_motion_space_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4334,6 +4725,18 @@
                     <h3 class="point-title">11 物质与运动为什么不可分割</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_ac34c7b93373d3de" data-card-id="card_politics_ac34c7b93373d3de" onclick="toggleCardAudio('card_politics_ac34c7b93373d3de')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_ac34c7b93373d3de" data-point-id="card_politics_ac34c7b93373d3de" data-mod-id="mod_01" onclick="toggleSeal('card_politics_ac34c7b93373d3de', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4435,6 +4838,18 @@
                     <h3 class="point-title">12 时间和空间的客观性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_b863d4e75f0227c7" data-card-id="card_politics_b863d4e75f0227c7" onclick="toggleCardAudio('card_politics_b863d4e75f0227c7')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_b863d4e75f0227c7" data-point-id="card_politics_b863d4e75f0227c7" data-mod-id="mod_01" onclick="toggleSeal('card_politics_b863d4e75f0227c7', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4536,6 +4951,18 @@
                     <h3 class="point-title">13 意识的能动性与人工智能边界</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_aedb3175306c6ead" data-card-id="card_politics_aedb3175306c6ead" onclick="toggleCardAudio('card_politics_aedb3175306c6ead')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_aedb3175306c6ead" data-point-id="card_politics_aedb3175306c6ead" data-mod-id="mod_01" onclick="toggleSeal('card_politics_aedb3175306c6ead', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4637,6 +5064,18 @@
                     <h3 class="point-title">14 自然界与人类社会的关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_21ae1c5994363e41" data-card-id="card_politics_21ae1c5994363e41" onclick="toggleCardAudio('card_politics_21ae1c5994363e41')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_21ae1c5994363e41" data-point-id="card_politics_21ae1c5994363e41" data-mod-id="mod_01" onclick="toggleSeal('card_politics_21ae1c5994363e41', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4738,6 +5177,18 @@
                     <h3 class="point-title">15 人工智能与人类意识的边界</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_c7fda79c64ef3357" data-card-id="card_politics_c7fda79c64ef3357" onclick="toggleCardAudio('card_politics_c7fda79c64ef3357')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_c7fda79c64ef3357" data-point-id="card_politics_c7fda79c64ef3357" data-mod-id="mod_01" onclick="toggleSeal('card_politics_c7fda79c64ef3357', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4840,6 +5291,18 @@
                     <h3 class="point-title">16 意识的起源、本质及其能动作用</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_mat_consciousness_v1" data-card-id="card_politics_mat_consciousness_v1" onclick="toggleCardAudio('card_politics_mat_consciousness_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_consciousness_v1" data-point-id="card_politics_mat_consciousness_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_consciousness_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -4941,6 +5404,18 @@
                     <h3 class="point-title">17 世界的物质统一性原理</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_5aaf9aabde7cf578" data-card-id="card_politics_5aaf9aabde7cf578" onclick="toggleCardAudio('card_politics_5aaf9aabde7cf578')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_5aaf9aabde7cf578" data-point-id="card_politics_5aaf9aabde7cf578" data-mod-id="mod_01" onclick="toggleSeal('card_politics_5aaf9aabde7cf578', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5043,6 +5518,18 @@
                     <h3 class="point-title">18 世界的物质统一性原理及其实践意义</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_mat_world_unity_v1" data-card-id="card_politics_mat_world_unity_v1" onclick="toggleCardAudio('card_politics_mat_world_unity_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_mat_world_unity_v1" data-point-id="card_politics_mat_world_unity_v1" data-mod-id="mod_01" onclick="toggleSeal('card_politics_mat_world_unity_v1', 'mod_01')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5157,6 +5644,18 @@
                     <h3 class="point-title">01 量变质变规律与适度原则</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_dialectic_quality_quantity_v1" data-card-id="card_politics_dialectic_quality_quantity_v1" onclick="toggleCardAudio('card_politics_dialectic_quality_quantity_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_dialectic_quality_quantity_v1" data-point-id="card_politics_dialectic_quality_quantity_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_dialectic_quality_quantity_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5258,6 +5757,18 @@
                     <h3 class="point-title">02 矛盾的同一性和斗争性及其辩证关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_contradiction_unity_struggle_v1" data-card-id="card_politics_contradiction_unity_struggle_v1" onclick="toggleCardAudio('card_politics_contradiction_unity_struggle_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_unity_struggle_v1" data-point-id="card_politics_contradiction_unity_struggle_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_unity_struggle_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5359,6 +5870,18 @@
                     <h3 class="point-title">03 否定之否定规律与辩证否定观（扬弃）</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_dialectic_negation_negation_v1" data-card-id="card_politics_dialectic_negation_negation_v1" onclick="toggleCardAudio('card_politics_dialectic_negation_negation_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_dialectic_negation_negation_v1" data-point-id="card_politics_dialectic_negation_negation_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_dialectic_negation_negation_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5460,6 +5983,18 @@
                     <h3 class="point-title">04 矛盾同一性与斗争性在事物发展中的作用</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_contradiction_dynamics_v1" data-card-id="card_politics_contradiction_dynamics_v1" onclick="toggleCardAudio('card_politics_contradiction_dynamics_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_dynamics_v1" data-point-id="card_politics_contradiction_dynamics_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_dynamics_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5561,6 +6096,18 @@
                     <h3 class="point-title">05 矛盾的普遍性与特殊性辩证关系及矛盾问题精髓</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_contradiction_general_specific_v1" data-card-id="card_politics_contradiction_general_specific_v1" onclick="toggleCardAudio('card_politics_contradiction_general_specific_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_general_specific_v1" data-point-id="card_politics_contradiction_general_specific_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_general_specific_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5662,6 +6209,18 @@
                     <h3 class="point-title">06 两点论和重点论的统一及主次矛盾辨析</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_contradiction_two_points_focus_v1" data-card-id="card_politics_contradiction_two_points_focus_v1" onclick="toggleCardAudio('card_politics_contradiction_two_points_focus_v1')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_contradiction_two_points_focus_v1" data-point-id="card_politics_contradiction_two_points_focus_v1" data-mod-id="mod_02" onclick="toggleSeal('card_politics_contradiction_two_points_focus_v1', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5757,6 +6316,18 @@
                     <h3 class="point-title">07 内容与形式的辩证关系及形式主义边界</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_7a6a02aa72cc7835" data-card-id="card_politics_7a6a02aa72cc7835" onclick="toggleCardAudio('card_politics_7a6a02aa72cc7835')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_7a6a02aa72cc7835" data-point-id="card_politics_7a6a02aa72cc7835" data-mod-id="mod_02" onclick="toggleSeal('card_politics_7a6a02aa72cc7835', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5859,6 +6430,18 @@
                     <h3 class="point-title">08 对立统一规律为什么是唯物辩证法的实质和核心</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_c96e47031faa537b" data-card-id="card_politics_c96e47031faa537b" onclick="toggleCardAudio('card_politics_c96e47031faa537b')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_c96e47031faa537b" data-point-id="card_politics_c96e47031faa537b" data-mod-id="mod_02" onclick="toggleSeal('card_politics_c96e47031faa537b', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -5960,6 +6543,18 @@
                     <h3 class="point-title">09 本质、现象、真象、假象与错觉如何区分</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_9a624c3e808fe77a" data-card-id="card_politics_9a624c3e808fe77a" onclick="toggleCardAudio('card_politics_9a624c3e808fe77a')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_9a624c3e808fe77a" data-point-id="card_politics_9a624c3e808fe77a" data-mod-id="mod_02" onclick="toggleSeal('card_politics_9a624c3e808fe77a', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6062,6 +6657,18 @@
                     <h3 class="point-title">10 矛盾的同一性和斗争性关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_33f1c3df8f65cfed" data-card-id="card_politics_33f1c3df8f65cfed" onclick="toggleCardAudio('card_politics_33f1c3df8f65cfed')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_33f1c3df8f65cfed" data-point-id="card_politics_33f1c3df8f65cfed" data-mod-id="mod_02" onclick="toggleSeal('card_politics_33f1c3df8f65cfed', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6164,6 +6771,18 @@
                     <h3 class="point-title">11 矛盾同一性在事物发展中的三方面作用</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_4fc195b016ba55c4" data-card-id="card_politics_4fc195b016ba55c4" onclick="toggleCardAudio('card_politics_4fc195b016ba55c4')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_4fc195b016ba55c4" data-point-id="card_politics_4fc195b016ba55c4" data-mod-id="mod_02" onclick="toggleSeal('card_politics_4fc195b016ba55c4', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6265,6 +6884,18 @@
                     <h3 class="point-title">12 原因与结果的辩证关系及因果识别</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_d23a9e7364cd675a" data-card-id="card_politics_d23a9e7364cd675a" onclick="toggleCardAudio('card_politics_d23a9e7364cd675a')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_d23a9e7364cd675a" data-point-id="card_politics_d23a9e7364cd675a" data-mod-id="mod_02" onclick="toggleSeal('card_politics_d23a9e7364cd675a', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6367,6 +6998,18 @@
                     <h3 class="point-title">13 矛盾的普遍性和特殊性关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_a51885ec724a817f" data-card-id="card_politics_a51885ec724a817f" onclick="toggleCardAudio('card_politics_a51885ec724a817f')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_a51885ec724a817f" data-point-id="card_politics_a51885ec724a817f" data-mod-id="mod_02" onclick="toggleSeal('card_politics_a51885ec724a817f', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6469,6 +7112,18 @@
                     <h3 class="point-title">14 必然与偶然的关系及判断边界</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_2190ef51e5afb26e" data-card-id="card_politics_2190ef51e5afb26e" onclick="toggleCardAudio('card_politics_2190ef51e5afb26e')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_2190ef51e5afb26e" data-point-id="card_politics_2190ef51e5afb26e" data-mod-id="mod_02" onclick="toggleSeal('card_politics_2190ef51e5afb26e', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6571,6 +7226,18 @@
                     <h3 class="point-title">15 两点论和重点论统一</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_7e494f5482d51907" data-card-id="card_politics_7e494f5482d51907" onclick="toggleCardAudio('card_politics_7e494f5482d51907')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_7e494f5482d51907" data-point-id="card_politics_7e494f5482d51907" data-mod-id="mod_02" onclick="toggleSeal('card_politics_7e494f5482d51907', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6668,6 +7335,18 @@
                     <h3 class="point-title">16 现实可能、抽象可能与不可能的区分</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_politics_9a78b405388309dd" data-card-id="card_politics_9a78b405388309dd" onclick="toggleCardAudio('card_politics_9a78b405388309dd')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_politics_9a78b405388309dd" data-point-id="card_politics_9a78b405388309dd" data-mod-id="mod_02" onclick="toggleSeal('card_politics_9a78b405388309dd', 'mod_02')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6784,6 +7463,18 @@
                     <h3 class="point-title">01 实践的本质与三大基本特征</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_practice_nature" data-card-id="card_pol_epi_practice_nature" onclick="toggleCardAudio('card_pol_epi_practice_nature')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_nature" data-point-id="card_pol_epi_practice_nature" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_nature', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6886,6 +7577,18 @@
                     <h3 class="point-title">02 实践的基本结构与运行机制</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_practice_structure" data-card-id="card_pol_epi_practice_structure" onclick="toggleCardAudio('card_pol_epi_practice_structure')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_structure" data-point-id="card_pol_epi_practice_structure" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_structure', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -6987,6 +7690,18 @@
                     <h3 class="point-title">03 实践对认识的决定作用</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_practice_determines" data-card-id="card_pol_epi_practice_determines" onclick="toggleCardAudio('card_pol_epi_practice_determines')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_determines" data-point-id="card_pol_epi_practice_determines" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_determines', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7089,6 +7804,18 @@
                     <h3 class="point-title">04 认识的本质是能动反映</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_essence_of_cognition" data-card-id="card_pol_epi_essence_of_cognition" onclick="toggleCardAudio('card_pol_epi_essence_of_cognition')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_essence_of_cognition" data-point-id="card_pol_epi_essence_of_cognition" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_essence_of_cognition', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7190,6 +7917,18 @@
                     <h3 class="point-title">05 认识运动的两次飞跃及其辩证过程</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_two_leaps" data-card-id="card_pol_epi_two_leaps" onclick="toggleCardAudio('card_pol_epi_two_leaps')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_two_leaps" data-point-id="card_pol_epi_two_leaps" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_two_leaps', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7291,6 +8030,18 @@
                     <h3 class="point-title">06 认识过程中的理性因素与非理性因素</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_rational_irrational" data-card-id="card_pol_epi_rational_irrational" onclick="toggleCardAudio('card_pol_epi_rational_irrational')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_rational_irrational" data-point-id="card_pol_epi_rational_irrational" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_rational_irrational', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7392,6 +8143,18 @@
                     <h3 class="point-title">07 真理的客观性、绝对性与相对性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_truth_objective_absolute_relative" data-card-id="card_pol_epi_truth_objective_absolute_relative" onclick="toggleCardAudio('card_pol_epi_truth_objective_absolute_relative')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_objective_absolute_relative" data-point-id="card_pol_epi_truth_objective_absolute_relative" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_objective_absolute_relative', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7494,6 +8257,18 @@
                     <h3 class="point-title">08 真理与谬误的对立统一关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_truth_error" data-card-id="card_pol_epi_truth_error" onclick="toggleCardAudio('card_pol_epi_truth_error')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_error" data-point-id="card_pol_epi_truth_error" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_error', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7595,6 +8370,18 @@
                     <h3 class="point-title">09 实践是检验真理的唯一标准及其确定性与不确定性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_practice_criterion" data-card-id="card_pol_epi_practice_criterion" onclick="toggleCardAudio('card_pol_epi_practice_criterion')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_practice_criterion" data-point-id="card_pol_epi_practice_criterion" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_practice_criterion', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7696,6 +8483,18 @@
                     <h3 class="point-title">10 真理尺度与价值尺度的辩证统一</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_truth_value" data-card-id="card_pol_epi_truth_value" onclick="toggleCardAudio('card_pol_epi_truth_value')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_truth_value" data-point-id="card_pol_epi_truth_value" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_truth_value', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7797,6 +8596,18 @@
                     <h3 class="point-title">11 认识世界与改造世界：从必然走向自由</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_epi_necessity_freedom" data-card-id="card_pol_epi_necessity_freedom" onclick="toggleCardAudio('card_pol_epi_necessity_freedom')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_epi_necessity_freedom" data-point-id="card_pol_epi_necessity_freedom" data-mod-id="mod_03" onclick="toggleSeal('card_pol_epi_necessity_freedom', 'mod_03')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -7912,6 +8723,18 @@
                     <h3 class="point-title">01 社会存在与社会意识的辩证关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_social_being_consciousness" data-card-id="card_pol_hist_social_being_consciousness" onclick="toggleCardAudio('card_pol_hist_social_being_consciousness')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_being_consciousness" data-point-id="card_pol_hist_social_being_consciousness" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_being_consciousness', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8013,6 +8836,18 @@
                     <h3 class="point-title">02 社会意识的相对独立性及其反作用</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_social_consciousness_autonomy" data-card-id="card_pol_hist_social_consciousness_autonomy" onclick="toggleCardAudio('card_pol_hist_social_consciousness_autonomy')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_consciousness_autonomy" data-point-id="card_pol_hist_social_consciousness_autonomy" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_consciousness_autonomy', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8115,6 +8950,18 @@
                     <h3 class="point-title">03 生产力与生产关系的矛盾运动规律</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_productive_forces_relations" data-card-id="card_pol_hist_productive_forces_relations" onclick="toggleCardAudio('card_pol_hist_productive_forces_relations')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_productive_forces_relations" data-point-id="card_pol_hist_productive_forces_relations" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_productive_forces_relations', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8217,6 +9064,18 @@
                     <h3 class="point-title">04 经济基础与上层建筑的矛盾运动规律</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_economic_base_superstructure" data-card-id="card_pol_hist_economic_base_superstructure" onclick="toggleCardAudio('card_pol_hist_economic_base_superstructure')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_economic_base_superstructure" data-point-id="card_pol_hist_economic_base_superstructure" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_economic_base_superstructure', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8319,6 +9178,18 @@
                     <h3 class="point-title">05 社会形态更替的一般规律与统一性多样性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_social_formation_evolution" data-card-id="card_pol_hist_social_formation_evolution" onclick="toggleCardAudio('card_pol_hist_social_formation_evolution')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_social_formation_evolution" data-point-id="card_pol_hist_social_formation_evolution" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_social_formation_evolution', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8420,6 +9291,18 @@
                     <h3 class="point-title">06 社会基本矛盾是历史发展的根本动力</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_basic_contradiction_fundamental_force" data-card-id="card_pol_hist_basic_contradiction_fundamental_force" onclick="toggleCardAudio('card_pol_hist_basic_contradiction_fundamental_force')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_basic_contradiction_fundamental_force" data-point-id="card_pol_hist_basic_contradiction_fundamental_force" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_basic_contradiction_fundamental_force', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8521,6 +9404,18 @@
                     <h3 class="point-title">07 科学技术革命在社会发展中的作用及其双刃剑本质</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_science_technology_revolution" data-card-id="card_pol_hist_science_technology_revolution" onclick="toggleCardAudio('card_pol_hist_science_technology_revolution')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_science_technology_revolution" data-point-id="card_pol_hist_science_technology_revolution" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_science_technology_revolution', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8622,6 +9517,18 @@
                     <h3 class="point-title">08 人民群众是历史的创造者及党的群众路线</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_people_creator_of_history" data-card-id="card_pol_hist_people_creator_of_history" onclick="toggleCardAudio('card_pol_hist_people_creator_of_history')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_people_creator_of_history" data-point-id="card_pol_hist_people_creator_of_history" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_people_creator_of_history', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8723,6 +9630,18 @@
                     <h3 class="point-title">09 个人在社会历史中的作用及评价历史人物的原则</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_hist_individual_historical_role" data-card-id="card_pol_hist_individual_historical_role" onclick="toggleCardAudio('card_pol_hist_individual_historical_role')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_hist_individual_historical_role" data-point-id="card_pol_hist_individual_historical_role" data-mod-id="mod_04" onclick="toggleSeal('card_pol_hist_individual_historical_role', 'mod_04')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8838,6 +9757,18 @@
                     <h3 class="point-title">01 商品的二重性：使用价值与价值</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_commodity_dual_nature" data-card-id="card_pol_econ_commodity_dual_nature" onclick="toggleCardAudio('card_pol_econ_commodity_dual_nature')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_commodity_dual_nature" data-point-id="card_pol_econ_commodity_dual_nature" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_commodity_dual_nature', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -8939,6 +9870,18 @@
                     <h3 class="point-title">02 劳动的二重性：具体劳动与抽象劳动</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_labor_dual_nature" data-card-id="card_pol_econ_labor_dual_nature" onclick="toggleCardAudio('card_pol_econ_labor_dual_nature')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_labor_dual_nature" data-point-id="card_pol_econ_labor_dual_nature" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_labor_dual_nature', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9040,6 +9983,18 @@
                     <h3 class="point-title">03 商品价值量的决定与劳动生产率的关系</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_value_quantity_determination" data-card-id="card_pol_econ_value_quantity_determination" onclick="toggleCardAudio('card_pol_econ_value_quantity_determination')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_value_quantity_determination" data-point-id="card_pol_econ_value_quantity_determination" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_value_quantity_determination', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9141,6 +10096,18 @@
                     <h3 class="point-title">04 价值规律的内容、表现形式与作用机制</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_law_of_value" data-card-id="card_pol_econ_law_of_value" onclick="toggleCardAudio('card_pol_econ_law_of_value')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_law_of_value" data-point-id="card_pol_econ_law_of_value" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_law_of_value', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9242,6 +10209,18 @@
                     <h3 class="point-title">05 劳动力成为商品与货币转化为资本</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_labor_power_commodity" data-card-id="card_pol_econ_labor_power_commodity" onclick="toggleCardAudio('card_pol_econ_labor_power_commodity')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_labor_power_commodity" data-point-id="card_pol_econ_labor_power_commodity" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_labor_power_commodity', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9343,6 +10322,18 @@
                     <h3 class="point-title">06 不变资本与可变资本的划分及剩余价值率</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_constant_variable_capital" data-card-id="card_pol_econ_constant_variable_capital" onclick="toggleCardAudio('card_pol_econ_constant_variable_capital')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_constant_variable_capital" data-point-id="card_pol_econ_constant_variable_capital" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_constant_variable_capital', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9444,6 +10435,18 @@
                     <h3 class="point-title">07 剩余价值生产的两种方法：绝对剩余价值与相对剩余价值</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_absolute_relative_surplus_value" data-card-id="card_pol_econ_absolute_relative_surplus_value" onclick="toggleCardAudio('card_pol_econ_absolute_relative_surplus_value')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_absolute_relative_surplus_value" data-point-id="card_pol_econ_absolute_relative_surplus_value" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_absolute_relative_surplus_value', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9545,6 +10548,18 @@
                     <h3 class="point-title">08 资本积累与资本有机构成的提高</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_capital_accumulation_organic_composition" data-card-id="card_pol_econ_capital_accumulation_organic_composition" onclick="toggleCardAudio('card_pol_econ_capital_accumulation_organic_composition')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_capital_accumulation_organic_composition" data-point-id="card_pol_econ_capital_accumulation_organic_composition" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_capital_accumulation_organic_composition', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9646,6 +10661,18 @@
                     <h3 class="point-title">09 产业资本循环的三个阶段与三种职能形式</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_capital_circuit_turnover" data-card-id="card_pol_econ_capital_circuit_turnover" onclick="toggleCardAudio('card_pol_econ_capital_circuit_turnover')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_capital_circuit_turnover" data-point-id="card_pol_econ_capital_circuit_turnover" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_capital_circuit_turnover', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9748,6 +10775,18 @@
                     <h3 class="point-title">10 固定资本与流动资本的划分及资本周转速度</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_fixed_circulating_capital" data-card-id="card_pol_econ_fixed_circulating_capital" onclick="toggleCardAudio('card_pol_econ_fixed_circulating_capital')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_fixed_circulating_capital" data-point-id="card_pol_econ_fixed_circulating_capital" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_fixed_circulating_capital', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9849,6 +10888,18 @@
                     <h3 class="point-title">11 社会总资本再生产的核心问题与实现条件</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_social_reproduction_core_problem" data-card-id="card_pol_econ_social_reproduction_core_problem" onclick="toggleCardAudio('card_pol_econ_social_reproduction_core_problem')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_social_reproduction_core_problem" data-point-id="card_pol_econ_social_reproduction_core_problem" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_social_reproduction_core_problem', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -9950,6 +11001,18 @@
                     <h3 class="point-title">12 剩余价值转化为利润与平均利润率的形成</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_profit_average_profit" data-card-id="card_pol_econ_profit_average_profit" onclick="toggleCardAudio('card_pol_econ_profit_average_profit')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_profit_average_profit" data-point-id="card_pol_econ_profit_average_profit" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_profit_average_profit', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -10051,6 +11114,18 @@
                     <h3 class="point-title">13 垄断资本主义的形成与国家垄断资本主义的实质</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_econ_monopoly_capitalism" data-card-id="card_pol_econ_monopoly_capitalism" onclick="toggleCardAudio('card_pol_econ_monopoly_capitalism')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_econ_monopoly_capitalism" data-point-id="card_pol_econ_monopoly_capitalism" data-mod-id="mod_05" onclick="toggleSeal('card_pol_econ_monopoly_capitalism', 'mod_05')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -10166,6 +11241,18 @@
                     <h3 class="point-title">01 空想社会主义的局限与科学社会主义的创立标志</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_soc_scientific_socialism_foundations" data-card-id="card_pol_soc_scientific_socialism_foundations" onclick="toggleCardAudio('card_pol_soc_scientific_socialism_foundations')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_scientific_socialism_foundations" data-point-id="card_pol_soc_scientific_socialism_foundations" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_scientific_socialism_foundations', 'mod_06')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -10267,6 +11354,18 @@
                     <h3 class="point-title">02 社会主义建设的长期性、曲折性与多样性</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_soc_socialist_development_path" data-card-id="card_pol_soc_socialist_development_path" onclick="toggleCardAudio('card_pol_soc_socialist_development_path')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_socialist_development_path" data-point-id="card_pol_soc_socialist_development_path" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_socialist_development_path', 'mod_06')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -10368,6 +11467,18 @@
                     <h3 class="point-title">03 共产主义社会的基本特征与人的自由全面发展</h3>
                   </div>
                   <div class="point-actions">
+                    <button type="button" class="card-audio-btn" id="audio_btn_card_pol_soc_communist_ideal_features" data-card-id="card_pol_soc_communist_ideal_features" onclick="toggleCardAudio('card_pol_soc_communist_ideal_features')" title="云扬播音腔朗读此考点 (支持0.75-1.75倍速)">
+                      <span class="audio-btn-wave">
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                        <span class="ab-bar"></span>
+                      </span>
+                      <svg class="ui-svg xs audio-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                      <span class="audio-btn-text">朗读</span>
+                    </button>
                     <button type="button" class="seal-stamp-btn" id="seal_card_pol_soc_communist_ideal_features" data-point-id="card_pol_soc_communist_ideal_features" data-mod-id="mod_06" onclick="toggleSeal('card_pol_soc_communist_ideal_features', 'mod_06')" title="落印为记：记录当前考点研习进度">
                       <svg class="ui-svg xs seal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -10559,6 +11670,61 @@
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
           </svg>
           <span>进卷</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 全局云扬带背浮动播控条 (0.75x - 1.75x 全倍速支持) -->
+  <div class="audio-float-dock" id="audioFloatDock" style="display:none;">
+    <div class="audio-dock-progress-track" id="audioDockProgressTrack" onclick="seekAudioFromTrack(event)">
+      <div class="audio-dock-progress-bar" id="audioDockProgressBar"></div>
+    </div>
+    
+    <div class="audio-dock-main">
+      <div class="audio-dock-left" onclick="jumpToPlayingCard()">
+        <div class="audio-dock-waveform" id="audioDockWaveform">
+          <span class="audio-wave-bar"></span>
+          <span class="audio-wave-bar"></span>
+          <span class="audio-wave-bar"></span>
+          <span class="audio-wave-bar"></span>
+        </div>
+        <div class="audio-dock-meta">
+          <div class="audio-dock-title" id="audioDockTitle">考点朗读</div>
+          <div class="audio-dock-sub">
+            <span class="audio-dock-voice-tag">云扬 · 播音腔</span>
+            <span class="audio-dock-time" id="audioDockTime">00:00 / 00:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="audio-dock-controls">
+        <button type="button" class="audio-dock-btn audio-speed-pill" id="audioSpeedToggleBtn" onclick="cycleReciteSpeed()" title="切换播放倍速 (0.75x - 1.75x)">
+          <span id="audioSpeedLabel">1.0x</span>
+        </button>
+
+        <button type="button" class="audio-dock-btn audio-play-toggle" id="audioPlayToggleBtn" onclick="togglePlayCurrentAudio()" title="播放/暂停">
+          <svg class="ui-svg sm" id="dockPlaySvg" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="6,4 20,12 6,20"/>
+          </svg>
+          <svg class="ui-svg sm" id="dockPauseSvg" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+            <rect x="6" y="4" width="4" height="16" rx="1"/>
+            <rect x="14" y="4" width="4" height="16" rx="1"/>
+          </svg>
+        </button>
+
+        <button type="button" class="audio-dock-btn audio-next-btn" onclick="playNextCardAudio()" title="连播下一考点">
+          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 4 15 12 5 20 5 4" fill="currentColor"/>
+            <line x1="19" y1="5" x2="19" y2="19"/>
+          </svg>
+        </button>
+
+        <button type="button" class="audio-dock-btn audio-close-btn" onclick="closeAudioDock()" title="关闭音频朗读">
+          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -11515,6 +12681,262 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 3000);
+    }
+
+    // ==========================================
+    // 云扬专属背诵朗读播放引擎 (0.75x - 1.75x 全倍速支持)
+    // ==========================================
+    const RECITE_SPEEDS = [0.75, 1.0, 1.25, 1.5, 1.75];
+    let currentReciteSpeed = parseFloat(localStorage.getItem('handbook_recite_speed') || '1.0');
+    if (!RECITE_SPEEDS.includes(currentReciteSpeed)) currentReciteSpeed = 1.0;
+
+    let reciteAudio = null;
+    let playingCardId = null;
+    let playingCardTitle = '';
+    let playingCardIndex = -1;
+
+    function initReciteAudioEngine() {
+      if (!reciteAudio) {
+        reciteAudio = new Audio();
+        reciteAudio.preload = 'metadata';
+        reciteAudio.playbackRate = currentReciteSpeed;
+
+        reciteAudio.addEventListener('timeupdate', onReciteAudioTimeUpdate);
+        reciteAudio.addEventListener('loadedmetadata', onReciteAudioLoaded);
+        reciteAudio.addEventListener('play', onReciteAudioPlay);
+        reciteAudio.addEventListener('pause', onReciteAudioPause);
+        reciteAudio.addEventListener('ended', onReciteAudioEnded);
+        reciteAudio.addEventListener('error', onReciteAudioError);
+      }
+    }
+
+    function toggleCardAudio(cardId) {
+      initReciteAudioEngine();
+
+      const cardEl = document.getElementById(cardId);
+      const cardTitle = cardEl ? (cardEl.querySelector('.point-title') ? cardEl.querySelector('.point-title').textContent.trim() : '') : '';
+
+      if (playingCardId === cardId) {
+        if (reciteAudio.paused) {
+          reciteAudio.play().catch(e => console.warn('Play error:', e));
+        } else {
+          reciteAudio.pause();
+        }
+        return;
+      }
+
+      startPlayingCard(cardId, cardTitle);
+    }
+
+    function startPlayingCard(cardId, cardTitle) {
+      initReciteAudioEngine();
+
+      if (playingCardId) {
+        const prevBtn = document.getElementById(`audio_btn_${playingCardId}`);
+        if (prevBtn) {
+          prevBtn.classList.remove('playing');
+          const txt = prevBtn.querySelector('.audio-btn-text');
+          if (txt) txt.textContent = '朗读';
+        }
+      }
+
+      playingCardId = cardId;
+      playingCardTitle = cardTitle || '';
+      
+      const cardEl = document.getElementById(cardId);
+      if (cardEl && cardEl.dataset.pageIndex !== undefined) {
+        playingCardIndex = parseInt(cardEl.dataset.pageIndex, 10);
+      } else {
+        playingCardIndex = pointEntries.findIndex(p => p.id === cardId);
+      }
+
+      reciteAudio.src = `audio_cards/${cardId}.mp3`;
+      reciteAudio.playbackRate = currentReciteSpeed;
+
+      const dock = document.getElementById('audioFloatDock');
+      const dockTitle = document.getElementById('audioDockTitle');
+      const speedLabel = document.getElementById('audioSpeedLabel');
+
+      if (dock) dock.style.display = 'block';
+      if (dockTitle) dockTitle.textContent = playingCardTitle || (cardEl ? cardEl.querySelector('.point-title').textContent : '考点朗读');
+      if (speedLabel) speedLabel.textContent = formatReciteSpeed(currentReciteSpeed);
+
+      const btn = document.getElementById(`audio_btn_${cardId}`);
+      if (btn) {
+        btn.classList.add('playing');
+        const txt = btn.querySelector('.audio-btn-text');
+        if (txt) txt.textContent = '播中';
+      }
+
+      reciteAudio.play().then(() => {
+        setupMediaSession(playingCardTitle);
+      }).catch(err => {
+        console.warn('Audio play error:', err);
+      });
+    }
+
+    function onReciteAudioPlay() {
+      const dock = document.getElementById('audioFloatDock');
+      if (dock) {
+        dock.classList.add('playing');
+        document.getElementById('dockPlaySvg').style.display = 'none';
+        document.getElementById('dockPauseSvg').style.display = 'block';
+      }
+      if (playingCardId) {
+        const btn = document.getElementById(`audio_btn_${playingCardId}`);
+        if (btn) {
+          btn.classList.add('playing');
+          const txt = btn.querySelector('.audio-btn-text');
+          if (txt) txt.textContent = '播中';
+        }
+      }
+    }
+
+    function onReciteAudioPause() {
+      const dock = document.getElementById('audioFloatDock');
+      if (dock) {
+        dock.classList.remove('playing');
+        document.getElementById('dockPlaySvg').style.display = 'block';
+        document.getElementById('dockPauseSvg').style.display = 'none';
+      }
+      if (playingCardId) {
+        const btn = document.getElementById(`audio_btn_${playingCardId}`);
+        if (btn) {
+          btn.classList.remove('playing');
+          const txt = btn.querySelector('.audio-btn-text');
+          if (txt) txt.textContent = '暂停';
+        }
+      }
+    }
+
+    function onReciteAudioLoaded() {
+      updateTimeDisplay();
+    }
+
+    function onReciteAudioTimeUpdate() {
+      updateTimeDisplay();
+    }
+
+    function updateTimeDisplay() {
+      if (!reciteAudio) return;
+      const cur = reciteAudio.currentTime || 0;
+      const dur = reciteAudio.duration || 0;
+      const timeLbl = document.getElementById('audioDockTime');
+      const pBar = document.getElementById('audioDockProgressBar');
+
+      if (timeLbl) {
+        timeLbl.textContent = `${formatAudioSeconds(cur)} / ${formatAudioSeconds(dur)}`;
+      }
+      if (pBar && dur > 0) {
+        pBar.style.width = `${(cur / dur) * 100}%`;
+      }
+    }
+
+    function formatAudioSeconds(sec) {
+      if (!sec || isNaN(sec)) return '00:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function onReciteAudioEnded() {
+      onReciteAudioPause();
+      playNextCardAudio();
+    }
+
+    function onReciteAudioError(e) {
+      console.warn('Audio playback error:', e);
+    }
+
+    function formatReciteSpeed(s) {
+      return (s === 1 ? '1.0' : s.toString()) + 'x';
+    }
+
+    // 倍速切换: 循环 0.75x ➔ 1.0x ➔ 1.25x ➔ 1.5x ➔ 1.75x
+    function cycleReciteSpeed() {
+      let idx = RECITE_SPEEDS.indexOf(currentReciteSpeed);
+      if (idx === -1) idx = 1;
+      idx = (idx + 1) % RECITE_SPEEDS.length;
+      currentReciteSpeed = RECITE_SPEEDS[idx];
+      localStorage.setItem('handbook_recite_speed', currentReciteSpeed);
+
+      if (reciteAudio) {
+        reciteAudio.playbackRate = currentReciteSpeed;
+      }
+      const speedLabel = document.getElementById('audioSpeedLabel');
+      if (speedLabel) speedLabel.textContent = formatReciteSpeed(currentReciteSpeed);
+      showToast(`朗读倍速已设为 ${formatReciteSpeed(currentReciteSpeed)}`);
+    }
+
+    function togglePlayCurrentAudio() {
+      if (!reciteAudio) return;
+      if (reciteAudio.paused) {
+        reciteAudio.play().catch(e => console.warn(e));
+      } else {
+        reciteAudio.pause();
+      }
+    }
+
+    function playNextCardAudio() {
+      if (playingCardIndex >= 0 && playingCardIndex < pointEntries.length - 1) {
+        const nextCard = pointEntries[playingCardIndex + 1];
+        if (nextCard) {
+          if (currentViewMode === 'paging') {
+            goToBookPage(playingCardIndex + 1);
+          }
+          startPlayingCard(nextCard.id);
+        }
+      } else {
+        showToast('已完成当前全卷朗读带背！');
+      }
+    }
+
+    function seekAudioFromTrack(e) {
+      if (!reciteAudio || !reciteAudio.duration) return;
+      const track = document.getElementById('audioDockProgressTrack');
+      const rect = track.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      reciteAudio.currentTime = ratio * reciteAudio.duration;
+    }
+
+    function jumpToPlayingCard() {
+      if (!playingCardId) return;
+      if (currentViewMode === 'paging' && playingCardIndex >= 0) {
+        goToBookPage(playingCardIndex);
+      } else {
+        const el = document.getElementById(playingCardId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function closeAudioDock() {
+      if (reciteAudio) {
+        reciteAudio.pause();
+      }
+      if (playingCardId) {
+        const btn = document.getElementById(`audio_btn_${playingCardId}`);
+        if (btn) {
+          btn.classList.remove('playing');
+          const txt = btn.querySelector('.audio-btn-text');
+          if (txt) txt.textContent = '朗读';
+        }
+      }
+      playingCardId = null;
+      const dock = document.getElementById('audioFloatDock');
+      if (dock) dock.style.display = 'none';
+    }
+
+    function setupMediaSession(title) {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: title || '考研政治核心考点',
+          artist: '云扬 · 新闻播音',
+          album: '考研政治精要背诵手卷'
+        });
+        navigator.mediaSession.setActionHandler('play', () => { if (reciteAudio) reciteAudio.play(); });
+        navigator.mediaSession.setActionHandler('pause', () => { if (reciteAudio) reciteAudio.pause(); });
+        navigator.mediaSession.setActionHandler('nexttrack', () => { playNextCardAudio(); });
+      }
     }
 
     // 页面就绪后统一初始化各模块

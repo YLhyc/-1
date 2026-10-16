@@ -254,17 +254,19 @@
 
     .speed-pills {
       display: flex;
-      gap: 6px;
+      gap: 5px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .speed-pill {
       border: 1px solid var(--border-color);
       background: var(--bg-card-sub);
       color: var(--text-muted);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 4px 12px;
-      border-radius: 14px;
+      padding: 3px 9px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
       white-space: nowrap;
@@ -799,9 +801,11 @@
         <span>朗读倍速</span>
       </div>
       <div class="speed-pills">
+        <button class="speed-pill" data-rate="0.75">0.75x</button>
         <button class="speed-pill active" data-rate="1.0">1.0x</button>
         <button class="speed-pill" data-rate="1.25">1.25x</button>
         <button class="speed-pill" data-rate="1.5">1.5x</button>
+        <button class="speed-pill" data-rate="1.75">1.75x</button>
       </div>
     </section>
 
@@ -1025,12 +1029,12 @@
       </div>
 
       <!-- 方案 1：云健（Words 系列原版男声） -->
-      <article class="voice-card selected" data-voice-id="yunjian" data-voice-title="云健（Words系列原版男声）" data-audio-src="audio_samples/sample_yunjian.mp3">
+      <article class="voice-card" data-voice-id="yunjian" data-voice-title="云健（Words系列原版男声）" data-audio-src="audio_samples/sample_yunjian.mp3">
         <div class="voice-header">
           <div class="voice-title-group">
             <div class="voice-name-row">
               <h3 class="voice-title">云健 · 沉稳有力</h3>
-              <span class="voice-badge badge-recommend">Words系列同款 · 推荐</span>
+              <span class="voice-badge badge-youth">Words系列同款</span>
             </div>
             <span class="voice-engine-id">zh-CN-YunjianNeural · 男声</span>
           </div>
@@ -1076,9 +1080,9 @@
             <!-- 纯 SVG 印章状态 -->
             <svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="3"/>
-              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7"/>
+              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7" style="display:none;"/>
             </svg>
-            <span class="status-text">当前推荐选定</span>
+            <span class="status-text">待选择</span>
           </div>
           <button class="select-action-btn">
             <span>选定此音色</span>
@@ -1087,12 +1091,12 @@
       </article>
 
       <!-- 方案 2：云扬（新闻联播专业男声） -->
-      <article class="voice-card" data-voice-id="yunyang" data-voice-title="云扬（新闻播报专业男声）" data-audio-src="audio_samples/sample_yunyang.mp3">
+      <article class="voice-card selected" data-voice-id="yunyang" data-voice-title="云扬（新闻播报专业男声）" data-audio-src="audio_samples/sample_yunyang.mp3">
         <div class="voice-header">
           <div class="voice-title-group">
             <div class="voice-name-row">
               <h3 class="voice-title">云扬 · 庄重权威</h3>
-              <span class="voice-badge badge-news">新闻联播播音腔</span>
+              <span class="voice-badge badge-recommend">您已选定 · 手卷官方音色</span>
             </div>
             <span class="voice-engine-id">zh-CN-YunyangNeural · 男声</span>
           </div>
@@ -1135,9 +1139,9 @@
           <div class="select-status">
             <svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="3"/>
-              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7" style="display:none;"/>
+              <path class="seal-check-path" d="M7 12l3.5 3.5 6.5-7"/>
             </svg>
-            <span class="status-text">待选择</span>
+            <span class="status-text">当前选定方案</span>
           </div>
           <button class="select-action-btn">
             <span>选定此音色</span>
@@ -1271,7 +1275,7 @@
     <div class="dock-content">
       <div class="current-choice-info">
         <span class="choice-label">当前选定方案</span>
-        <span id="currentChoiceName" class="choice-value">云健（Words系列原版男声）</span>
+        <span id="currentChoiceName" class="choice-value">云扬（新闻播报专业男声）</span>
       </div>
 
       <div class="dock-actions">
@@ -1366,8 +1370,8 @@
     // 音频播放器逻辑
     let currentAudio = null;
     let currentPlayingCard = null;
-    let selectedVoiceId = localStorage.getItem('handbook_preferred_voice') || 'yunjian';
-    let selectedVoiceTitle = '云健（Words系列原版男声）';
+    let selectedVoiceId = localStorage.getItem('handbook_preferred_voice') || 'yunyang';
+    let selectedVoiceTitle = '云扬（新闻播报专业男声）';
 
     const voiceCards = document.querySelectorAll('.voice-card');
     const currentChoiceNameEl = document.getElementById('currentChoiceName');
