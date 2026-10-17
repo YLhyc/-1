@@ -6,7 +6,7 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  // ═══════════ ROOT FAMILIES (考研核心同根词家族) ═══════════
+  // ═══════════ ROOT FAMILIES (考研核心同根词家族，全面扩充) ═══════════
   var ROOT_FAMILIES = {
     spect: {
       root: 'spect / spic',
@@ -32,89 +32,120 @@
     },
     tract: {
       root: 'tract',
-      meaning: '拉，引，抽出',
-      desc: '源自拉丁语 trahere，表达牵引、吸引、收缩与抽提',
+      meaning: '拉，引，拽，拖',
+      desc: '源自拉丁语 trahere，表达拉拽、吸引、抽取与契约',
       words: [
-        { en: 'attract', pos: 'v.', cn: '吸引，引起' },
+        { en: 'attract', pos: 'v.', cn: '吸引，引起兴趣' },
+        { en: 'attraction', pos: 'n.', cn: '吸引力，向往的地方' },
         { en: 'attractive', pos: 'adj.', cn: '有吸引力的' },
         { en: 'contract', pos: 'n.', cn: '合同 v. 收缩，感染' },
-        { en: 'distract', pos: 'v.', cn: '分心，转移注意力' },
-        { en: 'distraction', pos: 'n.', cn: '分心，干扰物' },
-        { en: 'extract', pos: 'v.', cn: '提取，拔出 n. 榨出物' },
-        { en: 'abstract', pos: 'adj.', cn: '抽象的 n. 摘要' },
-        { en: 'subtract', pos: 'v.', cn: '减去，扣除' },
-        { en: 'protract', pos: 'v.', cn: '延长，拖延' },
-        { en: 'retract', pos: 'v.', cn: '撤回，缩回' },
-        { en: 'intractable', pos: 'adj.', cn: '棘手的，难对付的' }
+        { en: 'contraction', pos: 'n.', cn: '紧缩，收缩' },
+        { en: 'distract', pos: 'v.', cn: '分散注意力，打扰' },
+        { en: 'distraction', pos: 'n.', cn: '分心，使人分心的事物' },
+        { en: 'extract', pos: 'v.', cn: '提取，榨取 n. 摘录' },
+        { en: 'abstract', pos: 'adj.', cn: '抽象的 n. 摘要 v. 提取' },
+        { en: 'subtract', pos: 'v.', cn: '减去，减掉' },
+        { en: 'traction', pos: 'n.', cn: '牵引力，拉力；知名度' }
       ]
     },
-    port: {
-      root: 'port',
-      meaning: '运，拿，港口',
-      desc: '源自拉丁语 portare，引申为搬运、传达、携带与输出',
+    duc: {
+      root: 'duc / duct',
+      meaning: '引导，引向，带来',
+      desc: '源自拉丁语 ducere，引申为生产、引导、推论与减少',
       words: [
-        { en: 'export', pos: 'v./n.', cn: '出口，输出' },
-        { en: 'import', pos: 'v./n.', cn: '进口，输入；重要性' },
-        { en: 'transport', pos: 'v./n.', cn: '运输，客运' },
-        { en: 'portable', pos: 'adj.', cn: '轻便的，手提式的' },
-        { en: 'report', pos: 'v./n.', cn: '报告，报道' },
-        { en: 'support', pos: 'v./n.', cn: '支持，支撑，抚养' },
-        { en: 'deport', pos: 'v.', cn: '驱逐出境' }
+        { en: 'conduct', pos: 'v.', cn: '组织，实施；引导' },
+        { en: 'introduce', pos: 'v.', cn: '介绍，引进，采用' },
+        { en: 'introduction', pos: 'n.', cn: '采用，引进；引言' },
+        { en: 'produce', pos: 'v.', cn: '生产，引起 n. 农产品' },
+        { en: 'product', pos: 'n.', cn: '产品，产物' },
+        { en: 'productive', pos: 'adj.', cn: '富有成效的，多产的' },
+        { en: 'productivity', pos: 'n.', cn: '生产率，生产力' },
+        { en: 'reduce', pos: 'v.', cn: '减少，降低' },
+        { en: 'reduction', pos: 'n.', cn: '削减，减少' },
+        { en: 'deduce', pos: 'v.', cn: '推论，推断' },
+        { en: 'deduction', pos: 'n.', cn: '推论；扣除额' },
+        { en: 'induce', pos: 'v.', cn: '引起，导致；诱导' },
+        { en: 'educate', pos: 'v.', cn: '教育，培养' }
       ]
     },
-    scrib: {
-      root: 'scrib / script',
-      meaning: '写，刻写，记述',
-      desc: '源自拉丁语 scribere，表达书写、记录、规定与归因',
+    struct: {
+      root: 'struct',
+      meaning: '建造，构建，搭起',
+      desc: '源自拉丁语 struere，表达构造、指导、破坏与障碍',
       words: [
-        { en: 'describe', pos: 'v.', cn: '描写，叙述' },
-        { en: 'description', pos: 'n.', cn: '描述，说明书' },
-        { en: 'prescribe', pos: 'v.', cn: '开处方；规定' },
-        { en: 'prescription', pos: 'n.', cn: '处方，药方；法规' },
-        { en: 'subscribe', pos: 'v.', cn: '订阅，赞成，签署' },
-        { en: 'subscription', pos: 'n.', cn: '订阅费，签署' },
-        { en: 'inscribe', pos: 'v.', cn: '题写，铭刻' },
-        { en: 'manuscript', pos: 'n.', cn: '手稿，原稿' },
-        { en: 'transcript', pos: 'n.', cn: '成绩单，文字记录' },
-        { en: 'ascribe', pos: 'v.', cn: '把...归因于' }
+        { en: 'structure', pos: 'n.', cn: '结构，建筑物 v. 构造' },
+        { en: 'structural', pos: 'adj.', cn: '结构上的' },
+        { en: 'construct', pos: 'v.', cn: '建筑，构建，创立' },
+        { en: 'construction', pos: 'n.', cn: '建造，施工；结构' },
+        { en: 'constructive', pos: 'adj.', cn: '建设性的，有积极作用的' },
+        { en: 'destruct', pos: 'v.', cn: '破坏，自毁' },
+        { en: 'destruction', pos: 'n.', cn: '摧毁，毁灭' },
+        { en: 'destructive', pos: 'adj.', cn: '毁灭性的，有害的' },
+        { en: 'instruct', pos: 'v.', cn: '指示，教导，通知' },
+        { en: 'instruction', pos: 'n.', cn: '指示，教学，说明书' },
+        { en: 'instructive', pos: 'adj.', cn: '有启发性的，有益的' },
+        { en: 'obstruct', pos: 'v.', cn: '妨碍，阻塞，遮挡' }
       ]
     },
-    dict: {
+    dic: {
       root: 'dic / dict',
-      meaning: '说，言，宣告',
-      desc: '源自拉丁语 dicere，表达陈述、预言、指令与裁决',
+      meaning: '说，宣示，讲',
+      desc: '源自拉丁语 dicere，表达预言、指示、矛盾与裁决',
       words: [
         { en: 'predict', pos: 'v.', cn: '预言，预测' },
-        { en: 'prediction', pos: 'n.', cn: '预言，预报' },
-        { en: 'dictate', pos: 'v.', cn: '听写，口述；指令' },
-        { en: 'indicate', pos: 'v.', cn: '表明，指出，暗示' },
-        { en: 'indicator', pos: 'n.', cn: '指标，指示器' },
+        { en: 'prediction', pos: 'n.', cn: '预言，预告' },
+        { en: 'predictable', pos: 'adj.', cn: '可预测的，意料之中的' },
         { en: 'contradict', pos: 'v.', cn: '反驳，与...相矛盾' },
-        { en: 'contradiction', pos: 'n.', cn: '矛盾，驳斥' },
-        { en: 'verdict', pos: 'n.', cn: '裁定，评决' },
-        { en: 'dedicate', pos: 'v.', cn: '献身，奉献' },
-        { en: 'jurisdiction', pos: 'n.', cn: '司法权，管辖范围' }
+        { en: 'contradiction', pos: 'n.', cn: '矛盾，不一致' },
+        { en: 'contradictory', pos: 'adj.', cn: '相互矛盾的' },
+        { en: 'indicate', pos: 'v.', cn: '表明，暗示，指示' },
+        { en: 'indication', pos: 'n.', cn: '迹象，暗示' },
+        { en: 'indicator', pos: 'n.', cn: '指示器，指标' },
+        { en: 'dictate', pos: 'v.', cn: '口授，命令，支配' },
+        { en: 'verdict', pos: 'n.', cn: '裁决，定论' },
+        { en: 'dedicate', pos: 'v.', cn: '致力于，献身于' }
+      ]
+    },
+    ced: {
+      root: 'ced / cess / ceed',
+      meaning: '走，行进，让步',
+      desc: '源自拉丁语 cedere，表达前进、退让、超过与通达',
+      words: [
+        { en: 'precede', pos: 'v.', cn: '先于...发生，在...之前' },
+        { en: 'precedent', pos: 'n.', cn: '先例，前例' },
+        { en: 'unprecedented', pos: 'adj.', cn: '前所未有的，空前的' },
+        { en: 'proceed', pos: 'v.', cn: '继续进行，行进' },
+        { en: 'procedure', pos: 'n.', cn: '程序，步骤，手续' },
+        { en: 'exceed', pos: 'v.', cn: '超过，超出' },
+        { en: 'excess', pos: 'n.', cn: '过量，过度' },
+        { en: 'excessive', pos: 'adj.', cn: '过分的，过度的' },
+        { en: 'succeed', pos: 'v.', cn: '成功；继承，接着发生' },
+        { en: 'success', pos: 'n.', cn: '成功，成就' },
+        { en: 'successive', pos: 'adj.', cn: '连续的，相继的' },
+        { en: 'access', pos: 'n./v.', cn: '通道；获取，存取' },
+        { en: 'accessible', pos: 'adj.', cn: '可到达的，易理解的' },
+        { en: 'concede', pos: 'v.', cn: '承认；让步' },
+        { en: 'recession', pos: 'n.', cn: '经济衰退' }
       ]
     },
     mit: {
       root: 'mit / miss',
-      meaning: '送，放，派，放出',
-      desc: '源自拉丁语 mittere，表达派发、许可、承担与传送',
+      meaning: '送，发射，派遣，放',
+      desc: '源自拉丁语 mittere，表达传递、犯下、允许与解散',
       words: [
-        { en: 'admit', pos: 'v.', cn: '承认，准许入内' },
-        { en: 'admission', pos: 'n.', cn: '准许进入，入场费；承认' },
-        { en: 'commit', pos: 'v.', cn: '承诺，犯(罪)，托付' },
-        { en: 'commitment', pos: 'n.', cn: '承诺，许诺，奉献' },
-        { en: 'committee', pos: 'n.', cn: '委员会' },
-        { en: 'emit', pos: 'v.', cn: '散发，发射，排放' },
-        { en: 'emission', pos: 'n.', cn: '散发，排放物' },
-        { en: 'permit', pos: 'v.', cn: '允许，许可 n. 许可证' },
-        { en: 'permission', pos: 'n.', cn: '允许，许可证' },
-        { en: 'submit', pos: 'v.', cn: '屈服；提交，呈递' },
-        { en: 'submission', pos: 'n.', cn: '投降；屈从；提交' },
+        { en: 'admit', pos: 'v.', cn: '承认；准许进入' },
+        { en: 'admission', pos: 'n.', cn: '准许加入；承认' },
+        { en: 'commit', pos: 'v.', cn: '犯(错误)；承诺，投入' },
+        { en: 'commitment', pos: 'n.', cn: '承诺，献身，投入' },
+        { en: 'emit', pos: 'v.', cn: '散发，发出(光、热、气体)' },
+        { en: 'emission', pos: 'n.', cn: '排放物，散发' },
+        { en: 'permit', pos: 'v.', cn: '允许，准许 n. 许可证' },
+        { en: 'permission', pos: 'n.', cn: '许可，允许' },
+        { en: 'submit', pos: 'v.', cn: '提交，屈服' },
         { en: 'transmit', pos: 'v.', cn: '传输，传播，传递' },
         { en: 'transmission', pos: 'n.', cn: '播送，发射，传动装置' },
         { en: 'omit', pos: 'v.', cn: '省略，省去，遗漏' },
+        { en: 'omission', pos: 'n.', cn: '遗漏，疏忽' },
         { en: 'dismiss', pos: 'v.', cn: '不予考虑，解雇，解散' }
       ]
     },
@@ -163,122 +194,10 @@
         { en: 'intention', pos: 'n.', cn: '意图，目的' },
         { en: 'intentional', pos: 'adj.', cn: '故意的，有意的' },
         { en: 'pretend', pos: 'v.', cn: '假装，装作' },
-        { en: 'contend', pos: 'v.', cn: '竞争，争夺；声称' },
-        { en: 'contention', pos: 'n.', cn: '争论，论点' },
-        { en: 'attend', pos: 'v.', cn: '出席，参加；照顾' },
-        { en: 'attention', pos: 'n.', cn: '注意，专心，留心' },
-        { en: 'attentive', pos: 'adj.', cn: '专心的，关心的' },
-        { en: 'tense', pos: 'adj.', cn: '紧绷的，紧张的' },
-        { en: 'tension', pos: 'n.', cn: '紧张，张力' },
+        { en: 'contend', pos: 'v.', cn: '竞争，声称，争辩' },
         { en: 'intense', pos: 'adj.', cn: '强烈的，剧烈的' },
-        { en: 'intensive', pos: 'adj.', cn: '密集的，深入的' }
-      ]
-    },
-    fer: {
-      root: 'fer',
-      meaning: '带，拿，承载，转移',
-      desc: '源自拉丁语 ferre，引申为传递、推断、差异与会议',
-      words: [
-        { en: 'differ', pos: 'v.', cn: '有差异，持不同看法' },
-        { en: 'difference', pos: 'n.', cn: '差别，差异' },
-        { en: 'different', pos: 'adj.', cn: '不同的' },
-        { en: 'infer', pos: 'v.', cn: '推断，推论' },
-        { en: 'inference', pos: 'n.', cn: '推断结果，结论' },
-        { en: 'prefer', pos: 'v.', cn: '较喜欢，偏好' },
-        { en: 'preference', pos: 'n.', cn: '偏爱，偏好' },
-        { en: 'refer', pos: 'v.', cn: '参考，涉及，指的是' },
-        { en: 'reference', pos: 'n.', cn: '参考，涉及，推荐信' },
-        { en: 'transfer', pos: 'v./n.', cn: '调动，转移，转车' },
-        { en: 'confer', pos: 'v.', cn: '商讨，协商；授予' },
-        { en: 'conference', pos: 'n.', cn: '会议，讨论会' },
-        { en: 'suffer', pos: 'v.', cn: '遭受，受苦' },
-        { en: 'defer', pos: 'v.', cn: '推迟；顺从，听从' }
-      ]
-    },
-    ceed: {
-      root: 'ceed / ced / cess',
-      meaning: '走，行走，让步，前进',
-      desc: '源自拉丁语 cedere，表达前行、程序、让步与衰退',
-      words: [
-        { en: 'proceed', pos: 'v.', cn: '继续进行，前进' },
-        { en: 'procedure', pos: 'n.', cn: '程序，手续，步骤' },
-        { en: 'process', pos: 'n.', cn: '过程 v. 加工，处理' },
-        { en: 'precede', pos: 'v.', cn: '在...之前，先于' },
-        { en: 'precedent', pos: 'n.', cn: '先例，前例' },
-        { en: 'unprecedented', pos: 'adj.', cn: '史无前例的，空前的' },
-        { en: 'succeed', pos: 'v.', cn: '成功；继承，接替' },
-        { en: 'success', pos: 'n.', cn: '成功' },
-        { en: 'successor', pos: 'n.', cn: '继任者，继承人' },
-        { en: 'access', pos: 'n.', cn: '通道，接入权 v. 访问' },
-        { en: 'accessible', pos: 'adj.', cn: '易接近的，可使用的' },
-        { en: 'exceed', pos: 'v.', cn: '超过，超出' },
-        { en: 'excess', pos: 'n.', cn: '过多，过量' },
-        { en: 'excessive', pos: 'adj.', cn: '过分的，过度的' },
-        { en: 'recede', pos: 'v.', cn: '退后，逐渐减弱' },
-        { en: 'recession', pos: 'n.', cn: '经济衰退，萧条期' },
-        { en: 'concede', pos: 'v.', cn: '承认属实；让步' },
-        { en: 'concession', pos: 'n.', cn: '让步，妥协' }
-      ]
-    },
-    sta: {
-      root: 'sta / stat / stit / sist',
-      meaning: '立，站，稳固，驻留',
-      desc: '源自拉丁语 stare，表达确立、稳定、机构与坚持',
-      words: [
-        { en: 'consist', pos: 'v.', cn: '由...组成，在于' },
-        { en: 'consistent', pos: 'adj.', cn: '始终如一的，前后一致的' },
-        { en: 'insist', pos: 'v.', cn: '坚持，强调' },
-        { en: 'persist', pos: 'v.', cn: '坚持不懈，持续存在' },
-        { en: 'persistent', pos: 'adj.', cn: '执着的，顽强的，持续的' },
-        { en: 'resist', pos: 'v.', cn: '抵制，反抗，抵抗' },
-        { en: 'resistance', pos: 'n.', cn: '阻力，抗拒，抵抗力' },
-        { en: 'assist', pos: 'v.', cn: '帮助，协助' },
-        { en: 'assistant', pos: 'n.', cn: '助手，助理' },
-        { en: 'constitute', pos: 'v.', cn: '构成，组成；设立' },
-        { en: 'constitution', pos: 'n.', cn: '宪法；体质；构造' },
-        { en: 'institute', pos: 'n.', cn: '研究所，学院 v. 设立' },
-        { en: 'institution', pos: 'n.', cn: '制度；社会公共机构' },
-        { en: 'substitute', pos: 'v./n.', cn: '代替，替补品' },
-        { en: 'stable', pos: 'adj.', cn: '稳定的，安定的' },
-        { en: 'stability', pos: 'n.', cn: '稳定性' },
-        { en: 'establish', pos: 'v.', cn: '建立，确立，使立足' },
-        { en: 'stationary', pos: 'adj.', cn: '静止不动的，固定的' }
-      ]
-    },
-    duc: {
-      root: 'duc / duct',
-      meaning: '引，导，率领，带来',
-      desc: '源自拉丁语 ducere，表达引导、生产、诱导与演绎',
-      words: [
-        { en: 'conduct', pos: 'v.', cn: '组织，实施；引导 n. 举止' },
-        { en: 'produce', pos: 'v.', cn: '生产，制造 n. 农产品' },
-        { en: 'product', pos: 'n.', cn: '产品，产物' },
-        { en: 'production', pos: 'n.', cn: '生产，产量' },
-        { en: 'productive', pos: 'adj.', cn: '多产的，富有成效的' },
-        { en: 'reduce', pos: 'v.', cn: '减少，降低' },
-        { en: 'reduction', pos: 'n.', cn: '缩小，减少' },
-        { en: 'introduce', pos: 'v.', cn: '介绍；引入，采用' },
-        { en: 'introduction', pos: 'n.', cn: '介绍，序言' },
-        { en: 'deduce', pos: 'v.', cn: '推断，推论' },
-        { en: 'induce', pos: 'v.', cn: '引诱，引起，催生' },
-        { en: 'educate', pos: 'v.', cn: '教育，教导' }
-      ]
-    },
-    gen: {
-      root: 'gen / gener',
-      meaning: '生，诞生，种类，天性',
-      desc: '源自希腊/拉丁语，表达产生、通用、种族与天才',
-      words: [
-        { en: 'generate', pos: 'v.', cn: '产生，引起，发电' },
-        { en: 'generation', pos: 'n.', cn: '一代人；产生' },
-        { en: 'general', pos: 'adj.', cn: '总的，普遍的 n. 将军' },
-        { en: 'generalize', pos: 'v.', cn: '概括，归纳' },
-        { en: 'generous', pos: 'adj.', cn: '慷慨的，大方的' },
-        { en: 'genius', pos: 'n.', cn: '天才，天赋' },
-        { en: 'genuine', pos: 'adj.', cn: '真诚的，真正的，正品的' },
-        { en: 'ingenious', pos: 'adj.', cn: '巧妙的，机敏的' },
-        { en: 'indigenous', pos: 'adj.', cn: '本土的，土生土长的' },
-        { en: 'homogeneous', pos: 'adj.', cn: '同种类的，同质的' }
+        { en: 'intensive', pos: 'adj.', cn: '密集的，集中的' },
+        { en: 'tension', pos: 'n.', cn: '紧张局势，张力' }
       ]
     },
     vert: {
@@ -333,65 +252,56 @@
         { en: 'capacity', pos: 'n.', cn: '容量，容积；能力' },
         { en: 'capture', pos: 'v.', cn: '俘获，捕获；引起关注' },
         { en: 'accept', pos: 'v.', cn: '接受，认可' },
-        { en: 'acceptance', pos: 'n.', cn: '接受，赞同' },
+        { en: 'acceptable', pos: 'adj.', cn: '可接受的，尚可的' },
         { en: 'concept', pos: 'n.', cn: '概念，观念' },
-        { en: 'conception', pos: 'n.', cn: '设想，概念；怀孕' },
-        { en: 'perceive', pos: 'v.', cn: '察觉，感知，视为' },
-        { en: 'perception', pos: 'n.', cn: '知觉，洞察力，认知' },
-        { en: 'receive', pos: 'v.', cn: '拿到，接收，接待' },
-        { en: 'reception', pos: 'n.', cn: '招待会，接待；反响' },
-        { en: 'deceive', pos: 'v.', cn: '欺骗，瞒骗' },
-        { en: 'deception', pos: 'n.', cn: '欺骗，圈套' },
-        { en: 'susceptible', pos: 'adj.', cn: '易受影响的，易动感情的' },
-        { en: 'anticipate', pos: 'v.', cn: '预料，预期，期待' }
+        { en: 'conception', pos: 'n.', cn: '理解，概念；受孕' },
+        { en: 'deceive', pos: 'v.', cn: '欺骗，蒙骗' },
+        { en: 'perceive', pos: 'v.', cn: '感知，察觉；看待' },
+        { en: 'perception', pos: 'n.', cn: '知觉，看法，洞察力' },
+        { en: 'receive', pos: 'v.', cn: '收到，接收' },
+        { en: 'susceptible', pos: 'adj.', cn: '易受影响的，易感染的' }
       ]
     },
-    fac: {
-      root: 'fac / fec / fic',
-      meaning: '做，作，制作，促成',
-      desc: '源自拉丁语 facere，表达制造、效果、缺陷与利益',
+    gen: {
+      root: 'gen / gener / gent',
+      meaning: '出生，产生，种类',
+      desc: '源自拉丁语 genere，表达发生、普遍、慷慨与起源',
       words: [
-        { en: 'factory', pos: 'n.', cn: '工厂' },
-        { en: 'factor', pos: 'n.', cn: '因素，要素' },
-        { en: 'manufacture', pos: 'v./n.', cn: '大批量制造，生产' },
-        { en: 'affect', pos: 'v.', cn: '影响，使感染，打动' },
-        { en: 'effect', pos: 'n.', cn: '效应，结果，影响' },
-        { en: 'effective', pos: 'adj.', cn: '有效的，生效的' },
-        { en: 'efficient', pos: 'adj.', cn: '高效率的，有能力的' },
-        { en: 'defect', pos: 'n.', cn: '缺陷，瑕疵 v. 背叛' },
-        { en: 'deficient', pos: 'adj.', cn: '缺乏的，不足的' },
-        { en: 'infect', pos: 'v.', cn: '传染，感染' },
-        { en: 'sufficient', pos: 'adj.', cn: '足够的，充足的' },
-        { en: 'beneficial', pos: 'adj.', cn: '有益的，有利的' },
-        { en: 'proficient', pos: 'adj.', cn: '精通的，熟练的' }
+        { en: 'generate', pos: 'v.', cn: '产生，引起，发电' },
+        { en: 'generation', pos: 'n.', cn: '一代人；产生' },
+        { en: 'generator', pos: 'n.', cn: '发电机，发动机' },
+        { en: 'general', pos: 'adj.', cn: '大体的，普遍的' },
+        { en: 'generalize', pos: 'v.', cn: '概括，归纳' },
+        { en: 'generous', pos: 'adj.', cn: '慷慨的，大方的' },
+        { en: 'genuine', pos: 'adj.', cn: '真诚的，真正的' },
+        { en: 'genius', pos: 'n.', cn: '天才，天赋' },
+        { en: 'indigenous', pos: 'adj.', cn: '本土的，土生土长的' },
+        { en: 'ingenious', pos: 'adj.', cn: '巧妙的，心灵手巧的' }
       ]
     },
-    struct: {
-      root: 'struct',
-      meaning: '建造，构筑，筑成',
-      desc: '源自拉丁语 struere，表达构建、破坏、指导与结构',
+    cur: {
+      root: 'cur / curs / cour',
+      meaning: '跑，发生，流动',
+      desc: '源自拉丁语 currere，表达发生、流传、光标与课程',
       words: [
-        { en: 'structure', pos: 'n.', cn: '结构，体系，建筑物' },
-        { en: 'structural', pos: 'adj.', cn: '结构上的' },
-        { en: 'construct', pos: 'v.', cn: '构建，建造，组成' },
-        { en: 'construction', pos: 'n.', cn: '建造，施工' },
-        { en: 'constructive', pos: 'adj.', cn: '建设性的，有助益的' },
-        { en: 'destruct', pos: 'v.', cn: '破坏，自毁' },
-        { en: 'destruction', pos: 'n.', cn: '毁灭，破坏' },
-        { en: 'destructive', pos: 'adj.', cn: '破坏性的，毁灭性的' },
-        { en: 'instruct', pos: 'v.', cn: '指示，吩咐，教授' },
-        { en: 'instruction', pos: 'n.', cn: '用法说明，命令' },
-        { en: 'instructive', pos: 'adj.', cn: '有启发性的，增长见识的' },
-        { en: 'obstruct', pos: 'v.', cn: '阻碍，堵塞，妨碍' }
+        { en: 'occur', pos: 'v.', cn: '发生，出现；想起' },
+        { en: 'occurrence', pos: 'n.', cn: '发生，出现；事件' },
+        { en: 'recur', pos: 'v.', cn: '再发生，反复出现' },
+        { en: 'current', pos: 'adj.', cn: '当前的 n. 水流，气流' },
+        { en: 'currency', pos: 'n.', cn: '货币，流通' },
+        { en: 'concur', pos: 'v.', cn: '同意，赞同；同时发生' },
+        { en: 'incur', pos: 'v.', cn: '招致，蒙受' },
+        { en: 'excursion', pos: 'n.', cn: '远足，短途旅行' },
+        { en: 'curriculum', pos: 'n.', cn: '课程体系' }
       ]
     },
     val: {
       root: 'val / vail',
-      meaning: '强健，价值，效力',
-      desc: '源自拉丁语 valere，表达价值、合法有效、胜过与普及',
+      meaning: '强壮，有力量，有价值',
+      desc: '源自拉丁语 valere，表达有效、强健、战胜与评估',
       words: [
-        { en: 'valid', pos: 'adj.', cn: '有法律效力的，合理的' },
-        { en: 'validity', pos: 'n.', cn: '有效性，合理性' },
+        { en: 'valid', pos: 'adj.', cn: '有效的，符合逻辑的' },
+        { en: 'validity', pos: 'n.', cn: '有效性，正当性' },
         { en: 'validate', pos: 'v.', cn: '证实，使合法化' },
         { en: 'avail', pos: 'v.', cn: '利用 n. 效用，利益' },
         { en: 'available', pos: 'adj.', cn: '可获得的，有空的' },
@@ -506,17 +416,6 @@
         { en: 'uniform', pos: 'n.', cn: '制服 adj. 统一的' }
       ]
     },
-    norm: {
-      root: 'norm',
-      meaning: '规矩，准则，尺度',
-      desc: '源自拉丁语 norma，表达标准、常规与超常',
-      words: [
-        { en: 'norm', pos: 'n.', cn: '行为准则，规范，常态' },
-        { en: 'normal', pos: 'adj.', cn: '正常的，平常的' },
-        { en: 'abnormal', pos: 'adj.', cn: '反常的，畸形的' },
-        { en: 'enormous', pos: 'adj.', cn: '巨大的，庞大的' }
-      ]
-    },
     serv: {
       root: 'serv',
       meaning: '保留，维持，服侍，守护',
@@ -563,6 +462,150 @@
         { en: 'survival', pos: 'n.', cn: '生存，幸存' },
         { en: 'revive', pos: 'v.', cn: '苏醒，复兴，重演' },
         { en: 'revival', pos: 'n.', cn: '复苏，再生' }
+      ]
+    },
+    port: {
+      root: 'port',
+      meaning: '拿，运，携带，港口',
+      desc: '源自拉丁语 portare，表达搬运、支持与输出',
+      words: [
+        { en: 'transport', pos: 'v./n.', cn: '运输，运送' },
+        { en: 'export', pos: 'v./n.', cn: '出口，输出' },
+        { en: 'import', pos: 'v./n.', cn: '进口，输入；重要性' },
+        { en: 'support', pos: 'v./n.', cn: '支持，支撑，供养' },
+        { en: 'report', pos: 'v./n.', cn: '报道，汇报' },
+        { en: 'portable', pos: 'adj.', cn: '便携的，轻便的' }
+      ]
+    },
+    sta: {
+      root: 'sta / stat / stit',
+      meaning: '站，立，建立，固定',
+      desc: '源自拉丁语 stare，表达稳定、状态、确立与抵制',
+      words: [
+        { en: 'stable', pos: 'adj.', cn: '稳定的，牢固的' },
+        { en: 'stability', pos: 'n.', cn: '稳定性，稳固' },
+        { en: 'status', pos: 'n.', cn: '地位，身份；状态' },
+        { en: 'constant', pos: 'adj.', cn: '持续不断的，恒定的' },
+        { en: 'institute', pos: 'n.', cn: '研究所，学院 v. 设立' },
+        { en: 'institution', pos: 'n.', cn: '机构；制度' },
+        { en: 'constitute', pos: 'v.', cn: '构成，组成；设立' },
+        { en: 'constitution', pos: 'n.', cn: '宪法；构造' },
+        { en: 'substitute', pos: 'v./n.', cn: '替代，代用品' },
+        { en: 'resist', pos: 'v.', cn: '抵抗，抵制，忍住' },
+        { en: 'persist', pos: 'v.', cn: '坚持不懈，执意；持续' }
+      ]
+    },
+    leg: {
+      root: 'leg / lect',
+      meaning: '采集，挑选，读，法律',
+      desc: '源自拉丁语 legere，表达选举、收集、阅读与合法',
+      words: [
+        { en: 'elect', pos: 'v.', cn: '选举，推选' },
+        { en: 'election', pos: 'n.', cn: '选举' },
+        { en: 'collect', pos: 'v.', cn: '收集，搜集' },
+        { en: 'neglect', pos: 'v./n.', cn: '忽视，疏忽' },
+        { en: 'eligible', pos: 'adj.', cn: '合格的，有资格的' },
+        { en: 'legible', pos: 'adj.', cn: '清晰可读的' },
+        { en: 'lecture', pos: 'n./v.', cn: '讲座，演讲' }
+      ]
+    },
+    sci: {
+      root: 'sci',
+      meaning: '知道，晓得，知识',
+      desc: '源自拉丁语 scire，表达科学、清醒意识与良知',
+      words: [
+        { en: 'science', pos: 'n.', cn: '科学，自然科学' },
+        { en: 'scientific', pos: 'adj.', cn: '科学的' },
+        { en: 'conscious', pos: 'adj.', cn: '有知觉的，有意识的' },
+        { en: 'consciousness', pos: 'n.', cn: '意识，知觉' },
+        { en: 'conscience', pos: 'n.', cn: '良心，良知' },
+        { en: 'conscientious', pos: 'adj.', cn: '勤勉认真的，尽责的' },
+        { en: 'subconscious', pos: 'adj.', cn: '潜意识的' }
+      ]
+    },
+    vis: {
+      root: 'vis / vid',
+      meaning: '看，看见，目睹',
+      desc: '源自拉丁语 videre，表达视觉、修改、预见与监督',
+      words: [
+        { en: 'visible', pos: 'adj.', cn: '可见的，明显的' },
+        { en: 'vision', pos: 'n.', cn: '视力，远见，视野' },
+        { en: 'visual', pos: 'adj.', cn: '视觉的，视力的' },
+        { en: 'revise', pos: 'v.', cn: '修改，修订，复习' },
+        { en: 'revision', pos: 'n.', cn: '修改，修订' },
+        { en: 'supervise', pos: 'v.', cn: '监督，管理，指导' },
+        { en: 'supervisor', pos: 'n.', cn: '主管，导师' },
+        { en: 'provide', pos: 'v.', cn: '提供，供给' },
+        { en: 'envision', pos: 'v.', cn: '设想，展望' }
+      ]
+    },
+    grad: {
+      root: 'grad / gress',
+      meaning: '步，走，级，阶梯',
+      desc: '源自拉丁语 gradi，表达进步、渐进、攻击与回归',
+      words: [
+        { en: 'progress', pos: 'n./v.', cn: '进步，进展' },
+        { en: 'progressive', pos: 'adj.', cn: '进步的，逐步的' },
+        { en: 'gradual', pos: 'adj.', cn: '逐渐的，渐进的' },
+        { en: 'graduate', pos: 'v.', cn: '毕业 n. 毕业生' },
+        { en: 'aggressive', pos: 'adj.', cn: '侵略性的，好斗的；有进取心的' },
+        { en: 'congress', pos: 'n.', cn: '国会，代表大会' },
+        { en: 'regress', pos: 'v.', cn: '倒退，退化' }
+      ]
+    },
+    cred: {
+      root: 'cred',
+      meaning: '相信，信任',
+      desc: '源自拉丁语 credere，表达信任、凭证与轻信',
+      words: [
+        { en: 'credible', pos: 'adj.', cn: '可信的，可靠的' },
+        { en: 'incredible', pos: 'adj.', cn: '不可思议的，难以置信的' },
+        { en: 'credit', pos: 'n.', cn: '信用；赞许；学分' },
+        { en: 'credulous', pos: 'adj.', cn: '轻信的，易受骗的' },
+        { en: 'credentials', pos: 'n.', cn: '凭证，资格证明' }
+      ]
+    },
+    plic: {
+      root: 'plic / ply',
+      meaning: '重叠，折叠，倍数',
+      desc: '源自拉丁语 plicare，表达应用、暗示、复制与复杂',
+      words: [
+        { en: 'apply', pos: 'v.', cn: '申请；应用，适用' },
+        { en: 'application', pos: 'n.', cn: '申请；应用' },
+        { en: 'imply', pos: 'v.', cn: '暗示，暗指' },
+        { en: 'implication', pos: 'n.', cn: '含意；可能的影响' },
+        { en: 'comply', pos: 'v.', cn: '顺从，服从' },
+        { en: 'replicate', pos: 'v.', cn: '复制，再现' },
+        { en: 'complicated', pos: 'adj.', cn: '复杂的，难懂的' },
+        { en: 'explicit', pos: 'adj.', cn: '清楚明确的，坦率的' },
+        { en: 'implicit', pos: 'adj.', cn: '含蓄的，不言明的' }
+      ]
+    },
+    voc: {
+      root: 'voc / vok',
+      meaning: '声音，呼喊，唤起',
+      desc: '源自拉丁语 vocare，表达呼唤、倡导、挑衅与词汇',
+      words: [
+        { en: 'vocal', pos: 'adj.', cn: '声音的；直言不讳的' },
+        { en: 'vocabulary', pos: 'n.', cn: '词汇量，词汇' },
+        { en: 'advocate', pos: 'v./n.', cn: '拥护，提倡；拥护者' },
+        { en: 'evoke', pos: 'v.', cn: '唤起，引起' },
+        { en: 'invoke', pos: 'v.', cn: '援引，援用；唤起' },
+        { en: 'provoke', pos: 'v.', cn: '激怒，挑衅，引发' }
+      ]
+    },
+    liter: {
+      root: 'liter',
+      meaning: '文字，书写，文学',
+      desc: '源自拉丁语 litera，表达文字、文学素养与字面义',
+      words: [
+        { en: 'literacy', pos: 'n.', cn: '读写能力，素养' },
+        { en: 'literate', pos: 'adj.', cn: '有读写能力的，有文化的' },
+        { en: 'illiterate', pos: 'adj.', cn: '文盲的，未受教育的' },
+        { en: 'literal', pos: 'adj.', cn: '字面意义的，本义的' },
+        { en: 'literally', pos: 'adv.', cn: '字面上，确实地' },
+        { en: 'literature', pos: 'n.', cn: '文学，文献' },
+        { en: 'literary', pos: 'adj.', cn: '文学的，适于文学作品的' }
       ]
     }
   };
@@ -676,10 +719,516 @@
     {
       words: ['eminent', 'imminent'],
       analysis: 'eminent (卓越的/显赫的/杰出的)；imminent (迫在眉睫的/即将来临的危难)。'
+    },
+    {
+      words: ['curb', 'cure'],
+      analysis: 'curb (控制/抑制狂奔势头，拉缰绳)；cure (治愈/疗法/消除弊端)。'
+    },
+    {
+      words: ['collaborate', 'corroborate'],
+      analysis: 'collaborate (合作/协同劳作，labor)；corroborate (证实/确证证据，robor强壮)。'
+    },
+    {
+      words: ['impetus', 'impulse'],
+      analysis: 'impetus (外部推动力/促进因素)；impulse (内部心理冲动/一时的心血来潮)。'
+    },
+    {
+      words: ['demonstrate', 'remonstrate'],
+      analysis: 'demonstrate (展示/证明/游行)；remonstrate (抗议/严正抗辩)。'
+    },
+    {
+      words: ['shrink', 'shrug'],
+      analysis: 'shrink (缩小/萎缩/退缩)；shrug (耸肩表示冷漠或不知所措)。'
+    },
+    {
+      words: ['diminish', 'distinguish'],
+      analysis: 'diminish (规模或影响力削弱变小)；distinguish (区分/辨别/使出众)。'
+    },
+    {
+      words: ['literacy', 'literally'],
+      analysis: 'literacy (阅读素养/读写能力)；literally (字面真实地/确实地)。'
     }
   ];
 
-  // ═══════════ FAST INDEX MAPS ═══════════
+  // ═══════════ EXAM SYNONYMS (考研真题高频同义替换群) ═══════════
+  var EXAM_SYNONYM_GROUPS = [
+    {
+      title: '激发 · 驱动 · 刺激',
+      words: [
+        { en: 'stimulate', pos: 'v.', cn: '激发；刺激' },
+        { en: 'motivate', pos: 'v.', cn: '激励；激发' },
+        { en: 'spur', pos: 'v.', cn: '鞭策；刺激' },
+        { en: 'spark', pos: 'v.', cn: '引发；激起' },
+        { en: 'provoke', pos: 'v.', cn: '挑起；激起' },
+        { en: 'trigger', pos: 'v.', cn: '触发；引起' }
+      ]
+    },
+    {
+      title: '促进 · 提升 · 扶持',
+      words: [
+        { en: 'promote', pos: 'v.', cn: '促进；提升' },
+        { en: 'foster', pos: 'v.', cn: '培养；促进' },
+        { en: 'boost', pos: 'v.', cn: '推动；增强' },
+        { en: 'nurture', pos: 'v.', cn: '扶持；培植' },
+        { en: 'advance', pos: 'v.', cn: '推动；前进' },
+        { en: 'facilitate', pos: 'v.', cn: '促进；使便利' }
+      ]
+    },
+    {
+      title: '令人畏惧 · 艰巨严峻',
+      words: [
+        { en: 'formidable', pos: 'adj.', cn: '令人生畏的；难对付的' },
+        { en: 'daunting', pos: 'adj.', cn: '使人退缩的；艰巨的' },
+        { en: 'intimidating', pos: 'adj.', cn: '吓人的；令人胆怯的' },
+        { en: 'challenging', pos: 'adj.', cn: '充满挑战的；艰难的' }
+      ]
+    },
+    {
+      title: '不情愿 · 勉强迟疑',
+      words: [
+        { en: 'reluctant', pos: 'adj.', cn: '不情愿的；勉强的' },
+        { en: 'unwilling', pos: 'adj.', cn: '不愿意的；非自愿的' },
+        { en: 'hesitant', pos: 'adj.', cn: '犹豫的；迟疑不决的' },
+        { en: 'loath', pos: 'adj.', cn: '极不情愿的；厌恶的' }
+      ]
+    },
+    {
+      title: '控制 · 抑制 · 约束',
+      words: [
+        { en: 'curb', pos: 'v.', cn: '抑制；控制' },
+        { en: 'restrain', pos: 'v.', cn: '克制；抑制' },
+        { en: 'restrict', pos: 'v.', cn: '限制；约束' },
+        { en: 'inhibit', pos: 'v.', cn: '阻碍；抑制' },
+        { en: 'suppress', pos: 'v.', cn: '镇压；抑制' }
+      ]
+    },
+    {
+      title: '缩小 · 减少 · 衰减',
+      words: [
+        { en: 'shrink', pos: 'v.', cn: '缩小；减少' },
+        { en: 'diminish', pos: 'v.', cn: '减少；削弱' },
+        { en: 'dwindle', pos: 'v.', cn: '逐渐变小；缩减' },
+        { en: 'contract', pos: 'v.', cn: '收缩；缩减' },
+        { en: 'lessen', pos: 'v.', cn: '减轻；变少' }
+      ]
+    },
+    {
+      title: '至关重要 · 核心必不可少',
+      words: [
+        { en: 'vital', pos: 'adj.', cn: '生死攸关的；关键的' },
+        { en: 'crucial', pos: 'adj.', cn: '关键的；决定性的' },
+        { en: 'essential', pos: 'adj.', cn: '必不可少的；本质的' },
+        { en: 'critical', pos: 'adj.', cn: '极为重要的；关键的' },
+        { en: 'indispensable', pos: 'adj.', cn: '不可或缺的' }
+      ]
+    },
+    {
+      title: '模糊 · 隐晦 · 掩盖',
+      words: [
+        { en: 'obscure', pos: 'adj./v.', cn: '鲜为人知的；掩盖' },
+        { en: 'vague', pos: 'adj.', cn: '含糊的；模糊的' },
+        { en: 'ambiguous', pos: 'adj.', cn: '模棱两可的' },
+        { en: 'murky', pos: 'adj.', cn: '浑浊的；含糊不清的' },
+        { en: 'conceal', pos: 'v.', cn: '隐瞒；隐藏' }
+      ]
+    },
+    {
+      title: '危害 · 危险 · 风险',
+      words: [
+        { en: 'hazard', pos: 'n.', cn: '危险；危害' },
+        { en: 'peril', pos: 'n.', cn: '严重危险；祸患' },
+        { en: 'jeopardy', pos: 'n.', cn: '危险；风险' },
+        { en: 'danger', pos: 'n.', cn: '危险；威胁' },
+        { en: 'threat', pos: 'n.', cn: '威胁；恐吓' }
+      ]
+    },
+    {
+      title: '放弃 · 抛弃 · 遗弃',
+      words: [
+        { en: 'abandon', pos: 'v.', cn: '离弃；抛弃' },
+        { en: 'discard', pos: 'v.', cn: '丢弃；抛弃' },
+        { en: 'desert', pos: 'v.', cn: '抛弃；擅离' },
+        { en: 'forsake', pos: 'v.', cn: '背弃；摒绝' },
+        { en: 'renounce', pos: 'v.', cn: '宣布放弃；断绝' }
+      ]
+    },
+    {
+      title: '真实 · 正宗 · 合法',
+      words: [
+        { en: 'genuine', pos: 'adj.', cn: '真正的；真诚的' },
+        { en: 'authentic', pos: 'adj.', cn: '真正的；正宗的' },
+        { en: 'legitimate', pos: 'adj.', cn: '合法的；正当的' }
+      ]
+    },
+    {
+      title: '协同 · 合作 · 配合',
+      words: [
+        { en: 'collaborate', pos: 'v.', cn: '合作；协作' },
+        { en: 'cooperate', pos: 'v.', cn: '合作；配合' },
+        { en: 'coordinate', pos: 'v.', cn: '协调；使配合' },
+        { en: 'partner', pos: 'v.', cn: '合伙；结成伙伴' }
+      ]
+    },
+    {
+      title: '顺从 · 遵守 · 符合',
+      words: [
+        { en: 'comply', pos: 'v.', cn: '顺从；服从' },
+        { en: 'conform', pos: 'v.', cn: '符合；顺应' },
+        { en: 'adhere', pos: 'v.', cn: '坚持；遵守' },
+        { en: 'abide', pos: 'v.', cn: '遵守；容忍' }
+      ]
+    },
+    {
+      title: '根除 · 消除 · 废除',
+      words: [
+        { en: 'eliminate', pos: 'v.', cn: '消除；根除' },
+        { en: 'eradicate', pos: 'v.', cn: '根绝；拔除' },
+        { en: 'abolish', pos: 'v.', cn: '废除；废止' },
+        { en: 'remove', pos: 'v.', cn: '移开；消除' }
+      ]
+    },
+    {
+      title: '开创性 · 突破性',
+      words: [
+        { en: 'groundbreaking', pos: 'adj.', cn: '开创性的；突破性的' },
+        { en: 'innovative', pos: 'adj.', cn: '创新的；革新的' },
+        { en: 'pioneering', pos: 'adj.', cn: '先锋的；开创性的' },
+        { en: 'revolutionary', pos: 'adj.', cn: '革命性的' }
+      ]
+    },
+    {
+      title: '教学 · 指导 · 训导',
+      words: [
+        { en: 'instruction', pos: 'n.', cn: '教学；指导' },
+        { en: 'guidance', pos: 'n.', cn: '指导；引导' },
+        { en: 'pedagogy', pos: 'n.', cn: '教学法；教育学' },
+        { en: 'direction', pos: 'n.', cn: '方向；指导' }
+      ]
+    },
+    {
+      title: '推断 · 演绎 · 结论',
+      words: [
+        { en: 'infer', pos: 'v.', cn: '推断；推定' },
+        { en: 'deduce', pos: 'v.', cn: '演绎；推论' },
+        { en: 'conclude', pos: 'v.', cn: '推断出；下结论' },
+        { en: 'surmise', pos: 'v.', cn: '推测；猜测' }
+      ]
+    },
+    {
+      title: '共识 · 一致意见',
+      words: [
+        { en: 'consensus', pos: 'n.', cn: '共识；一致意见' },
+        { en: 'accord', pos: 'n.', cn: '协议；一致' },
+        { en: 'unanimity', pos: 'n.', cn: '全体一致；无异议' }
+      ]
+    }
+  ];
+
+  // ═══════════ HANDCRAFTED DECOMPOSITIONS (核心构词拆解与记忆公式) ═══════════
+  var HANDCRAFTED_DECOMP = {
+    'rehearsal': {
+      parts: [
+        { type: 'prefix', text: 're-', mean: '反复/再' },
+        { type: 'root', text: 'hearse', mean: '排演/试演' },
+        { type: 'suffix', text: '-al', mean: '名词后缀' }
+      ],
+      meaning: '正式表现前反复试演操练'
+    },
+    'instruction': {
+      parts: [
+        { type: 'prefix', text: 'in-', mean: '向内/入心' },
+        { type: 'root', text: 'struct', mean: '建造/构建' },
+        { type: 'suffix', text: '-ion', mean: '名词后缀' }
+      ],
+      meaning: '在心智内构建完整的知识与操作框架'
+    },
+    'vocabulary': {
+      parts: [
+        { type: 'root', text: 'voc / vocabul', mean: '声音/呼喊/字词' },
+        { type: 'suffix', text: '-ary', mean: '集合名词后缀' }
+      ],
+      meaning: '脑中随时可调出的词汇工具箱'
+    },
+    'sophisticated': {
+      parts: [
+        { type: 'root', text: 'soph', mean: '智慧/精明' },
+        { type: 'suffix', text: '-ist+-ic+-ated', mean: '复合形容词后缀' }
+      ],
+      meaning: '充满世事智慧与严谨构造的'
+    },
+    'stimulate': {
+      parts: [
+        { type: 'root', text: 'stimul', mean: '刺/尖针' },
+        { type: 'suffix', text: '-ate', mean: '动词后缀' }
+      ],
+      meaning: '用尖刺恰到好处挑逗神经，激发主动思考'
+    },
+    'desert': {
+      parts: [
+        { type: 'prefix', text: 'de-', mean: '离开/去除' },
+        { type: 'root', text: 'sert', mean: '连接/系结' }
+      ],
+      meaning: '与生命繁荣切断系结 -> 荒凉空旷之地 / 遗弃'
+    },
+    'cliche': {
+      parts: [
+        { type: 'root', text: 'cliché', mean: '铅字版撞击声(拟声)' }
+      ],
+      meaning: '源自印刷铅版反复套印，引申为磨损新鲜感的陈词滥调'
+    },
+    'description': {
+      parts: [
+        { type: 'prefix', text: 'de-', mean: '向下/详尽' },
+        { type: 'root', text: 'script', mean: '写/描摹' },
+        { type: 'suffix', text: '-ion', mean: '名词后缀' }
+      ],
+      meaning: '从头到尾详尽描摹，在脑中搭建真实场景'
+    },
+    'omission': {
+      parts: [
+        { type: 'prefix', text: 'o- (ob-)', mean: '出/离开' },
+        { type: 'root', text: 'miss', mean: '送出/放走' },
+        { type: 'suffix', text: '-ion', mean: '名词后缀' }
+      ],
+      meaning: '放任某物溜走未纳入系统 -> 遗漏；忽略'
+    },
+    'casual': {
+      parts: [
+        { type: 'root', text: 'cas', mean: '降临/发生' },
+        { type: 'suffix', text: '-ual', mean: '形容词后缀' }
+      ],
+      meaning: '随遇而发生、不刻意端架子 -> 随意的；不正式的'
+    },
+    'preference': {
+      parts: [
+        { type: 'prefix', text: 'pre-', mean: '优先/提前' },
+        { type: 'root', text: 'fer', mean: '带来/提出' },
+        { type: 'suffix', text: '-ence', mean: '名词后缀' }
+      ],
+      meaning: '面对多选项时优先带上台面的选择 -> 偏好'
+    },
+    'promote': {
+      parts: [
+        { type: 'prefix', text: 'pro-', mean: '向前' },
+        { type: 'root', text: 'mote / mov', mean: '移动/推动' }
+      ],
+      meaning: '扫清阻碍向前推进 -> 促进；提升'
+    },
+    'literacy': {
+      parts: [
+        { type: 'root', text: 'liter', mean: '文字/字母' },
+        { type: 'suffix', text: '-acy', mean: '性质与综合能力' }
+      ],
+      meaning: '不仅识字，而且能准确解码、辨析现实文本的素养'
+    },
+    'infer': {
+      parts: [
+        { type: 'prefix', text: 'in-', mean: '向内/深入' },
+        { type: 'root', text: 'fer', mean: '带来/运载' }
+      ],
+      meaning: '潜入文字线索底层，提炼未明说的逻辑必然 -> 推断'
+    },
+    'formidable': {
+      parts: [
+        { type: 'root', text: 'formid', mean: '恐惧/退缩' },
+        { type: 'suffix', text: '-able', mean: '令人...的' }
+      ],
+      meaning: '庞大艰巨到让人第一反应退缩 -> 令人生畏的'
+    },
+    'primary': {
+      parts: [
+        { type: 'root', text: 'prim', mean: '第一/根基' },
+        { type: 'suffix', text: '-ary', mean: '形容词后缀' }
+      ],
+      meaning: '奠定后续所有能力的基石阶段 -> 初级的；首要的'
+    },
+    'reluctant': {
+      parts: [
+        { type: 'prefix', text: 're-', mean: '反向/往后' },
+        { type: 'root', text: 'luct', mean: '搏斗/抗拒' },
+        { type: 'suffix', text: '-ant', mean: '形容词后缀' }
+      ],
+      meaning: '心里拉起警戒线拼命往后拽 -> 不情愿的'
+    },
+    'pedagogy': {
+      parts: [
+        { type: 'root', text: 'ped', mean: '儿童/少年' },
+        { type: 'root', text: 'agog', mean: '引导/引领' },
+        { type: 'suffix', text: '-y', mean: '学科/学问' }
+      ],
+      meaning: '引领年轻心智成长建构的系统图谱 -> 教学法'
+    },
+    'accompany': {
+      parts: [
+        { type: 'prefix', text: 'ac- (ad-)', mean: '去/朝向' },
+        { type: 'root', text: 'company', mean: '同伴/同伙' }
+      ],
+      meaning: '去成为贴身同伴 -> 伴随；配合'
+    },
+    'curb': {
+      parts: [
+        { type: 'root', text: 'curb (courbe)', mean: '弯曲马嚼子/勒马绳' }
+      ],
+      meaning: '给失控狂奔的势头猛拉缰绳设立刚性边界 -> 抑制；控制'
+    },
+    'consensus': {
+      parts: [
+        { type: 'prefix', text: 'con-', mean: '共同/大家' },
+        { type: 'root', text: 'sens', mean: '感觉/判断' },
+        { type: 'suffix', text: '-us', mean: '名词后缀' }
+      ],
+      meaning: '所有人对核心原则产生同一共振 -> 共识；普遍看法'
+    },
+    'collaborate': {
+      parts: [
+        { type: 'prefix', text: 'col- (con-)', mean: '共同' },
+        { type: 'root', text: 'labor', mean: '劳动/付出' },
+        { type: 'suffix', text: '-ate', mean: '动词后缀' }
+      ],
+      meaning: '为同一目标共同投入脑力劳作 -> 合作；协作'
+    },
+    'diminish': {
+      parts: [
+        { type: 'prefix', text: 'di- (dis-)', mean: '分散/彻底' },
+        { type: 'root', text: 'min', mean: '小/少' },
+        { type: 'suffix', text: '-ish', mean: '使...化' }
+      ],
+      meaning: '从规模或影响力上彻底变小变弱 -> 减少；削弱'
+    },
+    'shrink': {
+      parts: [
+        { type: 'root', text: 'shrink', mean: '皱缩/收缩' }
+      ],
+      meaning: '因外力挤压或能量流失而体积收拢 -> 缩小；减少'
+    },
+    'coordinate': {
+      parts: [
+        { type: 'prefix', text: 'co-', mean: '共同' },
+        { type: 'root', text: 'ordin', mean: '次序/队列' },
+        { type: 'suffix', text: '-ate', mean: '动词后缀' }
+      ],
+      meaning: '让各方按共同节奏与秩序排列运转 -> 协调；配合'
+    },
+    'eliminate': {
+      parts: [
+        { type: 'prefix', text: 'e- (ex-)', mean: '出/门外' },
+        { type: 'root', text: 'limin', mean: '门槛/界限' },
+        { type: 'suffix', text: '-ate', mean: '动词后缀' }
+      ],
+      meaning: '毫不留情扫出大门门槛之外 -> 消除；根除'
+    },
+    'impetus': {
+      parts: [
+        { type: 'prefix', text: 'im- (in-)', mean: '朝向/进入' },
+        { type: 'root', text: 'pet', mean: '追寻/冲击' },
+        { type: 'suffix', text: '-us', mean: '名词后缀' }
+      ],
+      meaning: '像一股强劲冲力灌入系统 -> 推动力；刺激'
+    },
+    'demonstrate': {
+      parts: [
+        { type: 'prefix', text: 'de-', mean: '彻底/完全' },
+        { type: 'root', text: 'monstr', mean: '展示/显现' },
+        { type: 'suffix', text: '-ate', mean: '动词后缀' }
+      ],
+      meaning: '把逻辑或步骤原原本本摆在眼前证明给人看 -> 展示；证明'
+    },
+    'interpret': {
+      parts: [
+        { type: 'prefix', text: 'inter-', mean: '在...之间' },
+        { type: 'root', text: 'pret', mean: '买卖中介/搭桥' }
+      ],
+      meaning: '在文本深意与读者理解之间搭桥引渡 -> 解读；阐释'
+    },
+    'replicate': {
+      parts: [
+        { type: 'prefix', text: 're-', mean: '再/重新' },
+        { type: 'root', text: 'plic', mean: '折叠/加倍' },
+        { type: 'suffix', text: '-ate', mean: '动词后缀' }
+      ],
+      meaning: '重新折叠出一模一样的一份副本 -> 复制；再现'
+    }
+  };
+
+    // ═══════════ CORE MORPHOLOGY ROOTS (考研核心高频词根库) ═══════════
+  var CORE_ROOT_LIST = [
+    { r: 'spect', m: '看/视' }, { r: 'spic', m: '看/视' },
+    { r: 'dict', m: '说/言' }, { r: 'dic', m: '说/言' },
+    { r: 'tract', m: '拉/拽/抽' },
+    { r: 'port', m: '运/带/搬' },
+    { r: 'press', m: '压/逼' },
+    { r: 'struct', m: '建造/构建' }, { r: 'stru', m: '构建' },
+    { r: 'vers', m: '转/反转' }, { r: 'vert', m: '转/转换' },
+    { r: 'cess', m: '走/退让' }, { r: 'ced', m: '走/退让' }, { r: 'ceed', m: '前进/走' },
+    { r: 'ject', m: '投/掷/扔' },
+    { r: 'tend', m: '伸展/趋向' }, { r: 'tens', m: '伸展/拉紧' }, { r: 'tent', m: '伸展/维持' },
+    { r: 'vent', m: '来/发生' }, { r: 'ven', m: '来/到达' },
+    { r: 'rupt', m: '破裂/断绝' },
+    { r: 'pel', m: '推/驱使' }, { r: 'puls', m: '推/驱动' },
+    { r: 'gen', m: '产生/生育/基因' }, { r: 'gener', m: '出生/种类' },
+    { r: 'duc', m: '引导/带来' }, { r: 'duct', m: '引导/传导' },
+    { r: 'fer', m: '带来/承受/运' },
+    { r: 'vis', m: '看/看见' }, { r: 'vid', m: '看/清楚' },
+    { r: 'mit', m: '发送/委派/放行' }, { r: 'miss', m: '发送/释放' },
+    { r: 'pos', m: '放置/摆放' }, { r: 'posit', m: '放置/定位' }, { r: 'pon', m: '放置' },
+    { r: 'cur', m: '跑/发生/流动' }, { r: 'curs', m: '跑/流动' },
+    { r: 'sens', m: '感觉/意识' }, { r: 'sent', m: '感觉/认同' },
+    { r: 'cap', m: '抓/拿/头' }, { r: 'cept', m: '抓取/接受' }, { r: 'ceiv', m: '接受/领悟' },
+    { r: 'fac', m: '做/制造' }, { r: 'fec', m: '做/影响' }, { r: 'fic', m: '做/产生' },
+    { r: 'tort', m: '扭曲/纠缠' },
+    { r: 'tain', m: '拿住/保持' }, { r: 'ten', m: '握住/持续' },
+    { r: 'fin', m: '界限/终结' },
+    { r: 'flu', m: '流动/流淌' }, { r: 'flux', m: '流动' },
+    { r: 'solv', m: '解开/松开' }, { r: 'solu', m: '解开/溶解' },
+    { r: 'leg', m: '读/选/法律' }, { r: 'lect', m: '挑选/汇集/读' },
+    { r: 'voc', m: '声音/召唤' }, { r: 'vok', m: '喊/呼唤' },
+    { r: 'sta', m: '站立/稳定' }, { r: 'stat', m: '建立/站立' }, { r: 'stit', m: '设立/放置' },
+    { r: 'pend', m: '悬挂/衡量/支出' }, { r: 'pens', m: '支付/衡量' },
+    { r: 'aud', m: '听/听觉' }, { r: 'audit', m: '听/审计' },
+    { r: 'plic', m: '折叠/重叠' }, { r: 'ply', m: '重叠/折叠' }
+  ];
+
+  // ═══════════ UNIVERSAL AFFIX KNOWLEDGE BASE (通用词缀拆解引擎) ═══════════
+  var PREFIX_LIST = [
+    { p: 'counter', m: '反向/对应' }, { p: 'trans', m: '跨越/转变' }, { p: 'inter', m: '在...之间' },
+    { p: 'super', m: '超级/在上' }, { p: 'under', m: '在...下/不足' }, { p: 'anti', m: '抗/反' },
+    { p: 'fore', m: '前/先' }, { p: 'over', m: '过度/在上' }, { p: 'post', m: '在...后' },
+    { p: 'sub', m: '在...下/次级' }, { p: 'pre', m: '提前/预先' }, { p: 'pro', m: '向前/赞同' },
+    { p: 'con', m: '共同/加强' }, { p: 'com', m: '共同/加强' }, { p: 'col', m: '共同' },
+    { p: 'dis', m: '分离/否定' }, { p: 'mis', m: '错误/不当' }, { p: 'out', m: '超出/向外' },
+    { p: 'non', m: '非/无' }, { p: 'un', m: '不/未' }, { p: 'in', m: '向内/不' },
+    { p: 'im', m: '向内/不' }, { p: 'ir', m: '不' }, { p: 'il', m: '不' },
+    { p: 're', m: '反复/再/回' }, { p: 'de', m: '向下/去除' }, { p: 'ex', m: '向外/出' },
+    { p: 'en', m: '使成为/进入' }, { p: 'em', m: '使处于' }, { p: 'ad', m: '朝向/去' },
+    { p: 'ab', m: '离开/偏离' }, { p: 'se', m: '分开/脱离' }
+  ];
+
+  var SUFFIX_LIST = [
+    { s: 'ization', m: '化(过程)', pos: 'n.' }, { s: 'isation', m: '化(过程)', pos: 'n.' },
+    { s: 'ational', m: '具有...性质的', pos: 'adj.' }, { s: 'ibility', m: '可...性', pos: 'n.' },
+    { s: 'ability', m: '能力/性质', pos: 'n.' }, { s: 'ication', m: '行为/动作', pos: 'n.' },
+    { s: 'ically', m: '以...方式', pos: 'adv.' }, { s: 'ously', m: '充满...地', pos: 'adv.' },
+    { s: 'ively', m: '倾向于...地', pos: 'adv.' }, { s: 'ation', m: '动作/过程', pos: 'n.' },
+    { s: 'ition', m: '动作/状态', pos: 'n.' }, { s: 'ution', m: '行为/结果', pos: 'n.' },
+    { s: 'sion', m: '行为/状态', pos: 'n.' }, { s: 'tion', m: '动作/状态', pos: 'n.' },
+    { s: 'ment', m: '结果/行为', pos: 'n.' }, { s: 'ness', m: '状态/特性', pos: 'n.' },
+    { s: 'ance', m: '性质/状态', pos: 'n.' }, { s: 'ence', m: '性质/状态', pos: 'n.' },
+    { s: 'ship', m: '身份/关系', pos: 'n.' }, { s: 'hood', m: '时期/状态', pos: 'n.' },
+    { s: 'able', m: '可...的', pos: 'adj.' }, { s: 'ible', m: '可...的', pos: 'adj.' },
+    { s: 'less', m: '无...的', pos: 'adj.' }, { s: 'ful', m: '充满...的', pos: 'adj.' },
+    { s: 'ical', m: '与...相关的', pos: 'adj.' }, { s: 'ous', m: '充满...的', pos: 'adj.' },
+    { s: 'ive', m: '有...倾向的', pos: 'adj.' }, { s: 'ize', m: '使成为/化', pos: 'v.' },
+    { s: 'ise', m: '使成为/化', pos: 'v.' }, { s: 'ify', m: '使...化', pos: 'v.' },
+    { s: 'ate', m: '使发生/造成', pos: 'v.' }, { s: 'ist', m: '从事...者', pos: 'n.' },
+    { s: 'ism', m: '主义/学说', pos: 'n.' }, { s: 'ity', m: '性质/状态', pos: 'n.' },
+    { s: 'ian', m: '专业人员', pos: 'n.' }, { s: 'ant', m: '施动者/性质', pos: 'n./adj.' },
+    { s: 'ent', m: '性质/人', pos: 'adj./n.' }, { s: 'ing', m: '进行/令人...的', pos: 'adj./n.' },
+    { s: 'ed', m: '被...的/过去式', pos: 'adj.' }, { s: 'al', m: '具有...属性的', pos: 'adj./n.' },
+    { s: 'ic', m: '相关的', pos: 'adj.' }, { s: 'ly', m: '以...方式', pos: 'adv.' },
+    { s: 'ry', m: '行业/性质', pos: 'n.' }, { s: 'ty', m: '状态/性质', pos: 'n.' }
+  ];
+
+  // ═══════════ INDEX MAPS ═══════════
   var WORD_TO_ROOT = {};
   var ROOT_KEYS = Object.keys(ROOT_FAMILIES);
   for (var r = 0; r < ROOT_KEYS.length; r++) {
@@ -699,6 +1248,228 @@
     }
   }
 
+  var WORD_TO_SYNONYMS = {};
+  for (var s = 0; s < EXAM_SYNONYM_GROUPS.length; s++) {
+    var grp = EXAM_SYNONYM_GROUPS[s];
+    for (var sw = 0; sw < grp.words.length; sw++) {
+      WORD_TO_SYNONYMS[grp.words[sw].en.toLowerCase()] = grp;
+    }
+  }
+
+  // ═══════════ POS REGISTRY & HEURISTIC ENGINE (墨墨级词性分析引擎) ═══════════
+  var CURATED_POS = {
+    'rehearsal': 'n.', 'instruction': 'n.', 'vocabulary': 'n.', 'sophisticated': 'adj.',
+    'stimulate': 'v.', 'desert': 'adj./v.', 'cliche': 'n.', 'description': 'n.',
+    'omission': 'n.', 'casual': 'adj.', 'preference': 'n.', 'promote': 'v.',
+    'literacy': 'n.', 'infer': 'v.', 'formidable': 'adj.', 'primary': 'adj.',
+    'reluctant': 'adj.', 'groundbreaking': 'adj.', 'commission': 'v./n.', 'pedagogy': 'n.',
+    'accompany': 'v.', 'curb': 'v./n.', 'consensus': 'n.', 'collaborate': 'v.',
+    'diminish': 'v.', 'shrink': 'v.', 'coordinate': 'v.', 'eliminate': 'v.',
+    'demonstrate': 'v.', 'interpret': 'v.', 'impetus': 'n.', 'replicate': 'v.',
+    'embed': 'v.', 'scale': 'n./v.', 'crisis': 'n.', 'suspicion': 'n.', 'satellite': 'n.',
+    'mushroom': 'v./n.', 'inform': 'v.', 'illustrate': 'v.', 'urgency': 'n.',
+    'endeavour': 'n./v.', 'astonish': 'v.', 'triumph': 'n./v.', 'streaming': 'n.',
+    'spark': 'v./n.', 'profit': 'n./v.', 'boon': 'n.', 'pirate': 'n./v.', 'rip': 'v.',
+    'surpass': 'v.', 'revenue': 'n.', 'margin': 'n.', 'piracy': 'n.', 'aid': 'n./v.',
+    'consult': 'v.', 'plateau': 'n.', 'hoard': 'n./v.', 'gravel': 'n.', 'withdrawal': 'n.',
+    'abandon': 'v.', 'abolish': 'v.', 'radiate': 'v.', 'judge': 'n./v.', 'prompt': 'adj./v.'
+  };
+
+  var VERB_CN_REGEX = /^(?:检查|视察|勘察|审查|勘探|造成|激发|促进|提升|提高|推断|伴随|提供|改善|保护|实现|影响|抵抗|消除|克服|包含|产生|减少|增加|支持|表达|展示|建立|评估|识别|探索|维持|破坏|控制|改变|处理|决定|解决|经历|委托|使|让|导致|建议|要求|禁止|吸引|连接|指导|适应|采纳|分析|调查|复制|嵌入|翻录|抑制|咨询|协调|囤积|超越|说明|阐释|证明|演示|引发|激起|缩小|削弱|加剧|加深|强化|推动|驱动|促使|妨碍|阻碍|损害|危害|侵蚀|消耗|耗尽|利用|开发|拓展|扩展|扩充|扩大|重现|再现|复兴|恢复|复苏|反驳|驳斥|批判|批评|指责|谴责|指控|证实|核实|确认|承认|否认|违背|违反|遵守|服从|遵从|顺从|屈服|投降|屈从|忍受|容忍|承担|享有|拥有|占据|占有|占用|分配|配置|分发|发布|公布|发表|出版|发行|广播|传播|收获|获取|取得|赢得|战胜|击败|跨越|穿透|看透|洞察|观察|审视|监视|监控|监督|督促|催促|呼吁|敦促|劝说|说服|劝阻|警告|告诫|提醒|提示|暗示|预示|预言|预测|设想|构想|想象|回忆|回顾|总结|概括|归纳|提炼|提倡|主张|宣称|声称|主导|引导|追随|跟踪|追踪|追溯|回溯|追求|谋求|争取|索取|索赔|赔偿|补偿|抵消|平衡|打消|排除|排斥|排挤|孤立|隔绝|隔离|封锁|封闭|围绕|涉及|关联|牵涉|卷入|介入|干预|干涉|插手|渗透|渗入|流入|涌入|涌现|浮现|浮出|显露|暴露|显现|展现|呈现|反映|映射|折射|投射|释放|排遣|舒缓|缓解|减轻|减缓|降低|减小|压缩|收缩|紧缩|紧逼|逼迫|迫使|强迫|执行|贯彻|实施|落实|践行|履行|实践|运作|运行|运转|操纵|操作|操控|管辖|治理|管理|规范|规定|界定|限定|限制|制约|克制|抑制|遏制|遏止|阻止|放弃|遗弃|放任|废除|取消|散发|流露|发出|反对|判断|促使|提示|认出|掩盖|遵守|过时|痴迷|获得|表明|显示|指出|揭示|透露|发现|寻找|拒绝|接受|允许|伤害|保卫|防御|攻击|反抗|抵制|合作|妥协|让步|调整|增强|恶化|好转|应对|遭受|缺乏|丧失|遗失|遗忘|思考|考虑|打算|企图|尝试|努力|坚持|停止|中断|继续|开展|进行|达成|领先|监督|审查|核查|解释|传达|传递|交流|沟通|讨论|辩论|称赞|赞美|鼓励|引起|诱发|形成|构成|设立|创造|制作|供应|收集|整理|分类|注视|关注|重视|轻视|蔑视|鄙视|分离|连接|牵连|转型|升级|衰退|繁荣|昌盛|爆发|发生|出现|消逝|灭亡|死亡|诞生|居住|停留|离开|离去|出发|到达|抵达|返回|归来|进入|移出|投入|付出|支出|节约|节省|保留|储存|增长|贬值|升值|投资|理财|借用|借贷|归还|偿还|赔付|惩治|惩罚)/;
+
+  var NOUN_CN_REGEX = /^(?:目标|目的|客体|物体|物质|事物|人物|人员|群众|大众|社会|国家|政府|企业|组织|机构|系统|机制|平台|方案|计划|策略|政策|原则|规则|规律|规范|标准|理论|学说|概念|定义|观念|意识|思想|思维|智力|智慧|知识|科学|技术|信息|数据|证据|事实|真相|现实|情况|现状|环境|背景|条件|需求|需要|动力|动机|原因|理由|借口|结果|后果|效果|成果|成就|成功|失败|问题|困难|阻碍|障碍|危机|挑战|风险|威胁|冲突|矛盾|争议|纠纷|利益|好处|优势|劣势|缺点|短板|弱点|强项|特长|功能|作用|角色|地位|身份|权利|权力|义务|责任|使命|任务|指标|成绩|表现|水平|能力|技巧|技能|艺术|语言|文字|文化|传统|历史|时代|阶段|过程|时期|环节|步骤|细节|部分|整体|全局|局部|结构|框架|核心|基石|基础|源泉|源头|起源|根源|源由|期刊|杂志|报纸|书籍|著作|法官|裁判|记者|学者|专家|教授|学生|导师|读者|观众|听众|用户|客户|公众|陪审团|委员会|法庭|法案|法律|法规|条例|宪法|法度|司法|管辖|权限|行政)/;
+
+  function detectSegmentPos(en, seg) {
+    var raw = String(seg || '').trim();
+    if (!raw) return 'n.';
+    if (raw === '目的' || NOUN_CN_REGEX.test(raw)) return 'n.';
+    if (raw.endsWith('的') || raw.endsWith('式的') || raw.endsWith('化的') || raw.endsWith('性的')) return 'adj.';
+    if (raw.endsWith('地')) return 'adv.';
+    if (VERB_CN_REGEX.test(raw)) return 'v.';
+    if (/(?:ize|ise|ify|ate)$/.test(en) && !/(?:tion|ment|ness|ity)$/.test(en)) return 'v.';
+    if (/(?:able|ible|ive|ic|ous|ful|less)$/.test(en)) return 'adj.';
+    if (/(?:ly)$/.test(en)) return 'adv.';
+    if (/(?:tion|sion|ment|ness|ity|ance|ence|ship|hood|ist|ism|er|or|ure|logy)$/.test(en)) return 'n.';
+    return 'n.';
+  }
+
+  function detectWordPos(rawEn, rawCn) {
+    var en = String(rawEn || '').toLowerCase().trim();
+    var cn = String(rawCn || '').trim();
+    if (CURATED_POS[en]) return CURATED_POS[en];
+    if (en.indexOf(' ') !== -1 || (en.indexOf('-') !== -1 && !en.endsWith('ed') && !en.endsWith('able'))) return 'phrase';
+    return detectSegmentPos(en, cn);
+  }
+
+  function getCleanPosClass(posStr) {
+    var p = String(posStr || '').toLowerCase().trim();
+    if (p.indexOf('adj') !== -1 || p === 'a.') return 'adj';
+    if (p.indexOf('adv') !== -1 || p === 'ad.') return 'adv';
+    if (p.indexOf('vt') !== -1) return 'vt';
+    if (p.indexOf('vi') !== -1) return 'vi';
+    if (p.indexOf('v') !== -1) return 'v';
+    if (p.indexOf('n') !== -1) return 'n';
+    if (p.indexOf('prep') !== -1) return 'prep';
+    if (p.indexOf('conj') !== -1) return 'conj';
+    if (p.indexOf('pron') !== -1) return 'pron';
+    if (p.indexOf('phrase') !== -1 || p.indexOf('idiom') !== -1) return 'phrase';
+    return 'n';
+  }
+
+  function formatDefinitions(cnText, enWord) {
+    if (!cnText) return '';
+    var raw = String(cnText).trim();
+    var en = String(enWord || '').toLowerCase().trim();
+    var posTokenRegex = /\b(vt\.|vi\.|v\.|n\.|adj\.|adv\.|prep\.|conj\.|pron\.|phrase|idiom|a\.|ad\.|num\.|art\.)/i;
+
+    var rows = [];
+    if (posTokenRegex.test(raw)) {
+      var tokens = raw.split(/(?=\b(?:vt\.|vi\.|v\.|n\.|adj\.|adv\.|prep\.|conj\.|pron\.|phrase|idiom|a\.|ad\.|num\.|art\.)\s*)/i);
+      for (var i = 0; i < tokens.length; i++) {
+        var seg = tokens[i].trim();
+        if (!seg) continue;
+        var match = seg.match(/^([a-z]{1,6}\.)\s*(.*)$/i);
+        if (match) {
+          rows.push({ pos: match[1].toLowerCase(), text: match[2].trim() });
+        } else {
+          rows.push({ pos: detectWordPos(en, seg), text: seg });
+        }
+      }
+    } else {
+      // 智能分句与墨墨风格多义项聚合
+      var parts = raw.split(/[；;]/).map(function(s) { return s.trim(); }).filter(Boolean);
+      if (parts.length > 1) {
+        var groups = [];
+        var curGroup = null;
+        for (var p = 0; p < parts.length; p++) {
+          var part = parts[p];
+          var detected = detectSegmentPos(en, part);
+          if (!curGroup || curGroup.pos !== detected) {
+            curGroup = { pos: detected, items: [part] };
+            groups.push(curGroup);
+          } else {
+            curGroup.items.push(part);
+          }
+        }
+        for (var g = 0; g < groups.length; g++) {
+          rows.push({ pos: groups[g].pos, text: groups[g].items.join('；') });
+        }
+      } else {
+        var singleInferred = detectWordPos(en, raw);
+        rows.push({ pos: singleInferred, text: raw });
+      }
+    }
+
+    if (!rows.length) rows.push({ pos: 'n.', text: raw });
+
+    var html = '<div class="momo-def-group">';
+    for (var r = 0; r < rows.length; r++) {
+      var row = rows[r];
+      var cls = getCleanPosClass(row.pos);
+      html += '<div class="momo-def-row">'
+        + '<span class="momo-pos-pill momo-pos-' + cls + '">' + escapeHTML(row.pos || '释') + '</span>'
+        + '<span class="momo-def-text">' + escapeHTML(row.text) + '</span>'
+        + '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ═══════════ DECOMPOSITION / MNEMONIC ENGINE (构词拆解与记忆抓手) ═══════════
+  function smartDecompose(rawWord, rawCn) {
+    var word = String(rawWord || '').toLowerCase().trim();
+    var cn = String(rawCn || '').trim();
+    if (HANDCRAFTED_DECOMP[word]) {
+      var hc = HANDCRAFTED_DECOMP[word];
+      return { parts: hc.parts, meaning: hc.meaning || cn };
+    }
+
+    var pMatch = null, sMatch = null;
+    for (var i = 0; i < PREFIX_LIST.length; i++) {
+      var p = PREFIX_LIST[i];
+      if (word.indexOf(p.p) === 0 && word.length >= p.p.length + 3) {
+        pMatch = p;
+        break;
+      }
+    }
+
+    for (var j = 0; j < SUFFIX_LIST.length; j++) {
+      var s = SUFFIX_LIST[j];
+      if (word.length >= s.s.length + 3 && word.slice(word.length - s.s.length) === s.s) {
+        if (!pMatch || (word.length >= pMatch.p.length + s.s.length + 2)) {
+          sMatch = s;
+          break;
+        }
+      }
+    }
+
+    var start = pMatch ? pMatch.p.length : 0;
+    var end = sMatch ? word.length - sMatch.s.length : word.length;
+    var stem = word.slice(start, end);
+
+    // 探查核心词根 CORE_ROOT_LIST
+    var rMatch = null;
+    if (typeof CORE_ROOT_LIST !== 'undefined') {
+      for (var cr = 0; cr < CORE_ROOT_LIST.length; cr++) {
+        var candidateRoot = CORE_ROOT_LIST[cr];
+        if (stem.indexOf(candidateRoot.r) !== -1) {
+          rMatch = candidateRoot;
+          break;
+        }
+      }
+    }
+
+    var parts = [];
+    if (pMatch) parts.push({ type: 'prefix', text: pMatch.p + '-', mean: pMatch.m });
+    if (rMatch) {
+      parts.push({ type: 'root', text: stem, mean: rMatch.r + ': ' + rMatch.m });
+    } else if (stem && stem.length >= 2) {
+      parts.push({ type: 'root', text: stem, mean: '核心基干' });
+    }
+    if (sMatch) parts.push({ type: 'suffix', text: '-' + sMatch.s, mean: sMatch.m });
+
+    if (!parts.length) {
+      parts.push({ type: 'root', text: word, mean: '原生词源/基干' });
+    }
+
+    var formulaMean = cn || '构词逻辑';
+    if (pMatch && rMatch) {
+      formulaMean = pMatch.m + ' + ' + rMatch.m + ' → ' + (cn || '核心词义');
+    }
+
+    return { parts: parts, meaning: formulaMean };
+  }
+
+  // ═══════════ SENTENCE KEYWORD HIGHLIGHTER ═══════════
+  function highlightSentence(sentence, targetWord) {
+    if (!sentence || !targetWord) return escapeHTML(sentence);
+    var rawTarget = String(targetWord).trim().toLowerCase();
+    if (rawTarget.length < 3) return escapeHTML(sentence);
+
+    var stem = rawTarget;
+    if (stem.endsWith('e') && stem.length > 3) stem = stem.slice(0, -1);
+    else if (stem.endsWith('y') && stem.length > 3) stem = stem.slice(0, -1) + '(?:y|i)';
+
+    var escapedStem = stem.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var pattern;
+    try {
+      pattern = new RegExp('\\b(' + escapedStem + '(?:s|es|ed|d|ing|ion|ive|able|al)?)\\b', 'gi');
+    } catch(e) {
+      return escapeHTML(sentence);
+    }
+
+    var str = String(sentence);
+    var lastIdx = 0, html = '', match;
+    while ((match = pattern.exec(str)) !== null) {
+      html += escapeHTML(str.slice(lastIdx, match.index));
+      html += '<mark class="vc-kw-mark">' + escapeHTML(match[0]) + '</mark>';
+      lastIdx = pattern.lastIndex;
+    }
+    html += escapeHTML(str.slice(lastIdx));
+    return html;
+  }
+
+  // ═══════════ MAIN LOOKUP & RENDER ═══════════
   function lookup(rawWord) {
     var word = String(rawWord || '').trim().toLowerCase();
     if (!word) return { hasNetwork: false, word: '' };
@@ -706,13 +1477,18 @@
     var rootKey = WORD_TO_ROOT[word];
     var rootInfo = rootKey ? ROOT_FAMILIES[rootKey] : null;
     var confusable = WORD_TO_CONFUSE[word] || null;
+    var synonyms = WORD_TO_SYNONYMS[word] || null;
+    var decomp = smartDecompose(word, '');
 
     return {
-      hasNetwork: Boolean(rootInfo || confusable),
+      hasNetwork: true,
       word: word,
       root: rootInfo ? { root: rootInfo.root, meaning: rootInfo.meaning, desc: rootInfo.desc } : null,
       family: rootInfo ? rootInfo.words : [],
-      confusable: confusable
+      confusable: confusable,
+      synonyms: synonyms ? synonyms.words : [],
+      synonymGroupTitle: synonyms ? synonyms.title : '',
+      decomposition: decomp
     };
   }
 
@@ -727,7 +1503,7 @@
     if (info.root && info.family && info.family.length) {
       html += '<div class="vc-net-header">'
         + '<span class="vc-net-tag">'
-        + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="9" y1="12" x2="3" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg>'
+        + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="9" y1="12" x2="3" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg>'
         + '同根族 · <b>' + escapeHTML(info.root.root) + '</b>'
         + '</span>'
         + '<span class="vc-net-root-mean">' + escapeHTML(info.root.meaning) + '</span>'
@@ -745,7 +1521,46 @@
       html += '</div>';
     }
 
-    // 2. Confusable Pair Block
+    // 2. Exam Synonyms Block (考研同义替换)
+    if (info.synonyms && info.synonyms.length) {
+      html += '<div class="vc-net-synonyms">'
+        + '<div class="vc-net-syn-head">'
+        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>'
+        + '<span>真题同义替换 · ' + escapeHTML(info.synonymGroupTitle || '高频考点') + '</span>'
+        + '</div>'
+        + '<div class="vc-net-chips">';
+      for (var s = 0; s < info.synonyms.length; s++) {
+        var syn = info.synonyms[s];
+        var isCurSyn = (syn.en.toLowerCase() === info.word);
+        html += '<span class="vc-net-chip' + (isCurSyn ? ' current' : '') + '" onclick="event.stopPropagation();if(typeof playCardWordAudio===&quot;function&quot;)playCardWordAudio(&quot;' + escapeHTML(syn.en) + '&quot;)" title="点击朗读 ' + escapeHTML(syn.en) + '">'
+          + '<b>' + escapeHTML(syn.en) + '</b>'
+          + '<small>' + escapeHTML(syn.pos || '') + ' ' + escapeHTML(syn.cn || '') + '</small>'
+          + '</span>';
+      }
+      html += '</div></div>';
+    }
+
+    // 3. Structural Decomposition & Mnemonic Formula (构词拆解 · 记忆抓手)
+    if (info.decomposition && info.decomposition.parts && info.decomposition.parts.length) {
+      html += '<div class="vc-net-decomp">'
+        + '<div class="vc-net-decomp-head">'
+        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'
+        + '<span>构词拆解 · 记忆抓手</span>'
+        + '</div>'
+        + '<div class="vc-decomp-formula">';
+      for (var p = 0; p < info.decomposition.parts.length; p++) {
+        var part = info.decomposition.parts[p];
+        if (p > 0) html += '<span class="vc-decomp-plus">+</span>';
+        var pCls = (part.type === 'prefix') ? 'vc-decomp-prefix' : (part.type === 'suffix' ? 'vc-decomp-suffix' : 'vc-decomp-root');
+        html += '<span class="vc-decomp-part ' + pCls + '">' + escapeHTML(part.text) + ' <small>(' + escapeHTML(part.mean) + ')</small></span>';
+      }
+      if (info.decomposition.meaning) {
+        html += '<span class="vc-decomp-arrow">→</span><span class="vc-decomp-meaning">' + escapeHTML(info.decomposition.meaning) + '</span>';
+      }
+      html += '</div></div>';
+    }
+
+    // 4. Confusable Pair Block (形近辨析)
     if (info.confusable) {
       html += '<div class="vc-net-confuse">'
         + '<div class="vc-confuse-tag">'
@@ -766,20 +1581,45 @@
       var style = document.createElement('style');
       style.id = 'wordNetworkStyles';
       style.textContent =
-        '.vc-word-network{margin:8px 0 10px;padding:9px 11px;background:rgba(255,255,255,.76);border:1px solid rgba(7,83,106,.12);border-radius:14px;box-shadow:0 3px 12px rgba(7,83,106,.05);text-align:left;animation:vc-net-fade .18s ease}' +
-        '@keyframes vc-net-fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}' +
-        '.vc-net-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;font-size:11px;font-weight:750;color:var(--deep,#07536a)}' +
+        '.vc-word-network{margin:10px 0 12px;padding:10px 12px;background:rgba(255,255,255,.85);border:1px solid rgba(7,83,106,.14);border-radius:16px;box-shadow:0 4px 16px rgba(7,83,106,.05);text-align:left;animation:vc-net-fade .18s ease}' +
+        '@keyframes vc-net-fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}' +
+        '.momo-def-group{display:flex;flex-direction:column;gap:7px;width:100%;margin:4px 0 12px;text-align:left}' +
+        '.momo-def-row{display:flex;align-items:baseline;gap:8px;font-size:16.5px;line-height:1.45}' +
+        '.momo-pos-pill{display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:850;padding:2px 7px;border-radius:6px;flex-shrink:0;line-height:1.2;text-transform:lowercase;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:.02em}' +
+        '.momo-pos-n{color:#1d4ed8;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.24)}' +
+        '.momo-pos-v,.momo-pos-vt,.momo-pos-vi{color:#047857;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.24)}' +
+        '.momo-pos-adj,.momo-pos-a{color:#b45309;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.24)}' +
+        '.momo-pos-adv,.momo-pos-ad{color:#7c3aed;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.24)}' +
+        '.momo-pos-prep,.momo-pos-conj,.momo-pos-pron{color:#c026d3;background:rgba(192,38,211,.1);border:1px solid rgba(192,38,211,.24)}' +
+        '.momo-pos-phrase,.momo-pos-idiom{color:#0e7490;background:rgba(14,116,144,.1);border:1px solid rgba(14,116,144,.24)}' +
+        '.momo-def-text{color:var(--ink,#102a36);font-weight:700;flex:1;word-break:break-word}' +
+        '.vc-net-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:7px;font-size:11px;font-weight:750;color:var(--deep,#07536a)}' +
         '.vc-net-tag{display:inline-flex;align-items:center;gap:3px}' +
-        '.vc-net-root-mean{font-size:10px;color:var(--muted,#5f747d);font-weight:600}' +
-        '.vc-net-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:2px}' +
-        '.vc-net-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:6px;background:rgba(7,83,106,.05);border:1px solid rgba(7,83,106,.1);font-size:10.5px;color:var(--ink,#102a36);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 120ms ease}' +
-        '.vc-net-chip:active{transform:scale(.95);background:rgba(7,83,106,.12)}' +
-        '.vc-net-chip.current{background:rgba(7,83,106,.14);border-color:rgba(7,83,106,.35);font-weight:750;color:var(--deep,#07536a)}' +
+        '.vc-net-root-mean{font-size:10.5px;color:var(--muted,#5f747d);font-weight:600}' +
+        '.vc-net-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:3px}' +
+        '.vc-net-chip{display:inline-flex;align-items:center;gap:3px;padding:2.5px 8px;border-radius:7px;background:rgba(7,83,106,.05);border:1px solid rgba(7,83,106,.12);font-size:11px;color:var(--ink,#102a36);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 120ms ease}' +
+        '.vc-net-chip:active{transform:scale(.95);background:rgba(7,83,106,.14)}' +
+        '.vc-net-chip.current{background:rgba(7,83,106,.15);border-color:rgba(7,83,106,.38);font-weight:750;color:var(--deep,#07536a)}' +
         '.vc-net-chip b{font-weight:700}' +
         '.vc-net-chip small{font-size:9.5px;color:var(--muted,#5f747d)}' +
-        '.vc-net-confuse{margin-top:7px;padding:6px 9px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.24);border-radius:8px;font-size:10.5px;line-height:1.4}' +
-        '.vc-confuse-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:800;color:#b45309;margin-bottom:2px}' +
-        '.vc-confuse-text{color:#92400e;font-size:10px}' +
+        '.vc-net-synonyms{margin-top:8px;padding:7px 10px;background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.22);border-radius:10px;font-size:11px}' +
+        '.vc-net-syn-head{display:inline-flex;align-items:center;gap:3px;font-weight:800;color:#047857;margin-bottom:5px;font-size:10.5px}' +
+        '.vc-net-decomp{margin-top:8px;padding:8px 10px;background:rgba(7,83,106,.04);border:1px dashed rgba(7,83,106,.22);border-radius:10px;font-size:11px}' +
+        '.vc-net-decomp-head{display:inline-flex;align-items:center;gap:3px;font-weight:800;color:var(--deep,#07536a);margin-bottom:5px;font-size:10.5px}' +
+        '.vc-decomp-formula{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:11px;color:var(--ink,#102a36);line-height:1.45}' +
+        '.vc-decomp-part{padding:1.5px 6px;border-radius:5px;background:#ffffff;border:1px solid rgba(7,83,106,.16);font-weight:700}' +
+        '.vc-decomp-prefix{color:#059669}' +
+        '.vc-decomp-root{color:#0284c7}' +
+        '.vc-decomp-suffix{color:#7c3aed}' +
+        '.vc-decomp-plus{color:#94a3b8;font-weight:800;font-size:11px}' +
+        '.vc-decomp-arrow{color:#07536a;font-weight:800;margin:0 1px}' +
+        '.vc-decomp-meaning{font-weight:700;color:#07536a}' +
+        '.vc-net-confuse{margin-top:8px;padding:7px 10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.26);border-radius:10px;font-size:11px;line-height:1.45}' +
+        '.vc-confuse-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:800;color:#b45309;margin-bottom:3px}' +
+        '.vc-confuse-text{color:#92400e;font-size:10.5px}' +
+        '.vc-kw-mark{background:rgba(254,240,138,.65);color:#0c4a6e;font-weight:750;padding:1px 4px;border-radius:4px;border-bottom:2px solid #0284c7}' +
+        '.vc-cn-note-hdr{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:#278275;margin-bottom:4px}' +
+        '.vc-cn-note-body{font-size:12.5px;line-height:1.5;color:#31515e}' +
         '.recite-hidden{display:none}';
       document.head.appendChild(style);
     }
@@ -788,6 +1628,10 @@
   global.WordNetwork = {
     ROOT_FAMILIES: ROOT_FAMILIES,
     CONFUSABLE_LIST: CONFUSABLE_LIST,
+    EXAM_SYNONYM_GROUPS: EXAM_SYNONYM_GROUPS,
+    formatDefinitions: formatDefinitions,
+    detectWordPos: detectWordPos,
+    highlightSentence: highlightSentence,
     lookup: lookup,
     renderNetworkHtml: renderNetworkHtml
   };

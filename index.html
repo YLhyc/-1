@@ -1624,6 +1624,88 @@
     .morning-card-controls,
     .vc-cn-note { border-color:#31515e; }
   }
+  /* ═══════════ MOMO DESIGN SYSTEM & WORD NETWORK STYLES ═══════════ */
+  .momo-def-group { display:flex; flex-direction:column; gap:8px; width:100%; margin:6px 0 14px; text-align:left; }
+  .momo-def-row { display:flex; align-items:baseline; gap:8px; font-size:16px; line-height:1.5; }
+  .momo-pos-pill {
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; padding:2px 7px; border-radius:6px;
+    flex-shrink:0; line-height:1.2; text-transform:lowercase;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    letter-spacing:.02em; user-select:none;
+  }
+  .momo-pos-n { color:#0284c7; background:rgba(2,132,199,.12); border:1px solid rgba(2,132,199,.28); }
+  .momo-pos-v, .momo-pos-vt, .momo-pos-vi { color:#15803d; background:rgba(21,128,61,.12); border:1px solid rgba(21,128,61,.28); }
+  .momo-pos-adj, .momo-pos-a { color:#c2410c; background:rgba(194,65,12,.12); border:1px solid rgba(194,65,12,.28); }
+  .momo-pos-adv, .momo-pos-ad { color:#7e22ce; background:rgba(126,34,206,.12); border:1px solid rgba(126,34,206,.28); }
+  .momo-pos-prep, .momo-pos-conj, .momo-pos-pron { color:#b91c1c; background:rgba(185,28,28,.1); border:1px solid rgba(185,28,28,.24); }
+  .momo-pos-phrase, .momo-pos-idiom { color:#0e7490; background:rgba(14,116,144,.12); border:1px solid rgba(14,116,144,.28); }
+  .momo-def-text { color:var(--ink,#102a36); font-weight:700; flex:1; word-break:break-word; }
+
+  /* 关联网络与图谱 */
+  .vc-word-network {
+    margin:10px 0 14px; padding:12px 14px;
+    background:rgba(255,255,255,.92); border:1px solid rgba(7,83,106,.14);
+    border-radius:16px; box-shadow:0 4px 18px rgba(7,83,106,.06);
+    text-align:left; animation:vc-net-fade .2s ease;
+  }
+  @keyframes vc-net-fade { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+  .vc-net-header {
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+    margin-bottom:8px; font-size:11.5px; font-weight:800; color:var(--deep,#07536a);
+  }
+  .vc-net-tag { display:inline-flex; align-items:center; gap:4px; }
+  .vc-net-root-mean { font-size:11px; color:var(--muted,#5f747d); font-weight:600; }
+  .vc-net-chips { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:4px; }
+  .vc-net-chip {
+    display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:8px;
+    font-size:11.5px; background:rgba(7,83,106,.05); border:1px solid rgba(7,83,106,.15);
+    color:var(--deep,#07536a); cursor:pointer; transition:all .15s ease;
+  }
+  .vc-net-chip:hover { background:rgba(7,83,106,.12); }
+  .vc-net-chip.current { background:#07536a; color:#fff; border-color:#07536a; }
+  .vc-net-chip.current small { color:rgba(255,255,255,.8); }
+  .vc-net-chip b { font-weight:800; }
+  .vc-net-chip small { font-size:10px; color:#5c8491; }
+
+  /* 真题同义替换群 */
+  .vc-net-synonyms { margin-top:8px; padding-top:8px; border-top:1px dashed rgba(7,83,106,.15); }
+  .vc-net-syn-head {
+    display:flex; align-items:center; gap:4px; font-size:11px; font-weight:800;
+    color:#0284c7; margin-bottom:6px;
+  }
+
+  /* 构词拆解记忆抓手公式 */
+  .vc-net-decomp { margin-top:8px; padding-top:8px; border-top:1px dashed rgba(7,83,106,.15); }
+  .vc-net-decomp-head {
+    display:flex; align-items:center; gap:4px; font-size:11px; font-weight:800;
+    color:#059669; margin-bottom:6px;
+  }
+  .vc-decomp-formula {
+    display:flex; flex-wrap:wrap; align-items:center; gap:5px;
+    font-size:11.5px; color:var(--ink,#102a36); line-height:1.5;
+  }
+  .vc-decomp-part {
+    padding:2px 7px; border-radius:6px; background:#ffffff;
+    border:1px solid rgba(7,83,106,.18); font-weight:750;
+  }
+  .vc-decomp-prefix { color:#059669; background:rgba(5,150,105,.06); }
+  .vc-decomp-root { color:#0284c7; background:rgba(2,132,199,.06); }
+  .vc-decomp-suffix { color:#7c3aed; background:rgba(124,58,237,.06); }
+  .vc-decomp-plus { color:#94a3b8; font-weight:800; font-size:12px; }
+  .vc-decomp-arrow { color:#07536a; font-weight:800; margin:0 2px; }
+  .vc-decomp-meaning { font-weight:750; color:#07536a; }
+
+  /* 形近辨析 */
+  .vc-net-confuse {
+    margin-top:8px; padding:8px 11px; background:rgba(245,158,11,.08);
+    border:1px solid rgba(245,158,11,.28); border-radius:10px; font-size:11.5px; line-height:1.5;
+  }
+  .vc-confuse-tag {
+    display:inline-flex; align-items:center; gap:3px; font-size:10.5px;
+    font-weight:800; color:#b45309; margin-bottom:3px;
+  }
+  .vc-confuse-text { color:#92400e; font-size:11px; }
 </style>
 </head>
 <body>
@@ -1643,7 +1725,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.1.2 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.1.3 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -2063,13 +2145,13 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.1.2"></script>
-<script src="focus-core.js?v=2.1.2"></script>
-<script src="study-copy.js?v=2.1.2"></script>
-<script src="word-network.js?v=2.1.2"></script>
-<script src="sprint-export.js?v=2.1.2"></script>
-<script src="audio-cache.js?v=2.1.2"></script>
-<script src="ui-motion.js?v=2.1.2"></script>
+<script src="review-core.js?v=2.1.3"></script>
+<script src="focus-core.js?v=2.1.3"></script>
+<script src="study-copy.js?v=2.1.3"></script>
+<script src="word-network.js?v=2.1.3"></script>
+<script src="sprint-export.js?v=2.1.3"></script>
+<script src="audio-cache.js?v=2.1.3"></script>
+<script src="ui-motion.js?v=2.1.3"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2154,8 +2236,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.1.2";
-var BUILD_TS = 1792222310;
+var APP_BUILD_ID = "2.1.3";
+var BUILD_TS = 1792237418;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3477,7 +3559,7 @@ function renderTodayRecite() {
           '</div>' +
         '</div>' +
         '<div class="vc-phase2-content' + hidden + '" id="todayRecitePhase2">' +
-          '<div class="vc-cn' + hidden + '" id="todayReciteCn">' + escapeHTML(w.cn) + '</div>' +
+          '<div class="vc-cn' + hidden + '" id="todayReciteCn">' + (typeof WordNetwork !== 'undefined' && WordNetwork.formatDefinitions ? WordNetwork.formatDefinitions(w.cn, w.en) : escapeHTML(w.cn)) + '</div>' +
           (typeof WordNetwork !== 'undefined' ? WordNetwork.renderNetworkHtml(w.en, isEffectiveShown) : '') +
           cardExamplesMarkup(w, hidden) +
         '</div>' +
@@ -3593,8 +3675,6 @@ function bindTodayReciteSwipe() {
 }
 if (typeof window !== 'undefined' && window.addEventListener) {
   window.addEventListener('keydown', function(event) {
-    var view = document.getElementById('view-today-recite');
-    if (!view || view.style.display === 'none' || !todayReciteStarted || todayReciteDone) return;
     if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;
     var todayView = document.getElementById('view-today-recite');
     var isToday = (todayView && todayView.style.display !== 'none' && todayReciteStarted && !todayReciteDone);
@@ -3982,11 +4062,20 @@ function getCardExamples(item) {
 }
 function cardExamplesMarkup(item, hidden) {
   var examples = getCardExamples(item);
-  var detail = item && item.cn_note ? '<div class="vc-cn-note' + (hidden || '') + '">' + escapeHTML(item.cn_note) + '</div>' : '';
+  var detail = item && item.cn_note ? '<div class="vc-cn-note' + (hidden || '') + '">'
+      + '<div class="vc-cn-note-hdr">'
+      + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>'
+      + '<span>墨式助记 · 深度语境</span>'
+      + '</div>'
+      + '<div class="vc-cn-note-body">' + escapeHTML(item.cn_note) + '</div>'
+      + '</div>' : '';
   if (!examples.length) return detail + '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
   var body = examples.map(function(example, index) {
+    var highlightedEn = (typeof WordNetwork !== 'undefined' && WordNetwork.highlightSentence)
+      ? WordNetwork.highlightSentence(example.en, item ? item.en : '')
+      : escapeHTML(example.en);
     var translation = example.ex_cn ? '<div class="vc-example-cn' + (hidden || '') + '">' + escapeHTML(example.ex_cn) + '</div>' : '';
-    return '<article class="vc-example"' + (index ? ' hidden' : '') + '><div class="vc-example-en">' + (index + 1) + '. ' + escapeHTML(example.en) + '</div>' + translation + '</article>';
+    return '<article class="vc-example"' + (index ? ' hidden' : '') + '><div class="vc-example-en">' + (index + 1) + '. ' + highlightedEn + '</div>' + translation + '</article>';
   }).join('');
   var pager = examples.length > 1 ? '<div class="vc-example-pager"><button class="vc-example-page" type="button" aria-label="上一条例句" disabled onclick="event.stopPropagation();cardExampleStep(this,-1)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:2px;"><polyline points="15 18 9 12 15 6"/></svg><span>上一句</span></button><span class="vc-example-count">1 / ' + examples.length + '</span><button class="vc-example-page" type="button" aria-label="下一条例句" onclick="event.stopPropagation();cardExampleStep(this,1)"><span>下一句</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-left:2px;"><polyline points="9 18 15 12 9 6"/></svg></button></div>' : '';
   return detail + '<section class="vc-sentence-zone" data-example-index="0"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div><div class="vc-example-viewport">' + body + '</div>' + pager + '</section>';
@@ -4164,7 +4253,7 @@ function renderVocabRecite(entries) {
           '</div>' +
         '</div>' +
         '<div class="vc-phase2-content' + hidden + '" id="vocabRecitePhase2">' +
-          '<div class="vc-cn' + hidden + '" id="vcCn">' + escapeHTML(w.cn) + '</div>' +
+          '<div class="vc-cn' + hidden + '" id="vcCn">' + (typeof WordNetwork !== 'undefined' && WordNetwork.formatDefinitions ? WordNetwork.formatDefinitions(w.cn, w.en) : escapeHTML(w.cn)) + '</div>' +
           note +
           (typeof WordNetwork !== 'undefined' ? WordNetwork.renderNetworkHtml(w.en, isEffectiveShown) : '') +
           cardExamplesMarkup(w, hidden) +
