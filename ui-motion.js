@@ -111,6 +111,7 @@
     var opts = options || {}, drag = null, revealCalled = false, committing = false;
     el.style.touchAction = opts.touchAction || 'pan-y';
     el.style.userSelect = 'none';
+    if (opts.disabled) return function() {};
     function resetClasses() { el.classList.remove(opts.leftClass || 'swipe-left', opts.rightClass || 'swipe-right'); }
     function settleHome() {
       resetClasses();
