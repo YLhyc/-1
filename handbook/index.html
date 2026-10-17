@@ -1101,10 +1101,116 @@
       font-weight: 700;
       animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    body.mode-recite .cloze.must.revealed {
+    body.mode-recite .cloze.must.revealed,
+    .point-entry.cloze-mask-on .cloze.must.revealed {
       background: #faece6;
       border-color: #e8b8ac;
       color: var(--accent-deep) !important;
+    }
+
+    .point-entry.cloze-mask-on .cloze {
+      display: inline-block;
+      min-width: 3.2em;
+      min-height: 22px;
+      line-height: 20px;
+      vertical-align: -0.2em;
+      background: var(--stripe-bg);
+      color: transparent !important;
+      border: 1px dashed rgba(142, 35, 23, 0.45);
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      margin: 0 1px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+      transition: all 0.16s ease;
+    }
+    .point-entry.cloze-mask-on .cloze:active {
+      transform: scale(0.96);
+    }
+    .point-entry.cloze-mask-on .cloze.revealed {
+      background: #faece6 !important;
+      border-color: #e8b8ac !important;
+      color: var(--accent-deep) !important;
+      font-weight: 700;
+      border-style: solid;
+    }
+    body.theme-dark .point-entry.cloze-mask-on .cloze {
+      border-color: rgba(223, 88, 67, 0.4);
+    }
+    body.theme-dark .point-entry.cloze-mask-on .cloze.revealed {
+      background: rgba(223, 88, 67, 0.22) !important;
+      border-color: rgba(223, 88, 67, 0.5) !important;
+      color: #ff9d8c !important;
+    }
+
+    .mask-test-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border: 1px solid var(--line-subtle);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--sub);
+      font-size: 11.5px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .mask-test-btn:hover, .mask-test-btn.active {
+      background: rgba(184, 116, 20, 0.1);
+      border-color: #b87414;
+      color: #9a600e;
+    }
+    body.theme-dark .mask-test-btn {
+      background: #252a26;
+      border-color: #38423b;
+      color: #c5cec7;
+    }
+    body.theme-dark .mask-test-btn:hover, body.theme-dark .mask-test-btn.active {
+      background: rgba(212, 163, 89, 0.15);
+      border-color: #d4a359;
+      color: #ffd88a;
+    }
+
+    .drawer-search-wrap {
+      position: relative;
+      margin: 10px 14px 8px 14px;
+    }
+    .drawer-search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--sub);
+      pointer-events: none;
+    }
+    .drawer-search-input {
+      width: 100%;
+      padding: 7px 12px 7px 32px;
+      font-size: 13px;
+      font-family: var(--font-song);
+      border: 1px solid var(--line-subtle);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+    }
+    .drawer-search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(142, 35, 23, 0.12);
+    }
+    body.theme-dark .drawer-search-input {
+      background: #232824;
+      border-color: #364038;
+      color: #e2ded4;
+    }
+    body.theme-dark .drawer-search-input:focus {
+      border-color: #df5843;
+      box-shadow: 0 0 0 2px rgba(223, 88, 67, 0.2);
     }
 
     @keyframes popIn {
@@ -2778,12 +2884,13 @@
         </div>
         <div class="cloze-tool-links">
           <button type="button" class="link-btn ghost-btn" id="btnToggleGhost" onclick="toggleGhostHint()">
-            <span>💡 弱提示: <b id="ghostHintState">关</b></span>
+            <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M12 7a5 5 0 0 1 5 5c0 2.5-1.5 3.5-2 5H9c-.5-1.5-2-2.5-2-5a5 5 0 0 1 5-5z"/></svg>
+            <span>弱提示: <b id="ghostHintState">关</b></span>
           </button>
           <span>·</span>
-          <button type="button" class="link-btn" id="btnRevealAll">全部揭开</button>
+          <button type="button" class="link-btn" id="btnRevealAll" onclick="revealAllCloze()">全部揭开</button>
           <span>·</span>
-          <button type="button" class="link-btn" id="btnMaskAll">全部遮盖</button>
+          <button type="button" class="link-btn" id="btnMaskAll" onclick="maskAllCloze()">全部遮盖</button>
         </div>
       </div>
     </div>
@@ -2830,7 +2937,16 @@
         </svg>
       </a>
 
-      <ul class="toc-list">
+      <!-- 考点即时极速搜索栏 -->
+      <div class="drawer-search-wrap">
+        <svg class="ui-svg xs drawer-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="search" class="drawer-search-input" id="drawerSearchInput" placeholder="输入关键词检索 72 考点..." oninput="filterDrawerToc(this.value)">
+      </div>
+
+      <ul class="toc-list" id="drawerTocList">
         
         <li class="toc-group" data-mod-id="mod_00">
           <div class="toc-group-title" onclick="onTocGroupTitleClick('mod_00')">
@@ -3794,6 +3910,13 @@
                       </svg>
                       <span>标疑</span>
                     </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_b6cbf99b7869f305" onclick="toggleCardMask('card_politics_b6cbf99b7869f305')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
+                    </button>
                   </div>
                 </div>
 
@@ -3916,7 +4039,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_b6cbf99b7869f305" oninput="saveDoubtNote('card_politics_b6cbf99b7869f305', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -3991,6 +4114,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_dca1ec842306c2fb" onclick="toggleCardMask('card_politics_dca1ec842306c2fb')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -4114,7 +4244,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_dca1ec842306c2fb" oninput="saveDoubtNote('card_politics_dca1ec842306c2fb', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -4203,6 +4333,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_01100df6391835a2" onclick="toggleCardMask('card_politics_01100df6391835a2')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -4326,7 +4463,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_01100df6391835a2" oninput="saveDoubtNote('card_politics_01100df6391835a2', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -4401,6 +4538,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_64ec0ef20b5e7333" onclick="toggleCardMask('card_politics_64ec0ef20b5e7333')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -4524,7 +4668,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_64ec0ef20b5e7333" oninput="saveDoubtNote('card_politics_64ec0ef20b5e7333', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -4599,6 +4743,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_5c04f99e0d2f854d" onclick="toggleCardMask('card_politics_5c04f99e0d2f854d')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -4723,7 +4874,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_5c04f99e0d2f854d" oninput="saveDoubtNote('card_politics_5c04f99e0d2f854d', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -4798,6 +4949,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_f396ea06de5fe50f" onclick="toggleCardMask('card_politics_f396ea06de5fe50f')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -4915,7 +5073,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_f396ea06de5fe50f" oninput="saveDoubtNote('card_politics_f396ea06de5fe50f', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -4990,6 +5148,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_mat_substance_v1" onclick="toggleCardMask('card_politics_mat_substance_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -5107,7 +5272,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_mat_substance_v1" oninput="saveDoubtNote('card_politics_mat_substance_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -5182,6 +5347,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_f92e8489827056e4" onclick="toggleCardMask('card_politics_f92e8489827056e4')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -5305,7 +5477,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_f92e8489827056e4" oninput="saveDoubtNote('card_politics_f92e8489827056e4', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -5380,6 +5552,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_a12e43f7109b546c" onclick="toggleCardMask('card_politics_a12e43f7109b546c')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -5505,7 +5684,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_a12e43f7109b546c" oninput="saveDoubtNote('card_politics_a12e43f7109b546c', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -5580,6 +5759,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_16802f8826e810c8" onclick="toggleCardMask('card_politics_16802f8826e810c8')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -5697,7 +5883,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_16802f8826e810c8" oninput="saveDoubtNote('card_politics_16802f8826e810c8', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -5772,6 +5958,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_356679a94c1f1f00" onclick="toggleCardMask('card_politics_356679a94c1f1f00')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -5895,7 +6088,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_356679a94c1f1f00" oninput="saveDoubtNote('card_politics_356679a94c1f1f00', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -5970,6 +6163,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_mat_motion_space_v1" onclick="toggleCardMask('card_politics_mat_motion_space_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -6087,7 +6287,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_mat_motion_space_v1" oninput="saveDoubtNote('card_politics_mat_motion_space_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -6162,6 +6362,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_ac34c7b93373d3de" onclick="toggleCardMask('card_politics_ac34c7b93373d3de')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -6285,7 +6492,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_ac34c7b93373d3de" oninput="saveDoubtNote('card_politics_ac34c7b93373d3de', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -6360,6 +6567,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_b863d4e75f0227c7" onclick="toggleCardMask('card_politics_b863d4e75f0227c7')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -6483,7 +6697,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_b863d4e75f0227c7" oninput="saveDoubtNote('card_politics_b863d4e75f0227c7', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -6558,6 +6772,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_aedb3175306c6ead" onclick="toggleCardMask('card_politics_aedb3175306c6ead')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -6681,7 +6902,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_aedb3175306c6ead" oninput="saveDoubtNote('card_politics_aedb3175306c6ead', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -6756,6 +6977,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_21ae1c5994363e41" onclick="toggleCardMask('card_politics_21ae1c5994363e41')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -6879,7 +7107,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_21ae1c5994363e41" oninput="saveDoubtNote('card_politics_21ae1c5994363e41', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -6954,6 +7182,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_c7fda79c64ef3357" onclick="toggleCardMask('card_politics_c7fda79c64ef3357')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -7078,7 +7313,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_c7fda79c64ef3357" oninput="saveDoubtNote('card_politics_c7fda79c64ef3357', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -7153,6 +7388,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_mat_consciousness_v1" onclick="toggleCardMask('card_politics_mat_consciousness_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -7276,7 +7518,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_mat_consciousness_v1" oninput="saveDoubtNote('card_politics_mat_consciousness_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -7351,6 +7593,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_5aaf9aabde7cf578" onclick="toggleCardMask('card_politics_5aaf9aabde7cf578')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -7475,7 +7724,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_5aaf9aabde7cf578" oninput="saveDoubtNote('card_politics_5aaf9aabde7cf578', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -7550,6 +7799,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_mat_world_unity_v1" onclick="toggleCardMask('card_politics_mat_world_unity_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -7672,7 +7928,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_mat_world_unity_v1" oninput="saveDoubtNote('card_politics_mat_world_unity_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -7761,6 +8017,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_dialectic_quality_quantity_v1" onclick="toggleCardMask('card_politics_dialectic_quality_quantity_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -7884,7 +8147,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_dialectic_quality_quantity_v1" oninput="saveDoubtNote('card_politics_dialectic_quality_quantity_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -7959,6 +8222,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_contradiction_unity_struggle_v1" onclick="toggleCardMask('card_politics_contradiction_unity_struggle_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -8082,7 +8352,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_contradiction_unity_struggle_v1" oninput="saveDoubtNote('card_politics_contradiction_unity_struggle_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -8157,6 +8427,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_dialectic_negation_negation_v1" onclick="toggleCardMask('card_politics_dialectic_negation_negation_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -8280,7 +8557,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_dialectic_negation_negation_v1" oninput="saveDoubtNote('card_politics_dialectic_negation_negation_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -8355,6 +8632,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_contradiction_dynamics_v1" onclick="toggleCardMask('card_politics_contradiction_dynamics_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -8478,7 +8762,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_contradiction_dynamics_v1" oninput="saveDoubtNote('card_politics_contradiction_dynamics_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -8553,6 +8837,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_contradiction_general_specific_v1" onclick="toggleCardMask('card_politics_contradiction_general_specific_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -8676,7 +8967,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_contradiction_general_specific_v1" oninput="saveDoubtNote('card_politics_contradiction_general_specific_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -8751,6 +9042,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_contradiction_two_points_focus_v1" onclick="toggleCardMask('card_politics_contradiction_two_points_focus_v1')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -8868,7 +9166,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_contradiction_two_points_focus_v1" oninput="saveDoubtNote('card_politics_contradiction_two_points_focus_v1', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -8943,6 +9241,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_7a6a02aa72cc7835" onclick="toggleCardMask('card_politics_7a6a02aa72cc7835')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -9067,7 +9372,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_7a6a02aa72cc7835" oninput="saveDoubtNote('card_politics_7a6a02aa72cc7835', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -9142,6 +9447,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_c96e47031faa537b" onclick="toggleCardMask('card_politics_c96e47031faa537b')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -9265,7 +9577,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_c96e47031faa537b" oninput="saveDoubtNote('card_politics_c96e47031faa537b', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -9340,6 +9652,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_9a624c3e808fe77a" onclick="toggleCardMask('card_politics_9a624c3e808fe77a')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -9464,7 +9783,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_9a624c3e808fe77a" oninput="saveDoubtNote('card_politics_9a624c3e808fe77a', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -9539,6 +9858,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_33f1c3df8f65cfed" onclick="toggleCardMask('card_politics_33f1c3df8f65cfed')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -9663,7 +9989,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_33f1c3df8f65cfed" oninput="saveDoubtNote('card_politics_33f1c3df8f65cfed', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -9738,6 +10064,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_4fc195b016ba55c4" onclick="toggleCardMask('card_politics_4fc195b016ba55c4')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -9861,7 +10194,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_4fc195b016ba55c4" oninput="saveDoubtNote('card_politics_4fc195b016ba55c4', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -9936,6 +10269,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_d23a9e7364cd675a" onclick="toggleCardMask('card_politics_d23a9e7364cd675a')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -10060,7 +10400,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_d23a9e7364cd675a" oninput="saveDoubtNote('card_politics_d23a9e7364cd675a', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -10135,6 +10475,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_a51885ec724a817f" onclick="toggleCardMask('card_politics_a51885ec724a817f')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -10259,7 +10606,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_a51885ec724a817f" oninput="saveDoubtNote('card_politics_a51885ec724a817f', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -10334,6 +10681,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_2190ef51e5afb26e" onclick="toggleCardMask('card_politics_2190ef51e5afb26e')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -10458,7 +10812,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_2190ef51e5afb26e" oninput="saveDoubtNote('card_politics_2190ef51e5afb26e', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -10533,6 +10887,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_7e494f5482d51907" onclick="toggleCardMask('card_politics_7e494f5482d51907')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -10652,7 +11013,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_7e494f5482d51907" oninput="saveDoubtNote('card_politics_7e494f5482d51907', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -10727,6 +11088,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_politics_9a78b405388309dd" onclick="toggleCardMask('card_politics_9a78b405388309dd')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -10851,7 +11219,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_politics_9a78b405388309dd" oninput="saveDoubtNote('card_politics_9a78b405388309dd', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -10940,6 +11308,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_practice_nature" onclick="toggleCardMask('card_pol_epi_practice_nature')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -11064,7 +11439,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_practice_nature" oninput="saveDoubtNote('card_pol_epi_practice_nature', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -11139,6 +11514,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_practice_structure" onclick="toggleCardMask('card_pol_epi_practice_structure')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -11262,7 +11644,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_practice_structure" oninput="saveDoubtNote('card_pol_epi_practice_structure', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -11337,6 +11719,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_practice_determines" onclick="toggleCardMask('card_pol_epi_practice_determines')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -11461,7 +11850,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_practice_determines" oninput="saveDoubtNote('card_pol_epi_practice_determines', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -11536,6 +11925,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_essence_of_cognition" onclick="toggleCardMask('card_pol_epi_essence_of_cognition')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -11659,7 +12055,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_essence_of_cognition" oninput="saveDoubtNote('card_pol_epi_essence_of_cognition', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -11734,6 +12130,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_two_leaps" onclick="toggleCardMask('card_pol_epi_two_leaps')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -11857,7 +12260,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_two_leaps" oninput="saveDoubtNote('card_pol_epi_two_leaps', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -11932,6 +12335,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_rational_irrational" onclick="toggleCardMask('card_pol_epi_rational_irrational')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -12055,7 +12465,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_rational_irrational" oninput="saveDoubtNote('card_pol_epi_rational_irrational', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -12130,6 +12540,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_truth_objective_absolute_relative" onclick="toggleCardMask('card_pol_epi_truth_objective_absolute_relative')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -12254,7 +12671,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_truth_objective_absolute_relative" oninput="saveDoubtNote('card_pol_epi_truth_objective_absolute_relative', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -12329,6 +12746,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_truth_error" onclick="toggleCardMask('card_pol_epi_truth_error')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -12452,7 +12876,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_truth_error" oninput="saveDoubtNote('card_pol_epi_truth_error', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -12527,6 +12951,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_practice_criterion" onclick="toggleCardMask('card_pol_epi_practice_criterion')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -12650,7 +13081,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_practice_criterion" oninput="saveDoubtNote('card_pol_epi_practice_criterion', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -12725,6 +13156,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_truth_value" onclick="toggleCardMask('card_pol_epi_truth_value')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -12848,7 +13286,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_truth_value" oninput="saveDoubtNote('card_pol_epi_truth_value', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -12923,6 +13361,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_epi_necessity_freedom" onclick="toggleCardMask('card_pol_epi_necessity_freedom')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -13046,7 +13491,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_epi_necessity_freedom" oninput="saveDoubtNote('card_pol_epi_necessity_freedom', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -13135,6 +13580,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_social_being_consciousness" onclick="toggleCardMask('card_pol_hist_social_being_consciousness')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -13258,7 +13710,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_social_being_consciousness" oninput="saveDoubtNote('card_pol_hist_social_being_consciousness', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -13333,6 +13785,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_social_consciousness_autonomy" onclick="toggleCardMask('card_pol_hist_social_consciousness_autonomy')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -13457,7 +13916,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_social_consciousness_autonomy" oninput="saveDoubtNote('card_pol_hist_social_consciousness_autonomy', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -13532,6 +13991,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_productive_forces_relations" onclick="toggleCardMask('card_pol_hist_productive_forces_relations')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -13656,7 +14122,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_productive_forces_relations" oninput="saveDoubtNote('card_pol_hist_productive_forces_relations', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -13731,6 +14197,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_economic_base_superstructure" onclick="toggleCardMask('card_pol_hist_economic_base_superstructure')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -13855,7 +14328,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_economic_base_superstructure" oninput="saveDoubtNote('card_pol_hist_economic_base_superstructure', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -13930,6 +14403,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_social_formation_evolution" onclick="toggleCardMask('card_pol_hist_social_formation_evolution')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -14053,7 +14533,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_social_formation_evolution" oninput="saveDoubtNote('card_pol_hist_social_formation_evolution', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -14128,6 +14608,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_basic_contradiction_fundamental_force" onclick="toggleCardMask('card_pol_hist_basic_contradiction_fundamental_force')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -14251,7 +14738,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_basic_contradiction_fundamental_force" oninput="saveDoubtNote('card_pol_hist_basic_contradiction_fundamental_force', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -14326,6 +14813,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_science_technology_revolution" onclick="toggleCardMask('card_pol_hist_science_technology_revolution')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -14449,7 +14943,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_science_technology_revolution" oninput="saveDoubtNote('card_pol_hist_science_technology_revolution', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -14524,6 +15018,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_people_creator_of_history" onclick="toggleCardMask('card_pol_hist_people_creator_of_history')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -14647,7 +15148,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_people_creator_of_history" oninput="saveDoubtNote('card_pol_hist_people_creator_of_history', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -14722,6 +15223,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_hist_individual_historical_role" onclick="toggleCardMask('card_pol_hist_individual_historical_role')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -14845,7 +15353,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_hist_individual_historical_role" oninput="saveDoubtNote('card_pol_hist_individual_historical_role', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -14934,6 +15442,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_commodity_dual_nature" onclick="toggleCardMask('card_pol_econ_commodity_dual_nature')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -15057,7 +15572,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_commodity_dual_nature" oninput="saveDoubtNote('card_pol_econ_commodity_dual_nature', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -15132,6 +15647,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_labor_dual_nature" onclick="toggleCardMask('card_pol_econ_labor_dual_nature')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -15255,7 +15777,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_labor_dual_nature" oninput="saveDoubtNote('card_pol_econ_labor_dual_nature', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -15330,6 +15852,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_value_quantity_determination" onclick="toggleCardMask('card_pol_econ_value_quantity_determination')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -15453,7 +15982,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_value_quantity_determination" oninput="saveDoubtNote('card_pol_econ_value_quantity_determination', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -15528,6 +16057,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_law_of_value" onclick="toggleCardMask('card_pol_econ_law_of_value')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -15651,7 +16187,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_law_of_value" oninput="saveDoubtNote('card_pol_econ_law_of_value', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -15726,6 +16262,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_labor_power_commodity" onclick="toggleCardMask('card_pol_econ_labor_power_commodity')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -15849,7 +16392,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_labor_power_commodity" oninput="saveDoubtNote('card_pol_econ_labor_power_commodity', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -15924,6 +16467,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_constant_variable_capital" onclick="toggleCardMask('card_pol_econ_constant_variable_capital')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -16047,7 +16597,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_constant_variable_capital" oninput="saveDoubtNote('card_pol_econ_constant_variable_capital', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -16122,6 +16672,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_absolute_relative_surplus_value" onclick="toggleCardMask('card_pol_econ_absolute_relative_surplus_value')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -16245,7 +16802,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_absolute_relative_surplus_value" oninput="saveDoubtNote('card_pol_econ_absolute_relative_surplus_value', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -16320,6 +16877,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_capital_accumulation_organic_composition" onclick="toggleCardMask('card_pol_econ_capital_accumulation_organic_composition')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -16443,7 +17007,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_capital_accumulation_organic_composition" oninput="saveDoubtNote('card_pol_econ_capital_accumulation_organic_composition', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -16518,6 +17082,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_capital_circuit_turnover" onclick="toggleCardMask('card_pol_econ_capital_circuit_turnover')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -16642,7 +17213,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_capital_circuit_turnover" oninput="saveDoubtNote('card_pol_econ_capital_circuit_turnover', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -16717,6 +17288,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_fixed_circulating_capital" onclick="toggleCardMask('card_pol_econ_fixed_circulating_capital')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -16840,7 +17418,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_fixed_circulating_capital" oninput="saveDoubtNote('card_pol_econ_fixed_circulating_capital', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -16915,6 +17493,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_social_reproduction_core_problem" onclick="toggleCardMask('card_pol_econ_social_reproduction_core_problem')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -17038,7 +17623,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_social_reproduction_core_problem" oninput="saveDoubtNote('card_pol_econ_social_reproduction_core_problem', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -17113,6 +17698,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_profit_average_profit" onclick="toggleCardMask('card_pol_econ_profit_average_profit')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -17236,7 +17828,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_profit_average_profit" oninput="saveDoubtNote('card_pol_econ_profit_average_profit', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -17311,6 +17903,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_econ_monopoly_capitalism" onclick="toggleCardMask('card_pol_econ_monopoly_capitalism')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -17434,7 +18033,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_econ_monopoly_capitalism" oninput="saveDoubtNote('card_pol_econ_monopoly_capitalism', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -17523,6 +18122,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_soc_scientific_socialism_foundations" onclick="toggleCardMask('card_pol_soc_scientific_socialism_foundations')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -17646,7 +18252,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_soc_scientific_socialism_foundations" oninput="saveDoubtNote('card_pol_soc_scientific_socialism_foundations', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -17721,6 +18327,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_soc_socialist_development_path" onclick="toggleCardMask('card_pol_soc_socialist_development_path')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -17844,7 +18457,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_soc_socialist_development_path" oninput="saveDoubtNote('card_pol_soc_socialist_development_path', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -17919,6 +18532,13 @@
                         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                       </svg>
                       <span>标疑</span>
+                    </button>
+                    <button type="button" class="mask-test-btn" id="mask_btn_card_pol_soc_communist_ideal_features" onclick="toggleCardMask('card_pol_soc_communist_ideal_features')" title="遮盖核心题眼，点按逐个刮开自测">
+                      <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                      <span class="mask-btn-text">遮盖</span>
                     </button>
                   </div>
                 </div>
@@ -18042,7 +18662,7 @@
                     </svg>
                     <span>记录疑问或需要辅导的盲区：</span>
                   </div>
-                  <textarea class="doubt-input" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
+                  <textarea class="doubt-input" id="doubt_input_card_pol_soc_communist_ideal_features" oninput="saveDoubtNote('card_pol_soc_communist_ideal_features', this.value)" placeholder="例如：此处的逻辑词如何与真题干扰项区分？求大白话深入剖析..."></textarea>
                   <div class="doubt-tags">
                     <span class="quick-doubt-tag" onclick="insertTag(this, '概念界限模糊')"># 概念界限模糊</span>
                     <span class="quick-doubt-tag" onclick="insertTag(this, '真题常考陷阱')"># 真题常考陷阱</span>
@@ -18199,7 +18819,7 @@
         <div class="audio-dock-meta">
           <div class="audio-dock-title" id="audioDockTitle">考点朗读</div>
           <div class="audio-dock-sub">
-            <span class="audio-dock-voice-tag">云扬 · 播音腔</span>
+            <a href="voice_picker.html" class="audio-dock-voice-tag" title="试听并更换声音">云扬 · 播音腔</a>
             <span class="audio-dock-time" id="audioDockTime">00:00 / 00:00</span>
           </div>
         </div>
@@ -18208,6 +18828,13 @@
       <div class="audio-dock-controls">
         <button type="button" class="audio-dock-btn audio-speed-pill" id="audioSpeedToggleBtn" onclick="cycleReciteSpeed()" title="切换播放倍速 (0.75x - 1.75x)">
           <span id="audioSpeedLabel">1.0x</span>
+        </button>
+
+        <button type="button" class="audio-dock-btn audio-prev-btn" onclick="playPrevCardAudio()" title="连播上一考点">
+          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="19 20 9 12 19 4 19 20" fill="currentColor"/>
+            <line x1="5" y1="19" x2="5" y2="5"/>
+          </svg>
         </button>
 
         <button type="button" class="audio-dock-btn audio-play-toggle" id="audioPlayToggleBtn" onclick="togglePlayCurrentAudio()" title="播放/暂停">
@@ -18978,7 +19605,7 @@
     }
 
     function setViewMode(mode) {
-      isBookPagingMode = (mode === 'paging');
+      isBookPagingMode = (mode === 'paging' || mode === 'book');
       try {
         localStorage.setItem('handbook_view_mode', mode);
       } catch(e) {}
@@ -19013,6 +19640,10 @@
           pointEntries[currentBookPageIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
+    }
+
+    function toggleViewMode(mode) {
+      setViewMode(mode);
     }
 
     function initTouchPageSwipe() {
@@ -19050,11 +19681,112 @@
     }
 
     function updateClozeStats() {
-      const visibleCloze = Array.from(document.querySelectorAll('.chapter-block:not([style*="display: none"]) .cloze'));
+      const visibleCloze = Array.from(document.querySelectorAll('.point-entry:not([style*="display: none"]) .cloze'));
       const total = visibleCloze.length;
       const revealed = visibleCloze.filter(el => el.classList.contains('revealed')).length;
       const statEl = document.getElementById('clozeStatText');
       if (statEl) statEl.textContent = `${revealed} / ${total} 处`;
+    }
+
+    // 考点一键遮盖自测模式切换 (逐词显隐回忆)
+    function toggleCardMask(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.toggle('cloze-mask-on');
+      const btn = document.getElementById('mask_btn_' + cardId);
+      const isMasked = card.classList.contains('cloze-mask-on');
+      if (btn) {
+        btn.classList.toggle('active', isMasked);
+        const txt = btn.querySelector('.mask-btn-text');
+        if (txt) txt.textContent = isMasked ? '全显' : '遮盖';
+      }
+      if (isMasked) {
+        card.querySelectorAll('.cloze').forEach(c => c.classList.remove('revealed'));
+        showToast('已开启遮盖自测：轻触填空胶囊即可刮开回忆');
+      } else {
+        showToast('已恢复完整速记文本');
+      }
+      updateClozeStats();
+    }
+
+    function revealAllCloze() {
+      document.querySelectorAll('.cloze').forEach(c => c.classList.add('revealed'));
+      updateClozeStats();
+      showToast('已全部揭开填空');
+    }
+
+    function maskAllCloze() {
+      document.querySelectorAll('.point-entry').forEach(card => card.classList.add('cloze-mask-on'));
+      document.querySelectorAll('.mask-test-btn').forEach(b => {
+        b.classList.add('active');
+        const txt = b.querySelector('.mask-btn-text');
+        if (txt) txt.textContent = '全显';
+      });
+      document.querySelectorAll('.cloze').forEach(c => c.classList.remove('revealed'));
+      updateClozeStats();
+      showToast('已开启全卷遮盖背诵');
+    }
+
+    function toggleClozeMask(enable) {
+      if (enable === undefined) {
+        enable = !document.body.classList.contains('cloze-active');
+      }
+      if (enable) {
+        document.body.classList.add('cloze-active');
+        maskAllCloze();
+      } else {
+        document.body.classList.remove('cloze-active');
+        document.querySelectorAll('.point-entry').forEach(card => card.classList.remove('cloze-mask-on'));
+        document.querySelectorAll('.mask-test-btn').forEach(b => {
+          b.classList.remove('active');
+          const txt = b.querySelector('.mask-btn-text');
+          if (txt) txt.textContent = '遮盖';
+        });
+        document.querySelectorAll('.cloze').forEach(c => c.classList.remove('revealed'));
+        updateClozeStats();
+      }
+    }
+
+    // 疑难笔记双向绑定与本地存储持久化
+    function saveDoubtNote(cardId, val) {
+      try {
+        const doubts = JSON.parse(localStorage.getItem('handbook_doubt_notes') || '{}');
+        if (val && val.trim()) {
+          doubts[cardId] = val.trim();
+        } else {
+          delete doubts[cardId];
+        }
+        localStorage.setItem('handbook_doubt_notes', JSON.stringify(doubts));
+      } catch(e) {}
+      const card = document.getElementById(cardId);
+      if (card) {
+        const isMarked = (val && val.trim().length > 0);
+        card.classList.toggle('is-marked', isMarked);
+        const btn = card.querySelector('.doubt-btn');
+        if (btn) btn.classList.toggle('active', isMarked);
+      }
+      updateDoubtStats();
+      updateFilterBadges();
+    }
+
+    function restoreDoubtNotes() {
+      try {
+        const doubts = JSON.parse(localStorage.getItem('handbook_doubt_notes') || '{}');
+        for (const [cid, note] of Object.entries(doubts)) {
+          const card = document.getElementById(cid);
+          if (card) {
+            const input = card.querySelector('.doubt-input');
+            if (input) input.value = note;
+            const btn = card.querySelector('.doubt-btn');
+            if (btn) btn.classList.add('active');
+            const panel = card.querySelector('.doubt-panel');
+            if (panel) panel.classList.add('open');
+            card.classList.add('is-marked');
+          }
+        }
+      } catch(e) {}
+      updateDoubtStats();
+      updateFilterBadges();
     }
 
     function toggleDoubt(btn) {
@@ -19068,9 +19800,11 @@
       if (panel.classList.contains('open')) {
         textarea.focus();
         entry.classList.add('is-marked');
+        saveDoubtNote(entry.id, textarea.value || '已标记待讲解盲区');
       } else {
         if (!textarea.value.trim()) {
           entry.classList.remove('is-marked');
+          saveDoubtNote(entry.id, '');
         }
       }
       updateDoubtStats();
@@ -19084,7 +19818,26 @@
         textarea.value = tagText + textarea.value;
       }
       textarea.focus();
-      updateDoubtStats();
+      const entry = tagEl.closest('.point-entry');
+      if (entry) {
+        saveDoubtNote(entry.id, textarea.value);
+      }
+    }
+
+    // 大纲目录即时搜索过滤
+    function filterDrawerToc(q) {
+      const query = (q || '').trim().toLowerCase();
+      const items = document.querySelectorAll('.toc-sub-list > li');
+      items.forEach(it => {
+        const title = it.querySelector('.toc-title-text') ? it.querySelector('.toc-title-text').textContent.toLowerCase() : '';
+        const idx = it.querySelector('.toc-idx') ? it.querySelector('.toc-idx').textContent.toLowerCase() : '';
+        const match = !query || title.includes(query) || idx.includes(query);
+        it.style.display = match ? '' : 'none';
+      });
+      document.querySelectorAll('.toc-group').forEach(grp => {
+        const visibleChildren = grp.querySelectorAll('.toc-sub-list > li:not([style*="display: none"])');
+        grp.style.display = (visibleChildren.length > 0) ? '' : 'none';
+      });
     }
 
     function updateDoubtStats() {
@@ -19401,7 +20154,9 @@
         const newSpan = document.getElementById(`sent_${playingCardId}_${currentPlayingSentenceIdx}`);
         if (newSpan) {
           newSpan.classList.add('active-sentence');
-          newSpan.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          if (newSpan.offsetParent !== null) {
+            newSpan.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         }
       }
     }
@@ -19475,6 +20230,20 @@
       }
     }
 
+    function playPrevCardAudio() {
+      if (playingCardIndex > 0) {
+        const prevCard = pointEntries[playingCardIndex - 1];
+        if (prevCard) {
+          if (isBookPagingMode) {
+            goToBookPage(playingCardIndex - 1);
+          }
+          startPlayingCard(prevCard.id);
+        }
+      } else {
+        showToast('已经是全卷第一张考点啦！');
+      }
+    }
+
     function playNextCardAudio() {
       if (playingCardIndex >= 0 && playingCardIndex < pointEntries.length - 1) {
         const nextCard = pointEntries[playingCardIndex + 1];
@@ -19489,11 +20258,20 @@
       }
     }
 
+    function getEventClientX(e) {
+      if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
+      if (e.changedTouches && e.changedTouches.length > 0) return e.changedTouches[0].clientX;
+      return e.clientX;
+    }
+
     function seekAudioFromTrack(e) {
       if (!reciteAudio || !reciteAudio.duration) return;
+      const clientX = getEventClientX(e);
+      if (clientX === undefined) return;
       const track = document.getElementById('audioDockProgressTrack');
+      if (!track) return;
       const rect = track.getBoundingClientRect();
-      const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       reciteAudio.currentTime = ratio * reciteAudio.duration;
     }
 
@@ -19540,6 +20318,7 @@
         });
         navigator.mediaSession.setActionHandler('play', () => { if (reciteAudio) reciteAudio.play(); });
         navigator.mediaSession.setActionHandler('pause', () => { if (reciteAudio) reciteAudio.pause(); });
+        navigator.mediaSession.setActionHandler('previoustrack', () => { playPrevCardAudio(); });
         navigator.mediaSession.setActionHandler('nexttrack', () => { playNextCardAudio(); });
       }
     }
@@ -19551,9 +20330,31 @@
       initTheme();
       initResumeTracker();
       updateAllSealUI();
+      restoreDoubtNotes();
       updateClozeStats();
       updateDoubtStats();
       initTouchPageSwipe();
+
+      // 遮盖挖空胶囊轻触交互
+      document.addEventListener('click', (e) => {
+        const cloze = e.target.closest('.cloze');
+        if (cloze) {
+          const card = cloze.closest('.point-entry');
+          if (card && (card.classList.contains('cloze-mask-on') || document.body.classList.contains('cloze-active'))) {
+            cloze.classList.toggle('revealed');
+            updateClozeStats();
+          }
+        }
+      });
+
+      // 播放坞进度条触控拖拽支持
+      const dockTrack = document.getElementById('audioDockProgressTrack');
+      if (dockTrack) {
+        dockTrack.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          seekAudioFromTrack(e);
+        }, { passive: false });
+      }
 
       // 恢复上次阅读页码
       try {
