@@ -1,506 +1,650 @@
 {
-  "card_politics_5c04f99e0d2f854d": {
-    "idx": 5,
-    "title": "意识的起源和本质",
-    "file": "audio_cards/card_politics_5c04f99e0d2f854d.mp3",
-    "size": 427968,
-    "chars": 359
-  },
-  "card_politics_dca1ec842306c2fb": {
-    "idx": 2,
-    "title": "马克思主义的基本立场、观点和方法",
-    "file": "audio_cards/card_politics_dca1ec842306c2fb.mp3",
-    "size": 395712,
-    "chars": 319
-  },
-  "card_politics_01100df6391835a2": {
-    "idx": 3,
-    "title": "列宁的物质定义与客观实在性",
-    "file": "audio_cards/card_politics_01100df6391835a2.mp3",
-    "size": 411984,
-    "chars": 334
-  },
   "card_politics_b6cbf99b7869f305": {
     "idx": 1,
     "title": "马克思主义的三大组成部分",
     "file": "audio_cards/card_politics_b6cbf99b7869f305.mp3",
-    "size": 391824,
-    "chars": 323
+    "sentences_file": "audio_cards/card_politics_b6cbf99b7869f305.sentences.json",
+    "duration": 113.29,
+    "size": 680256,
+    "sentence_count": 16
   },
   "card_politics_64ec0ef20b5e7333": {
     "idx": 4,
     "title": "哲学基本问题的两个方面",
     "file": "audio_cards/card_politics_64ec0ef20b5e7333.mp3",
-    "size": 373680,
-    "chars": 307
+    "sentences_file": "audio_cards/card_politics_64ec0ef20b5e7333.sentences.json",
+    "duration": 111.459,
+    "size": 669168,
+    "sentence_count": 16
+  },
+  "card_politics_01100df6391835a2": {
+    "idx": 3,
+    "title": "列宁的物质定义与客观实在性",
+    "file": "audio_cards/card_politics_01100df6391835a2.mp3",
+    "sentences_file": "audio_cards/card_politics_01100df6391835a2.sentences.json",
+    "duration": 123.993,
+    "size": 744480,
+    "sentence_count": 17
+  },
+  "card_politics_5c04f99e0d2f854d": {
+    "idx": 5,
+    "title": "意识的起源和本质",
+    "file": "audio_cards/card_politics_5c04f99e0d2f854d.mp3",
+    "sentences_file": "audio_cards/card_politics_5c04f99e0d2f854d.sentences.json",
+    "duration": 124.327,
+    "size": 746352,
+    "sentence_count": 16
   },
   "card_politics_mat_substance_v1": {
     "idx": 7,
     "title": "物质的唯一特性与未知世界辨析",
     "file": "audio_cards/card_politics_mat_substance_v1.mp3",
-    "size": 210672,
-    "chars": 172
+    "sentences_file": "audio_cards/card_politics_mat_substance_v1.sentences.json",
+    "duration": 104.258,
+    "size": 625968,
+    "sentence_count": 18
   },
-  "card_politics_16802f8826e810c8": {
-    "idx": 10,
-    "title": "‘意识完全不能运动’为什么错？",
-    "file": "audio_cards/card_politics_16802f8826e810c8.mp3",
-    "size": 209664,
-    "chars": 179
+  "card_politics_dca1ec842306c2fb": {
+    "idx": 2,
+    "title": "马克思主义的基本立场、观点和方法",
+    "file": "audio_cards/card_politics_dca1ec842306c2fb.mp3",
+    "sentences_file": "audio_cards/card_politics_dca1ec842306c2fb.sentences.json",
+    "duration": 108.03,
+    "size": 648576,
+    "sentence_count": 15
   },
   "card_politics_f396ea06de5fe50f": {
     "idx": 6,
     "title": "意识能不能运动？",
     "file": "audio_cards/card_politics_f396ea06de5fe50f.mp3",
-    "size": 202608,
-    "chars": 167
+    "sentences_file": "audio_cards/card_politics_f396ea06de5fe50f.sentences.json",
+    "duration": 111.757,
+    "size": 671040,
+    "sentence_count": 16
   },
   "card_politics_a12e43f7109b546c": {
     "idx": 9,
     "title": "意识能动作用与客观规律性",
     "file": "audio_cards/card_politics_a12e43f7109b546c.mp3",
-    "size": 455472,
-    "chars": 367
+    "sentences_file": "audio_cards/card_politics_a12e43f7109b546c.sentences.json",
+    "duration": 128.039,
+    "size": 768672,
+    "sentence_count": 15
   },
   "card_politics_f92e8489827056e4": {
     "idx": 8,
     "title": "旧唯物主义的“半截子”局限",
     "file": "audio_cards/card_politics_f92e8489827056e4.mp3",
-    "size": 428112,
-    "chars": 352
+    "sentences_file": "audio_cards/card_politics_f92e8489827056e4.sentences.json",
+    "duration": 110.646,
+    "size": 664272,
+    "sentence_count": 16
   },
   "card_politics_mat_motion_space_v1": {
     "idx": 12,
     "title": "物质运动与时空的绝对性与相对性",
     "file": "audio_cards/card_politics_mat_motion_space_v1.mp3",
-    "size": 244656,
-    "chars": 201
-  },
-  "card_politics_b863d4e75f0227c7": {
-    "idx": 14,
-    "title": "时间和空间的客观性",
-    "file": "audio_cards/card_politics_b863d4e75f0227c7.mp3",
-    "size": 286272,
-    "chars": 237
-  },
-  "card_politics_356679a94c1f1f00": {
-    "idx": 11,
-    "title": "物质、运动与相对静止",
-    "file": "audio_cards/card_politics_356679a94c1f1f00.mp3",
-    "size": 392544,
-    "chars": 314
+    "sentences_file": "audio_cards/card_politics_mat_motion_space_v1.sentences.json",
+    "duration": 115.911,
+    "size": 695952,
+    "sentence_count": 18
   },
   "card_politics_ac34c7b93373d3de": {
     "idx": 13,
     "title": "物质与运动为什么不可分割",
     "file": "audio_cards/card_politics_ac34c7b93373d3de.mp3",
-    "size": 346608,
-    "chars": 289
+    "sentences_file": "audio_cards/card_politics_ac34c7b93373d3de.sentences.json",
+    "duration": 103.542,
+    "size": 621648,
+    "sentence_count": 15
+  },
+  "card_politics_356679a94c1f1f00": {
+    "idx": 11,
+    "title": "物质、运动与相对静止",
+    "file": "audio_cards/card_politics_356679a94c1f1f00.mp3",
+    "sentences_file": "audio_cards/card_politics_356679a94c1f1f00.sentences.json",
+    "duration": 114.579,
+    "size": 687888,
+    "sentence_count": 17
+  },
+  "card_politics_16802f8826e810c8": {
+    "idx": 10,
+    "title": "‘意识完全不能运动’为什么错？",
+    "file": "audio_cards/card_politics_16802f8826e810c8.mp3",
+    "sentences_file": "audio_cards/card_politics_16802f8826e810c8.sentences.json",
+    "duration": 109.232,
+    "size": 655776,
+    "sentence_count": 14
+  },
+  "card_politics_b863d4e75f0227c7": {
+    "idx": 14,
+    "title": "时间和空间的客观性",
+    "file": "audio_cards/card_politics_b863d4e75f0227c7.mp3",
+    "sentences_file": "audio_cards/card_politics_b863d4e75f0227c7.sentences.json",
+    "duration": 98.267,
+    "size": 589968,
+    "sentence_count": 14
   },
   "card_politics_21ae1c5994363e41": {
     "idx": 16,
     "title": "自然界与人类社会的关系",
     "file": "audio_cards/card_politics_21ae1c5994363e41.mp3",
-    "size": 313056,
-    "chars": 251
-  },
-  "card_politics_aedb3175306c6ead": {
-    "idx": 15,
-    "title": "意识的能动性与人工智能边界",
-    "file": "audio_cards/card_politics_aedb3175306c6ead.mp3",
-    "size": 327312,
-    "chars": 279
-  },
-  "card_politics_5aaf9aabde7cf578": {
-    "idx": 19,
-    "title": "世界的物质统一性原理",
-    "file": "audio_cards/card_politics_5aaf9aabde7cf578.mp3",
-    "size": 350640,
-    "chars": 284
+    "sentences_file": "audio_cards/card_politics_21ae1c5994363e41.sentences.json",
+    "duration": 108.906,
+    "size": 653760,
+    "sentence_count": 14
   },
   "card_politics_c7fda79c64ef3357": {
     "idx": 17,
     "title": "人工智能与人类意识的边界",
     "file": "audio_cards/card_politics_c7fda79c64ef3357.mp3",
-    "size": 419904,
-    "chars": 354
+    "sentences_file": "audio_cards/card_politics_c7fda79c64ef3357.sentences.json",
+    "duration": 124.422,
+    "size": 746928,
+    "sentence_count": 16
+  },
+  "card_politics_aedb3175306c6ead": {
+    "idx": 15,
+    "title": "意识的能动性与人工智能边界",
+    "file": "audio_cards/card_politics_aedb3175306c6ead.mp3",
+    "sentences_file": "audio_cards/card_politics_aedb3175306c6ead.sentences.json",
+    "duration": 107.487,
+    "size": 645264,
+    "sentence_count": 14
   },
   "card_politics_mat_world_unity_v1": {
     "idx": 20,
     "title": "世界的物质统一性原理及其实践意义",
     "file": "audio_cards/card_politics_mat_world_unity_v1.mp3",
-    "size": 395568,
-    "chars": 321
+    "sentences_file": "audio_cards/card_politics_mat_world_unity_v1.sentences.json",
+    "duration": 130.756,
+    "size": 784944,
+    "sentence_count": 17
   },
   "card_politics_mat_consciousness_v1": {
     "idx": 18,
     "title": "意识的起源、本质及其能动作用",
     "file": "audio_cards/card_politics_mat_consciousness_v1.mp3",
-    "size": 460944,
-    "chars": 364
+    "sentences_file": "audio_cards/card_politics_mat_consciousness_v1.sentences.json",
+    "duration": 138.477,
+    "size": 831312,
+    "sentence_count": 19
   },
-  "card_politics_dialectic_negation_negation_v1": {
-    "idx": 23,
-    "title": "否定之否定规律与辩证否定观（扬弃）",
-    "file": "audio_cards/card_politics_dialectic_negation_negation_v1.mp3",
-    "size": 458352,
-    "chars": 362
+  "card_politics_5aaf9aabde7cf578": {
+    "idx": 19,
+    "title": "世界的物质统一性原理",
+    "file": "audio_cards/card_politics_5aaf9aabde7cf578.mp3",
+    "sentences_file": "audio_cards/card_politics_5aaf9aabde7cf578.sentences.json",
+    "duration": 112.305,
+    "size": 674208,
+    "sentence_count": 16
   },
   "card_politics_dialectic_quality_quantity_v1": {
     "idx": 21,
     "title": "量变质变规律与适度原则",
     "file": "audio_cards/card_politics_dialectic_quality_quantity_v1.mp3",
-    "size": 444240,
-    "chars": 354
-  },
-  "card_politics_contradiction_dynamics_v1": {
-    "idx": 24,
-    "title": "矛盾同一性与斗争性在事物发展中的作用",
-    "file": "audio_cards/card_politics_contradiction_dynamics_v1.mp3",
-    "size": 451152,
-    "chars": 357
-  },
-  "card_politics_contradiction_two_points_focus_v1": {
-    "idx": 26,
-    "title": "两点论和重点论的统一及主次矛盾辨析",
-    "file": "audio_cards/card_politics_contradiction_two_points_focus_v1.mp3",
-    "size": 248544,
-    "chars": 200
-  },
-  "card_politics_contradiction_unity_struggle_v1": {
-    "idx": 22,
-    "title": "矛盾的同一性和斗争性及其辩证关系",
-    "file": "audio_cards/card_politics_contradiction_unity_struggle_v1.mp3",
-    "size": 471456,
-    "chars": 364
+    "sentences_file": "audio_cards/card_politics_dialectic_quality_quantity_v1.sentences.json",
+    "duration": 144.309,
+    "size": 866304,
+    "sentence_count": 21
   },
   "card_politics_contradiction_general_specific_v1": {
     "idx": 25,
     "title": "矛盾的普遍性与特殊性辩证关系及矛盾问题精髓",
     "file": "audio_cards/card_politics_contradiction_general_specific_v1.mp3",
-    "size": 476352,
-    "chars": 380
+    "sentences_file": "audio_cards/card_politics_contradiction_general_specific_v1.sentences.json",
+    "duration": 153.307,
+    "size": 920304,
+    "sentence_count": 20
   },
-  "card_politics_7a6a02aa72cc7835": {
-    "idx": 27,
-    "title": "内容与形式的辩证关系及形式主义边界",
-    "file": "audio_cards/card_politics_7a6a02aa72cc7835.mp3",
-    "size": 414432,
-    "chars": 342
+  "card_politics_dialectic_negation_negation_v1": {
+    "idx": 23,
+    "title": "否定之否定规律与辩证否定观（扬弃）",
+    "file": "audio_cards/card_politics_dialectic_negation_negation_v1.mp3",
+    "sentences_file": "audio_cards/card_politics_dialectic_negation_negation_v1.sentences.json",
+    "duration": 152.812,
+    "size": 917280,
+    "sentence_count": 20
+  },
+  "card_politics_contradiction_unity_struggle_v1": {
+    "idx": 22,
+    "title": "矛盾的同一性和斗争性及其辩证关系",
+    "file": "audio_cards/card_politics_contradiction_unity_struggle_v1.mp3",
+    "sentences_file": "audio_cards/card_politics_contradiction_unity_struggle_v1.sentences.json",
+    "duration": 151.302,
+    "size": 908208,
+    "sentence_count": 23
+  },
+  "card_politics_contradiction_dynamics_v1": {
+    "idx": 24,
+    "title": "矛盾同一性与斗争性在事物发展中的作用",
+    "file": "audio_cards/card_politics_contradiction_dynamics_v1.mp3",
+    "sentences_file": "audio_cards/card_politics_contradiction_dynamics_v1.sentences.json",
+    "duration": 144.18,
+    "size": 865440,
+    "sentence_count": 19
   },
   "card_politics_c96e47031faa537b": {
     "idx": 28,
     "title": "对立统一规律为什么是唯物辩证法的实质和核心",
     "file": "audio_cards/card_politics_c96e47031faa537b.mp3",
-    "size": 344448,
-    "chars": 284
+    "sentences_file": "audio_cards/card_politics_c96e47031faa537b.sentences.json",
+    "duration": 111.98,
+    "size": 672336,
+    "sentence_count": 15
   },
   "card_politics_9a624c3e808fe77a": {
     "idx": 29,
     "title": "本质、现象、真象、假象与错觉如何区分",
     "file": "audio_cards/card_politics_9a624c3e808fe77a.mp3",
-    "size": 430416,
-    "chars": 352
+    "sentences_file": "audio_cards/card_politics_9a624c3e808fe77a.sentences.json",
+    "duration": 119.622,
+    "size": 718128,
+    "sentence_count": 15
+  },
+  "card_politics_7a6a02aa72cc7835": {
+    "idx": 27,
+    "title": "内容与形式的辩证关系及形式主义边界",
+    "file": "audio_cards/card_politics_7a6a02aa72cc7835.mp3",
+    "sentences_file": "audio_cards/card_politics_7a6a02aa72cc7835.sentences.json",
+    "duration": 123.541,
+    "size": 741744,
+    "sentence_count": 17
   },
   "card_politics_33f1c3df8f65cfed": {
     "idx": 30,
     "title": "矛盾的同一性和斗争性关系",
     "file": "audio_cards/card_politics_33f1c3df8f65cfed.mp3",
-    "size": 375552,
-    "chars": 313
+    "sentences_file": "audio_cards/card_politics_33f1c3df8f65cfed.sentences.json",
+    "duration": 120.3,
+    "size": 722304,
+    "sentence_count": 18
   },
-  "card_politics_4fc195b016ba55c4": {
-    "idx": 31,
-    "title": "矛盾同一性在事物发展中的三方面作用",
-    "file": "audio_cards/card_politics_4fc195b016ba55c4.mp3",
-    "size": 367344,
-    "chars": 298
-  },
-  "card_politics_a51885ec724a817f": {
-    "idx": 33,
-    "title": "矛盾的普遍性和特殊性关系",
-    "file": "audio_cards/card_politics_a51885ec724a817f.mp3",
-    "size": 325152,
-    "chars": 265
+  "card_politics_contradiction_two_points_focus_v1": {
+    "idx": 26,
+    "title": "两点论和重点论的统一及主次矛盾辨析",
+    "file": "audio_cards/card_politics_contradiction_two_points_focus_v1.mp3",
+    "sentences_file": "audio_cards/card_politics_contradiction_two_points_focus_v1.sentences.json",
+    "duration": 127.174,
+    "size": 763488,
+    "sentence_count": 16
   },
   "card_politics_d23a9e7364cd675a": {
     "idx": 32,
     "title": "原因与结果的辩证关系及因果识别",
     "file": "audio_cards/card_politics_d23a9e7364cd675a.mp3",
-    "size": 426816,
-    "chars": 344
+    "sentences_file": "audio_cards/card_politics_d23a9e7364cd675a.sentences.json",
+    "duration": 128.177,
+    "size": 769536,
+    "sentence_count": 17
+  },
+  "card_politics_a51885ec724a817f": {
+    "idx": 33,
+    "title": "矛盾的普遍性和特殊性关系",
+    "file": "audio_cards/card_politics_a51885ec724a817f.mp3",
+    "sentences_file": "audio_cards/card_politics_a51885ec724a817f.sentences.json",
+    "duration": 114.544,
+    "size": 687600,
+    "sentence_count": 18
   },
   "card_politics_7e494f5482d51907": {
     "idx": 35,
     "title": "两点论和重点论统一",
     "file": "audio_cards/card_politics_7e494f5482d51907.mp3",
-    "size": 260496,
-    "chars": 212
+    "sentences_file": "audio_cards/card_politics_7e494f5482d51907.sentences.json",
+    "duration": 106.589,
+    "size": 639936,
+    "sentence_count": 17
+  },
+  "card_politics_4fc195b016ba55c4": {
+    "idx": 31,
+    "title": "矛盾同一性在事物发展中的三方面作用",
+    "file": "audio_cards/card_politics_4fc195b016ba55c4.mp3",
+    "sentences_file": "audio_cards/card_politics_4fc195b016ba55c4.sentences.json",
+    "duration": 124.154,
+    "size": 745344,
+    "sentence_count": 17
   },
   "card_politics_9a78b405388309dd": {
     "idx": 36,
     "title": "现实可能、抽象可能与不可能的区分",
     "file": "audio_cards/card_politics_9a78b405388309dd.mp3",
-    "size": 456624,
-    "chars": 367
-  },
-  "card_politics_2190ef51e5afb26e": {
-    "idx": 34,
-    "title": "必然与偶然的关系及判断边界",
-    "file": "audio_cards/card_politics_2190ef51e5afb26e.mp3",
-    "size": 429264,
-    "chars": 361
+    "sentences_file": "audio_cards/card_politics_9a78b405388309dd.sentences.json",
+    "duration": 126.315,
+    "size": 758304,
+    "sentence_count": 16
   },
   "card_pol_epi_practice_nature": {
     "idx": 37,
     "title": "实践的本质与三大基本特征",
     "file": "audio_cards/card_pol_epi_practice_nature.mp3",
-    "size": 580752,
-    "chars": 478
-  },
-  "card_pol_epi_practice_determines": {
-    "idx": 39,
-    "title": "实践对认识的决定作用",
-    "file": "audio_cards/card_pol_epi_practice_determines.mp3",
-    "size": 525024,
-    "chars": 446
+    "sentences_file": "audio_cards/card_pol_epi_practice_nature.sentences.json",
+    "duration": 165.187,
+    "size": 991584,
+    "sentence_count": 18
   },
   "card_pol_epi_practice_structure": {
     "idx": 38,
     "title": "实践的基本结构与运行机制",
     "file": "audio_cards/card_pol_epi_practice_structure.mp3",
-    "size": 544896,
-    "chars": 448
+    "sentences_file": "audio_cards/card_pol_epi_practice_structure.sentences.json",
+    "duration": 158.755,
+    "size": 952992,
+    "sentence_count": 16
   },
-  "card_pol_epi_essence_of_cognition": {
-    "idx": 40,
-    "title": "认识的本质是能动反映",
-    "file": "audio_cards/card_pol_epi_essence_of_cognition.mp3",
-    "size": 530064,
-    "chars": 435
+  "card_politics_2190ef51e5afb26e": {
+    "idx": 34,
+    "title": "必然与偶然的关系及判断边界",
+    "file": "audio_cards/card_politics_2190ef51e5afb26e.mp3",
+    "sentences_file": "audio_cards/card_politics_2190ef51e5afb26e.sentences.json",
+    "duration": 118.489,
+    "size": 711360,
+    "sentence_count": 16
+  },
+  "card_pol_epi_practice_determines": {
+    "idx": 39,
+    "title": "实践对认识的决定作用",
+    "file": "audio_cards/card_pol_epi_practice_determines.mp3",
+    "sentences_file": "audio_cards/card_pol_epi_practice_determines.sentences.json",
+    "duration": 158.277,
+    "size": 950112,
+    "sentence_count": 20
   },
   "card_pol_epi_rational_irrational": {
     "idx": 42,
     "title": "认识过程中的理性因素与非理性因素",
     "file": "audio_cards/card_pol_epi_rational_irrational.mp3",
-    "size": 591696,
-    "chars": 470
+    "sentences_file": "audio_cards/card_pol_epi_rational_irrational.sentences.json",
+    "duration": 166.394,
+    "size": 998928,
+    "sentence_count": 19
   },
-  "card_pol_epi_two_leaps": {
-    "idx": 41,
-    "title": "认识运动的两次飞跃及其辩证过程",
-    "file": "audio_cards/card_pol_epi_two_leaps.mp3",
-    "size": 619488,
-    "chars": 518
+  "card_pol_epi_essence_of_cognition": {
+    "idx": 40,
+    "title": "认识的本质是能动反映",
+    "file": "audio_cards/card_pol_epi_essence_of_cognition.mp3",
+    "sentences_file": "audio_cards/card_pol_epi_essence_of_cognition.sentences.json",
+    "duration": 158.559,
+    "size": 951840,
+    "sentence_count": 16
   },
   "card_pol_epi_truth_objective_absolute_relative": {
     "idx": 43,
     "title": "真理的客观性、绝对性与相对性",
     "file": "audio_cards/card_pol_epi_truth_objective_absolute_relative.mp3",
-    "size": 682416,
-    "chars": 560
+    "sentences_file": "audio_cards/card_pol_epi_truth_objective_absolute_relative.sentences.json",
+    "duration": 184.657,
+    "size": 1108368,
+    "sentence_count": 21
   },
-  "card_pol_epi_truth_error": {
-    "idx": 44,
-    "title": "真理与谬误的对立统一关系",
-    "file": "audio_cards/card_pol_epi_truth_error.mp3",
-    "size": 526896,
-    "chars": 434
+  "card_pol_epi_two_leaps": {
+    "idx": 41,
+    "title": "认识运动的两次飞跃及其辩证过程",
+    "file": "audio_cards/card_pol_epi_two_leaps.mp3",
+    "sentences_file": "audio_cards/card_pol_epi_two_leaps.sentences.json",
+    "duration": 170.555,
+    "size": 1023840,
+    "sentence_count": 19
   },
   "card_pol_epi_practice_criterion": {
     "idx": 45,
     "title": "实践是检验真理的唯一标准及其确定性与不确定性",
     "file": "audio_cards/card_pol_epi_practice_criterion.mp3",
-    "size": 551232,
-    "chars": 463
+    "sentences_file": "audio_cards/card_pol_epi_practice_criterion.sentences.json",
+    "duration": 162.644,
+    "size": 976320,
+    "sentence_count": 16
   },
-  "card_pol_epi_truth_value": {
-    "idx": 46,
-    "title": "真理尺度与价值尺度的辩证统一",
-    "file": "audio_cards/card_pol_epi_truth_value.mp3",
-    "size": 517104,
-    "chars": 417
-  },
-  "card_pol_epi_necessity_freedom": {
-    "idx": 47,
-    "title": "认识世界与改造世界：从必然走向自由",
-    "file": "audio_cards/card_pol_epi_necessity_freedom.mp3",
-    "size": 566208,
-    "chars": 469
+  "card_pol_epi_truth_error": {
+    "idx": 44,
+    "title": "真理与谬误的对立统一关系",
+    "file": "audio_cards/card_pol_epi_truth_error.mp3",
+    "sentences_file": "audio_cards/card_pol_epi_truth_error.sentences.json",
+    "duration": 151.103,
+    "size": 907056,
+    "sentence_count": 19
   },
   "card_pol_hist_social_being_consciousness": {
     "idx": 48,
     "title": "社会存在与社会意识的辩证关系",
     "file": "audio_cards/card_pol_hist_social_being_consciousness.mp3",
-    "size": 625104,
-    "chars": 505
+    "sentences_file": "audio_cards/card_pol_hist_social_being_consciousness.sentences.json",
+    "duration": 165.148,
+    "size": 991440,
+    "sentence_count": 20
+  },
+  "card_pol_epi_truth_value": {
+    "idx": 46,
+    "title": "真理尺度与价值尺度的辩证统一",
+    "file": "audio_cards/card_pol_epi_truth_value.mp3",
+    "sentences_file": "audio_cards/card_pol_epi_truth_value.sentences.json",
+    "duration": 153.134,
+    "size": 919296,
+    "sentence_count": 18
+  },
+  "card_pol_epi_necessity_freedom": {
+    "idx": 47,
+    "title": "认识世界与改造世界：从必然走向自由",
+    "file": "audio_cards/card_pol_epi_necessity_freedom.mp3",
+    "sentences_file": "audio_cards/card_pol_epi_necessity_freedom.sentences.json",
+    "duration": 166.888,
+    "size": 1001808,
+    "sentence_count": 18
   },
   "card_pol_hist_social_consciousness_autonomy": {
     "idx": 49,
     "title": "社会意识的相对独立性及其反作用",
     "file": "audio_cards/card_pol_hist_social_consciousness_autonomy.mp3",
-    "size": 632448,
-    "chars": 528
-  },
-  "card_pol_hist_economic_base_superstructure": {
-    "idx": 51,
-    "title": "经济基础与上层建筑的矛盾运动规律",
-    "file": "audio_cards/card_pol_hist_economic_base_superstructure.mp3",
-    "size": 758880,
-    "chars": 624
-  },
-  "card_pol_hist_productive_forces_relations": {
-    "idx": 50,
-    "title": "生产力与生产关系的矛盾运动规律",
-    "file": "audio_cards/card_pol_hist_productive_forces_relations.mp3",
-    "size": 698544,
-    "chars": 592
+    "sentences_file": "audio_cards/card_pol_hist_social_consciousness_autonomy.sentences.json",
+    "duration": 171.88,
+    "size": 1031760,
+    "sentence_count": 19
   },
   "card_pol_hist_social_formation_evolution": {
     "idx": 52,
     "title": "社会形态更替的一般规律与统一性多样性",
     "file": "audio_cards/card_pol_hist_social_formation_evolution.mp3",
-    "size": 644256,
-    "chars": 528
+    "sentences_file": "audio_cards/card_pol_hist_social_formation_evolution.sentences.json",
+    "duration": 170.968,
+    "size": 1026288,
+    "sentence_count": 18
+  },
+  "card_pol_hist_economic_base_superstructure": {
+    "idx": 51,
+    "title": "经济基础与上层建筑的矛盾运动规律",
+    "file": "audio_cards/card_pol_hist_economic_base_superstructure.mp3",
+    "sentences_file": "audio_cards/card_pol_hist_economic_base_superstructure.sentences.json",
+    "duration": 193.807,
+    "size": 1163376,
+    "sentence_count": 21
   },
   "card_pol_hist_basic_contradiction_fundamental_force": {
     "idx": 53,
     "title": "社会基本矛盾是历史发展的根本动力",
     "file": "audio_cards/card_pol_hist_basic_contradiction_fundamental_force.mp3",
-    "size": 585360,
-    "chars": 471
+    "sentences_file": "audio_cards/card_pol_hist_basic_contradiction_fundamental_force.sentences.json",
+    "duration": 166.906,
+    "size": 1001952,
+    "sentence_count": 18
+  },
+  "card_pol_hist_productive_forces_relations": {
+    "idx": 50,
+    "title": "生产力与生产关系的矛盾运动规律",
+    "file": "audio_cards/card_pol_hist_productive_forces_relations.mp3",
+    "sentences_file": "audio_cards/card_pol_hist_productive_forces_relations.sentences.json",
+    "duration": 180.399,
+    "size": 1082880,
+    "sentence_count": 19
   },
   "card_pol_hist_science_technology_revolution": {
     "idx": 54,
     "title": "科学技术革命在社会发展中的作用及其双刃剑本质",
     "file": "audio_cards/card_pol_hist_science_technology_revolution.mp3",
-    "size": 582624,
-    "chars": 481
-  },
-  "card_pol_hist_individual_historical_role": {
-    "idx": 56,
-    "title": "个人在社会历史中的作用及评价历史人物的原则",
-    "file": "audio_cards/card_pol_hist_individual_historical_role.mp3",
-    "size": 609552,
-    "chars": 498
-  },
-  "card_pol_hist_people_creator_of_history": {
-    "idx": 55,
-    "title": "人民群众是历史的创造者及党的群众路线",
-    "file": "audio_cards/card_pol_hist_people_creator_of_history.mp3",
-    "size": 613008,
-    "chars": 506
+    "sentences_file": "audio_cards/card_pol_hist_science_technology_revolution.sentences.json",
+    "duration": 163.498,
+    "size": 981504,
+    "sentence_count": 18
   },
   "card_pol_econ_labor_dual_nature": {
     "idx": 58,
     "title": "劳动的二重性：具体劳动与抽象劳动",
     "file": "audio_cards/card_pol_econ_labor_dual_nature.mp3",
-    "size": 625248,
-    "chars": 516
+    "sentences_file": "audio_cards/card_pol_econ_labor_dual_nature.sentences.json",
+    "duration": 160.595,
+    "size": 964080,
+    "sentence_count": 20
+  },
+  "card_pol_hist_people_creator_of_history": {
+    "idx": 55,
+    "title": "人民群众是历史的创造者及党的群众路线",
+    "file": "audio_cards/card_pol_hist_people_creator_of_history.mp3",
+    "sentences_file": "audio_cards/card_pol_hist_people_creator_of_history.sentences.json",
+    "duration": 166.806,
+    "size": 1001376,
+    "sentence_count": 18
   },
   "card_pol_econ_commodity_dual_nature": {
     "idx": 57,
     "title": "商品的二重性：使用价值与价值",
     "file": "audio_cards/card_pol_econ_commodity_dual_nature.mp3",
-    "size": 607680,
-    "chars": 504
+    "sentences_file": "audio_cards/card_pol_econ_commodity_dual_nature.sentences.json",
+    "duration": 165.669,
+    "size": 994464,
+    "sentence_count": 20
   },
-  "card_pol_econ_labor_power_commodity": {
-    "idx": 61,
-    "title": "劳动力成为商品与货币转化为资本",
-    "file": "audio_cards/card_pol_econ_labor_power_commodity.mp3",
-    "size": 644400,
-    "chars": 530
-  },
-  "card_pol_econ_value_quantity_determination": {
-    "idx": 59,
-    "title": "商品价值量的决定与劳动生产率的关系",
-    "file": "audio_cards/card_pol_econ_value_quantity_determination.mp3",
-    "size": 593856,
-    "chars": 504
-  },
-  "card_pol_econ_absolute_relative_surplus_value": {
-    "idx": 63,
-    "title": "剩余价值生产的两种方法：绝对剩余价值与相对剩余价值",
-    "file": "audio_cards/card_pol_econ_absolute_relative_surplus_value.mp3",
-    "size": 691344,
-    "chars": 567
-  },
-  "card_pol_econ_constant_variable_capital": {
-    "idx": 62,
-    "title": "不变资本与可变资本的划分及剩余价值率",
-    "file": "audio_cards/card_pol_econ_constant_variable_capital.mp3",
-    "size": 695088,
-    "chars": 597
-  },
-  "card_pol_econ_capital_accumulation_organic_composition": {
-    "idx": 64,
-    "title": "资本积累与资本有机构成的提高",
-    "file": "audio_cards/card_pol_econ_capital_accumulation_organic_composition.mp3",
-    "size": 706464,
-    "chars": 577
+  "card_pol_hist_individual_historical_role": {
+    "idx": 56,
+    "title": "个人在社会历史中的作用及评价历史人物的原则",
+    "file": "audio_cards/card_pol_hist_individual_historical_role.mp3",
+    "sentences_file": "audio_cards/card_pol_hist_individual_historical_role.sentences.json",
+    "duration": 170.222,
+    "size": 1021968,
+    "sentence_count": 18
   },
   "card_pol_econ_law_of_value": {
     "idx": 60,
     "title": "价值规律的内容、表现形式与作用机制",
     "file": "audio_cards/card_pol_econ_law_of_value.mp3",
-    "size": 673488,
-    "chars": 540
+    "sentences_file": "audio_cards/card_pol_econ_law_of_value.sentences.json",
+    "duration": 175.482,
+    "size": 1053360,
+    "sentence_count": 19
   },
-  "card_pol_econ_capital_circuit_turnover": {
-    "idx": 65,
-    "title": "产业资本循环的三个阶段与三种职能形式",
-    "file": "audio_cards/card_pol_econ_capital_circuit_turnover.mp3",
-    "size": 615888,
-    "chars": 505
+  "card_pol_econ_labor_power_commodity": {
+    "idx": 61,
+    "title": "劳动力成为商品与货币转化为资本",
+    "file": "audio_cards/card_pol_econ_labor_power_commodity.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_labor_power_commodity.sentences.json",
+    "duration": 175.7,
+    "size": 1054800,
+    "sentence_count": 17
   },
-  "card_pol_econ_profit_average_profit": {
-    "idx": 68,
-    "title": "剩余价值转化为利润与平均利润率的形成",
-    "file": "audio_cards/card_pol_econ_profit_average_profit.mp3",
-    "size": 686448,
-    "chars": 573
+  "card_pol_econ_value_quantity_determination": {
+    "idx": 59,
+    "title": "商品价值量的决定与劳动生产率的关系",
+    "file": "audio_cards/card_pol_econ_value_quantity_determination.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_value_quantity_determination.sentences.json",
+    "duration": 165.774,
+    "size": 995184,
+    "sentence_count": 17
   },
-  "card_pol_econ_social_reproduction_core_problem": {
-    "idx": 67,
-    "title": "社会总资本再生产的核心问题与实现条件",
-    "file": "audio_cards/card_pol_econ_social_reproduction_core_problem.mp3",
-    "size": 650592,
-    "chars": 551
+  "card_pol_econ_absolute_relative_surplus_value": {
+    "idx": 63,
+    "title": "剩余价值生产的两种方法：绝对剩余价值与相对剩余价值",
+    "file": "audio_cards/card_pol_econ_absolute_relative_surplus_value.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_absolute_relative_surplus_value.sentences.json",
+    "duration": 183.92,
+    "size": 1103904,
+    "sentence_count": 18
+  },
+  "card_pol_econ_constant_variable_capital": {
+    "idx": 62,
+    "title": "不变资本与可变资本的划分及剩余价值率",
+    "file": "audio_cards/card_pol_econ_constant_variable_capital.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_constant_variable_capital.sentences.json",
+    "duration": 184.284,
+    "size": 1106352,
+    "sentence_count": 17
+  },
+  "card_pol_econ_capital_accumulation_organic_composition": {
+    "idx": 64,
+    "title": "资本积累与资本有机构成的提高",
+    "file": "audio_cards/card_pol_econ_capital_accumulation_organic_composition.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_capital_accumulation_organic_composition.sentences.json",
+    "duration": 186.802,
+    "size": 1121328,
+    "sentence_count": 20
   },
   "card_pol_econ_fixed_circulating_capital": {
     "idx": 66,
     "title": "固定资本与流动资本的划分及资本周转速度",
     "file": "audio_cards/card_pol_econ_fixed_circulating_capital.mp3",
-    "size": 653328,
-    "chars": 535
+    "sentences_file": "audio_cards/card_pol_econ_fixed_circulating_capital.sentences.json",
+    "duration": 174.802,
+    "size": 1049328,
+    "sentence_count": 18
   },
-  "card_pol_econ_monopoly_capitalism": {
-    "idx": 69,
-    "title": "垄断资本主义的形成与国家垄断资本主义的实质",
-    "file": "audio_cards/card_pol_econ_monopoly_capitalism.mp3",
-    "size": 744768,
-    "chars": 601
+  "card_pol_econ_social_reproduction_core_problem": {
+    "idx": 67,
+    "title": "社会总资本再生产的核心问题与实现条件",
+    "file": "audio_cards/card_pol_econ_social_reproduction_core_problem.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_social_reproduction_core_problem.sentences.json",
+    "duration": 176.411,
+    "size": 1058976,
+    "sentence_count": 19
+  },
+  "card_pol_econ_profit_average_profit": {
+    "idx": 68,
+    "title": "剩余价值转化为利润与平均利润率的形成",
+    "file": "audio_cards/card_pol_econ_profit_average_profit.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_profit_average_profit.sentences.json",
+    "duration": 183.091,
+    "size": 1099152,
+    "sentence_count": 20
   },
   "card_pol_soc_scientific_socialism_foundations": {
     "idx": 70,
     "title": "空想社会主义的局限与科学社会主义的创立标志",
     "file": "audio_cards/card_pol_soc_scientific_socialism_foundations.mp3",
-    "size": 703728,
-    "chars": 581
-  },
-  "card_pol_soc_communist_ideal_features": {
-    "idx": 72,
-    "title": "共产主义社会的基本特征与人的自由全面发展",
-    "file": "audio_cards/card_pol_soc_communist_ideal_features.mp3",
-    "size": 645264,
-    "chars": 523
+    "sentences_file": "audio_cards/card_pol_soc_scientific_socialism_foundations.sentences.json",
+    "duration": 182.778,
+    "size": 1097136,
+    "sentence_count": 19
   },
   "card_pol_soc_socialist_development_path": {
     "idx": 71,
     "title": "社会主义建设的长期性、曲折性与多样性",
     "file": "audio_cards/card_pol_soc_socialist_development_path.mp3",
-    "size": 662112,
-    "chars": 536
+    "sentences_file": "audio_cards/card_pol_soc_socialist_development_path.sentences.json",
+    "duration": 172.643,
+    "size": 1036368,
+    "sentence_count": 17
+  },
+  "card_pol_soc_communist_ideal_features": {
+    "idx": 72,
+    "title": "共产主义社会的基本特征与人的自由全面发展",
+    "file": "audio_cards/card_pol_soc_communist_ideal_features.mp3",
+    "sentences_file": "audio_cards/card_pol_soc_communist_ideal_features.sentences.json",
+    "duration": 168.159,
+    "size": 1009440,
+    "sentence_count": 20
+  },
+  "card_pol_econ_monopoly_capitalism": {
+    "idx": 69,
+    "title": "垄断资本主义的形成与国家垄断资本主义的实质",
+    "file": "audio_cards/card_pol_econ_monopoly_capitalism.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_monopoly_capitalism.sentences.json",
+    "duration": 196.789,
+    "size": 1181232,
+    "sentence_count": 20
+  },
+  "card_pol_econ_capital_circuit_turnover": {
+    "idx": 65,
+    "title": "产业资本循环的三个阶段与三种职能形式",
+    "file": "audio_cards/card_pol_econ_capital_circuit_turnover.mp3",
+    "sentences_file": "audio_cards/card_pol_econ_capital_circuit_turnover.sentences.json",
+    "duration": 173.59,
+    "size": 1041984,
+    "sentence_count": 22
   }
 }
