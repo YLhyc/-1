@@ -71,14 +71,14 @@
     border:1.5px dashed rgba(5,122,157,.22); border-radius:18px; background:rgba(240,249,255,.45);
     cursor:pointer; transition:background 160ms ease, border-color 160ms ease;
   }
-  #view-today-recite .vc-phase1-prompt, #view-groups.vocab-card-view .vc-phase1-prompt:active { background:rgba(240,249,255,.8); }
-  #view-today-recite .vc-phase1-prompt, #view-groups.vocab-card-view .vc-phase1-prompt.hidden { display:none; }
+  #view-today-recite .vc-phase1-prompt:active, #view-groups.vocab-card-view .vc-phase1-prompt:active { background:rgba(240,249,255,.8); }
+  #view-today-recite .vc-phase1-prompt.hidden, #view-groups.vocab-card-view .vc-phase1-prompt.hidden { display:none !important; }
   #view-today-recite .vc-prompt-icon { color:#057a9d; animation:floatChevron 1.6s ease-in-out infinite; margin-bottom:8px; }
   @keyframes floatChevron { 0%,100% { transform:translateY(0); } 50% { transform:translateY(4px); } }
   #view-today-recite .vc-prompt-text { font-size:15px; font-weight:700; color:#057a9d; }
   #view-today-recite .vc-prompt-sub { font-size:11px; color:#7b919b; margin-top:4px; }
   #view-today-recite .vc-phase2-content, #view-groups.vocab-card-view .vc-phase2-content { display:flex; flex-direction:column; width:100%; }
-  #view-today-recite .vc-phase2-content, #view-groups.vocab-card-view .vc-phase2-content.recite-hidden { display:none; }
+  #view-today-recite .vc-phase2-content.recite-hidden, #view-groups.vocab-card-view .vc-phase2-content.recite-hidden { display:none !important; }
   #view-today-recite .vocab-card .vc-word { font-size:clamp(35px,10vw,46px); margin-bottom:12px; }
   #view-today-recite .vocab-card .vc-cn { font-size:18px; margin-bottom:17px; }
   #view-today-recite .vc-cn-note { max-height:160px; margin:-7px 0 11px; padding:9px 11px; font-size:13px; line-height:1.5; overflow:auto; }
@@ -88,8 +88,9 @@
   #view-today-recite .vc-btn { width:38px; height:38px; font-size:17px; }
   #view-today-recite .vc-btn-main { width:44px; height:44px; font-size:18px; }
   #view-today-recite .recite-rate-actions, #view-groups.vocab-card-view .recite-rate-actions { grid-area:rate; width:min(100%,420px); margin-top:6px; justify-self:center; display:grid; gap:6px; }
-  #view-today-recite .recite-rate-phase1, #view-groups.vocab-card-view .recite-rate-phase1 { grid-template-columns:1fr 1.6fr; }
+  #view-today-recite .recite-rate-phase1, #view-groups.vocab-card-view .recite-rate-phase1 { grid-template-columns:1fr 1fr; }
   #view-today-recite .recite-rate-4tier, #view-groups.vocab-card-view .recite-rate-4tier { grid-template-columns:repeat(4,1fr); }
+  #view-today-recite .recite-rate-unfamiliar, #view-groups.vocab-card-view .recite-rate-unfamiliar { grid-template-columns:1.8fr 1fr 1fr; }
   #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn {
     min-height:46px; border-radius:14px; border:1px solid transparent; font-family:inherit;
     cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -108,6 +109,8 @@
   #view-today-recite .recite-rate-mastered, #view-groups.vocab-card-view .recite-rate-mastered { color:#4f46e5; background:#eef2ff; border-color:rgba(79,70,229,.2); }
   #view-today-recite .recite-rate-mastered, #view-groups.vocab-card-view .recite-rate-mastered:active { background:#e0e7ff; }
   #view-today-recite .recite-reveal-trigger, #view-groups.vocab-card-view .recite-reveal-trigger { color:#0369a1; background:#f0f9ff; border-color:rgba(3,105,161,.2); flex-direction:row; gap:6px; }
+  #view-today-recite .recite-rate-affirm, #view-groups.vocab-card-view .recite-rate-affirm { color:#b91c1c; background:#fff1f2; border-color:rgba(225,29,72,.25); font-weight:800; flex-direction:row; gap:6px; }
+  #view-today-recite .recite-rate-affirm:active, #view-groups.vocab-card-view .recite-rate-affirm:active { background:#ffe4e6; }
   #view-today-recite .vc-hint { display:none; }
   #view-today-recite .recite-setup, #view-today-recite .recite-summary { margin:4px auto 0; max-height:100%; overflow:auto; }
   #view-groups.vocab-card-view {
@@ -1640,7 +1643,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.1.1 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.1.2 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -2060,13 +2063,13 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.1.1"></script>
-<script src="focus-core.js?v=2.1.1"></script>
-<script src="study-copy.js?v=2.1.1"></script>
-<script src="word-network.js?v=2.1.1"></script>
-<script src="sprint-export.js?v=2.1.1"></script>
-<script src="audio-cache.js?v=2.1.1"></script>
-<script src="ui-motion.js?v=2.1.1"></script>
+<script src="review-core.js?v=2.1.2"></script>
+<script src="focus-core.js?v=2.1.2"></script>
+<script src="study-copy.js?v=2.1.2"></script>
+<script src="word-network.js?v=2.1.2"></script>
+<script src="sprint-export.js?v=2.1.2"></script>
+<script src="audio-cache.js?v=2.1.2"></script>
+<script src="ui-motion.js?v=2.1.2"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2151,8 +2154,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.1.1";
-var BUILD_TS = 1792209917;
+var APP_BUILD_ID = "2.1.2";
+var BUILD_TS = 1792222310;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3243,41 +3246,63 @@ function toggleReciteFlowMode() {
   haptic(12);
   renderTodayRecite();
 }
+var todayReciteInitialSense = null;
 function renderTodayReciteRateBar(isShown) {
   var flowMode = getReciteFlowMode();
   if (flowMode === 'direct_4tier') isShown = true;
   if (!isShown) {
     return '<div class="recite-rate-actions recite-rate-phase1" id="todayReciteRateActions">' +
-      '<button class="recite-rate-btn recite-rate-forget" onclick="todayReciteRate(&quot;forget&quot;)" title="快捷键 1">' +
+      '<button class="recite-rate-btn recite-rate-forget" onclick="todayReciteShow(&quot;unfamiliar&quot;)" data-legacy="todayReciteRate(&quot;forget&quot;)" title="快捷键 1">' +
         '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' +
-        '<span class="rate-name">完全没印象</span>' +
+        '<span class="rate-name">不认识</span>' +
+        '<span class="rate-hint">看释义学</span>' +
       '</button>' +
-      '<button class="recite-rate-btn recite-reveal-trigger" onclick="todayReciteShow()" title="快捷键 空格">' +
+      '<button class="recite-rate-btn recite-reveal-trigger" onclick="todayReciteShow(&quot;familiar&quot;)" title="快捷键 空格">' +
         '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.06 12.35a1 1 0 0 1 0-.7C3.45 8.1 7.11 5.5 12 5.5s8.55 2.6 9.94 6.15a1 1 0 0 1 0 .7C20.55 15.9 16.89 18.5 12 18.5s-8.55-2.6-9.94-6.15Z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
-        '<span class="rate-name">想起来了 / 翻转</span>' +
+        '<span class="rate-name">认识</span>' +
+        '<span class="rate-hint">翻面核对</span>' +
+      '</button>' +
+    '</div>';
+  }
+  if (todayReciteInitialSense === 'unfamiliar') {
+    return '<div class="recite-rate-actions recite-rate-unfamiliar" id="todayReciteRateActions">' +
+      '<button class="recite-rate-btn recite-rate-forget recite-rate-affirm" onclick="todayReciteRate(&quot;forget&quot;)" title="快捷键 1 / 空格">' +
+        '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline><path d="M5 12h10"></path></svg>' +
+        '<span class="rate-name">记住了 · 下一词</span>' +
+        '<span class="rate-hint">今日重现</span>' +
+      '</button>' +
+      '<button class="recite-rate-btn recite-rate-uncertain" onclick="todayReciteRate(&quot;uncertain&quot;)" title="快捷键 2">' +
+        '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' +
+        '<span class="rate-name">模糊</span>' +
+        '<span class="rate-hint">有点印象</span>' +
+      '</button>' +
+      '<button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(&quot;familiar&quot;)" data-legacy="todayReciteRate(true)" title="快捷键 3">' +
+        '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10.5 14.5 8 12"></polyline></svg>' +
+        '<span class="rate-name">其实认识</span>' +
+        '<span class="rate-hint">看懂释义</span>' +
       '</button>' +
     '</div>';
   }
   return '<div class="recite-rate-actions recite-rate-4tier" id="todayReciteRateActions">' +
     '<button class="recite-rate-btn recite-rate-forget" onclick="todayReciteRate(&quot;forget&quot;)" title="快捷键 1">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' +
-      '<span class="rate-name">忘记</span>' +
-      '<span class="rate-hint">1天后</span>' +
+      '<span class="rate-name">记错了</span>' +
+      '<span class="rate-hint">今日重现</span>' +
     '</button>' +
     '<button class="recite-rate-btn recite-rate-uncertain" onclick="todayReciteRate(&quot;uncertain&quot;)" title="快捷键 2">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' +
       '<span class="rate-name">模糊</span>' +
-      '<span class="rate-hint">重现</span>' +
+      '<span class="rate-hint">巩固重现</span>' +
     '</button>' +
     '<button class="recite-rate-btn recite-rate-familiar" onclick="todayReciteRate(&quot;familiar&quot;)" data-legacy="todayReciteRate(true)" title="快捷键 3">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10.5 14.5 8 12"></polyline></svg>' +
       '<span class="rate-name">认识</span>' +
-      '<span class="rate-hint">通过</span>' +
+      '<span class="rate-hint">顺利通过</span>' +
     '</button>' +
     '<button class="recite-rate-btn recite-rate-mastered" onclick="todayReciteRate(&quot;mastered&quot;)" title="快捷键 4">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 12 12 17 22 7"></polyline><polyline points="2 12 7 17"></polyline></svg>' +
       '<span class="rate-name">熟知</span>' +
-      '<span class="rate-hint">免复习</span>' +
+      '<span class="rate-hint">永久斩词</span>' +
     '</button>' +
   '</div>';
 }
@@ -3470,16 +3495,17 @@ function renderTodayRecite() {
   '</div>';
   bindTodayReciteSwipe();
 }
-function todayReciteShow() {
+function todayReciteShow(initialSense) {
   if (todayReciteShown) return;
   todayReciteShown = true;
+  todayReciteInitialSense = initialSense || 'familiar';
   haptic(8);
   renderTodayRecite();
 }
 function todayReciteCardClick(event) {
   if (!event || !event.target) return;
   if (event.target.closest('button, a, input, select, textarea, .vc-example-pager, .archive-review-action')) return;
-  if (!todayReciteShown) todayReciteShow();
+  if (!todayReciteShown) todayReciteShow('familiar');
 }
 function playCardWordAudio(en) {
   if (!en) return;
@@ -3533,6 +3559,7 @@ function todayReciteRate(ratingOrFamiliar) {
     clearTodayReciteSession();
   }
   todayReciteShown = false;
+  todayReciteInitialSense = null;
   updateHomeStats();
   renderTodayRecite();
 }
@@ -3578,22 +3605,35 @@ if (typeof window !== 'undefined' && window.addEventListener) {
 
     var flowMode = getReciteFlowMode();
     var isShown = isToday ? ((flowMode === 'direct_4tier') ? true : todayReciteShown) : ((flowMode === 'direct_4tier') ? true : vocabReciteShown);
+    var initialSense = isToday ? todayReciteInitialSense : vocabReciteInitialSense;
     var rateFn = isToday ? todayReciteRate : vocabReciteRate;
     var showFn = isToday ? todayReciteShow : vocabReciteShow;
     var undoFn = isToday ? todayReciteUndoLast : vocabReciteUndoLast;
 
     if (event.code === 'Space') {
       event.preventDefault();
-      if (!isShown) showFn();
+      if (!isShown) {
+        showFn('familiar');
+      } else if (initialSense === 'unfamiliar') {
+        rateFn('forget');
+      }
     } else if (event.key === '1') {
       event.preventDefault();
-      rateFn('forget');
+      if (!isShown) {
+        showFn('unfamiliar');
+      } else {
+        rateFn('forget');
+      }
     } else if (event.key === '2') {
       event.preventDefault();
       if (isShown) rateFn('uncertain');
     } else if (event.key === '3') {
       event.preventDefault();
-      if (isShown) rateFn('familiar');
+      if (!isShown) {
+        showFn('familiar');
+      } else {
+        rateFn('familiar');
+      }
     } else if (event.key === '4') {
       event.preventDefault();
       if (isShown) rateFn('mastered');
@@ -4026,41 +4066,63 @@ function setVocabStudyMode(mode) {
   localStorage.setItem('vocab_study_mode_v1',mode); saveLearningResume('vocab', currentUnit, mode, vocabCardIdx);
   renderVocabCardMode();
 }
+var vocabReciteInitialSense = null;
 function renderVocabReciteRateBar(isShown) {
   var flowMode = getReciteFlowMode();
   if (flowMode === 'direct_4tier') isShown = true;
   if (!isShown) {
     return '<div class="recite-rate-actions recite-rate-phase1" id="vocabReciteRateActions">' +
-      '<button class="recite-rate-btn recite-rate-forget" onclick="vocabReciteRate(&quot;forget&quot;)" title="快捷键 1">' +
+      '<button class="recite-rate-btn recite-rate-forget" onclick="vocabReciteShow(&quot;unfamiliar&quot;)" data-legacy="vocabReciteRate(&quot;forget&quot;)" title="快捷键 1">' +
         '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' +
-        '<span class="rate-name">完全没印象</span>' +
+        '<span class="rate-name">不认识</span>' +
+        '<span class="rate-hint">看释义学</span>' +
       '</button>' +
-      '<button class="recite-rate-btn recite-reveal-trigger" onclick="vocabReciteShow()" title="快捷键 空格">' +
+      '<button class="recite-rate-btn recite-reveal-trigger" onclick="vocabReciteShow(&quot;familiar&quot;)" title="快捷键 空格">' +
         '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.06 12.35a1 1 0 0 1 0-.7C3.45 8.1 7.11 5.5 12 5.5s8.55 2.6 9.94 6.15a1 1 0 0 1 0 .7C20.55 15.9 16.89 18.5 12 18.5s-8.55-2.6-9.94-6.15Z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
-        '<span class="rate-name">想起来了 / 翻转</span>' +
+        '<span class="rate-name">认识</span>' +
+        '<span class="rate-hint">翻面核对</span>' +
+      '</button>' +
+    '</div>';
+  }
+  if (vocabReciteInitialSense === 'unfamiliar') {
+    return '<div class="recite-rate-actions recite-rate-unfamiliar" id="vocabReciteRateActions">' +
+      '<button class="recite-rate-btn recite-rate-forget recite-rate-affirm" onclick="vocabReciteRate(&quot;forget&quot;)" title="快捷键 1 / 空格">' +
+        '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline><path d="M5 12h10"></path></svg>' +
+        '<span class="rate-name">记住了 · 下一词</span>' +
+        '<span class="rate-hint">今日重现</span>' +
+      '</button>' +
+      '<button class="recite-rate-btn recite-rate-uncertain" onclick="vocabReciteRate(&quot;uncertain&quot;)" title="快捷键 2">' +
+        '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' +
+        '<span class="rate-name">模糊</span>' +
+        '<span class="rate-hint">有点印象</span>' +
+      '</button>' +
+      '<button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(&quot;familiar&quot;)" data-legacy="vocabReciteRate(true)" title="快捷键 3">' +
+        '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10.5 14.5 8 12"></polyline></svg>' +
+        '<span class="rate-name">其实认识</span>' +
+        '<span class="rate-hint">看懂释义</span>' +
       '</button>' +
     '</div>';
   }
   return '<div class="recite-rate-actions recite-rate-4tier" id="vocabReciteRateActions">' +
     '<button class="recite-rate-btn recite-rate-forget" onclick="vocabReciteRate(&quot;forget&quot;)" title="快捷键 1">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' +
-      '<span class="rate-name">忘记</span>' +
-      '<span class="rate-hint">1天</span>' +
+      '<span class="rate-name">记错了</span>' +
+      '<span class="rate-hint">今日重现</span>' +
     '</button>' +
     '<button class="recite-rate-btn recite-rate-uncertain" onclick="vocabReciteRate(&quot;uncertain&quot;)" title="快捷键 2">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' +
       '<span class="rate-name">模糊</span>' +
-      '<span class="rate-hint">微增</span>' +
+      '<span class="rate-hint">加固重现</span>' +
     '</button>' +
     '<button class="recite-rate-btn recite-rate-familiar" onclick="vocabReciteRate(&quot;familiar&quot;)" data-legacy="vocabReciteRate(true)" title="快捷键 3">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10.5 14.5 8 12"></polyline></svg>' +
       '<span class="rate-name">认识</span>' +
-      '<span class="rate-hint">推进</span>' +
+      '<span class="rate-hint">顺利通过</span>' +
     '</button>' +
     '<button class="recite-rate-btn recite-rate-mastered" onclick="vocabReciteRate(&quot;mastered&quot;)" title="快捷键 4">' +
       '<svg class="rate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 12 12 17 22 7"></polyline><polyline points="2 12 7 17"></polyline></svg>' +
       '<span class="rate-name">熟知</span>' +
-      '<span class="rate-hint">免复习</span>' +
+      '<span class="rate-hint">永久斩词</span>' +
     '</button>' +
   '</div>';
 }
@@ -4122,9 +4184,10 @@ function renderVocabRecite(entries) {
   '</div>';
   bindVocabReciteSwipe();
 }
-function vocabReciteShow() {
+function vocabReciteShow(initialSense) {
   if (vocabReciteShown) return;
   vocabReciteShown = true;
+  vocabReciteInitialSense = initialSense || 'familiar';
   haptic(8);
   var card = document.getElementById('vocabCard');
   if (card) {
@@ -4169,6 +4232,7 @@ function vocabReciteRate(ratingOrFamiliar) {
     vocabReciteDone = true;
   }
   vocabReciteShown = false;
+  vocabReciteInitialSense = null;
   renderVocabRecite(entries);
 }
 function vocabReciteUndoLast() {
