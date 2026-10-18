@@ -8,6 +8,23 @@
 
   // ═══════════ ROOT FAMILIES (考研核心同根词家族，全面扩充) ═══════════
   var ROOT_FAMILIES = {
+    dict: {
+      root: 'dict / dic',
+      meaning: '言，说，宣告，命令',
+      desc: '源自拉丁语 dicere，表达口述、预言、宣判与反驳',
+      words: [
+        { en: 'jurisdiction', pos: 'n.', cn: '司法权，管辖权' },
+        { en: 'verdict', pos: 'n.', cn: '裁定，判决' },
+        { en: 'predict', pos: 'v.', cn: '预言，预测' },
+        { en: 'prediction', pos: 'n.', cn: '预言，预测' },
+        { en: 'dictate', pos: 'v.', cn: '口述；支配，命令' },
+        { en: 'contradict', pos: 'v.', cn: '反驳；与...矛盾' },
+        { en: 'contradiction', pos: 'n.', cn: '矛盾，反驳' },
+        { en: 'indicate', pos: 'v.', cn: '表明，指出' },
+        { en: 'indicator', pos: 'n.', cn: '指标，指示器' },
+        { en: 'addict', pos: 'v.', cn: '使沉溺 n. 上瘾者' }
+      ]
+    },
     spect: {
       root: 'spect / spic',
       meaning: '看，凝视，审视',
@@ -926,6 +943,21 @@
 
   // ═══════════ HANDCRAFTED DECOMPOSITIONS (核心构词拆解与记忆公式) ═══════════
   var HANDCRAFTED_DECOMP = {
+    'jurisdiction': {
+      parts: [
+        { type: 'root', text: 'juris', mean: '法律/裁判 (拉丁语 ius)' },
+        { type: 'root', text: 'dict', mean: '言/宣告' },
+        { type: 'suffix', text: '-ion', mean: '名词后缀' }
+      ],
+      meaning: '依法律行使宣布判决的权力 → 司法权；管辖权'
+    },
+    'verdict': {
+      parts: [
+        { type: 'root', text: 'ver', mean: '真实/客观' },
+        { type: 'root', text: 'dict', mean: '言/宣告' }
+      ],
+      meaning: '审判后宣告的真实结论 → 裁定；判决'
+    },
     'rehearsal': {
       parts: [
         { type: 'prefix', text: 're-', mean: '反复/再' },
@@ -1151,6 +1183,8 @@
   };
   // ═══════════ MOMO RICH CONTENT EXPANSION (墨墨级词汇全景数据) ═══════════
   var EXAM_FREQ_MAP = {
+    'jurisdiction': { freq: 9, stars: 4, tag: '高频法律考点' },
+    'verdict': { freq: 7, stars: 3, tag: '常考词' },
     'abandon': { freq: 12, stars: 4, tag: '高频核心' },
     'abolish': { freq: 8, stars: 3, tag: '常考动词' },
     'radiate': { freq: 6, stars: 3, tag: '核心词' },
@@ -1217,6 +1251,15 @@
   };
 
   var EXAM_COLLOCATIONS = {
+    'jurisdiction': [
+      { en: 'have / exercise jurisdiction over', cn: '对...拥有/行使管辖权 (真题核心短语)' },
+      { en: 'under the jurisdiction of', cn: '在...的管辖范围内' },
+      { en: 'appellate jurisdiction', cn: '上诉管辖权' }
+    ],
+    'verdict': [
+      { en: 'reach / deliver a verdict', cn: '达成/宣布裁决' },
+      { en: 'return a verdict of guilty', cn: '裁定有罪' }
+    ],
     'abandon': [
       { en: 'abandon oneself to', cn: '沉溺于；放纵于' },
       { en: 'with abandon', cn: '放任地；放纵自流' }
@@ -1264,6 +1307,8 @@
   };
 
   var CORE_IPA_MAP = {
+    'jurisdiction': { uk: 'ˌdʒʊərɪsˈdɪkʃn', us: 'ˌdʒʊrɪsˈdɪkʃn' },
+    'verdict': { uk: 'ˈvɜːdɪkt', us: 'ˈvɜːrdɪkt' },
     'abandon': { uk: 'əˈbændən', us: 'əˈbændən' },
     'abolish': { uk: 'əˈbɒlɪʃ', us: 'əˈbɑːlɪʃ' },
     'radiate': { uk: 'ˈreɪdieɪt', us: 'ˈreɪdieɪt' },
@@ -1574,9 +1619,15 @@
       parts.push({ type: 'root', text: word, mean: '原生词源/基干' });
     }
 
-    var formulaMean = cn || '构词逻辑';
+    var formulaMean = cn || '';
     if (pMatch && rMatch) {
       formulaMean = pMatch.m + ' + ' + rMatch.m + ' → ' + (cn || '核心词义');
+    } else if (rMatch) {
+      formulaMean = rMatch.m + ' → ' + (cn || '引申词义');
+    } else if (cn) {
+      formulaMean = cn;
+    } else {
+      formulaMean = '核心词根引申演变';
     }
 
     return { parts: parts, meaning: formulaMean };
@@ -1612,7 +1663,7 @@
   }
 
   // ═══════════ MAIN LOOKUP & RENDER ═══════════
-  function lookup(rawWord) {
+  function lookup(rawWord, optionalCn) {
     var word = String(rawWord || '').trim().toLowerCase();
     if (!word) return { hasNetwork: false, word: '' };
 
@@ -1620,7 +1671,7 @@
     var rootInfo = rootKey ? ROOT_FAMILIES[rootKey] : null;
     var confusable = WORD_TO_CONFUSE[word] || null;
     var synonyms = WORD_TO_SYNONYMS[word] || null;
-    var decomp = smartDecompose(word, '');
+    var decomp = smartDecompose(word, optionalCn || '');
 
     return {
       hasNetwork: true,
@@ -1634,9 +1685,9 @@
     };
   }
 
-  function renderNetworkHtml(rawWord, isShown) {
+  function renderNetworkHtml(rawWord, isShown, optionalCn) {
     var word = String(rawWord || '').trim().toLowerCase();
-    var info = lookup(rawWord);
+    var info = lookup(rawWord, optionalCn);
     if (!word) return '';
 
     var hiddenClass = isShown ? '' : ' recite-hidden';
