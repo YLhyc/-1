@@ -1,14 +1,14 @@
-const CACHE = 'kv-2.1.5';
+const CACHE = 'kv-2.2.0';
 const APP_SHELL = [
   'index.html',
-  'review-core.js?v=2.1.5',
-  'focus-core.js?v=2.1.5',
-  'study-copy.js?v=2.1.5',
-  'word-network.js?v=2.1.5',
-  'sprint-export.js?v=2.1.5',
-  'audio-cache.js?v=2.1.5',
-  'ui-motion.js?v=2.1.5',
-  'hongbaoshu.json?v=2.1.5',
+  'review-core.js?v=2.2.0',
+  'focus-core.js?v=2.2.0',
+  'study-copy.js?v=2.2.0',
+  'word-network.js?v=2.2.0',
+  'sprint-export.js?v=2.2.0',
+  'audio-cache.js?v=2.2.0',
+  'ui-motion.js?v=2.2.0',
+  'hongbaoshu.json?v=2.2.0',
   'manifest.json',
   'hb/index.html',
   'uf/index.html',
@@ -45,14 +45,14 @@ self.addEventListener('activate', e => {
     caches.open(CACHE)
       .then(cache => Promise.all([
         cache.match('index.html'),
-        cache.match('review-core.js?v=2.1.5'),
-        cache.match('focus-core.js?v=2.1.5'),
-        cache.match('study-copy.js?v=2.1.5'),
-        cache.match('word-network.js?v=2.1.5'),
-        cache.match('sprint-export.js?v=2.1.5'),
-        cache.match('audio-cache.js?v=2.1.5'),
-        cache.match('ui-motion.js?v=2.1.5'),
-        cache.match('hongbaoshu.json?v=2.1.5')
+        cache.match('review-core.js?v=2.2.0'),
+        cache.match('focus-core.js?v=2.2.0'),
+        cache.match('study-copy.js?v=2.2.0'),
+        cache.match('word-network.js?v=2.2.0'),
+        cache.match('sprint-export.js?v=2.2.0'),
+        cache.match('audio-cache.js?v=2.2.0'),
+        cache.match('ui-motion.js?v=2.2.0'),
+        cache.match('hongbaoshu.json?v=2.2.0')
       ]))
       .then(shell => shell.every(Boolean)
         ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
