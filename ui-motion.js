@@ -149,7 +149,7 @@
       var travelLimit = Number(opts.travelLimit) || Math.max((global.innerWidth || 320) * 1.1, limit + 160);
       var x = rubber(drag.originX + rawDx, travelLimit, .6);
       drag.x = x;
-      if (!revealCalled && Math.abs(x) > 12) { revealCalled = true; if (opts.onReveal) opts.onReveal(); }
+      if (!revealCalled && Math.abs(x) > 12) { revealCalled = true; if (opts.onReveal) opts.onReveal(x); }
       setX(el, x, true);
       var cue = opts.cue || 70;
       el.classList.toggle(opts.leftClass || 'swipe-left', x < -cue); el.classList.toggle(opts.rightClass || 'swipe-right', x > cue);
