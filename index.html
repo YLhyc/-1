@@ -1606,6 +1606,7 @@
     padding-left:14px;
   }
   .vc-cn-note::before { color:#278275; }
+  .vc-cn-note:has(.vc-cn-note-hdr)::before { display: none !important; }
   @media (max-height:720px) {
     #view-today-recite .vc-cn-note,
     #view-groups.vocab-card-view .vc-cn-note { padding-left:12px; }
@@ -1725,7 +1726,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.0 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.1 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -2145,13 +2146,13 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.2.0"></script>
-<script src="focus-core.js?v=2.2.0"></script>
-<script src="study-copy.js?v=2.2.0"></script>
-<script src="word-network.js?v=2.2.0"></script>
-<script src="sprint-export.js?v=2.2.0"></script>
-<script src="audio-cache.js?v=2.2.0"></script>
-<script src="ui-motion.js?v=2.2.0"></script>
+<script src="review-core.js?v=2.2.1"></script>
+<script src="focus-core.js?v=2.2.1"></script>
+<script src="study-copy.js?v=2.2.1"></script>
+<script src="word-network.js?v=2.2.1"></script>
+<script src="sprint-export.js?v=2.2.1"></script>
+<script src="audio-cache.js?v=2.2.1"></script>
+<script src="ui-motion.js?v=2.2.1"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2236,8 +2237,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.2.0";
-var BUILD_TS = 1792304278;
+var APP_BUILD_ID = "2.2.1";
+var BUILD_TS = 1792305795;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3560,6 +3561,7 @@ function renderTodayRecite() {
         '</div>' +
         '<div class="vc-phase2-content' + hidden + '" id="todayRecitePhase2">' +
           '<div class="vc-cn' + hidden + '" id="todayReciteCn">' + (typeof WordNetwork !== 'undefined' && WordNetwork.formatDefinitions ? WordNetwork.formatDefinitions(w.cn, w.en) : escapeHTML(w.cn)) + '</div>' +
+          cardDetailMarkup(w, hidden) +
           (typeof WordNetwork !== 'undefined' ? WordNetwork.renderNetworkHtml(w.en, isEffectiveShown, w.cn) : '') +
           cardExamplesMarkup(w, hidden) +
         '</div>' +
@@ -4067,8 +4069,7 @@ function getCardExamples(item) {
   if (!list.length && item && item.ex) list = [{ en: item.ex, ex_cn: item.ex_cn || '' }];
   return list.filter(function(example) { return example && example.en; });
 }
-function cardExamplesMarkup(item, hidden) {
-  var examples = getCardExamples(item);
+function cardDetailMarkup(item, hidden) {
   var detail = item && item.cn_note ? '<div class="vc-cn-note' + (hidden || '') + '">'
       + '<div class="vc-cn-note-hdr">'
       + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>'
@@ -4076,7 +4077,11 @@ function cardExamplesMarkup(item, hidden) {
       + '</div>'
       + '<div class="vc-cn-note-body">' + escapeHTML(item.cn_note) + '</div>'
       + '</div>' : '';
-  if (!examples.length) return detail + '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
+  return detail;
+}
+function cardExamplesMarkup(item, hidden) {
+  var examples = getCardExamples(item);
+  if (!examples.length) return '<section class="vc-sentence-zone vc-sentence-empty"><span>暂无可用例句，当前卡片已收紧为单词与释义复习。</span></section>';
   var body = examples.map(function(example, index) {
     var highlightedEn = (typeof WordNetwork !== 'undefined' && WordNetwork.highlightSentence)
       ? WordNetwork.highlightSentence(example.en, item ? item.en : '')
@@ -4085,7 +4090,7 @@ function cardExamplesMarkup(item, hidden) {
     return '<article class="vc-example"' + (index ? ' hidden' : '') + '><div class="vc-example-en">' + (index + 1) + '. ' + highlightedEn + '</div>' + translation + '</article>';
   }).join('');
   var pager = examples.length > 1 ? '<div class="vc-example-pager"><button class="vc-example-page" type="button" aria-label="上一条例句" disabled onclick="event.stopPropagation();cardExampleStep(this,-1)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:2px;"><polyline points="15 18 9 12 15 6"/></svg><span>上一句</span></button><span class="vc-example-count">1 / ' + examples.length + '</span><button class="vc-example-page" type="button" aria-label="下一条例句" onclick="event.stopPropagation();cardExampleStep(this,1)"><span>下一句</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-left:2px;"><polyline points="9 18 15 12 9 6"/></svg></button></div>' : '';
-  return detail + '<section class="vc-sentence-zone" data-example-index="0"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div><div class="vc-example-viewport">' + body + '</div>' + pager + '</section>';
+  return '<section class="vc-sentence-zone" data-example-index="0"><div class="vc-sentence-head"><span>Reading context</span><span>' + examples.length + '句</span></div><div class="vc-example-viewport">' + body + '</div>' + pager + '</section>';
 }
 function cardExampleStep(button, delta) {
   var zone = button && button.closest ? button.closest('.vc-sentence-zone') : null;
@@ -4236,7 +4241,7 @@ function renderVocabRecite(entries) {
   var flowMode = getReciteFlowMode();
   var isEffectiveShown = (flowMode === 'direct_4tier') ? true : vocabReciteShown;
   var hidden = isEffectiveShown ? '' : ' recite-hidden';
-  var note = '';
+  var note = cardDetailMarkup(w, hidden);
   c.innerHTML = '<div class="vocab-card-shell">' +
     '<div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div>' +
     '<div class="vocab-card-progress">' + (vocabCardIdx + 1) + ' / ' + entries.length + (e.isRepeat ? ' · 重现攻克' : '') + '</div>' +
