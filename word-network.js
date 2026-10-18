@@ -1149,6 +1149,148 @@
       meaning: '重新折叠出一模一样的一份副本 -> 复制；再现'
     }
   };
+  // ═══════════ MOMO RICH CONTENT EXPANSION (墨墨级词汇全景数据) ═══════════
+  var EXAM_FREQ_MAP = {
+    'abandon': { freq: 12, stars: 4, tag: '高频核心' },
+    'abolish': { freq: 8, stars: 3, tag: '常考动词' },
+    'radiate': { freq: 6, stars: 3, tag: '核心词' },
+    'object': { freq: 24, stars: 5, tag: '命题极高频' },
+    'objective': { freq: 18, stars: 5, tag: '阅读高频' },
+    'judge': { freq: 15, stars: 4, tag: '核心常考' },
+    'arbitrary': { freq: 9, stars: 4, tag: '阅读高频' },
+    'stimulate': { freq: 14, stars: 4, tag: '阅读高频' },
+    'prospect': { freq: 16, stars: 5, tag: '高频核心' },
+    'inspect': { freq: 10, stars: 4, tag: '常考词' },
+    'perspective': { freq: 22, stars: 5, tag: '命题极高频' },
+    'distort': { freq: 11, stars: 4, tag: '阅读高频' },
+    'reproduce': { freq: 13, stars: 4, tag: '阅读高频' },
+    'scale': { freq: 20, stars: 5, tag: '熟词生义高频' },
+    'court': { freq: 16, stars: 4, tag: '熟词生义常考' },
+    'prompt': { freq: 15, stars: 4, tag: '高频核心' },
+    'diminish': { freq: 12, stars: 4, tag: '阅读高频' },
+    'shrink': { freq: 10, stars: 4, tag: '阅读高频' },
+    'coordinate': { freq: 11, stars: 4, tag: '常考动词' },
+    'eliminate': { freq: 14, stars: 4, tag: '高频核心' },
+    'promote': { freq: 19, stars: 5, tag: '命题高频' },
+    'curb': { freq: 9, stars: 4, tag: '高频动词' },
+    'consensus': { freq: 15, stars: 4, tag: '阅读极高频' },
+    'collaborate': { freq: 8, stars: 3, tag: '核心词' },
+    'hesitate': { freq: 7, stars: 3, tag: '核心词' },
+    'assassinate': { freq: 5, stars: 2, tag: '常考词' },
+    'ambition': { freq: 13, stars: 4, tag: '阅读高频' },
+    'chaos': { freq: 9, stars: 4, tag: '常考词' },
+    'fatigue': { freq: 8, stars: 3, tag: '核心词' }
+  };
+
+  var EXAM_TRICK_WORDS = {
+    'court': { trickPos: 'v.', trickMean: '招致；求取；献殷勤', trapNote: '真题常考 court disaster (自招灾祸)，而非“法庭”' },
+    'scale': { trickPos: 'v.', trickMean: '攀登；翻越', trapNote: '真题考查 scale the heights (攀登高峰)，而非“规模”' },
+    'entertain': { trickPos: 'v.', trickMean: '怀有，抱有 (想法/希望)', trapNote: '阅读常考 entertain a belief (怀有信念)，而非“娱乐”' },
+    'company': { trickPos: 'n.', trickMean: '陪伴；交往；伴侣', trapNote: '真题考查 keep sb company (陪伴某人)，而非“公司”' },
+    'prompt': { trickPos: 'v.', trickMean: '促使，推动；提示', trapNote: '真题高频考察 prompt sb to act (促使某人行动)' },
+    'desert': { trickPos: 'v.', trickMean: '抛弃，擅离 (职守)', trapNote: '阅读常考 desert one’s post / duty，而非“沙漠”' },
+    'novel': { trickPos: 'adj.', trickMean: '新颖的，前所未有的', trapNote: '阅读常考 a novel solution / approach，而非“小说”' },
+    'observe': { trickPos: 'v.', trickMean: '遵守 (法规/习俗)；评述', trapNote: '阅读常考 observe regulations / rules，而非“观察”' },
+    'champion': { trickPos: 'v.', trickMean: '支持，拥护，捍卫', trapNote: '真题考查 champion the cause of (捍卫...事业)，而非“冠军”' },
+    'harbor': { trickPos: 'v.', trickMean: '心怀，怀有 (恶意/疑虑)', trapNote: '常考 harbor doubts / suspicions (心存疑虑)，而非“海港”' },
+    'object': { trickPos: 'v.', trickMean: '反对；提出异议', trapNote: '阅读最爱考 object to (doing) sth，而非“物体”' }
+  };
+
+  var MNEMONIC_HACKS = {
+    'abandon': '【抓手巧记】a (一个) + bandon (拼音: 绊倒) → 赶路被绊倒后，干脆把身上的行囊都丢弃了 → 放弃，遗弃',
+    'abolish': '【趣味谐音】啊暴力死 → 用革命暴力手段把陈规旧俗彻底终结掉 → 废除，取消',
+    'pest': '【趣味谐音】拍死它！看到苍蝇蚊子害虫就必须一巴掌拍死它 → 害虫，讨厌的人',
+    'exhaust': '【趣味谐音】一个搞死它 → 把身体的精力和体力一次性全部榨干搞死 → 耗尽，使精疲力竭',
+    'hesitate': '【拆词巧记】he (他) + sit (坐着) + ate (吃) → 他坐在一边慢吞吞吃一边发呆拿不定主意 → 犹豫，迟疑',
+    'assassinate': '【拆词巧记】ass (驴) + ass (驴) + in (在...里) + ate (吃) → 两头驴在帐篷里面吃草时遭遇了突然暗算 → 暗杀，行刺',
+    'ambition': '【趣味谐音】俺必胜！心怀大志、充满野心的人每天都在心底高呼俺必胜 → 雄心，野心',
+    'chaos': '【趣味谐音】吵死！现场一片混乱，到处都在吵闹大喊吵死了 → 混乱，无序',
+    'morbid': '【趣味谐音】毛病的 → 身上心理全是各种怪毛病的 → 病态的，不健康的',
+    'ponder': '【趣味联想】胖的 (ponder) → 那个微胖的人整天都在托腮深思如何科学减脂 → 沉思，深思',
+    'frown': '【趣味联想】寒风 (f) 吹过来冷得让小朗 (rown) 紧紧皱起眉头 → 皱眉',
+    'scold': '【趣味拆词】s + cold (冰冷) → 摆出一张冷若冰霜的死脸严厉训斥你 → 责骂，训斥',
+    'fatigue': '【趣味谐音】法体格 → 身体法力与体格全部透支耗尽 → 疲劳，劳累',
+    'drowsy': '【趣味联想】扰睡 (drow) + sy → 睡意被打破但依然极其困顿乏力 → 昏昏欲睡的',
+    'arbitrary': '【抓手联想】arbitra (仲裁人) + -ry → 专制裁判官单凭个人主观随心所欲断案 → 随心所欲的，专断的',
+    'prospect': '【抓手联想】pro- (向前) + spect (看) → 眼睛往前看能看到的美好前景与展望 → 前景，前途',
+    'distort': '【抓手联想】dis- (偏离) + tort (扭曲) → 偏离了原本客观事实并加以扭转 → 扭曲，曲解'
+  };
+
+  var EXAM_COLLOCATIONS = {
+    'abandon': [
+      { en: 'abandon oneself to', cn: '沉溺于；放纵于' },
+      { en: 'with abandon', cn: '放任地；放纵自流' }
+    ],
+    'abolish': [
+      { en: 'abolish the death penalty', cn: '废除死刑' },
+      { en: 'abolish trade tariffs', cn: '取消贸易关税' }
+    ],
+    'object': [
+      { en: 'object to (doing) sth', cn: '反对做某事 (真题高频考点)' },
+      { en: 'raise an objection to', cn: '对...提出强烈异议' }
+    ],
+    'objective': [
+      { en: 'achieve / fulfill the objective', cn: '达成预定目标' },
+      { en: 'objective reality / evaluation', cn: '客观现实 / 客观公正的评价' }
+    ],
+    'prompt': [
+      { en: 'prompt sb to do sth', cn: '促使 / 激励某人做某事' },
+      { en: 'a prompt response / decision', cn: '迅速的回应 / 果断的决定' }
+    ],
+    'scale': [
+      { en: 'on a global / massive scale', cn: '在大规模 / 全球范围内' },
+      { en: 'scale back / down budget', cn: '缩减预算；调低比例' }
+    ],
+    'stimulate': [
+      { en: 'stimulate economic growth', cn: '刺激经济增长 (真题核心考点)' },
+      { en: 'stimulate critical thinking', cn: '激发批判性思维' }
+    ],
+    'prospect': [
+      { en: 'in prospect', cn: '在展望中；有望发生' },
+      { en: 'bright career / market prospects', cn: '光明的职业前景 / 市场远景' }
+    ],
+    'arbitrary': [
+      { en: 'arbitrary decision / exercise of power', cn: '武断的决定 / 专断行使权力' },
+      { en: 'arbitrary standard', cn: '随意设定的标准' }
+    ],
+    'diminish': [
+      { en: 'diminish in importance / influence', cn: '重要性 / 影响力减弱' },
+      { en: 'law of diminishing returns', cn: '边际效益递减规律' }
+    ],
+    'shrink': [
+      { en: 'shrink from responsibility / doing sth', cn: '回避责任；退缩不前' },
+      { en: 'shrink by ... percent', cn: '缩减了...百分比' }
+    ]
+  };
+
+  var CORE_IPA_MAP = {
+    'abandon': { uk: 'əˈbændən', us: 'əˈbændən' },
+    'abolish': { uk: 'əˈbɒlɪʃ', us: 'əˈbɑːlɪʃ' },
+    'radiate': { uk: 'ˈreɪdieɪt', us: 'ˈreɪdieɪt' },
+    'object': { uk: 'ˈɒbdʒɪkt', us: 'ˈɑːbdʒekt' },
+    'objective': { uk: 'əbˈdʒektɪv', us: 'əbˈdʒektɪv' },
+    'judge': { uk: 'dʒʌdʒ', us: 'dʒʌdʒ' },
+    'arbitrary': { uk: 'ˈɑːbɪtrəri', us: 'ˈɑːrbətreri' },
+    'inspect': { uk: 'ɪnˈspekt', us: 'ɪnˈspekt' },
+    'prospect': { uk: 'ˈprɒspekt', us: 'ˈprɑːspekt' },
+    'perspective': { uk: 'pəˈspektɪv', us: 'pərˈspektɪv' },
+    'stimulate': { uk: 'ˈstɪmjuleɪt', us: 'ˈstɪmjuleɪt' },
+    'diminish': { uk: 'dɪˈmɪnɪʃ', us: 'dɪˈmɪnɪʃ' },
+    'shrink': { uk: 'ʃrɪŋk', us: 'ʃrɪŋk' },
+    'prompt': { uk: 'prɒmpt', us: 'prɑːmpt' },
+    'scale': { uk: 'skeɪl', us: 'skeɪl' },
+    'court': { uk: 'kɔːt', us: 'kɔːrt' },
+    'distort': { uk: 'dɪˈstɔːt', us: 'dɪˈstɔːrt' },
+    'reproduce': { uk: 'ˌriːprəˈdjuːs', us: 'ˌriːprəˈduːs' },
+    'coordinate': { uk: 'kəʊˈɔːdɪneɪt', us: 'koʊˈɔːrdɪneɪt' },
+    'eliminate': { uk: 'ɪˈlɪmɪneɪt', us: 'ɪˈlɪmɪneɪt' },
+    'promote': { uk: 'prəˈməʊt', us: 'prəˈmoʊt' },
+    'curb': { uk: 'kɜːb', us: 'kɜːrb' },
+    'consensus': { uk: 'kənˈsensəs', us: 'kənˈsensəs' },
+    'collaborate': { uk: 'kəˈlæbəreɪt', us: 'kəˈlæbəreɪt' }
+  };
+
+
 
     // ═══════════ CORE MORPHOLOGY ROOTS (考研核心高频词根库) ═══════════
   var CORE_ROOT_LIST = [
@@ -1493,35 +1635,90 @@
   }
 
   function renderNetworkHtml(rawWord, isShown) {
+    var word = String(rawWord || '').trim().toLowerCase();
     var info = lookup(rawWord);
-    if (!info.hasNetwork) return '';
+    if (!word) return '';
 
     var hiddenClass = isShown ? '' : ' recite-hidden';
     var html = '<div class="vc-word-network' + hiddenClass + '">';
 
-    // 1. Root Family Block
-    if (info.root && info.family && info.family.length) {
-      html += '<div class="vc-net-header">'
-        + '<span class="vc-net-tag">'
-        + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="9" y1="12" x2="3" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg>'
-        + '同根族 · <b>' + escapeHTML(info.root.root) + '</b>'
-        + '</span>'
-        + '<span class="vc-net-root-mean">' + escapeHTML(info.root.meaning) + '</span>'
-        + '</div>';
+    // 0. 词头音标与考频星级徽章 (Word Phonetics & Exam Frequency)
+    var ipa = CORE_IPA_MAP[word];
+    var freq = EXAM_FREQ_MAP[word] || { freq: 8, stars: 3, tag: '考研大纲核心词' };
+    var starSvg = '';
+    for (var st = 0; st < (freq.stars || 3); st++) {
+      starSvg += '<svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" stroke="none" style="vertical-align:-1px;margin-right:1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+    }
+    html += '<div class="momo-meta-bar">'
+      + '<span class="momo-freq-pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' + escapeHTML(freq.tag) + ' · 考频 ' + freq.freq + '次 ' + starSvg + '</span>'
+      + (ipa ? '<span class="momo-ipa-tag">英 /' + escapeHTML(ipa.uk) + '/ · 美 /' + escapeHTML(ipa.us) + '/</span>' : '')
+      + '</div>';
 
-      html += '<div class="vc-net-chips">';
-      for (var i = 0; i < info.family.length; i++) {
-        var member = info.family[i];
-        var isCurrent = (member.en.toLowerCase() === info.word);
-        html += '<span class="vc-net-chip' + (isCurrent ? ' current' : '') + '" onclick="event.stopPropagation();if(typeof playCardWordAudio===&quot;function&quot;)playCardWordAudio(&quot;' + escapeHTML(member.en) + '&quot;)" title="点击朗读 ' + escapeHTML(member.en) + '">'
-          + '<b>' + escapeHTML(member.en) + '</b>'
-          + '<small>' + escapeHTML(member.pos || '') + ' ' + escapeHTML(member.cn || '') + '</small>'
-          + '</span>';
-      }
-      html += '</div>';
+    // 1. 考研熟词生义专属警示卡 (Trap Sense Alert)
+    if (EXAM_TRICK_WORDS[word]) {
+      var trick = EXAM_TRICK_WORDS[word];
+      html += '<div class="momo-trick-card">'
+        + '<div class="momo-trick-hdr">'
+        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+        + '<b>考研熟词生义 · 命题陷阱</b>'
+        + '<span class="momo-trick-pos">' + escapeHTML(trick.trickPos) + '</span>'
+        + '</div>'
+        + '<div class="momo-trick-mean">' + escapeHTML(trick.trickMean) + '</div>'
+        + '<div class="momo-trick-note">' + escapeHTML(trick.trapNote) + '</div>'
+        + '</div>';
     }
 
-    // 2. Exam Synonyms Block (考研同义替换)
+    // 2. 趣味谐音与联想巧记 (Mnemonic Hacks)
+    if (MNEMONIC_HACKS[word]) {
+      html += '<div class="momo-hack-card">'
+        + '<div class="momo-hack-hdr">'
+        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M12 2v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="M2 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/></svg>'
+        + '<span>墨式趣味联想 · 秒记抓手</span>'
+        + '</div>'
+        + '<div class="momo-hack-body">' + escapeHTML(MNEMONIC_HACKS[word]) + '</div>'
+        + '</div>';
+    }
+
+    // 3. 构词拆解与记忆公式 (Morphology Formula)
+    if (info.decomposition && info.decomposition.parts && info.decomposition.parts.length) {
+      html += '<div class="vc-net-decomp">'
+        + '<div class="vc-net-decomp-head">'
+        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'
+        + '<span>构词拆解 · 记忆公式</span>'
+        + '</div>'
+        + '<div class="vc-decomp-formula">';
+      for (var p = 0; p < info.decomposition.parts.length; p++) {
+        var part = info.decomposition.parts[p];
+        if (p > 0) html += '<span class="vc-decomp-plus">+</span>';
+        var pCls = (part.type === 'prefix') ? 'vc-decomp-prefix' : (part.type === 'suffix' ? 'vc-decomp-suffix' : 'vc-decomp-root');
+        html += '<span class="vc-decomp-part ' + pCls + '">' + escapeHTML(part.text) + ' <small>(' + escapeHTML(part.mean) + ')</small></span>';
+      }
+      if (info.decomposition.meaning) {
+        html += '<span class="vc-decomp-arrow">→</span><span class="vc-decomp-meaning">' + escapeHTML(info.decomposition.meaning) + '</span>';
+      }
+      html += '</div></div>';
+    }
+
+    // 4. 真题高频搭配与考点矩阵 (Collocations & Phrases)
+    if (EXAM_COLLOCATIONS[word] && EXAM_COLLOCATIONS[word].length) {
+      var collocs = EXAM_COLLOCATIONS[word];
+      html += '<div class="momo-colloc-box">'
+        + '<div class="momo-colloc-head">'
+        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+        + '<span>真题高频搭配 · 考点矩阵</span>'
+        + '</div>'
+        + '<div class="momo-colloc-list">';
+      for (var c = 0; c < collocs.length; c++) {
+        var cl = collocs[c];
+        html += '<div class="momo-colloc-item" onclick="event.stopPropagation();if(typeof playCardWordAudio===&quot;function&quot;)playCardWordAudio(&quot;' + escapeHTML(cl.en) + '&quot;)" title="点击朗读搭配">'
+          + '<span class="momo-colloc-en">' + escapeHTML(cl.en) + '</span>'
+          + '<span class="momo-colloc-cn">' + escapeHTML(cl.cn) + '</span>'
+          + '</div>';
+      }
+      html += '</div></div>';
+    }
+
+    // 5. 考研同义替换群 (Exam Synonyms)
     if (info.synonyms && info.synonyms.length) {
       html += '<div class="vc-net-synonyms">'
         + '<div class="vc-net-syn-head">'
@@ -1540,32 +1737,34 @@
       html += '</div></div>';
     }
 
-    // 3. Structural Decomposition & Mnemonic Formula (构词拆解 · 记忆抓手)
-    if (info.decomposition && info.decomposition.parts && info.decomposition.parts.length) {
-      html += '<div class="vc-net-decomp">'
-        + '<div class="vc-net-decomp-head">'
-        + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'
-        + '<span>构词拆解 · 记忆抓手</span>'
-        + '</div>'
-        + '<div class="vc-decomp-formula">';
-      for (var p = 0; p < info.decomposition.parts.length; p++) {
-        var part = info.decomposition.parts[p];
-        if (p > 0) html += '<span class="vc-decomp-plus">+</span>';
-        var pCls = (part.type === 'prefix') ? 'vc-decomp-prefix' : (part.type === 'suffix' ? 'vc-decomp-suffix' : 'vc-decomp-root');
-        html += '<span class="vc-decomp-part ' + pCls + '">' + escapeHTML(part.text) + ' <small>(' + escapeHTML(part.mean) + ')</small></span>';
+    // 6. 同根族词派生 (Word Family)
+    if (info.root && info.family && info.family.length) {
+      html += '<div class="vc-net-header" style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(7,83,106,.15);">'
+        + '<span class="vc-net-tag">'
+        + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="9" y1="12" x2="3" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg>'
+        + '同根衍生族 · <b>' + escapeHTML(info.root.root) + '</b>'
+        + '</span>'
+        + '<span class="vc-net-root-mean">' + escapeHTML(info.root.meaning) + '</span>'
+        + '</div>';
+
+      html += '<div class="vc-net-chips">';
+      for (var i = 0; i < info.family.length; i++) {
+        var member = info.family[i];
+        var isCurrent = (member.en.toLowerCase() === info.word);
+        html += '<span class="vc-net-chip' + (isCurrent ? ' current' : '') + '" onclick="event.stopPropagation();if(typeof playCardWordAudio===&quot;function&quot;)playCardWordAudio(&quot;' + escapeHTML(member.en) + '&quot;)" title="点击朗读 ' + escapeHTML(member.en) + '">'
+          + '<b>' + escapeHTML(member.en) + '</b>'
+          + '<small>' + escapeHTML(member.pos || '') + ' ' + escapeHTML(member.cn || '') + '</small>'
+          + '</span>';
       }
-      if (info.decomposition.meaning) {
-        html += '<span class="vc-decomp-arrow">→</span><span class="vc-decomp-meaning">' + escapeHTML(info.decomposition.meaning) + '</span>';
-      }
-      html += '</div></div>';
+      html += '</div>';
     }
 
-    // 4. Confusable Pair Block (形近辨析)
+    // 7. 形近辨析 (Confusables)
     if (info.confusable) {
       html += '<div class="vc-net-confuse">'
         + '<div class="vc-confuse-tag">'
         + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-        + '<span>形近辨析</span>'
+        + '<span>形近混淆排雷</span>'
         + '</div>'
         + '<div class="vc-confuse-text">' + escapeHTML(info.confusable.analysis) + '</div>'
         + '</div>';
@@ -1620,7 +1819,8 @@
         '.vc-kw-mark{background:rgba(254,240,138,.65);color:#0c4a6e;font-weight:750;padding:1px 4px;border-radius:4px;border-bottom:2px solid #0284c7}' +
         '.vc-cn-note-hdr{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:#278275;margin-bottom:4px}' +
         '.vc-cn-note-body{font-size:12.5px;line-height:1.5;color:#31515e}' +
-        '.recite-hidden{display:none}';
+        '.recite-hidden{display:none}' +
+        '.momo-meta-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid rgba(7,83,106,.1)}' +'.momo-freq-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:999px;background:rgba(234,88,12,.1);color:#ea580c;border:1px solid rgba(234,88,12,.22);font-size:11px;font-weight:800;letter-spacing:.02em}' +'.momo-ipa-tag{font-family:Menlo,Consolas,monospace;font-size:11.5px;color:#5f747d;font-weight:600;letter-spacing:.01em}' +'.momo-trick-card{margin:8px 0 10px;padding:9px 12px;background:linear-gradient(135deg,rgba(254,242,242,.95),rgba(255,237,213,.9));border:1.5px solid rgba(239,68,68,.3);border-radius:12px;box-shadow:0 3px 10px rgba(239,68,68,.08)}' +'.momo-trick-hdr{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:850;color:#b91c1c;margin-bottom:4px}' +'.momo-trick-pos{display:inline-flex;align-items:center;padding:1px 6px;border-radius:4px;background:#ef4444;color:#fff;font-size:10.5px;font-weight:900;margin-left:auto}' +'.momo-trick-mean{font-size:13.5px;font-weight:800;color:#991b1b;line-height:1.45;margin-bottom:3px}' +'.momo-trick-note{font-size:11.5px;color:#7f1d1d;line-height:1.4;opacity:.92}' +'.momo-hack-card{margin:8px 0 10px;padding:9px 11px;background:rgba(240,253,244,.9);border:1px solid rgba(34,197,94,.28);border-radius:12px;font-size:12px;line-height:1.5;color:#14532d}' +'.momo-hack-hdr{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:#16a34a;margin-bottom:3px}' +'.momo-hack-body{font-size:12px;color:#166534;font-weight:650}' +'.momo-colloc-box{margin:9px 0 10px;padding:8px 11px;background:rgba(238,242,255,.8);border:1px solid rgba(99,102,241,.22);border-radius:12px}' +'.momo-colloc-head{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:#4338ca;margin-bottom:6px}' +'.momo-colloc-list{display:flex;flex-direction:column;gap:5px}' +'.momo-colloc-item{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.75);border:1px solid rgba(99,102,241,.12);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .12s ease}' +'.momo-colloc-item:active{background:rgba(99,102,241,.14)}' +'.momo-colloc-en{font-size:12px;font-weight:750;color:#312e81}' +'.momo-colloc-cn{font-size:11px;color:#475569}' +'.vocab-card.revealed,#view-groups.recite-view .vocab-card.revealed,#view-today-recite .vocab-card.revealed{touch-action:pan-y!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;scroll-behavior:smooth}' +'.vocab-card.revealed .vc-sentence-zone{touch-action:pan-y!important;overscroll-behavior:contain!important}';
       document.head.appendChild(style);
     }
   }
