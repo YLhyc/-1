@@ -478,5 +478,225 @@
     "duration": 168.086,
     "size": 1009008,
     "sentence_count": 23
+  },
+  "mzt_01": {
+    "idx": 1,
+    "id": "mzt_01",
+    "title": "马克思主义中国化时代化的提出、历史进程与核心内涵",
+    "file": "audio_cards/mzt_01.mp3",
+    "sentences_file": "audio_cards/mzt_01.sentences.json",
+    "duration": 172.366,
+    "size": 1034784,
+    "sentence_count": 20
+  },
+  "mzt_03": {
+    "idx": 3,
+    "id": "mzt_03",
+    "title": "毛泽东思想形成发展的历史条件与发展过程",
+    "file": "audio_cards/mzt_03.mp3",
+    "sentences_file": "audio_cards/mzt_03.sentences.json",
+    "duration": 172.665,
+    "size": 1036512,
+    "sentence_count": 21
+  },
+  "mzt_02": {
+    "idx": 2,
+    "id": "mzt_02",
+    "title": "马克思主义中国化时代化理论成果的关系：一脉相承又与时俱进",
+    "file": "audio_cards/mzt_02.mp3",
+    "sentences_file": "audio_cards/mzt_02.sentences.json",
+    "duration": 168.907,
+    "size": 1014048,
+    "sentence_count": 20
+  },
+  "mzt_04": {
+    "idx": 4,
+    "id": "mzt_04",
+    "title": "毛泽东思想活的灵魂：实事求是、群众路线与独立自主",
+    "file": "audio_cards/mzt_04.mp3",
+    "sentences_file": "audio_cards/mzt_04.sentences.json",
+    "duration": 165.607,
+    "size": 994176,
+    "sentence_count": 22
+  },
+  "mzt_06": {
+    "idx": 6,
+    "id": "mzt_06",
+    "title": "近代中国国情与新民主主义革命总路线（对象、动力、领导与前途）",
+    "file": "audio_cards/mzt_06.mp3",
+    "sentences_file": "audio_cards/mzt_06.sentences.json",
+    "duration": 172.487,
+    "size": 1035360,
+    "sentence_count": 24
+  },
+  "mzt_05": {
+    "idx": 5,
+    "id": "mzt_05",
+    "title": "毛泽东思想的历史地位与对毛泽东同志的科学评价",
+    "file": "audio_cards/mzt_05.mp3",
+    "sentences_file": "audio_cards/mzt_05.sentences.json",
+    "duration": 155.53,
+    "size": 933696,
+    "sentence_count": 18
+  },
+  "mzt_08": {
+    "idx": 8,
+    "id": "mzt_08",
+    "title": "新民主主义革命的道路：农村包围城市、武装夺取政权",
+    "file": "audio_cards/mzt_08.mp3",
+    "sentences_file": "audio_cards/mzt_08.sentences.json",
+    "duration": 162.327,
+    "size": 974448,
+    "sentence_count": 20
+  },
+  "mzt_09": {
+    "idx": 9,
+    "id": "mzt_09",
+    "title": "新民主主义革命的三大法宝：统一战线、武装斗争与党的建设",
+    "file": "audio_cards/mzt_09.mp3",
+    "sentences_file": "audio_cards/mzt_09.sentences.json",
+    "duration": 166.585,
+    "size": 999936,
+    "sentence_count": 22
+  },
+  "mzt_10": {
+    "idx": 10,
+    "id": "mzt_10",
+    "title": "新民主主义社会的性质与过渡时期总路线（“一化三改”）",
+    "file": "audio_cards/mzt_10.mp3",
+    "sentences_file": "audio_cards/mzt_10.sentences.json",
+    "duration": 161.771,
+    "size": 971136,
+    "sentence_count": 20
+  },
+  "mzt_07": {
+    "idx": 7,
+    "id": "mzt_07",
+    "title": "新民主主义的基本纲领（政治、经济与文化纲领）",
+    "file": "audio_cards/mzt_07.mp3",
+    "sentences_file": "audio_cards/mzt_07.sentences.json",
+    "duration": 169.422,
+    "size": 1017072,
+    "sentence_count": 18
+  },
+  "mzt_12": {
+    "idx": 12,
+    "id": "mzt_12",
+    "title": "社会主义基本制度在中国的确立及其重大历史意义",
+    "file": "audio_cards/mzt_12.mp3",
+    "sentences_file": "audio_cards/mzt_12.sentences.json",
+    "duration": 156.715,
+    "size": 940752,
+    "sentence_count": 18
+  },
+  "mzt_13": {
+    "idx": 13,
+    "id": "mzt_13",
+    "title": "《论十大关系》与调动一切积极因素为社会主义事业服务的基本方针",
+    "file": "audio_cards/mzt_13.mp3",
+    "sentences_file": "audio_cards/mzt_13.sentences.json",
+    "duration": 159.427,
+    "size": 957024,
+    "sentence_count": 23
+  },
+  "mzt_11": {
+    "idx": 11,
+    "id": "mzt_11",
+    "title": "农业、手工业与资本主义工商业改造的历史经验（和平赎买）",
+    "file": "audio_cards/mzt_11.mp3",
+    "sentences_file": "audio_cards/mzt_11.sentences.json",
+    "duration": 167.904,
+    "size": 1008000,
+    "sentence_count": 20
+  },
+  "mzt_17": {
+    "idx": 17,
+    "id": "mzt_17",
+    "title": "邓小平理论的首要基本理论问题与社会主义本质论",
+    "file": "audio_cards/mzt_17.mp3",
+    "sentences_file": "audio_cards/mzt_17.sentences.json",
+    "duration": 166.094,
+    "size": 997056,
+    "sentence_count": 21
+  },
+  "mzt_16": {
+    "idx": 16,
+    "id": "mzt_16",
+    "title": "中国特色社会主义理论体系的形成发展、鲜明特征与历史地位",
+    "file": "audio_cards/mzt_16.mp3",
+    "sentences_file": "audio_cards/mzt_16.sentences.json",
+    "duration": 170.018,
+    "size": 1020672,
+    "sentence_count": 19
+  },
+  "mzt_14": {
+    "idx": 14,
+    "id": "mzt_14",
+    "title": "《关于正确处理人民内部矛盾的问题》：社会主义矛盾学说",
+    "file": "audio_cards/mzt_14.mp3",
+    "sentences_file": "audio_cards/mzt_14.sentences.json",
+    "duration": 169.271,
+    "size": 1016064,
+    "sentence_count": 22
+  },
+  "mzt_19": {
+    "idx": 19,
+    "id": "mzt_19",
+    "title": "社会主义根本任务与改革开放理论（“改革是中国的第二次革命”）",
+    "file": "audio_cards/mzt_19.mp3",
+    "sentences_file": "audio_cards/mzt_19.sentences.json",
+    "duration": 156.041,
+    "size": 936720,
+    "sentence_count": 24
+  },
+  "mzt_18": {
+    "idx": 18,
+    "id": "mzt_18",
+    "title": "社会主义初级阶段理论与党的基本路线（“一个中心，两个基本点”）",
+    "file": "audio_cards/mzt_18.mp3",
+    "sentences_file": "audio_cards/mzt_18.sentences.json",
+    "duration": 160.838,
+    "size": 965520,
+    "sentence_count": 21
+  },
+  "mzt_15": {
+    "idx": 15,
+    "id": "mzt_15",
+    "title": "走中国工业化道路的思想与初步探索的经验教训",
+    "file": "audio_cards/mzt_15.mp3",
+    "sentences_file": "audio_cards/mzt_15.sentences.json",
+    "duration": 163.855,
+    "size": 983664,
+    "sentence_count": 18
+  },
+  "mzt_22": {
+    "idx": 22,
+    "id": "mzt_22",
+    "title": "科学发展观的科学内涵（第一要义、核心、基本要求、根本方法）",
+    "file": "audio_cards/mzt_22.mp3",
+    "sentences_file": "audio_cards/mzt_22.sentences.json",
+    "duration": 176.963,
+    "size": 1062288,
+    "sentence_count": 21
+  },
+  "mzt_20": {
+    "idx": 20,
+    "id": "mzt_20",
+    "title": "社会主义市场经济理论的创立、核心内涵与重大意义",
+    "file": "audio_cards/mzt_20.mp3",
+    "sentences_file": "audio_cards/mzt_20.sentences.json",
+    "duration": 162.053,
+    "size": 972864,
+    "sentence_count": 21
+  },
+  "mzt_21": {
+    "idx": 21,
+    "id": "mzt_21",
+    "title": "“三个代表”重要思想的核心观点、历史地位与指导意义",
+    "file": "audio_cards/mzt_21.mp3",
+    "sentences_file": "audio_cards/mzt_21.sentences.json",
+    "duration": 145.959,
+    "size": 876240,
+    "sentence_count": 20
   }
 }
