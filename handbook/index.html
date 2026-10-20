@@ -20356,6 +20356,28 @@
       // 默认开启书本翻页模式
       const savedMode = localStorage.getItem('handbook_view_mode') || 'paging';
       setViewMode(savedMode);
+
+      // URL 参数联动：自动检索并打开指定考点
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const searchKw = params.get('search') || params.get('q');
+        const targetCardId = params.get('id');
+        if (searchKw) {
+          setTimeout(() => {
+            const searchInput = document.getElementById('tocSearchInput');
+            if (searchInput) {
+              searchInput.value = searchKw;
+              searchInput.dispatchEvent(new Event('input'));
+              const btnToc = document.getElementById('btnToc');
+              if (btnToc) btnToc.click();
+            }
+          }, 400);
+        } else if (targetCardId && typeof selectCard === 'function') {
+          setTimeout(() => {
+            selectCard(targetCardId);
+          }, 400);
+        }
+      } catch(e) {}
     });
 
     // PWA Service Worker 注册 (支持 iPhone 离线阅读)
