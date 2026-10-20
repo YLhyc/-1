@@ -598,6 +598,10 @@
   .github-backup-title { font-size: 14px; font-weight: 700; color: #1d1d1f; margin-bottom: 4px; }
   .github-backup-desc { font-size: 11px; color: #6e6e73; line-height: 1.5; margin-bottom: 9px; }
   .github-backup-input { width: 100%; height: 38px; border: 1px solid #d2d2d7; border-radius: 8px; padding: 0 10px; font-size: 12px; margin-bottom: 7px; -webkit-appearance: none; }
+  .github-token-wrap { position: relative; display: flex; align-items: center; margin-bottom: 7px; width: 100%; }
+  .github-token-wrap .github-backup-input { margin-bottom: 0; padding-right: 86px; width: 100%; box-sizing: border-box; }
+  .github-token-toggle-btn { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: #5f747d; display: inline-flex; align-items: center; justify-content: center; }
+  .github-token-copy-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: rgba(8,97,123,.1); border: 1px solid rgba(8,97,123,.2); border-radius: 6px; cursor: pointer; padding: 3px 8px; font-size: 11px; font-weight: 600; color: #08617b; display: inline-flex; align-items: center; justify-content: center; }
   .github-backup-toggle { display: flex; align-items: center; gap: 7px; min-height: 32px; font-size: 12px; color: #3a3a3c; }
   .github-backup-toggle input { width: 18px; height: 18px; }
   .github-backup-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 7px; }
@@ -1726,7 +1730,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.3 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.4 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -1870,7 +1874,14 @@
       <div class="github-backup-title">GitHub 私有云备份</div>
       <div class="github-backup-desc">使用仅含 Gist 权限的 GitHub Token。Token 只保存在当前设备，不会写入导出文件或项目源码。</div>
       <input class="github-backup-input" id="githubGistInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="已有备份时先填 Gist ID（没有可留空）" onchange="githubBackupConfigChanged()">
-      <input class="github-backup-input" id="githubTokenInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="GitHub Token（仅需 gist 权限）" onchange="githubBackupConfigChanged()">
+      <div class="github-token-wrap">
+        <input class="github-backup-input" id="githubTokenInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="GitHub Token（仅需 gist 权限）" onchange="githubBackupConfigChanged()">
+        <button type="button" class="github-token-toggle-btn" id="githubTokenToggleBtn" onclick="toggleGithubTokenVisibility()" aria-label="切换显示 Token 明文" title="切换显示 Token 明文">
+          <svg class="eye-open" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" style="display:none;" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-.722-3.25"/><path d="M2 8a10.645 10.645 0 0 0 20 0"/><path d="m20 15-1.726-2.05"/><path d="m4 15 1.726-2.05"/><path d="m9 18 .722-3.25"/></svg>
+        </button>
+        <button type="button" class="github-token-copy-btn" id="githubTokenCopyBtn" onclick="copyGithubToken()" aria-label="复制 Token" title="复制 Token">复制</button>
+      </div>
       <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked onchange="githubBackupConfigChanged()">全自动备份（首次自动创建，之后最多每 6 小时更新）</label>
       <div class="github-backup-actions">
         <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即备份</button>
@@ -2146,13 +2157,13 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.2.3"></script>
-<script src="focus-core.js?v=2.2.3"></script>
-<script src="study-copy.js?v=2.2.3"></script>
-<script src="word-network.js?v=2.2.3"></script>
-<script src="sprint-export.js?v=2.2.3"></script>
-<script src="audio-cache.js?v=2.2.3"></script>
-<script src="ui-motion.js?v=2.2.3"></script>
+<script src="review-core.js?v=2.2.4"></script>
+<script src="focus-core.js?v=2.2.4"></script>
+<script src="study-copy.js?v=2.2.4"></script>
+<script src="word-network.js?v=2.2.4"></script>
+<script src="sprint-export.js?v=2.2.4"></script>
+<script src="audio-cache.js?v=2.2.4"></script>
+<script src="ui-motion.js?v=2.2.4"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2237,8 +2248,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.2.3";
-var BUILD_TS = 1792373002;
+var APP_BUILD_ID = "2.2.4";
+var BUILD_TS = 1792464617;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -6006,6 +6017,39 @@ function githubBackupConfigChanged() {
   }
   updateGithubBackupUI();
   return Promise.resolve(config);
+}
+
+function toggleGithubTokenVisibility() {
+  var input = document.getElementById('githubTokenInput');
+  var btn = document.getElementById('githubTokenToggleBtn');
+  if (!input) return;
+  var isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  if (btn) {
+    var openIcon = btn.querySelector('.eye-open');
+    var closedIcon = btn.querySelector('.eye-closed');
+    if (openIcon) openIcon.style.display = isPassword ? 'none' : 'inline-block';
+    if (closedIcon) closedIcon.style.display = isPassword ? 'inline-block' : 'none';
+  }
+}
+
+function copyGithubToken() {
+  var input = document.getElementById('githubTokenInput');
+  var token = input ? input.value.trim() : '';
+  if (!token) { showGithubBackupStatus('当前没有可复制的 Token', 'err'); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(token).then(function() {
+      showGithubBackupStatus('Token 已成功复制到剪贴板！', 'ok');
+    }).catch(function() {
+      if (input.type === 'password') toggleGithubTokenVisibility();
+      input.focus();
+      showGithubBackupStatus('已切换为明文，请长按选择拷贝', 'ok');
+    });
+  } else {
+    if (input.type === 'password') toggleGithubTokenVisibility();
+    input.focus();
+    showGithubBackupStatus('已切换为明文，请长按选择拷贝', 'ok');
+  }
 }
 
 function showGithubBackupStatus(text, cls) {
