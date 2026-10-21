@@ -1,5 +1,5 @@
-// 考研政治背诵手卷 · 极速离线 PWA Service Worker (V3 极速冷启动引擎)
-const CACHE_NAME = 'kyzz-handbook-v3';
+// 考研政治背诵手卷 · 极速离线 PWA Service Worker (V4 自动感知与实时更新)
+const CACHE_NAME = 'kyzz-handbook-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -40,6 +40,12 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
+
+  // 0. 版本检测清单绝不走缓存 (每次强制穿透网络)
+  if (url.pathname.endsWith('version.json')) {
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    return;
+  }
 
   // 1. 核心加速：iOS/手机桌面 PWA 启动瞬间的主文档导航 (0ms 离线快照，绝无白屏)
   if (event.request.mode === 'navigate') {
