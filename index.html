@@ -1711,6 +1711,335 @@
     font-weight:800; color:#b45309; margin-bottom:3px;
   }
   .vc-confuse-text { color:#92400e; font-size:11px; }
+
+  /* ═══════════ iPad / Tablet 专属大屏与全屏铺满响应式适配 ═══════════ */
+  @media (min-width: 601px) {
+    /* 1. 消除两侧窄边，全局渐变与页面容器彻底铺满 iPad 屏幕 */
+    html, body {
+      background: linear-gradient(145deg, #ccebf4 0%, #e8f6f8 47%, #f7f9f8 72%, #edf6f3 100%) !important;
+    }
+    .app-page,
+    .morning-view,
+    #view-home,
+    #view-library,
+    #view-review,
+    #view-progress,
+    #view-units,
+    #view-groups,
+    #view-today-recite,
+    #view-morning,
+    #view-morning-player {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 auto !important;
+      padding-left: clamp(24px, 5vw, 64px) !important;
+      padding-right: clamp(24px, 5vw, 64px) !important;
+      padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+      box-sizing: border-box !important;
+      background: transparent !important;
+    }
+
+    /* 2. 内容层级居中并扩展至舒展的 iPad 黄金阅读宽度 (880px) */
+    .app-page > *,
+    .morning-view > *,
+    .progress-page,
+    .morning-home-section {
+      width: 100% !important;
+      max-width: 880px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      box-sizing: border-box !important;
+    }
+
+    /* 3. 顶栏导航与次级导航居中悬浮胶囊 */
+    .app-topbar,
+    .nav-bar,
+    .morning-nav {
+      max-width: 880px !important;
+      margin: calc(12px + env(safe-area-inset-top)) auto 18px !important;
+      padding: 10px 18px !important;
+      border-radius: 24px !important;
+      box-sizing: border-box !important;
+    }
+    .app-brand { font-size: 20px !important; }
+    .nav-title, .morning-nav-title { font-size: 18px !important; }
+    .app-icon-btn, .nav-back, .morning-nav-back {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 14px !important;
+    }
+
+    /* 4. 今日主页大卡片与六列数据指标面板 */
+    .today-kicker { font-size: 13px !important; margin-bottom: 6px !important; }
+    .today-title { font-size: 29px !important; line-height: 1.28 !important; }
+    .today-sub { font-size: 15px !important; margin-bottom: 22px !important; }
+    .today-task {
+      padding: 24px 28px !important;
+      border-radius: 28px !important;
+      margin-bottom: 18px !important;
+    }
+    .today-task-title { font-size: 22px !important; }
+    .today-task-label { font-size: 13.5px !important; }
+    .today-task-count span { font-size: 34px !important; }
+    .task-button {
+      height: 50px !important;
+      font-size: 16.5px !important;
+      border-radius: 16px !important;
+      margin-top: 16px !important;
+    }
+    .home-metrics {
+      grid-template-columns: repeat(6, 1fr) !important;
+      gap: 12px !important;
+      border-radius: 24px !important;
+      padding: 14px 10px !important;
+      background: var(--a3-glass) !important;
+      border: 1px solid var(--a3-line) !important;
+      box-shadow: var(--a3-shadow) !important;
+    }
+    .home-metric {
+      padding: 10px 4px !important;
+      border: 0 !important;
+    }
+    .home-metric-num { font-size: 24px !important; }
+    .home-metric-label { font-size: 11px !important; }
+    .source-row {
+      padding: 14px 18px !important;
+      border-radius: 18px !important;
+      min-height: 64px !important;
+    }
+    .source-name { font-size: 16.5px !important; }
+    .source-meta { font-size: 13px !important; }
+
+    /* 5. 背诵卡片 (#todayReciteCard & #vocabCard) 平板自适应大尺寸 */
+    #todayReciteContainer,
+    #groupContainer {
+      width: 100% !important;
+      max-width: 880px !important;
+      margin: 0 auto !important;
+    }
+    .vocab-card-shell {
+      width: 100% !important;
+      max-width: 760px !important;
+      margin: 0 auto !important;
+    }
+    #view-today-recite > .nav-bar,
+    #view-groups > .nav-bar {
+      max-width: 760px !important;
+      margin: calc(10px + env(safe-area-inset-top)) auto 8px !important;
+      padding: 8px 18px !important;
+      border-radius: 20px !important;
+      border: 1px solid var(--a3-line) !important;
+      background: var(--a3-glass-soft) !important;
+      box-shadow: 0 10px 25px #174b5618 !important;
+      box-sizing: border-box !important;
+      flex: none !important;
+    }
+    #view-today-recite .vocab-card,
+    #view-today-recite .vocab-card-long,
+    #view-groups.vocab-card-view .vocab-card,
+    #view-groups.vocab-card-view .vocab-card-long {
+      width: min(90vw, 700px) !important;
+      max-width: 700px !important;
+      height: min(62dvh, 580px) !important;
+      max-height: min(65dvh, 600px) !important;
+      min-height: 460px !important;
+      padding: 30px 36px 24px !important;
+      border-radius: 34px !important;
+      box-shadow: 0 24px 56px rgba(12,66,84,.16), inset 0 1px rgba(255,255,255,.9) !important;
+    }
+    .vocab-card .vc-word {
+      font-size: clamp(42px, 6vw, 58px) !important;
+      margin-bottom: 12px !important;
+    }
+    .vocab-card .vc-phonetic { font-size: 17px !important; }
+    .vocab-card .vc-pronounce-btn { width: 42px !important; height: 42px !important; }
+    .vocab-card .vc-cn {
+      font-size: 22px !important;
+      line-height: 1.45 !important;
+      margin-bottom: 18px !important;
+    }
+    .vc-cn-note {
+      font-size: 14.5px !important;
+      max-height: 120px !important;
+      padding: 11px 14px !important;
+      border-radius: 12px !important;
+    }
+    .vc-sentence-zone {
+      min-height: 120px !important;
+      padding: 18px 22px !important;
+      border-radius: 20px !important;
+    }
+    .vc-en { font-size: 16px !important; line-height: 1.55 !important; }
+    .vc-zh { font-size: 14.5px !important; line-height: 1.5 !important; }
+    .vc-phase1-prompt {
+      padding: 44px 24px !important;
+      border-radius: 24px !important;
+      margin: 16px 0 8px !important;
+    }
+    .vc-prompt-text { font-size: 18px !important; }
+    .vc-prompt-sub { font-size: 13px !important; }
+    .vc-momo-decomp {
+      padding: 10px 14px !important;
+      font-size: 13.5px !important;
+      border-radius: 12px !important;
+    }
+    .vc-net-confuse {
+      padding: 10px 14px !important;
+      font-size: 13px !important;
+      border-radius: 12px !important;
+    }
+
+    /* 6. 背诵评分栏与操作工具条适配 */
+    .vocab-card-shell > .card-utility-bar {
+      width: min(90vw, 560px) !important;
+      max-width: 560px !important;
+      height: 56px !important;
+      min-height: 56px !important;
+      border-radius: 18px !important;
+      margin-top: 10px !important;
+    }
+    .vocab-card-shell > .card-utility-bar .vc-btn,
+    .vocab-card-shell > .card-utility-bar .focus-toggle,
+    .vocab-card-shell > .card-utility-bar .archive-review-action {
+      height: 44px !important;
+      min-height: 44px !important;
+      font-size: 19px !important;
+      border-radius: 14px !important;
+    }
+    .recite-rate-actions,
+    #view-today-recite .recite-rate-actions,
+    #view-groups.vocab-card-view .recite-rate-actions {
+      width: min(90vw, 700px) !important;
+      max-width: 700px !important;
+      gap: 12px !important;
+      margin-top: 10px !important;
+    }
+    .recite-rate-btn,
+    #view-today-recite .recite-rate-btn,
+    #view-groups.vocab-card-view .recite-rate-btn {
+      min-height: 58px !important;
+      height: 58px !important;
+      border-radius: 18px !important;
+      padding: 6px 8px !important;
+    }
+    .recite-rate-btn .rate-name { font-size: 15.5px !important; font-weight: 800 !important; }
+    .recite-rate-btn .rate-hint { font-size: 12px !important; }
+
+    /* 7. 晨听播放器卡片与控制栏 */
+    .morning-player {
+      align-items: center !important;
+    }
+    .morning-player-top {
+      width: min(calc(100% - 32px), 880px) !important;
+      max-width: 880px !important;
+      margin: calc(8px + env(safe-area-inset-top)) auto 0 !important;
+      border-radius: 22px !important;
+      border: 1px solid var(--a3-line) !important;
+      box-sizing: border-box !important;
+    }
+    .morning-player-card {
+      width: min(90vw, 700px) !important;
+      max-width: 700px !important;
+      height: min(65dvh, 580px) !important;
+      padding: 30px 34px 24px !important;
+      border-radius: 34px !important;
+      margin: 0 auto !important;
+      box-shadow: 0 24px 56px rgba(12,66,84,.16), inset 0 1px rgba(255,255,255,.9) !important;
+    }
+    .morning-player-card .mc-en {
+      font-size: clamp(40px, 6vw, 54px) !important;
+      margin-bottom: 8px !important;
+    }
+    .morning-player-card .mc-cn {
+      font-size: 21px !important;
+      margin-bottom: 14px !important;
+    }
+    .morning-player-card .mc-example {
+      padding: 16px 20px !important;
+      font-size: 15px !important;
+      border-radius: 18px !important;
+    }
+    .morning-card-controls {
+      width: min(90vw, 700px) !important;
+      max-width: 700px !important;
+      height: 86px !important;
+      border-radius: 24px !important;
+      margin: 12px auto 0 !important;
+      gap: 16px !important;
+      grid-template-columns: 48px 48px 48px 66px 48px 48px 48px !important;
+    }
+    .mc-btn {
+      width: 48px !important;
+      height: 48px !important;
+      font-size: 24px !important;
+      border-radius: 16px !important;
+    }
+    .mc-btn-play {
+      width: 66px !important;
+      height: 66px !important;
+      border-radius: 22px !important;
+    }
+
+    /* 8. 底部导航栏自适应居中悬浮胶囊 */
+    .app-tabbar {
+      left: 0 !important;
+      right: 0 !important;
+      margin: 0 auto !important;
+      transform: none !important;
+      width: min(calc(100% - 64px), 720px) !important;
+      max-width: 720px !important;
+      height: 64px !important;
+      min-height: 64px !important;
+      padding: 6px 14px !important;
+      border-radius: 26px !important;
+      bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+      box-shadow: 0 16px 40px rgba(18,65,78,.18) !important;
+    }
+    .app-tab {
+      min-height: 50px !important;
+      font-size: 11.5px !important;
+      gap: 4px !important;
+      border-radius: 18px !important;
+    }
+    .app-tab-symbol { width: 22px !important; height: 22px !important; }
+    .app-tab-symbol svg { width: 22px !important; height: 22px !important; }
+
+    /* 9. 栅格布局（单元列表 6 列、进度面板 4 列） */
+    .unit-grid {
+      grid-template-columns: repeat(6, 1fr) !important;
+      gap: 12px !important;
+    }
+    .unit-btn {
+      min-height: 82px !important;
+      border-radius: 20px !important;
+    }
+    .progress-summary {
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 12px !important;
+    }
+    .progress-summary-item {
+      min-height: 84px !important;
+      padding: 16px !important;
+      border-radius: 22px !important;
+    }
+    .progress-summary-num { font-size: 26px !important; }
+
+    /* 10. 弹窗模态框 */
+    .sync-modal-card,
+    .backup-card,
+    .cache-card {
+      width: min(90vw, 560px) !important;
+      max-width: 560px !important;
+      border-radius: 26px !important;
+      padding: 24px 26px !important;
+    }
+    .sync-textarea,
+    .backup-textarea {
+      height: 120px !important;
+      font-size: 13px !important;
+      border-radius: 14px !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1730,7 +2059,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.5 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.6 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -2157,13 +2486,13 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.2.5"></script>
-<script src="focus-core.js?v=2.2.5"></script>
-<script src="study-copy.js?v=2.2.5"></script>
-<script src="word-network.js?v=2.2.5"></script>
-<script src="sprint-export.js?v=2.2.5"></script>
-<script src="audio-cache.js?v=2.2.5"></script>
-<script src="ui-motion.js?v=2.2.5"></script>
+<script src="review-core.js?v=2.2.6"></script>
+<script src="focus-core.js?v=2.2.6"></script>
+<script src="study-copy.js?v=2.2.6"></script>
+<script src="word-network.js?v=2.2.6"></script>
+<script src="sprint-export.js?v=2.2.6"></script>
+<script src="audio-cache.js?v=2.2.6"></script>
+<script src="ui-motion.js?v=2.2.6"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2248,8 +2577,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.2.5";
-var BUILD_TS = 1792582988;
+var APP_BUILD_ID = "2.2.6";
+var BUILD_TS = 1792585272;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
