@@ -1631,11 +1631,10 @@
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 18px;
-      background: rgba(44, 36, 29, 0.94);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      padding: 3px 6px 3px 12px;
+      background: rgba(38, 30, 24, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: #fdfaf3;
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 24px;
@@ -1644,13 +1643,46 @@
       font-weight: 500;
       white-space: nowrap;
       z-index: 10000;
-      cursor: pointer;
       user-select: none;
       animation: slideDownFade 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .update-banner-pill:active {
-      transform: translateX(-50%) scale(0.97);
+    .update-banner-pill .pill-body {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      padding: 5px 4px 5px 2px;
+    }
+
+    .update-banner-pill .pill-body:active {
+      opacity: 0.85;
+    }
+
+    .update-banner-pill .pill-close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      margin-left: 6px;
+      padding: 0;
+      border: none;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .update-banner-pill .pill-close-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .update-banner-pill .pill-close-btn:active {
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 0.35);
     }
 
     .update-banner-pill .pill-icon-spin {
@@ -2967,17 +2999,25 @@
 </head>
 <body class="mode-read">
 
-  <!-- 浮动更新提示胶囊 -->
-  <div class="update-banner-pill" id="updateBannerPill" onclick="applyAppUpdate()" style="display:none;">
-    <div class="pill-icon-spin">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+  <!-- 浮动更新提示胶囊 (带关闭与独立更新触发) -->
+  <div class="update-banner-pill" id="updateBannerPill" style="display:none;">
+    <div class="pill-body" onclick="applyAppUpdate()" title="点击立即更新到最新版">
+      <div class="pill-icon-spin">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+      </div>
+      <span id="updateBannerText">发现新版本 · 点击立即更新</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
     </div>
-    <span id="updateBannerText">发现新版本 · 点击立即更新</span>
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
+    <button type="button" class="pill-close-btn" onclick="dismissUpdateBanner(event)" title="暂不提醒">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
 
   <!-- 顶部极简导航栏 -->
@@ -36760,14 +36800,41 @@
       });
     }
 
-    // ==================== 12. 自动获取云端更新与版本号体系 (参照 words 规范) ====================
+    // ==================== 12. 自动获取云端更新与版本号体系 (严格语义化比对，绝不误弹) ====================
     const APP_BUILD_ID = "2.6.0";
     const APP_BUILD_TS = 1792800000;
     let latestUpdatePayload = null;
 
+    function compareVersions(v1, v2) {
+      const p1 = String(v1).replace(/^v/i, "").split(".").map(Number);
+      const p2 = String(v2).replace(/^v/i, "").split(".").map(Number);
+      for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+        const a = p1[i] || 0;
+        const b = p2[i] || 0;
+        if (a > b) return 1;
+        if (a < b) return -1;
+      }
+      return 0;
+    }
+
+    function dismissUpdateBanner(e) {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      const banner = document.getElementById("updateBannerPill");
+      if (banner) banner.style.display = "none";
+      const ver = (latestUpdatePayload && latestUpdatePayload.version) ? latestUpdatePayload.version : "any";
+      sessionStorage.setItem("dismiss_update_v" + ver, "1");
+      sessionStorage.setItem("dismiss_update_all", "1");
+    }
+
     async function checkAppUpdate(isManual = false) {
       const badge = document.getElementById("appVersionBadge");
       const versionText = document.getElementById("versionText");
+      const banner = document.getElementById("updateBannerPill");
+      const bannerText = document.getElementById("updateBannerText");
+
       if (isManual) {
         showToast("正在检查云端更新…");
         if (versionText) versionText.textContent = "正在检查更新…";
@@ -36780,12 +36847,16 @@
 
         const remoteTs = Number(payload.built_at || payload.build_ts || 0);
         const remoteVer = String(payload.version || "");
-        const isNewer = remoteTs > APP_BUILD_TS || (remoteVer && remoteVer !== APP_BUILD_ID);
+
+        // 严格语义化版本比较：仅当云端版本号严格大于当前页面版本号时才提示升级
+        const verCmp = compareVersions(remoteVer, APP_BUILD_ID);
+        const isNewer = verCmp > 0;
+
+        // 如果用户在当前会话已主动关闭过该版本的提示，则静默不打扰
+        const isDismissed = sessionStorage.getItem("dismiss_update_v" + remoteVer) === "1" || sessionStorage.getItem("dismiss_update_all") === "1";
 
         if (isNewer) {
-          const banner = document.getElementById("updateBannerPill");
-          const bannerText = document.getElementById("updateBannerText");
-          if (banner && bannerText) {
+          if (banner && bannerText && !isDismissed) {
             bannerText.textContent = `发现新版本 v${remoteVer} · 点击立即更新`;
             banner.style.display = "flex";
           }
@@ -36799,8 +36870,11 @@
             showToast(`发现新版本 v${remoteVer}，请点击升级！`);
           }
         } else {
+          // 已是最新版本：坚决隐藏更新提示胶囊并移除红点
+          if (banner) banner.style.display = "none";
+          if (badge) badge.classList.remove("has-update");
           if (versionText) {
-            versionText.textContent = `版本 v${APP_BUILD_ID} · 已是最新`;
+            versionText.textContent = `版本 v${APP_BUILD_ID} · 逻辑骨架版`;
           }
           if (isManual) {
             showToast("已是最新版本，无需更新");
@@ -36808,7 +36882,7 @@
         }
       } catch (err) {
         console.warn("Update check failed:", err);
-        if (versionText) versionText.textContent = `版本 v${APP_BUILD_ID} · 羊皮暖杏`;
+        if (versionText) versionText.textContent = `版本 v${APP_BUILD_ID} · 逻辑骨架版`;
         if (isManual) showToast("检查更新超时，请检查网络连接");
       }
     }
@@ -36816,6 +36890,13 @@
     function applyAppUpdate() {
       const ts = (latestUpdatePayload && (latestUpdatePayload.built_at || latestUpdatePayload.build_ts)) || Date.now();
       showToast("正在更新至最新版本…");
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          for (let reg of regs) {
+            reg.unregister();
+          }
+        }).catch(() => {});
+      }
       if ("caches" in window) {
         caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
       }
