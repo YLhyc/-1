@@ -2229,7 +2229,7 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.7 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.8 · 检查缓存…</button></div>
     <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
@@ -2656,13 +2656,13 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.2.7"></script>
-<script src="focus-core.js?v=2.2.7"></script>
-<script src="study-copy.js?v=2.2.7"></script>
-<script src="word-network.js?v=2.2.7"></script>
-<script src="sprint-export.js?v=2.2.7"></script>
-<script src="audio-cache.js?v=2.2.7"></script>
-<script src="ui-motion.js?v=2.2.7"></script>
+<script src="review-core.js?v=2.2.8"></script>
+<script src="focus-core.js?v=2.2.8"></script>
+<script src="study-copy.js?v=2.2.8"></script>
+<script src="word-network.js?v=2.2.8"></script>
+<script src="sprint-export.js?v=2.2.8"></script>
+<script src="audio-cache.js?v=2.2.8"></script>
+<script src="ui-motion.js?v=2.2.8"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2747,8 +2747,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.2.7";
-var BUILD_TS = 1792586611;
+var APP_BUILD_ID = "2.2.8";
+var BUILD_TS = 1792848346;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3561,12 +3561,37 @@ function removeTodayReciteCompletion() {
   saveTodayReciteDaily(data); todayReciteCompletionId = '';
 }
 function packTodayReciteEntry(entry) {
-  return { source: entry.source, en: entry.en, index: entry.index, kind: entry.kind, dueAt: entry.dueAt || 0, lapses: entry.lapses || 0, isRepeat: !!entry.isRepeat, repeatCount: entry.repeatCount || 0, isSmoothed: !!entry.isSmoothed };
+  return {
+    source: entry.source,
+    en: entry.en,
+    index: entry.index,
+    kind: entry.kind,
+    dueAt: entry.dueAt || 0,
+    lapses: entry.lapses || 0,
+    isRepeat: !!entry.isRepeat,
+    repeatCount: entry.repeatCount || 0,
+    repeatType: entry.repeatType || '',
+    repeatStage: entry.repeatStage || 0,
+    isSmoothed: !!entry.isSmoothed
+  };
 }
 function hydrateTodayReciteEntry(raw) {
   if (!raw || !raw.source || !raw.en) return null;
   var found = todayReciteWord(raw.source, raw.en); if (!found) return null;
-  return { source: raw.source, en: raw.en, item: found.item, index: found.index, kind: raw.kind || 'hard', dueAt: raw.dueAt || 0, lapses: raw.lapses || 0, isRepeat: !!raw.isRepeat, repeatCount: raw.repeatCount || 0, isSmoothed: !!raw.isSmoothed };
+  return {
+    source: raw.source,
+    en: raw.en,
+    item: found.item,
+    index: found.index,
+    kind: raw.kind || 'hard',
+    dueAt: raw.dueAt || 0,
+    lapses: raw.lapses || 0,
+    isRepeat: !!raw.isRepeat,
+    repeatCount: raw.repeatCount || 0,
+    repeatType: raw.repeatType || '',
+    repeatStage: raw.repeatStage || 0,
+    isSmoothed: !!raw.isSmoothed
+  };
 }
 function readTodayReciteSession() {
   var session = safeJsonFromStorage(TODAY_RECITE_SESSION_KEY, null);
@@ -4039,7 +4064,13 @@ function renderTodayRecite() {
 
   var extraMetaTag = '';
   if (entry.isRepeat) {
-    extraMetaTag = '<span class="vc-tag-repeat">组内重现第 ' + (entry.repeatCount || 1) + ' 次</span>';
+    var stageNote = '';
+    if (entry.repeatType === 'forget') {
+      stageNote = (entry.repeatStage === 2) ? ' · 终极巩固' : ' · 短期重现';
+    } else if (entry.repeatType === 'uncertain') {
+      stageNote = ' · 模糊回马枪';
+    }
+    extraMetaTag = '<span class="vc-tag-repeat">组内重现第 ' + (entry.repeatCount || 1) + ' 次' + stageNote + '</span>';
   } else if (entry.isSmoothed) {
     extraMetaTag = '<span class="vc-tag-smoothed">平滑分摊</span>';
   } else if (overdueDays > 0) {
@@ -4125,6 +4156,22 @@ function playCardWordAudio(en) {
   if (!en) return;
   if (typeof speakWeb === 'function') speakWeb(en, 'en-US', function(){});
 }
+function insertReciteRepeatWord(queue, currentIdx, reEntry, step) {
+  var targetIdx;
+  if (step === 'end' || !step || step < 0) {
+    targetIdx = queue.length;
+    queue.push(reEntry);
+  } else {
+    targetIdx = currentIdx + step;
+    if (targetIdx >= queue.length) {
+      targetIdx = queue.length;
+      queue.push(reEntry);
+    } else {
+      queue.splice(targetIdx, 0, reEntry);
+    }
+  }
+  return targetIdx;
+}
 function todayReciteRate(ratingOrFamiliar) {
   var entry = todayReciteItems[todayReciteIdx]; if (!entry) return;
   var rating = ReviewCore.normalizeRating(ratingOrFamiliar);
@@ -4143,11 +4190,44 @@ function todayReciteRate(ratingOrFamiliar) {
   recordLearningActivity(activitySource, entry.en, activityMode);
 
   var reInsertedIdx = null;
-  if (rating === 'forget' || rating === 'uncertain') {
-    var reEntry = Object.assign({}, entry, { isRepeat: true, repeatCount: (entry.repeatCount || 0) + 1, hasRated: true });
-    reInsertedIdx = todayReciteItems.length;
-    todayReciteItems.push(reEntry);
-    if (!todayRecitePracticeOnly && !entry.isRepeat) todayReciteHardReinforcement.push(entry);
+  if (!entry.isRepeat) {
+    if (rating === 'forget') {
+      var reEntry = Object.assign({}, entry, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: 1, hasRated: true });
+      reInsertedIdx = insertReciteRepeatWord(todayReciteItems, todayReciteIdx, reEntry, 3);
+      if (!todayRecitePracticeOnly) todayReciteHardReinforcement.push(entry);
+    } else if (rating === 'uncertain') {
+      var reEntry = Object.assign({}, entry, { isRepeat: true, repeatType: 'uncertain', repeatStage: 1, repeatCount: 1, hasRated: true });
+      reInsertedIdx = insertReciteRepeatWord(todayReciteItems, todayReciteIdx, reEntry, 5);
+      if (!todayRecitePracticeOnly) todayReciteHardReinforcement.push(entry);
+    }
+  } else {
+    if (entry.repeatType === 'forget') {
+      if (entry.repeatStage === 1) {
+        if (isFamiliar) {
+          var reEntry = Object.assign({}, entry, { isRepeat: true, repeatType: 'forget', repeatStage: 2, repeatCount: (entry.repeatCount || 1) + 1, hasRated: true });
+          reInsertedIdx = insertReciteRepeatWord(todayReciteItems, todayReciteIdx, reEntry, 'end');
+        } else {
+          var reEntry = Object.assign({}, entry, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: (entry.repeatCount || 1) + 1, hasRated: true });
+          reInsertedIdx = insertReciteRepeatWord(todayReciteItems, todayReciteIdx, reEntry, 3);
+        }
+      } else {
+        if (isFamiliar) {
+          reInsertedIdx = null;
+        } else {
+          var reEntry = Object.assign({}, entry, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: (entry.repeatCount || 2) + 1, hasRated: true });
+          reInsertedIdx = insertReciteRepeatWord(todayReciteItems, todayReciteIdx, reEntry, 3);
+        }
+      }
+    } else {
+      if (isFamiliar) {
+        reInsertedIdx = null;
+      } else {
+        var nextType = (rating === 'forget') ? 'forget' : 'uncertain';
+        var step = (nextType === 'forget') ? 3 : 5;
+        var reEntry = Object.assign({}, entry, { isRepeat: true, repeatType: nextType, repeatStage: 1, repeatCount: (entry.repeatCount || 1) + 1, hasRated: true });
+        reInsertedIdx = insertReciteRepeatWord(todayReciteItems, todayReciteIdx, reEntry, step);
+      }
+    }
   }
 
   todayReciteUndo = {
@@ -4192,6 +4272,9 @@ function todayReciteUndoLast() {
   if (u.entry && !u.entry.isRepeat) {
     if (u.familiar) todayReciteStats.familiar = Math.max(0, todayReciteStats.familiar - 1);
     else todayReciteStats.hard = Math.max(0, todayReciteStats.hard - 1);
+    if (todayReciteHardReinforcement.length && todayReciteHardReinforcement[todayReciteHardReinforcement.length - 1] === u.entry) {
+      todayReciteHardReinforcement.pop();
+    }
   }
   todayReciteIdx = u.idx;
   todayReciteDone = false;
@@ -4354,6 +4437,7 @@ function showGroups(unitIdx, options) {
     var resumeIndex = hasSavedOrder ? Number(resume.itemIdx) : (resume ? vocabCardOrder.indexOf(Math.max(0, Number(resume.itemIdx) || 0)) : 0);
     vocabCardIdx = Math.max(0, Math.min(Number.isFinite(resumeIndex) ? resumeIndex : 0, Math.max(0, words.length - 1)));
     vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+    resetVocabReciteSession();
     saveLearningResume('vocab', unitIdx, vocabStudyMode, vocabCardIdx, vocabCardOrder);
   }
   showView('groups');
@@ -4577,6 +4661,18 @@ var vocabCardCountedPlayToken = 0;
 var vocabStudyMode = localStorage.getItem('vocab_study_mode_v1') || 'listen';
 var vocabReciteShown = false, vocabReciteUndo = null, vocabReciteDone = false;
 var vocabCardOrder = [], vocabCardOrderUnit = -1;
+var vocabReciteSessionEntries = null, vocabReciteSessionUnit = -1;
+function getVocabReciteEntries() {
+  if (!vocabReciteSessionEntries || vocabReciteSessionUnit !== currentUnit) {
+    vocabReciteSessionEntries = getVocabCardEntries();
+    vocabReciteSessionUnit = currentUnit;
+  }
+  return vocabReciteSessionEntries;
+}
+function resetVocabReciteSession() {
+  vocabReciteSessionEntries = null;
+  vocabReciteSessionUnit = -1;
+}
 
 function cardUtilityIcon(name) {
   var paths = {
@@ -4658,7 +4754,7 @@ function renderVocabCardMode() {
   }
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
   saveLearningResume('vocab', currentUnit, vocabStudyMode, vocabCardIdx);
-  if (vocabStudyMode === 'recite') { renderVocabRecite(entries); return; }
+  if (vocabStudyMode === 'recite') { renderVocabRecite(getVocabReciteEntries()); return; }
   container.innerHTML = ''
     + '<div class="vocab-card-shell">'
     + '<div class="study-mode"><button class="active">聆听</button><button onclick="setVocabStudyMode(&quot;recite&quot;)">背诵</button></div>'
@@ -4706,6 +4802,7 @@ function vocabCardCurrentPref() {
 
 function setVocabStudyMode(mode) {
   vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false;
+  resetVocabReciteSession();
   localStorage.setItem('vocab_study_mode_v1',mode); saveLearningResume('vocab', currentUnit, mode, vocabCardIdx);
   renderVocabCardMode();
 }
@@ -4791,7 +4888,7 @@ function renderVocabRecite(entries) {
       '<div class="vocab-card vocab-card-long' + (isEffectiveShown ? ' revealed' : '') + '" id="vocabCard" onclick="vocabReciteShow()">' +
         '<div class="vc-top-meta">' +
           '<span class="vc-tag-source">生词本 · Unit ' + (currentUnit + 1) + '</span>' +
-          (e.isRepeat ? '<span class="vc-tag-repeat">组内重现</span>' : '') +
+          (e.isRepeat ? ('<span class="vc-tag-repeat">组内重现第 ' + (e.repeatCount || 1) + ' 次' + (e.repeatType === 'forget' ? (e.repeatStage === 2 ? ' · 终极巩固' : ' · 短期重现') : (e.repeatType === 'uncertain' ? ' · 模糊回马枪' : '')) + '</span>') : '') +
         '</div>' +
         '<div class="vc-word-row">' +
           '<div class="vc-word">' + escapeHTML(w.en) + '</div>' +
@@ -4850,25 +4947,64 @@ function vocabReciteShow(initialSense) {
   }
 }
 function vocabReciteRate(ratingOrFamiliar) {
-  var entries = getVocabCardEntries(), e = entries[vocabCardIdx];
+  var entries = getVocabReciteEntries(), e = entries[vocabCardIdx];
   if (!e) return;
   var rating = ReviewCore.normalizeRating(ratingOrFamiliar);
   var isFamiliar = (rating === 'familiar' || rating === 'mastered');
   var k = prefKey('vocab',vocabCardLocalToGW(e.localIdx));
-  var state = ReviewCore.applyRating('vocab', e.item.en, rating, 'recite');
-  showRatingFeedback('vocab', e.item.en, rating, 'recite');
-  recordLearningActivity('vocab', e.item.en, 'vocab_recite');
+  var state = null, practiceRecallOutcome = null;
+  if (!e.isRepeat) {
+    state = ReviewCore.applyRating('vocab', e.item.en, rating, 'recite');
+    showRatingFeedback('vocab', e.item.en, rating, 'recite');
+  } else {
+    practiceRecallOutcome = ReviewCore.recordRecallOutcome('vocab', e.item.en, rating, 'vocab_recite_repeat', { practice: true });
+    showRatingFeedback('vocab', e.item.en, rating, 'recite');
+  }
+  recordLearningActivity('vocab', e.item.en, e.isRepeat ? 'vocab_recite_repeat' : 'vocab_recite');
 
   var reInsertedIdx = null;
-  if ((rating === 'forget' || rating === 'uncertain') && !e.isRepeat) {
-    var reEntry = Object.assign({}, e, { isRepeat: true, repeatCount: (e.repeatCount || 0) + 1 });
-    reInsertedIdx = entries.length;
-    entries.push(reEntry);
+  if (!e.isRepeat) {
+    if (rating === 'forget') {
+      var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: 1 });
+      reInsertedIdx = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 3);
+    } else if (rating === 'uncertain') {
+      var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'uncertain', repeatStage: 1, repeatCount: 1 });
+      reInsertedIdx = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 5);
+    }
+  } else {
+    if (e.repeatType === 'forget') {
+      if (e.repeatStage === 1) {
+        if (isFamiliar) {
+          var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'forget', repeatStage: 2, repeatCount: (e.repeatCount || 1) + 1 });
+          reInsertedIdx = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 'end');
+        } else {
+          var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: (e.repeatCount || 1) + 1 });
+          reInsertedIdx = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 3);
+        }
+      } else {
+        if (isFamiliar) {
+          reInsertedIdx = null;
+        } else {
+          var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: (e.repeatCount || 2) + 1 });
+          reInsertedIdx = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 3);
+        }
+      }
+    } else {
+      if (isFamiliar) {
+        reInsertedIdx = null;
+      } else {
+        var nextType = (rating === 'forget') ? 'forget' : 'uncertain';
+        var step = (nextType === 'forget') ? 3 : 5;
+        var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: nextType, repeatStage: 1, repeatCount: (e.repeatCount || 1) + 1 });
+        reInsertedIdx = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, step);
+      }
+    }
   }
 
   vocabReciteUndo = {
     idx: vocabCardIdx, state: state, en: e.item.en,
-    familiar: isFamiliar, rating: rating,
+    familiar: isFamiliar, rating: rating, isRepeat: !!e.isRepeat,
+    practiceRecallOutcome: practiceRecallOutcome,
     reInsertedIdx: reInsertedIdx
   };
   haptic(18);
@@ -4884,12 +5020,15 @@ function vocabReciteRate(ratingOrFamiliar) {
 }
 function vocabReciteUndoLast() {
   var u = vocabReciteUndo; if (!u) return;
-  var entries = getVocabCardEntries();
+  var entries = getVocabReciteEntries();
   if (u.reInsertedIdx !== null && u.reInsertedIdx < entries.length) {
     entries.splice(u.reInsertedIdx, 1);
   }
   if (u.state) ReviewCore.undoRating(u.state);
-  undoLearningActivity('vocab', u.en, 'vocab_recite');
+  if (u.practiceRecallOutcome) {
+    ReviewCore.undoRecallOutcome(u.practiceRecallOutcome);
+  }
+  undoLearningActivity('vocab', u.en, u.isRepeat ? 'vocab_recite_repeat' : 'vocab_recite');
   hideScheduleFeedback();
   vocabCardIdx = u.idx;
   vocabReciteDone = false;
