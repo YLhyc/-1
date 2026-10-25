@@ -1,5 +1,5 @@
 // 考研政治背诵手卷 · 极速离线 PWA Service Worker (V4 自动感知与实时更新)
-const CACHE_NAME = 'kyzz-handbook-v6';
+const CACHE_NAME = 'kyzz-handbook-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
