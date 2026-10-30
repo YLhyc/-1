@@ -1,5 +1,5 @@
-// 考研政治背诵手卷 · 生产级 PWA Service Worker (v3.3.5)
-const CACHE_NAME = 'kyzz-handbook-v335';
+// 考研政治背诵手卷 · 生产级 PWA Service Worker (v3.3.6)
+const CACHE_NAME = 'kyzz-handbook-v336';
 const ASSETS_TO_CACHE = [
   './manifest.webmanifest',
   './icons/icon-192.png',
