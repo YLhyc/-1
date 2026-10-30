@@ -1,0 +1,506 @@
+{
+  "807_01_T0_曹禺_01_雷雨思想意蕴与艺术成就_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 205.39,
+    "sentence_count": 44,
+    "elapsed_sec": 19.19,
+    "updated_at": "2026-10-29T16:31:20.373220"
+  },
+  "706_01_T0_屈原_01_离骚思想意蕴与艺术成就_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 240.84,
+    "sentence_count": 61,
+    "elapsed_sec": 25.35,
+    "updated_at": "2026-10-29T16:36:26.539785"
+  },
+  "807_02_T0_鲁迅_01_现代小说史开创性贡献_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 200.28,
+    "sentence_count": 51,
+    "elapsed_sec": 18.08,
+    "updated_at": "2026-10-29T16:31:40.528049"
+  },
+  "807_02_T0_鲁迅_02_阿Q正传思想意蕴与艺术成就_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 211.63,
+    "sentence_count": 50,
+    "elapsed_sec": 20.18,
+    "updated_at": "2026-10-29T16:32:02.818598"
+  },
+  "807_02_T0_鲁迅_03_杂文艺术特质与思想内涵_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 273.38,
+    "sentence_count": 60,
+    "elapsed_sec": 30.26,
+    "updated_at": "2026-10-29T16:32:35.480929"
+  },
+  "807_02_T0_鲁迅_04_故事新编历史小说创新_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 125.5,
+    "sentence_count": 28,
+    "elapsed_sec": 12.94,
+    "updated_at": "2026-10-29T16:32:50.096539"
+  },
+  "807_03_T0_郭沫若_01_女神自我抒情主人公与诗歌美学_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 261.79,
+    "sentence_count": 61,
+    "elapsed_sec": 27.92,
+    "updated_at": "2026-10-29T16:33:20.319756"
+  },
+  "807_04_T1_老舍_01_茶馆图卷戏结构与悲剧成就_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 282.84,
+    "sentence_count": 62,
+    "elapsed_sec": 26.14,
+    "updated_at": "2026-10-29T16:33:48.823449"
+  },
+  "807_05_T1_新月派_01_三美理论与新格律诗主张_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 108.53,
+    "sentence_count": 26,
+    "elapsed_sec": 9.94,
+    "updated_at": "2026-10-29T16:34:00.453824"
+  },
+  "807_06_T1_汪曾祺_01_散文化小说文体创新与和美哲学_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 237.89,
+    "sentence_count": 59,
+    "elapsed_sec": 21.45,
+    "updated_at": "2026-10-29T16:34:24.243431"
+  },
+  "807_07_T0_五四文学革命_01_历史发生发展与现代文学转型_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 247.63,
+    "sentence_count": 56,
+    "elapsed_sec": 21.25,
+    "updated_at": "2026-10-29T16:34:47.763151"
+  },
+  "807_07_T0_五四文学革命_02_文学研究会与创造社比较_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 125.66,
+    "sentence_count": 29,
+    "elapsed_sec": 10.52,
+    "updated_at": "2026-10-29T16:34:59.969500"
+  },
+  "807_08_T1_讲话与解放区_01_延安文艺座谈会讲话核心命题与历史影响_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 242.35,
+    "sentence_count": 57,
+    "elapsed_sec": 23.93,
+    "updated_at": "2026-10-29T16:35:26.224418"
+  },
+  "807_09_T1_先锋小说_01_叙事革命与审美特征_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 219.62,
+    "sentence_count": 52,
+    "elapsed_sec": 19.91,
+    "updated_at": "2026-10-29T16:46:50.851810"
+  },
+  "807_09_T1_先锋小说_02_余华从先锋探索到九十年代创作转型_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 121.73,
+    "sentence_count": 30,
+    "elapsed_sec": 10.53,
+    "updated_at": "2026-10-29T16:47:03.234601"
+  },
+  "807_10_T1_朦胧诗_01_思想特征与艺术革新_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 218.26,
+    "sentence_count": 57,
+    "elapsed_sec": 20.7,
+    "updated_at": "2026-10-29T16:47:26.250036"
+  },
+  "807_10_T1_朦胧诗_02_北岛诗歌思想特质与冷峻美学_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 115.49,
+    "sentence_count": 31,
+    "elapsed_sec": 10.02,
+    "updated_at": "2026-10-29T16:47:38.140121"
+  },
+  "807_11_T2_张爱玲_01_小说艺术特质与苍凉美学_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 225.24,
+    "sentence_count": 53,
+    "elapsed_sec": 20.2,
+    "updated_at": "2026-10-29T16:48:00.551643"
+  },
+  "807_11_T2_张爱玲_02_金锁记曹七巧形象与心理异化机制_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 125.5,
+    "sentence_count": 28,
+    "elapsed_sec": 10.7,
+    "updated_at": "2026-10-29T16:48:12.992149"
+  },
+  "807_12_T2_寻根文学_01_思潮发生与文化审美特征_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 216.67,
+    "sentence_count": 51,
+    "elapsed_sec": 18.86,
+    "updated_at": "2026-10-29T16:48:34.078144"
+  },
+  "807_12_T2_寻根文学_02_阿城棋王文化道家人格与寻根追求_20分简答_t1": {
+    "status": "done",
+    "duration_sec": 116.21,
+    "sentence_count": 29,
+    "elapsed_sec": 10.1,
+    "updated_at": "2026-10-29T16:48:45.853749"
+  },
+  "706_01_T0_庄子_01_庄子散文艺术与浪漫主义_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 249.89,
+    "sentence_count": 62,
+    "elapsed_sec": 26.06,
+    "updated_at": "2026-10-29T16:36:55.225078"
+  },
+  "706_01_T0_杜甫_01_沉郁顿挫风格与诗史性质_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 247.32,
+    "sentence_count": 57,
+    "elapsed_sec": 22.72,
+    "updated_at": "2026-10-29T16:37:20.244365"
+  },
+  "706_01_T0_诗经_01_诗经艺术成就与赋比兴_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 235.32,
+    "sentence_count": 60,
+    "elapsed_sec": 22.11,
+    "updated_at": "2026-10-29T16:37:44.680089"
+  },
+  "706_02_T0_史记_01_史记人物塑造与互见法_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 253.63,
+    "sentence_count": 61,
+    "elapsed_sec": 24.34,
+    "updated_at": "2026-10-29T16:38:11.485392"
+  },
+  "706_03_T0_李白_01_李白盛唐诗歌艺术特质与盛唐气象_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 257.33,
+    "sentence_count": 71,
+    "elapsed_sec": 21.94,
+    "updated_at": "2026-10-29T16:38:35.880111"
+  },
+  "706_04_T0_杜甫_01_杜甫沉郁顿挫艺术风格_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 251.06,
+    "sentence_count": 58,
+    "elapsed_sec": 23.44,
+    "updated_at": "2026-10-29T16:39:01.817548"
+  },
+  "706_04_T0_杜甫_02_杜甫诗史与叙事艺术_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 242.59,
+    "sentence_count": 57,
+    "elapsed_sec": 22.16,
+    "updated_at": "2026-10-29T16:39:26.460851"
+  },
+  "706_05_T0_红楼梦_01_红楼梦悲剧意蕴与人生悲剧_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 260.35,
+    "sentence_count": 61,
+    "elapsed_sec": 23.95,
+    "updated_at": "2026-10-29T16:39:52.982276"
+  },
+  "706_05_T0_苏轼_01_苏轼以诗入词与文学史贡献_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 242.35,
+    "sentence_count": 60,
+    "elapsed_sec": 22.36,
+    "updated_at": "2026-10-29T16:40:17.865930"
+  },
+  "706_06_T1_建安风骨_01_建安风骨内涵与三曹诗歌艺术_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 246.6,
+    "sentence_count": 63,
+    "elapsed_sec": 22.4,
+    "updated_at": "2026-10-29T16:40:42.722811"
+  },
+  "706_07_T1_陶渊明_01_陶渊明田园诗艺术特色与文化品格_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 160.13,
+    "sentence_count": 34,
+    "elapsed_sec": 14.84,
+    "updated_at": "2026-10-29T16:40:59.693103"
+  },
+  "706_08_T1_三国演义_01_三国演义虚实相生与诸葛亮形象_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 123.17,
+    "sentence_count": 29,
+    "elapsed_sec": 11.01,
+    "updated_at": "2026-10-29T16:41:12.490180"
+  },
+  "706_09_T1_水浒传_01_水浒传叙事结构与林冲人物塑造_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 123.58,
+    "sentence_count": 28,
+    "elapsed_sec": 10.09,
+    "updated_at": "2026-10-29T16:41:24.338072"
+  },
+  "706_10_T1_白居易_01_白居易新乐府运动主张与讽谕诗艺术特色_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 113.9,
+    "sentence_count": 24,
+    "elapsed_sec": 11.52,
+    "updated_at": "2026-10-29T16:41:37.763940"
+  },
+  "706_11_T1_辛弃疾_01_辛弃疾稼轩词艺术成就与以文为词_30分论述_t1": {
+    "status": "done",
+    "duration_sec": 138.94,
+    "sentence_count": 35,
+    "elapsed_sec": 12.89,
+    "updated_at": "2026-10-29T16:41:52.667556"
+  },
+  "807_01_T0_曹禺_01_雷雨思想意蕴与艺术成就_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 751.7,
+    "sentence_count": 187,
+    "elapsed_sec": 69.86,
+    "updated_at": "2026-10-29T16:52:14.260433"
+  },
+  "807_02_T0_鲁迅_01_现代小说史开创性贡献_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 700.2,
+    "sentence_count": 170,
+    "elapsed_sec": 72.13,
+    "updated_at": "2026-10-29T16:53:31.055808"
+  },
+  "807_02_T0_鲁迅_02_阿Q正传思想意蕴与艺术成就_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 761.74,
+    "sentence_count": 179,
+    "elapsed_sec": 71.76,
+    "updated_at": "2026-10-29T16:54:47.704936"
+  },
+  "807_02_T0_鲁迅_03_杂文艺术特质与思想内涵_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1075.9,
+    "sentence_count": 249,
+    "elapsed_sec": 108.73,
+    "updated_at": "2026-10-29T16:56:42.976056"
+  },
+  "807_02_T0_鲁迅_04_故事新编历史小说创新_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 550.51,
+    "sentence_count": 129,
+    "elapsed_sec": 56.3,
+    "updated_at": "2026-10-29T16:57:42.996453"
+  },
+  "807_03_T0_郭沫若_01_女神自我抒情主人公与诗歌美学_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1026.02,
+    "sentence_count": 245,
+    "elapsed_sec": 98.54,
+    "updated_at": "2026-10-29T16:59:27.606276"
+  },
+  "807_04_T1_老舍_01_茶馆图卷戏结构与悲剧成就_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1075.54,
+    "sentence_count": 249,
+    "elapsed_sec": 101.28,
+    "updated_at": "2026-10-29T17:01:15.671110"
+  },
+  "807_05_T1_新月派_01_三美理论与新格律诗主张_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 452.06,
+    "sentence_count": 111,
+    "elapsed_sec": 40.35,
+    "updated_at": "2026-10-29T17:01:59.294748"
+  },
+  "807_06_T1_汪曾祺_01_散文化小说文体创新与和美哲学_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 930.22,
+    "sentence_count": 212,
+    "elapsed_sec": 88.59,
+    "updated_at": "2026-10-29T17:03:33.738696"
+  },
+  "807_07_T0_五四文学革命_01_历史发生发展与现代文学转型_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 971.47,
+    "sentence_count": 230,
+    "elapsed_sec": 89.95,
+    "updated_at": "2026-10-29T17:05:09.472206"
+  },
+  "807_07_T0_五四文学革命_02_文学研究会与创造社比较_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 528.24,
+    "sentence_count": 129,
+    "elapsed_sec": 48.63,
+    "updated_at": "2026-10-29T17:06:01.896580"
+  },
+  "807_08_T1_讲话与解放区_01_延安文艺座谈会讲话核心命题与历史影响_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 940.75,
+    "sentence_count": 224,
+    "elapsed_sec": 93.04,
+    "updated_at": "2026-10-29T17:07:40.387383"
+  },
+  "807_09_T1_先锋小说_01_叙事革命与审美特征_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 679.85,
+    "sentence_count": 168,
+    "elapsed_sec": 60.32,
+    "updated_at": "2026-10-29T17:08:45.101078"
+  },
+  "807_09_T1_先锋小说_02_余华从先锋探索到九十年代创作转型_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 387.46,
+    "sentence_count": 94,
+    "elapsed_sec": 35.97,
+    "updated_at": "2026-10-29T17:09:24.310415"
+  },
+  "807_10_T1_朦胧诗_01_思想特征与艺术革新_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 661.54,
+    "sentence_count": 175,
+    "elapsed_sec": 63.86,
+    "updated_at": "2026-10-29T17:10:32.566776"
+  },
+  "807_10_T1_朦胧诗_02_北岛诗歌思想特质与冷峻美学_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 383.69,
+    "sentence_count": 97,
+    "elapsed_sec": 34.55,
+    "updated_at": "2026-10-29T17:11:10.226333"
+  },
+  "807_11_T2_张爱玲_01_小说艺术特质与苍凉美学_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 671.5,
+    "sentence_count": 161,
+    "elapsed_sec": 61.15,
+    "updated_at": "2026-10-29T17:12:15.758939"
+  },
+  "807_11_T2_张爱玲_02_金锁记曹七巧形象与心理异化机制_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 395.04,
+    "sentence_count": 95,
+    "elapsed_sec": 38.28,
+    "updated_at": "2026-10-29T17:12:57.085680"
+  },
+  "807_12_T2_寻根文学_01_思潮发生与文化审美特征_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 647.33,
+    "sentence_count": 154,
+    "elapsed_sec": 59.28,
+    "updated_at": "2026-10-29T17:14:00.166510"
+  },
+  "807_12_T2_寻根文学_02_阿城棋王文化道家人格与寻根追求_20分简答_t2": {
+    "status": "done",
+    "duration_sec": 384.24,
+    "sentence_count": 97,
+    "elapsed_sec": 34.97,
+    "updated_at": "2026-10-29T17:14:37.844814"
+  },
+  "706_01_T0_屈原_01_离骚思想意蕴与艺术成就_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1202.9,
+    "sentence_count": 289,
+    "elapsed_sec": 111.26,
+    "updated_at": "2026-10-29T17:16:35.432939"
+  },
+  "706_01_T0_庄子_01_庄子散文艺术与浪漫主义_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1222.34,
+    "sentence_count": 294,
+    "elapsed_sec": 106.7,
+    "updated_at": "2026-10-29T17:18:28.494360"
+  },
+  "706_01_T0_杜甫_01_沉郁顿挫风格与诗史性质_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 928.82,
+    "sentence_count": 217,
+    "elapsed_sec": 81.11,
+    "updated_at": "2026-10-29T17:19:54.625952"
+  },
+  "706_01_T0_诗经_01_诗经艺术成就与赋比兴_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1203.07,
+    "sentence_count": 291,
+    "elapsed_sec": 105.13,
+    "updated_at": "2026-10-29T17:21:46.046852"
+  },
+  "706_02_T0_史记_01_史记人物塑造与互见法_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1224.43,
+    "sentence_count": 296,
+    "elapsed_sec": 112.07,
+    "updated_at": "2026-10-29T17:23:44.263507"
+  },
+  "706_03_T0_李白_01_李白盛唐诗歌艺术特质与盛唐气象_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1285.94,
+    "sentence_count": 302,
+    "elapsed_sec": 114.54,
+    "updated_at": "2026-10-29T17:25:45.110348"
+  },
+  "706_04_T0_杜甫_01_杜甫沉郁顿挫艺术风格_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1211.23,
+    "sentence_count": 274,
+    "elapsed_sec": 114.35,
+    "updated_at": "2026-10-29T17:27:45.577814"
+  },
+  "706_04_T0_杜甫_02_杜甫诗史与叙事艺术_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1209.77,
+    "sentence_count": 281,
+    "elapsed_sec": 113.46,
+    "updated_at": "2026-10-29T17:29:45.164441"
+  },
+  "706_05_T0_红楼梦_01_红楼梦悲剧意蕴与人生悲剧_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1257.05,
+    "sentence_count": 295,
+    "elapsed_sec": 108.89,
+    "updated_at": "2026-10-29T17:31:40.469125"
+  },
+  "706_05_T0_苏轼_01_苏轼以诗入词与文学史贡献_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1223.86,
+    "sentence_count": 291,
+    "elapsed_sec": 107.24,
+    "updated_at": "2026-10-29T17:33:33.964083"
+  },
+  "706_06_T1_建安风骨_01_建安风骨内涵与三曹诗歌艺术_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1191.53,
+    "sentence_count": 288,
+    "elapsed_sec": 108.24,
+    "updated_at": "2026-10-29T17:35:28.372054"
+  },
+  "706_07_T1_陶渊明_01_陶渊明田园诗艺术特色与文化品格_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 1123.82,
+    "sentence_count": 269,
+    "elapsed_sec": 104.17,
+    "updated_at": "2026-10-29T17:37:18.491765"
+  },
+  "706_08_T1_三国演义_01_三国演义虚实相生与诸葛亮形象_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 935.28,
+    "sentence_count": 225,
+    "elapsed_sec": 80.52,
+    "updated_at": "2026-10-29T17:38:44.081168"
+  },
+  "706_09_T1_水浒传_01_水浒传叙事结构与林冲人物塑造_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 893.26,
+    "sentence_count": 220,
+    "elapsed_sec": 83.36,
+    "updated_at": "2026-10-29T17:40:12.486076"
+  },
+  "706_10_T1_白居易_01_白居易新乐府运动主张与讽谕诗艺术特色_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 869.26,
+    "sentence_count": 219,
+    "elapsed_sec": 80.38,
+    "updated_at": "2026-10-29T17:41:37.604921"
+  },
+  "706_11_T1_辛弃疾_01_辛弃疾稼轩词艺术成就与以文为词_30分论述_t2": {
+    "status": "done",
+    "duration_sec": 919.27,
+    "sentence_count": 227,
+    "elapsed_sec": 81.21,
+    "updated_at": "2026-10-29T17:43:03.857021"
+  }
+}
