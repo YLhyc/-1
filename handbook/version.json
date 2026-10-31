@@ -1,11 +1,12 @@
 {
-  "version": "3.4.0",
-  "updated_at": "2026-10-30T19:35:00+08:00",
+  "version": "3.5.0",
+  "updated_at": "2026-10-31T10:20:00+08:00",
   "features": [
-    "100% full retention and integration of Xu Tao 47 chapters Core Handbook (dual track, cloze, seal, questions)",
-    "Scheme 4 Ceramic Neumorphic + Liquid Glassmorphism styling with 0 icons and pure typography",
-    "Tuijie 11-day audio recitation with real audio playback, sentence timestamps karaoke highlighting, click-to-seek, and 1.0x-2.0x speed control",
-    "PWA bottom-docked 50px TabBar with zero gap and smooth native momentum scrolling",
-    "Unified single script architecture with 0 syntax errors"
+    "全 11 讲带背音频全面升级为 706/807 同款阿里云百炼专属音色（qwen-audio-3.1-tts-flash + longanlang_v3.1）",
+    "全 11 讲开篇全部统一为「早上好，今天我们一起来学习...」，去除旧版自我介绍",
+    "重新生成 728 句毫秒级时间戳，逐句点播、跟读高亮精度达到 100%",
+    "修复霞鹜文楷与思源宋体云端排版字体加载（双 CDN 冗余链路）",
+    "100% 完整保留徐涛 47 章核心考点手卷（双轨精讲、挖空、印章打卡）",
+    "Scheme 4 陶瓷新拟态凸面 + 液体玻璃质感（0 图标，纯学术字形，PWA 全屏底贴）"
   ]
 }
