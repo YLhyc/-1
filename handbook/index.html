@@ -3628,7 +3628,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
     }
 
     /* ==========================================================================
-       核心背诵 · 精瓷液态玻璃悬浮播放胶囊 (Scheme 4 · 0 图标 · 触控优化)
+       核心背诵 · 精瓷液态玻璃悬浮播放胶囊 (Scheme 4 · 章内自动连播 · 0 图标)
        ========================================================================== */
     .audio-float-dock {
       position: fixed;
@@ -3741,6 +3741,18 @@ body.mode-mask .xt-keyword.cloze.revealed {
       flex-shrink: 0;
     }
 
+    .dock-card-counter {
+      font-size: 10px;
+      font-weight: 700;
+      color: #3c7d66;
+      background: rgba(60, 125, 102, 0.12);
+      padding: 1px 6px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
     .audio-float-dock .audio-dock-title {
       font-family: var(--font-song);
       font-size: 13px;
@@ -3793,6 +3805,40 @@ body.mode-mask .xt-keyword.cloze.revealed {
       flex-shrink: 0;
     }
 
+    .dock-autoplay-btn {
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 9999px;
+      background: var(--paper-subtle);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .dock-autoplay-btn.mode-chapter {
+      background: var(--accent-soft);
+      border-color: rgba(166, 64, 42, 0.28);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .dock-autoplay-btn.mode-cross {
+      background: rgba(60, 125, 102, 0.12);
+      border-color: rgba(60, 125, 102, 0.3);
+      color: #3c7d66;
+      font-weight: 700;
+    }
+    .dock-autoplay-btn:active {
+      transform: scale(0.92);
+    }
+
     .dock-speed-pill {
       height: 28px;
       padding: 0 9px;
@@ -3836,6 +3882,51 @@ body.mode-mask .xt-keyword.cloze.revealed {
     /* 当悬浮音频播放台展示时，原底栏隐藏避让，避免多重堆叠 */
     body.audio-dock-visible .bottom-dock-bar {
       display: none !important;
+    }
+
+    /* 手机端精细适配 */
+    @media (max-width: 480px) {
+      .audio-float-dock {
+        height: 56px;
+        padding: 0 8px 0 6px;
+      }
+      .dock-left-controls {
+        gap: 4px;
+      }
+      .dock-main-play-disc {
+        width: 38px;
+        height: 38px;
+        font-size: 11px;
+      }
+      .dock-nav-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
+      }
+      .dock-center-info {
+        margin: 0 5px;
+      }
+      .dock-ch-badge {
+        display: none;
+      }
+      .dock-right-controls {
+        gap: 4px;
+      }
+      .dock-autoplay-btn {
+        height: 26px;
+        padding: 0 6px;
+        font-size: 10px;
+      }
+      .dock-speed-pill {
+        height: 26px;
+        padding: 0 6px;
+        font-size: 10px;
+      }
+      .dock-close-pill {
+        height: 26px;
+        padding: 0 6px;
+        font-size: 10px;
+      }
     }
 
     /* ==========================================================================
@@ -4521,7 +4612,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
             <p class="entry-card-desc">原书 47 章考点手卷。内置双轨精讲音频、关键词挖空背诵、课后记忆打卡与仿真书页翻阅系统，夯实政治知识框架。</p>
             <div class="entry-card-tags">
               <span class="entry-tag-item">手卷双轨翻页</span>
-              <span class="entry-tag-item">逐段音频解析</span>
+              <span class="entry-tag-item">章内音频自动连播</span>
               <span class="entry-tag-item">背诵印章打卡</span>
               <span class="entry-tag-item">挖空记忆测试</span>
             </div>
@@ -22939,7 +23030,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
   </main>
 
   <!-- 悬浮微型音频控制器 (播放时浮现) -->
-    <!-- 核心背诵悬浮精瓷液态玻璃胶囊播放台 (Scheme 4 · 0 图标 · 触控优化) -->
+    <!-- 核心背诵悬浮精瓷液态玻璃胶囊播放台 (Scheme 4 · 章内自动连播 · 0 图标) -->
   <div class="audio-float-dock" id="audioFloatDock" style="display: none;">
     <div class="dock-left-controls">
       <button type="button" class="dock-nav-btn" onclick="playPrevAudioCard()" title="上一节音频">上节</button>
@@ -22951,6 +23042,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
     <div class="dock-center-info">
       <div class="dock-meta-row" onclick="jumpToPlayingChapter()">
         <span class="dock-ch-badge">核心背诵</span>
+        <span class="dock-card-counter" id="dockCardCounter" style="display: none;">[ 1/1 节 ]</span>
         <span class="audio-dock-title" id="audioDockTitle">徐涛核心考点</span>
         <span class="audio-dock-time" id="audioDockTime">00:00 / 00:00</span>
       </div>
@@ -22959,6 +23051,9 @@ body.mode-mask .xt-keyword.cloze.revealed {
       </div>
     </div>
     <div class="dock-right-controls">
+      <button type="button" class="dock-autoplay-btn mode-chapter" id="dockAutoplayBtn" onclick="cycleAutoPlayMode()" title="切换连播模式（章内连播/跨章连播/单篇）">
+        <span id="dockAutoplayLabel">章内连播</span>
+      </button>
       <button type="button" class="dock-speed-pill" onclick="cycleReciteSpeed()" title="切换倍速">
         <span id="audioSpeedLabel">1.0x</span>
       </button>
@@ -23618,8 +23713,52 @@ const TOTAL_CHAPTERS = 47;
 
 
     // =========================================================================
-    // 核心背诵 · 精瓷液态玻璃胶囊播放台交互 (Scheme 4 · 0 图标 · 触控优化)
+    // 核心背诵 · 章内音频自动连播与精瓷液态玻璃胶囊交互 (Scheme 4 · 0 图标)
     // =========================================================================
+    let currentAutoPlayMode = 'chapter'; // 默认：'chapter' (章内连播), 可选 'cross' (跨章连播), 'single' (单篇播放)
+
+    function cycleAutoPlayMode() {
+      const modes = ['chapter', 'cross', 'single'];
+      const curIdx = modes.indexOf(currentAutoPlayMode);
+      currentAutoPlayMode = modes[(curIdx + 1) % modes.length];
+
+      const btn = document.getElementById('dockAutoplayBtn');
+      const lbl = document.getElementById('dockAutoplayLabel');
+
+      if (btn) {
+        btn.classList.remove('mode-chapter', 'mode-cross', 'mode-single');
+        btn.classList.add(`mode-${currentAutoPlayMode}`);
+      }
+
+      if (lbl) {
+        if (currentAutoPlayMode === 'chapter') {
+          lbl.textContent = '章内连播';
+          showToast('已开启章内自动连播：本章节所有考点音频自动顺序连播');
+        } else if (currentAutoPlayMode === 'cross') {
+          lbl.textContent = '全书跨章';
+          showToast('已开启全书连续连播：播完本章后自动进入下一章');
+        } else {
+          lbl.textContent = '单篇播放';
+          showToast('已切换为单篇播放：当前考点音频播完即停');
+        }
+      }
+    }
+
+    function updateDockTrackCounter() {
+      if (!playingChapterId) return;
+      const chBtns = Array.from(document.querySelectorAll(`.card-audio-btn[data-chapter-id="${playingChapterId}"]`));
+      const curIdx = chBtns.findIndex(b => b.dataset.cardId === playingCardId);
+      const cnt = document.getElementById('dockCardCounter');
+      if (cnt) {
+        if (chBtns.length > 0 && curIdx !== -1) {
+          cnt.textContent = `[ ${curIdx + 1}/${chBtns.length} 节 ]`;
+          cnt.style.display = 'inline-block';
+        } else {
+          cnt.style.display = 'none';
+        }
+      }
+    }
+
     function seekAudioFromDockTrack(e) {
       const track = document.getElementById('audioDockProgressTrack');
       if (!track || !reciteAudio || !reciteAudio.duration) return;
@@ -23632,30 +23771,40 @@ const TOTAL_CHAPTERS = 47;
     }
 
     function playPrevAudioCard() {
-      const btns = Array.from(document.querySelectorAll('.card-audio-btn'));
-      if (!btns.length) return;
-      const idx = btns.findIndex(b => b.dataset.cardId === playingCardId);
+      if (!playingChapterId) return;
+      const chBtns = Array.from(document.querySelectorAll(`.card-audio-btn[data-chapter-id="${playingChapterId}"]`));
+      const idx = chBtns.findIndex(b => b.dataset.cardId === playingCardId);
       if (idx > 0) {
-        btns[idx - 1].click();
-        showToast('已切换至上一节音频');
-      } else if (idx === 0) {
-        showToast('已经是第一节音频');
+        chBtns[idx - 1].click();
+        showToast(`切换至本章第 ${idx}/${chBtns.length} 节`);
       } else {
-        btns[0].click();
+        const allBtns = Array.from(document.querySelectorAll('.card-audio-btn'));
+        const gIdx = allBtns.findIndex(b => b.dataset.cardId === playingCardId);
+        if (gIdx > 0) {
+          allBtns[gIdx - 1].click();
+          showToast('已返回上一章音频');
+        } else {
+          showToast('已经是手册第一节音频');
+        }
       }
     }
 
     function playNextAudioCard() {
-      const btns = Array.from(document.querySelectorAll('.card-audio-btn'));
-      if (!btns.length) return;
-      const idx = btns.findIndex(b => b.dataset.cardId === playingCardId);
-      if (idx !== -1 && idx < btns.length - 1) {
-        btns[idx + 1].click();
-        showToast('已切换至下一节音频');
-      } else if (idx === btns.length - 1) {
-        showToast('已经是最后一节音频');
+      if (!playingChapterId) return;
+      const chBtns = Array.from(document.querySelectorAll(`.card-audio-btn[data-chapter-id="${playingChapterId}"]`));
+      const idx = chBtns.findIndex(b => b.dataset.cardId === playingCardId);
+      if (idx !== -1 && idx < chBtns.length - 1) {
+        chBtns[idx + 1].click();
+        showToast(`切换至本章第 ${idx + 2}/${chBtns.length} 节`);
       } else {
-        btns[0].click();
+        const allBtns = Array.from(document.querySelectorAll('.card-audio-btn'));
+        const gIdx = allBtns.findIndex(b => b.dataset.cardId === playingCardId);
+        if (gIdx !== -1 && gIdx < allBtns.length - 1) {
+          allBtns[gIdx + 1].click();
+          showToast('已进入下一章第一节');
+        } else {
+          showToast('已经是手册最后一节音频');
+        }
       }
     }
 
@@ -23668,7 +23817,7 @@ const TOTAL_CHAPTERS = 47;
       document.body.classList.remove('audio-dock-visible');
     }
 
-    // 增强原有音频监听器以适配全新胶囊播放台
+    // 增强核心音频控制与章节自动连播监听器
     (function enhanceCoreAudioControls() {
       if (typeof reciteAudio !== 'undefined' && reciteAudio) {
         reciteAudio.addEventListener('play', () => {
@@ -23680,6 +23829,7 @@ const TOTAL_CHAPTERS = 47;
           document.body.classList.add('audio-dock-visible');
           const playTxt = document.getElementById('audioDockPlayText');
           if (playTxt) playTxt.textContent = '暂停';
+          updateDockTrackCounter();
         });
 
         reciteAudio.addEventListener('pause', () => {
@@ -23687,7 +23837,51 @@ const TOTAL_CHAPTERS = 47;
           if (playTxt) playTxt.textContent = '播放';
         });
 
-        // 重写 togglePlayCardAudio 触发显示
+        // 核心机制：音频播放结束自动连播
+        reciteAudio.addEventListener('ended', () => {
+          if (!playingChapterId) return;
+
+          if (currentAutoPlayMode === 'single') {
+            const playTxt = document.getElementById('audioDockPlayText');
+            if (playTxt) playTxt.textContent = '播放';
+            const dock = document.getElementById('audioFloatDock');
+            if (dock) dock.classList.remove('playing');
+            return;
+          }
+
+          const chBtns = Array.from(document.querySelectorAll(`.card-audio-btn[data-chapter-id="${playingChapterId}"]`));
+          const curIdx = chBtns.findIndex(b => b.dataset.cardId === playingCardId);
+
+          if (curIdx !== -1 && curIdx < chBtns.length - 1) {
+            // 本章内尚有下一节音频，自动连播
+            const nextBtn = chBtns[curIdx + 1];
+            showToast(`本章连播：正在播放第 ${curIdx + 2}/${chBtns.length} 节`);
+            nextBtn.click();
+          } else {
+            // 本章全部音频播放完毕
+            if (currentAutoPlayMode === 'cross') {
+              const allBtns = Array.from(document.querySelectorAll('.card-audio-btn'));
+              const gIdx = allBtns.findIndex(b => b.dataset.cardId === playingCardId);
+              if (gIdx !== -1 && gIdx < allBtns.length - 1) {
+                showToast('本章播完，正在自动翻入下一章第一节');
+                allBtns[gIdx + 1].click();
+              } else {
+                showToast('全书所有章节音频已全部播完！');
+                const playTxt = document.getElementById('audioDockPlayText');
+                if (playTxt) playTxt.textContent = '播放';
+              }
+            } else {
+              // 默认章内连播完成
+              showToast(`本章节全部 ${chBtns.length} 节音频已连播完毕`);
+              const playTxt = document.getElementById('audioDockPlayText');
+              if (playTxt) playTxt.textContent = '播放';
+              const dock = document.getElementById('audioFloatDock');
+              if (dock) dock.classList.remove('playing');
+            }
+          }
+        });
+
+        // 重写 togglePlayCardAudio 确保显示计数与状态
         const origToggle = window.togglePlayCardAudio;
         if (typeof origToggle === 'function') {
           window.togglePlayCardAudio = function(cardId, cardTitle, chId) {
@@ -23700,6 +23894,7 @@ const TOTAL_CHAPTERS = 47;
             }
             document.body.classList.add('audio-dock-visible');
             if (dockTitle && cardTitle) dockTitle.textContent = cardTitle;
+            updateDockTrackCounter();
           };
         }
       }
