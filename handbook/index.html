@@ -3628,6 +3628,217 @@ body.mode-mask .xt-keyword.cloze.revealed {
     }
 
     /* ==========================================================================
+       核心背诵 · 精瓷液态玻璃悬浮播放胶囊 (Scheme 4 · 0 图标 · 触控优化)
+       ========================================================================== */
+    .audio-float-dock {
+      position: fixed;
+      bottom: 50px !important;
+      left: 10px !important;
+      right: 10px !important;
+      max-width: 760px;
+      margin: 0 auto;
+      height: 58px;
+      background: rgba(253, 250, 243, 0.94);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.98);
+      box-shadow: 0 12px 36px rgba(50, 38, 25, 0.12), 0 3px 10px rgba(50, 38, 25, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px 0 8px;
+      z-index: 960 !important;
+      transform: none !important;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.theme-dark .audio-float-dock {
+      background: rgba(30, 34, 30, 0.94);
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    }
+
+    .dock-left-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .dock-main-play-disc {
+      width: 42px;
+      height: 42px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #a6402a 0%, #b8432a 100%);
+      border: none;
+      box-shadow: 0 4px 14px rgba(166, 64, 42, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: transform 0.18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dock-main-play-disc:active {
+      transform: scale(0.92);
+    }
+
+    .dock-nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      background: var(--paper-card);
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 6px rgba(50, 38, 25, 0.05);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .dock-nav-btn:active {
+      transform: scale(0.92);
+      background: var(--paper-subtle);
+    }
+
+    .dock-center-info {
+      flex: 1;
+      min-width: 0;
+      margin: 0 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dock-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .dock-ch-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 1px 6px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .audio-float-dock .audio-dock-title {
+      font-family: var(--font-song);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      min-width: 0;
+      line-height: 1.2;
+    }
+
+    .audio-float-dock .audio-dock-time {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .audio-dock-progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.07);
+      border-radius: 9999px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    body.theme-dark .audio-dock-progress-track {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .audio-dock-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #a6402a, #d48344);
+      border-radius: 9999px;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .dock-right-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .dock-speed-pill {
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 9999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(166, 64, 42, 0.22);
+      color: var(--accent);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+    }
+    .dock-speed-pill:active {
+      transform: scale(0.92);
+    }
+
+    .dock-close-pill {
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 9999px;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+    }
+    .dock-close-pill:active {
+      transform: scale(0.92);
+    }
+
+    /* 当悬浮音频播放台展示时，原底栏隐藏避让，避免多重堆叠 */
+    body.audio-dock-visible .bottom-dock-bar {
+      display: none !important;
+    }
+
+    /* ==========================================================================
        平滑原生滚动状态类
        ========================================================================== */
     body.tab-tuijie-active,
@@ -3660,8 +3871,11 @@ body.mode-mask .xt-keyword.cloze.revealed {
     .home-hero-card::before {
       content: "";
       position: absolute;
-      top: 0; left: 0; right: 0; height: 4px;
-      background: linear-gradient(90deg, #a6402a 0%, #d48344 50%, #2f6f5e 100%);
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
     }
     .home-hero-title {
       font-family: var(--font-song);
@@ -3669,29 +3883,40 @@ body.mode-mask .xt-keyword.cloze.revealed {
       font-weight: 700;
       color: var(--ink);
       margin-bottom: 8px;
-      letter-spacing: 0.5px;
     }
-    .home-hero-sub {
-      font-size: 13.5px;
+    .home-hero-desc {
+      font-family: var(--font-kai);
+      font-size: 14.5px;
       color: var(--sub);
       line-height: 1.6;
       margin-bottom: 16px;
     }
-    .home-stats-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .home-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
-    .home-stat-pill {
-      background: var(--bg-soft);
+    .home-stat-box {
+      background: var(--paper-subtle);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
       border: 1px solid var(--line);
-      padding: 5px 12px;
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink);
     }
-    .home-parallel-grid {
+    .home-stat-num {
+      font-family: var(--font-song);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+    .home-stat-lbl {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .home-section-grid {
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -3699,107 +3924,98 @@ body.mode-mask .xt-keyword.cloze.revealed {
     .home-section-entry-card {
       background: var(--paper-card);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 3px 14px rgba(60, 48, 36, 0.03);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 16px;
+      padding: 20px 18px;
+      box-shadow: 0 4px 16px rgba(60, 48, 36, 0.03);
+      transition: all 0.2s ease;
     }
     .home-section-entry-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(60, 48, 36, 0.06);
+      box-shadow: 0 8px 24px rgba(60, 48, 36, 0.07);
     }
     .entry-card-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
     }
     .entry-card-badge {
-      font-family: var(--font-kai);
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-    }
-    .entry-card-badge.xt {
-      background: rgba(166, 64, 42, 0.1);
-      color: #a6402a;
-      border: 1px solid rgba(166, 64, 42, 0.2);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: var(--accent-soft);
+      color: var(--accent);
     }
     .entry-card-badge.tj {
-      background: rgba(47, 111, 94, 0.1);
-      color: #2f6f5e;
-      border: 1px solid rgba(47, 111, 94, 0.2);
+      background: rgba(185, 56, 44, 0.1);
+      color: #b9382c;
     }
     .entry-card-title {
       font-family: var(--font-song);
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--ink);
-      margin: 0;
+      margin-bottom: 6px;
     }
     .entry-card-desc {
       font-size: 13px;
       color: var(--sub);
-      line-height: 1.6;
-      margin: 0;
+      line-height: 1.55;
+      margin-bottom: 14px;
     }
     .entry-card-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      margin-bottom: 16px;
     }
     .entry-tag-item {
       font-size: 11px;
-      color: var(--muted);
-      background: var(--bg-soft);
-      padding: 3px 8px;
-      border-radius: 4px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--paper-subtle);
       border: 1px solid var(--line);
+      color: var(--muted);
     }
     .entry-card-action-btn {
-      align-self: flex-start;
-      margin-top: 4px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-family: var(--font-sans);
-      font-size: 13px;
-      font-weight: 700;
+      width: 100%;
+      height: 42px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
       cursor: pointer;
-      display: inline-flex;
+      border: 1px solid var(--line);
+      background: var(--paper-subtle);
+      color: var(--ink);
+      transition: all 0.2s ease;
+      display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.18s ease;
-      border: 1px solid var(--line);
-      background: linear-gradient(135deg, #a6402a 0%, #b8432a 100%);
-      color: #ffffff;
-      box-shadow: 0 3px 10px rgba(166, 64, 42, 0.2);
+    }
+    .entry-card-action-btn.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .entry-card-action-btn.primary:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
     }
 
     /* ==========================================================================
-       板块 3：腿姐带背专区（陶瓷新拟态凸面 + 液体玻璃质感）
+       板块 3：腿姐带背页面样式（完全继承 Scheme 4 液体玻璃与双字体标准）
        ========================================================================== */
-    .tuijie-stage-wrap {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 16px 16px 130px;
-    }
-
     .tj-sticky-top {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(253, 250, 243, 0.92);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(253, 250, 243, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--line);
-      box-shadow: 0 4px 18px rgba(60, 48, 36, 0.03);
     }
     body.theme-dark .tj-sticky-top {
-      background: rgba(24, 28, 25, 0.94);
+      background: rgba(24, 28, 25, 0.96);
       border-bottom-color: #2e3630;
     }
 
@@ -3807,7 +4023,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px 6px;
+      padding: 10px 16px 8px;
     }
     .tj-brand-group {
       display: flex;
@@ -3815,11 +4031,11 @@ body.mode-mask .xt-keyword.cloze.revealed {
       gap: 8px;
     }
     .tj-brand-badge {
-      font-family: var(--font-kai);
-      background: var(--accent);
-      color: #ffffff;
+      font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 700;
+      background: var(--accent);
+      color: #fff;
       padding: 2px 7px;
       border-radius: 4px;
       letter-spacing: 0.5px;
@@ -3831,271 +4047,249 @@ body.mode-mask .xt-keyword.cloze.revealed {
       color: var(--ink);
     }
 
-    .tj-day-rail {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 6px 14px 10px;
-      display: flex;
-      gap: 8px;
-      scrollbar-width: none;
-    }
-    .tj-day-rail::-webkit-scrollbar { display: none; }
-
-    .tj-day-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 9999px;
-      border: 1px solid var(--line);
-      background: var(--paper-card);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--sub);
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 2px 6px rgba(60, 48, 36, 0.02);
-    }
-    .tj-day-chip .chip-no {
-      font-family: var(--font-kai);
-      font-weight: 700;
-      color: var(--muted);
-      font-size: 11px;
-    }
-    .tj-day-chip.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(166, 64, 42, 0.28);
-    }
-    .tj-day-chip.active .chip-no {
-      color: rgba(255, 255, 255, 0.88);
-    }
-
     .tj-pill-btn {
-      padding: 5px 12px;
-      border-radius: 9999px;
-      border: 1px solid var(--line);
-      background: var(--paper-card);
       font-family: var(--font-sans);
       font-size: 12px;
       font-weight: 600;
       color: var(--ink);
+      background: var(--paper-card);
+      border: 1px solid var(--line);
+      border-radius: 9999px;
+      padding: 4px 12px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.18s ease;
+      transition: all 0.2s ease;
+      user-select: none;
     }
-    .tj-pill-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+    .tj-pill-btn:active {
+      transform: scale(0.95);
+      background: var(--paper-subtle);
     }
 
-    /* 凸面陶瓷新拟态主卡片 */
+    /* 横向讲次胶囊轨道 */
+    .tj-day-rail {
+      display: flex;
+      gap: 8px;
+      padding: 4px 16px 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tj-day-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tj-day-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      background: var(--paper-card);
+      border: 1px solid var(--line);
+      font-size: 12.5px;
+      font-family: var(--font-sans);
+      color: var(--sub);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .tj-day-chip .chip-no {
+      font-family: var(--font-song);
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+    .tj-day-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(185, 56, 44, 0.25);
+    }
+    .tj-day-chip.active .chip-no {
+      color: #ffffff;
+    }
+
+    /* 讲义主体容器 */
+    .tuijie-stage-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 16px 16px 120px;
+    }
+
+    /* 讲次主卡片 */
     .tj-hero-card {
       background: var(--paper-card);
-      border-radius: 16px;
       border: 1px solid var(--line);
-      box-shadow: 0 6px 20px rgba(60, 48, 36, 0.04), 0 1px 3px rgba(60, 48, 36, 0.02);
-      padding: 20px 18px;
-      margin-bottom: 20px;
+      border-radius: 16px;
+      padding: 20px 18px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(60, 48, 36, 0.04);
+      position: relative;
     }
     .tj-hero-badge-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 8px;
       margin-bottom: 8px;
     }
     .tj-hero-badge {
-      font-family: var(--font-kai);
-      font-size: 11.5px;
+      font-size: 10.5px;
       font-weight: 700;
-      color: var(--accent);
-      background: rgba(166, 64, 42, 0.08);
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      letter-spacing: 0.5px;
     }
     .tj-hero-page {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
       font-family: var(--font-sans);
     }
     .tj-hero-title {
       font-family: var(--font-song);
-      font-size: 19px;
-      font-weight: 700;
+      font-size: 21px;
+      font-weight: 800;
       color: var(--ink);
-      line-height: 1.45;
-      margin-bottom: 12px;
+      line-height: 1.35;
+      margin-bottom: 8px;
     }
     .tj-hero-meta-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
     }
     .tj-hero-meta-pill {
       font-size: 11px;
-      color: var(--sub);
-      background: var(--bg-soft);
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--paper-subtle);
+      border-radius: 6px;
+      padding: 2px 8px;
     }
 
+    /* 讲义考点卡片 */
     .tj-handbook-card {
       background: var(--paper-card);
-      border-radius: 14px;
       border: 1px solid var(--line);
-      box-shadow: 0 4px 16px rgba(60, 48, 36, 0.03);
+      border-radius: 14px;
       padding: 18px 16px;
-      margin-bottom: 16px;
-      transition: all 0.2s ease;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(60, 48, 36, 0.03);
     }
     .tj-handbook-card.intro {
-      border-left: 3.5px solid #2f6f5e;
+      border-left: 4px solid var(--accent);
     }
     .tj-handbook-card.point {
-      border-left: 3.5px solid var(--accent);
+      border-left: 4px solid #3c7d66;
     }
     .tj-handbook-card.callout {
-      border-left: 3.5px solid #b36319;
-      background: rgba(179, 99, 25, 0.02);
+      border-left: 4px solid #b57a32;
+      background: rgba(181, 122, 50, 0.03);
     }
+
     .tj-card-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      align-items: center;
+      margin-bottom: 10px;
     }
     .tj-card-tag {
-      font-family: var(--font-kai);
       font-size: 11px;
       font-weight: 700;
       padding: 2px 7px;
       border-radius: 4px;
     }
-    .tj-card-tag.intro {
-      background: rgba(47, 111, 94, 0.1);
-      color: #2f6f5e;
-    }
-    .tj-card-tag.point {
-      background: rgba(166, 64, 42, 0.1);
-      color: #a6402a;
-    }
-    .tj-card-tag.callout {
-      background: rgba(179, 99, 25, 0.1);
-      color: #b36319;
-    }
+    .tj-card-tag.intro { background: var(--accent-soft); color: var(--accent); }
+    .tj-card-tag.point { background: rgba(60, 125, 102, 0.12); color: #3c7d66; }
+    .tj-card-tag.callout { background: rgba(181, 122, 50, 0.12); color: #b57a32; }
+
     .tj-card-status {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--muted);
-      font-weight: 600;
     }
-    .tj-card-heading {
+    .tj-card-title {
       font-family: var(--font-song);
-      font-size: 16.5px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--ink);
+      margin-bottom: 12px;
       line-height: 1.4;
-      margin: 0 0 10px;
     }
 
-    /* 学术书籍流式正文段落 */
-    .tj-book-para {
-      font-family: var(--font-song);
+    /* 原文点读句子流 */
+    .tj-sentence-flow {
+      font-family: var(--font-kai);
       font-size: 15.5px;
       line-height: 1.85;
       color: var(--ink);
-      text-align: justify;
-      margin: 0;
-      letter-spacing: 0.3px;
     }
-    .tj-callout-box {
-      background: rgba(179, 99, 25, 0.04);
-      border-radius: 10px;
-      padding: 12px 14px;
-      border: 1px dashed rgba(179, 99, 25, 0.25);
-    }
-
-    /* 逐句点击与跟读高亮（液体琥珀晶亮光晕） */
     .tj-sent-span {
-      display: inline;
       padding: 2px 4px;
       border-radius: 4px;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline;
     }
     .tj-sent-span:hover {
-      background: rgba(166, 64, 42, 0.08);
+      background: var(--accent-soft);
     }
     .tj-sent-span.active {
-      background: rgba(166, 64, 42, 0.14);
-      color: #8c2e1b;
-      font-weight: 700;
-      box-shadow: 0 1px 6px rgba(166, 64, 42, 0.18);
-      border-bottom: 2px solid var(--accent);
+      background: #fce8e6;
+      color: #922b21;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(185, 56, 44, 0.15);
+      border-bottom: 1.5px solid var(--accent);
     }
     body.theme-dark .tj-sent-span.active {
-      background: rgba(220, 100, 75, 0.25);
-      color: #ff9b84;
-    }
-    .tj-kw {
-      color: var(--accent);
-      font-weight: 700;
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 3px;
+      background: rgba(185, 56, 44, 0.25);
+      color: #f5b7b1;
     }
 
-    /* 讲次切换器 */
-    .tj-stepper-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 24px;
-      margin-bottom: 24px;
-    }
-    .tj-stepper-btn {
-      flex: 1;
-      padding: 12px 16px;
-      border-radius: 12px;
+    /* 考点强化卡片内部清单 */
+    .tj-points-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--paper-subtle);
+      border-radius: 10px;
       border: 1px solid var(--line);
-      background: var(--paper-card);
+    }
+    .tj-points-title {
       font-family: var(--font-sans);
-      font-size: 13.5px;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--ink);
-      cursor: pointer;
+      color: var(--sub);
+      margin-bottom: 8px;
+    }
+    .tj-points-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(60, 48, 36, 0.03);
-      transition: all 0.2s ease;
+      flex-direction: column;
+      gap: 6px;
     }
-    .tj-stepper-btn:hover {
-      border-color: var(--accent);
+    .tj-point-item {
+      font-size: 13.5px;
+      font-family: var(--font-kai);
+      color: var(--ink);
+      line-height: 1.6;
+      position: relative;
+      padding-left: 14px;
+    }
+    .tj-point-item::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      top: 0;
       color: var(--accent);
-    }
-    .tj-stepper-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      border-color: var(--line);
-      color: var(--muted);
-    }
-    .tj-stepper-btn.primary {
-      background: linear-gradient(135deg, #a6402a 0%, #b8432a 100%);
-      color: #ffffff;
-      border-color: #a6402a;
-      box-shadow: 0 4px 14px rgba(166, 64, 42, 0.25);
+      font-weight: bold;
     }
 
-    /* ==========================================================================
-       悬浮带背随身播（液体玻璃 + 凸面胶囊 · 0 图标）
-       ========================================================================== */
+    /* 悬浮带背随身播（Scheme 4 液体玻璃凸面胶囊 · 0 图标） */
     .tj-floating-player {
       position: fixed;
       bottom: 50px;
@@ -4149,15 +4343,16 @@ body.mode-mask .xt-keyword.cloze.revealed {
     .tj-player-center {
       flex: 1;
       min-width: 0;
-      padding: 0 10px;
+      margin: 0 12px;
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
     .tj-player-text-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: baseline;
+      min-width: 0;
     }
     .tj-player-title {
       font-family: var(--font-song);
@@ -4167,93 +4362,181 @@ body.mode-mask .xt-keyword.cloze.revealed {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      flex: 1;
+      margin-right: 8px;
     }
     .tj-player-counter {
       font-family: var(--font-sans);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       color: var(--muted);
+      white-space: nowrap;
       flex-shrink: 0;
-      margin-left: 6px;
     }
+
     .tj-progress-track {
+      width: 100%;
       height: 4px;
-      background: var(--bg-soft);
+      background: rgba(0, 0, 0, 0.08);
       border-radius: 9999px;
-      overflow: hidden;
       cursor: pointer;
       position: relative;
+      overflow: hidden;
+    }
+    body.theme-dark .tj-progress-track {
+      background: rgba(255, 255, 255, 0.12);
     }
     .tj-progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #a6402a 0%, #d48344 100%);
+      background: linear-gradient(90deg, #a6402a, #d48344);
       border-radius: 9999px;
-      transition: width 0.15s linear;
+      transition: width 0.15s ease;
+      pointer-events: none;
     }
 
     .tj-player-speed-pill {
-      padding: 4px 9px;
+      height: 28px;
+      padding: 0 10px;
       border-radius: 9999px;
-      border: 1px solid var(--line);
       background: var(--paper-card);
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 6px rgba(50, 38, 25, 0.05);
+      color: var(--ink);
       font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 700;
-      color: var(--sub);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
       transition: all 0.18s ease;
     }
-    .tj-player-speed-pill:hover {
+    .tj-player-speed-pill:active {
+      transform: scale(0.92);
+      background: var(--paper-subtle);
+    }
+
+    /* 讲次切换按钮行 */
+    .tj-stepper-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .tj-stepper-btn {
+      flex: 1;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--paper-card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(60, 48, 36, 0.03);
+    }
+    .tj-stepper-btn.primary {
+      background: var(--accent);
+      color: #fff;
       border-color: var(--accent);
-      color: var(--accent);
+      box-shadow: 0 3px 12px rgba(185, 56, 44, 0.25);
+    }
+    .tj-stepper-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* 讲次全景抽屉 */
+    .tj-drawer-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1050;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .tj-drawer-mask.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .tj-drawer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 80vh;
+      background: var(--paper-bg, #fbf7ee);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tj-drawer-mask.open .tj-drawer {
+      transform: translateY(0);
     }
 
 </style>
 <body class="theme-paper tab-tuijie-active">
 
-    <!-- 板块 1：首页工作台 -->
+    <!-- 板块 1：首页工作台（平行独立板块） -->
     <section id="sectionHome" class="main-app-tab-section" style="display: none;">
       <div class="section-home-wrap">
-        <div class="home-hero-card">
-          <h1 class="home-hero-title">2026考研政治 · 冲刺双轨背诵工作台</h1>
-          <p class="home-hero-sub">聚合「徐涛核心考点手卷」与「腿姐会议文献带背」，理清学术脉络、默写挖空与碎片听讲的冲刺闭环。</p>
-          <div class="home-stats-row">
-            <span class="home-stat-pill" id="homeStudiedStat">核心背诵已学: 0 / 47 章</span>
-            <span class="home-stat-pill">带背精析已就绪: 全 11 讲</span>
-            <span class="home-stat-pill" id="homeSealStat">已打卡印章: 0 枚</span>
+        <header class="home-hero-card">
+          <h1 class="home-hero-title">考研政治背诵手册</h1>
+          <p class="home-hero-desc">融合徐涛 47 章核心考点精研手卷与腿姐冲刺带背 11 讲原音精析，一站式攻克政治高分大关。</p>
+          <div class="home-stat-grid">
+            <div class="home-stat-box">
+              <div class="home-stat-num">47</div>
+              <div class="home-stat-lbl">核心考点章</div>
+            </div>
+            <div class="home-stat-box">
+              <div class="home-stat-num">11</div>
+              <div class="home-stat-lbl">带背冲刺讲</div>
+            </div>
+            <div class="home-stat-box">
+              <div class="home-stat-num" id="homeStudiedStat">0</div>
+              <div class="home-stat-lbl">已学进度</div>
+            </div>
           </div>
-        </div>
+        </header>
 
-        <div class="home-parallel-grid">
-          <!-- 平行板块 A：核心背诵手卷 -->
+        <div class="home-section-grid">
           <article class="home-section-entry-card">
             <div class="entry-card-header">
-              <span class="entry-card-badge xt">原书复刻 · 默写手卷</span>
-              <span class="entry-tag-item">共 47 个核心条目</span>
+              <span class="entry-card-badge">体系化手卷 · 47章完整收录</span>
+              <span class="entry-tag-item">马原 / 毛中特 / 史纲 / 思修</span>
             </div>
-            <h2 class="entry-card-title">徐涛核心考点背诵笔记 (1:1 完整版)</h2>
-            <p class="entry-card-desc">原书 47 章完整装载，马原、毛中特、史纲、思修法基。支持 1:1 原书背诵卷与名师精讲双轨切换、挖空默写、疑问标注与盖章打卡。</p>
+            <h2 class="entry-card-title">徐涛考研政治核心考点 (精研手卷)</h2>
+            <p class="entry-card-desc">原书 47 章考点手卷。内置双轨精讲音频、关键词挖空背诵、课后记忆打卡与仿真书页翻阅系统，夯实政治知识框架。</p>
             <div class="entry-card-tags">
-              <span class="entry-tag-item">1:1原书背诵</span>
-              <span class="entry-tag-item">挖空默写</span>
-              <span class="entry-tag-item">双轨精讲</span>
-              <span class="entry-tag-item">清单打卡</span>
+              <span class="entry-tag-item">手卷双轨翻页</span>
+              <span class="entry-tag-item">逐段音频解析</span>
+              <span class="entry-tag-item">背诵印章打卡</span>
+              <span class="entry-tag-item">挖空记忆测试</span>
             </div>
             <button type="button" class="entry-card-action-btn primary" onclick="switchMainTab('recite')">
               <span>立即进入核心背诵</span>
             </button>
           </article>
 
-          <!-- 平行板块 B：腿姐带背 -->
           <article class="home-section-entry-card">
             <div class="entry-card-header">
               <span class="entry-card-badge tj">专属音色 · 碎片带背</span>
               <span class="entry-tag-item">全 11 讲全收录</span>
             </div>
             <h2 class="entry-card-title">重要会议、文献与考点串讲 (高清带背)</h2>
-            <p class="entry-card-desc">精选全 11 讲音频带背。逐句考点高亮、原音点读跟播、1.0x-2.0x变速播放与考点脉络导航，打造随时随地高效磨耳带背利器。</p>
+            <p class="entry-card-desc">精选全 11 讲音频带背。纯净无杂音讲解、逐句考点高亮、原音点读跟播、1.0x-2.0x变速播放与考点脉络导航，打造随时随地高效磨耳带背利器。</p>
             <div class="entry-card-tags">
               <span class="entry-tag-item">重要会议篇 (D01-D05)</span>
               <span class="entry-tag-item">文献篇 (D06-D08)</span>
@@ -22656,23 +22939,31 @@ body.mode-mask .xt-keyword.cloze.revealed {
   </main>
 
   <!-- 悬浮微型音频控制器 (播放时浮现) -->
+    <!-- 核心背诵悬浮精瓷液态玻璃胶囊播放台 (Scheme 4 · 0 图标 · 触控优化) -->
   <div class="audio-float-dock" id="audioFloatDock" style="display: none;">
-    <div class="audio-dock-inner">
-      <div class="audio-dock-meta" onclick="jumpToPlayingChapter()">
-        <span class="audio-dock-title" id="audioDockTitle">音频播放中...</span>
+    <div class="dock-left-controls">
+      <button type="button" class="dock-nav-btn" onclick="playPrevAudioCard()" title="上一节音频">上节</button>
+      <button type="button" class="dock-main-play-disc" id="audioDockPlayBtn" onclick="toggleReciteAudio()" title="播放/暂停">
+        <span id="audioDockPlayText">播放</span>
+      </button>
+      <button type="button" class="dock-nav-btn" onclick="playNextAudioCard()" title="下一节音频">下节</button>
+    </div>
+    <div class="dock-center-info">
+      <div class="dock-meta-row" onclick="jumpToPlayingChapter()">
+        <span class="dock-ch-badge">核心背诵</span>
+        <span class="audio-dock-title" id="audioDockTitle">徐涛核心考点</span>
         <span class="audio-dock-time" id="audioDockTime">00:00 / 00:00</span>
       </div>
-      <div class="audio-dock-ctrls">
-        <button type="button" class="dock-btn" onclick="toggleReciteAudio()" title="播放/暂停">
-          <svg class="ui-svg sm" id="dockPlaySvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <svg class="ui-svg sm" id="dockPauseSvg" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-        </button>
-        <button type="button" class="dock-btn speed-btn" onclick="cycleReciteSpeed()" title="切换倍速">
-          <span id="audioSpeedLabel">1.0x</span>
-        </button>
+      <div class="audio-dock-progress-track" id="audioDockProgressTrack" onclick="seekAudioFromDockTrack(event)">
+        <div class="audio-dock-bar" id="audioDockProgressBar"></div>
       </div>
     </div>
-    <div class="audio-dock-progress"><div class="audio-dock-bar" id="audioDockProgressBar"></div></div>
+    <div class="dock-right-controls">
+      <button type="button" class="dock-speed-pill" onclick="cycleReciteSpeed()" title="切换倍速">
+        <span id="audioSpeedLabel">1.0x</span>
+      </button>
+      <button type="button" class="dock-close-pill" onclick="hideAudioFloatDock()" title="收起播放台">收起</button>
+    </div>
   </div>
 
   <!-- 底部固定微操作台 -->
@@ -22767,7 +23058,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
         <div class="tj-player-center">
           <div class="tj-player-text-row">
             <span class="tj-player-title" id="tjPlayerTitle">Day 01 · 党的一大至四大</span>
-            <span class="tj-player-counter" id="tjSentenceCounter">[ 01 / 54 ]</span>
+            <span class="tj-player-counter" id="tjSentenceCounter">[ 01 / 28 ]</span>
           </div>
           <div class="tj-progress-track" onclick="tjHandleTrackSeek(event)">
             <div class="tj-progress-fill" id="tjProgressFill"></div>
@@ -23327,9 +23618,99 @@ const TOTAL_CHAPTERS = 47;
 
 
     // =========================================================================
+    // 核心背诵 · 精瓷液态玻璃胶囊播放台交互 (Scheme 4 · 0 图标 · 触控优化)
+    // =========================================================================
+    function seekAudioFromDockTrack(e) {
+      const track = document.getElementById('audioDockProgressTrack');
+      if (!track || !reciteAudio || !reciteAudio.duration) return;
+      const rect = track.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      reciteAudio.currentTime = ratio * reciteAudio.duration;
+      const pBar = document.getElementById('audioDockProgressBar');
+      if (pBar) pBar.style.width = (ratio * 100) + '%';
+    }
+
+    function playPrevAudioCard() {
+      const btns = Array.from(document.querySelectorAll('.card-audio-btn'));
+      if (!btns.length) return;
+      const idx = btns.findIndex(b => b.dataset.cardId === playingCardId);
+      if (idx > 0) {
+        btns[idx - 1].click();
+        showToast('已切换至上一节音频');
+      } else if (idx === 0) {
+        showToast('已经是第一节音频');
+      } else {
+        btns[0].click();
+      }
+    }
+
+    function playNextAudioCard() {
+      const btns = Array.from(document.querySelectorAll('.card-audio-btn'));
+      if (!btns.length) return;
+      const idx = btns.findIndex(b => b.dataset.cardId === playingCardId);
+      if (idx !== -1 && idx < btns.length - 1) {
+        btns[idx + 1].click();
+        showToast('已切换至下一节音频');
+      } else if (idx === btns.length - 1) {
+        showToast('已经是最后一节音频');
+      } else {
+        btns[0].click();
+      }
+    }
+
+    function hideAudioFloatDock() {
+      const dock = document.getElementById('audioFloatDock');
+      if (dock) {
+        dock.style.display = 'none';
+        dock.classList.remove('dock-active');
+      }
+      document.body.classList.remove('audio-dock-visible');
+    }
+
+    // 增强原有音频监听器以适配全新胶囊播放台
+    (function enhanceCoreAudioControls() {
+      if (typeof reciteAudio !== 'undefined' && reciteAudio) {
+        reciteAudio.addEventListener('play', () => {
+          const dock = document.getElementById('audioFloatDock');
+          if (dock) {
+            dock.style.display = 'flex';
+            dock.classList.add('dock-active');
+          }
+          document.body.classList.add('audio-dock-visible');
+          const playTxt = document.getElementById('audioDockPlayText');
+          if (playTxt) playTxt.textContent = '暂停';
+        });
+
+        reciteAudio.addEventListener('pause', () => {
+          const playTxt = document.getElementById('audioDockPlayText');
+          if (playTxt) playTxt.textContent = '播放';
+        });
+
+        // 重写 togglePlayCardAudio 触发显示
+        const origToggle = window.togglePlayCardAudio;
+        if (typeof origToggle === 'function') {
+          window.togglePlayCardAudio = function(cardId, cardTitle, chId) {
+            origToggle(cardId, cardTitle, chId);
+            const dock = document.getElementById('audioFloatDock');
+            const dockTitle = document.getElementById('audioDockTitle');
+            if (dock) {
+              dock.style.display = 'flex';
+              dock.classList.add('dock-active');
+            }
+            document.body.classList.add('audio-dock-visible');
+            if (dockTitle && cardTitle) dockTitle.textContent = cardTitle;
+          };
+        }
+      }
+    })();
+
+
+
+    // =========================================================================
     // 腿姐带背 · 真实音频 + 句子对齐 + 播放控制逻辑 (706/807 阿里云百炼专属音色版)
     // =========================================================================
-    const tjAllDaysData = [{"day": 1, "title": "重要会议总结（一）· 党的一大至四大与国民党一大", "short_topic": "一大至四大与国民党一大", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["党的一大：三个核心关键词（首个纲领/崭新目标/组织工人）", "党的二大（周年纪念★）：五大历史首创与民主革命纲领", "党的三大：国共合作的决定与保持独立性", "国民党一大：第一次国共合作正式形成的标志与新三民主义", "党的四大：第一次明确提出领导权与工农联盟"], "sentences_count": 54, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（一）：党的一大至四大与国民党一大。", "那么从今天开始呢，我们就正式进入《冲刺背诵手册》下册的音频带背的部分啦。", "所以今天我和你的任务呢是把《冲刺背诵手册》下册第一到第二页关于党的一大到四大，以及中间差不多国民党一大一起背完。", "所以在背完之后呢，你可以完成随书所附赠的那个背练结合的自测本，看看你到底背的怎么样。", "好，那我们正式开始。", "那第一呢是党的一大，你有三个点要记啊，每次看到党的一大呢，你要脑子里面反映出来第一个单词叫第一个纲领，它不是最高，不是最低，叫第一个啊，这是很纯粹的啊，因为明确规定哇，我们要无产阶级专政，对吧？", "我们要这个消灭资本家私有制，你看没有特别纯粹啊，因为这个特别纯粹，所以其实也就证明了第二个词，我们有了一个崭新的目标，就是共产主义嘛。", "所以党的一大是明确规定自己的奋斗目标是社会主义和共产主义的。", "好，第三个词呢叫做决定。", "首先集中精力组织工人。", "所以你看党的一大是一个非常非常纯粹啊，目标纯粹，然后呢也这个阶级础挺纯粹的，因为提纯了工人阶级，所以有没有党的一大就有工农啊，没有有没有党的一大就提出要去找朋友啊？", "没有啊，所以现实呢就给了他一个暴击。", "因为当他切切实实去做他的目标的时候，他发现哎跟现实有点不符合。", "因为当时的实际并不能直接去推翻资本主义，当时还是还是官僚军阀呢。", "所以我们党的二大才有了非常接近实际的这样的一些内容。", "所以党的二大非常重要，你要打两颗星【周年纪念】。", "这是今年的周年纪念，我在《冲刺背诵手册》架册旁边已经做了标注了。", "党的二大呢你要记住五个内容啊。", "第一呢是它是有党的章程的，看到没有？", "所以叫党章啊，这也是党成以后第一步章程，所以有呃中国共产党章程是对应的党的二大，不是一大。", "第二呢叫做第一次提出了反帝反封建的民主革命纲领。", "也就是说我们的目标比较落地了，叫第一次提出反帝反封建民主革命纲领。", "好，第三呢是它有最高和最低的，那么党的最高纲领呢是实现社会主义共产主义党当前阶段的最低纲领是打倒军阀，推翻国际帝国主义，压迫统一中国为真正的民主共和国。", "好，那么第四个呢，就是开始采取别的阶级别的政党都没有采取过，也不可能采取的革命方法及群众模型的方法。", "第五条叫做会议正式提出了民主联合战线的主张，第一次明确提出了党的统一战线政策。", "所以你看并不是党一成立就开始找朋友的，是不是二大才开始找朋友哦，所以党的统一战线的第一次明确提出，也是对你的是党的二大。", "那么具体来说，在当时叫民主联合战线的主张。", "好，那么接下来很自然的找到了朋友，谁呀？", "国民党嘛是不是？", "所以党的三大就正式决定全体共产党员以个人名义加入国民党，同孙山领导的国民党建立统一战线。", "同时呢我们是有很清醒的认知的啊，所以党的三大规定，即便我们加入国民党，也必须是什么党？", "必须在政治上、思想上、组织上保持自己的独立性。", "规定是规定，但最后不一定能做得到，是不是？", "所以非常可惜啊，所以国民呃这个国国共合作过程当中，我们在第一次国共合作里面，其实是有很多很多教训是要吸取的。", "好，所以紧接我们来看国民党一大，这也是唯一一个党之外的会议能考到的。", "国民党一大呢它其实是为国国共合作奠定的。", "因此国民党一大本身的成功召开，标志着第一次国国共合作这种形成。", "那凭什么它是个标志呢？", "因为在国民党一大当中，我们对原本的民族资产阶级的纲领叫三民主义做了新的解释。", "所以正是这个新的解释体现了反帝反封，所以它才能成为第一次国国共合作基础。", "所以新三民主义同中国共产党在民主革命阶段的纲领，就是那个二大提出那个啊基本一致，注意不是完全相同，这些都是出题干扰项的，这些点啊是基本一致，不是完全相同。", "但因而成为国国共合作政治基础。", "因为你增加的点恰恰是中共在意的点，是我们的诉求。", "所以那你能够愿意修改一些新的解释，跟我们的诉求一样，那岂不是就是基本一致的吗？", "因此我们才能合作起来嘛。", "所以新三民主义成为国国共合作政治基础原因是什么？", "因为跟党的纲领是基本一致的啊，那么大会呢在实际上也确定了联俄联共、扶助农工三大革命政策。", "所以你看新三民主义它能修改什么啊？", "所以新三民主义是从三个方面进行重新阐释的：，怎么体现反帝反封，怎么体现跟中共一致的那一定是民族主当中突出反帝，要求各民族一律平等，民权一志当中让权力更更更多嘛。", "随着规定民主权利应该为一般平民所共有，那么民生主义就不仅仅是平均地权了，而是平均地权加节制资本。", "且后来又提出了耕者有其田的主张，同时要求改善工农的生活状况。", "你看这些都是体现咱们能合作起来的这样的一个原因，是不是？", "好，那么最后呢是党的四大，那么党四大只要被一条就好了，叫最重要的贡献。", "是第一次明确提出了无产阶级在民主革命中的领导权和工农联盟问题，特别注意这一点就好了。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2, 3, 4], "type": "intro"}, {"tag": "考点 01", "title": "党的一大：三个核心关键词（首个纲领/崭新目标/组织工人）", "badge": "重点采分点", "sent_indices": [5, 6, 7, 8, 9, 10, 11, 12, 13], "type": "point"}, {"tag": "考点 02", "title": "党的二大（周年纪念）：五大历史首创与民主革命纲领", "badge": "周年高频考点", "sent_indices": [14, 15, 16, 17, 18, 19, 20, 21, 22], "type": "point"}, {"tag": "考点 03", "title": "党的三大：国共合作的决定与保持独立性", "badge": "重点采分点", "sent_indices": [23, 24, 25, 26, 27, 28, 29, 30, 31, 32], "type": "point"}, {"tag": "考点 04", "title": "国民党一大：第一次国共合作正式形成的标志与新三民主义", "badge": "周年高频考点", "sent_indices": [33, 34, 35, 36, 37, 38, 39, 40, 41], "type": "point"}, {"tag": "考点 05", "title": "党的四大：第一次明确提出领导权与工农联盟", "badge": "重点采分点", "sent_indices": [42, 43, 44, 45, 46, 47, 48, 49, 50, 51], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [52, 53], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 8.3}, {"start": 8.44, "end": 14.35}, {"start": 14.49, "end": 24.54}, {"start": 24.68, "end": 31.69}, {"start": 31.83, "end": 33.56}, {"start": 33.7, "end": 49.11}, {"start": 49.25, "end": 59.78}, {"start": 59.92, "end": 65.01}, {"start": 65.15, "end": 67.6}, {"start": 67.74, "end": 69.71}, {"start": 69.85, "end": 82.47}, {"start": 82.61, "end": 85.78}, {"start": 85.92, "end": 91.49}, {"start": 91.63, "end": 97.05}, {"start": 97.19, "end": 101.56}, {"start": 101.7, "end": 106.07}, {"start": 106.21, "end": 111.78}, {"start": 111.92, "end": 114.46}, {"start": 114.6, "end": 117.86}, {"start": 118.0, "end": 126.86}, {"start": 127.0, "end": 131.46}, {"start": 131.6, "end": 137.82}, {"start": 137.96, "end": 150.9}, {"start": 151.04, "end": 159.96}, {"start": 160.1, "end": 167.59}, {"start": 167.73, "end": 177.96}, {"start": 178.1, "end": 182.15}, {"start": 182.29, "end": 185.39}, {"start": 185.53, "end": 186.94}, {"start": 187.08, "end": 195.63}, {"start": 195.77, "end": 202.87}, {"start": 203.01, "end": 207.24}, {"start": 207.38, "end": 211.02}, {"start": 211.16, "end": 220.43}, {"start": 220.57, "end": 226.23}, {"start": 226.37, "end": 229.54}, {"start": 229.68, "end": 236.21}, {"start": 236.35, "end": 238.48}, {"start": 238.62, "end": 244.91}, {"start": 245.05, "end": 252.3}, {"start": 252.44, "end": 255.44}, {"start": 255.44, "end": 258.13}, {"start": 258.27, "end": 262.25}, {"start": 262.39, "end": 268.78}, {"start": 268.92, "end": 270.74}, {"start": 270.88, "end": 275.1}, {"start": 275.24, "end": 282.83}, {"start": 282.97, "end": 285.75}, {"start": 285.89, "end": 301.4}, {"start": 301.54, "end": 310.22}, {"start": 310.36, "end": 316.41}, {"start": 316.55, "end": 320.44}, {"start": 320.58, "end": 327.52}, {"start": 327.66, "end": 335.62}], "audio_src": "audio_tuijie/tuijie_d01.mp3"}, {"day": 2, "title": "重要会议总结（二）· 八七会议至遵义会议与洛川会议", "short_topic": "八七会议至遵义与洛川会议", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["八七会议：给思想定调，枪杆子里出政权与历史性转变", "古田会议：思想建党、政治建军与新型人民军队建设", "遵义会议：生死攸关的转折点，军事与组织问题解决", "瓦窑堡会议：提出抗日民族统一战线新政策", "洛川会议：全面抗战路线与敌后战场开辟"], "sentences_count": 78, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（二）：八七会议、古田会议至遵义会议与洛川会议。", "那今天我陪你一起背呢是冲刺不动手册下册第三到第五页。", "咦所以今天内容是有点多的哦。", "那我们先来看第六条八七会议，那么这个呢是1927年8月7号，所以今年属于周年纪念。", "你不妨把第六和第七连在一起去记。", "古田和87会议在一块儿，相当于是在大革命失败以后，在血的教训之后，我们来看看中国共产党应该怎么去自救的这样的问题。", "所以八七会解决用什么打哦，用枪杆打，因为原来那种让步的方式不行，是不是？", "好，那么古田会呢就是解决哎队伍听谁的，怎么带的问题。", "好，87会呢记住鸠又找心一论断一方针，鸠又是因为原来的不行，所以彻底清算成独究右。", "第二呢是找新，提出了整顿改编自己的队伍，纠正过去严重的错误，而找着新道路的任务。", "第三呢就是一个方针，确定了土地革命和武装自己的方针，别人打你，你也得反反抗起来啊。", "那么再往下第四条，那么就是一个论断，叫须知政权是由枪杆的中取得的。", "因此全武做一个总结，中国革命从此开始了，从大革命失败到土地革命战争兴起的历史性转变。", "好，那么队伍怎么带呢？", "对吧？", "你不能像以前的那种旧式军队那样，就是直打仗啊，那么很容易打散打烂的。", "所以我们要给这个军队注入点灵魂，什么灵魂呢？", "思政。", "所以看到思想政治一定是对应古田会的。", "第一确定了思想建党，政治建军原则，所以原则思政嘛好。", "第二，中心思想是用无产阶思想进行军队和党的建设。", "因为给军队和党对吧注点就是你打不散打不烂的东西，那么就是无产阶级思想。", "第三呢，阐述了加强党的思想建设的极端重要性，指明党内各种非无产阶思想的表现来源，其纠正方法。", "第四，既然我们不是旧军队，我们是什么样的军队，什么样的新的性质呢？", "啊，指的是中国的红军是一个执行革命政治任务的武装集团。", "那么什么任务呢？", "第五条提出红军必须担负打仗筹款、群众工作、政治工作。", "好，最后，因此古田会确立了马克思主义建党建军原则，倡造性的解决了在农村环境中，在党组织军队以农民为主要成分条件之下，如何去保持党的无产阶级先锋队性质和建设党领导的新型人民军队的根本问题。", "其实就是哎有了军队之后，拿起枪杆了之后，哎，我要怎么去打的问题，对吧？", "我应该是这个队伍怎么去带的问题啊，这样来带队伍，给他注点思政的灵魂就行了。", "好，接下来呢是1935年的遵义会议。", "那么遵义会议呢非常非常的关键，因为在生死关头去做的决策，从而挽救挽救挽救。", "所以看到什么生死关头挽救挽救，也就是我们呃尊义会的第五条，一定要去想清楚他对你是尊义会啊，所以生死攸关，挽救挽救挽救对你是呃尊义会。", "那么他为什么能够挽救挽救呢？", "因为他做了如下决策。", "第一，解决当时具有决定的军事问题、组织问题。", "因为如果说你接下来还是乱打一气，你就要全军覆没的呀，所以叫做决定的军事组织啊，注意没有政治。", "第二，那么这个开会这个决定都是我们自己独立自主做的，没有听共产国籍，没有听大哥的。", "所以看到独立自主解决中国革命实际问题新阶段，标志着党在政治上开始走向成熟，也对应的是遵义会议。", "好，接下来所有的确立毛泽东，只要不是毛泽东思想这个具体的说法啊，只是确立毛泽东啊确立毛泽东路线，确立毛泽东这样一个领导地位，第一代领导集体核心都可以选。", "Ok所以你看确立毛泽东同志在红军和党中央领导地位，开始确立毛泽同志为主要代表的马克思主义正确路线。", "在党中央领导地位，开始形成以毛泽东同志为核心的党的第一代中央领导集体。", "啊，这是我们党和革命事业转危为安、不断打开新局面最重要保证。", "第四，结束网民王民左倾教导主义在中央统治。", "注意时间太短太紧急，没办法彻底清算，要根本清算，这一清算要严整风才可以啊，所以只是结束左倾教条在中央统治好。", "第五，我们讲过了生死攸关，挽救挽救挽救。", "好。", "第六条呢就是遵义会的鲜明特点，三个坚持真理纠正作确立党中央正确领导，创造性的制定和实施符合中国革命特点的战略策略。", "啊，往下呢第九第十呢是我们的抗战双子星会议。", "那么我们的娃宝会呢是找朋友把朋友搞多多的啊，所以瓦宝会单选题要对应的是建立广泛的就是多多的嘛抗日民族统一战线。", "好，那么具体来说，如果是考多选题，那就会问你，哎，那这个会议还有什么别的内容呢？", "那肯定就是阐明我们能把朋友搞多多的可能性。", "主要就是分析不同阶级的态度，对吧？", "工同小要，抗日民资是有可能变的，第五阶级是有可能会走狗。", "好，第三，那么既然你要广泛的朋友，你就不能关门。", "所以批判了左倾官门主义错误，强调党的领导作用，并且指出官门主义的错误在于不相信许多中间阶层有参加抗日的可能。", "第四呢，就是既然要朋友多多，所以就不能只是工农共和国啊，所以决定用人民共和国口号代替工农共和国。", "那么找了朋友以后怎么打呢？", "对吧？", "那么很具体的方针呢政策战略，那么就是洛川会议了。", "所以洛川会议制定了具体的啊叫抗日救国十大纲领。", "十大够不够？", "具体强调要打倒日本帝国主义，关键在于使已经发动的抗战成为全面的全民族抗战。", "所以洛川会议四川担担面川面记住啊。", "好，再往下总动员总动员一定要去对应洛川会议。", "所以全国军事总动员，全国人民总动员洛川会议。", "第三，改革政治机构，给予人民充分的抗日民主权利，适当改善共农大众的生活。", "第四呢，必须坚持统一战争当中无产阶级领导权，发动独立自主的山地游击战争，在国统区放手发动抗日的群众运动。", "这样子就是很具体，就是告诉我们怎么去打啊，所以关键词十大纲领啊，穿灭呐对不对？", "然后总动员呐、领导权啊，这些都是对应洛川会的。", "那么洛川会1934年也是周年纪念，要特别特别重点去记案们。", "今天的最后一个会议呢是党的六届六中全会。", "它呢有三条，第一呢是第一次明确提出了马克思主义中华这个命题啊，第二呢就是它决定中国之命运，为什么？", "因为又克服了王民的右倾。", "王民的右倾呢就是呃就是一切经过统一战线啊，一切服从统一战线，把党呃军队的活动限制在国民党的范围之内，这不是相当于放弃独立自主嘛。", "所以我们得克服这个呃错误，并且再次强调中国党必须独立自主的领导人民进行抗日战争。", "啊，接下来因为我们肯定是丰富矛盾多了嘛啊所以我们进一步巩固了毛泽东在全党的领导地位，统一了全党的思想，在政治、思想、组织上为实现党对抗日战争的领导奠定了基础。", "Ok今天内容稍微有点多，但我相信宁玲可以加油，明天继续喽。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2, 3], "type": "intro"}, {"tag": "考点 01", "title": "八七会议：给思想定调，枪杆子里出政权与历史性转变", "badge": "重点采分点", "sent_indices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], "type": "point"}, {"tag": "考点 02", "title": "古田会议：思想建党、政治建军与新型人民军队建设", "badge": "周年高频考点", "sent_indices": [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], "type": "point"}, {"tag": "考点 03", "title": "遵义会议：生死攸关的转折点，军事与组织问题解决", "badge": "重点采分点", "sent_indices": [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], "type": "point"}, {"tag": "考点 04", "title": "瓦窑堡会议：提出抗日民族统一战线新政策", "badge": "周年高频考点", "sent_indices": [46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59], "type": "point"}, {"tag": "考点 05", "title": "洛川会议：全面抗战路线与敌后战场开辟", "badge": "重点采分点", "sent_indices": [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [75, 76, 77], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.58}, {"start": 9.72, "end": 14.73}, {"start": 14.87, "end": 17.01}, {"start": 17.15, "end": 23.68}, {"start": 23.82, "end": 26.91}, {"start": 27.05, "end": 36.63}, {"start": 36.77, "end": 42.74}, {"start": 42.88, "end": 47.25}, {"start": 47.39, "end": 56.56}, {"start": 56.7, "end": 63.95}, {"start": 64.09, "end": 72.06}, {"start": 72.2, "end": 78.82}, {"start": 78.96, "end": 87.02}, {"start": 87.16, "end": 88.65}, {"start": 88.79, "end": 89.49}, {"start": 89.63, "end": 95.53}, {"start": 95.67, "end": 99.49}, {"start": 99.63, "end": 100.4}, {"start": 100.54, "end": 103.94}, {"start": 104.08, "end": 108.69}, {"start": 108.83, "end": 113.44}, {"start": 113.58, "end": 119.87}, {"start": 120.01, "end": 128.94}, {"start": 129.08, "end": 134.64}, {"start": 134.78, "end": 139.39}, {"start": 139.53, "end": 140.88}, {"start": 141.02, "end": 146.58}, {"start": 146.72, "end": 164.53}, {"start": 164.67, "end": 171.13}, {"start": 171.27, "end": 176.45}, {"start": 176.59, "end": 179.76}, {"start": 179.9, "end": 186.6}, {"start": 186.74, "end": 198.47}, {"start": 198.61, "end": 201.06}, {"start": 201.2, "end": 203.02}, {"start": 203.16, "end": 207.29}, {"start": 207.43, "end": 215.26}, {"start": 215.4, "end": 222.4}, {"start": 222.54, "end": 231.64}, {"start": 231.78, "end": 245.12}, {"start": 245.26, "end": 254.53}, {"start": 254.67, "end": 257.67}, {"start": 257.67, "end": 262.92}, {"start": 263.06, "end": 267.43}, {"start": 267.57, "end": 277.94}, {"start": 278.08, "end": 281.9}, {"start": 282.04, "end": 282.73}, {"start": 282.87, "end": 294.37}, {"start": 294.51, "end": 298.49}, {"start": 298.63, "end": 307.56}, {"start": 307.7, "end": 314.16}, {"start": 314.3, "end": 317.94}, {"start": 318.08, "end": 320.7}, {"start": 320.84, "end": 325.78}, {"start": 325.92, "end": 330.46}, {"start": 330.6, "end": 340.73}, {"start": 340.87, "end": 349.89}, {"start": 350.03, "end": 352.24}, {"start": 352.38, "end": 353.08}, {"start": 353.22, "end": 357.27}, {"start": 357.41, "end": 362.12}, {"start": 362.26, "end": 363.74}, {"start": 363.88, "end": 371.54}, {"start": 371.68, "end": 375.42}, {"start": 375.56, "end": 379.69}, {"start": 379.83, "end": 383.96}, {"start": 384.1, "end": 391.04}, {"start": 391.18, "end": 401.54}, {"start": 401.68, "end": 408.38}, {"start": 408.52, "end": 412.5}, {"start": 412.64, "end": 417.59}, {"start": 417.73, "end": 421.38}, {"start": 421.52, "end": 430.44}, {"start": 430.58, "end": 432.65}, {"start": 432.79, "end": 444.45}, {"start": 444.59, "end": 451.53}, {"start": 451.67, "end": 466.76}, {"start": 466.9, "end": 471.51}], "audio_src": "audio_tuijie/tuijie_d02.mp3"}, {"day": 3, "title": "重要会议总结（三）· 六届六中、六届七中、七大与七届二中", "short_topic": "六届六中、七大至七届二中", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["六届六中全会：首次明确提出“马克思主义中国化”命题", "六届七中全会：通过党的第一个历史决议，延安整风重大成果", "中共七大：政治思想组织全成熟，确立毛泽东思想为指导思想", "七届二中全会：工作重心转移，两个务必与夺取胜利方针"], "sentences_count": 79, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（三）：六届六中全会、六届七中全会、中共七大与七届二中全会。", "如果觉得学起来比较痛苦，那至少至少从背诵手册跟带背开始吧。", "今天我和你一起背的内容呢是来自于我的冲击泵手册下册第五到第七页，同样内容有点点多啊，那我们一起先从第12条党的六届七中全会开始。", "一听这个名字呢，就属于党的高级干部啊，中央政治局开的啊，所以有个基本的印象。", "所以他通过的第一个呢叫做关于若干历史问题的决议。", "这个其实是党历史上的第一个历史决议。", "之所以第一个历史决议比较重要，说明他圈四当中啊清算了党内历次机会主义路线，特别是王明“左”倾错误表现和严重危害。", "所以大家就认识到，哎，我们之前犯了各种各样的错误，而且也理清楚了。", "理清楚以后大家就比较认可啊，所以第一次以文件的形式做了这样的一个结论，那么因此我们称之为延安整风运动的重大成果。", "毕竟它是一支啊一个思想解放运动，思想教育运动。", "那么有成果就得有文件。", "所以延安整风运动的这样的一个重大成果，其实对应的就是六届七中全会这个党的第一个历史决议，叫关于若干历史文题的决议。", "一定要把一四啊和二连在一起去记忆。", "好，接下来第三条就是使全党尤其是党的高级干部对中国民主革命基本问题的认识达到在马列主义基础上的一致。", "于是也标志着圈五延呃延安整风运动的胜利结束，为党的七大的胜利召开在思想上做了充分的准备。", "因为你先中央搞完以后，是不是全党开会了？", "好，紧接着第13条，党的七大这个也是个巅峰大聚会，它召开于抗战胜利前夕，对不对？", "所以因为我们现在是各方面都非常的成熟，而且大家都非常的一致。", "所以我们可以选政治思想、组织都成熟。", "好，然后呢我们也可以选这是一次团结的大会，胜利大会。", "因为超团结大家的超一致。", "好，怎么体现在我们成熟呢？", "症状成熟体现在我们确立的接下来要干嘛啊，也就是政治路线是打败日本侵略者，解放全国人民，建立一个新民主主义的中国。", "那么组织上体现在我们有三大作风，那么思想上体现在我们刘少奇做了关于修改党章的报告，把毛泽思想概括并且确立未党的指导思想并写入党章。", "而这一点也是七大的历史性贡献。", "Ok啊好，接下来呢就是我们第14个会议，叫党的七届中全会，这也是个巅峰大聚会。", "这个巅峰大聚会呢是背景来讲是召开于中国革命即将取得胜利的前夕，中国党即将成为执党的前夕。", "那你要从打江山变为座江山了，你是不是要好好的想想将来要怎么去办呢？", "对不对？", "所以提出了迅速夺取全国胜利的方针，有天津市就是用武力，北平市合并改装呃合并改装，随远市就是先保持原状再改编这三种方式啊，所以接下来就是军事上你要注意。", "然后呢呃内容上呢叫做两个重呃两个转变，两个务必。", "两个转变呢是指党的工作中心由乡村转到城市。", "而且在全国胜利以后呢，我们已经规定了在政治、经济、外交各方面应当采取的基本政策。", "都已经想得好好的啊。", "好，第二个转变呢指的是由农业国转变于工业国，由新民主主义社会转变于社会主义社会的总任务和主要途径。", "好，再接来呢就是我们的圈四叫两个务必，务必保持谦虚谨慎，务必保持不骄呃谦虚谨慎、不骄不躁，务必保持艰苦奋斗的作风就可以了。", "好，第15呢是党的七届三中全会只有一个单选，叫党和全国人民的中心，任务是在三年左右时间内争取国家财政经济状况的基本好转。", "单选题是有可能考的啊。", "第16条党的八大这个呢也是周年纪念，因为它是1956年刚好对我们2026年的备考。", "那么八大呢是很多人参与，然后呢，而且很多的提出来东西都是正确的这是建国以后跟毛总有关唯一可靠的会议了，所以特别要好好背，是今年的重点。", "那么八大难第一条正确分析了社会主义改造完成之后中国社会的主要矛盾和主要任务。", "主要矛盾是什么呢？", "叫人民对于建立先进的工业国要求同落后农业国现实之间矛盾，是人民对于经济文化迅速发展的需要同当前经济文化不能满足人民需的矛盾。", "所以虽然是两方面，但是都是比较贴合实际的。", "所以记住八大的主要矛盾分析正确，而且是分成两方面的。", "第二呢，我们的主要任务和根本任务都去找生产力这个词就可以了。", "好，经济建设当中除还有一个方针叫既反保守又反冒进，即在综合综合平衡中稳步前进的方针。", "所以有印象澳八大主要矛盾、主要任务和经济方针都是有的啊。", "这个经济方针单独也是可以考单选的，所以记住它既反保守又反冒进，在综合平衡中稳步前进。", "政治上呢扩大社会主民主，健全社会主义法治，有法可依，有反必依。", "执党建设里面啊提高马列主义思思想水平，健全党内民主集中制，集体领导，反对个人崇拜，加强党内民主、人民民主啊。", "好，完了以后呢，第五条是肯定了陈云提出的三个主体，三个普通的思想。", "这个有点像后面的市场经济有一点点像。", "所以为克服苏联模式弊端提供的重要启示，毕竟他从理论上突破了当时苏联单一公有制、单一经营形式、高度集中计经济体制为特征的社会主义经济发展模式，是探索社会主义国家经济发展道路一个重要尝试。", "那具体你可以自己看，基本上都是跟后面的这种市场经济有一点点像啊啊好，那么接下来第17条党的八届九中全会。", "这个不是那么的重要啊，因为呃当时是相当于是呃大跃进，然后呢我们觉得要有点刹车，对吧？", "有加上当时的自然灾害啊，所以我们遇到一些严重的困难啊，想要去呃刹刹车啊、调速。", "所以上来就是调啊调整、巩固、充实、提高刚好是八字方针。", "那么第18条重要的啊，就算不直接考，也会成为干扰项的。", "党的十一届三中全会非常之重要。", "那么党的十一届三中全会呢，在他开之前，我们有一篇邓小平的讲话，叫解放思想，实事求是，团结一致向前看。", "那么这个讲话呢其实是把解放思想、实事求是，坚持实践标准提到党的思想路限的高度。", "这就为接下来冲破两个凡事啊，重新确立党项路线奠定基础。", "所以成为记住啊单选题叫开辟中国特色社会主义，开创中国特色社会理论的叫宣言书。", "所以中特开创宣言书，对你是这一篇讲话舒明浩写的解放思想，实事求是，团结之向前看。", "而这个讲话呢也实际上是十一届三中全会的主题报告啊，所以要记住这一点。", "好，那么党十届三中全会呢你可以选的是非常重的词，比如说冲破彻底对吧？", "停止这种词。", "所以彻底否定两个凡是，果断停止使用阶斗争为纲，冲破左的错误的严重束缚。", "那么你有搞错的，你是不是就搞正确的是什么？", "所以做出了把工作重点转移到社会主义新化建设上来和改开放的这样的一个战略决策。", "好，重新确立了马克思主义的思想路线、政治路线、组织路线。", "也就是说重新确的前提是过去都是错的，那么你对错的态度是比较绝对的啊，就是彻底否定啊，对吧？", "果断停止使用啊，这些词都是可以选的。", "所以第一个就是把错的搞定，然后重新确立思想政治组织的路线。", "好，第二呢就是全会恢复了党的民主集中制的优良传统，审查解决历史上遗留的一大呃一批重大问题和领导人工作是非问题。", "第三，新的领导自己出现了，叫邓小平为核心的第二代党的中央领导集体，揭开了改革放序幕。", "第四呢是以这次全会为起点，我们进入了改开放和社会计划建设的历史新时期。", "今天内容有点多啊，希望你能够听一听，结合故事想一想就好了。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "六届六中全会：首次明确提出“马克思主义中国化”命题", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "type": "point"}, {"tag": "考点 02", "title": "六届七中全会：通过党的第一个历史决议，延安整风重大成果", "badge": "周年高频考点", "sent_indices": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], "type": "point"}, {"tag": "考点 03", "title": "中共七大：政治思想组织全成熟，确立毛泽东思想为指导思想", "badge": "重点采分点", "sent_indices": [39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56], "type": "point"}, {"tag": "考点 04", "title": "七届二中全会：工作重心转移，两个务必与夺取胜利方针", "badge": "周年高频考点", "sent_indices": [57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [76, 77, 78], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 11.18}, {"start": 11.32, "end": 16.27}, {"start": 16.41, "end": 28.55}, {"start": 28.69, "end": 34.98}, {"start": 35.12, "end": 39.34}, {"start": 39.48, "end": 42.34}, {"start": 42.48, "end": 51.98}, {"start": 52.12, "end": 56.73}, {"start": 56.87, "end": 66.04}, {"start": 66.18, "end": 70.24}, {"start": 70.38, "end": 72.58}, {"start": 72.72, "end": 82.23}, {"start": 82.37, "end": 85.54}, {"start": 85.68, "end": 95.08}, {"start": 95.22, "end": 103.84}, {"start": 103.98, "end": 107.15}, {"start": 107.29, "end": 115.11}, {"start": 115.25, "end": 120.58}, {"start": 120.72, "end": 123.98}, {"start": 124.12, "end": 129.21}, {"start": 129.35, "end": 131.49}, {"start": 131.63, "end": 134.0}, {"start": 134.14, "end": 144.27}, {"start": 144.41, "end": 158.48}, {"start": 158.62, "end": 161.47}, {"start": 161.61, "end": 169.1}, {"start": 169.24, "end": 177.45}, {"start": 177.59, "end": 183.56}, {"start": 183.7, "end": 184.47}, {"start": 184.61, "end": 198.92}, {"start": 199.06, "end": 203.59}, {"start": 203.73, "end": 208.2}, {"start": 208.34, "end": 214.79}, {"start": 214.93, "end": 216.52}, {"start": 216.66, "end": 225.2}, {"start": 225.34, "end": 237.32}, {"start": 237.46, "end": 249.02}, {"start": 249.16, "end": 250.89}, {"start": 251.03, "end": 258.14}, {"start": 258.28, "end": 269.12}, {"start": 269.26, "end": 275.89}, {"start": 276.03, "end": 277.52}, {"start": 277.66, "end": 288.6}, {"start": 288.74, "end": 292.0}, {"start": 292.14, "end": 296.92}, {"start": 297.06, "end": 301.76}, {"start": 301.9, "end": 310.28}, {"start": 310.42, "end": 315.12}, {"start": 315.26, "end": 323.23}, {"start": 323.37, "end": 329.66}, {"start": 329.8, "end": 338.9}, {"start": 339.04, "end": 344.84}, {"start": 344.98, "end": 348.25}, {"start": 348.39, "end": 364.68}, {"start": 364.82, "end": 374.33}, {"start": 374.47, "end": 381.81}, {"start": 381.95, "end": 388.1}, {"start": 388.24, "end": 392.94}, {"start": 393.08, "end": 397.62}, {"start": 397.76, "end": 400.44}, {"start": 400.58, "end": 409.92}, {"start": 410.06, "end": 416.83}, {"start": 416.97, "end": 421.67}, {"start": 421.81, "end": 428.51}, {"start": 428.65, "end": 436.38}, {"start": 436.52, "end": 441.6}, {"start": 441.74, "end": 448.44}, {"start": 448.58, "end": 451.58}, {"start": 451.58, "end": 458.35}, {"start": 458.49, "end": 462.23}, {"start": 462.37, "end": 469.14}, {"start": 469.28, "end": 474.37}, {"start": 474.51, "end": 482.33}, {"start": 482.47, "end": 485.33}, {"start": 485.47, "end": 490.24}, {"start": 490.38, "end": 502.29}, {"start": 502.43, "end": 510.25}, {"start": 510.39, "end": 516.85}, {"start": 516.99, "end": 521.93}], "audio_src": "audio_tuijie/tuijie_d03.mp3"}, {"day": 4, "title": "重要会议总结（四）· 理论工作务虚会、十一届六中至二十大", "short_topic": "务虚会、十一届六中至二十大", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["理论工作务虚会：邓小平旗帜鲜明提出“坚持四项基本原则”", "十一届六中全会：通过第二个历史决议，科学评价毛泽东同志", "中共十二大至十五大：中国特色社会主义的开创与理论深化", "中共十六大至二十大：科学发展观与新时代新征程使命"], "sentences_count": 75, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（四）：理论工作务虚会、十一届六中全会至中共二十大。", "今天我和你呢是我《冲刺背诵手册》下册第七到第九页的内容。", "那么先从第19条开始，党的理论工作勿虚会。", "其实今天内容有点像改革开放的五步进阶曲上来。", "第一个搞改革可以，但是要有底线，对吧？", "因为我们的呃理论工作务虚会对应的是坚持思想基本原则。", "啊，在十一届中全会之后呢，社会上出现了一些极端思潮。", "比如说一种是倒退回左的，另一种是想全盘细化否定党领导的。", "所以那得出来破局嘛，我得画一条红线，得画条底线。", "那么这个就是对应的坚持四项基本原则。", "所以定位就是四项基本原则，是实现四个现代化的根本前提。", "Ok啊，所以这是这个要记住。", "那么同时也提出了呃走一条中国式现代化道路，所以你看中国现代化从那个时候就也已经有了哟。", "好，然后呢第二个呢是党的十一届六中全会，这个是1981年的。", "你想要大它步向前走，是不是要把一些历史上的包袱，历史上的遗留问题处理好。", "也就是说怎么看待毛泽东啊，怎么去评价过去。", "所以我们通过了建国以来啊，就关于建国以来党的若干历史问题的决议。", "这个其实也是党的历史上的第二个历史决议。", "第一个是6月7中，还记得不？", "第二个在这里区别在于多了，叫做关于建国以来这六个字。", "Ok啊，所以一定要有印象，建国以来嘛你才会有一些就是到底怎么去评价，才会有一些些争议。", "所以这个争议当中呢，邓小平就提出了叫起草决义的三条指导原则。", "那么最核心的一条呢，就是确立毛泽东同志的历史地位，坚持和发展毛泽东思想。", "第二条呢叫实事求是的分析，第三条呢叫总结，一粗不一细。", "好在这三条这人的之下，我们才有了这样的一个历史决议。", "所以这个决议能够科学评价毛泽东，是因为把毛泽东这个人跟毛泽东思想做了区分。", "所以评价毛泽东这个人叫做功绩第一位，错误第二位。", "那评价毛泽东思想这个科学体系，其实相当于概括出了这个思想体系的活的灵魂及三方面，实事求是，群众路线独立自主。", "正因为它是一个科学体系，而且这个活动灵魂是方法论的东西，所以他可以一直指导党和国家全部工作，各项工作想清楚啊，正因为这一点，所以圈5绝对通过，标志着党在指导思想上不那不就是毛泽东思想是指导思想，对不对？", "所以标志着党在指导思想上拨乱反正的胜利。", "完成好总结的过去是不是就可以接挨往下了？", "所以接来往下呢，有第一个叫实质上初步提出了在中国建设什么样的社会主义和怎样建设社会主义问题。", "因为呃这个决议呢是呃对十一届三中全会以来逐步确立的，是和中国情况的建设社会主义宪法强国的道路从十个方面做的概括。", "那么这个概括其实就是实质上初步提出了呃这个问题。", "Ok啊好，第二呢是关于计划经济的啊，叫提出了计划经济为主，市场调节为辅的方针。", "这就为接下来形成社会主义市场经济理论开辟的道路。", "同时呢这个会展望未来的第三点在于对主要矛盾做了规范表述。", "八大呢当时是说社率改造完成之后，主要矛盾是分两方面的。", "但是十一届中全会呢是直接变成了一句话，所以这叫规范表述的意思，指的是在社率改造基本完成之后，我国社会主要矛盾是人民日益增长的无质化需要同落后社会生产直接矛盾。", "所以，回溯过去，展向未来，接下来就到了党的十二大历史，抱负解决了，思想统一了。", "现在要正式向全国全党宣誓，我们到底走什么样的路。", "于是就有了第一次提出建设有中国特色的社会主义命题，这个对应的是党的十二大。", "好，那么第22条，党的十二届三中全会其实就是大突破。", "因为你接下来就是要怎么去更体现我们的改革就更进一步。", "那么其实就是在经济上的一种突破。", "过去呢一直把计划经济跟市呃商品经济或者说市场经济绝对对立起来啊，那么现在我们已经突破突破传统观念的禁锢，已经从计划经济变成什么商品经济了。", "因为提出了叫公有制基础上的有计划的商品经济的概念啊啊，所以这算是一个大突破。", "好，最后呢是23条，党的十三大，毕竟改革开放搞了快十年了，对不对？", "需要从理论上把我们处于什么阶段，基本路线是什么，未来怎么走彻底说明白。", "于是党的十三大一定是跟这几个词有关的啊，我们基本呃这个国情，也就是社会主义初阶段，我们的基本路线肯定都是有关。", "所以正因为你想国情是我们做事情的根本依据，那么基本路线呢相当于是一种总目标框架上的东西，所以有框架是不是有轮廓？", "所以你要记住，党的十三大因为第一次对中国特色社会主义理论进行系统的概括，所以标志着邓小平理论轮廓形成继承三轮啊。", "好，然后呢我们再来看他还能对应什么呢？", "啊，比如说我们的第一呃，在十三大召开前夕，邓小平第一次把社会主义初级阶段作为事关全局的基本国情加以把握，明确了这一国情是制定路线方针政策的出发点和根本依据。", "所以你每次看到什么A我们制定执行路线政策的根本依据，一定要去选什么？", "去选国情。", "国情就是要正确认识我国社会现在正在处的历史阶段。", "Ok啊，所以这是关于国情的，或者关于社会主义初级阶段的啊，把它连接起来。", "十三大同样我们十三大呢也明确概括和阐发了党在社会主义初级阶段的基本路线。", "那么有了这个基本路线，就有了圈3，叫做啊三步走发展战略，也是对应的党的十三大。", "对不对啊？", "提出计划与市场在统呃必须要这个内在统一的这样一个体制，这些都有。", "好在这里呢引申讲一下社会主义初级阶段的含义。", "首先它是一个合成词，所以表明我们的性质是社会主义啊，那么程度上不太发达，生产力比较落后啊，而且是只有我国特定的呃阶段，不是说所有国家都要有的。", "明白不？", "啊，想到这一点，其实你就已经理解了我们做所有政策的依据为什么得是这个历史阶段了。", "啊，坚持历史阶段或者说坚持我们社会主初阶段，100年不许动摇。", "想一想从什么时候开始，1956年的啊，从我们确立社会主义制度，其实我们就已经是社会主义初级的阶段了。", "这跟你有没有认识到是不相干的？", "你刚出生你不知道你是个女的，你就不是女的了吗？", "是不是？", "所以我们对她的认识呢是经历一段时间。", "但是其实是从1956年，我们就已经是社会主义初级阶段了。", "好，那么坚持100年不许动摇，那么显然就是到建国100年啊，所以对于社会主义初级阶段这个历史阶段，其实很长一段时间是不会变，要有一个理解上的认识就好了。", "Ok这是今天所有内容，加油，明天见喽。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "理论工作务虚会：邓小平旗帜鲜明提出“坚持四项基本原则”", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], "type": "point"}, {"tag": "考点 02", "title": "十一届六中全会：通过第二个历史决议，科学评价毛泽东同志", "badge": "周年高频考点", "sent_indices": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36], "type": "point"}, {"tag": "考点 03", "title": "中共十二大至十五大：中国特色社会主义的开创与理论深化", "badge": "重点采分点", "sent_indices": [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53], "type": "point"}, {"tag": "考点 04", "title": "中共十六大至二十大：科学发展观与新时代新征程使命", "badge": "周年高频考点", "sent_indices": [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [72, 73, 74], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 10.37}, {"start": 10.51, "end": 15.69}, {"start": 15.83, "end": 19.96}, {"start": 20.1, "end": 24.32}, {"start": 24.46, "end": 27.49}, {"start": 27.63, "end": 33.36}, {"start": 33.5, "end": 38.69}, {"start": 38.83, "end": 44.25}, {"start": 44.39, "end": 48.45}, {"start": 48.59, "end": 51.85}, {"start": 51.99, "end": 56.94}, {"start": 57.08, "end": 59.21}, {"start": 59.35, "end": 66.77}, {"start": 66.91, "end": 72.4}, {"start": 72.54, "end": 78.76}, {"start": 78.9, "end": 81.9}, {"start": 81.9, "end": 87.47}, {"start": 87.61, "end": 90.63}, {"start": 90.77, "end": 93.15}, {"start": 93.29, "end": 97.58}, {"start": 97.72, "end": 104.59}, {"start": 104.73, "end": 110.3}, {"start": 110.44, "end": 116.89}, {"start": 117.03, "end": 122.29}, {"start": 122.43, "end": 127.2}, {"start": 127.34, "end": 134.21}, {"start": 134.35, "end": 138.81}, {"start": 138.95, "end": 149.97}, {"start": 150.11, "end": 169.6}, {"start": 169.74, "end": 173.72}, {"start": 173.86, "end": 177.27}, {"start": 177.41, "end": 185.62}, {"start": 185.76, "end": 188.76}, {"start": 188.76, "end": 193.77}, {"start": 193.91, "end": 200.92}, {"start": 201.06, "end": 205.12}, {"start": 205.26, "end": 210.34}, {"start": 210.48, "end": 215.33}, {"start": 215.47, "end": 230.98}, {"start": 231.12, "end": 238.22}, {"start": 238.36, "end": 243.3}, {"start": 243.44, "end": 250.31}, {"start": 250.45, "end": 256.02}, {"start": 256.16, "end": 260.14}, {"start": 260.28, "end": 263.06}, {"start": 263.2, "end": 276.55}, {"start": 276.69, "end": 282.98}, {"start": 283.12, "end": 289.16}, {"start": 289.3, "end": 295.21}, {"start": 295.35, "end": 304.44}, {"start": 304.58, "end": 313.85}, {"start": 313.99, "end": 323.64}, {"start": 323.78, "end": 326.78}, {"start": 326.78, "end": 340.91}, {"start": 341.05, "end": 346.14}, {"start": 346.28, "end": 347.62}, {"start": 347.76, "end": 352.37}, {"start": 352.51, "end": 357.53}, {"start": 357.67, "end": 364.05}, {"start": 364.19, "end": 371.37}, {"start": 371.51, "end": 374.51}, {"start": 374.51, "end": 380.65}, {"start": 380.79, "end": 384.54}, {"start": 384.68, "end": 396.65}, {"start": 396.79, "end": 397.56}, {"start": 397.7, "end": 404.47}, {"start": 404.61, "end": 409.79}, {"start": 409.93, "end": 418.72}, {"start": 418.86, "end": 421.47}, {"start": 421.61, "end": 425.19}, {"start": 425.33, "end": 426.19}, {"start": 426.33, "end": 429.12}, {"start": 429.26, "end": 433.55}, {"start": 433.69, "end": 445.74}, {"start": 445.88, "end": 449.22}], "audio_src": "audio_tuijie/tuijie_d04.mp3"}, {"day": 5, "title": "重要会议总结（五）· 会议考点大收官与核心题眼速记辨析", "short_topic": "会议考点大收官与口诀速记", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["各时期统一战线会议横向穿透对比", "容易混淆的“第一次”、“标志”与“里程碑”高频陷阱", "会议篇选择题必杀做题法与口诀速记"], "sentences_count": 55, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（五）：重要会议考点大收官与核心题眼速记辨析。", "今天呢我和你一起把混一篇就结束了。", "所以今天我给你背诵内容呢是在冲刺不动手册下册第九到第11页，把我们的会议的剩的内容全部背完。", "我们从第24条开始，可以先把24、25、二十六连在一块背，因为他们都跟市场经济有关。", "对吧？", "南方谈话当中呢，其实它的背景是90年代初对吧？", "国际风云变幻，国内有人去争论改开到底是姓字还是姓社，思想再次陷入停滞。", "所以呢邓小平破局的方式呢就是视察南方很多地方，发表了一系列划时代的谈话，给全党吃了定心丸。", "那么其中在经济方面，主要就是关于社会主义市场经济的理论。", "所以谈话里面有讲啊，南方方面包括的第一点是最重要一点，叫计划经济不等于社会主义，资本主义也有计划，市场经济不等于资本主义，社会主义有市场，说明计划和市场都只是什么经济手段。", "这是单选题，有容易考到多选题成为选项的啊。", "好，那么他指出这段话其实就从理论上突破了计划经济市场经济是制度属性的观念，说明他不是嘛只是手段嘛，对不对？", "所以从根本上解除了把计划经济市场经济看作属于社会资本制度范畴的思想疏缚，所以非常重要，所以在理论上就标志了邓小平同志的社会主义市场经济理论的形成，也为党的十四大明确把建立社会主义商经济体制作为我国经济体制改革目标奠定了理论基础。", "所以先有这个理论，然后我们直接跳到25条党的十四大。", "所以党的十四大就是明确确定我国经济体制改革的目标是建立社会主义市场经济体制。", "而以邓小平同志的南方谈话和党的十四大为目标，相当于一个是谈话，一个是过会了，确立下来了啊，这两个东西合并在一起为标志。", "改开放和现代化建设事业进入从计划经济体制向社会主义市场经济体制转变的新阶段，由此打开了中国经济、政治、文化发展的崭新局面。", "所以一定要把这两个连在一块记啊，紧接着看一下26条，叫党的十四届三中全会。", "那么这个呢其实就是把十四大提出来的那个经济体制改革的目标和原则就是具体化了。", "所以制定了社会主义市场经济体制的一个总体规划，相当于讲的那个就是勾画了社会主义市场经济体制的基本框架，对吧？", "你相当于哎我我把我把这东西就是时践当中开了一个大头之后，那接着往下你就要把就是施工设计图给给弄好啊，所以叫勾画了社会主义市场经济体制的基本规划。", "Ok啊那相当于是啊20世纪90年代我国经济体制改革的一种行动纲领啊，所以这三个连带体系，你对市场经济从理论到实践到这样的一个基本框架你都想清楚了。", "好，然后我们再回来去背南方谈话。", "南方谈话除了市场经济呃理论啊之外，还有别的非常非常多。", "所以如果是多选题，很可能是全选。", "因为从内容上来讲，除了我们市场经济理论之外，还有阐明了社会主义本质，就是那个奖生产力，发展生产力，消除剥削，消除软子分化，最终实现共同富裕。", "那个啊然后也提出了发展才是硬道理的重要论断，提出了判断改革放各项工作成功失败那个得失的三个有利于标准。", "包括什么家党的建设啊，关于社会主义初级阶段长期进行前途啊等等。", "正因为这么多，所以我们称之为南方谈话是调皮理论极大成之作就是多嘛啊所以是大集大成之错，标志着邓小平理论啊走向成熟。", "所以南方谈话也是一个宣言书，叫做又一个解放思想、实事求是的宣言书。", "正因为他在理论上回答了长期困扰和束缚人们思想的许多重大问题，所以把改革放现代化建设推向新阶段。", "那么南方谈话它是有中年经验的对吧？", "1992年2027是五结尾的中年经验，所以特别注意一下，如果考市场经济这条线，我连着记三个会，但如果单独考南方谈话，我知道它内容超多，所以集大成调名理论成熟。", "Ok然后它本身对应的叫又一个宣言书。", "以及把改开放新化建设推向新阶段就好了啊。", "好，接下来呢就是我们党的十五大，党的十五大呢是正式提出邓平理论这一概念啊。", "那么大会通过了中国人党章程修修正案的决议，把邓平理论确立为党的指导思想，并写入党章，而且确立的基本纲领。", "所以要记住武钢，我们有个钢铁集团叫武钢集团，所以十五大才是对应社会主义初级段基本纲领。", "好，回忆一下社会主义初级段基本路线是吗？", "哎，十三大哦，好，那么在十五大当中呢啊就是提出了叫新三步走。", "因为十三大有三步走，那么十五大就是新三步走，就是更加新了，更加细化，更加符合当时的条件。", "好，然后跳过党的十八大，我们直接来看党的十八届三中全会。", "这个呢你要记住就是破冰这个词就可以了。", "所以实现了改革由局部探索、破冰突围到系统集成、全面深化的转变，开创了我国改放新局面。", "之所以能够开创我国改放新局面，是因为党的十八三中全会其实就是全面深化改革这个词开始了，所以相当于改革开放1.02.0叫全面深化改革开放。", "看到没有？", "多了四个字呢啊所以这算是一个就是相当于是一个总体部署，一个很明确的。", "而且其中还有一个比较大的突破是明确提出了使市场在资源配置中起决定性作用和更好发挥政府作用。", "也就是说以前叫基础性，现在叫决定性，也是来自于18.3中。", "所以十败三中对应的叫破冰，对吧？", "对应的是全面深化改革，对应的是市场在资源配置中起决定性作用和更好发挥政府的作用。", "呀。", "就可以啦。", "Ok这是我们会议线索的全部内容。", "加油，你就是最棒的，我们一口气五天就背完了。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "各时期统一战线会议横向穿透对比", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], "type": "point"}, {"tag": "考点 02", "title": "容易混淆的“第一次”、“标志”与“里程碑”高频陷阱", "badge": "周年高频考点", "sent_indices": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34], "type": "point"}, {"tag": "考点 03", "title": "会议篇选择题必杀做题法与口诀速记", "badge": "重点采分点", "sent_indices": [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [52, 53, 54], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 8.78}, {"start": 8.92, "end": 11.71}, {"start": 11.85, "end": 19.98}, {"start": 20.12, "end": 27.47}, {"start": 27.61, "end": 28.3}, {"start": 28.44, "end": 32.26}, {"start": 32.4, "end": 39.34}, {"start": 39.48, "end": 48.02}, {"start": 48.16, "end": 52.86}, {"start": 53.0, "end": 67.69}, {"start": 67.83, "end": 71.34}, {"start": 71.48, "end": 80.88}, {"start": 81.02, "end": 102.19}, {"start": 102.33, "end": 107.04}, {"start": 107.18, "end": 114.18}, {"start": 114.32, "end": 124.79}, {"start": 124.93, "end": 136.35}, {"start": 136.49, "end": 144.08}, {"start": 144.22, "end": 151.22}, {"start": 151.36, "end": 161.01}, {"start": 161.15, "end": 174.26}, {"start": 174.4, "end": 187.4}, {"start": 187.54, "end": 190.23}, {"start": 190.37, "end": 196.11}, {"start": 196.25, "end": 199.18}, {"start": 199.32, "end": 212.01}, {"start": 212.15, "end": 221.9}, {"start": 222.04, "end": 227.46}, {"start": 227.6, "end": 238.3}, {"start": 238.44, "end": 244.18}, {"start": 244.32, "end": 253.34}, {"start": 253.48, "end": 256.27}, {"start": 256.41, "end": 270.23}, {"start": 270.37, "end": 273.71}, {"start": 273.85, "end": 277.42}, {"start": 277.56, "end": 284.02}, {"start": 284.16, "end": 293.09}, {"start": 293.23, "end": 300.64}, {"start": 300.78, "end": 303.95}, {"start": 304.09, "end": 307.09}, {"start": 307.09, "end": 314.92}, {"start": 315.06, "end": 320.55}, {"start": 320.69, "end": 323.55}, {"start": 323.69, "end": 331.58}, {"start": 331.72, "end": 344.66}, {"start": 344.8, "end": 345.98}, {"start": 346.12, "end": 351.85}, {"start": 351.99, "end": 360.68}, {"start": 360.82, "end": 366.87}, {"start": 367.01, "end": 370.01}, {"start": 370.01, "end": 377.9}, {"start": 378.04, "end": 378.67}, {"start": 378.81, "end": 379.74}, {"start": 379.88, "end": 382.33}, {"start": 382.47, "end": 386.22}], "audio_src": "audio_tuijie/tuijie_d05.mp3"}, {"day": 6, "title": "重要人物及文献（一）· 李大钊、陈独秀及早期思想萌芽", "short_topic": "李大钊、陈独秀及思想萌芽", "sub": "对应《冲刺背诵手册》下册 P11-P18", "badge": "模块二 · 人物文献篇", "module_id": "m2", "points": ["李大钊核心著作：《法俄革命之比较观》《庶民的胜利》《我的马克思主义观》", "陈独秀与《新青年》及早期建党思想文献", "大革命时期早期著作与中国社会各阶级分析"], "sentences_count": 60, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要人物及文献（一）：李大钊、陈独秀及早期革命思想文献。", "那今天我和你背的呢是我在《冲刺背诵手册》下册第11到13页总结的一个新的篇章，重要人物及文献总结。", "那么今天我和你一起背诵的任务呢是把近代史的八位重要人物和他们的思想搞清楚。", "因为容易张冠李戴嘛，所以你想象一下，他其实是一个近代救亡图存接力赛的这样一个故事。", "为了救亡图存，那么每个人要提出一些自己的主张。", "那么这个主张呢就是慢慢一步一步往前走，一步一步打开世界，一步一步去找到这个救亡屠存道路的这种方式啊，那么开始呢第一棒是林则徐委员啊，然后包括我们的冯桂芬跟郑官，也就比较早期的。", "所以林睁眼魏长记、冯体用、郑商战。", "那么林睁眼是因为他在四周志呃这本书，因为他是个偏地理书。", "哎，那你发现原来除了咱们还有别的人嘛，所以叫要睁眼看世界第一人。", "那么魏源呢魏长记就不仅仅是地理的，而是要去学什么？", "去学西方的这样的一个军事科学技术。", "以来抵御外国侵略，那么由此呢开创了中国近代向西方学习的新风。", "好，那么再进一步呢，就是呃正观音跟冯桂芬正官音呢就是除了技术之外，有一些政治跟经济上的一些主张。", "那么这一类人呢就是一批人都是这样的。", "所以郑观音等人呢不仅希望去学习西方的科技，同时要求学习西方的政治经济学说。", "共同特点呢就是三点，第一，有比较强烈的反对外国侵略。", "第二，追求中国独立富强的爱国。", "第三呢有一定程度的反对封建专制的民主思想。", "好，那么以政官音为例呢，他住的叫盛世威严，提出要同西方国家进行商战，就是经济的啊政治呢，就是设立意愿，实行军民共主制度等主张，那么是具有相当重要的思想启蒙意的。", "那么到冯桂芬呢，她呢是另外一种代表啊，她是最先对洋务运动的这样的一个指导思想做出比较完整的表述。", "把它表述为叫中学为体，西学为用。", "这个概括呢其实也已经证明了洋务运动最终的失败，因为你想要不变更中国的这样的一个封建制度伦理纲常，只是去学西方的技术，这肯定是不可能真正成功的。", "啊，就是比较早期的这一波这一波啊，然后加兰顿就是比较真正的有点觉醒的这样状况，因为激励赛道比较紧张的阶段啊，他觉得就是前面这些呃启蒙还是太慢了。", "啊，虽以呢他就是翻译到天眼论，物竞天择，适者生存。", "那么这个呢其实是一个振聋发聩的警示钟啊，因为当时已经是民族危机很严重了，你再不去起来去改，你就叫生存不下去了嘛啊所以这是为当时民族危机啊，民族意识这种提供了理论依据。", "好，到了再进一步就是孙中山。", "那么孙中山呢对应的其实是民主革命，民主共和，那比较具有代表的是比如第一个自然阶级革命团体新中会啊，第一个在你革命的全国性政党中国同盟会，包括确定了三民主义的革命纲领，领导的辛亥革命，结束了封建君主专制制度。", "所以驻窑清政府啊，包括我们的皇帝呀啊被赶跑，对应的是辛亥革命，对的，是孙中山啊。", "好，他还领导了二次革命和护法运动。", "那么在这里还有另外一个容易出错的干扰项，叫护国运动。", "所以护国运动不是孙中山干的啊，所以孙中山民主革命，民主共和对应的世界有哪些？", "刚刚有个印象，什么革命团体啦啊然后革命政党啦、革命纲领啦、领导辛亥革命啦、护法运动、二次革命等等，这些都体现他的主张民主共和、民主呃革命的好。", "那么郑因在此意义上呢，我们称孙中山为民族英雄，是民主革命的伟大先驱，坚定了维护民主共和制度和国家完整统一。", "那么之所以是先驱，是因为他最后没干完嘛。", "不过呢在呃就是后期的时候呢，他有重新解释三民主义，提出了联俄联共、扶助农工三大政策。", "这个其实就是我们国民党一代的时候，那时候讲的啊有印象啊。", "好，这是孙中山。", "那么再往后呢，就是就是冲刺了啊，我们这样一个接力棒的一个冲刺啊，那么肯定就是跟马克思主义与建党有关。", "那么就是南陈北理两个啊，那么陈独秀呢当然是新文化运动，这是可以对应的。", "同样中共创始人之一，那么在大革命后期呢，是犯了右倾机会主义错误啊，那么右倾机会主义错误呢，就是你想象一条线叫条线叫客观实际。", "如果说呢我正好卡在这个线上叫实事求是。", "如果呢哎我比这个线还慢一点，就是没有达到实际的要求，比实际落后了啊，那么这个就属于叫投降啊啊，所以叫右倾机会主义，右倾投降主义就属于这一种，所以叫现实客观实际。", "明明是可以争取领导权，但他放弃了。", "所以放弃了革命党权，放弃了对武装力量领导权，那么这就是大革命后期陈独秀右倾机会主义错误。", "那么在我们之前背过的八七会当中呢，我们有印象彻底清算陈独秀右清，这是八七会议啊。", "好，那么接下来呢李大钊李大钊呢是率先小旗帜啊，那么率先在中国大地上举起了马克思主义旗帜。", "对应的其实刚好是三个文章。", "第一呢是第一次正确的阐述了十维革命性质，对应的是法俄革命之比较观。", "你想想看，在俄国革命之前是没有过这种革命的对吧？", "那么它跟之前的法国革命、英国革命是不一样的。", "所以你只有通过比较的方式才能够说明它正确的性质是什么啊，所以叫第一次正确的阐述十月革命性质，对你是那个什么什么比较好。", "然后呢。", "热情歌颂了十月革命和布尔什为主的胜利，第一次揭露了呃其深克揭露了第一次世界大战的本质，那么这个就是胜利。", "对胜利。", "因为刚好文章叫庶民的胜利，布尔什为主义的胜利啊，所以歌颂什么什么胜利，对你就是什么什么胜利的文章。", "那么最后呢就是系统。", "如果看到对马克思主义做了比较系统介绍，标志着马克思主义在中国进入比较系统的传播阶段。", "那么对应的文章叫我的马克思主义观啊，因为一看就就是一个好几万字的文章啊，所以这个就比较系统了。", "好，那么我的马克思主义观这篇文章啊，包括之前一些文章呢，都表明了马克思主义呃的第一中国的第一个马克思主者是李大钊啊，所以在在人物当中要记住，哎，ok好，那我能想清楚，那么臣是右轻，礼是举旗就好了。", "好，记住的话你可以把音频在反复吃饭啊，睡前听一听，量化我们进步的每一天，明天见喽。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "李大钊核心著作：《法俄革命之比较观》《庶民的胜利》《我的马克思主义观》", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], "type": "point"}, {"tag": "考点 02", "title": "陈独秀与《新青年》及早期建党思想文献", "badge": "周年高频考点", "sent_indices": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36], "type": "point"}, {"tag": "考点 03", "title": "大革命时期早期著作与中国社会各阶级分析", "badge": "重点采分点", "sent_indices": [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [55, 56, 57, 58, 59], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.26}, {"start": 9.4, "end": 17.78}, {"start": 17.92, "end": 23.58}, {"start": 23.72, "end": 31.38}, {"start": 31.52, "end": 35.34}, {"start": 35.48, "end": 49.2}, {"start": 49.34, "end": 52.34}, {"start": 52.34, "end": 57.43}, {"start": 57.57, "end": 63.79}, {"start": 63.93, "end": 68.46}, {"start": 68.6, "end": 72.11}, {"start": 72.25, "end": 77.58}, {"start": 77.72, "end": 87.05}, {"start": 87.19, "end": 90.12}, {"start": 90.26, "end": 93.26}, {"start": 93.26, "end": 98.28}, {"start": 98.42, "end": 101.34}, {"start": 101.48, "end": 105.54}, {"start": 105.68, "end": 108.68}, {"start": 108.68, "end": 116.58}, {"start": 116.72, "end": 119.98}, {"start": 120.12, "end": 133.37}, {"start": 133.51, "end": 145.0}, {"start": 145.14, "end": 150.23}, {"start": 150.37, "end": 163.62}, {"start": 163.76, "end": 166.62}, {"start": 166.76, "end": 184.32}, {"start": 184.46, "end": 192.91}, {"start": 193.05, "end": 196.56}, {"start": 196.7, "end": 201.06}, {"start": 201.2, "end": 208.21}, {"start": 208.35, "end": 221.12}, {"start": 221.26, "end": 231.39}, {"start": 231.53, "end": 234.53}, {"start": 234.53, "end": 242.18}, {"start": 242.32, "end": 246.79}, {"start": 246.93, "end": 248.99}, {"start": 249.13, "end": 257.75}, {"start": 257.89, "end": 263.62}, {"start": 263.76, "end": 273.34}, {"start": 273.48, "end": 277.06}, {"start": 277.2, "end": 280.2}, {"start": 280.2, "end": 283.22}, {"start": 283.36, "end": 291.33}, {"start": 291.47, "end": 298.81}, {"start": 298.95, "end": 306.78}, {"start": 306.92, "end": 309.12}, {"start": 309.26, "end": 315.48}, {"start": 315.62, "end": 319.68}, {"start": 319.82, "end": 323.39}, {"start": 323.53, "end": 332.63}, {"start": 332.77, "end": 333.63}, {"start": 333.77, "end": 343.04}, {"start": 343.18, "end": 344.04}, {"start": 344.18, "end": 347.18}, {"start": 347.18, "end": 348.91}, {"start": 349.05, "end": 355.98}, {"start": 356.12, "end": 363.78}, {"start": 363.92, "end": 380.62}, {"start": 380.76, "end": 387.63}], "audio_src": "audio_tuijie/tuijie_d06.mp3"}, {"day": 7, "title": "重要人物及文献（二）· 毛泽东思想发展历程与著作穿透", "short_topic": "毛泽东思想历程与经典著作", "sub": "对应《冲刺背诵手册》下册 P11-P18", "badge": "模块二 · 人物文献篇", "module_id": "m2", "points": ["土地革命前期（萌芽）：《中国的红色政权为什么能够存在？》《井冈山的斗争》", "土地革命后期（形成）：《星星之火，可以燎原》《反对本本主义》", "抗日战争时期（成熟）：《新民主主义论》《论联合政府》《论持久战》", "解放战争与建国初期（发展）：《论人民民主专政》《论十大关系》"], "sentences_count": 71, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要人物及文献（二）：毛泽东思想发展全历程经典著作与题眼穿透。", "每天背就是在为花期绽放做准备。", "所以我们今天任务比较多，有第13页到第16页这么多内容，然我们一起来背。", "第一呢是你要知道毛泽发例当中，第一个时间是开始萌芽，那么这个标志是可以考单选题的。", "那么时间上对你是大革命，那么那么那么对应的这样一个理论，哎，你既然是开始萌芽，所以肯定不会是理论，不是系统，所以只能选的是新民主主义革命基本思想的提出。", "啊，记住这一点，那么这一时期呢有两篇重要文章，一篇呢叫中国社会各界分析指出一个重要论断，叫分清敌友是革命的首要问题。", "相当于迎来一个人，你跟他握手，如果是朋友就能够放在右边做你的统一战线。", "如果是敌人，你就拿这个武装斗争，拿枪杆他打他。", "所以握手握手首要问题啊。", "好，再来国民革命与农民运动呢指的是农民问题，乃国民革命的中心问题。", "因为对于大革命来说，农民展现了强大的潜力，所以国民革命的中心问题是农民问题就好了。", "好，第二呢时期呢是毛东思想呃的初步形成，所以初步形成对应的其实是井冈山，一看井冈山呢就一定是土地革命早期。", "因为大革命失败以后啊，我们是不是慢慢哎是不是到井冈山去了，对不对？", "那到井冈山实习你是不是得找活路。", "所以呢呃初步形成这样的一个呃标志，对应的是时间，叫土地革命早期。", "而它的一个理论应该是农村包围城市武装独立政权思想的提出并生成阐述。", "因为得找活路呀。", "好，那么这其中呢就有四篇文章，嗯，前两篇合在一起叫做红色政权。", "为什么都存在井冈山斗争？", "你可以连在一起记红景。", "那么我们颈子就是脖子嘛有很多颈纹的嘛，所以对应的是红色的颈子，也就是红锦对应的是提出工农武装割据思想割据不就是一道道颈纹吗？", "我知道你没有一条两条总有吧，联想记一下啊。", "好，那第三篇文章呢叫心之火可以燎原。", "那么这篇文章其实是回答了悲观主义者关于红旗到底打的多久的疑问。", "你想我们都可以燎原了，所以显然最终是可以有高潮的。", "所以我们的星星之火其实就是红军游击队。", "红色区的建立发展，最终无疑促进全国革命高潮，这是最重要因素啊。", "好，最后一篇文章呢是反对本本主义，这是一篇极高频的必考文章。", "毕竟那个时候有人死死的读书，或者说用那些很教条的方式来指导中国革命，这肯定是不可以的。", "所以毛宗为了反对教条主义写的这篇文章。", "因此这篇文章有好几个第一次，或者说好几个初步。", "那我们要先记住所有的初步所有的第一次啊啊。", "第一个叫初步，界定了中国共产党人思想路线的基本含义。", "第二呢叫做独立制自主思想的最初的首次的明确表述。", "第三个第一次或者说初步叫初步形成了毛东思想活的灵魂。", "三个基本点标志毛东哲学思想的初步形成。", "你看三个初步啊或者三个第一次。", "好，然后呢我们接下来还有个谓了。", "因为反对本本主义，从名字知道本本就是教条嘛，所以是为了反对当时红军中的教条主义思想而写的重要著作。", "那么最后就只剩下三条论断，没有调查，没有发言权。", "中国跟斗争胜利要靠中国同志了解中国情况。", "调查就像十月怀胎，解决问题就像一朝分娩，调查就是解决问题。", "这些重要论断其实就是相当于阐明了坚持辩证国主三无限，坚持理论与实际相结合原则极端重要性。", "Ok好，那么接下来呢就是到了就北上抗日那个时候，是不是？", "所以我们土地革命后期和整个抗战期间，在这个时间对应的叫呃矛盾思想形成过程，就叫做趋于成熟。", "所以趋于成熟就会有理论，就会有系统这两个单词的出现了。", "所以毛泽东思想趋于成熟，时间上来讲叫土地革命战争后期和抗战时期，那么理论对应可以叫新民主主义革命理论的系统阐述。", "这次时机文章特别多，你不用逐条背过啊，我们把它分成这么几类。", "第一呢是哲学上，我们有两论叫实践论、矛盾论，它对应的是哲学嘛。", "所以对党的思想路线做了系统的哲学论证。", "那么抗战上呢主要是论持有战，对吧？", "那么指出啊中日对比的特点说明最后的胜利属于中国，以及科学预测的抗战发展进程。", "我们有三个阶段，战略、防御战略相持、战略反攻，而战略相持阶段是中国抗日战争取得最后胜利的最关键阶段。", "而既然我们是一个很长时间，对不对？", "所以就不可能是肃胜和亡国。", "所以批判了错个理论，叫肃胜论和亡国论，也提出了兵民是胜利之本的论断，这个就属于叫做抗战上，对不对？", "那么革命道路上呢，那么就是战争和战略问题是把我们的这个这个农村贸易城市啊，作为这样的一个武装多立政权，作为一个革命道路确立下来。", "最终确立了农村包围城市武装多义政权的这样的一个革命道路。", "那么在法宝跟理论上呢，我们有有呃法宝。", "比如中国浪人发刊词是提出了统一战线武装斗争，党的建设是中国党在中国革命中战胜敌人的三个法宝。", "你脑子面想象一下啊，党的建设就是披着铠甲的战士，左手拿着武装斗争那把枪，右手拿着统一战线。", "就是找朋友都在，哎，你只要联想自己就可以了。", "好，然后呢我们还有那个呃理论上那么就是中国革命和中国人党。", "这篇文章第一次提出了新民主义革命的科学概念和总路线的内容。", "而新民主主义论是第一次旗帜鲜明的提出了新民主主义的完整理论，阐述了新民主主义的政治、经济、文化。", "啊，所以你看就是新民主角论了，他就会系统一点，对不对啊，那么只是中国革命，中国党那只是提出概念而已啊，所以对标能够注意力集中一点，清楚一点就好了。", "好，然后呢再来呢就是我们偏向于我们的这个思想上，对不对？", "那么为了统一全党思想，我们还搞了整风运动。", "所以呢改造我们的学习，就是整风运动在首先在党的高级干中进行，而整顿党的作风，反对党8股，就是整风运动在全党范围内普遍展开。", "其实就可以了啊。", "好，记住这一些，然后我们明天再来看毛总思想的继续发展。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "土地革命前期（萌芽）：《中国的红色政权为什么能够存在？》《井冈山的斗争》", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], "type": "point"}, {"tag": "考点 02", "title": "土地革命后期（形成）：《星星之火，可以燎原》《反对本本主义》", "badge": "周年高频考点", "sent_indices": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34], "type": "point"}, {"tag": "考点 03", "title": "抗日战争时期（成熟）：《新民主主义论》《论联合政府》《论持久战》", "badge": "重点采分点", "sent_indices": [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50], "type": "point"}, {"tag": "考点 04", "title": "解放战争与建国初期（发展）：《论人民民主专政》《论十大关系》", "badge": "周年高频考点", "sent_indices": [51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [68, 69, 70], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.89}, {"start": 10.03, "end": 12.96}, {"start": 13.1, "end": 18.59}, {"start": 18.73, "end": 25.67}, {"start": 25.81, "end": 38.67}, {"start": 38.81, "end": 50.0}, {"start": 50.14, "end": 56.11}, {"start": 56.25, "end": 60.31}, {"start": 60.45, "end": 62.75}, {"start": 62.89, "end": 68.7}, {"start": 68.84, "end": 75.94}, {"start": 76.08, "end": 79.08}, {"start": 79.08, "end": 84.03}, {"start": 84.17, "end": 86.78}, {"start": 86.92, "end": 93.45}, {"start": 93.59, "end": 100.29}, {"start": 100.43, "end": 101.84}, {"start": 101.98, "end": 107.55}, {"start": 107.69, "end": 110.69}, {"start": 110.69, "end": 112.52}, {"start": 112.66, "end": 123.26}, {"start": 123.4, "end": 126.67}, {"start": 126.81, "end": 130.07}, {"start": 130.21, "end": 135.78}, {"start": 135.92, "end": 140.46}, {"start": 140.6, "end": 144.34}, {"start": 144.48, "end": 150.38}, {"start": 150.52, "end": 155.78}, {"start": 155.92, "end": 163.74}, {"start": 163.88, "end": 167.15}, {"start": 167.29, "end": 171.18}, {"start": 171.32, "end": 174.82}, {"start": 174.96, "end": 179.5}, {"start": 179.64, "end": 184.89}, {"start": 185.03, "end": 190.7}, {"start": 190.84, "end": 194.65}, {"start": 194.79, "end": 197.58}, {"start": 197.72, "end": 199.68}, {"start": 199.82, "end": 208.92}, {"start": 209.06, "end": 213.36}, {"start": 213.5, "end": 217.0}, {"start": 217.14, "end": 222.88}, {"start": 223.02, "end": 226.02}, {"start": 226.02, "end": 231.44}, {"start": 231.58, "end": 239.55}, {"start": 239.69, "end": 244.39}, {"start": 244.53, "end": 255.24}, {"start": 255.38, "end": 259.91}, {"start": 260.05, "end": 265.86}, {"start": 266.0, "end": 269.58}, {"start": 269.72, "end": 272.64}, {"start": 272.78, "end": 279.48}, {"start": 279.62, "end": 282.62}, {"start": 282.62, "end": 285.31}, {"start": 285.45, "end": 287.9}, {"start": 288.04, "end": 297.2}, {"start": 297.34, "end": 306.27}, {"start": 306.41, "end": 311.67}, {"start": 311.81, "end": 316.1}, {"start": 316.24, "end": 325.27}, {"start": 325.41, "end": 333.47}, {"start": 333.61, "end": 337.26}, {"start": 337.4, "end": 343.38}, {"start": 343.52, "end": 348.7}, {"start": 348.84, "end": 358.25}, {"start": 358.39, "end": 369.33}, {"start": 369.47, "end": 373.84}, {"start": 373.98, "end": 377.8}, {"start": 377.94, "end": 389.36}, {"start": 389.5, "end": 390.92}, {"start": 391.06, "end": 395.42}], "audio_src": "audio_tuijie/tuijie_d07.mp3"}, {"day": 8, "title": "重要人物及文献（三）· 邓小平、江泽民、胡锦涛理论文献", "short_topic": "邓小平南方谈话与三个代表", "sub": "对应《冲刺背诵手册》下册 P11-P18", "badge": "模块二 · 人物文献篇", "module_id": "m2", "points": ["邓小平南方谈话与社会主义本质论断", "“三个代表”重要思想核心论述与历史地位", "科学发展观核心立场与基本要求文献串联"], "sentences_count": 67, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要人物及文献（三）：邓小平、江泽民、胡锦涛重要理论文献。", "今天我和你一起呢就会把《冲刺背诵手册》下册第16到第18页，关于人物跟文献就一起结束掉了。", "毛东向发展历程当中的最后一个阶段，就是继续丰富与发展。", "那么对的时期呢就是解放战争时期和新罗成立以后啊，那么最重要的是在尤其是新罗成立以后，最重要的是毛泽东提出了要把马克思主义同中国时际进行第二次结合，找出在中国怎样建设社会主义道路的任务啊，所以提出第二次结合，注意不是完成第二次结合啊，我们来看看对应的文章有哪些呢？", "第一个呢叫做竞绥总路线啊，所以在晋绥干部会上讲话，完整的表述了新民主主义的总路线的内容。", "那么总路线就是一个比较宏大的一个纲领，之所以是完整的去表述，是因为它增加了反对官僚资本主义，其实就已经说的是非常非常的具体了啊，说啊我们要完整的表述啊，完整的去做，所以完整总路线对应的是近随。", "好，那么再往下呢是论人民民主专政。", "那么论人民民主专政呢，这篇文章其实你要记住，它专政对应的是两基石。", "因为建国你得有理论基础嘛，所以这篇文章呢其实是创造性的发展了马克思列宁主义的国家学说。", "它跟契届二中全会决一起，共同构成了建立新中国的两块基石，共同构成了共同纲领的基础，也就是专政两基石。", "啊，好，那么再往下呢，就是我们建国之后了，江山打下来以后怎么去建设呢？", "那么建国一开始的时候呢，我们是跟着苏联老大哥学，后来发现不行，得有自己的打法，是不是？", "所以论世代关系横空出世。", "那么既然不是说不能就是只跟老大哥学，那么肯定是老大哥有点有一点点就是还是还是大哥的意思啊啊，只是不能只学他，所以以苏为贱啊，对应的这个单词是以苏为鉴啊，那么开开始独立自主的探索适合中国情况的社会主义建设道路。", "所以做题的时候呢，如果你看到开始探索中国自己的社会主义的道路的标志描选论杀关系，这个叫做十大坐标志啊。", "好一个是以缩为鉴，一个是标志。", "那么中间还可叫基本方针及调动一切基金素为把我国建设成为一个强大的社会主义国家啊，所以这是一个基本方针。", "那么最后呢就是论筛官当中，因为十个关系嘛，所以第一大关系要清楚，是重工业、轻工业和农业的关系。", "由于不能只跟老大哥学，所以毛泽东同志还提出了向外国学习的口号，强调一切民族，一切归他长处都要学，但是不能照搬照抄就行了。", "那么扼杀关系。", "因为今年是周年纪念，所以特别要注意去背它其中的所有内容啊，以作为鉴啦基本方针啦开始标志啦，对吧？", "第一大关系啦，外国学习这些口号就行了。", "好，接下来一篇文章呢叫关于正确处理人民内部矛盾的问题。", "这也是今年的重点，也是今年的周年纪念啊。", "那么随着建设铺开，国内矛盾也变了啊，那么那么所以我们这个时候要根据新的情况来重新进行去分析啊，所以我们关于正确处理人民内部矛盾的问题呢啊主要是明确提出走一条有别于苏联的中国共有化道路。", "就说明哎学学着我们自己对吧？", "建设铺开了，发现哎超级自信了，不仅仅是以素为戒，而且是什么明确提出啊走一条有别于苏联的中国工有化道路。", "所以对大哥态度比较激进了。", "记住比较激进得是第二篇文章，就是政处这篇文章才可以。", "好，第二呢是关于矛盾，矛盾当中呢这篇文章是分析了各种各样的矛盾。", "首先上来是分析社会主义社会的矛盾，那么指出矛盾是普遍的，社会主社会同样充满矛盾。", "社会主义社会既矛盾是非对抗性的，是可以在社会主义制度内自我调整、自我完善不断解决的这是第一种。", "也就是还是生产力生产关系啊，只不过在社会社会你不能不能质变，因为他们是可以自己解决的，通过调整就可以。", "好，第二种矛盾呢，我们称之为叫做政治上，那么政治上划分为叫敌我矛盾跟人民内部矛盾。", "敌我矛盾的性质是对抗性的，要用专政的方法来解决。", "人民内部矛盾呢是非对抗性的方矛盾，所以要用民主方法来解决。", "当然这两类性质完全不同的矛盾是可以相互转化的，所以民主的方法怎么来解决人民内部矛盾呢？", "又分了很多方面，所以你要特别去记住这些方针。", "不会超过啊八个字，都是基本上是八个字左右，或者6到8个字左右的啊。", "你看政治思想领域团结平与团结物质利益分配方面叫统筹兼顾、适当安排的方针。", "科学文化叫百花齐放、百家争鸣、双百方针。", "党派之间叫长期共存、互相兼督，民族之间叫民族平等、团结互助，人民和政府之间叫民主集中制原则。", "所以看清楚这些方针是什么，他有可能考试时候考的非常细，所以你要把这些方针都看看清楚，对应清楚就好了啊。", "好，再来呢就是我们的整整个矛盾完以后，就是关于我们的主题跟根本着眼点了。", "所以关于正确处理人民内部矛盾问题呢，是授予国家政治生活的主题。", "那么这一论断的根本着眼点仍然是调动一切因素，团结一切可以团结力量，把全党的注意力转移到社会主义建设上来就好了。", "好，所以你看这篇文章，第一个是对苏联态度更激进了。", "2.0版本了叫有别于苏联中国共产道路。", "第二是关于矛盾，分成了社会主义矛盾以及我们的政治上的矛盾，敌我跟人民内部矛盾。", "那么第三就是对于人民内部矛盾的这种民主的方法，知道有N个方针，方针不会超过八字，每一个方面要对应相应的方针就好了。", "最后呢是主题跟根本中原点对吧？", "好，那么由于呢是鼓励大家一直在说话啊，只是去判断你的矛盾是人民内部的还是敌我的啊，所以如何在我国的政治生活当中去判断人们的言论和行动的是非辨别、相挖和毒草呢？", "毛东提了六条政治标准，其中最重要的两条是社会主道路和党的领导。", "啊，看清楚，所以你就是随便说。", "但是到底是好的花还是有毒的草，我们可以根据标准来判定。", "那就这个意思啊，因为毕竟不是说百花齐放嘛，所以这个是在科学文化领域当中延伸出来讲的一些标准。", "好，然后接下来呢我觉得其实把这个东西搞完就已经ok了，就净绥总路线，专政两纪时，十大做标志，正处抓矛盾和主题搞定。", "你接下来呢呃毛宗人物结束以后呢，主要是邓小平跟江子民，今年的重点呢应该是江子民同志。", "那么特别注意一下呃呃，邓小平和江泽民他们各自贡献什么啊，那么邓小平对你是第二代装领导集体的核心啊，对应的是改革开放新时期，对应的是开创中国特色社会主义，对不对？", "所以他领导的伟大历史转折及改革开放嘛，推动了马克思主义中华新的飞跃，带领党和人民开辟了社会主义现化建设新局面，确立了实现祖国完全统一的正确路径，坚定了捍卫了光辉的社会主义旗帜。", "而对于姜泽来说，他是第三代中央领导集极的核心。", "三个代表重要思想的主要创立者啊，然后呢他做的是捍卫中国特色社会伟大事业，开创全面改革开放新局面，实现人民生活总体小康。", "这里要注意啊，因为全面小康对应的是习近平总书记，那么这里总体小康对应的是江泽民成功把中国特色社会主义推向21世纪。", "毕竟三六重要思想它其实是跨世纪的，所以叫做推向21世纪嘛。", "你这个从时间的用词来讲，能够反应过来就可以。", "Ok那今天我们就全部结束我们的背诵任务了。", "要记住这个世界上不要去怕不够好，只要你再变好，就一定值得骄傲，加油。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2, 3], "type": "intro"}, {"tag": "考点 01", "title": "邓小平南方谈话与社会主义本质论断", "badge": "重点采分点", "sent_indices": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], "type": "point"}, {"tag": "考点 02", "title": "“三个代表”重要思想核心论述与历史地位", "badge": "周年高频考点", "sent_indices": [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], "type": "point"}, {"tag": "考点 03", "title": "科学发展观核心立场与基本要求文献串联", "badge": "重点采分点", "sent_indices": [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [64, 65, 66], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 3.0}, {"start": 3.0, "end": 10.82}, {"start": 10.96, "end": 15.98}, {"start": 16.12, "end": 39.21}, {"start": 39.35, "end": 47.0}, {"start": 47.14, "end": 50.14}, {"start": 50.14, "end": 52.93}, {"start": 53.07, "end": 58.49}, {"start": 58.63, "end": 65.81}, {"start": 65.95, "end": 75.52}, {"start": 75.66, "end": 82.29}, {"start": 82.43, "end": 89.12}, {"start": 89.26, "end": 91.81}, {"start": 91.95, "end": 111.77}, {"start": 111.91, "end": 120.12}, {"start": 120.26, "end": 123.04}, {"start": 123.18, "end": 132.59}, {"start": 132.73, "end": 140.15}, {"start": 140.29, "end": 151.06}, {"start": 151.2, "end": 152.55}, {"start": 152.69, "end": 160.99}, {"start": 161.13, "end": 164.13}, {"start": 164.13, "end": 168.91}, {"start": 169.05, "end": 172.31}, {"start": 172.45, "end": 188.03}, {"start": 188.17, "end": 190.86}, {"start": 191.0, "end": 200.81}, {"start": 200.95, "end": 203.02}, {"start": 203.16, "end": 207.04}, {"start": 207.18, "end": 213.16}, {"start": 213.3, "end": 220.79}, {"start": 220.93, "end": 229.54}, {"start": 229.68, "end": 237.58}, {"start": 237.72, "end": 244.34}, {"start": 244.48, "end": 248.78}, {"start": 248.92, "end": 254.82}, {"start": 254.96, "end": 262.38}, {"start": 262.52, "end": 266.34}, {"start": 266.48, "end": 271.8}, {"start": 271.94, "end": 278.16}, {"start": 278.3, "end": 282.19}, {"start": 282.33, "end": 285.33}, {"start": 285.33, "end": 292.74}, {"start": 292.88, "end": 298.21}, {"start": 298.35, "end": 301.35}, {"start": 301.35, "end": 310.93}, {"start": 311.07, "end": 315.6}, {"start": 315.74, "end": 318.74}, {"start": 318.74, "end": 325.68}, {"start": 325.82, "end": 334.99}, {"start": 335.13, "end": 337.98}, {"start": 338.12, "end": 352.33}, {"start": 352.47, "end": 358.45}, {"start": 358.59, "end": 361.76}, {"start": 361.9, "end": 366.36}, {"start": 366.5, "end": 373.84}, {"start": 373.98, "end": 384.69}, {"start": 384.83, "end": 392.65}, {"start": 392.79, "end": 406.21}, {"start": 406.35, "end": 421.2}, {"start": 421.34, "end": 425.23}, {"start": 425.37, "end": 436.39}, {"start": 436.53, "end": 446.03}, {"start": 446.17, "end": 451.67}, {"start": 451.81, "end": 455.55}, {"start": 455.69, "end": 459.34}, {"start": 459.48, "end": 465.29}], "audio_src": "audio_tuijie/tuijie_d08.mp3"}, {"day": 9, "title": "土地政策总结（一）· 太平天国、辛亥革命至土地革命路线", "short_topic": "太平天国、辛亥至土地革命", "sub": "对应《冲刺背诵手册》下册 P18-P20", "badge": "模块三 · 土地政策篇", "module_id": "m3", "points": ["《天朝田亩制度》：“凡天下田，天下人同耕”的空想性与进步性", "辛亥革命民生主义：平均地权与“核定地价、增价归公”的局限", "井冈山土地法（第一个）到兴国土地法（依靠雇农贫农/保护中小工商业）的飞跃"], "sentences_count": 39, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》土地政策总结（一）：太平天国、辛亥革命至土地革命路线与土地法。", "今天为们起开启的是一个全新背诵板块，是土地政策总结，在创新帮手册下册第18到19页。", "今天呢我们主要是把逻辑想通，因为土地这个东西在党成立之前，是这些人无论什么阶级是触碰不了土这个根本的。", "因为土地其实是封建统治的根基，叫封建地主推所制嘛。", "如果在党成立之前，就有人可以触碰到封建地主土地所有制，能够触碰到把农把土地分配给给农民这样的一条根基的话，那其实他们就能实现成功了，是不是？", "而他俩只有我们能做到，只有我们能触及，所以最终我们才能赢得革命的胜利。", "因为触及的就代表真正的去反封建，彻底的反封建也代表了你会有相当雄厚的群众基础。", "在所以搞清楚这个大逻辑之后，我们再去看我们的所有土地政策，你就可以迎刃而解他们的缺陷在哪儿了。", "Ok啊且上来第一个呢是农民阶级的一种空饷，叫天朝田亩制度。", "它有没有好的？", "有的啊，解决土地问题为中心，要求平分土地，这也是一种纲领性的文件，能够最能够体现太平国的社会理想，则是四个好的啊，而且呢它有个根本可以选啊，叫根本上否定了封建社会的基础，即封建地主土地所有制。", "注意则是否定，因为它毕竟要求平分土地嘛。", "那为什么只是否定呢？", "因为它没落地啊，所以它的缺陷也是三个，叫做没有超出农民小生产者的狭隘眼界，具有不切实际的空想性质，也没有付诸实施。", "所以四个好的一个一个根本加上三个不好的就行了。", "好，第二个呢我们来看资产阶级的妥协与进步。", "那么自然阶级在呃孙中山在旧的三民主义当中呢，民生主义的内容叫平均地权。", "那么特别注意平均地权呢就是呃增价归公。", "因为现有地归现的人所有，但是革命后的增加的价值是归国家的，这个叫增价归公啊，注意它的缺陷是什么呢？", "叫做平均地权，不是将土地所有权分给农民，所以它没有正面触及封建地主体所有制，不能满足农民的土地要求，是不是？", "好，再接来呢，它稍微进步了一点呢，就是在新三民主义的民生主义里面呢，是除了平均地权之外，增加了节制资本，变成了平均地权加节制资本两大原则。", "而且要改善工农的生活状况，这个呢后来又提出了耕者有进行主张。", "注意第一个呢，是后来提出说明也没落地，对不对啊，不是当时提出的啊，特别特别的要想清楚。", "第二个啊，那么只是主张而已，并没有真正的去落地，一定要想清楚。", "好，那么到了中国党这里，我们就是比叫硬核摸索了啊，那么我们硬核摸索的一开始呢，可能也不是那么的符合实际。", "所以井冈山土地法呢是党历史上第一个土地法，首次以立法的形式肯定了广大农民以革命的手段获得土地的权利。", "但是呢由于缺乏经验，这个土地法关于没收一切土地归苏维埃政府所有，禁止土地买卖等方面的规定呢，其实并不适合中国农村的实际。", "于是后面有个叫兴国建土地法，是对井冈山土地法的一种继承发展啊。", "那么一个最关键的原则性的改正，就是把那个没收一切土地改为没收一切公共土地及地主阶级土地。", "这才是一个原则性的改正，保护了中农的利益不受侵犯的那一定要看清楚啊。", "好，至此呢我们终于在土地革命时期当中形成了一条比较好的阶级路线和分配方法。", "也就是我们的数字五叫做坚定的依靠贫农雇农，联合中农，限制富农，保护中小工商业者，消灭地主阶级。", "注意这就是阶级路线。", "那么土地分配方法呢就是以乡为单位，按人口平分土地，在原耕地的基址上抽多补少，抽肥补瘦。", "这里呢注意我们对于地主级态度是很坚定的，叫消灭。", "我们对于农民的态当中，尤其是富农，富农不是消灭啊，不是打击，用的动词叫什么？", "叫限制？", "一定要注意打击消灭是错的，只有限制在这里是正确的，嗯，所以注意清楚干扰他们就好了。", "Ok今天的任务想清楚闭上，你回忆一下，把逻辑顺一顺，然后呢再反复听听，记住我们的1到5条，明天我们继续来把图政策结束掉就好啦。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "《天朝田亩制度》：“凡天下田，天下人同耕”的空想性与进步性", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "type": "point"}, {"tag": "考点 02", "title": "辛亥革命民生主义：平均地权与“核定地价、增价归公”的局限", "badge": "周年高频考点", "sent_indices": [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], "type": "point"}, {"tag": "考点 03", "title": "井冈山土地法（第一个）到兴国土地法（依靠雇农贫农/保护中小工商业）的飞跃", "badge": "重点采分点", "sent_indices": [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [36, 37, 38], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.26}, {"start": 9.4, "end": 17.47}, {"start": 17.61, "end": 25.82}, {"start": 25.96, "end": 31.04}, {"start": 31.18, "end": 43.33}, {"start": 43.47, "end": 49.61}, {"start": 49.75, "end": 52.75}, {"start": 52.75, "end": 60.82}, {"start": 60.96, "end": 66.21}, {"start": 66.35, "end": 67.6}, {"start": 67.74, "end": 85.88}, {"start": 86.02, "end": 89.53}, {"start": 89.67, "end": 91.49}, {"start": 91.63, "end": 101.86}, {"start": 102.0, "end": 106.22}, {"start": 106.36, "end": 110.01}, {"start": 110.15, "end": 117.32}, {"start": 117.46, "end": 121.35}, {"start": 121.49, "end": 129.63}, {"start": 129.77, "end": 139.18}, {"start": 139.32, "end": 153.69}, {"start": 153.83, "end": 159.02}, {"start": 159.16, "end": 165.44}, {"start": 165.58, "end": 170.53}, {"start": 170.67, "end": 178.73}, {"start": 178.87, "end": 188.21}, {"start": 188.35, "end": 198.96}, {"start": 199.1, "end": 204.76}, {"start": 204.9, "end": 213.2}, {"start": 213.34, "end": 219.08}, {"start": 219.22, "end": 225.12}, {"start": 225.26, "end": 234.36}, {"start": 234.5, "end": 236.71}, {"start": 236.85, "end": 244.91}, {"start": 245.05, "end": 249.28}, {"start": 249.42, "end": 255.7}, {"start": 255.84, "end": 257.09}, {"start": 257.23, "end": 263.76}, {"start": 263.9, "end": 274.75}], "audio_src": "audio_tuijie/tuijie_d09.mp3"}, {"day": 10, "title": "土地政策总结（二）· 抗日战争、解放战争至农业合作化", "short_topic": "抗战、解放战争至农业土改", "sub": "对应《冲刺背诵手册》下册 P18-P20", "badge": "模块三 · 土地政策篇", "module_id": "m3", "points": ["抗日战争时期：减租减息政策（保留地主土地所有权，联合一切抗日力量）", "解放战争时期：《五四指示》（由减租减息转变为耕者有其田的过渡）", "解放战争时期：《中国土地法大纲》（废除封建剥削，明确规定实行耕者有其田）", "建国初期《土地改革法》与三大改造时期的农业合作化演进"], "sentences_count": 63, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》土地政策总结（二）：抗日战争、解放战争至新中国土改与农业合作化。", "今天我跟你一起背呢是《冲刺背诵手册》下册第19到20页。", "今天我们就把土地政策全部搞完啊，由于我们今天的内容呢全部是针对中国人党的土地政策啊，所以总的来说肯定就是变封建地主所有制为农民土地所制，对不对？", "那不同时期它肯定会有不一样，为什么不一样呢？", "因为它不同时期的任务是不一样的，所以我们上来先看第六条，那么减租减息时期呢是抗战时期，任务是为了团结抗战抗战所以你不可能说直接消灭它，你只能削弱它。", "所以叫减租减息意味着只是削弱封建剥削啊，但但仍然是在政治上可以动摇封建统治的，所以政治上动摇封建统治，经济上削弱封建剥削。", "改善农民的政治地位和生活状况，同时呢也可以调节各抗日阶层的利益啊，至此就可以有利于巩固抗日民族统一战线，推动抗日民主根据地的发展。", "好，到了第七第八条合并在一起呢，它其实是解放战时期。", "那么解放战时期呢任务是打倒反动派，解放全中国。", "所以你得发动国人民群众，是不是啊？", "那么党中央呢发布了一个指示，这个指示叫54指示，指示的就是重要指示，就是变减租减息改变为实行耕者久其田这个政策。", "而由于这样一个指示，就标志着解放区开始由削弱封建剥削向废除封建剥削制度的过渡，所以它叫指示嘛，对应关键词叫改变为叫过渡。", "好，那么《中国土地法大纲》对应的就是明确规定，明确规定废除封建及半封建性剥削土地制度，实行耕者有其田的土地制度。", "所以虽然出现了两次耕者有其田，但它改变为过渡，对应的是五四指示而明确规定实行，那么对应的是《中国土地法大纲》。", "同时中国土发的纲还规定，乡村中一切地主的土地及工地，由乡村农会接收分配给无地或少地的农民。", "所以中国土发的纲是一个彻底的反封建的土地革命纲领啊。", "那么那么在这个纲领一公布，那么解放区广大农村迅速掀起土地制度改革运动的热潮。", "那么这不就是为打倒反动派，解放全中国提供非常非常强大的群众基础嘛。", "好，那么第20页当中第九条中华人民共和国土地改革法一听这个名字就是新中国成立初期的。", "所以任务呢主要是完成民主革命遗留任务。", "民主革命不就是反封建嘛，对不对？", "那封建制度的根基土地不就是属于反封建任务嘛。", "但是这个为什么叫民主革命遗留任务呢？", "就这个任务应该在新中国成立之前你就干完的，但是你却遗留到新国成立之后才干，这不就是被遗留下来的任务吗？", "Ok所以它明确非常体现反封建的，所以这次土改的目的呢，当然就是废除地主阶级剥削的土地所有制，实行农民土地所有制，解放农村生产力，发展农业生产，为新中国的工业化开辟道路。", "好，第二个呢是对于富农的政策，从解放战时期征收富农多余土地财产的政策，改变为保存富农经济政策。", "至此我们有三个富农的案，我们知道打击赋农是错的啊，那么我们征收赋农对的是减放军时期，那么保存赋农对应的是中华人民共和国土地改革法。", "那么还有一个呢，是昨天我们所背的叫限制赋农，还记得是谁吗？", "啊，那么第三条，那么就中华人民共和国土地改革法的最后一条，由于这次相当于是全国的地盘都要土改，而不是说只是在解放区土改了。", "所以它是历史上规模最大，也是历次土改运动中进行最好的一次。", "好，第十条呢就是农业合作化，这一看就是社会主义改造时期的，所以它对应的任务呢就是确立社会主义制度。", "由此对于农农业来说，就是要从个体经济变为集体经济。", "因为在新中国成立之后的土改完成以后呢，农民的积极性很高。", "这个积极性表现在两方面，A个体经济积极性，因为你有东西了，你有生产资料的。", "B互助合作积极性，因为农民觉得大家合在一起可以有利于抵御风险，所以这是两个积极性。", "4选2答啊。", "好，那么单选题呢就告诉我们在社会主改造当中，三大改造里面首先进行的就是农业的社会主改造。", "那么改造的方式，单选题合作化遵循原则。", "单选题叫自典帮自愿互利、典型示范、国家帮助原则。", "采取的步骤形式一共有三种，互助组，初级生产合作社、高级生产合作社。", "互助组呢就是藕结对子，所以这时候呢只生产资料只是两个人，所以只是具有社会主义萌芽性质。", "那么到了初级农业生产合作社的时候呢，生产资料可能是组团的啊，那么这时候呢除了暗王分配之外呢，我们仍然是按当初入股的东西是拿分红的。", "所以不是完全的是物理性质，称之为叫半社物主性质。", "那么到了最后，高级农业生产合作社呢就是完全的集体所有的，所以就是属于完全的社会主义性质啊，最后一条呢是第11条，农村改开放。", "一看改开放肯定就是改开放。", "新时期嘛。", "对呢，就是解放生产力。", "毕竟为了打破旧的僵化模式，农村改造呢啊就是家庭验产承包责任制，就是让土地的这样的一个所有权仍然是集体的，仍然是集体所有。", "但是他把这个所有权跟经营权分离，这样子呢就是就容易激发农民自己的积极性了。", "所以啊家庭联产承包责任制啊，我们从农村改开放，那么对应的是安徽省凤阳县小岗村，他是最开开最先开始的啊。", "那么后面呢，我们明确规定包产到户，包干到户都是社会主义集体经济的生产责任制。", "所以相当于是明确了家庭连满承包责任制的性质，就还是集体所有的，它只是一种所有权跟经济权的分离啊。", "好，到了后来也就对应的是现在我们现在就习近平总书记执政期间，我们叫三权分治，叫所有权、承包权、经营权分置并行。", "这是农村基本经营制度的自我完善，也是继家庭联产承包责任制之后，农村改革又一重大制度创新。", "这个创新体现哪里呢？", "啊，就是还是集体所有承包呢？", "每个人每个家庭都有承包。", "但是如果说你已经不在农村了，你到城市了，你可以把经营权分给别人，分给那些愿意留在农村继续干的人。", "这样其实也有利于发展技术，也有利于大规模去做，对不对？", "所以这是一项重大制度创新。", "那么农村基本经营制度是乡村振兴的制度基础，在新形势下深化农村改革，主线仍然是处理好农民跟土地关系，最大的政策就是必须坚持和完善农村基本经营制度。", "Ok到此为止，我们的土地政策就全部背完了哦。", "加油，努力的每一天你都是最棒的。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "抗日战争时期：减租减息政策（保留地主土地所有权，联合一切抗日力量）", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], "type": "point"}, {"tag": "考点 02", "title": "解放战争时期：《五四指示》（由减租减息转变为耕者有其田的过渡）", "badge": "周年高频考点", "sent_indices": [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], "type": "point"}, {"tag": "考点 03", "title": "解放战争时期：《中国土地法大纲》（废除封建剥削，明确规定实行耕者有其田）", "badge": "重点采分点", "sent_indices": [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], "type": "point"}, {"tag": "考点 04", "title": "建国初期《土地改革法》与三大改造时期的农业合作化演进", "badge": "周年高频考点", "sent_indices": [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [60, 61, 62], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.34}, {"start": 9.48, "end": 13.94}, {"start": 14.08, "end": 25.74}, {"start": 25.88, "end": 29.39}, {"start": 29.53, "end": 42.3}, {"start": 42.44, "end": 54.48}, {"start": 54.62, "end": 65.88}, {"start": 66.02, "end": 70.87}, {"start": 71.01, "end": 75.23}, {"start": 75.37, "end": 78.16}, {"start": 78.3, "end": 89.14}, {"start": 89.28, "end": 100.47}, {"start": 100.61, "end": 110.66}, {"start": 110.8, "end": 119.97}, {"start": 120.11, "end": 129.45}, {"start": 129.59, "end": 134.12}, {"start": 134.26, "end": 141.03}, {"start": 141.17, "end": 147.22}, {"start": 147.36, "end": 155.26}, {"start": 155.4, "end": 158.56}, {"start": 158.7, "end": 161.56}, {"start": 161.7, "end": 166.0}, {"start": 166.14, "end": 169.23}, {"start": 169.37, "end": 172.37}, {"start": 172.37, "end": 175.37}, {"start": 175.37, "end": 184.23}, {"start": 184.37, "end": 195.38}, {"start": 195.52, "end": 199.99}, {"start": 200.13, "end": 211.46}, {"start": 211.6, "end": 216.54}, {"start": 216.68, "end": 224.89}, {"start": 225.03, "end": 230.21}, {"start": 230.35, "end": 235.85}, {"start": 235.99, "end": 242.13}, {"start": 242.27, "end": 249.38}, {"start": 249.52, "end": 250.86}, {"start": 251.0, "end": 258.18}, {"start": 258.32, "end": 261.72}, {"start": 261.86, "end": 264.86}, {"start": 264.86, "end": 267.86}, {"start": 267.86, "end": 275.28}, {"start": 275.42, "end": 285.64}, {"start": 285.78, "end": 289.84}, {"start": 289.98, "end": 300.52}, {"start": 300.66, "end": 303.34}, {"start": 303.48, "end": 304.66}, {"start": 304.8, "end": 306.86}, {"start": 307.0, "end": 317.85}, {"start": 317.99, "end": 324.21}, {"start": 324.35, "end": 333.68}, {"start": 333.82, "end": 340.52}, {"start": 340.66, "end": 349.04}, {"start": 349.18, "end": 359.47}, {"start": 359.61, "end": 367.51}, {"start": 367.65, "end": 369.3}, {"start": 369.44, "end": 371.82}, {"start": 371.96, "end": 374.1}, {"start": 374.24, "end": 381.41}, {"start": 381.55, "end": 386.09}, {"start": 386.23, "end": 388.44}, {"start": 388.58, "end": 402.3}, {"start": 402.44, "end": 406.19}, {"start": 406.33, "end": 409.42}], "audio_src": "audio_tuijie/tuijie_d10.mp3"}, {"day": 11, "title": "思想解放与论战线索总结 · 维新、辛亥论战与新文化运动", "short_topic": "维新、辛亥论战与新文化", "sub": "对应《冲刺背诵手册》下册 P21-P24", "badge": "模块四 · 思想论战篇", "module_id": "m4", "points": ["维新派与守旧派论战：要不要变法、要不要兴民权、要不要废八股", "革命派与改良派论战：要不要以革命手段推翻清王朝（核心焦点）", "新文化运动：提倡民主与科学、思想启蒙与马克思主义传入准备"], "sentences_count": 87, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》思想解放与论战线索总结：维新论战、辛亥论战与新文化运动。", "今天我和你一起把《冲刺背诵手册》下册第21到24页，整个近代思想解放与论战线索总结完整背完！", "因为今天我们要开启的是冲刺动手册下册第21到24页，整个思想解放线索总结一起把它背完。", "一共呢有六个内容，但这个内容每个比较多。", "然后呢在出选择题的时候呢，他们其实互为干扰箱。", "所以你可以把一和二放在一块背，三和四放一块背，五和六放一块背啊，那么一和二呢都是论战，所以呢如果是在做选题的时候呢，无论材料怎么出啊，你要在设问里面去搞清楚它是第几次的，只要分清楚是第一次还是第二次，立刻就能秒选出来。", "因为第一次论战不会有革命这个词，那么所有的革命都是选在第二次论战里面的。", "所以你看我们的第二次论战叫呃划清了革命与改良的界限，传播了民主革命的思想，促进了革命形式的发展。", "当然也抱露了革命派在思想理论方面的弱点及反对反封的不彻底嘛。", "所以你看第二作战内容全是革命哦，要不要以革命手段推翻清王朝，这是双方论战的焦点。", "要不要推翻帝制实新共和推翻帝制不也是革命的意思吗？", "对不对？", "第三个是要不要社会革命哦，也是有革命这个词的，所以第一步进行判定，第二步来选，所以你背了2，其实就不用背一了，是不是？", "好，我们来看第三和第四条，分别是新文化运动跟54。", "新文化运动显然也是一种对比来记的。", "那么新文化运动呢，如果不是特别强调五四以前，就是讲新文化运动它就是指的五四以前的。", "所以它对的是12个字，叫前所未有空前深刻啊。", "前所未有空前深刻加上民主科学这12个字是对应新文化运动的。", "所以第一条你要记住啊，第二呢是你要明白他所宣传的呢其实是西方的民主与科学啊，也就是说这个时候民主与科学指的是西方资本主义的这样的一个思潮啊，所以记住第二点。", "第三个呢是他为马克思主义只是准备了条件，因为这时候呢马克思主义只是作为一种外来思潮传入了中国啊，那只是说相当于先翻译，所以也就是为接下来能够广泛传播准备条件而已。", "就是你得有人能读，你得有人能翻译，你得有人先接触到，这个叫准备条件。", "第四，充足了禁锢人们思想闸门，为外国各种思想流派传入中国敞开大门。", "因为新文化运动做了非常非常多的翻译的工作啊，好，由此也可见它的局限性是由于它所宣传的是西方的自然界民主主义。", "我们现在开了上帝视角，知道西方的这种资产阶级民主主义并不能为人们提供一种有效的思想武器去认识和改造中国，对吧？", "第二呢，西方运动的局限是在于他把改造国命性至优先地位啊靠呐喊，而不去改变那种啊环境啊，那么其实是不可能真正的去改造国民性的啊。", "第三呢是西化运动呢还没有马克思主义批判精神，采用的是一般的自然阶方法。", "这种形式主义看不见方法呢其实是很致命的。", "Ok所以这是新文化运动当中你要记住的词就好了。", "那么所谓的新文化就是呃新的道德啊、新的文学啊、白话文呐啊类似这种啊这种个性解放这种这种新的文化。", "那么他反对的其实是那些封建礼教，所以你不要把它直接等同于说啊，他就是否定了全部的传统文化，也不是否定全部的孔学。", "它只是通过批判孔学来动摇封建正统思想的统治地位，这一点是在理解上，要想清楚就好了。", "好，那么往后呢我们是如何发展到54以后向运动呢？", "中间临时出了一些刺激事件，这个刺激事件呢就是一战与十月革命。", "因为第一次世界大战其实就是让呃我们对于这种西方的资本主义的民主是彻底的失望的。", "那么同时呢十月革命的爆发又让我们对于一种新的主义产生了一种希望，也就是给知识分子展示了一种全新的这种道路。", "那么不就是马克思主义吗？", "所以金由这的外界的两个stimul的刺激，所以我们才会有五四运动。", "那么五四运动呢之后，新动就发生了一些变化啊，这个变化就在于我还是新文化运动，所以呢我仍然是民主义科学。", "但是自首呢民主义科学是继承了马克思主义的这样的一个意愿了，所以是大多数人的民主，是马克思主义这样的一种科学。", "好，第二呢是体现在我们虽然继续深刻的反对封建文化，但是我们是付诸实践的。", "就跟之前不一样了，我们又付诸实践，而且强调不是个性解放，是社会解放。", "而且强调不仅要去反对思想，还要去反对产生这个思想的社会制度。", "你看是不是超级马克思主义。", "因此我们认为马克思主义成为54以后新运动当中居于主体地位的思想，逐步发挥指导作用。", "Ok啊所以就是三四两条合在一起，最后呢就是五六两条。", "延安整风跟关于真理辩证问题的讨论。", "他们一个叫马克思主义思想教育运动，马克思主义思想解放运动啊啊，那么真理辩证问题的意义叫做又一场。", "所以你看又一场说明前面有啊，所以你要先记住，哎，谁是马克思主义的思想教育运动。", "思想解放运动呢对应的是延安整风，所以意义当中马克思主义思想教育运动特别指的是延安整风。", "那么又一场马克思主义思想解放运动指的是真理标中。", "你讨论这样子，我们可以先上来定个性。", "那么为什么严安整风吃马克思主义思想教育运动呢？", "或者说也是一场伟大的马克思主义结放运动呢？", "因为他确立了实事求是的马克思主义思想路线，所以全党范围内确立了实事求是。", "那说明之前我们犯的最大的错误主要是教条主义，那么就是根本清算所要能够选清楚根本清算教条主义。", "严暗整风，确立实事求是向无限严案整风，马克思主义思想教育运动严安整风。", "Ok这是他的意义当中，在多选题里面最容易考得到的。", "好，那返回来。", "那么延安整风的内容是什么呢？", "它是三个反对，反对主观主义、宗派主义、党八股。", "那么反对主观主义是三个任务当中排名最首的，所以延安整风最主要的任务就是反对主观主义。", "一整顿学风，为什么呢？", "这里有四个单选题，主观主义是党内反复出现左右倾错误的思想政治根源。", "因为主观主义的实质就叫做理论脱离实际。", "还记得实际是一条线不？", "那么理论如果不在这个线上，那么一定是在线的上面，那就是超越实际，那就是左倾。", "在线的下方就是投降，那就是右倾。", "只有正好卡在线上才叫理论联系实际的实事求是。", "所以主观主义无论是上面下面的左或者右都是错的，所以主观主义实质叫理论脱离实际，颠倒了时间认识关系啊。", "那么主观主义表现形式就叫教条主义和经验主义，其中教条主义才是整风运动的重点，因为这不是我们根本轻算的东西嘛。", "而由于反对主观主义整顿的是学风，所以学风问题是第一个重要的问题。", "什么是学风呢？", "指的是一种态度，是思想方法问题加对待马列态度工作态度问题。", "所以两个态度一个方法，这个就叫学风问题了。", "好，那么整部中当中呢还规定转变党的作风的基础一环就是加强调查研究就可以了。", "好，那么再往下呢就是关于真理标论文讨论。", "我们现在知道它叫做又一场马克思主义思想解放运动，是不是？", "那么它的实质是在于是不是坚持马克思列宁主义、毛泽思想。", "因为真正的马列思主义矛东思想，他肯定是要坚持实事求是的，对不对？", "所以正因为这个讨论明确的解决了党的思想路线问题，继而影响党的政治路线的制定和贯彻，成为注意啊叫正本清源、拨乱反正和改开放的思想先导。", "所以政乱思想先导啊，所以就为重新确立实事求是啊做了思想理论准备。", "所以关于政理辩论的讨论呢，它既然是一场思想解放运动，它本身不是会议，不是文件，所以它不能直接确立。", "它只是为确立做了思想先导，未确立做了思想准备，注意这个表述就好了。", "好，那么在24当中呢，我其实整理了思想启蒙的选择大汇总，是对我们是目前所学的所有内容的一个总结。", "你可以自己看一看，看看能不能左右对应的非常清楚就好了。", "请你记住啊，不凡的绝技一定是重复给的，他未必惊验开场，但一定可以圆满结局。", "所以背书练习的过程虽然很枯燥，但是我相信总有一天你精通样子一定是最耀眼的。"], "sections": [{"tag": "开篇导引", "title": "学习定位与考情导读", "badge": "开卷指要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "维新派与守旧派论战：要不要变法、要不要兴民权、要不要废八股", "badge": "重点采分点", "sent_indices": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], "type": "point"}, {"tag": "考点 02", "title": "革命派与改良派论战：要不要以革命手段推翻清王朝（核心焦点）", "badge": "周年高频考点", "sent_indices": [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55], "type": "point"}, {"tag": "考点 03", "title": "新文化运动：提倡民主与科学、思想启蒙与马克思主义传入准备", "badge": "重点采分点", "sent_indices": [56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82], "type": "point"}, {"tag": "名师点拨", "title": "命题题眼拆解与做题要诀", "badge": "考场避坑", "sent_indices": [83, 84, 85, 86], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.65}, {"start": 9.79, "end": 18.81}, {"start": 18.95, "end": 27.4}, {"start": 27.54, "end": 30.88}, {"start": 31.02, "end": 34.76}, {"start": 34.9, "end": 51.68}, {"start": 51.82, "end": 57.38}, {"start": 57.52, "end": 67.1}, {"start": 67.24, "end": 72.66}, {"start": 72.8, "end": 79.81}, {"start": 79.95, "end": 83.94}, {"start": 84.08, "end": 84.84}, {"start": 84.98, "end": 94.49}, {"start": 94.63, "end": 99.16}, {"start": 99.3, "end": 102.33}, {"start": 102.47, "end": 109.64}, {"start": 109.78, "end": 114.08}, {"start": 114.22, "end": 119.4}, {"start": 119.54, "end": 132.0}, {"start": 132.14, "end": 145.48}, {"start": 145.62, "end": 151.36}, {"start": 151.5, "end": 157.48}, {"start": 157.62, "end": 167.19}, {"start": 167.33, "end": 176.91}, {"start": 177.05, "end": 188.14}, {"start": 188.28, "end": 191.28}, {"start": 191.28, "end": 194.54}, {"start": 194.68, "end": 198.42}, {"start": 198.56, "end": 208.14}, {"start": 208.28, "end": 217.69}, {"start": 217.83, "end": 225.32}, {"start": 225.46, "end": 229.68}, {"start": 229.82, "end": 235.08}, {"start": 235.22, "end": 241.74}, {"start": 241.88, "end": 250.67}, {"start": 250.81, "end": 253.11}, {"start": 253.25, "end": 258.1}, {"start": 258.24, "end": 267.41}, {"start": 267.55, "end": 275.13}, {"start": 275.27, "end": 283.0}, {"start": 283.14, "end": 289.19}, {"start": 289.33, "end": 294.42}, {"start": 294.56, "end": 297.1}, {"start": 297.24, "end": 304.66}, {"start": 304.8, "end": 309.57}, {"start": 309.71, "end": 312.98}, {"start": 313.12, "end": 321.49}, {"start": 321.63, "end": 329.05}, {"start": 329.19, "end": 337.01}, {"start": 337.15, "end": 341.04}, {"start": 341.18, "end": 343.72}, {"start": 343.86, "end": 348.23}, {"start": 348.37, "end": 352.19}, {"start": 352.33, "end": 358.54}, {"start": 358.68, "end": 361.68}, {"start": 361.68, "end": 368.79}, {"start": 368.93, "end": 372.91}, {"start": 373.05, "end": 374.47}, {"start": 374.61, "end": 376.74}, {"start": 376.88, "end": 381.25}, {"start": 381.39, "end": 388.98}, {"start": 389.12, "end": 391.66}, {"start": 391.8, "end": 398.09}, {"start": 398.23, "end": 401.88}, {"start": 402.02, "end": 403.91}, {"start": 404.05, "end": 410.92}, {"start": 411.06, "end": 414.08}, {"start": 414.22, "end": 418.68}, {"start": 418.82, "end": 427.68}, {"start": 427.82, "end": 430.82}, {"start": 430.82, "end": 436.15}, {"start": 436.29, "end": 437.63}, {"start": 437.77, "end": 443.68}, {"start": 443.82, "end": 447.7}, {"start": 447.84, "end": 454.61}, {"start": 454.75, "end": 458.33}, {"start": 458.47, "end": 463.56}, {"start": 463.7, "end": 468.54}, {"start": 468.68, "end": 473.63}, {"start": 473.77, "end": 486.46}, {"start": 486.6, "end": 492.41}, {"start": 492.55, "end": 500.93}, {"start": 501.07, "end": 506.73}, {"start": 506.87, "end": 515.42}, {"start": 515.56, "end": 519.13}, {"start": 519.27, "end": 526.28}, {"start": 526.42, "end": 533.12}], "audio_src": "audio_tuijie/tuijie_d11.mp3"}];
+    const tjAllDaysData = [{"day": 1, "title": "重要会议总结（一）· 党的一大至四大与国民党一大", "short_topic": "一大至四大与国民党一大", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["党的一大：三大核心关键词（首个纲领/崭新目标/组织工人）", "党的二大（五大里程碑贡献）：首提民主革命纲领与首部党章", "党的三大：国共党内合作与保持独立性", "国民党一大：第一次国共合作正式形成的标志", "党的四大：首次明确提出无产阶级领导权与工农联盟", "早期重要会议命题辨析与速记决胜"], "sentences_count": 28, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（一）：党的一大至四大与国民党一大。", "本讲系统梳理中国共产党创建初期及第一次国共合作时期的重要会议脉络与高频命题点。", "请结合《冲刺背诵手册》下册核心条目，重点掌握各次会议的标志性历史贡献与考点辨析。", "党的一大核心把握三个关键词：首个纲领、崭新目标、组织工人。", "第一个关键词是“首个纲领”：党的一大通过了中国共产党的第一个纲领，明确规定以无产阶级革命军队推翻资产阶级，建立无产阶级专政，消灭资本家私有制。", "第二个关键词是“崭新目标”：党的一大明确规定奋斗目标是实现社会主义和共产主义。", "第三个关键词是“组织工人”：党的一大决定成立后首先集中精力组织工人阶级，领导工人运动。", "需要特别注意：党的一大尚未充分认识中国半殖民地半封建社会的国情，尚未提出民主革命纲领，也尚未认识到统一战线和农民问题的重要性。", "党的二大是具有里程碑意义的会议，需牢牢掌握五大标志性贡献。", "第一，制定了党的第一部章程，即《中国共产党章程》，为党的组织建设奠定了基石。", "第二，第一次明确提出了反帝反封建的民主革命纲领，科学指明了中国革命性质与奋斗目标，使中国革命有了清晰的方向。", "第三，第一次科学区分了最高纲领与最低纲领。最高纲领是实现社会主义和共产主义；当前阶段的最低纲领是打倒军阀、推翻国际帝国主义压迫，统一中国为真正的民主共和国。", "第四，采取了以往任何政党都未曾采取过的革命方法，即群众路线的方法，相信群众、依靠群众。", "第五，会议正式提出了民主联合战线的主张，第一次明确提出了党的统一战线政策。", "党的三大核心议题是解决国共合作方式与统一战线建立问题。", "会议正式决定全体共产党员以个人名义加入国民党，同孙中山领导的国民党建立革命统一战线，这种合作形式被称为党内合作。", "同时党的三大明确规定：共产党员加入国民党后，必须在政治上、思想上、组织上保持中国共产党的独立性。", "国民党一大是唯一被纳入中共党史常考范围的国民党会议，标志着第一次国共合作正式形成。", "会议通过的宣言对三民主义作出了符合时代潮流的新解释，形成了新三民主义。", "民族主义突出反帝内容，主张各民族一律平等；民权主义强调主权在民，为一般平民所共有；民生主义概括为平均地权和节制资本，并进一步提出耕者有其田。", "新三民主义同中国共产党在民主革命阶段的纲领基本一致，因而成为国共合作的政治基础。", "在审题时务必精准辨析：新三民主义与中共民主革命纲领是“基本一致”，而非“完全相同”。", "国民党一大在实际上确立了联俄、联共、扶助农工的三大革命政策，使新三民主义同三大政策融为一体。", "党的四大最突出的历史贡献包含两大核心内容。", "第一，第一次明确提出了无产阶级在民主革命中的领导权问题。", "第二，第一次明确提出了工农联盟问题，指出了农民是工人阶级最可靠的同盟军。", "名师点拨速记口诀：一大建党立纲领，二大出章定两纲；三大决定入国党，国党一大合作起；四大首提领导权，工农同盟是法宝。", "解答早期会议题目时，紧扣“首次”与“标志”，重点谨防一大与二大纲领、二大与国民党一大统一战线地位的混淆。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "党的一大：三大核心关键词（首个纲领/崭新目标/组织工人）", "badge": "高频考点", "sent_indices": [3, 4, 5, 6, 7], "type": "point"}, {"tag": "考点 02", "title": "党的二大（五大里程碑贡献）：首提民主革命纲领与首部党章", "badge": "高频考点", "sent_indices": [8, 9, 10, 11, 12, 13], "type": "point"}, {"tag": "考点 03", "title": "党的三大：国共党内合作与保持独立性", "badge": "重点关注", "sent_indices": [14, 15, 16], "type": "point"}, {"tag": "考点 04", "title": "国民党一大：第一次国共合作正式形成的标志", "badge": "高频考点", "sent_indices": [17, 18, 19, 20, 21, 22], "type": "point"}, {"tag": "考点 05", "title": "党的四大：首次明确提出无产阶级领导权与工农联盟", "badge": "重点关注", "sent_indices": [23, 24, 25], "type": "point"}, {"tag": "名师点拨", "title": "早期重要会议命题辨析与速记决胜", "badge": "技巧点睛", "sent_indices": [26, 27], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 8.38}, {"start": 8.56, "end": 16.21}, {"start": 16.39, "end": 23.5}, {"start": 23.68, "end": 29.48}, {"start": 29.66, "end": 42.6}, {"start": 42.78, "end": 49.64}, {"start": 49.82, "end": 57.41}, {"start": 57.59, "end": 69.16}, {"start": 69.34, "end": 74.66}, {"start": 74.84, "end": 81.3}, {"start": 81.48, "end": 90.58}, {"start": 90.76, "end": 104.24}, {"start": 104.42, "end": 112.39}, {"start": 112.57, "end": 118.62}, {"start": 118.8, "end": 123.98}, {"start": 124.16, "end": 135.18}, {"start": 135.36, "end": 143.26}, {"start": 143.44, "end": 150.85}, {"start": 151.03, "end": 157.49}, {"start": 157.67, "end": 171.25}, {"start": 171.43, "end": 178.54}, {"start": 178.72, "end": 185.96}, {"start": 186.14, "end": 195.24}, {"start": 195.42, "end": 199.55}, {"start": 199.73, "end": 204.67}, {"start": 204.85, "end": 211.72}, {"start": 211.9, "end": 223.63}, {"start": 223.81, "end": 232.74}], "audio_src": "audio_tuijie/tuijie_d01.mp3"}, {"day": 2, "title": "重要会议总结（二）· 八七会议至遵义会议与洛川会议", "short_topic": "八七会议至遵义与洛川会议", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["八七会议：给思想定调，枪杆子里出政权与历史性转变", "古田会议：思想建党、政治建军与人民军队性质", "遵义会议：生死攸关的转折点，军事与组织问题的解决", "瓦窑堡会议：抗日民族统一战线新政策与关门主义批判", "洛川会议：全面抗战路线、十大纲领与敌后战场开辟", "土地革命与抗战初期会议命题脉络梳理"], "sentences_count": 27, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（二）：八七会议、古田会议、遵义会议、瓦窑堡会议与洛川会议。", "本讲聚焦中国革命从土地革命战争兴起到全面抗日战争爆发时期的关键转折性会议。", "这些会议在中国革命危急关头发挥了挽救党、挽救军队、挽救中国革命的决定性作用，是考研政治命题常青树。", "八七会议是在大革命失败后极其危急的关头召开的紧急会议，核心地位在于“给思想定调，实现历史性转变”。", "会议彻底清算了大革命后期的陈独秀右倾机会主义错误，确定了土地革命和武装反抗国民党反动派的总方针。", "毛泽东在会上深刻总结大革命失败的沉痛教训，提出了“须知政权是由枪杆子中取得的”著名论断。", "会议提出了整顿队伍、纠正错误、组织工农武装起义的具体任务，秋收起义即是在八七会议方针指导下发动的。", "八七会议给正处在思想混乱和组织涣散中的中国共产党指明了出路，是由大革命失败到土地革命战争兴起的历史性转变点。", "古田会议即红四军第九次党代会，系统解决了把以农民为主要成分的军队建设成为新型人民军队的根本问题。", "会议通过了毛泽东起草的建党建军纲领性文献，确立了思想建党、政治建军的根本原则。", "会议确立了党对军队的绝对领导原则，规定红军必须置于党的绝对领导之下，坚决克服单纯军事观点。", "会议科学规定了红军的无产阶级性质、宗旨与任务，指出红军是一个执行革命的政治任务的武装集团，必须担负打仗、消灭敌人、打土豪筹款子、做群众工作等多项政治任务。", "遵义会议是中国共产党历史上一个生死攸关的转折点。", "遵义会议集中解决了当时具有决定意义的军事问题和组织问题，结束了王明左倾教条主义在中央的统治。", "会议确立了毛泽东在红军和党中央的实际领导地位，成立了由毛泽东、周恩来、王稼祥组成的三人军事指挥小组。", "遵义会议在红军第五次反围剿失败和长征初期严重受挫的历史关头，挽救了党、挽救了红军、挽救了中国革命。", "更为重要的是，遵义会议是中国共产党第一次独立自主地运用马克思列宁主义基本原理解决自己的路线、方针和政策问题，标志着中国共产党在政治上走向成熟。", "瓦窑堡会议是在华北事变后、中日民族矛盾上升为主要矛盾的历史背景下召开的政治局扩大会议。", "会议深入分析了华北事变后国内阶级关系的新变化，正式确立了建立抗日民族统一战线的策略方针。", "会议系统批判了党内长期存在的左倾关门主义错误，指出关门主义是党内当前最大的危险。", "瓦窑堡会议强调中国共产党在统一战线中的领导权，明确提出将工农共和国的口号改变为人民共和国，为抗日民族统一战线的形成奠定了坚实政治基础。", "洛川会议是在七七事变后、全国性抗战爆发的历史转折关头召开的中央政治局扩大会议。", "会议通过了《抗日救国十大纲领》，系统阐明了中国共产党的全面抗战路线，即人民战争路线，主张动员全民族一切力量争取抗战胜利。", "会议明确指出了全面抗战路线与国民党片面抗战路线的根本区别，片面抗战路线不敢发动群众，只依靠政府和军队抗战，必然导致失败。", "会议决定把党的工作重心放在敌后战场的开辟上，在敌后开展独立自主的游击战争，建立抗日民主根据地。", "名师点拨速记要诀：八七定调起义兴，古田建军党铸魂；遵义救急走向熟，瓦堡统战改共和国；洛川全面十纲领，敌后游击筑铜墙。", "复习时重点把握会议解决的核心问题：遵义会议解决的是“军事与组织问题”，而非思想或政治路线问题；抗日民族统一战线策略确立于瓦窑堡，而非洛川会议。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "八七会议：给思想定调，枪杆子里出政权与历史性转变", "badge": "核心重点", "sent_indices": [3, 4, 5, 6, 7], "type": "point"}, {"tag": "考点 02", "title": "古田会议：思想建党、政治建军与人民军队性质", "badge": "高频考点", "sent_indices": [8, 9, 10, 11], "type": "point"}, {"tag": "考点 03", "title": "遵义会议：生死攸关的转折点，军事与组织问题的解决", "badge": "必背核心", "sent_indices": [12, 13, 14, 15, 16], "type": "point"}, {"tag": "考点 04", "title": "瓦窑堡会议：抗日民族统一战线新政策与关门主义批判", "badge": "核心考点", "sent_indices": [17, 18, 19, 20], "type": "point"}, {"tag": "考点 05", "title": "洛川会议：全面抗战路线、十大纲领与敌后战场开辟", "badge": "重点掌握", "sent_indices": [21, 22, 23, 24], "type": "point"}, {"tag": "名师点拨", "title": "土地革命与抗战初期会议命题脉络梳理", "badge": "技巧点睛", "sent_indices": [25, 26], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 10.94}, {"start": 11.12, "end": 18.54}, {"start": 18.72, "end": 28.13}, {"start": 28.31, "end": 36.85}, {"start": 37.03, "end": 45.82}, {"start": 46.0, "end": 54.44}, {"start": 54.62, "end": 63.24}, {"start": 63.42, "end": 73.96}, {"start": 74.14, "end": 83.23}, {"start": 83.41, "end": 90.9}, {"start": 91.08, "end": 99.53}, {"start": 99.71, "end": 113.44}, {"start": 113.62, "end": 117.98}, {"start": 118.16, "end": 126.3}, {"start": 126.48, "end": 135.26}, {"start": 135.44, "end": 145.09}, {"start": 145.27, "end": 158.69}, {"start": 158.87, "end": 166.84}, {"start": 167.02, "end": 174.67}, {"start": 174.85, "end": 182.51}, {"start": 182.69, "end": 194.98}, {"start": 195.16, "end": 203.22}, {"start": 203.4, "end": 214.97}, {"start": 215.15, "end": 225.68}, {"start": 225.86, "end": 234.79}, {"start": 234.97, "end": 247.67}, {"start": 247.85, "end": 260.86}], "audio_src": "audio_tuijie/tuijie_d02.mp3"}, {"day": 3, "title": "重要会议总结（三）· 六届六中、六届七中、七大与七届二中", "short_topic": "六届六中、七大至七届二中", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["六届六中全会：首次明确提出“马克思主义中国化”命题", "六届七中全会：通过第一个历史决议，整风运动圆满总结", "中共七大：确立毛泽东思想为指导思想，系统阐述三大作风", "七届二中全会：工作重心转移与“两个务必”提出", "延安时期重要会议命题考点与易错题眼"], "sentences_count": 23, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（三）：六届六中全会、六届七中全会、中共七大与七届二中全会。", "本讲聚焦抗日战争中后期至解放战争胜利前夕的关键会议。", "这一时期是中国共产党在理论上、政治上和组织上达到空前团结与成熟的黄金时期，是考研分析题和客观题的密集命题区。", "六届六中全会是毛泽东思想发展史上的里程碑会议。", "毛泽东在会上作了题为《论新阶段》的政治报告，首次明确提出了“马克思主义中国化”这一划时代的伟大命题。", "会议明确指出：离开中国特点来谈马克思主义，只是抽象的、空洞的马克思主义；必须使马克思主义在中国具体化，使之带有中国风貌和中国特色。", "六届六中全会统一了全党在抗日民族统一战线中的思想，巩固了毛泽东在党中央的核心领导地位，为延安整风运动奠定了重要的理论基础。", "六届七中全会在延安整风运动取得决定性胜利的背景下召开，历时较长。", "会议原则通过了党史上的第一个历史决议，即《关于若干历史问题的决议》。", "该决议深刻总结了建党以来特别是六届四中全会至遵义会议期间的重大历史经验，对党史上的左倾、右倾错误作出了客观科学的政治结论。", "决议高度评价了毛泽东运用马克思主义基本原理解决中国革命问题的杰出贡献，统一了全党思想，为中共七大的胜利召开做好了思想和组织准备。", "中共七大是民主革命时期党召开的极其重要的一次全国代表大会，实现了全党空前的团结统一。", "中共七大正式确立毛泽东思想为党的指导思想，并庄严写入党章，这是七大最重大的历史贡献。", "毛泽东在会上作了《论联合政府》的政治报告，系统阐述了新民主主义国家建构与联合政府主张。", "会议系统总结了中国共产党在长期奋斗中形成的三大优良作风：理论联系实际的作风、密切联系群众的作风、批评与自我批评的作风。", "三大作风是中国共产党区别于其他任何政党的显著标志，彰显了无产阶级先锋队的政治本色。", "七届二中全会是在新民主主义革命即将取得全国胜利的历史转折关头召开的极为重要的中央全会。", "会议作出了党的工作重心由乡村转移到城市的重大战略决策，开启了党由革命党向执政党的历史转变。", "会议规定了全国胜利后中国由农业国转变为工业国、由新民主主义社会转变为社会主义社会的总任务和主要途径。", "毛泽东在会上高瞻远瞩地提出了“两个务必”的思想：务必使同志们继续地保持谦虚、谨慎、不骄、不躁的作风，务必使同志们继续地保持艰苦奋斗的作风。", "“两个务必”体现了中国共产党人在夺取全国政权面前清醒的历史自觉，告诫全党警惕资产阶级“糖衣炮弹”的袭击。", "名师点拨速记要诀：六中首提中国化，七中首决历史明；七大立宪毛思想，三大作风聚人心；二中进京赶考去，重心移城务必清。", "审题辨析关键点：马克思主义中国化的提出是在六届六中全会，而正式写入党章作为指导思想是在中共七大，二者切忌时间错位。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "六届六中全会：首次明确提出“马克思主义中国化”命题", "badge": "高频考点", "sent_indices": [3, 4, 5, 6], "type": "point"}, {"tag": "考点 02", "title": "六届七中全会：通过第一个历史决议，整风运动圆满总结", "badge": "核心重点", "sent_indices": [7, 8, 9, 10], "type": "point"}, {"tag": "考点 03", "title": "中共七大：确立毛泽东思想为指导思想，系统阐述三大作风", "badge": "必背核心", "sent_indices": [11, 12, 13, 14, 15], "type": "point"}, {"tag": "考点 04", "title": "七届二中全会：工作重心转移与“两个务必”提出", "badge": "必背核心", "sent_indices": [16, 17, 18, 19, 20], "type": "point"}, {"tag": "名师点拨", "title": "延安时期重要会议命题考点与易错题眼", "badge": "技巧点睛", "sent_indices": [21, 22], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.98}, {"start": 10.16, "end": 15.42}, {"start": 15.6, "end": 25.97}, {"start": 26.15, "end": 30.52}, {"start": 30.7, "end": 39.86}, {"start": 40.04, "end": 51.47}, {"start": 51.65, "end": 63.22}, {"start": 63.4, "end": 69.44}, {"start": 69.62, "end": 75.6}, {"start": 75.78, "end": 87.52}, {"start": 87.7, "end": 99.12}, {"start": 99.3, "end": 107.12}, {"start": 107.3, "end": 115.03}, {"start": 115.21, "end": 123.52}, {"start": 123.7, "end": 135.02}, {"start": 135.2, "end": 142.55}, {"start": 142.73, "end": 151.1}, {"start": 151.28, "end": 159.59}, {"start": 159.77, "end": 169.18}, {"start": 169.36, "end": 181.16}, {"start": 181.34, "end": 190.99}, {"start": 191.17, "end": 203.46}, {"start": 203.64, "end": 214.1}], "audio_src": "audio_tuijie/tuijie_d03.mp3"}, {"day": 4, "title": "重要会议总结（四）· 理论工作务虚会、十一届六中至二十大", "short_topic": "务虚会、十一届六中至二十大", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["探索开端与中共八大：社会主要矛盾科学判断与经济方针", "十一届三中全会：伟大历史转折与改革开放开端", "党的十二大至十五大：中国特色社会主义理论确立与市场经济目标", "党的十六大至二十大：新时代新征程与中国式现代化", "社会主义建设与改革开放历次党代会演进脉络"], "sentences_count": 25, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（四）：从社会主义建设探索、十一届三中全会到党的十二大至二十大。", "本讲贯穿社会主义革命和建设时期、改革开放新时期以及中国特色社会主义新时代的核心会议脉络。", "重点把握各次党代会对社会主要矛盾的判断、党的基本路线演进以及指导思想的接续确立。", "毛泽东作《论十大关系》的重要讲话，标志着党探索中国社会主义建设道路的良好开端，基本方针是调动一切积极因素为社会主义事业服务。", "中共八大是党在全国执政后召开的第一次全国代表大会，对国内主要矛盾作出了正确科学的判断。", "中共八大指出：社会主义改造基本完成后，国内主要矛盾已经是人民对于建立先进的工业国的要求同落后的农业国的现实之间的矛盾，是人民对于经济文化迅速发展的需要同当前经济文化不能满足人民需要的状况之间的矛盾。", "党和全国人民的主要任务，就是集中力量发展社会生产力，实现国家工业化，逐步满足人民日益增长的物质和文化需要。", "经济体制上，陈云提出了“三个主体、三个补充”的重要思想，在国家经营和集体经营为主体的前提下，允许个体经营作为补充，为社会主义经济体制改革提供了宝贵思路。", "党的十一届三中全会是新中国成立以来党的历史上具有深远意义的伟大转折。", "全会彻底冲破“两个凡是”的束缚，果断结束“以阶级斗争为纲”，重新确立了马克思主义的思想路线、政治路线和组织路线。", "全会作出了把党和国家工作重心转移到经济建设上来、实行改革开放的历史性决策。", "全会开启了改革开放和社会主义现代化建设的新时期，形成了以邓小平同志为核心的党中央领导集体。", "随后十一届六中全会通过《关于建国以来党的若干历史问题的决议》，科学评价了毛泽东同志的历史地位，标志着党在指导思想上的拨乱反正胜利完成。", "改革开放后历次党代会接续推进理论与实践创新。", "党的十二大上，邓小平首次明确提出“走自己的道路，建设有中国特色的社会主义”的重大理论命题。", "党的十三大系统阐述了社会主义初级阶段理论，明确提出了党在社会主义初级阶段的基本路线，即“一个中心、两个基本点”。", "党的十四大确立了建立社会主义市场经济体制的改革目标，确立了邓小平建设有中国特色社会主义理论在全党的指导地位。", "党的十五大正式确立邓小平理论为党的指导思想并写入党章，系统阐述了党在社会主义初级阶段的基本纲领。", "进入新世纪与新时代，历次代表大会不断推陈出新。", "党的十六大确立“三个代表”重要思想为指导思想，提出了全面建设小康社会的奋斗目标。", "党的十七大确立科学发展观为指导思想，深入阐述了科学发展观的科学内涵与精神实质。", "党的十八大确立了全面建成小康社会和全面深化改革开放的目标，中国特色社会主义进入了新时代。", "党的十九大明确指出中国特色社会主义进入新时代，我国社会主要矛盾转化为人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾，确立了习近平新时代中国特色社会主义思想为党的指导思想；党的二十大全面擘画了以中国式现代化全面推进中华民族伟大复兴的宏伟蓝图。", "名师点拨速记要诀：十大关系探开端，八大主盾向生产；三中转折改开起，六中决议纠偏完；十二特色十三初，十四市改十五邓；十六三代十七科，十八十九入新程；二十擘画现代化，宏伟蓝图向复兴。", "复习建议：重点比对八大、十一届六中全会与十九大对主要矛盾表述的变化，这是主客观试题极高频考查点。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "探索开端与中共八大：社会主要矛盾科学判断与经济方针", "badge": "必背核心", "sent_indices": [3, 4, 5, 6, 7], "type": "point"}, {"tag": "考点 02", "title": "十一届三中全会：伟大历史转折与改革开放开端", "badge": "必背核心", "sent_indices": [8, 9, 10, 11, 12], "type": "point"}, {"tag": "考点 03", "title": "党的十二大至十五大：中国特色社会主义理论确立与市场经济目标", "badge": "高频考点", "sent_indices": [13, 14, 15, 16, 17], "type": "point"}, {"tag": "考点 04", "title": "党的十六大至二十大：新时代新征程与中国式现代化", "badge": "新思想重点", "sent_indices": [18, 19, 20, 21, 22], "type": "point"}, {"tag": "名师点拨", "title": "社会主义建设与改革开放历次党代会演进脉络", "badge": "技巧点睛", "sent_indices": [23, 24], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 10.78}, {"start": 10.96, "end": 19.33}, {"start": 19.51, "end": 27.48}, {"start": 27.66, "end": 38.75}, {"start": 38.93, "end": 46.42}, {"start": 46.6, "end": 64.57}, {"start": 64.75, "end": 74.5}, {"start": 74.68, "end": 87.68}, {"start": 87.86, "end": 94.73}, {"start": 94.91, "end": 104.96}, {"start": 105.14, "end": 112.8}, {"start": 112.98, "end": 121.76}, {"start": 121.94, "end": 134.57}, {"start": 134.75, "end": 139.21}, {"start": 139.39, "end": 147.7}, {"start": 147.88, "end": 157.62}, {"start": 157.8, "end": 167.86}, {"start": 168.04, "end": 176.72}, {"start": 176.9, "end": 181.44}, {"start": 181.62, "end": 188.56}, {"start": 188.74, "end": 197.04}, {"start": 197.22, "end": 205.52}, {"start": 205.7, "end": 228.41}, {"start": 228.59, "end": 251.12}, {"start": 251.3, "end": 261.19}], "audio_src": "audio_tuijie/tuijie_d04.mp3"}, {"day": 5, "title": "重要会议总结（五）· 会议考点大收官与核心题眼速记辨析", "short_topic": "会议考点大收官与口诀速记", "sub": "对应《冲刺背诵手册》下册 P1-P11", "badge": "模块一 · 重要会议篇", "module_id": "m1", "points": ["重要会议“标志与转折”全景对照表", "统一战线在历次会议中的演进脉络考法透析", "三次历史决议与重要指导思想确立节点辨析", "会议类客观题解题技巧与审题避坑口诀"], "sentences_count": 21, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要会议总结（五）：重要会议考法汇总与常考考点横向辨析。", "本讲是重要会议篇的收官总结，旨在打通横向联系，强化标志性、转折性与首创性考点的精准辨析。", "通过构建知识矩阵，彻底攻克会议考点中“张冠李戴”、“概念偷换”等常见命题陷阱。", "首先梳理核心标志与转折性节点。", "中国共产党创建的标志是党的一大，而中国革命新局面的开启则是八七会议。", "中国共产党在政治上走向成熟的标志是遵义会议，而党在思想上政治上组织上达到空前成熟与团结的标志是中共七大。", "探索社会主义建设道路的良好开端是《论十大关系》和中共八大，而实现伟大历史转折、开启改革开放新时期的标志是十一届三中全会。", "社会主义市场经济体制改革目标确立的标志是中共十四大，而社会主义市场经济体制初步建立是在十四届三中全会通过决定之后。", "其次掌握统一战线在历次会议中的全链条发展。", "民主联合战线的主张与党的统战政策的首次明确提出，归属于党的二大。", "决定采取“党内合作”方式加入国民党建立革命统一战线，归属于党的三大。", "第一次国共合作正式形成的标志，归属于国民党一大；合作的政治基础是新三民主义与中共民主革命纲领基本一致。", "抗日民族统一战线新政策与策略方针的确立，归属于瓦窑堡会议；而抗日救国十大纲领与全面抗战路线的提出，归属于洛川会议。", "人民民主统一战线的巩固与发展，则体现在七届二中全会及中国人民政治协商会议第一届全体会议的召开。", "再次聚焦党史上的三次历史决议与指导思想写入党章的历史节点。", "第一个历史决议是1945年六届七中全会通过的《关于若干历史问题的决议》，标志着整风运动胜利结束。", "第二个历史决议是1981年十一届六中全会通过的《关于建国以来党的若干历史问题的决议》，标志着拨乱反正任务的胜利完成。", "第三个历史决议是2021年十九届六中全会通过的《关于党的百年奋斗重大成就和历史经验的决议》，系统总结了党的百年奋斗历史经验和重大成就。", "关于指导思想入党章：中共七大确立毛泽东思想，中共十五大确立邓小平理论，中共十六大确立“三个代表”重要思想，中共十八大确立科学发展观，中共十九大确立习近平新时代中国特色社会主义思想。", "名师点拨审题避坑法则：选项见“成熟”辨遵义与七大；选项见“开端”分一大与八大；选项见“转折”分八七、遵义与十一届三中全会。", "在多选题中，看到“完全相同”、“彻底消灭”等绝对化词汇时高度警惕；牢记新三民主义是“基本一致”，最低纲领是“打倒军阀与帝国主义”。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "重要会议“标志与转折”全景对照表", "badge": "串联对比", "sent_indices": [3, 4, 5, 6, 7], "type": "point"}, {"tag": "考点 02", "title": "统一战线在历次会议中的演进脉络考法透析", "badge": "专题攻坚", "sent_indices": [8, 9, 10, 11, 12], "type": "point"}, {"tag": "考点 03", "title": "三次历史决议与重要指导思想确立节点辨析", "badge": "高频必背", "sent_indices": [13, 14, 15, 16], "type": "point"}, {"tag": "名师点拨", "title": "会议类客观题解题技巧与审题避坑口诀", "badge": "技巧点睛", "sent_indices": [17, 18], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.26}, {"start": 9.44, "end": 18.71}, {"start": 18.89, "end": 25.75}, {"start": 25.93, "end": 28.86}, {"start": 29.04, "end": 35.5}, {"start": 35.68, "end": 46.04}, {"start": 46.22, "end": 57.17}, {"start": 57.35, "end": 68.29}, {"start": 68.47, "end": 72.6}, {"start": 72.78, "end": 78.92}, {"start": 79.1, "end": 85.25}, {"start": 85.43, "end": 95.32}, {"start": 95.5, "end": 106.75}, {"start": 106.93, "end": 115.96}, {"start": 116.14, "end": 121.8}, {"start": 121.98, "end": 130.91}, {"start": 131.09, "end": 141.07}, {"start": 141.25, "end": 153.16}, {"start": 153.34, "end": 171.55}, {"start": 171.73, "end": 183.06}, {"start": 183.24, "end": 194.57}], "audio_src": "audio_tuijie/tuijie_d05.mp3"}, {"day": 6, "title": "重要人物及文献（一）· 李大钊、陈独秀及早期思想萌芽", "short_topic": "李大钊、陈独秀及思想萌芽", "sub": "对应《冲刺背诵手册》下册 P11-P18", "badge": "模块二 · 人物文献篇", "module_id": "m2", "points": ["马克思主义早期传播文献：李大钊先驱之作", "大革命时期文献：《中国社会各阶级的分析》与《湖南农民运动考察报告》", "土地革命早期文献：农村包围城市道路与思想路线初步形成", "早期经典著作命题题眼与文献归纳"], "sentences_count": 19, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要文献总结（一）：李大钊早期探索文献至毛泽东井冈山与中央苏区时期经典著作。", "重要文献是毛泽东思想形成与发展的重要载体，也是史纲与毛中特交叉命题的核心考查形式。", "学习文献时务必把握“著作名称、发表时期、核心观点、历史贡献”四位一体的知识结构。", "首先是李大钊作为马克思主义在中国早期传播先驱的代表作。", "十月革命后，李大钊发表了《法俄革命之比较观》，深刻指出十月革命是立于社会主义上之革命，是二十世纪中世界革命的先声。", "随后发表的《庶民的胜利》与《Bolshevism的胜利》，热情讴歌十月革命，指出十月革命的胜利是人类历史上崭新纪元的黎明。", "1919年发表的《我的马克思主义观》，系统阐述了马克思主义的唯物史观、政治经济学和科学社会主义理论，标志着马克思主义在中国进入系统传播阶段。", "大革命时期毛泽东的代表作集中阐述了中国革命的基本问题。", "《中国社会各阶级的分析》发表于1925年，开宗明义指出“谁是我们的敌人？谁是我们的朋友？这个问题是革命的首要问题”。", "该著作深刻分析了中国社会各阶级的经济地位及其对革命的态度，指出了无产阶级是革命的领导力量，农民是无产阶级最可靠的同盟军，资产阶级分为买办资产阶级和民族资产阶级。", "《湖南农民运动考察报告》发表于1927年，毛泽东亲赴湖南进行实地调查，充分肯定了农民运动在民主革命中的伟大作用，驳斥了党内外对农民运动的种种责难。", "著作明确提出了相信群众、依靠群众、放手发动群众、建立农民政权和农民武装的极其重要的革命观点。", "土地革命战争早期，毛泽东思想在总结井冈山斗争经验中初步形成。", "《中国的红色政权为什么能够存在？》与《井冈山的斗争》，科学论证了红色政权存在和发展的客观条件与主观条件，回答了“红旗到底打得多久”的疑问。", "《星星之火，可以燎原》进一步指明了中国革命的发展规律，批评了悲观失望情绪，实际上确立了把党的工作重心放在农村、在农村积蓄力量的战略思想，标志着农村包围城市、武装夺取政权道路理论的初步形成。", "《反对本本主义》是毛泽东思想路线萌芽的重要代表作，开篇提出了“没有调查，没有发言权”的著名论断，严肃批判了教条主义思想。", "该著作初步阐述了实事求是、群众路线、独立自主的思想萌芽，指出中国革命斗争的胜利要靠中国同志了解中国情况，为党的实事求是思想路线奠定了基石。", "名师点拨速记要诀：大钊首系统介马，阶级分析辨敌友；湘农考察重工农，红色政权指生机；燎原初步成道路，本本调查破教条。", "文献选择题题眼：首要问题见《阶级分析》；思想路线与调查研究见《反对本本主义》；道路理论初步形成见《星星之火，可以燎原》。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "马克思主义早期传播文献：李大钊先驱之作", "badge": "核心重点", "sent_indices": [3, 4, 5, 6], "type": "point"}, {"tag": "考点 02", "title": "大革命时期文献：《中国社会各阶级的分析》与《湖南农民运动考察报告》", "badge": "高频考点", "sent_indices": [7, 8, 9, 10, 11], "type": "point"}, {"tag": "考点 03", "title": "土地革命早期文献：农村包围城市道路与思想路线初步形成", "badge": "必背核心", "sent_indices": [12, 13, 14, 15, 16], "type": "point"}, {"tag": "名师点拨", "title": "早期经典著作命题题眼与文献归纳", "badge": "技巧点睛", "sent_indices": [17, 18], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 11.57}, {"start": 11.75, "end": 19.33}, {"start": 19.51, "end": 27.1}, {"start": 27.28, "end": 32.36}, {"start": 32.54, "end": 42.53}, {"start": 42.71, "end": 53.65}, {"start": 53.83, "end": 65.57}, {"start": 65.75, "end": 70.69}, {"start": 70.87, "end": 80.21}, {"start": 80.39, "end": 95.08}, {"start": 95.26, "end": 108.74}, {"start": 108.92, "end": 117.37}, {"start": 117.55, "end": 123.12}, {"start": 123.3, "end": 135.52}, {"start": 135.7, "end": 152.95}, {"start": 153.13, "end": 163.36}, {"start": 163.54, "end": 176.54}, {"start": 176.72, "end": 189.01}, {"start": 189.19, "end": 200.21}], "audio_src": "audio_tuijie/tuijie_d06.mp3"}, {"day": 7, "title": "重要人物及文献（二）· 毛泽东思想发展历程与著作穿透", "short_topic": "毛泽东思想历程与经典著作", "sub": "对应《冲刺背诵手册》下册 P11-P18", "badge": "模块二 · 人物文献篇", "module_id": "m2", "points": ["哲学奠基文献：《实践论》与《矛盾论》", "军事战略文献：《论持久战》批驳速胜与亡国论", "成熟期新民主主义理论文献：《发刊词》与《新民主主义论》", "延安整风三大文献与思想路线确立", "毛泽东思想成熟期著作核心考点矩阵"], "sentences_count": 22, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要文献总结（二）：毛泽东思想达到成熟时期的经典文献全景透析。", "遵义会议后至延安时期，毛泽东进行了大量的理论总结，毛泽东思想在抗日战争时期达到成熟。", "本讲涵盖哲学、军事、建党、新民主主义理论以及延安整风文献，是考研政治难度最高、分值最重的文献群。", "《实践论》与《矛盾论》是毛泽东思想哲学体系的奠基之作。", "两篇哲学著作深刻总结了中国革命的历史经验，从马克思主义认识论和辩证法的高度，系统揭露并严肃批判了党内长期的主观主义特别是教条主义错误。", "《实践论》阐明了实践是认识的基础、认识对实践的依赖关系，揭示了由实践到认识、再由认识到实践的认识发展总规律。", "《矛盾论》精辟阐述了对立统一规律是唯物辩证法的实质和核心，深入剖析了矛盾的普遍性与特殊性、主要矛盾与次要矛盾、矛盾的主要方面与次要方面及其辩证关系。", "《论持久战》是抗日战争时期极其光辉的马克思主义军事理论文献。", "毛泽东在著作中全面反驳了亡国论和速胜论两种错误观点，科学揭示了中日战争是半殖民地半封建弱国同帝国主义强国之间的生死较量。", "著作依据中日双方相互矛盾的四个基本特点，科学预见了抗日战争必须经历战略防御、战略相持、战略反攻三个阶段，指出抗日战争是一场持久战，最后的胜利必属于中国。", "著作强调“兵民是胜利之本”，深刻阐述了人民战争的战略思想，为夺取抗日战争的最终胜利指明了正确方向。", "抗日战争中后期，毛泽东系统阐发了新民主主义革命理论。", "在《共产党人发刊词》中，毛泽东首次提出了“统一战线、武装斗争、党的建设”是中国共产党在中国革命中战胜敌人的三个法宝。", "著作明确指出，把党建设成为一个全国范围的、广大群众性的、思想上政治上组织上完全巩固的马克思主义政党，是一项“伟大的工程”。", "在《中国革命和中国共产党》中，毛泽东首次提出了“新民主主义革命”的科学概念，系统阐述了中国革命的对象、动力、性质与前途。", "在《新民主主义论》中，毛泽东完整阐明了新民主主义的政治纲领、经济纲领和文化纲领，标志着新民主主义革命理论体系的完整建构，表明毛泽东思想已达到成熟。", "延安整风运动的三大纲领性文献奠定了党的思想路线。", "《改造我们的学习》系统批评了主观主义学风，对实事求是的科学内涵作出了马克思主义的经典界定。", "《整顿党的作风》重点解决党风问题，反对宗派主义；《反对党八股》重点解决学风与文风问题，反对主观主义在文风上的表现。", "延安整风确立了实事求是的思想路线，使全党达到了空前的团结与统一。", "名师点拨速记要诀：两论哲学破教条，持久预见三阶段；发刊三大法宝现，工程伟大党魂凝；新民纲领成体系，整风实事求是明。", "高频考查点：三大法宝在《发刊词》；新民概念首提在《中革中党》；理论成熟标志在《新民主主义论》；实事求是科学阐释在《改造我们的学习》。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "哲学奠基文献：《实践论》与《矛盾论》", "badge": "哲学核心", "sent_indices": [3, 4, 5, 6], "type": "point"}, {"tag": "考点 02", "title": "军事战略文献：《论持久战》批驳速胜与亡国论", "badge": "必背重点", "sent_indices": [7, 8, 9, 10], "type": "point"}, {"tag": "考点 03", "title": "成熟期新民主主义理论文献：《发刊词》与《新民主主义论》", "badge": "理论顶峰", "sent_indices": [11, 12, 13, 14, 15], "type": "point"}, {"tag": "考点 04", "title": "延安整风三大文献与思想路线确立", "badge": "高频考点", "sent_indices": [16, 17, 18, 19], "type": "point"}, {"tag": "名师点拨", "title": "毛泽东思想成熟期著作核心考点矩阵", "badge": "技巧点睛", "sent_indices": [20, 21], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 9.74}, {"start": 9.92, "end": 18.13}, {"start": 18.31, "end": 28.13}, {"start": 28.31, "end": 32.92}, {"start": 33.1, "end": 45.48}, {"start": 45.66, "end": 57.08}, {"start": 57.26, "end": 71.57}, {"start": 71.75, "end": 77.41}, {"start": 77.59, "end": 89.16}, {"start": 89.34, "end": 103.16}, {"start": 103.34, "end": 112.68}, {"start": 112.86, "end": 117.95}, {"start": 118.13, "end": 129.07}, {"start": 129.25, "end": 140.82}, {"start": 141.0, "end": 152.02}, {"start": 152.2, "end": 165.2}, {"start": 165.38, "end": 169.68}, {"start": 169.86, "end": 177.59}, {"start": 177.77, "end": 188.06}, {"start": 188.24, "end": 194.7}, {"start": 194.88, "end": 207.98}, {"start": 208.16, "end": 220.31}], "audio_src": "audio_tuijie/tuijie_d07.mp3"}, {"day": 8, "title": "重要人物及文献（三）· 邓小平、江泽民、胡锦涛理论文献", "short_topic": "邓小平南方谈话与三个代表", "sub": "对应《冲刺背诵手册》下册 P11-P18", "badge": "模块二 · 人物文献篇", "module_id": "m2", "points": ["解放战争决胜文献：《目前形势和我们的任务》与《在晋绥干部会议上的讲话》", "建国与建设探索文献：《论人民民主专政》与《关于正确处理人民内部矛盾的问题》", "邓小平南方谈话：社会主义本质论与“三个有利于”标准", "建国前后文献与邓小平理论题眼提炼"], "sentences_count": 19, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》重要文献总结（三）：解放战争后期文献、建国初期探索文献以及邓小平南方谈话。", "本讲文献涵盖新中国政权奠基、社会主义矛盾理论开创以及改革开放关键时期的理论飞跃。", "重点掌握新民主主义经济纲领、人民民主专政理论、正确处理人民内部矛盾方针以及社会主义本质论。", "解放战争转入战略进攻后，毛泽东作了一系列重要的政策与纲领性讲话。", "在《目前形势和我们的任务》中，毛泽东首次提出了新民主主义的三大经济纲领：没收封建阶级的土地归农民所有，没收蒋宋孔陈为首的垄断资本归新民主主义国家所有，保护民族工商业；并系统提出了十大军事原则。", "在《在晋绥干部会议上的讲话》中，毛泽东完整地表述了新民主主义革命的总路线：无产阶级领导的，人民大众的，反对帝国主义、封建主义和官僚资本主义的革命。", "同时，毛泽东在讲话中完整表述了土地改革的总路线：依靠贫农，团结中农，有步骤地、有分别地消灭封建剥削制度，发展农业生产。", "新中国成立前后，毛泽东发表了指导建国与社会主义建设的两大鸿篇巨著。", "《论人民民主专政》发表于新中国成立前夕，深刻总结了中国共产党领导革命二十八年的历史经验，指出历史结论就是工人阶级领导的以工农联盟为基础的人民民主专政。", "著作明确规定了新中国国家政权的阶级基础、国体性质与外交方针，为中国人民政治协商会议的召开提供了理论和政策依据。", "《关于正确处理人民内部矛盾的问题》发表于1957年，开创性地提出把正确处理人民内部矛盾作为国家政治生活的主题。", "著作科学分析了社会主义社会的基本矛盾仍是生产关系和生产力之间、上层建筑和经济基础之间的矛盾，区分了敌我矛盾和人民内部矛盾两类不同性质的矛盾，提出了政治上实行团结—批评—团结、经济上统筹兼顾适当安排、文化上百花齐放百家争鸣等一系列正确方针。", "1992年邓小平南方谈话是坚持改革开放、推动中国特色社会主义进入新阶段的划时代文献。", "南方谈话科学概括了社会主义的本质：解放生产力，发展生产力，消灭剥削，消除两极分化，最终达到共同富裕。", "邓小平提出了判断改革开放是非得失的“三个有利于”标准：是否有利于发展社会主义社会的生产力、是否有利于增强社会主义国家的综合国力、是否有利于提高人民的生活水平。", "谈话深刻指出了计划和市场都是经济手段，计划多一点还是市场多一点，不是社会主义与资本主义的本质区别；计划经济不等于社会主义，市场经济不等于资本主义。", "谈话强调“发展才是硬道理”，要抓住机遇，加快发展，防右同时主要防左，为中共十四大确立社会主义市场经济体制改革目标奠定了坚实的理论基石。", "名师点拨速记要诀：三大经济出目前，总路土改晋绥明；专政奠基人民政，内部矛盾国家题；南方谈话明本质，计划市场非标签。", "高频考查点：总路线完整表述在《晋绥》；三大经济纲领在《目前形势》；政治生活主题在《人民内部矛盾》；本质论与三个有利于在《南方谈话》。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "解放战争决胜文献：《目前形势和我们的任务》与《在晋绥干部会议上的讲话》", "badge": "核心重点", "sent_indices": [3, 4, 5, 6], "type": "point"}, {"tag": "考点 02", "title": "建国与建设探索文献：《论人民民主专政》与《关于正确处理人民内部矛盾的问题》", "badge": "必背核心", "sent_indices": [7, 8, 9, 10, 11], "type": "point"}, {"tag": "考点 03", "title": "邓小平南方谈话：社会主义本质论与“三个有利于”标准", "badge": "必背核心", "sent_indices": [12, 13, 14, 15, 16], "type": "point"}, {"tag": "名师点拨", "title": "建国前后文献与邓小平理论题眼提炼", "badge": "技巧点睛", "sent_indices": [17, 18], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 11.18}, {"start": 11.36, "end": 19.43}, {"start": 19.61, "end": 27.02}, {"start": 27.2, "end": 33.11}, {"start": 33.29, "end": 50.86}, {"start": 51.04, "end": 64.28}, {"start": 64.46, "end": 76.92}, {"start": 77.1, "end": 83.39}, {"start": 83.57, "end": 96.91}, {"start": 97.09, "end": 107.22}, {"start": 107.4, "end": 117.38}, {"start": 117.56, "end": 138.97}, {"start": 139.15, "end": 147.05}, {"start": 147.23, "end": 155.84}, {"start": 156.02, "end": 169.68}, {"start": 169.86, "end": 182.39}, {"start": 182.57, "end": 194.86}, {"start": 195.04, "end": 208.69}, {"start": 208.87, "end": 219.58}], "audio_src": "audio_tuijie/tuijie_d08.mp3"}, {"day": 9, "title": "土地政策总结（一）· 太平天国、辛亥革命至土地革命路线", "short_topic": "太平天国、辛亥至土地革命", "sub": "对应《冲刺背诵手册》下册 P18-P20", "badge": "模块三 · 土地政策篇", "module_id": "m3", "points": ["太平天国运动：《天朝田亩制度》与《资政新篇》深度对比", "洋务运动与戊戌维新：中体西用、自强求富与思想启蒙", "辛亥革命：三民主义纲领、临时约法与历史功过分析", "旧民主主义革命时期阶级局限性与失败根源辨析"], "sentences_count": 20, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》史纲专题突破（一）：农民阶级、地主阶级洋务派与资产阶级早期救国探索。", "近代中国早期探索历经太平天国运动、洋务运动、戊戌维新运动与辛亥革命四大波澜壮阔的历史进程。", "复习时重点牢记各运动的代表纲领、进步历史意义、失败的根本原因以及阶级局限性。", "太平天国运动是中国旧式农民战争的最高峰，其两大核心纲领呈现鲜明对比。", "《天朝田亩制度》是太平天国的建国纲领，确立了“凡天下田，天下人同耕”的平均分配原则，从根本上否定了封建地主土地所有制，体现了广大农民要求摆脱封建剥削的强烈愿望。", "但其平均主义方案脱离实际，并没有超出农民小生产者的狭隘眼界，具有绝对的空想性质，因而未能真正付诸实施。", "后期洪仁玕提出的《资政新篇》，是中国近代历史上第一个比较系统的发展资本主义的方案，主张向西方学习、发展工商业、兴办近代事业。", "但《资政新篇》缺乏当时实行资本主义的经济基础与阶级基础，未涉及农民土地问题，未能解决广大农民最切身的现实诉求，最终也未付诸实践。", "地主阶级洋务派与资产阶级维新派相继展开救亡图存。", "洋务运动以“自强”、“求富”为目标，指导思想是“中学为体，西学为用”，主张在维护封建君主专制的前提下引进西方近代军事工业和科学技术。", "洋务运动客观上促进了中国早期工业和民族资本主义的发展，开辟了近代教育，但甲午海战北洋水师全军覆没标志着洋务运动的彻底破产，证明了不触动封建制度的改良是走不通的。", "戊戌维新运动是资产阶级改良派领导的一场爱国救亡运动与资产阶级性质的政治改良运动。", "维新派通过办学会、办报刊，猛烈抨击封建纲常伦理，在社会上起到了广泛的思想启蒙作用，开创了中国近代向西方学习制度体制的新阶段。", "辛亥革命是一次比较完全意义上的反帝反封建的资产阶级民主革命。", "中国同盟会的政治纲领是“驱除鞑虏，恢复中华，创立民国，平均地权”；孙中山在《民报》发刊词中将其系统阐发为民族、民权、民生三大主义。", "辛亥革命推翻了清王朝统治，结束了统治中国两千多年的封建君主专制制度，建立了中国历史上第一个资产阶级共和国政府，颁布了具有资产阶级共和国宪法性质的《中华民国临时约法》。", "辛亥革命极大地推动了中华民族的思想解放，促使民主共和观念深入人心，为中国先进分子探索新的救国救民道路打开了眼界。", "辛亥革命之所以未能完成反帝反封建的任务，根本原因在于资产阶级维新派与革命派自身的软弱性与妥协性，没有彻底的反帝反封建纲领，不敢放手发动广大农民群众，未能建立坚强的革命政党。", "名师点拨速记要诀：天朝田亩平分田，资政新篇首资篇；中体西用甲午败，维新启蒙制度探；辛亥共和君主覆，阶级软弱教训留。", "常考易混点辨析：第一个比较系统的资本主义方案是《资政新篇》而非《天朝田亩》；辛亥革命推翻的是封建君主专制制度，而非封建制度本身（封建地主土地所有制仍在）。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "太平天国运动：《天朝田亩制度》与《资政新篇》深度对比", "badge": "必背核心", "sent_indices": [3, 4, 5, 6, 7], "type": "point"}, {"tag": "考点 02", "title": "洋务运动与戊戌维新：中体西用、自强求富与思想启蒙", "badge": "高频重点", "sent_indices": [8, 9, 10, 11, 12], "type": "point"}, {"tag": "考点 03", "title": "辛亥革命：三民主义纲领、临时约法与历史功过分析", "badge": "必背核心", "sent_indices": [13, 14, 15, 16, 17], "type": "point"}, {"tag": "名师点拨", "title": "旧民主主义革命时期阶级局限性与失败根源辨析", "badge": "技巧点睛", "sent_indices": [18, 19], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 10.46}, {"start": 10.64, "end": 18.78}, {"start": 18.96, "end": 26.21}, {"start": 26.39, "end": 32.68}, {"start": 32.86, "end": 48.5}, {"start": 48.68, "end": 58.33}, {"start": 58.51, "end": 69.77}, {"start": 69.95, "end": 82.16}, {"start": 82.34, "end": 87.6}, {"start": 87.78, "end": 99.28}, {"start": 99.46, "end": 113.59}, {"start": 113.77, "end": 121.91}, {"start": 122.09, "end": 134.38}, {"start": 134.56, "end": 140.12}, {"start": 140.3, "end": 152.59}, {"start": 152.77, "end": 167.7}, {"start": 167.88, "end": 178.49}, {"start": 178.67, "end": 194.8}, {"start": 194.98, "end": 207.26}, {"start": 207.44, "end": 221.27}], "audio_src": "audio_tuijie/tuijie_d09.mp3"}, {"day": 10, "title": "土地政策总结（二）· 抗日战争、解放战争至农业合作化", "short_topic": "抗战、解放战争至农业土改", "sub": "对应《冲刺背诵手册》下册 P18-P20", "badge": "模块三 · 土地政策篇", "module_id": "m3", "points": ["土地革命战争时期：井冈山至兴国土地法与阶级路线成熟", "抗日战争时期：减租减息政策与统战兼顾原则", "解放战争与建国初期：耕者有其田与封建剥削彻底消灭", "社会主义改造时期：农业合作化三步走与自愿互利原则", "党在不同历史时期土地政策演进全景矩阵"], "sentences_count": 21, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》史纲专题突破（二）：党在各个历史时期的土地政策演进与农业社会主义改造全景脉络。", "“谁赢得了农民，谁就赢得了中国革命。”土地问题是中国革命的中心问题，也是农民最核心的利益所在。", "掌握土地政策在土地革命时期、抗日战争时期、解放战争时期及建国后的演进逻辑，是攻克史纲高难度题目的关键法宝。", "土地革命战争时期，党确立了消灭封建土地所有制的根本方针。", "毛泽东主持制定了党史上第一个土地法《井冈山土地法》，明确没收一切土地归苏维埃政府所有，用抽多补少、抽肥补瘦的方法分给农民使用；但由于缺乏经验，存在没收一切土地和禁止土地买卖等缺点。", "随后制定的《兴国土地法》，将“没收一切土地”改为“没收一切公共土地及地主阶级土地”，这是一个原则性的重大修正，保护了中农利益，标志着党的土地法走向成熟。", "至此，党形成了成熟的土地革命阶级路线和分配原则：坚定地依靠贫农雇农，联合中农，限制富农，消灭地主阶级；以乡为单位，按人口平分，在原耕地基础上，实行抽多补少、抽肥补瘦。", "抗日战争时期，为了团结一切抗日力量，党实行了“减租减息”的土地政策。", "地主减租减息、农民交租交息。减租减息适当减轻了农民的封建负担，提高了农民抗日和生产的积极性；同时交租交息兼顾了地主阶级的利益，有利于联合地主阶级一致抗日。", "减租减息政策成功兼顾了农民与地主的关系，巩固并壮大了抗日民族统一战线，是党在抗战特殊历史条件下极具政治智慧的策略方针。", "注意区别：抗日战争时期并未废除封建土地所有制，而是限制封建剥削，保留地主土地所有权，以实现全民族团结抗战的政治大局。", "解放战争与新中国成立初期，党坚决实行“耕者有其田”，彻底消灭封建剥削。", "1946年中共中央发出《关于土地问题的指示》，即《五四指示》，决定将党在抗战时期的减租减息政策改变为没收地主土地分配给农民的政策，标志着土地政策由限制封建剥削转向彻底废除封建剥削。", "1947年全国土地会议制定并通过《中国土地法大纲》，庄严宣布废除封建性及半封建性剥削的土地制度，实行耕者有其田的土地制度，为解放战争迅速取得全国胜利提供了极其雄厚的群众基础与人力物力支撑。", "新中国成立后，1950年中央颁布《中华人民共和国土地改革法》，规定保存富农经济，实行政治上孤立地主、经济上保护富农的方针；至1952年底，除部分少数民族地区外，全国大陆土地改革基本完成，彻底消灭了在中国存在两千多年的封建剥削土地制度。", "三大改造时期，党成功走出了一条具有中国特色的农业社会主义改造道路。", "农业合作化遵循自愿互利、典型示范和国家帮助的原则，采取循序渐进的步骤逐步过渡。", "第一阶段是互助组，具有社会主义萌芽性质；第二阶段是初级农业生产合作社，土地入股、统一经营，具有半社会主义性质；第三阶段是高级农业生产合作社，土地归集体所有，完全实行按劳分配，具有完全社会主义性质。", "农业合作化的顺利完成，标志着中国农村社会主义公有制的确立，为国家工业化建设奠定了坚实体制基础。", "名师点拨速记口诀：井冈首法兴国熟，依靠贫农联合中；抗日统一减租息，五四指示转没收；土法大纲耕其田，土改彻底灭封建；合作三步互初高，集体公有奔康庄。", "核心易混点：没收一切公共及地主土地始于《兴国土地法》；减租减息转没收始于《五四指示》；土地彻底私有转集体公有是通过“高级社”实现的。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "土地革命战争时期：井冈山至兴国土地法与阶级路线成熟", "badge": "必背核心", "sent_indices": [3, 4, 5, 6], "type": "point"}, {"tag": "考点 02", "title": "抗日战争时期：减租减息政策与统战兼顾原则", "badge": "高频考点", "sent_indices": [7, 8, 9, 10], "type": "point"}, {"tag": "考点 03", "title": "解放战争与建国初期：耕者有其田与封建剥削彻底消灭", "badge": "必背核心", "sent_indices": [11, 12, 13, 14], "type": "point"}, {"tag": "考点 04", "title": "社会主义改造时期：农业合作化三步走与自愿互利原则", "badge": "高频必背", "sent_indices": [15, 16, 17, 18], "type": "point"}, {"tag": "名师点拨", "title": "党在不同历史时期土地政策演进全景矩阵", "badge": "技巧点睛", "sent_indices": [19, 20], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 11.18}, {"start": 11.36, "end": 19.43}, {"start": 19.61, "end": 30.38}, {"start": 30.56, "end": 35.82}, {"start": 36.0, "end": 51.82}, {"start": 52.0, "end": 65.0}, {"start": 65.18, "end": 81.79}, {"start": 81.97, "end": 88.43}, {"start": 88.61, "end": 102.82}, {"start": 103.0, "end": 114.42}, {"start": 114.6, "end": 126.02}, {"start": 126.2, "end": 132.9}, {"start": 133.08, "end": 150.41}, {"start": 150.59, "end": 169.21}, {"start": 169.39, "end": 191.21}, {"start": 191.39, "end": 197.44}, {"start": 197.62, "end": 205.51}, {"start": 205.69, "end": 223.43}, {"start": 223.61, "end": 232.46}, {"start": 232.64, "end": 249.49}, {"start": 249.67, "end": 262.61}], "audio_src": "audio_tuijie/tuijie_d10.mp3"}, {"day": 11, "title": "思想解放与论战线索总结 · 维新、辛亥论战与新文化运动", "short_topic": "维新、辛亥论战与新文化", "sub": "对应《冲刺背诵手册》下册 P21-P24", "badge": "模块四 · 思想论战篇", "module_id": "m4", "points": ["理想信念与中国精神：精神之钙与爱国主义时代主题", "社会主义道德建设：核心为民、原则集体、核心价值观引领", "法治中国建设：法治思维、宪法权威与权利义务辩证统筹", "思修法基分析题答题逻辑框架与得分题眼"], "sentences_count": 20, "sentences": ["早上好，今天我们一起来学习《冲刺背诵手册》思修法基决胜篇：理想信念、中国精神、社会主义道德与法治体系核心考点精粹。", "思想道德与法治模块命题注重价值导向与规范引领，分析题主干鲜明，客观题概念精密。", "复习时重点牢记人生观、理想观、精神观、道德观与法治观五大维度的标准规范表述与核心金句。", "理想信念是共产党人精神上的“钙”，是指引人生的灯塔。", "理想与现实是辩证统一的：理想源于现实，又超越现实；现实是理想的基础，理想是现实的升华；对立统一，在一定条件下相互转化；坚定的信念与扎实的行动是连通理想与现实的桥梁。", "中国精神是兴国强国之魂，包括以爱国主义为核心的民族精神和以改革创新为核心的时代精神。", "爱国主义是中华民族的优良传统，在新时代的鲜明主题是坚持爱国主义与爱社会主义相统一、维护祖国统一和民族团结、实现中华民族伟大复兴的中国梦。", "改革创新是当代中国最鲜明的时代特征，是国家繁荣富强的力量源泉。", "社会主义道德建设为全面建设社会主义现代化国家提供强大精神力量。", "社会主义道德建设的核心是为人民服务，原则是集体主义。", "集体主义分为三个层次：无私奉献、一心为公是最高层次；先公后私、先人后己是普遍要求；公私兼顾、不损公肥私是基本要求。", "社会主义核心价值观是当代中国精神的集中体现，凝结着全体人民共同的价值追求：富强、民主、文明、和谐是国家层面的价值要求；自由、平等、公正、法治是社会层面的价值要求；爱国、敬业、诚信、友善是公民层面的价值准则。", "恪守社会公德、职业道德、家庭美德、个人品德，形成向上向善的社会风尚。", "全面依法治国是国家治理的一场深刻革命，也是中国特色社会主义的本质要求和重要保障。", "全面依法治国的总目标是建设中国特色社会主义法治体系，建设社会主义法治国家。", "法治思维包含法律至上、权力制约、公平正义、人权保障、正当程序五大核心要求，与人治思维在根本依据、运行方式、价值导向等方面具有本质区别。", "宪法是国家的根本法，是治国安邦的总章程，具有最高的法律地位、法律权威、法律效力；坚持依宪治国、依宪执政是全面依法治国的首要任务。", "法律权利与法律义务是辩证统一的，二者相辅相成、不可分割：没有无义务的权利，也没有无权利的义务；公民应当正确行使权利，忠实履行法定义务。", "名师点拨思修大题答题框架：无论设问为何，首列定位概念，次述辩证统一，三提实践路径，终升华爱国强国使命担当。", "客观题审题关键：为人民服务是道德“核心”，集体主义是道德“原则”；法治至上是法治思维的“首要前提”；权利与义务“不可分割”。"], "sections": [{"tag": "导语篇", "title": "学习定位与考情导引", "badge": "必背导要", "sent_indices": [0, 1, 2], "type": "intro"}, {"tag": "考点 01", "title": "理想信念与中国精神：精神之钙与爱国主义时代主题", "badge": "高频考点", "sent_indices": [3, 4, 5, 6, 7], "type": "point"}, {"tag": "考点 02", "title": "社会主义道德建设：核心为民、原则集体、核心价值观引领", "badge": "核心重点", "sent_indices": [8, 9, 10, 11, 12], "type": "point"}, {"tag": "考点 03", "title": "法治中国建设：法治思维、宪法权威与权利义务辩证统筹", "badge": "必背核心", "sent_indices": [13, 14, 15, 16, 17], "type": "point"}, {"tag": "名师点拨", "title": "思修法基分析题答题逻辑框架与得分题眼", "badge": "技巧点睛", "sent_indices": [18, 19], "type": "callout"}], "timestamps": [{"start": 0.0, "end": 10.85}, {"start": 11.03, "end": 18.37}, {"start": 18.55, "end": 27.48}, {"start": 27.66, "end": 32.36}, {"start": 32.54, "end": 48.19}, {"start": 48.37, "end": 56.82}, {"start": 57.0, "end": 70.42}, {"start": 70.6, "end": 76.64}, {"start": 76.82, "end": 83.04}, {"start": 83.22, "end": 87.92}, {"start": 88.1, "end": 99.36}, {"start": 99.54, "end": 118.24}, {"start": 118.42, "end": 125.04}, {"start": 125.22, "end": 132.56}, {"start": 132.74, "end": 139.68}, {"start": 139.86, "end": 152.87}, {"start": 153.05, "end": 165.34}, {"start": 165.52, "end": 178.38}, {"start": 178.56, "end": 188.3}, {"start": 188.48, "end": 198.78}], "audio_src": "audio_tuijie/tuijie_d11.mp3"}];
 
     const tjKwRegex = /(党的一大|党的二大|党的三大|党的四大|国民党一大|八七会议|古田会议|遵义会议|洛川会议|六届六中全会|六届七中全会|中共七大|七届二中全会|论十大关系|中共八大|十一届三中全会|十二大|十三大|十四大|十五大|十六大|十七大|十八大|十九大|二十大|主要矛盾|根本任务|首要任务|第一要务|活的灵魂|实事求是|群众路线|独立自主|三大法宝|统一战线|武装斗争|党的建设|最高纲领|最低纲领|新民主主义革命|社会主义革命)/g;
 
@@ -23443,6 +23824,8 @@ const TOTAL_CHAPTERS = 47;
       const stage = document.getElementById('tjLectureContentStage');
       if (!stage) return;
 
+      const totalSents = data.sentences ? data.sentences.length : (data.sentences_count || 0);
+
       let html = `
         <header class="tj-hero-card">
           <div class="tj-hero-badge-row">
@@ -23451,8 +23834,8 @@ const TOTAL_CHAPTERS = 47;
           </div>
           <h1 class="tj-hero-title">Day ${data.day < 10 ? '0' : ''}${data.day} · ${data.title}</h1>
           <div class="tj-hero-meta-row">
-            <span class="tj-hero-meta-pill">全讲精析共 ${data.sentences_count} 句</span>
-            <span class="tj-hero-meta-pill">带背约 ${Math.round(data.sentences_count * 6.5 / 60)} 分钟</span>
+            <span class="tj-hero-meta-pill">全讲精析共 ${totalSents} 句</span>
+            <span class="tj-hero-meta-pill">带背约 ${Math.round(totalSents * 8.5 / 60)} 分钟</span>
             <span class="tj-hero-meta-pill">原书 1:1 考点对齐</span>
           </div>
         </header>
@@ -23475,37 +23858,49 @@ const TOTAL_CHAPTERS = 47;
               <span class="tj-card-tag ${cardClass}">${sec.tag}</span>
               <span class="tj-card-status">${sec.badge}</span>
             </div>
-            <h3 class="tj-card-heading">${sec.title}</h3>
-            <div class="tj-card-body">
-              ${isCallout ? `
-                <div class="tj-callout-box">
-                  <div style="font-weight:700; font-size:12px; color:var(--accent); margin-bottom:6px;">名师题眼精析 · 考场必杀指南</div>
-                  <p class="tj-book-para">${sentencesHtml}</p>
-                </div>
-              ` : `
-                <p class="tj-book-para">${sentencesHtml}</p>
-              `}
-            </div>
+            <h2 class="tj-card-title">${sec.title}</h2>
+            <div class="tj-sentence-flow">${sentencesHtml}</div>
+            ${sec.points && sec.points.length ? `
+              <div class="tj-points-box">
+                <div class="tj-points-title">高频命题与辨析考点</div>
+                <ul class="tj-points-list">
+                  ${sec.points.map(p => `<li class="tj-point-item">${tjFormatKw(p)}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
           </article>
         `;
       });
 
       stage.innerHTML = html;
 
-      document.getElementById('tjPlayerTitle').innerText = `Day ${data.day < 10 ? '0' : ''}${data.day} · ${data.short_topic}`;
+      // 更新播放器状态
+      const titleEl = document.getElementById('tjPlayerTitle');
+      if (titleEl) titleEl.innerText = `Day ${data.day < 10 ? '0' : ''}${data.day} · ${data.short_topic}`;
       tjUpdateSentenceCounter();
+
       const fill = document.getElementById('tjProgressFill');
       if (fill) fill.style.width = '0%';
 
+      // 按钮状态
       const prevBtn = document.getElementById('tjPrevBtn');
       const nextBtn = document.getElementById('tjNextBtn');
       if (prevBtn) prevBtn.disabled = (dayIndex === 0);
       if (nextBtn) nextBtn.disabled = (dayIndex === tjAllDaysData.length - 1);
     }
 
-    function tjHighlightSentenceDOM(sIdx, smoothScroll) {
+    function tjUpdateSentenceCounter() {
+      const cnt = document.getElementById('tjSentenceCounter');
+      if (!cnt) return;
+      const day = tjAllDaysData[tjCurrentDayIndex];
+      const total = day.sentences ? day.sentences.length : 1;
+      const cur = tjActiveSentenceIndex + 1;
+      cnt.innerText = `[ ${cur < 10 ? '0' : ''}${cur} / ${total < 10 ? '0' : ''}${total} ]`;
+    }
+
+    function tjHighlightSentenceDOM(idx, smoothScroll = true) {
       document.querySelectorAll('.tj-sent-span').forEach(sp => sp.classList.remove('active'));
-      const target = document.getElementById(`tjSent-${sIdx}`);
+      const target = document.getElementById(`tjSent-${idx}`);
       if (target) {
         target.classList.add('active');
         if (smoothScroll) {
@@ -23514,23 +23909,18 @@ const TOTAL_CHAPTERS = 47;
       }
     }
 
-    function tjUpdateSentenceCounter() {
-      const total = tjAllDaysData[tjCurrentDayIndex].sentences_count;
-      const cur = tjActiveSentenceIndex + 1;
-      const counter = document.getElementById('tjSentenceCounter');
-      if (counter) counter.innerText = `[ ${cur < 10 ? '0' : ''}${cur} / ${total} ]`;
-    }
-
-    function tjSeekSentence(sIdx) {
+    function tjSeekSentence(idx) {
       const day = tjAllDaysData[tjCurrentDayIndex];
-      if (!day || sIdx < 0 || sIdx >= day.sentences.length) return;
-      tjActiveSentenceIndex = sIdx;
-      tjHighlightSentenceDOM(sIdx, true);
+      if (!day || !day.timestamps || !day.timestamps[idx]) return;
+
+      tjActiveSentenceIndex = idx;
+      tjHighlightSentenceDOM(idx, true);
       tjUpdateSentenceCounter();
 
+      const startSec = day.timestamps[idx].start;
       const a = tjGetAudioEl();
-      if (a && day.timestamps && day.timestamps[sIdx]) {
-        a.currentTime = day.timestamps[sIdx].start;
+      if (a) {
+        a.currentTime = startSec + 0.05;
         if (!tjIsPlaying) {
           tjStartPlayAudio();
         }
@@ -23538,20 +23928,23 @@ const TOTAL_CHAPTERS = 47;
     }
 
     function tjTogglePlayState() {
-      if (tjIsPlaying) tjPauseAudio();
-      else tjStartPlayAudio();
+      if (tjIsPlaying) {
+        tjPauseAudio();
+      } else {
+        tjStartPlayAudio();
+      }
     }
 
     function tjStartPlayAudio() {
       tjIsPlaying = true;
-      document.getElementById('tjPlayBtnText').innerText = '暂停';
+      const txt = document.getElementById('tjPlayBtnText');
+      if (txt) txt.innerText = '暂停';
 
       const a = tjGetAudioEl();
       if (a) {
-        a.playbackRate = tjPlaybackSpeed;
         const playPromise = a.play();
         if (playPromise !== undefined) {
-          playPromise.catch(() => {
+          playPromise.catch(err => {
             tjStartTimerFallback();
           });
         }
@@ -23735,7 +24128,9 @@ const TOTAL_CHAPTERS = 47;
         tjPauseAudio();
         document.getElementById('mainTabRecite').classList.add('active');
         if (secRecite) secRecite.style.display = 'block';
-        if (reciteBottomDock) reciteBottomDock.style.display = 'flex';
+        if (reciteBottomDock && !document.body.classList.contains('audio-dock-visible')) {
+          reciteBottomDock.style.display = 'flex';
+        }
         if (typeof isBookMode !== 'undefined' && isBookMode) {
           document.body.classList.add('mode-book-paging');
         }
