@@ -3559,6 +3559,317 @@ body.mode-mask .xt-keyword.cloze.revealed {
   @import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css');
 
     /* ==========================================================================
+       全局变量补全与修复（修复 undefined CSS vars，完善夜间/宣纸双主题）
+       ========================================================================== */
+    :root {
+      --paper-card: rgba(255, 255, 255, 0.95);
+      --paper-subtle: rgba(246, 241, 231, 0.8);
+      --paper-sunken: rgba(236, 229, 217, 0.7);
+      --surface: #ffffff;
+      --bg-card: #ffffff;
+      --card-bg: #ffffff;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --gold: #d4a359;
+      --accent-hover: #8e2b1b;
+      --vermilion: #a6402a;
+      --indigo: #2e5b88;
+      --text-main: #2c241d;
+      --text-muted: #877665;
+    }
+    body.theme-dark {
+      --paper-card: #202422;
+      --paper-subtle: #272d29;
+      --paper-sunken: #181c19;
+      --surface: #202422;
+      --bg-card: #202422;
+      --card-bg: #202422;
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      --gold: #d4a359;
+      --accent-hover: #eb715d;
+      --vermilion: #df5843;
+      --indigo: #4e86b8;
+      --text-main: #dfd8cb;
+      --text-muted: #9caaa0;
+    }
+
+    /* ==========================================================================
+       背诵手册部分核心排版与格式深度修复
+       ========================================================================== */
+    /* 1. 修复全屏 PWA 翻页舞台高度与溢出切断问题 */
+    body.mode-book-paging {
+      overflow: hidden !important;
+      height: 100dvh !important;
+      position: fixed !important;
+    }
+    body.mode-book-paging .handbook-stage {
+      height: calc(100dvh - 198px) !important;
+      max-height: calc(100dvh - 198px) !important;
+      min-height: 380px !important;
+      margin-bottom: 0 !important;
+    }
+    body.mode-book-paging .point-scroll-body {
+      flex: 1;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      padding: 14px 16px 28px 16px !important;
+      mask-image: none !important;
+      -webkit-mask-image: none !important;
+    }
+
+    /* 2. 修复核心背诵卡片背景与文本渲染 */
+    .xt-part-box {
+      background: var(--paper-card) !important;
+      border: 1px solid var(--line) !important;
+      box-shadow: 0 2px 10px rgba(50, 38, 25, 0.04) !important;
+      padding: 16px 18px !important;
+      margin-bottom: 16px !important;
+      border-radius: 12px !important;
+    }
+    body.theme-dark .xt-part-box {
+      background: #202422 !important;
+      border-color: #333a35 !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+    }
+    .xt-part-box.xt-part-recite {
+      border-left: 4px solid var(--accent) !important;
+    }
+    .xt-part-box.xt-part-understand {
+      border-left: 4px solid #2e5b88 !important;
+    }
+
+    /* 3. 规范正文字体为学术霞鹜文楷，字号与行间距黄金比例 */
+    .xt-item-row,
+    .xt-text-para {
+      font-family: var(--font-kai) !important;
+      font-size: 15.5px !important;
+      line-height: 1.85 !important;
+      color: var(--ink) !important;
+      margin: 6px 0 !important;
+    }
+    .xt-num-badge {
+      font-family: var(--font-sans) !important;
+      font-weight: 700 !important;
+      color: var(--accent) !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* 4. 彻底去除丑陋机械伪斜体 */
+    .stream-intro-row,
+    .stream-outline-intro,
+    .stream-lecture-intro {
+      font-style: normal !important;
+      font-family: var(--font-kai) !important;
+      color: var(--sub) !important;
+      line-height: 1.75 !important;
+    }
+
+    /* 5. 119 个微课卡片标题与切歌栏优雅排版 */
+    .sub-card-audio-ctrl {
+      background: var(--paper-subtle);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .sub-card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+    }
+    .sub-card-badge {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 7px;
+      border-radius: 9999px;
+      flex-shrink: 0;
+    }
+    .sub-card-title {
+      font-family: var(--font-song);
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+      flex: 1;
+      line-height: 1.35;
+    }
+    .card-audio-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(166, 64, 42, 0.25);
+      color: var(--accent);
+      border-radius: 9999px;
+      padding: 4px 11px;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      flex-shrink: 0;
+    }
+    .card-audio-btn.playing {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(166, 64, 42, 0.3);
+    }
+    .card-audio-btn:active {
+      transform: scale(0.93);
+    }
+
+    /* 6. 纯学术 0 图标：隐藏正文中散落的 1000+ 个杂乱装饰 SVG 图标 */
+    .view-pill-btn svg,
+    .card-audio-btn svg,
+    .playlist-chip-btn svg,
+    .stream-card-label svg,
+    .xt-part-badge svg,
+    .card-flip-btn svg {
+      display: none !important;
+    }
+
+    /* 7. 双轨模式切换胶囊按钮（0 图标 · 纯学术字形） */
+    .view-pill-btn {
+      padding: 4px 12px !important;
+      font-size: 12px !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 600 !important;
+      border-radius: 9999px !important;
+      transition: all 0.2s ease !important;
+    }
+    .view-pill-btn.active {
+      background: var(--accent) !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
+      box-shadow: 0 2px 6px rgba(166, 64, 42, 0.25) !important;
+    }
+
+    /* 8. 考点精讲卡片流式优化 */
+    .chapter-audio-playlist {
+      background: var(--paper-subtle);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+    .playlist-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 4px 0;
+    }
+    .playlist-chips::-webkit-scrollbar {
+      display: none;
+    }
+    .playlist-chip-btn {
+      padding: 5px 12px !important;
+      font-size: 12px !important;
+      border-radius: 9999px !important;
+      font-family: var(--font-sans) !important;
+      white-space: nowrap;
+      border: 1px solid var(--line) !important;
+      background: var(--paper-card) !important;
+      color: var(--sub) !important;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .playlist-chip-btn.active {
+      background: var(--accent) !important;
+      color: #ffffff !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 2px 8px rgba(166, 64, 42, 0.25) !important;
+    }
+
+    /* 9. 考点微卡片（金句/大纲/提炼）学术样式 */
+    .stream-card {
+      background: var(--paper-card) !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 12px !important;
+      padding: 14px 16px !important;
+      margin-bottom: 12px !important;
+      box-shadow: 0 2px 8px rgba(50, 38, 25, 0.03) !important;
+    }
+    body.theme-dark .stream-card {
+      background: #202422 !important;
+      border-color: #333a35 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+    }
+    .stream-card-golden {
+      border-left: 4px solid var(--gold) !important;
+      background: rgba(212, 163, 89, 0.04) !important;
+    }
+    .stream-card-outline {
+      border-left: 4px solid var(--accent) !important;
+    }
+    .stream-card-lecture {
+      border-left: 4px solid #216e57 !important;
+    }
+    .stream-card-label {
+      font-family: var(--font-song) !important;
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.5px !important;
+    }
+
+    /* 10. 伴读高亮句子与点播 */
+    .recite-sentence {
+      cursor: pointer;
+      padding: 1px 3px;
+      border-radius: 3px;
+      transition: all 0.18s ease;
+      display: inline;
+    }
+    .recite-sentence:hover {
+      background: var(--accent-soft);
+    }
+    .recite-sentence.active-sentence {
+      background: #fce8e6 !important;
+      color: #922b21 !important;
+      font-weight: 700 !important;
+      border-bottom: 2px solid var(--accent) !important;
+      box-shadow: 0 1px 6px rgba(185, 56, 44, 0.2);
+    }
+    body.theme-dark .recite-sentence.active-sentence {
+      background: rgba(185, 56, 44, 0.25) !important;
+      color: #f5b7b1 !important;
+    }
+
+    /* 11. 挖空胶囊优化 */
+    .xt-keyword.cloze {
+      font-family: var(--font-kai);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    .mode-mask-active .xt-keyword.cloze:not(.revealed),
+    body.mode-mask .xt-keyword.cloze:not(.revealed) {
+      background: var(--stripe-bg) !important;
+      color: transparent !important;
+      border: 1px dashed rgba(166, 64, 42, 0.4) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .mode-mask-active .xt-keyword.cloze:not(.revealed)::after,
+    body.mode-mask.ghost-on .xt-keyword.cloze:not(.revealed)::after {
+      content: attr(data-ghost);
+      color: var(--muted) !important;
+      font-size: 0.88em;
+      margin-left: 0 !important;
+      display: inline-block;
+      text-align: center;
+    }
+    .mode-mask-active .xt-keyword.cloze.revealed,
+    body.mode-mask .xt-keyword.cloze.revealed {
+      background: var(--accent-soft) !important;
+      color: var(--accent) !important;
+      border: 1px solid var(--accent-border) !important;
+    }
+
+    /* ==========================================================================
        Scheme 4: 底部固定 TabBar 与全屏 PWA 适配（0 图标 · 纯学术字体）
        ========================================================================== */
     .docked-bottom-nav {
