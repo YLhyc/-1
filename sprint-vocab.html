@@ -3,21 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>考研英语一 · 40天核心专题词速记便签</title>
+  <title>考前冲刺专题词 · Words 考研英语一专属</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="专题词速记">
+  <meta name="apple-mobile-web-app-title" content="专题词冲刺">
   <style>
     :root {
-      --bg: #f8f9fa;
-      --card-bg: #ffffff;
-      --text-main: #1c1c1e;
-      --text-sub: #636366;
-      --text-muted: #8e8e93;
-      --border: #e5e5ea;
-      --accent: #2563eb;
-      --accent-soft: rgba(37, 99, 235, 0.1);
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --ease-drawer: cubic-bezier(.32, .72, 0, 1);
       
+      /* Words 原生质感调色板 */
+      --deep: #07536a;
+      --ocean: #057a9d;
+      --mint: #44b892;
+      --ink: #102a36;
+      --muted: #5f747d;
+      --canvas: #eaf3f5;
+      --surface: #ffffff;
+      --surface-card: #ffffff;
+      --border: #d4e2e6;
+      --border-subtle: #e8eff2;
+      
+      --accent: #057a9d;
+      --accent-soft: rgba(5, 122, 157, 0.1);
+
+      /* 考点功能色 */
       --badge-pos-bg: #ecfdf5;
       --badge-pos-text: #059669;
       --badge-pos-border: #a7f3d0;
@@ -38,22 +48,27 @@
       --badge-poly-text: #d97706;
       --badge-poly-border: #fde68a;
 
-      --mask-bg: rgba(229, 231, 235, 0.85);
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+      --mask-bg: rgba(234, 243, 245, 0.9);
+      --shadow-sm: 0 1px 3px rgba(16, 42, 54, 0.05);
+      --shadow-md: 0 6px 18px rgba(16, 42, 54, 0.08);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Segoe UI", Roboto, sans-serif;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #09090b;
-        --card-bg: #18181b;
-        --text-main: #f4f4f5;
-        --text-sub: #a1a1aa;
-        --text-muted: #71717a;
-        --border: #27272a;
-        --accent: #3b82f6;
-        --accent-soft: rgba(59, 130, 246, 0.2);
+        --deep: #38bdf8;
+        --ocean: #0ea5e9;
+        --mint: #34d399;
+        --ink: #f0fdf4;
+        --muted: #94a3b8;
+        --canvas: #091319;
+        --surface: #0f1f28;
+        --surface-card: #132733;
+        --border: #1e3a4b;
+        --border-subtle: #162c39;
+
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.18);
 
         --badge-pos-bg: rgba(5, 150, 105, 0.2);
         --badge-pos-text: #34d399;
@@ -75,93 +90,105 @@
         --badge-poly-text: #fbbf24;
         --badge-poly-border: rgba(217, 119, 6, 0.4);
 
-        --mask-bg: rgba(39, 39, 42, 0.9);
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+        --mask-bg: rgba(15, 31, 40, 0.92);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
       }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: var(--font);
-      background-color: var(--bg);
-      color: var(--text-main);
+      background-color: var(--canvas);
+      color: var(--ink);
       line-height: 1.5;
-      padding-bottom: 90px;
+      padding-bottom: 95px;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* 顶部吸顶面板 */
+    /* 顶部导航与操作栏（Words 统一质感） */
     .header-bar {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--bg);
+      background: var(--surface);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: env(safe-area-inset-top, 12px) 16px 10px;
+      padding: env(safe-area-inset-top, 10px) 16px 10px;
+      box-shadow: var(--shadow-sm);
     }
     .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
+      margin-top: 6px;
       margin-bottom: 10px;
     }
-    .header-title {
-      font-size: 18px;
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ocean);
+      text-decoration: none;
+      background: var(--accent-soft);
+      padding: 5px 11px;
+      border-radius: 18px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .nav-back:active {
+      opacity: 0.7;
+    }
+    .header-center-title {
+      font-size: 16px;
       font-weight: 700;
-      letter-spacing: -0.4px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .header-title span.tag-day {
-      font-size: 11px;
-      font-weight: 700;
-      background: #ef4444;
-      color: #fff;
+    .tag-sprint {
+      font-size: 10px;
+      font-weight: 800;
+      background: #dc2626;
+      color: #ffffff;
       padding: 1px 6px;
-      border-radius: 6px;
-      vertical-align: middle;
+      border-radius: 5px;
+      letter-spacing: 0.3px;
     }
     .header-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     .btn-action {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      height: 32px;
-      padding: 0 12px;
-      border-radius: 16px;
+      gap: 4px;
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 15px;
       border: 1px solid var(--border);
-      background: var(--card-bg);
-      color: var(--text-main);
-      font-size: 12.5px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s var(--ease-out);
     }
     .btn-action.active {
-      background: var(--accent);
+      background: var(--ocean);
       color: #ffffff;
-      border-color: var(--accent);
-      box-shadow: 0 2px 8px var(--accent-soft);
-    }
-    .btn-action svg {
-      width: 14px;
-      height: 14px;
-      stroke-width: 2.2;
+      border-color: var(--ocean);
     }
 
-    /* 搜索栏与统计条 */
-    .search-row {
+    /* 搜索栏与模式切换 */
+    .controls-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 10px;
+      align-items: center;
+      margin-bottom: 8px;
     }
     .search-input-wrap {
       position: relative;
@@ -174,7 +201,7 @@
       transform: translateY(-50%);
       width: 14px;
       height: 14px;
-      color: var(--text-muted);
+      color: var(--muted);
     }
     .search-input {
       width: 100%;
@@ -182,63 +209,102 @@
       padding: 0 12px 0 32px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: var(--card-bg);
-      color: var(--text-main);
+      background: var(--surface-card);
+      color: var(--ink);
       font-size: 13px;
       outline: none;
       transition: border-color 0.2s;
     }
     .search-input:focus {
-      border-color: var(--accent);
+      border-color: var(--ocean);
     }
 
-    /* 分类标签切换 */
+    /* 模式切换胶囊 (清单 vs 沉浸抽认卡) */
+    .view-mode-toggle {
+      display: flex;
+      background: var(--canvas);
+      padding: 2px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+    }
+    .view-mode-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      border-radius: 7px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .view-mode-btn.active {
+      background: var(--surface);
+      color: var(--ocean);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    /* 分类选项卡 */
     .tabs-row {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding-bottom: 2px;
       scrollbar-width: none;
+      padding-bottom: 2px;
     }
     .tabs-row::-webkit-scrollbar { display: none; }
     .tab-pill {
       flex-shrink: 0;
       padding: 5px 12px;
-      border-radius: 14px;
+      border-radius: 13px;
       font-size: 12px;
       font-weight: 600;
-      background: var(--card-bg);
-      color: var(--text-sub);
+      background: var(--surface-card);
+      color: var(--muted);
       border: 1px solid var(--border);
       cursor: pointer;
       transition: all 0.2s;
     }
     .tab-pill.active {
-      background: var(--text-main);
-      color: var(--card-bg);
-      border-color: var(--text-main);
+      background: var(--ocean);
+      color: #ffffff;
+      border-color: var(--ocean);
+    }
+    .tab-pill.weak {
+      color: #d97706;
+      border-color: #fcd34d;
+    }
+    .tab-pill.weak.active {
+      background: #d97706;
+      color: #ffffff;
+      border-color: #d97706;
     }
 
     /* 进度统计栏 */
     .progress-bar-wrap {
-      margin: 12px 16px 6px;
+      max-width: 680px;
+      margin: 10px auto 4px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
-      color: var(--text-sub);
+      color: var(--muted);
     }
     .progress-track {
       flex: 1;
       height: 5px;
       background: var(--border);
       border-radius: 3px;
-      margin: 0 10px;
+      margin: 0 12px;
       overflow: hidden;
     }
     .progress-fill {
       height: 100%;
-      background: #10b981;
+      background: var(--mint);
       width: 0%;
       border-radius: 3px;
       transition: width 0.3s ease;
@@ -246,13 +312,15 @@
     .btn-reset {
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: var(--muted);
       font-size: 11px;
       cursor: pointer;
       text-decoration: underline;
     }
 
-    /* 卡片列表容器 */
+    /* ================================================= */
+    /* 视图一：清单全览列表 */
+    /* ================================================= */
     .vocab-container {
       max-width: 680px;
       margin: 0 auto;
@@ -262,15 +330,14 @@
       gap: 10px;
     }
 
-    /* 单张卡片设计 */
     .vocab-card {
-      background: var(--card-bg);
+      background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 13px 15px;
+      border-radius: 16px;
+      padding: 13px 16px;
       box-shadow: var(--shadow-sm);
       position: relative;
-      transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+      transition: transform 0.15s, border-color 0.2s;
       cursor: pointer;
       user-select: none;
     }
@@ -278,8 +345,11 @@
       transform: scale(0.99);
     }
     .vocab-card.mastered {
-      border-color: #10b981;
-      background: rgba(16, 185, 129, 0.03);
+      border-color: var(--mint);
+      background: rgba(68, 184, 146, 0.04);
+    }
+    .vocab-card.is-weak {
+      border-left: 4px solid #f59e0b;
     }
 
     .card-head {
@@ -294,16 +364,15 @@
       gap: 8px;
     }
     .word-text {
-      font-size: 18px;
+      font-size: 18.5px;
       font-weight: 700;
-      color: var(--text-main);
+      color: var(--ink);
       letter-spacing: -0.2px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .btn-speak {
       background: none;
       border: none;
-      color: var(--accent);
+      color: var(--ocean);
       cursor: pointer;
       padding: 2px;
       display: inline-flex;
@@ -331,14 +400,12 @@
     .badge-warn { background: var(--badge-warn-bg); color: var(--badge-warn-text); border-color: var(--badge-warn-border); }
     .badge-poly { background: var(--badge-poly-bg); color: var(--badge-poly-text); border-color: var(--badge-poly-border); }
 
-    /* 遮挡自测内容区域 */
+    /* 遮挡自测逻辑 */
     .card-body {
       position: relative;
-      margin-top: 4px;
+      margin-top: 5px;
       transition: filter 0.25s, opacity 0.25s;
     }
-
-    /* 遮挡罩样式 */
     .mask-active .card-body.masked {
       filter: blur(5px);
       opacity: 0.25;
@@ -354,7 +421,7 @@
       justify-content: center;
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-sub);
+      color: var(--muted);
       gap: 4px;
     }
     .mask-active .card-body.masked + .mask-hint {
@@ -364,8 +431,8 @@
     .meaning-text {
       font-size: 14.5px;
       font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 4px;
+      color: var(--ink);
+      margin-bottom: 5px;
       line-height: 1.4;
     }
     .contrast-box {
@@ -374,7 +441,7 @@
       color: #b45309;
       background: rgba(245, 158, 11, 0.08);
       border-left: 3px solid #f59e0b;
-      padding: 3px 8px;
+      padding: 4px 9px;
       border-radius: 4px;
       margin-bottom: 5px;
     }
@@ -386,29 +453,42 @@
     }
     .contrast-box.pos-dir {
       color: #047857;
-      background: rgba(16, 185, 129, 0.08);
-      border-left-color: #10b981;
+      background: rgba(68, 184, 146, 0.09);
+      border-left-color: var(--mint);
     }
     .contrast-box.neg-dir {
       color: #b91c1c;
-      background: rgba(239, 68, 68, 0.08);
+      background: rgba(220, 38, 38, 0.08);
       border-left-color: #ef4444;
     }
 
     .note-text {
       font-size: 11.5px;
-      color: var(--text-muted);
+      color: var(--muted);
       line-height: 1.4;
     }
 
-    /* 底部勾选与快捷键 */
     .card-footer {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      margin-top: 6px;
+      margin-top: 7px;
       padding-top: 6px;
-      border-top: 1px dashed var(--border);
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .btn-weak-toggle {
+      background: none;
+      border: none;
+      font-size: 11.5px;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .btn-weak-toggle.active {
+      color: #d97706;
+      font-weight: 700;
     }
     .btn-check {
       display: inline-flex;
@@ -416,17 +496,157 @@
       gap: 4px;
       font-size: 11.5px;
       font-weight: 600;
-      color: var(--text-sub);
+      color: var(--muted);
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 2px 8px;
+      padding: 2px 9px;
       cursor: pointer;
     }
     .vocab-card.mastered .btn-check {
-      background: #10b981;
+      background: var(--mint);
       color: #fff;
-      border-color: #10b981;
+      border-color: var(--mint);
+    }
+
+    /* ================================================= */
+    /* 视图二：沉浸抽认卡冲刺模式 (Flashcard Mode) */
+    /* ================================================= */
+    .flashcard-view {
+      display: none;
+      max-width: 520px;
+      margin: 16px auto;
+      padding: 0 16px;
+      flex-direction: column;
+      align-items: center;
+    }
+    .flashcard-view.active {
+      display: flex;
+    }
+    .flashcard-deck {
+      width: 100%;
+      min-height: 380px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow-md);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+    }
+    .fc-index-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .fc-word-area {
+      text-align: center;
+      margin: 25px 0 15px;
+    }
+    .fc-word-text {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .fc-content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .fc-content-area.hidden {
+      visibility: hidden;
+      opacity: 0;
+    }
+    .fc-reveal-prompt {
+      text-align: center;
+      font-size: 13px;
+      color: var(--ocean);
+      font-weight: 600;
+      padding: 12px;
+      background: var(--accent-soft);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .fc-actions-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .btn-fc-action {
+      flex: 1;
+      height: 48px;
+      border-radius: 16px;
+      border: none;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+    .btn-fc-action:active {
+      transform: scale(0.97);
+    }
+    .btn-fc-hard {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+    .btn-fc-easy {
+      background: var(--mint);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(68, 184, 146, 0.25);
+    }
+
+    /* 底部悬浮控制台 */
+    .bottom-dock {
+      position: fixed;
+      bottom: env(safe-area-inset-bottom, 16px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      padding: 7px 16px;
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 90;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .dock-btn {
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .dock-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
     }
 
     /* 考场口诀弹窗 */
@@ -434,7 +654,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.45);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       z-index: 200;
@@ -446,14 +666,14 @@
       display: flex;
     }
     .modal-content {
-      background: var(--card-bg);
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 20px;
       max-width: 520px;
       width: 100%;
-      max-height: 80vh;
+      max-height: 82vh;
       overflow-y: auto;
-      padding: 20px;
+      padding: 22px;
       box-shadow: var(--shadow-md);
     }
     .modal-header {
@@ -461,16 +681,19 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
     }
     .modal-title {
-      font-size: 16px;
+      font-size: 16.5px;
       font-weight: 700;
+      color: var(--ink);
     }
     .btn-close {
       background: none;
       border: none;
-      font-size: 20px;
-      color: var(--text-muted);
+      font-size: 22px;
+      color: var(--muted);
       cursor: pointer;
       line-height: 1;
     }
@@ -480,42 +703,9 @@
       line-height: 1.6;
     }
     .rule-item strong {
-      color: var(--accent);
+      color: var(--ocean);
       display: block;
-      margin-bottom: 2px;
-    }
-
-    /* 底部悬浮控制台 */
-    .bottom-dock {
-      position: fixed;
-      bottom: env(safe-area-inset-bottom, 14px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-md);
-      padding: 6px 14px;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 90;
-    }
-    .dock-btn {
-      background: none;
-      border: none;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .dock-divider {
-      width: 1px;
-      height: 14px;
-      background: var(--border);
+      margin-bottom: 3px;
     }
   </style>
 </head>
@@ -524,32 +714,43 @@
   <!-- 顶部吸顶控制栏 -->
   <header class="header-bar">
     <div class="header-top">
-      <div class="header-title">
-        考研英语一 · 核心专题词 <span class="tag-day">考前40天</span>
+      <a href="index.html" class="nav-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Words
+      </a>
+      <div class="header-center-title">
+        冲刺专题词 <span class="tag-sprint">考前40天</span>
       </div>
       <div class="header-actions">
-        <button class="btn-action" id="btnTips" onclick="toggleModal(true)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-          考场口诀
-        </button>
-        <button class="btn-action active" id="btnMask" onclick="toggleMaskMode()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span id="maskBtnText">遮挡自测</span>
+        <button class="btn-action" onclick="toggleModal(true)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          口诀
         </button>
       </div>
     </div>
 
-    <!-- 搜索栏 -->
-    <div class="search-row">
+    <!-- 搜索与视图模式切换 -->
+    <div class="controls-row">
       <div class="search-input-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="输入单词、中文释义或考点..." oninput="handleSearch()">
+        <input type="text" id="searchInput" class="search-input" placeholder="输入单词、考点或词义..." oninput="handleSearch()">
+      </div>
+      <div class="view-mode-toggle">
+        <button class="view-mode-btn active" id="btnModeList" onclick="switchViewMode('list')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          清单
+        </button>
+        <button class="view-mode-btn" id="btnModeCard" onclick="switchViewMode('card')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          抽认卡
+        </button>
       </div>
     </div>
 
     <!-- 一级分类 Tab -->
     <div class="tabs-row">
       <button class="tab-pill active" onclick="switchCategory('all', this)">全部 (130)</button>
+      <button class="tab-pill weak" id="tabWeak" onclick="switchCategory('weak', this)">⭐️ 待巩固 (<span id="weakCountBadge">0</span>)</button>
       <button class="tab-pill" onclick="switchCategory('attitude', this)">态度路标 (35)</button>
       <button class="tab-pill" onclick="switchCategory('polysemy', this)">熟词僻义 (55)</button>
       <button class="tab-pill" onclick="switchCategory('logic', this)">逻辑动词 (40)</button>
@@ -558,34 +759,68 @@
 
   <!-- 进度统计条 -->
   <div class="progress-bar-wrap">
-    <span>自测进度：<strong id="masteredCount">0</strong> / <span id="totalVisibleCount">130</span></span>
+    <span>已掌握：<strong id="masteredCount">0</strong> / <span id="totalVisibleCount">130</span></span>
     <div class="progress-track">
       <div class="progress-fill" id="progressFill"></div>
     </div>
     <button class="btn-reset" onclick="resetProgress()">重置打勾</button>
   </div>
 
-  <!-- 卡片列表容器 -->
+  <!-- ================= 视图一：清单视图 ================= -->
   <main class="vocab-container" id="vocabList">
-    <!-- 由 JS 渲染 -->
+    <!-- JS 渲染 -->
   </main>
 
-  <!-- 底部快捷悬浮坞 -->
-  <div class="bottom-dock">
-    <button class="dock-btn" onclick="revealAllVisible()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-      一键全揭示
+  <!-- ================= 视图二：沉浸抽认卡视图 ================= -->
+  <main class="flashcard-view" id="flashcardDeck">
+    <div class="flashcard-deck" onclick="toggleCardReveal()">
+      <div class="fc-index-row">
+        <span id="fcCategoryBadge" class="badge">分类</span>
+        <span><strong id="fcCurrentIndex">1</strong> / <span id="fcTotalIndex">130</span></span>
+      </div>
+
+      <div class="fc-word-area">
+        <div class="fc-word-text" id="fcWord">Word</div>
+        <button class="btn-speak" onclick="event.stopPropagation(); speakWord(document.getElementById('fcWord').innerText)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+      </div>
+
+      <div class="fc-content-area" id="fcContentArea">
+        <div class="meaning-text" id="fcMeaning" style="font-size:16px; margin-bottom:8px;">释义</div>
+        <div class="contrast-box" id="fcContrast" style="font-size:13.5px; padding:6px 12px;">对比考点</div>
+        <div class="note-text" id="fcNote" style="font-size:12.5px; margin-top:6px;">真题搭配</div>
+      </div>
+
+      <div class="fc-reveal-prompt" id="fcPrompt">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        轻触卡片揭示考点释义
+      </div>
+    </div>
+
+    <!-- 抽认卡操作大按键 -->
+    <div class="fc-actions-row">
+      <button class="btn-fc-action btn-fc-hard" onclick="fcMarkWeak()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        不熟 · 重点巩固
+      </button>
+      <button class="btn-fc-action btn-fc-easy" onclick="fcMarkMastered()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        秒杀 · 标记掌握
+      </button>
+    </div>
+  </main>
+
+  <!-- 底部快捷悬浮控制坞 (清单模式可用) -->
+  <div class="bottom-dock" id="bottomDock">
+    <button class="dock-btn" id="btnToggleMask" onclick="toggleMaskMode()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span id="dockMaskText">遮挡自测</span>
     </button>
     <div class="dock-divider"></div>
-    <button class="dock-btn" onclick="hideAllVisible()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
-      一键全遮挡
-    </button>
+    <button class="dock-btn" onclick="revealAllVisible()">全揭示</button>
     <div class="dock-divider"></div>
-    <button class="dock-btn" onclick="scrollToTop()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
-      回顶
-    </button>
+    <button class="dock-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">回顶</button>
   </div>
 
   <!-- 考场口诀说明弹窗 -->
@@ -597,13 +832,13 @@
       </div>
       <div class="rule-item">
         <strong>1. 态度题：正/负/陪跑三色法则</strong>
-        <p>• <strong>绿灯（正向）</strong>：supportive, approving, optimistic（正向议论文正解）<br>
-        • <strong>红灯（批判题眼）</strong>：critical, skeptical, suspicious（揭露商业、学术问题最爱正解）<br>
-        • <strong>灰灯（必死陪跑）</strong>：indifferent（冷漠）, subjective, confused（95%直接排除，不用回文核对）</p>
+        <p>• <strong>绿灯（正向支持）</strong>：supportive, approving, optimistic（议论文正解）<br>
+        • <strong>红灯（批判质疑·高频题眼）</strong>：critical, skeptical, suspicious（揭露商业垄断、学术造假最爱正解）<br>
+        • <strong>灰灯（必死陪跑）</strong>：indifferent（冷漠）, subjective, confused（95%见之秒排，不用回文核对）</p>
       </div>
       <div class="rule-item">
         <strong>2. 逻辑动词：只看“箭头方向”</strong>
-        <p>• <strong>⬆️ 撑腰促进 (+)</strong>：bolster, reinforce, foster, substantiate（前后同向支持）<br>
+        <p>• <strong>⬆️ 撑腰促进 (+)</strong>：bolster, reinforce, foster, substantiate（前后逻辑同向一致）<br>
         • <strong>⬇️ 削弱阻碍 (-)</strong>：undermine, impede, curb, compromise（前后逻辑反转，选项反向设坑主犯）</p>
       </div>
       <div class="rule-item">
@@ -614,8 +849,8 @@
         • champion = 捍卫支持民权（not 冠军）</p>
       </div>
       <div class="rule-item">
-        <strong>4. 3秒闪电刷词技巧</strong>
-        <p>开启“遮挡自测”，手指往下滑：3秒内能反应出考点反射，直接划过；卡壳犹豫的点开看一眼，每天5分钟过一遍，形成肌肉反射！</p>
+        <strong>4. 极速冲刺法</strong>
+        <p>切到「抽认卡」模式，大字单词出现后心理默念 3 秒；能瞬间反应反射的右滑/点击「秒杀掌握」，卡壳的点「不熟·重点巩固」，考前最后 10 天专刷「⭐️ 待巩固」词池！</p>
       </div>
     </div>
   </div>
@@ -1794,24 +2029,29 @@
   }
 ];
 
+    let viewMode = 'list'; // 'list' | 'card'
     let currentCategory = 'all';
     let searchQuery = '';
     let isMaskMode = true;
-    let cardMaskStates = {}; // id -> boolean (true: masked, false: revealed)
+    let cardMaskStates = {};
     let masteredSet = new Set(JSON.parse(localStorage.getItem('sprint_mastered_words') || '[]'));
+    let weakSet = new Set(JSON.parse(localStorage.getItem('sprint_weak_words') || '[]'));
 
-    // 初始化遮挡状态
+    // 抽认卡当前状态
+    let fcIndex = 0;
+    let fcRevealed = false;
+
     VOCAB_DATA.forEach((item, idx) => {
       cardMaskStates[idx] = true;
     });
 
-    function renderCards() {
-      const container = document.getElementById('vocabList');
-      container.className = 'vocab-container' + (isMaskMode ? ' mask-active' : '');
-
-      const filtered = VOCAB_DATA.filter((item, idx) => {
-        const matchCat = (currentCategory === 'all' || item.category === currentCategory);
-        if (!matchCat) return false;
+    function getFilteredData() {
+      return VOCAB_DATA.filter((item) => {
+        if (currentCategory === 'weak') {
+          if (!weakSet.has(item.word)) return false;
+        } else if (currentCategory !== 'all' && item.category !== currentCategory) {
+          return false;
+        }
         if (!searchQuery) return true;
         const q = searchQuery.toLowerCase();
         return item.word.toLowerCase().includes(q) ||
@@ -1819,13 +2059,20 @@
                item.contrast.toLowerCase().includes(q) ||
                (item.note && item.note.toLowerCase().includes(q));
       });
+    }
 
+    function renderList() {
+      const container = document.getElementById('vocabList');
+      container.className = 'vocab-container' + (isMaskMode ? ' mask-active' : '');
+
+      const filtered = getFilteredData();
       document.getElementById('totalVisibleCount').innerText = filtered.length;
 
       let html = '';
       filtered.forEach((item) => {
         const originalIndex = VOCAB_DATA.indexOf(item);
         const isMastered = masteredSet.has(item.word);
+        const isWeak = weakSet.has(item.word);
         const isMasked = isMaskMode && cardMaskStates[originalIndex];
 
         let badgeClass = 'badge-pos';
@@ -1839,7 +2086,7 @@
         else if (item.contrast.includes('⬇️')) contrastClass += ' neg-dir';
 
         html += `
-          <div class="vocab-card ${isMastered ? 'mastered' : ''}" onclick="toggleSingleCard(${originalIndex})">
+          <div class="vocab-card ${isMastered ? 'mastered' : ''} ${isWeak ? 'is-weak' : ''}" onclick="toggleSingleCard(${originalIndex})">
             <div class="card-head">
               <div class="word-title-wrap">
                 <span class="word-text">${item.word}</span>
@@ -1857,10 +2104,14 @@
             </div>
             <div class="mask-hint">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-              轻触卡片揭示释义
+              轻触卡片揭示考点释义
             </div>
 
             <div class="card-footer">
+              <button class="btn-weak-toggle ${isWeak ? 'active' : ''}" onclick="event.stopPropagation(); toggleWeak('${item.word}')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="${isWeak ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>${isWeak ? '已加待巩固' : '加待巩固'}</span>
+              </button>
               <button class="btn-check" onclick="event.stopPropagation(); toggleMastered('${item.word}')">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>${isMastered ? '已掌握' : '标记掌握'}</span>
@@ -1871,59 +2122,165 @@
       });
 
       if (filtered.length === 0) {
-        html = '<div style="text-align:center; padding:40px 10px; color:var(--text-muted); font-size:14px;">没有找到匹配的专题词</div>';
+        html = '<div style="text-align:center; padding:50px 10px; color:var(--muted); font-size:14px;">没有找到符合条件的专题词</div>';
       }
 
       container.innerHTML = html;
-      updateMasteredStats();
+      updateStats();
+    }
+
+    function renderFlashcard() {
+      const filtered = getFilteredData();
+      const total = filtered.length;
+      document.getElementById('fcTotalIndex').innerText = total;
+
+      if (total === 0) {
+        document.getElementById('fcWord').innerText = '空';
+        document.getElementById('fcCurrentIndex').innerText = 0;
+        document.getElementById('fcCategoryBadge').innerText = '-';
+        document.getElementById('fcMeaning').innerText = '没有符合当前筛选的单词';
+        document.getElementById('fcContrast').innerText = '';
+        document.getElementById('fcNote').innerText = '';
+        document.getElementById('fcContentArea').classList.remove('hidden');
+        document.getElementById('fcPrompt').style.display = 'none';
+        return;
+      }
+
+      if (fcIndex >= total) fcIndex = 0;
+      if (fcIndex < 0) fcIndex = total - 1;
+
+      const item = filtered[fcIndex];
+      document.getElementById('fcCurrentIndex').innerText = fcIndex + 1;
+      document.getElementById('fcWord').innerText = item.word;
+
+      const badgeEl = document.getElementById('fcCategoryBadge');
+      badgeEl.innerText = item.badge;
+      badgeEl.className = 'badge';
+      if (item.type === 'neg') badgeEl.classList.add('badge-neg');
+      else if (item.type === 'neutral') badgeEl.classList.add('badge-neutral');
+      else if (item.type === 'warn') badgeEl.classList.add('badge-warn');
+      else if (item.type === 'poly') badgeEl.classList.add('badge-poly');
+      else badgeEl.classList.add('badge-pos');
+
+      document.getElementById('fcMeaning').innerText = item.meaning;
+      
+      const contrastEl = document.getElementById('fcContrast');
+      contrastEl.innerText = item.contrast;
+      contrastEl.className = 'contrast-box';
+      if (item.contrast.includes('⬆️')) contrastEl.classList.add('pos-dir');
+      else if (item.contrast.includes('⬇️')) contrastEl.classList.add('neg-dir');
+
+      document.getElementById('fcNote').innerText = item.note || '';
+
+      const contentArea = document.getElementById('fcContentArea');
+      const promptEl = document.getElementById('fcPrompt');
+
+      if (fcRevealed) {
+        contentArea.classList.remove('hidden');
+        promptEl.style.display = 'none';
+      } else {
+        contentArea.classList.add('hidden');
+        promptEl.style.display = 'flex';
+      }
+      updateStats();
+    }
+
+    function toggleCardReveal() {
+      fcRevealed = !fcRevealed;
+      renderFlashcard();
+    }
+
+    function fcMarkMastered() {
+      const filtered = getFilteredData();
+      if (filtered.length === 0) return;
+      const word = filtered[fcIndex].word;
+      masteredSet.add(word);
+      weakSet.delete(word);
+      saveSets();
+      fcRevealed = false;
+      fcIndex++;
+      renderFlashcard();
+    }
+
+    function fcMarkWeak() {
+      const filtered = getFilteredData();
+      if (filtered.length === 0) return;
+      const word = filtered[fcIndex].word;
+      weakSet.add(word);
+      masteredSet.delete(word);
+      saveSets();
+      fcRevealed = false;
+      fcIndex++;
+      renderFlashcard();
+    }
+
+    function switchViewMode(mode) {
+      viewMode = mode;
+      const listEl = document.getElementById('vocabList');
+      const deckEl = document.getElementById('flashcardDeck');
+      const dockEl = document.getElementById('bottomDock');
+      const btnList = document.getElementById('btnModeList');
+      const btnCard = document.getElementById('btnModeCard');
+
+      if (mode === 'list') {
+        btnList.classList.add('active');
+        btnCard.classList.remove('active');
+        listEl.style.display = 'flex';
+        deckEl.classList.remove('active');
+        dockEl.style.display = 'flex';
+        renderList();
+      } else {
+        btnList.classList.remove('active');
+        btnCard.classList.add('active');
+        listEl.style.display = 'none';
+        deckEl.classList.add('active');
+        dockEl.style.display = 'none';
+        fcIndex = 0;
+        fcRevealed = false;
+        renderFlashcard();
+      }
     }
 
     function toggleSingleCard(idx) {
       if (!isMaskMode) return;
       cardMaskStates[idx] = !cardMaskStates[idx];
-      renderCards();
+      renderList();
     }
 
     function toggleMaskMode() {
       isMaskMode = !isMaskMode;
-      const btn = document.getElementById('btnMask');
-      const text = document.getElementById('maskBtnText');
+      const text = document.getElementById('dockMaskText');
       if (isMaskMode) {
-        btn.classList.add('active');
         text.innerText = '遮挡自测';
-        // 全部重置为遮挡
         VOCAB_DATA.forEach((_, idx) => cardMaskStates[idx] = true);
       } else {
-        btn.classList.remove('active');
         text.innerText = '全部明文';
         VOCAB_DATA.forEach((_, idx) => cardMaskStates[idx] = false);
       }
-      renderCards();
+      renderList();
     }
 
     function revealAllVisible() {
       VOCAB_DATA.forEach((_, idx) => cardMaskStates[idx] = false);
-      renderCards();
-    }
-
-    function hideAllVisible() {
-      isMaskMode = true;
-      document.getElementById('btnMask').classList.add('active');
-      document.getElementById('maskBtnText').innerText = '遮挡自测';
-      VOCAB_DATA.forEach((_, idx) => cardMaskStates[idx] = true);
-      renderCards();
+      renderList();
     }
 
     function switchCategory(cat, btn) {
       currentCategory = cat;
       document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
-      renderCards();
+      fcIndex = 0;
+      fcRevealed = false;
+      if (viewMode === 'list') renderList();
+      else renderFlashcard();
     }
 
     function handleSearch() {
       searchQuery = document.getElementById('searchInput').value.trim();
-      renderCards();
+      fcIndex = 0;
+      fcRevealed = false;
+      if (viewMode === 'list') renderList();
+      else renderFlashcard();
     }
 
     function toggleMastered(word) {
@@ -1931,20 +2288,39 @@
         masteredSet.delete(word);
       } else {
         masteredSet.add(word);
+        weakSet.delete(word);
       }
+      saveSets();
+      renderList();
+    }
+
+    function toggleWeak(word) {
+      if (weakSet.has(word)) {
+        weakSet.delete(word);
+      } else {
+        weakSet.add(word);
+        masteredSet.delete(word);
+      }
+      saveSets();
+      renderList();
+    }
+
+    function saveSets() {
       localStorage.setItem('sprint_mastered_words', JSON.stringify(Array.from(masteredSet)));
-      renderCards();
+      localStorage.setItem('sprint_weak_words', JSON.stringify(Array.from(weakSet)));
+      updateStats();
     }
 
     function resetProgress() {
-      if (confirm('确定要重置已打勾的进度吗？')) {
+      if (confirm('确定要重置已打勾掌握的进度吗？')) {
         masteredSet.clear();
-        localStorage.removeItem('sprint_mastered_words');
-        renderCards();
+        saveSets();
+        if (viewMode === 'list') renderList();
+        else renderFlashcard();
       }
     }
 
-    function updateMasteredStats() {
+    function updateStats() {
       const countEl = document.getElementById('masteredCount');
       const fillEl = document.getElementById('progressFill');
       const total = VOCAB_DATA.length;
@@ -1952,6 +2328,7 @@
       countEl.innerText = mastered;
       const pct = Math.round((mastered / total) * 100);
       fillEl.style.width = pct + '%';
+      document.getElementById('weakCountBadge').innerText = weakSet.size;
     }
 
     function speakWord(word) {
@@ -1969,12 +2346,8 @@
       else m.classList.remove('open');
     }
 
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // 初始化渲染
-    renderCards();
+    // 初始化
+    renderList();
   </script>
 </body>
 </html>
