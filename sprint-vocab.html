@@ -48,7 +48,6 @@
       --badge-poly-text: #d97706;
       --badge-poly-border: #fde68a;
 
-      --mask-bg: rgba(234, 243, 245, 0.9);
       --shadow-sm: 0 1px 3px rgba(16, 42, 54, 0.05);
       --shadow-md: 0 6px 18px rgba(16, 42, 54, 0.08);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Segoe UI", Roboto, sans-serif;
@@ -90,7 +89,6 @@
         --badge-poly-text: #fbbf24;
         --badge-poly-border: rgba(217, 119, 6, 0.4);
 
-        --mask-bg: rgba(15, 31, 40, 0.92);
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
         --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
       }
@@ -129,14 +127,13 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--ocean);
       text-decoration: none;
       background: var(--accent-soft);
       padding: 5px 11px;
       border-radius: 18px;
-      border: 1px solid transparent;
       transition: all 0.2s;
     }
     .nav-back:active {
@@ -176,11 +173,6 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s var(--ease-out);
-    }
-    .btn-action.active {
-      background: var(--ocean);
-      color: #ffffff;
-      border-color: var(--ocean);
     }
 
     /* 搜索栏与模式切换 */
@@ -338,11 +330,6 @@
       box-shadow: var(--shadow-sm);
       position: relative;
       transition: transform 0.15s, border-color 0.2s;
-      cursor: pointer;
-      user-select: none;
-    }
-    .vocab-card:active {
-      transform: scale(0.99);
     }
     .vocab-card.mastered {
       border-color: var(--mint);
@@ -352,6 +339,7 @@
       border-left: 4px solid #f59e0b;
     }
 
+    /* 单词头部（永远清晰显示，绝对不遮挡） */
     .card-head {
       display: flex;
       align-items: center;
@@ -364,10 +352,10 @@
       gap: 8px;
     }
     .word-text {
-      font-size: 18.5px;
-      font-weight: 700;
+      font-size: 20px;
+      font-weight: 800;
       color: var(--ink);
-      letter-spacing: -0.2px;
+      letter-spacing: -0.3px;
     }
     .btn-speak {
       background: none;
@@ -380,8 +368,8 @@
       border-radius: 4px;
     }
     .btn-speak svg {
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
     }
 
     .badge {
@@ -400,37 +388,56 @@
     .badge-warn { background: var(--badge-warn-bg); color: var(--badge-warn-text); border-color: var(--badge-warn-border); }
     .badge-poly { background: var(--badge-poly-bg); color: var(--badge-poly-text); border-color: var(--badge-poly-border); }
 
-    /* 遮挡自测逻辑 */
-    .card-body {
+    /* 专门为考点释义设立的遮挡区域容器 */
+    .card-body-wrapper {
       position: relative;
-      margin-top: 5px;
-      transition: filter 0.25s, opacity 0.25s;
+      min-height: 50px;
+      margin-top: 4px;
+      cursor: pointer;
+      border-radius: 8px;
     }
-    .mask-active .card-body.masked {
-      filter: blur(5px);
-      opacity: 0.25;
+
+    .card-body {
+      transition: opacity 0.2s, filter 0.2s;
+    }
+    .card-body.masked {
+      filter: blur(8px);
+      opacity: 0.15;
+      user-select: none;
       pointer-events: none;
     }
-    .mask-hint {
-      display: none;
+
+    /* 释义区域专属遮挡提示层（仅覆盖释义区域，不盖头部单词！） */
+    .mask-overlay {
       position: absolute;
       inset: 0;
-      background: var(--mask-bg);
+      background: rgba(234, 243, 245, 0.85);
+      border: 1px dashed var(--border);
       border-radius: 8px;
+      display: flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
       font-size: 12px;
       font-weight: 600;
-      color: var(--muted);
-      gap: 4px;
+      color: var(--ocean);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      transition: all 0.2s;
     }
-    .mask-active .card-body.masked + .mask-hint {
-      display: flex;
+    @media (prefers-color-scheme: dark) {
+      .mask-overlay {
+        background: rgba(19, 39, 51, 0.85);
+        border-color: var(--border);
+      }
+    }
+    .mask-overlay:active {
+      background: var(--accent-soft);
     }
 
     .meaning-text {
-      font-size: 14.5px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       color: var(--ink);
       margin-bottom: 5px;
       line-height: 1.4;
@@ -472,7 +479,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 7px;
+      margin-top: 8px;
       padding-top: 6px;
       border-top: 1px dashed var(--border-subtle);
     }
@@ -530,7 +537,7 @@
       border: 1px solid var(--border);
       border-radius: 22px;
       box-shadow: var(--shadow-md);
-      padding: 28px 24px;
+      padding: 26px 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -547,14 +554,14 @@
     }
     .fc-word-area {
       text-align: center;
-      margin: 25px 0 15px;
+      margin: 20px 0 15px;
     }
     .fc-word-text {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 800;
       letter-spacing: -0.5px;
       color: var(--ink);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .fc-content-area {
       flex: 1;
@@ -564,21 +571,22 @@
       transition: all 0.2s;
     }
     .fc-content-area.hidden {
-      visibility: hidden;
-      opacity: 0;
+      display: none;
     }
     .fc-reveal-prompt {
       text-align: center;
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--ocean);
       font-weight: 600;
-      padding: 12px;
+      padding: 16px;
       background: var(--accent-soft);
-      border-radius: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
+      margin: auto 0;
     }
     .fc-actions-row {
       display: flex;
@@ -850,7 +858,7 @@
       </div>
       <div class="rule-item">
         <strong>4. 极速冲刺法</strong>
-        <p>切到「抽认卡」模式，大字单词出现后心理默念 3 秒；能瞬间反应反射的右滑/点击「秒杀掌握」，卡壳的点「不熟·重点巩固」，考前最后 10 天专刷「⭐️ 待巩固」词池！</p>
+        <p>大字英文单词始终清晰可见！大字出现后心理默念 3 秒；能瞬间反应反射的点右下「标记掌握」，卡壳的点「加待巩固」并在下方轻触展开考点，考前最后 10 天专刷「⭐️ 待巩固」词池！</p>
       </div>
     </div>
   </div>
@@ -2029,7 +2037,7 @@
   }
 ];
 
-    let viewMode = 'list'; // 'list' | 'card'
+    let viewMode = 'list';
     let currentCategory = 'all';
     let searchQuery = '';
     let isMaskMode = true;
@@ -2037,7 +2045,6 @@
     let masteredSet = new Set(JSON.parse(localStorage.getItem('sprint_mastered_words') || '[]'));
     let weakSet = new Set(JSON.parse(localStorage.getItem('sprint_weak_words') || '[]'));
 
-    // 抽认卡当前状态
     let fcIndex = 0;
     let fcRevealed = false;
 
@@ -2063,8 +2070,6 @@
 
     function renderList() {
       const container = document.getElementById('vocabList');
-      container.className = 'vocab-container' + (isMaskMode ? ' mask-active' : '');
-
       const filtered = getFilteredData();
       document.getElementById('totalVisibleCount').innerText = filtered.length;
 
@@ -2086,33 +2091,39 @@
         else if (item.contrast.includes('⬇️')) contrastClass += ' neg-dir';
 
         html += `
-          <div class="vocab-card ${isMastered ? 'mastered' : ''} ${isWeak ? 'is-weak' : ''}" onclick="toggleSingleCard(${originalIndex})">
+          <div class="vocab-card ${isMastered ? 'mastered' : ''} ${isWeak ? 'is-weak' : ''}">
+            <!-- 头部英文单词：永远清晰可见，绝不遮挡！ -->
             <div class="card-head">
               <div class="word-title-wrap">
                 <span class="word-text">${item.word}</span>
-                <button class="btn-speak" title="朗读发音" onclick="event.stopPropagation(); speakWord('${item.word}')">
+                <button class="btn-speak" title="朗读发音" onclick="speakWord('${item.word}')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
                 </button>
               </div>
               <span class="badge ${badgeClass}">${item.badge}</span>
             </div>
 
-            <div class="card-body ${isMasked ? 'masked' : ''}">
-              <div class="meaning-text">${item.meaning}</div>
-              <div class="${contrastClass}">${item.contrast}</div>
-              <div class="note-text">${item.note || ''}</div>
-            </div>
-            <div class="mask-hint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-              轻触卡片揭示考点释义
+            <!-- 仅释义与考点区进行遮挡自测 -->
+            <div class="card-body-wrapper" onclick="toggleSingleCard(${originalIndex})">
+              <div class="card-body ${isMasked ? 'masked' : ''}">
+                <div class="meaning-text">${item.meaning}</div>
+                <div class="${contrastClass}">${item.contrast}</div>
+                <div class="note-text">${item.note || ''}</div>
+              </div>
+              ${isMasked ? `
+                <div class="mask-overlay">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>轻触揭示考点释义</span>
+                </div>
+              ` : ''}
             </div>
 
             <div class="card-footer">
-              <button class="btn-weak-toggle ${isWeak ? 'active' : ''}" onclick="event.stopPropagation(); toggleWeak('${item.word}')">
+              <button class="btn-weak-toggle ${isWeak ? 'active' : ''}" onclick="toggleWeak('${item.word}')">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="${isWeak ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>${isWeak ? '已加待巩固' : '加待巩固'}</span>
               </button>
-              <button class="btn-check" onclick="event.stopPropagation(); toggleMastered('${item.word}')">
+              <button class="btn-check" onclick="toggleMastered('${item.word}')">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>${isMastered ? '已掌握' : '标记掌握'}</span>
               </button>
@@ -2151,6 +2162,7 @@
 
       const item = filtered[fcIndex];
       document.getElementById('fcCurrentIndex').innerText = fcIndex + 1;
+      // 英文单词永远显示！
       document.getElementById('fcWord').innerText = item.word;
 
       const badgeEl = document.getElementById('fcCategoryBadge');
