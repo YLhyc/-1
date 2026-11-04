@@ -13,6 +13,7 @@ const APP_SHELL = [
   'hb/index.html',
   'uf/index.html',
   'wordbank/index.html',
+  'sprint-vocab.html',
   'icons/words-180.png',
   'icons/words-192.png',
   'icons/words-512.png'
