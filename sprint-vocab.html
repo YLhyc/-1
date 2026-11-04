@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>考前冲刺专题词 · Words 考研英语一专属</title>
+  <title>考前冲刺专题词 · Words 英语一专属</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="专题词冲刺">
+  <meta name="apple-mobile-web-app-title" content="冲刺专题词">
   <style>
     :root {
       --ease-out: cubic-bezier(.23, 1, .32, 1);
-      --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+      --ease-spring: cubic-bezier(.175, .885, .32, 1.275);
       
       /* Words 原生质感调色板 */
       --deep: #07536a;
@@ -28,6 +28,10 @@
       --accent-soft: rgba(5, 122, 157, 0.1);
 
       /* 考点功能色 */
+      --badge-neutral-grey: #64748b;
+      --badge-neutral-grey-bg: #f1f5f9;
+      --badge-neutral-grey-border: #cbd5e1;
+
       --badge-pos-bg: #ecfdf5;
       --badge-pos-text: #059669;
       --badge-pos-border: #a7f3d0;
@@ -50,6 +54,7 @@
 
       --shadow-sm: 0 1px 3px rgba(16, 42, 54, 0.05);
       --shadow-md: 0 6px 18px rgba(16, 42, 54, 0.08);
+      --shadow-lg: 0 10px 28px rgba(16, 42, 54, 0.12);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Segoe UI", Roboto, sans-serif;
     }
 
@@ -68,6 +73,10 @@
 
         --accent: #38bdf8;
         --accent-soft: rgba(56, 189, 248, 0.18);
+
+        --badge-neutral-grey: #94a3b8;
+        --badge-neutral-grey-bg: rgba(148, 163, 184, 0.15);
+        --badge-neutral-grey-border: rgba(148, 163, 184, 0.3);
 
         --badge-pos-bg: rgba(5, 150, 105, 0.2);
         --badge-pos-text: #34d399;
@@ -311,7 +320,34 @@
     }
 
     /* ================================================= */
-    /* 视图一：清单全览列表 */
+    /* 徽章样式：中性防剧透灰标 vs 揭晓后真身 */
+    /* ================================================= */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2.5px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    /* 防剧透中性灰标 */
+    .badge-blind {
+      background: var(--badge-neutral-grey-bg);
+      color: var(--badge-neutral-grey);
+      border-color: var(--badge-neutral-grey-border);
+    }
+    /* 揭晓后的真身徽章 */
+    .badge-pos { background: var(--badge-pos-bg); color: var(--badge-pos-text); border-color: var(--badge-pos-border); }
+    .badge-neg { background: var(--badge-neg-bg); color: var(--badge-neg-text); border-color: var(--badge-neg-border); }
+    .badge-neutral { background: var(--badge-neutral-bg); color: var(--badge-neutral-text); border-color: var(--badge-neutral-border); }
+    .badge-warn { background: var(--badge-warn-bg); color: var(--badge-warn-text); border-color: var(--badge-warn-border); }
+    .badge-poly { background: var(--badge-poly-bg); color: var(--badge-poly-text); border-color: var(--badge-poly-border); }
+
+    /* ================================================= */
+    /* 视图一：清单列表 */
     /* ================================================= */
     .vocab-container {
       max-width: 680px;
@@ -372,42 +408,25 @@
       height: 16px;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 6px;
-      border: 1px solid transparent;
-    }
-    .badge-pos { background: var(--badge-pos-bg); color: var(--badge-pos-text); border-color: var(--badge-pos-border); }
-    .badge-neg { background: var(--badge-neg-bg); color: var(--badge-neg-text); border-color: var(--badge-neg-border); }
-    .badge-neutral { background: var(--badge-neutral-bg); color: var(--badge-neutral-text); border-color: var(--badge-neutral-border); }
-    .badge-warn { background: var(--badge-warn-bg); color: var(--badge-warn-text); border-color: var(--badge-warn-border); }
-    .badge-poly { background: var(--badge-poly-bg); color: var(--badge-poly-text); border-color: var(--badge-poly-border); }
-
-    /* 专门为考点释义设立的遮挡区域容器 */
+    /* 遮挡区域容器 */
     .card-body-wrapper {
       position: relative;
-      min-height: 50px;
+      min-height: 52px;
       margin-top: 4px;
       cursor: pointer;
       border-radius: 8px;
     }
-
     .card-body {
       transition: opacity 0.2s, filter 0.2s;
     }
     .card-body.masked {
       filter: blur(8px);
-      opacity: 0.15;
+      opacity: 0.12;
       user-select: none;
       pointer-events: none;
     }
 
-    /* 释义区域专属遮挡提示层（仅覆盖释义区域，不盖头部单词！） */
+    /* 清单遮挡提示层（中性防剧透，邀请用户自测） */
     .mask-overlay {
       position: absolute;
       inset: 0;
@@ -418,7 +437,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--ocean);
       backdrop-filter: blur(2px);
@@ -430,9 +449,6 @@
         background: rgba(19, 39, 51, 0.85);
         border-color: var(--border);
       }
-    }
-    .mask-overlay:active {
-      background: var(--accent-soft);
     }
 
     .meaning-text {
@@ -517,12 +533,12 @@
     }
 
     /* ================================================= */
-    /* 视图二：沉浸抽认卡冲刺模式 (Flashcard Mode) */
+    /* 视图二：抽认卡模式（核心提分互动：单手盲选判定！） */
     /* ================================================= */
     .flashcard-view {
       display: none;
       max-width: 520px;
-      margin: 16px auto;
+      margin: 14px auto;
       padding: 0 16px;
       flex-direction: column;
       align-items: center;
@@ -532,19 +548,34 @@
     }
     .flashcard-deck {
       width: 100%;
-      min-height: 380px;
+      min-height: 400px;
       background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 24px;
       box-shadow: var(--shadow-md);
-      padding: 26px 22px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      cursor: pointer;
-      transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+      transition: all 0.25s var(--ease-out);
     }
+    /* 正反馈与负反馈动态边框光效 */
+    .flashcard-deck.success-flash {
+      border-color: #10b981;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+    }
+    .flashcard-deck.wrong-flash {
+      border-color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+      animation: shake 0.4s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
     .fc-index-row {
       display: flex;
       justify-content: space-between;
@@ -554,7 +585,7 @@
     }
     .fc-word-area {
       text-align: center;
-      margin: 20px 0 15px;
+      margin: 14px 0 10px;
     }
     .fc-word-text {
       font-size: 34px;
@@ -563,36 +594,104 @@
       color: var(--ink);
       margin-bottom: 6px;
     }
-    .fc-content-area {
-      flex: 1;
+
+    /* 盲测互动选择区（未揭晓时呈现） */
+    .fc-quiz-box {
+      background: var(--canvas);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px 14px;
+      text-align: center;
+      margin: 12px 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      transition: all 0.2s;
+      gap: 12px;
     }
-    .fc-content-area.hidden {
-      display: none;
-    }
-    .fc-reveal-prompt {
-      text-align: center;
-      font-size: 13.5px;
-      color: var(--ocean);
-      font-weight: 600;
-      padding: 16px;
-      background: var(--accent-soft);
-      border: 1px dashed var(--border);
-      border-radius: 14px;
+    .fc-quiz-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--deep);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      margin: auto 0;
+      gap: 5px;
     }
+    .fc-options-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .fc-options-grid.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .fc-options-grid.cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .btn-fc-choice {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 4px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      transition: all 0.15s;
+    }
+    .btn-fc-choice span.sub-tip {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .btn-fc-choice:active {
+      transform: scale(0.96);
+      background: var(--accent-soft);
+    }
+
+    /* 揭晓后的内容区 */
+    .fc-content-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px 0;
+      animation: fadeIn 0.25s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fc-result-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      align-self: flex-start;
+    }
+    .fc-result-banner.success {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+    .fc-result-banner.fail {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    /* 抽认卡底部大控制键 */
     .fc-actions-row {
       display: flex;
       gap: 12px;
       width: 100%;
-      margin-top: 20px;
+      margin-top: 14px;
     }
     .btn-fc-action {
       flex: 1;
@@ -779,42 +878,51 @@
     <!-- JS 渲染 -->
   </main>
 
-  <!-- ================= 视图二：沉浸抽认卡视图 ================= -->
+  <!-- ================= 视图二：沉浸抽认卡视图（强互动盲选） ================= -->
   <main class="flashcard-view" id="flashcardDeck">
-    <div class="flashcard-deck" onclick="toggleCardReveal()">
+    <div class="flashcard-deck" id="fcDeckCard">
       <div class="fc-index-row">
-        <span id="fcCategoryBadge" class="badge">分类</span>
+        <span id="fcBlindBadge" class="badge badge-blind">态度题眼</span>
         <span><strong id="fcCurrentIndex">1</strong> / <span id="fcTotalIndex">130</span></span>
       </div>
 
+      <!-- 英文单词始终清晰呈现！ -->
       <div class="fc-word-area">
         <div class="fc-word-text" id="fcWord">Word</div>
-        <button class="btn-speak" onclick="event.stopPropagation(); speakWord(document.getElementById('fcWord').innerText)">
+        <button class="btn-speak" onclick="speakWord(document.getElementById('fcWord').innerText)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
         </button>
       </div>
 
-      <div class="fc-content-area" id="fcContentArea">
+      <!-- 交互盲测互动选择区（未揭晓时呈现） -->
+      <div class="fc-quiz-box" id="fcQuizBox">
+        <div class="fc-quiz-title" id="fcQuizTitle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          考场推导：判断该词核心属性
+        </div>
+        <div class="fc-options-grid" id="fcOptionsGrid">
+          <!-- 动态注入单手选项 -->
+        </div>
+      </div>
+
+      <!-- 揭晓后的答案与真题考点区 -->
+      <div class="fc-content-area" id="fcContentArea" style="display:none;">
+        <div id="fcResultBanner" class="fc-result-banner">判定结果</div>
         <div class="meaning-text" id="fcMeaning" style="font-size:16px; margin-bottom:8px;">释义</div>
         <div class="contrast-box" id="fcContrast" style="font-size:13.5px; padding:6px 12px;">对比考点</div>
         <div class="note-text" id="fcNote" style="font-size:12.5px; margin-top:6px;">真题搭配</div>
       </div>
-
-      <div class="fc-reveal-prompt" id="fcPrompt">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        轻触卡片揭示考点释义
-      </div>
     </div>
 
-    <!-- 抽认卡操作大按键 -->
+    <!-- 抽认卡底部大控制键 -->
     <div class="fc-actions-row">
       <button class="btn-fc-action btn-fc-hard" onclick="fcMarkWeak()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        不熟 · 重点巩固
+        加待巩固 (下一个)
       </button>
-      <button class="btn-fc-action btn-fc-easy" onclick="fcMarkMastered()">
+      <button class="btn-fc-action btn-fc-easy" onclick="fcNextWord()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        秒杀 · 标记掌握
+        秒杀掌握 (下一个)
       </button>
     </div>
   </main>
@@ -857,8 +965,8 @@
         • champion = 捍卫支持民权（not 冠军）</p>
       </div>
       <div class="rule-item">
-        <strong>4. 极速冲刺法</strong>
-        <p>大字英文单词始终清晰可见！大字出现后心理默念 3 秒；能瞬间反应反射的点右下「标记掌握」，卡壳的点「加待巩固」并在下方轻触展开考点，考前最后 10 天专刷「⭐️ 待巩固」词池！</p>
+        <strong>4. 极速冲刺自测技巧</strong>
+        <p>抽认卡模式下，自己点击选项推导正负向；选错系统自动收录进「⭐️ 待巩固」，选对自动跳下一词，打造高强度考场反射！</p>
       </div>
     </div>
   </div>
@@ -2046,7 +2154,7 @@
     let weakSet = new Set(JSON.parse(localStorage.getItem('sprint_weak_words') || '[]'));
 
     let fcIndex = 0;
-    let fcRevealed = false;
+    let fcAnswered = false;
 
     VOCAB_DATA.forEach((item, idx) => {
       cardMaskStates[idx] = true;
@@ -2068,6 +2176,17 @@
       });
     }
 
+    // 获取未揭晓时的中性分类名称（绝不剧透正负向！）
+    function getBlindCategoryName(category) {
+      if (category === 'attitude') return '态度题眼';
+      if (category === 'logic') return '逻辑动词';
+      if (category === 'polysemy') return '熟词僻义';
+      return '考点便签';
+    }
+
+    // ==========================================
+    // 渲染视图一：清单模式
+    // ==========================================
     function renderList() {
       const container = document.getElementById('vocabList');
       const filtered = getFilteredData();
@@ -2090,9 +2209,14 @@
         if (item.contrast.includes('⬆️')) contrastClass += ' pos-dir';
         else if (item.contrast.includes('⬇️')) contrastClass += ' neg-dir';
 
+        // 核心防剧透逻辑：未揭晓时只显示中性灰标；揭晓后才亮出真实角色！
+        const badgeHtml = isMasked
+          ? `<span class="badge badge-blind">${getBlindCategoryName(item.category)}</span>`
+          : `<span class="badge ${badgeClass}">${item.badge}</span>`;
+
         html += `
           <div class="vocab-card ${isMastered ? 'mastered' : ''} ${isWeak ? 'is-weak' : ''}">
-            <!-- 头部英文单词：永远清晰可见，绝不遮挡！ -->
+            <!-- 头部英文单词：永远清晰可见！ -->
             <div class="card-head">
               <div class="word-title-wrap">
                 <span class="word-text">${item.word}</span>
@@ -2100,7 +2224,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
                 </button>
               </div>
-              <span class="badge ${badgeClass}">${item.badge}</span>
+              ${badgeHtml}
             </div>
 
             <!-- 仅释义与考点区进行遮挡自测 -->
@@ -2112,8 +2236,8 @@
               </div>
               ${isMasked ? `
                 <div class="mask-overlay">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  <span>轻触揭示考点释义</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                  <span>🧠 脑海推导正负/僻义，轻触揭晓</span>
                 </div>
               ` : ''}
             </div>
@@ -2140,20 +2264,26 @@
       updateStats();
     }
 
+    // ==========================================
+    // 渲染视图二：抽认卡模式（强对抗盲选）
+    // ==========================================
     function renderFlashcard() {
       const filtered = getFilteredData();
       const total = filtered.length;
       document.getElementById('fcTotalIndex').innerText = total;
 
+      const deckCard = document.getElementById('fcDeckCard');
+      deckCard.className = 'flashcard-deck';
+
       if (total === 0) {
         document.getElementById('fcWord').innerText = '空';
         document.getElementById('fcCurrentIndex').innerText = 0;
-        document.getElementById('fcCategoryBadge').innerText = '-';
-        document.getElementById('fcMeaning').innerText = '没有符合当前筛选的单词';
+        document.getElementById('fcBlindBadge').innerText = '-';
+        document.getElementById('fcQuizBox').style.display = 'none';
+        document.getElementById('fcContentArea').style.display = 'flex';
+        document.getElementById('fcMeaning').innerText = '没有符合条件的单词';
         document.getElementById('fcContrast').innerText = '';
         document.getElementById('fcNote').innerText = '';
-        document.getElementById('fcContentArea').classList.remove('hidden');
-        document.getElementById('fcPrompt').style.display = 'none';
         return;
       }
 
@@ -2162,54 +2292,134 @@
 
       const item = filtered[fcIndex];
       document.getElementById('fcCurrentIndex').innerText = fcIndex + 1;
-      // 英文单词永远显示！
       document.getElementById('fcWord').innerText = item.word;
 
-      const badgeEl = document.getElementById('fcCategoryBadge');
-      badgeEl.innerText = item.badge;
-      badgeEl.className = 'badge';
-      if (item.type === 'neg') badgeEl.classList.add('badge-neg');
-      else if (item.type === 'neutral') badgeEl.classList.add('badge-neutral');
-      else if (item.type === 'warn') badgeEl.classList.add('badge-warn');
-      else if (item.type === 'poly') badgeEl.classList.add('badge-poly');
-      else badgeEl.classList.add('badge-pos');
-
-      document.getElementById('fcMeaning').innerText = item.meaning;
-      
-      const contrastEl = document.getElementById('fcContrast');
-      contrastEl.innerText = item.contrast;
-      contrastEl.className = 'contrast-box';
-      if (item.contrast.includes('⬆️')) contrastEl.classList.add('pos-dir');
-      else if (item.contrast.includes('⬇️')) contrastEl.classList.add('neg-dir');
-
-      document.getElementById('fcNote').innerText = item.note || '';
-
+      const badgeEl = document.getElementById('fcBlindBadge');
+      const quizBox = document.getElementById('fcQuizBox');
       const contentArea = document.getElementById('fcContentArea');
-      const promptEl = document.getElementById('fcPrompt');
+      const optionsGrid = document.getElementById('fcOptionsGrid');
 
-      if (fcRevealed) {
-        contentArea.classList.remove('hidden');
-        promptEl.style.display = 'none';
+      if (!fcAnswered) {
+        // 未回答前：纯粹中性灰标，绝不剧透正负向！
+        badgeEl.innerText = getBlindCategoryName(item.category);
+        badgeEl.className = 'badge badge-blind';
+
+        quizBox.style.display = 'flex';
+        contentArea.style.display = 'none';
+
+        // 依据分类生成单手选项
+        if (item.category === 'attitude') {
+          document.getElementById('fcQuizTitle').innerText = '🎯 考场判定：作者对此立场是？';
+          optionsGrid.className = 'fc-options-grid cols-3';
+          optionsGrid.innerHTML = `
+            <button class="btn-fc-choice" onclick="handleFcChoice('pos')">
+              <span>🟢 正向</span>
+              <span class="sub-tip">支持/赞同</span>
+            </button>
+            <button class="btn-fc-choice" onclick="handleFcChoice('neg')">
+              <span>🔴 批判</span>
+              <span class="sub-tip">质疑/题眼</span>
+            </button>
+            <button class="btn-fc-choice" onclick="handleFcChoice('other')">
+              <span>⚪ 客观/陪跑</span>
+              <span class="sub-tip">审慎/秒排</span>
+            </button>
+          `;
+        } else if (item.category === 'logic') {
+          document.getElementById('fcQuizTitle').innerText = '🎯 考场判定：逻辑论点走向是？';
+          optionsGrid.className = 'fc-options-grid cols-2';
+          optionsGrid.innerHTML = `
+            <button class="btn-fc-choice" onclick="handleFcChoice('pos')">
+              <span>⬆️ 撑腰促进</span>
+              <span class="sub-tip">同向强化/证实</span>
+            </button>
+            <button class="btn-fc-choice" onclick="handleFcChoice('neg')">
+              <span>⬇️ 削弱阻碍</span>
+              <span class="sub-tip">反向拆台/反转</span>
+            </button>
+          `;
+        } else {
+          document.getElementById('fcQuizTitle').innerText = '🎯 熟词僻义：初中字面陷阱防范';
+          optionsGrid.className = 'fc-options-grid';
+          optionsGrid.innerHTML = `
+            <button class="btn-fc-choice" onclick="handleFcChoice('reveal')">
+              <span>⚡ 考研真题第一反射是？</span>
+              <span class="sub-tip">点击揭晓真题考法</span>
+            </button>
+          `;
+        }
       } else {
-        contentArea.classList.add('hidden');
-        promptEl.style.display = 'flex';
+        // 揭晓后：展示真实角色徽标与详细考点
+        badgeEl.innerText = item.badge;
+        badgeEl.className = 'badge';
+        if (item.type === 'neg') badgeEl.classList.add('badge-neg');
+        else if (item.type === 'neutral') badgeEl.classList.add('badge-neutral');
+        else if (item.type === 'warn') badgeEl.classList.add('badge-warn');
+        else if (item.type === 'poly') badgeEl.classList.add('badge-poly');
+        else badgeEl.classList.add('badge-pos');
+
+        quizBox.style.display = 'none';
+        contentArea.style.display = 'flex';
+
+        document.getElementById('fcMeaning').innerText = item.meaning;
+        
+        const contrastEl = document.getElementById('fcContrast');
+        contrastEl.innerText = item.contrast;
+        contrastEl.className = 'contrast-box';
+        if (item.contrast.includes('⬆️')) contrastEl.classList.add('pos-dir');
+        else if (item.contrast.includes('⬇️')) contrastEl.classList.add('neg-dir');
+
+        document.getElementById('fcNote').innerText = item.note || '';
       }
       updateStats();
     }
 
-    function toggleCardReveal() {
-      fcRevealed = !fcRevealed;
+    // 处理抽认卡选择判定
+    function handleFcChoice(chosen) {
+      const filtered = getFilteredData();
+      if (filtered.length === 0) return;
+      const item = filtered[fcIndex];
+      const banner = document.getElementById('fcResultBanner');
+      const deckCard = document.getElementById('fcDeckCard');
+
+      let isCorrect = false;
+      if (item.category === 'attitude') {
+        if (chosen === 'pos' && item.type === 'pos') isCorrect = true;
+        else if (chosen === 'neg' && item.type === 'neg') isCorrect = true;
+        else if (chosen === 'other' && (item.type === 'neutral' || item.type === 'warn')) isCorrect = true;
+      } else if (item.category === 'logic') {
+        if (chosen === 'pos' && item.type === 'pos') isCorrect = true;
+        else if (chosen === 'neg' && item.type === 'neg') isCorrect = true;
+      } else {
+        isCorrect = true;
+      }
+
+      fcAnswered = true;
+
+      if (isCorrect) {
+        deckCard.classList.add('success-flash');
+        banner.className = 'fc-result-banner success';
+        banner.innerHTML = '🎯 判断完全准确！符合真题题眼逻辑';
+        masteredSet.add(item.word);
+        saveSets();
+      } else {
+        deckCard.classList.add('wrong-flash');
+        banner.className = 'fc-result-banner fail';
+        banner.innerHTML = '⚠️ 判断有误！已自动加入「⭐️ 待巩固」词池';
+        weakSet.add(item.word);
+        masteredSet.delete(item.word);
+        saveSets();
+      }
+
       renderFlashcard();
     }
 
-    function fcMarkMastered() {
+    function fcNextWord() {
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
-      const word = filtered[fcIndex].word;
-      masteredSet.add(word);
-      weakSet.delete(word);
+      masteredSet.add(filtered[fcIndex].word);
       saveSets();
-      fcRevealed = false;
+      fcAnswered = false;
       fcIndex++;
       renderFlashcard();
     }
@@ -2217,11 +2427,10 @@
     function fcMarkWeak() {
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
-      const word = filtered[fcIndex].word;
-      weakSet.add(word);
-      masteredSet.delete(word);
+      weakSet.add(filtered[fcIndex].word);
+      masteredSet.delete(filtered[fcIndex].word);
       saveSets();
-      fcRevealed = false;
+      fcAnswered = false;
       fcIndex++;
       renderFlashcard();
     }
@@ -2248,7 +2457,7 @@
         deckEl.classList.add('active');
         dockEl.style.display = 'none';
         fcIndex = 0;
-        fcRevealed = false;
+        fcAnswered = false;
         renderFlashcard();
       }
     }
@@ -2282,7 +2491,7 @@
       document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
       fcIndex = 0;
-      fcRevealed = false;
+      fcAnswered = false;
       if (viewMode === 'list') renderList();
       else renderFlashcard();
     }
@@ -2290,7 +2499,7 @@
     function handleSearch() {
       searchQuery = document.getElementById('searchInput').value.trim();
       fcIndex = 0;
-      fcRevealed = false;
+      fcAnswered = false;
       if (viewMode === 'list') renderList();
       else renderFlashcard();
     }
