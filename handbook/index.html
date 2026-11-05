@@ -7,6 +7,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="政治背诵手卷">
   <meta name="theme-color" content="#f4f1ea">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>2027考研政治 · 徐涛核心背诵笔记 (1:1 原书复刻与双轨精讲手卷 v3.0.0)</title>
 
   <!-- 学术排版字体（国内阿里/饿了么高速 CDN + jsdelivr 双源镜像 + 思源宋体） -->
@@ -26962,6 +26965,31 @@ const TOTAL_CHAPTERS = 47;
     // =========================================================================
     // 页面全局启动装载与板块恢复
     // =========================================================================
+    
+  // =========================================================================
+  // 自动化版本感知与 PWA 强制热更检测 (v4.5.0)
+  // =========================================================================
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js?v=4.5.0', { scope: './' })
+        .then(reg => {
+          reg.update();
+          reg.onupdatefound = () => {
+            const installing = reg.installing;
+            if (installing) {
+              installing.onstatechange = () => {
+                if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('SW新版本已缓存，立即刷新');
+                  window.location.reload();
+                }
+              };
+            }
+          };
+        })
+        .catch(err => console.warn('SW registration warning:', err));
+    });
+  }
+
     window.addEventListener('load', () => {
       initReciteAudioEngine();
       if (typeof tjInit === 'function') tjInit();
