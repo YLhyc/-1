@@ -15,7 +15,9 @@
   <!-- 学术排版字体（国内阿里/饿了么高速 CDN + jsdelivr 双源镜像 + 思源宋体） -->
   <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-web/style.css" media="all">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css" media="all">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap">
 
@@ -5404,7 +5406,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
 
   
     /* ==========================================================================
-       v4.5.0 极致沉浸单行顶栏、下沉式挖空条、背诵专属沉浸底栏与抽屉设置面板
+       v4.6.0 极致沉浸单行顶栏、下沉式挖空条、背诵专属沉浸底栏与抽屉设置面板
        ========================================================================== */
     .top-bar {
       position: sticky;
@@ -5634,6 +5636,263 @@ body.mode-mask .xt-keyword.cloze.revealed {
       padding-bottom: 120px !important;
     }
 
+
+    /* ==========================================================================
+       Claude UI Master Spec: Palette B (Warm Parchment) & 0.5px Pure-Flat
+       ========================================================================== */
+    :root {
+      --font-serif: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Palette B: Warm Parchment (Claude Signature Editorial) */
+      --background: #faf9f5;
+      --surface: #f3f1ea;
+      --surface-hover: #ebe7dc;
+      --text: #141413;
+      --text-secondary: #5c5a53;
+      --text-tertiary: #8c887e;
+      --border: #e4e1d6;
+      --border-strong: #cfcab8;
+
+      /* 政治考点三色克制标识 (消灭红黑刺眼) */
+      --accent: #d97757;          /* 陶土红金：帽子题、核心考词、原书题眼 */
+      --accent-soft: rgba(217, 119, 87, 0.12);
+      --accent-border: #e08a6d;
+
+      --mark-amber: #c46b16;      /* 暖琥珀色：易错陷阱、错·陷阱 */
+      --mark-soft: rgba(196, 107, 22, 0.12);
+      --mark-border: rgba(196, 107, 22, 0.35);
+
+      --success: #2f7d4a;         /* 植物绿：正确做法、原则、根本原因、已研毕 */
+      --success-soft: rgba(47, 125, 74, 0.12);
+      --success-border: rgba(47, 125, 74, 0.35);
+
+      /* 统一系统变量映射 */
+      --bg: var(--background);
+      --paper: var(--background);
+      --paper-raised: var(--surface);
+      --ink: var(--text);
+      --sub: var(--text-secondary);
+      --muted: var(--text-tertiary);
+      --line: var(--border);
+      --line-subtle: var(--border);
+      --seal-red: var(--accent);
+    }
+
+    body.theme-dark {
+      /* Palette B Dark: Warm Charcoal */
+      --background: #141413;
+      --surface: #1c1b19;
+      --surface-hover: #262522;
+      --text: #ece9e0;
+      --text-secondary: #a6a298;
+      --text-tertiary: #737067;
+      --border: #2b2a26;
+      --border-strong: #3f3d37;
+
+      --accent: #e08a6d;
+      --accent-soft: rgba(224, 138, 109, 0.16);
+      --accent-border: #e08a6d;
+
+      --mark-amber: #fbbf24;
+      --mark-soft: rgba(251, 191, 36, 0.16);
+      --mark-border: rgba(251, 191, 36, 0.35);
+
+      --success: #4ade80;
+      --success-soft: rgba(74, 222, 128, 0.16);
+      --success-border: rgba(74, 222, 128, 0.35);
+
+      --bg: var(--background);
+      --paper: var(--background);
+      --paper-raised: var(--surface);
+      --ink: var(--text);
+      --sub: var(--text-secondary);
+      --muted: var(--text-tertiary);
+      --line: var(--border);
+      --line-subtle: var(--border);
+      --seal-red: var(--accent);
+    }
+
+    body {
+      background-color: var(--background) !important;
+      color: var(--text) !important;
+      font-family: var(--font-serif);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 建议 1：顶栏高度严格固定 56px (精确融入 safe-area) */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--background) !important;
+      border-bottom: 0.5px solid var(--border) !important;
+      height: 56px !important;
+      padding-top: env(safe-area-inset-top, 0px) !important;
+      box-sizing: border-box;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: none !important;
+    }
+    .top-wrap.claude-top-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      height: 100%;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+    .claude-icon-btn {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.14s ease, border-color 0.14s ease, transform 0.1s ease;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .claude-icon-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-strong);
+    }
+    .claude-icon-btn:active {
+      transform: scale(0.94);
+    }
+    .claude-chapter-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100% - 96px);
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 0.5px solid transparent;
+      transition: background 0.14s ease, border-color 0.14s ease;
+      touch-action: manipulation;
+    }
+    .claude-chapter-title:hover {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+    .claude-ch-pill {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: var(--font-mono) !important;
+      font-variant-numeric: tabular-nums !important;
+    }
+    .claude-ch-name {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    /* 建议 3：47 章节目录重构为 0.5px 纯平侧边栏 + 实时激活锚定 */
+    .toc-drawer {
+      background: var(--surface) !important;
+      border-right: 0.5px solid var(--border) !important;
+      box-shadow: 2px 0 16px rgba(0, 0, 0, 0.05) !important;
+    }
+    body.theme-dark .toc-drawer {
+      background: var(--surface) !important;
+      border-right-color: var(--border) !important;
+      box-shadow: 2px 0 24px rgba(0, 0, 0, 0.4) !important;
+    }
+    .toc-header {
+      background: var(--surface) !important;
+      border-bottom: 0.5px solid var(--border) !important;
+    }
+    .toc-link {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 8px 12px !important;
+      border-radius: 6px !important;
+      border-left: 2.5px solid transparent !important;
+      transition: all 0.14s ease !important;
+      color: var(--text-secondary) !important;
+      font-size: 13px !important;
+      text-decoration: none !important;
+    }
+    .toc-link:hover {
+      background: var(--surface-hover) !important;
+      color: var(--text) !important;
+    }
+    .toc-link.active, .drawer-toc-item.active {
+      border-left: 2.5px solid var(--accent) !important;
+      background: var(--surface-hover) !important;
+      color: var(--text) !important;
+      font-weight: 600 !important;
+    }
+    .toc-idx {
+      font-family: var(--font-mono) !important;
+      font-variant-numeric: tabular-nums !important;
+      width: 24px !important;
+      display: inline-block !important;
+      text-align: right !important;
+      margin-right: 8px !important;
+      color: var(--text-tertiary) !important;
+      font-weight: 500 !important;
+      font-size: 12px !important;
+    }
+    .toc-link.active .toc-idx {
+      color: var(--accent) !important;
+      font-weight: 700 !important;
+    }
+
+    /* 建议 4：JetBrains Mono 等宽字体通用绑定 */
+    .font-mono,
+    .toc-idx,
+    .claude-ch-pill,
+    .top-chapter-pill,
+    .book-page-counter strong,
+    .book-page-counter span,
+    .dock-card-counter,
+    .audio-dock-time,
+    .card-flip-hint,
+    .badge-exam-year,
+    .toc-overview-num {
+      font-family: var(--font-mono) !important;
+      font-variant-numeric: tabular-nums !important;
+      letter-spacing: -0.01em;
+    }
+
+    /* 建议 2：卡片与题眼纯平去投影 (0.5px border, no shadow) */
+    .point-entry, .entry-card, .book-card-bottom-nav, .recite-sub-bar {
+      border: 0.5px solid var(--border) !important;
+      box-shadow: none !important;
+      background: var(--surface) !important;
+    }
+    .xt-keyword.cloze, strong, b {
+      color: var(--accent) !important;
+    }
+    /* 错·陷阱徽章 */
+    .trap-hint, [class*="trap"], span:contains("陷阱") {
+      color: var(--mark-amber) !important;
+    }
+
 </style>
 <body class="theme-paper tab-recite-active mode-scroll-flow">
 <!-- 板块 1：首页工作台（平行独立板块） -->
@@ -5702,28 +5961,30 @@ body.mode-mask .xt-keyword.cloze.revealed {
   <section id="sectionRecite" class="master-tab-section active">
     <!-- 主导航栏 -->
   <header class="top-bar">
-    <div class="top-wrap immersive-top-wrap">
-      <!-- 左侧：全卷目录入口 (带藏书印与书名) -->
-      <div class="nav-brand" id="btnOpenDrawer" onclick="openDrawer()" title="查看全卷目录与设置">
-        <span class="seal-badge">徐涛</span>
-        <span class="book-title">背诵笔记</span>
-      </div>
-
-      <!-- 中间：当前章节名与序号 (点击直通抽屉) -->
-      <div class="top-chapter-title-wrap" id="topBarChapterInfo" onclick="openDrawer()" title="点击快速切换章节">
-        <span class="top-chapter-pill" id="topChapterPill">第 1/47 讲</span>
-        <span class="top-chapter-name" id="topChapterName">导论</span>
-      </div>
-
-      <!-- 右侧：目录与设置入口 (含背诵进度) -->
-      <button type="button" class="drawer-btn" id="btnDrawer" onclick="openDrawer()" title="查看目录与系统设置">
-        <span class="top-studied-badge" id="topBadgeStudied">0/47</span>
-        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="7" x2="21" y2="7"/>
+    <div class="top-wrap claude-top-wrap">
+      <!-- 1. 左侧：全卷目录折叠键 (Lucide Menu Icon) -->
+      <button type="button" class="claude-icon-btn" id="btnOpenDrawer" onclick="openDrawer()" title="打开全卷 47 讲目录与设置" aria-label="全卷目录">
+        <svg class="ui-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
           <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="17" x2="15" y2="17"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
-        <span>目录</span>
+      </button>
+
+      <!-- 2. 居中：章节标题（限制在 5 词以内，超出自动省略，等宽序号） -->
+      <div class="claude-chapter-title" id="topBarChapterInfo" onclick="openDrawer()" title="点击呼出目录切换章节">
+        <span class="claude-ch-pill font-mono" id="topChapterPill">01/47</span>
+        <span class="claude-ch-name" id="topChapterName">导论</span>
+      </div>
+
+      <!-- 3. 右侧：日夜主题切换 (Lucide Moon/Sun Icon) -->
+      <button type="button" class="claude-icon-btn theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()" title="切换宣纸暖纸 / 沉香夜读模式" aria-label="切换主题模式">
+        <svg class="ui-svg theme-svg-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="ui-svg theme-svg-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
       </button>
     </div>
   </header>
@@ -25417,7 +25678,29 @@ const TOTAL_CHAPTERS = 47;
 
     // 手势滑动翻页
     
+    
+    // =========================================================================
+    // Claude UI 抽屉控制与活跃章节自动居中定位 (Active Anchor)
+    // =========================================================================
+    function openDrawer() {
+      const overlay = document.getElementById('drawerOverlay');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      setTimeout(() => {
+        const curArt = pointEntries[currentChapterIndex];
+        const activeLink = (curArt ? overlay.querySelector(`a[href="#${curArt.id}"]`) : null) || overlay.querySelector('.toc-link.active');
+        if (activeLink) {
+          activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      }, 100);
+    }
+
     function closeDrawer() {
+      const overlay = document.getElementById('drawerOverlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function _legacy_closeDrawer() {
       document.getElementById('drawerOverlay').classList.remove('active');
     }
     function filterDrawerToc(q) {
@@ -25599,34 +25882,48 @@ const TOTAL_CHAPTERS = 47;
         nextBtn.classList.toggle('disabled', index === TOTAL_CHAPTERS - 1);
       }
 
+      // 等宽双位格式化 (01/47)
+      const padIdx = String(index + 1).padStart(2, '0');
+
       // 同步当前卡片顶部指示器
       const curPageEl = document.getElementById('bookCurPage');
-      if (curPageEl) curPageEl.textContent = index + 1;
+      if (curPageEl) curPageEl.textContent = padIdx;
       const modBadgeEl = document.getElementById('bookModBadge');
       const titleEl = curArt.querySelector('.point-title') || curArt.querySelector('.card-title');
-      const titleText = titleEl ? titleEl.textContent.trim().replace(/^\d+\s*/, '') : '';
+      const rawTitle = titleEl ? titleEl.textContent.trim().replace(/^\d+\s*/, '') : '';
+      // 严格限制顶栏章节名在 5 词以内
+      const shortTitle = rawTitle.length > 12 ? (rawTitle.slice(0, 11) + '…') : rawTitle;
       const subj = curArt.dataset.subject || '';
       if (modBadgeEl) {
         modBadgeEl.textContent = subj ? ('【' + subj + '】') : '';
       }
 
-      // 同步极致沉浸顶栏：第 X/47 讲 · 标题
+      // 建议 1：同步 Claude 56px 顶栏 (01/47 与精炼标题)
       const topPill = document.getElementById('topChapterPill');
-      if (topPill) topPill.textContent = '第 ' + (index + 1) + '/47 讲';
+      if (topPill) topPill.textContent = padIdx + '/47';
       const topName = document.getElementById('topChapterName');
-      if (topName) topName.textContent = titleText || ('第 ' + (index + 1) + ' 讲');
+      if (topName) topName.textContent = shortTitle || ('第 ' + padIdx + ' 讲');
 
       // 同步悬浮播放台的章节计数器
       const counterEl = document.getElementById('dockCardCounter');
       if (counterEl) {
         counterEl.style.display = 'inline-block';
-        counterEl.textContent = '[ ' + (index + 1) + '/47 章 ]';
+        counterEl.textContent = '[ ' + padIdx + '/47 章 ]';
       }
 
-      // 同步目录抽屉中对应激活项的高亮
+      // 建议 3：同步 47 章节目录实时激活锚定态
+      document.querySelectorAll('.toc-link').forEach((link, i) => {
+        link.classList.toggle('active', i === index);
+      });
       document.querySelectorAll('.drawer-toc-item').forEach((item, i) => {
         item.classList.toggle('active', i === index);
       });
+
+      // 同步卡片底部切换按钮文案
+      const cardHint = curArt.querySelector('.card-flip-hint');
+      if (cardHint) {
+        cardHint.textContent = '第 ' + padIdx + ' / 47 讲 · 目录';
+      }
 
       // 同步研习总数
       const studiedBadge = document.getElementById('topBadgeStudied');
@@ -26967,7 +27264,7 @@ const TOTAL_CHAPTERS = 47;
     // =========================================================================
     
   // =========================================================================
-  // 自动化版本感知与 PWA 强制热更检测 (v4.5.0)
+  // 自动化版本感知与 PWA 强制热更检测 (v4.6.0)
   // =========================================================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
