@@ -2984,9 +2984,7 @@
     }
 
     /* 仿真器环境动态安全区垫高 (防灵动岛遮挡) */
-    html.ios-simulated-env .top-bar {
-      padding-top: 50px !important;
-    }
+    /* clean top bar */
     html.ios-simulated-env .bottom-bar {
       padding-bottom: 26px !important;
     }
@@ -5401,7 +5399,239 @@ body.mode-mask .xt-keyword.cloze.revealed {
       scroll-margin-top: 64px !important;
     }
 
-  </style>
+  
+    /* ==========================================================================
+       v4.5.0 极致沉浸单行顶栏、下沉式挖空条、背诵专属沉浸底栏与抽屉设置面板
+       ========================================================================== */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(244, 241, 234, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line-subtle);
+      padding-top: env(safe-area-inset-top, 0px) !important;
+      height: auto;
+    }
+    body.theme-dark .top-bar {
+      background: rgba(24, 28, 25, 0.94);
+      border-bottom-color: #2e3630;
+    }
+    .top-wrap.immersive-top-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      height: 48px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-sizing: border-box;
+    }
+    .top-chapter-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 58%;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.035);
+      transition: background 0.15s ease;
+      touch-action: manipulation;
+    }
+    .top-chapter-title-wrap:active {
+      background: rgba(0, 0, 0, 0.08);
+    }
+    body.theme-dark .top-chapter-title-wrap {
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .top-chapter-pill {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .top-chapter-name {
+      font-family: var(--font-song);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top-studied-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 6px;
+      border-radius: 999px;
+      margin-right: 2px;
+    }
+
+    /* 卡片顶部自然挖空自测条 (非吸顶) */
+    .recite-sub-bar {
+      display: block !important;
+      position: static !important;
+      margin: 10px auto 8px auto !important;
+      max-width: 680px !important;
+      background: var(--paper-raised, #fcf9f2) !important;
+      border: 1px solid var(--line, #e6dfd3) !important;
+      border-radius: 12px !important;
+      padding: 8px 14px !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+    }
+    body.theme-dark .recite-sub-bar {
+      background: #202422 !important;
+      border-color: #333a35 !important;
+    }
+    .cloze-badge-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-right: 6px;
+    }
+    .cloze-title-wrap {
+      display: flex;
+      align-items: center;
+    }
+    .cloze-sep {
+      color: var(--line);
+      margin: 0 2px;
+    }
+
+    /* 章节状态纯净指示条 */
+    .book-top-bar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      max-width: 680px !important;
+      margin: 0 auto 12px auto !important;
+      padding: 6px 14px !important;
+      background: var(--paper-raised, #fdfaf3) !important;
+      border: 1px solid var(--line, #e6dfd3) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03) !important;
+    }
+    body.theme-dark .book-top-bar {
+      background: #202422 !important;
+      border-color: #333a35 !important;
+    }
+
+    /* 抽屉设置控制台样式 */
+    .drawer-settings-panel {
+      padding: 10px 14px 12px 14px;
+      margin: 8px 12px 10px 12px;
+      background: rgba(0, 0, 0, 0.025);
+      border: 1px solid var(--line-subtle);
+      border-radius: 12px;
+    }
+    body.theme-dark .drawer-settings-panel {
+      background: rgba(255, 255, 255, 0.035);
+      border-color: #38423c;
+    }
+    .drawer-settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 12px;
+    }
+    .drawer-setting-cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .cell-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .drawer-pill-action {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      touch-action: manipulation;
+    }
+    body.theme-dark .drawer-pill-action {
+      background: #232724;
+      border-color: #38423c;
+      color: #dfd8cb;
+    }
+    .drawer-module-switch-row {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line-subtle);
+    }
+    .module-switch-title {
+      display: block;
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .drawer-module-pills {
+      display: flex;
+      gap: 6px;
+    }
+    .drawer-mod-pill {
+      flex: 1;
+      padding: 5px 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--sub);
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      touch-action: manipulation;
+    }
+    body.theme-dark .drawer-mod-pill {
+      background: #232724;
+      border-color: #38423c;
+      color: #dfd8cb;
+    }
+    .drawer-mod-pill.active {
+      background: var(--accent-soft);
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+
+    /* 背诵专属沉浸底栏与音频悬浮高度动态协同 */
+    body.tab-recite-active .docked-bottom-nav {
+      display: none !important;
+    }
+    body.tab-recite-active .audio-float-dock {
+      bottom: calc(14px + env(safe-area-inset-bottom, 12px)) !important;
+    }
+    body:not(.tab-recite-active) .audio-float-dock {
+      bottom: calc(62px + env(safe-area-inset-bottom, 12px)) !important;
+    }
+    body.tab-recite-active .container {
+      padding-bottom: 120px !important;
+    }
+
+</style>
 <body class="theme-paper tab-recite-active mode-scroll-flow">
 <!-- 板块 1：首页工作台（平行独立板块） -->
     <section id="sectionHome" class="main-app-tab-section" style="display: none;">
@@ -5469,112 +5699,29 @@ body.mode-mask .xt-keyword.cloze.revealed {
   <section id="sectionRecite" class="master-tab-section active">
     <!-- 主导航栏 -->
   <header class="top-bar">
-    <div class="top-wrap">
-      <div class="nav-brand" id="btnOpenDrawer" onclick="openDrawer()" title="查看全卷目录">
+    <div class="top-wrap immersive-top-wrap">
+      <!-- 左侧：全卷目录入口 (带藏书印与书名) -->
+      <div class="nav-brand" id="btnOpenDrawer" onclick="openDrawer()" title="查看全卷目录与设置">
         <span class="seal-badge">徐涛</span>
         <span class="book-title">背诵笔记</span>
       </div>
 
-            <div class="top-actions">
-        <!-- 切换字系 -->
-        <button type="button" class="top-action-btn" id="btnFontSwitch" onclick="cycleFontFamily()" title="切换字系（文楷/雅宋/精黑/仿宋）">
-          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="4 7 4 4 20 4 20 7"/>
-            <line x1="9" y1="20" x2="15" y2="20"/>
-            <line x1="12" y1="4" x2="12" y2="20"/>
-          </svg>
-          <span id="btnFontSwitchLabel">文楷</span>
-        </button>
-
-        <!-- 强制清理缓存并热更新 -->
-        <button type="button" class="top-action-btn" id="btnForceUpdate" onclick="forceCleanAndReload()" title="清理缓存并强制刷新最新版本">
-          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/>
-          </svg>
-        </button>
-
-        <!-- 切换夜读/宣纸模式 -->
-        <button type="button" class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()" title="切换夜读/宣纸模式">
-          <svg class="ui-svg sm theme-svg-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-          <svg class="ui-svg sm theme-svg-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        </button>
-
-        <!-- 字号 A- / A+ -->
-        <div class="font-zoom-ctrl">
-          <button type="button" class="zoom-btn" onclick="adjustFontSize(-1)" title="缩小字号">A-</button>
-          <button type="button" class="zoom-btn" onclick="adjustFontSize(1)" title="放大字号">A+</button>
-        </div>
-
-        <!-- 模式切换：书本翻页 vs 瀑布长卷 -->
-        <div class="mode-switch">
-          <button type="button" class="mode-btn active" id="btnModePaging" onclick="setViewMode('paging')" title="一页一章实体书翻页">
-            <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            </svg>
-            <span>翻页</span>
-          </button>
-          <button type="button" class="mode-btn" id="btnModeScroll" onclick="setViewMode('scroll')" title="长卷通读">
-            <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <polyline points="19 12 12 19 5 12"/>
-            </svg>
-            <span>长卷</span>
-          </button>
-        </div>
-
-        <!-- 目录按钮 -->
-        <button type="button" class="drawer-btn" id="btnDrawer" onclick="openDrawer()" title="查看目录与学习进度">
-          <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="7" x2="21" y2="7"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="17" x2="15" y2="17"/>
-          </svg>
-          <span>目录</span>
-          <span class="top-studied-badge" id="topBadgeStudied">0/47</span>
-        </button>
+      <!-- 中间：当前章节名与序号 (点击直通抽屉) -->
+      <div class="top-chapter-title-wrap" id="topBarChapterInfo" onclick="openDrawer()" title="点击快速切换章节">
+        <span class="top-chapter-pill" id="topChapterPill">第 1/47 讲</span>
+        <span class="top-chapter-name" id="topChapterName">导论</span>
       </div>
-    </div>
 
-    <!-- 模块横向滑动分流栏 -->
-    <nav class="module-nav-bar">
-      <div class="module-nav-wrap">
-        
-    <button type="button" class="mod-pill active" data-filter-type="subject" onclick="filterSubject('all', this)">全卷 (47章)</button>
-    <button type="button" class="mod-pill pill-subject" data-filter-type="subject" onclick="filterSubject('马原', this)">马原 (9章)</button>
-    <button type="button" class="mod-pill pill-subject" data-filter-type="subject" onclick="filterSubject('毛中特', this)">毛中特 (8章)</button>
-    <button type="button" class="mod-pill pill-subject" data-filter-type="subject" onclick="filterSubject('新思想', this)">新思想 (15章)</button>
-    <button type="button" class="mod-pill pill-subject" data-filter-type="subject" onclick="filterSubject('史纲', this)">史纲 (8章)</button>
-    <button type="button" class="mod-pill pill-subject" data-filter-type="subject" onclick="filterSubject('思修', this)">思修 (7章)</button>
-    <span class="nav-divider"></span>
-    <button type="button" class="mod-pill pill-status" data-filter-type="status" onclick="filterStatus('unstudied', this)">待研习 (<span id="pillUnstudiedCount">47</span>)</button>
-    <button type="button" class="mod-pill pill-status" data-filter-type="status" onclick="filterStatus('doubt', this)">已标记 (<span id="pillDoubtCount">0</span>)</button>
-    
-      </div>
-    </nav>
-
-    <!-- 默背模式快捷操作条 -->
-    <div class="recite-sub-bar" id="reciteSubBar">
-      <div class="recite-sub-wrap">
-        <div>
-          <span>原书加粗题眼</span>
-          <span class="recite-counter" id="clozeStatText">支持一键/点击挖空自测</span>
-        </div>
-        <div class="cloze-tool-links">
-          <button type="button" class="link-btn ghost-btn" id="btnToggleGhost" onclick="toggleGhostHint()">
-            <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M12 7a5 5 0 0 1 5 5c0 2.5-1.5 3.5-2 5H9c-.5-1.5-2-2.5-2-5a5 5 0 0 1 5-5z"/></svg>
-            <span>弱提示: <b id="ghostHintState">关</b></span>
-          </button>
-          <span>·</span>
-          <button type="button" class="link-btn" id="btnRevealAll" onclick="revealAllCloze()">全卷显现</button>
-          <span>·</span>
-          <button type="button" class="link-btn" id="btnMaskAll" onclick="maskAllCloze()">全卷遮盖</button>
-        </div>
-      </div>
+      <!-- 右侧：目录与设置入口 (含背诵进度) -->
+      <button type="button" class="drawer-btn" id="btnDrawer" onclick="openDrawer()" title="查看目录与系统设置">
+        <span class="top-studied-badge" id="topBadgeStudied">0/47</span>
+        <svg class="ui-svg sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="7" x2="21" y2="7"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="17" x2="15" y2="17"/>
+        </svg>
+        <span>目录</span>
+      </button>
     </div>
   </header>
 
@@ -5592,6 +5739,68 @@ body.mode-mask .xt-keyword.cloze.revealed {
         </div>
         <div class="toc-overview-bar">
           已研毕 <strong class="toc-overview-num" id="drawerTotalStudied">0 / 47</strong> 章
+        </div>
+      </div>
+
+      <!-- 偏好与系统设置面板 (纯 SVG · 字系/字号/夜读/强刷/模块直通) -->
+      <div class="drawer-settings-panel">
+        <div class="drawer-settings-grid">
+          <!-- 字系切换 -->
+          <div class="drawer-setting-cell">
+            <span class="cell-label">字系风格</span>
+            <button type="button" class="drawer-pill-action" id="btnFontSwitch" onclick="cycleFontFamily()" title="切换字系（文楷/雅宋/精黑/仿宋）">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 7 4 4 20 4 20 7"/>
+                <line x1="9" y1="20" x2="15" y2="20"/>
+                <line x1="12" y1="4" x2="12" y2="20"/>
+              </svg>
+              <span id="btnFontSwitchLabel">文楷</span>
+            </button>
+          </div>
+
+          <!-- 字号缩放 -->
+          <div class="drawer-setting-cell">
+            <span class="cell-label">字号缩放</span>
+            <div class="font-zoom-ctrl">
+              <button type="button" class="zoom-btn" onclick="adjustFontSize(-1)" title="缩小字号">A-</button>
+              <button type="button" class="zoom-btn" onclick="adjustFontSize(1)" title="放大字号">A+</button>
+            </div>
+          </div>
+
+          <!-- 夜读/宣纸模式 -->
+          <div class="drawer-setting-cell">
+            <span class="cell-label">阅读模式</span>
+            <button type="button" class="drawer-pill-action theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()" title="切换夜读/宣纸模式">
+              <svg class="ui-svg xs theme-svg-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+              <svg class="ui-svg xs theme-svg-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <span class="theme-label-txt">宣纸/夜读</span>
+            </button>
+          </div>
+
+          <!-- 强刷热更 -->
+          <div class="drawer-setting-cell">
+            <span class="cell-label">缓存同步</span>
+            <button type="button" class="drawer-pill-action" id="btnForceUpdate" onclick="forceCleanAndReload()" title="清理缓存并强制刷新最新版本">
+              <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/>
+              </svg>
+              <span>强制刷新</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 模块直通快捷条 -->
+        <div class="drawer-module-switch-row">
+          <span class="module-switch-title">三大板块导航</span>
+          <div class="drawer-module-pills">
+            <button type="button" class="drawer-mod-pill" onclick="closeDrawer(); switchMainTab('home');">首页总览</button>
+            <button type="button" class="drawer-mod-pill active" onclick="closeDrawer(); switchMainTab('recite');">背诵手册</button>
+            <button type="button" class="drawer-mod-pill" onclick="closeDrawer(); switchMainTab('tuijie');">腿姐带背</button>
+          </div>
         </div>
       </div>
 
@@ -6285,32 +6494,33 @@ body.mode-mask .xt-keyword.cloze.revealed {
   <!-- 正文大舞台 -->
   <main class="container">
     <!-- 书本翻页模式专属顶部指示条 -->
+    <!-- 原书加粗题眼自测工具条 (下沉至卡片顶部自然排列 · 不占吸顶高度) -->
+    <div class="recite-sub-bar" id="reciteSubBar">
+      <div class="recite-sub-wrap">
+        <div class="cloze-title-wrap">
+          <span class="cloze-badge-tag">加粗题眼</span>
+          <span class="recite-counter" id="clozeStatText">支持一键/点击挖空自测</span>
+        </div>
+        <div class="cloze-tool-links">
+          <button type="button" class="link-btn ghost-btn" id="btnToggleGhost" onclick="toggleGhostHint()">
+            <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M12 7a5 5 0 0 1 5 5c0 2.5-1.5 3.5-2 5H9c-.5-1.5-2-2.5-2-5a5 5 0 0 1 5-5z"/></svg>
+            <span>弱提示: <b id="ghostHintState">关</b></span>
+          </button>
+          <span class="cloze-sep">·</span>
+          <button type="button" class="link-btn" id="btnRevealAll" onclick="revealAllCloze()">全卷显现</button>
+          <span class="cloze-sep">·</span>
+          <button type="button" class="link-btn" id="btnMaskAll" onclick="maskAllCloze()">全卷遮盖</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 章节状态指示条 (纯净元数据 · 移除重复翻页按钮) -->
     <div class="book-top-bar" id="bookTopBar">
       <div class="book-page-meta">
         <span class="book-mod-badge" id="bookModBadge">【马原】导论</span>
         <span class="book-page-counter">
-          第 <strong id="bookCurPage">1</strong> / <span id="bookTotalPage">47</span> 章
+          第 <strong id="bookCurPage">1</strong> / <span id="bookTotalPage">47</span> 讲
         </span>
-      </div>
-      <div class="book-page-quick-jump">
-        <button type="button" class="book-jump-btn" onclick="openDrawer()" title="打开全卷目录">
-          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="15" y2="18"/>
-          </svg>
-          <span>目录</span>
-        </button>
-        <button type="button" class="book-jump-btn" id="bookTopPrev" onclick="prevBookPage()" title="上一章 (左滑)">
-          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          <span>上章</span>
-        </button>
-        <button type="button" class="book-jump-btn" id="bookTopNext" onclick="nextBookPage()" title="下一章 (右滑)">
-          <span>下章</span>
-          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </button>
       </div>
     </div>
 
@@ -25386,25 +25596,40 @@ const TOTAL_CHAPTERS = 47;
         nextBtn.classList.toggle('disabled', index === TOTAL_CHAPTERS - 1);
       }
 
-      // 同步顶部学科分类导航 Tab (马原 / 毛中特 / 史纲 / 思修 / 新思想)
-      const subj = curArt.dataset.subject;
-      if (subj) {
-        document.querySelectorAll('.mod-pill[data-filter-type="subject"]').forEach(b => {
-          b.classList.toggle('active', b.dataset.filter === 'all' || b.dataset.filter === subj);
-        });
+      // 同步当前卡片顶部指示器
+      const curPageEl = document.getElementById('bookCurPage');
+      if (curPageEl) curPageEl.textContent = index + 1;
+      const modBadgeEl = document.getElementById('bookModBadge');
+      const titleEl = curArt.querySelector('.point-title') || curArt.querySelector('.card-title');
+      const titleText = titleEl ? titleEl.textContent.trim().replace(/^\d+\s*/, '') : '';
+      const subj = curArt.dataset.subject || '';
+      if (modBadgeEl) {
+        modBadgeEl.textContent = subj ? ('【' + subj + '】') : '';
       }
+
+      // 同步极致沉浸顶栏：第 X/47 讲 · 标题
+      const topPill = document.getElementById('topChapterPill');
+      if (topPill) topPill.textContent = '第 ' + (index + 1) + '/47 讲';
+      const topName = document.getElementById('topChapterName');
+      if (topName) topName.textContent = titleText || ('第 ' + (index + 1) + ' 讲');
 
       // 同步悬浮播放台的章节计数器
       const counterEl = document.getElementById('dockCardCounter');
       if (counterEl) {
         counterEl.style.display = 'inline-block';
-        counterEl.textContent = `[ ${index + 1}/47 章 ]`;
+        counterEl.textContent = '[ ' + (index + 1) + '/47 章 ]';
       }
 
       // 同步目录抽屉中对应激活项的高亮
       document.querySelectorAll('.drawer-toc-item').forEach((item, i) => {
         item.classList.toggle('active', i === index);
       });
+
+      // 同步研习总数
+      const studiedBadge = document.getElementById('topBadgeStudied');
+      if (studiedBadge && typeof studiedChapters !== 'undefined') {
+        studiedBadge.textContent = studiedChapters.size + '/47';
+      }
     }
 
     function scrollToChapter(chIdOrIndex, cardId = null) {
@@ -26719,6 +26944,18 @@ const TOTAL_CHAPTERS = 47;
       }
 
       // 修复板块记忆持久化
+      // 同步控制全局 TabBar 显示状态（背诵页沉浸隐藏，首页/带背页显示）
+      const bottomNav = document.querySelector('.docked-bottom-nav');
+      if (bottomNav) {
+        bottomNav.style.display = (tabKey === 'recite') ? 'none' : 'flex';
+      }
+
+      // 同步抽屉中的三大板块直达高亮
+      document.querySelectorAll('.drawer-mod-pill').forEach((pill, pIdx) => {
+        const pTabs = ['home', 'recite', 'tuijie'];
+        pill.classList.toggle('active', pTabs[pIdx] === tabKey);
+      });
+
       localStorage.setItem('kyzz_last_tab', tabKey);
     }
 
