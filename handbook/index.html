@@ -5908,26 +5908,43 @@ body.mode-mask .xt-keyword.cloze.revealed {
       top: 0 !important;
       left: 0 !important;
       right: 0 !important;
-      width: 100% !important;
-      height: 56px !important;
+      height: calc(56px + env(safe-area-inset-top, 0px)) !important;
       padding-top: env(safe-area-inset-top, 0px) !important;
       box-sizing: border-box !important;
-      background: var(--background) !important;
-      border-bottom: 0.5px solid var(--border) !important;
       z-index: 9999 !important;
+      background: rgba(247, 243, 232, 0.96) !important;
       backdrop-filter: blur(16px) !important;
       -webkit-backdrop-filter: blur(16px) !important;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.03) !important;
+      border-bottom: 0.5px solid var(--line-subtle) !important;
+      box-shadow: 0 1px 3px rgba(44, 36, 29, 0.04) !important;
     }
-
-    /* 正文容器上下安全内边距，完全避免被 fixed 顶栏与底栏遮挡 */
-    .container, #sectionRecite .container {
-      padding-top: calc(64px + env(safe-area-inset-top, 0px)) !important;
-      padding-bottom: calc(115px + env(safe-area-inset-bottom, 20px)) !important;
+    body.theme-dark .top-bar {
+      background: rgba(24, 28, 25, 0.96) !important;
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .top-wrap.claude-top-wrap {
+      height: 56px !important;
+      max-width: 780px !important;
+      margin: 0 auto !important;
+      padding: 0 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
       box-sizing: border-box !important;
     }
 
-    /* 全局底部导航栏 (首页 / 背诵手册 / 腿姐带背) 严格固定底部 52px */
+    /* 正文容器严格预留顶栏与底栏安全边距，彻底告别遮挡与闪烁 */
+    .container, #sectionRecite .container {
+      max-width: 780px !important;
+      margin: 0 auto !important;
+      padding-top: calc(56px + env(safe-area-inset-top, 0px) + 14px) !important;
+      padding-bottom: calc(130px + env(safe-area-inset-bottom, 24px)) !important;
+      padding-left: 14px !important;
+      padding-right: 14px !important;
+      box-sizing: border-box !important;
+    }
+
+    /* 常驻底部三栏导航 Docked Bottom Nav */
     .docked-bottom-nav {
       position: fixed !important;
       bottom: 0 !important;
@@ -6058,6 +6075,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
     }
 
 </style>
+</head>
 <body class="theme-paper tab-recite-active mode-scroll-flow">
 <!-- 板块 1：首页工作台（平行独立板块） -->
     <section id="sectionHome" class="main-app-tab-section" style="display: none;">
@@ -25979,20 +25997,21 @@ const TOTAL_CHAPTERS = 47;
         pointEntries = Array.from(document.querySelectorAll('.point-entry'));
       }
 
+      // 严格显隐互斥：仅当前 index 设为 display: block，其余所有章节严格 display: none
       pointEntries.forEach((art, i) => {
         if (i === index) {
           art.classList.add('active-chapter-page');
           art.style.setProperty('display', 'block', 'important');
+        } else {
           art.classList.remove('active-chapter-page');
           art.style.setProperty('display', 'none', 'important');
         }
       });
 
-      // 更新翻页按钮禁用状态与指示器
+      // 更新翻页按钮与状态指示器
       updateChapterPagingUI(index);
 
-      // 视窗滚动置顶
-      // 彻底置顶：执行并在后续关键渲染周期确认，彻底解决移动端回弹/定位于底部的问题
+      // 视窗滚动彻底置顶：多阶段强制置顶，彻底消除移动端与历史滚动的拉扯
       const forceScrollToTop = () => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         document.documentElement.scrollTop = 0;
@@ -26003,13 +26022,15 @@ const TOTAL_CHAPTERS = 47;
       setTimeout(forceScrollToTop, 30);
       setTimeout(forceScrollToTop, 120);
       setTimeout(forceScrollToTop, 300);
-      }
+    }
 
     function prevBookPage() {
       if (currentChapterIndex > 0) {
         showChapterPage(currentChapterIndex - 1, false);
+      } else {
         showToast('已经是第一章');
       }
+    }
 
     function nextBookPage() {
       if (currentChapterIndex < TOTAL_CHAPTERS - 1) {
@@ -27421,7 +27442,7 @@ const TOTAL_CHAPTERS = 47;
   // =========================================================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=4.8.0', { scope: './' })
+      navigator.serviceWorker.register('./sw.js?v=4.9.0', { scope: './' })
         .then(reg => {
           reg.update();
           reg.onupdatefound = () => {

@@ -1,5 +1,5 @@
-// Service Worker v4.8.0 - 2027 考研政治核心背诵笔记 (PWA 生产版)
-const CACHE_NAME = 'kyzz-cache-v4.8.0';
+// Service Worker v4.9.0 - 2027 考研政治核心背诵笔记 (PWA 生产版)
+const CACHE_NAME = 'kyzz-cache-v4.9.0';
 
 // 核心离线静态资源白名单
 const CORE_ASSETS = [
@@ -24,6 +24,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[SW v4.9.0] Deleting obsolete cache:', key);
             return caches.delete(key);
           }
         })
@@ -43,20 +44,39 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. 网络优先，失败后降级读取缓存 (Network-first with Cache Fallback)
+  // 3. 页面主导航与 HTML/版本信息：Network-First（网络优先，更新缓存，离线降级）
+  const isNavigation = event.request.mode === 'navigate';
+  const isHtml = url.endsWith('/') || url.includes('index.html') || url.includes('version.json');
+
+  if (isNavigation || isHtml) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // 4. 其余静态资源同样优先网络，网络失败才降级读取缓存
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return fetch(event.request).then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200 && event.request.url.startsWith(self.location.origin)) {
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && url.startsWith(self.location.origin)) {
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
           });
         }
         return networkResponse;
-      }).catch(() => {
-        return cachedResponse;
-      });
-    })
+      })
+      .catch(() => caches.match(event.request))
   );
 });

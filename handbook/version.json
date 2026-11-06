@@ -1,12 +1,10 @@
 {
-  "version": "4.8.0",
-  "updated_at": "2026-11-06T11:25:00+08:00",
+  "version": "4.9.0",
+  "updated_at": "2026-11-06T13:10:00+08:00",
   "features": [
-    "彻底删除旧版残留底栏DOM节点与JS触发（消灭[≡ 目录][☆ 抽题]已研 0/47 章[💾 清单]）",
-    "移动端置顶彻底锁定：head首行注入 history.scrollRestoration = manual 并多帧重置 scrollTop=0，解决刷新直接落在卡片底部的问题",
-    "Claude UI 顶栏 56px position:fixed !important 顶级置顶（z-index: 9999），正文 paddingTop 严格避让",
-    "常驻底栏 TabBar（首页/背诵手册/腿姐带背）position:fixed 永久显示（z-index: 9999）",
-    "断点续播药丸与浮动音频播放条精确定位在 TabBar 上方，彻底杜绝元素错乱重叠",
-    "PWA 离线缓存升级为 kyzz-cache-v4.8.0，强制清除旧版缓存"
+    "【彻底消灭幽灵按钮】闭合丢失的</head>标签，清除残留CSS冲突，彻底杜绝裸露按钮与布局崩坏",
+    "【修复翻页与置顶死穴】重写showChapterPage章节显隐逻辑（严格仅当前章节display:block，其余全部display:none），修复缺失的prevBookPage函数闭合花括号与SyntaxError语法错误，消除音频与翻页竞态，100%稳稳置顶",
+    "【恢复iPhone顶部56px导航栏】增加padding-top: env(safe-area-inset-top, 0px)与calc(56px + safe-area)高，确保目录/标题/日夜切换在iOS真机状态栏下方完美呈现",
+    "【破除PWA缓存死锁】Service Worker版本升级至kyzz-cache-v4.9.0，index.html与导航请求全面调整为Network-First（网络优先），并在HTML头部注入严格no-cache meta头"
   ]
 }
