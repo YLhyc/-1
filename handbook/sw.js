@@ -1,5 +1,5 @@
-// Service Worker v4.6.0 - 2027 考研政治核心背诵笔记 (PWA 生产版)
-const CACHE_NAME = 'kyzz-cache-v4.6.0';
+// Service Worker v4.7.0 - 2027 考研政治核心背诵笔记 (PWA 生产版)
+const CACHE_NAME = 'kyzz-cache-v4.7.0';
 
 // 核心离线静态资源白名单
 const CORE_ASSETS = [
