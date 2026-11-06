@@ -1,10 +1,15 @@
 {
-  "version": "4.9.0",
-  "updated_at": "2026-11-06T13:10:00+08:00",
+  "version": "4.9.1",
+  "updated_at": "2026-11-06T14:35:00+08:00",
   "features": [
     "【彻底消灭幽灵按钮】闭合丢失的</head>标签，清除残留CSS冲突，彻底杜绝裸露按钮与布局崩坏",
     "【修复翻页与置顶死穴】重写showChapterPage章节显隐逻辑（严格仅当前章节display:block，其余全部display:none），修复缺失的prevBookPage函数闭合花括号与SyntaxError语法错误，消除音频与翻页竞态，100%稳稳置顶",
     "【恢复iPhone顶部56px导航栏】增加padding-top: env(safe-area-inset-top, 0px)与calc(56px + safe-area)高，确保目录/标题/日夜切换在iOS真机状态栏下方完美呈现",
-    "【破除PWA缓存死锁】Service Worker版本升级至kyzz-cache-v4.9.0，index.html与导航请求全面调整为Network-First（网络优先），并在HTML头部注入严格no-cache meta头"
+    "【破除PWA缓存死锁】Service Worker版本升级至kyzz-cache-v4.9.0，index.html与导航请求全面调整为Network-First（网络优先），并在HTML头部注入严格no-cache meta头",
+    "【对抗性交互修复 1：跨章音频高亮防视口跳动】严格限定仅当音频播放章节与当前浏览章节一致时才允许滚动定位，杜绝后台音频换句强制拉扯当前视口",
+    "【对抗性交互修复 2：悬浮条标题精准翻页跳转】点击音频播放条标题时先切换章节显隐（showChapterPage）再定位句子，杜绝隐藏章节跳转失效",
+    "【对抗性交互修复 3：浮窗药丸防重叠踩踏】音频浮动条显示时断点续播药丸自动避让隐藏，消灭右下角按钮重影遮挡",
+    "【对抗性交互修复 4：多处安全区与防穿透适配】修复全景目录抽屉顶栏在 iPhone 刘海屏下关闭按钮被遮挡、首页与腿姐带背顶栏沉入状态栏、腿姐播放器被底栏遮挡及抽屉滚动穿透（overscroll-behavior: contain）",
+    "【对抗性交互修复 5：消除重复 ID 冲突】修复 ch_xsx_00 与 ch_xsx_01 重名音频按钮与句子 ID，恢复高亮与状态同步"
   ]
 }

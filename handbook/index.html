@@ -6074,6 +6074,61 @@ body.mode-mask .xt-keyword.cloze.revealed {
       opacity: 0 !important;
     }
 
+
+    /* 解决悬浮播放条与断点续播药丸在右下角重叠踩踏：播放条显示时，断点续播药丸自动隐藏 */
+    body.audio-dock-visible #resumeCapsulePill {
+      display: none !important;
+    }
+
+    /* 抽屉滚动穿透防护（Overscroll Containment） */
+    .drawer-overlay, .toc-drawer {
+      overscroll-behavior: contain !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* 抽屉头部安全区适配：杜绝在 iPhone 状态栏/刘海屏下关闭按钮被遮挡 */
+    .toc-drawer {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .toc-header {
+      padding-top: calc(14px + env(safe-area-inset-top, 0px)) !important;
+      padding-bottom: 12px !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+      box-sizing: border-box !important;
+      background: var(--surface) !important;
+      border-bottom: 0.5px solid var(--border) !important;
+      flex-shrink: 0 !important;
+    }
+    .toc-header-top {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+    .drawer-body {
+      flex: 1 !important;
+      overflow-y: auto !important;
+      padding-bottom: calc(30px + env(safe-area-inset-bottom, 20px)) !important;
+      overscroll-behavior: contain !important;
+    }
+
+    /* 首页顶部安全区适配：杜绝 iPhone 状态栏压住首页头部 */
+    .section-home-wrap {
+      padding-top: calc(20px + env(safe-area-inset-top, 0px)) !important;
+      padding-bottom: calc(90px + env(safe-area-inset-bottom, 20px)) !important;
+      box-sizing: border-box !important;
+    }
+
+    /* 腿姐带背顶栏与底部播放器安全区适配：杜绝 iPhone 下播放器被常驻底栏遮挡 */
+    .tj-sticky-top {
+      padding-top: env(safe-area-inset-top, 0px) !important;
+      box-sizing: border-box !important;
+    }
+    .tj-floating-player, #tjFloatingPlayer {
+      bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+      z-index: 9998 !important;
+    }
 </style>
 </head>
 <body class="theme-paper tab-recite-active mode-scroll-flow">
@@ -6216,7 +6271,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
           <!-- 夜读/宣纸模式 -->
           <div class="drawer-setting-cell">
             <span class="cell-label">阅读模式</span>
-            <button type="button" class="drawer-pill-action theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()" title="切换夜读/宣纸模式">
+            <button type="button" class="drawer-pill-action theme-toggle-btn" id="btnThemeToggleDrawer" onclick="toggleTheme()" title="切换夜读/宣纸模式">
               <svg class="ui-svg xs theme-svg-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
               </svg>
@@ -15495,7 +15550,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
                     <div class="sub-card-title-row">
                       <span class="sub-card-badge">音轨 01</span>
                       <h4 class="sub-card-title">新思想的科学体系、“十个明确”与“六个必须坚持”</h4>
-                      <button type="button" class="card-audio-btn" id="audio_btn_xsx_01" data-card-id="xsx_01" data-chapter-id="ch_xsx_00" onclick="togglePlayCardAudio('xsx_01', '新思想的科学体系、“十个明确”与“六个必须坚持”', 'ch_xsx_00')">
+                      <button type="button" class="card-audio-btn" id="audio_btn_xsx_00" data-card-id="xsx_00" data-chapter-id="ch_xsx_00" onclick="togglePlayCardAudio('xsx_00', '新思想的科学体系、“十个明确”与“六个必须坚持”', 'ch_xsx_00')">
                         <svg class="ui-svg xs audio-play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                         <span class="audio-btn-text">试听伴读</span>
                       </button>
@@ -15508,7 +15563,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
             <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <span>考点设问引入与立论锚点</span>
           </div>
-          <div class="stream-intro-row"><span class="recite-sentence" id="sent_xsx_01_0" data-card-id="xsx_01" data-sent-idx="0" data-start="0.1" data-end="4.859" onclick="seekReciteSentence('xsx_01', 0.1, 0)" title="点击从该句起播">复习新思想第一课，我们首先要掌握全篇的四梁八柱。</span> <span class="recite-sentence" id="sent_xsx_01_1" data-card-id="xsx_01" data-sent-idx="1" data-start="4.809" data-end="6.939" onclick="seekReciteSentence('xsx_01', 4.809, 1)" title="点击从该句起播">新思想的科学体系。</span> <span class="recite-sentence" id="sent_xsx_01_2" data-card-id="xsx_01" data-sent-idx="2" data-start="6.939" data-end="12.743" onclick="seekReciteSentence('xsx_01', 6.939, 2)" title="点击从该句起播">习近平新时代中国特色社会主义思想，是当代中国马克思主义。</span> <span class="recite-sentence" id="sent_xsx_01_3" data-card-id="xsx_01" data-sent-idx="3" data-start="12.742" data-end="15.127" onclick="seekReciteSentence('xsx_01', 12.742, 3)" title="点击从该句起播">二十一世纪马克思主义。</span></div>
+          <div class="stream-intro-row"><span class="recite-sentence" id="sent_xsx_00_0" data-card-id="xsx_00" data-sent-idx="0" data-start="0.1" data-end="4.859" onclick="seekReciteSentence('xsx_00', 0.1, 0)" title="点击从该句起播">复习新思想第一课，我们首先要掌握全篇的四梁八柱。</span> <span class="recite-sentence" id="sent_xsx_00_1" data-card-id="xsx_00" data-sent-idx="1" data-start="4.809" data-end="6.939" onclick="seekReciteSentence('xsx_00', 4.809, 1)" title="点击从该句起播">新思想的科学体系。</span> <span class="recite-sentence" id="sent_xsx_00_2" data-card-id="xsx_00" data-sent-idx="2" data-start="6.939" data-end="12.743" onclick="seekReciteSentence('xsx_00', 6.939, 2)" title="点击从该句起播">习近平新时代中国特色社会主义思想，是当代中国马克思主义。</span> <span class="recite-sentence" id="sent_xsx_00_3" data-card-id="xsx_00" data-sent-idx="3" data-start="12.742" data-end="15.127" onclick="seekReciteSentence('xsx_00', 12.742, 3)" title="点击从该句起播">二十一世纪马克思主义。</span></div>
         </div>
 
         <div class="stream-card stream-card-outline">
@@ -15517,14 +15572,14 @@ body.mode-mask .xt-keyword.cloze.revealed {
             <span>核心概念深度因果推导</span>
           </div>
           <div class="stream-outline-content">
-            <div class="stream-outline-row"><span class="recite-sentence" id="sent_xsx_01_4" data-card-id="xsx_01" data-sent-idx="4" data-start="15.128" data-end="21.901" onclick="seekReciteSentence('xsx_01', 15.128, 4)" title="点击从该句起播">是中华文化和中国精神的时代精华，实现了马克思主义中国化时代化新的飞跃。</span> <span class="recite-sentence" id="sent_xsx_01_5" data-card-id="xsx_01" data-sent-idx="5" data-start="21.901" data-end="28.419" onclick="seekReciteSentence('xsx_01', 21.901, 5)" title="点击从该句起播">这一科学体系的核心内容概括为十个明确，十四个坚持，十三个方面成就。</span> <span class="recite-sentence" id="sent_xsx_01_6" data-card-id="xsx_01" data-sent-idx="6" data-start="28.418" data-end="35.701" onclick="seekReciteSentence('xsx_01', 28.418, 6)" title="点击从该句起播">十个明确是支撑全篇思想体系的四梁八柱，集中体现了理论创新的核心观点。</span> <span class="recite-sentence" id="sent_xsx_01_7" data-card-id="xsx_01" data-sent-idx="7" data-start="35.702" data-end="40.919" onclick="seekReciteSentence('xsx_01', 35.702, 7)" title="点击从该句起播">明确中国特色社会主义最本质的特征是中国共产党领导。</span> <span class="recite-sentence" id="sent_xsx_01_8" data-card-id="xsx_01" data-sent-idx="8" data-start="40.918" data-end="45.127" onclick="seekReciteSentence('xsx_01', 40.918, 8)" title="点击从该句起播">十四个坚持是指导实践推进的行动路线图。</span> <span class="recite-sentence" id="sent_xsx_01_9" data-card-id="xsx_01" data-sent-idx="9" data-start="45.128" data-end="49.682" onclick="seekReciteSentence('xsx_01', 45.128, 9)" title="点击从该句起播">十三个方面成就是新时代伟大变革的实践成果。</span> <span class="recite-sentence" id="sent_xsx_01_10" data-card-id="xsx_01" data-sent-idx="10" data-start="49.681" data-end="54.783" onclick="seekReciteSentence('xsx_01', 49.681, 10)" title="点击从该句起播">这一思想的世界观和方法论集中体现为六个必须坚持。</span> <span class="recite-sentence" id="sent_xsx_01_11" data-card-id="xsx_01" data-sent-idx="11" data-start="54.783" data-end="58.495" onclick="seekReciteSentence('xsx_01', 54.783, 11)" title="点击从该句起播">坚持人民至上，这是最根本的政治立场。</span> <span class="recite-sentence" id="sent_xsx_01_12" data-card-id="xsx_01" data-sent-idx="12" data-start="58.495" data-end="63.074" onclick="seekReciteSentence('xsx_01', 58.495, 12)" title="点击从该句起播">坚持自信自立，这是立足自身发展的精神基石。</span> <span class="recite-sentence" id="sent_xsx_01_13" data-card-id="xsx_01" data-sent-idx="13" data-start="63.074" data-end="67.997" onclick="seekReciteSentence('xsx_01', 63.074, 13)" title="点击从该句起播">坚持守正创新，这是推进理论实践发展的根本原则。</span> <span class="recite-sentence" id="sent_xsx_01_14" data-card-id="xsx_01" data-sent-idx="14" data-start="67.997" data-end="72.474" onclick="seekReciteSentence('xsx_01', 67.997, 14)" title="点击从该句起播">坚持问题导向，这是开创新局面的源头活水。</span> <span class="recite-sentence" id="sent_xsx_01_15" data-card-id="xsx_01" data-sent-idx="15" data-start="72.474" data-end="77.053" onclick="seekReciteSentence('xsx_01', 72.474, 15)" title="点击从该句起播">坚持系统观念，这是统筹全局的科学思想方法。</span> <span class="recite-sentence" id="sent_xsx_01_16" data-card-id="xsx_01" data-sent-idx="16" data-start="77.054" data-end="81.761" onclick="seekReciteSentence('xsx_01', 77.054, 16)" title="点击从该句起播">坚持胸怀天下，这彰显了天下为公的大国情怀。</span></div>
+            <div class="stream-outline-row"><span class="recite-sentence" id="sent_xsx_00_4" data-card-id="xsx_00" data-sent-idx="4" data-start="15.128" data-end="21.901" onclick="seekReciteSentence('xsx_00', 15.128, 4)" title="点击从该句起播">是中华文化和中国精神的时代精华，实现了马克思主义中国化时代化新的飞跃。</span> <span class="recite-sentence" id="sent_xsx_00_5" data-card-id="xsx_00" data-sent-idx="5" data-start="21.901" data-end="28.419" onclick="seekReciteSentence('xsx_00', 21.901, 5)" title="点击从该句起播">这一科学体系的核心内容概括为十个明确，十四个坚持，十三个方面成就。</span> <span class="recite-sentence" id="sent_xsx_00_6" data-card-id="xsx_00" data-sent-idx="6" data-start="28.418" data-end="35.701" onclick="seekReciteSentence('xsx_00', 28.418, 6)" title="点击从该句起播">十个明确是支撑全篇思想体系的四梁八柱，集中体现了理论创新的核心观点。</span> <span class="recite-sentence" id="sent_xsx_00_7" data-card-id="xsx_00" data-sent-idx="7" data-start="35.702" data-end="40.919" onclick="seekReciteSentence('xsx_00', 35.702, 7)" title="点击从该句起播">明确中国特色社会主义最本质的特征是中国共产党领导。</span> <span class="recite-sentence" id="sent_xsx_00_8" data-card-id="xsx_00" data-sent-idx="8" data-start="40.918" data-end="45.127" onclick="seekReciteSentence('xsx_00', 40.918, 8)" title="点击从该句起播">十四个坚持是指导实践推进的行动路线图。</span> <span class="recite-sentence" id="sent_xsx_00_9" data-card-id="xsx_00" data-sent-idx="9" data-start="45.128" data-end="49.682" onclick="seekReciteSentence('xsx_00', 45.128, 9)" title="点击从该句起播">十三个方面成就是新时代伟大变革的实践成果。</span> <span class="recite-sentence" id="sent_xsx_00_10" data-card-id="xsx_00" data-sent-idx="10" data-start="49.681" data-end="54.783" onclick="seekReciteSentence('xsx_00', 49.681, 10)" title="点击从该句起播">这一思想的世界观和方法论集中体现为六个必须坚持。</span> <span class="recite-sentence" id="sent_xsx_00_11" data-card-id="xsx_00" data-sent-idx="11" data-start="54.783" data-end="58.495" onclick="seekReciteSentence('xsx_00', 54.783, 11)" title="点击从该句起播">坚持人民至上，这是最根本的政治立场。</span> <span class="recite-sentence" id="sent_xsx_00_12" data-card-id="xsx_00" data-sent-idx="12" data-start="58.495" data-end="63.074" onclick="seekReciteSentence('xsx_00', 58.495, 12)" title="点击从该句起播">坚持自信自立，这是立足自身发展的精神基石。</span> <span class="recite-sentence" id="sent_xsx_00_13" data-card-id="xsx_00" data-sent-idx="13" data-start="63.074" data-end="67.997" onclick="seekReciteSentence('xsx_00', 63.074, 13)" title="点击从该句起播">坚持守正创新，这是推进理论实践发展的根本原则。</span> <span class="recite-sentence" id="sent_xsx_00_14" data-card-id="xsx_00" data-sent-idx="14" data-start="67.997" data-end="72.474" onclick="seekReciteSentence('xsx_00', 67.997, 14)" title="点击从该句起播">坚持问题导向，这是开创新局面的源头活水。</span> <span class="recite-sentence" id="sent_xsx_00_15" data-card-id="xsx_00" data-sent-idx="15" data-start="72.474" data-end="77.053" onclick="seekReciteSentence('xsx_00', 72.474, 15)" title="点击从该句起播">坚持系统观念，这是统筹全局的科学思想方法。</span> <span class="recite-sentence" id="sent_xsx_00_16" data-card-id="xsx_00" data-sent-idx="16" data-start="77.054" data-end="81.761" onclick="seekReciteSentence('xsx_00', 77.054, 16)" title="点击从该句起播">坚持胸怀天下，这彰显了天下为公的大国情怀。</span></div>
           </div>
         </div>
 
         <div class="stream-card stream-card-tips">
           <div class="stream-tip-box xiao">
             <span class="stream-tip-badge xiao">〔考场避坑 · 审题红线与偷换陷阱〕</span>
-            <div class="stream-tip-body"><span class="recite-sentence" id="sent_xsx_01_17" data-card-id="xsx_01" data-sent-idx="17" data-start="81.76" data-end="83.214" onclick="seekReciteSentence('xsx_01', 81.76, 17)" title="点击从该句起播">考场题眼。</span> <span class="recite-sentence" id="sent_xsx_01_18" data-card-id="xsx_01" data-sent-idx="18" data-start="83.214" data-end="90.497" onclick="seekReciteSentence('xsx_01', 83.214, 18)" title="点击从该句起播">十个明确是四梁八柱，十四个坚持是路线图，六个必须坚持是世界观和方法论。</span></div>
+            <div class="stream-tip-body"><span class="recite-sentence" id="sent_xsx_00_17" data-card-id="xsx_00" data-sent-idx="17" data-start="81.76" data-end="83.214" onclick="seekReciteSentence('xsx_00', 81.76, 17)" title="点击从该句起播">考场题眼。</span> <span class="recite-sentence" id="sent_xsx_00_18" data-card-id="xsx_00" data-sent-idx="18" data-start="83.214" data-end="90.497" onclick="seekReciteSentence('xsx_00', 83.214, 18)" title="点击从该句起播">十个明确是四梁八柱，十四个坚持是路线图，六个必须坚持是世界观和方法论。</span></div>
           </div>
         </div>
 
@@ -15535,7 +15590,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
           </div>
           <div class="stream-takeaway-box">
             <div class="stream-takeaway-tag">〔秒杀口诀与记忆回路〕</div>
-            <div class="stream-takeaway-text"><span class="recite-sentence" id="sent_xsx_01_19" data-card-id="xsx_01" data-sent-idx="19" data-start="90.497" data-end="97.398" onclick="seekReciteSentence('xsx_01', 90.497, 19)" title="点击从该句起播">四梁八柱十明确，十四坚持路线图，六个坚持铸精髓，新的飞跃展宏图。</span></div>
+            <div class="stream-takeaway-text"><span class="recite-sentence" id="sent_xsx_00_19" data-card-id="xsx_00" data-sent-idx="19" data-start="90.497" data-end="97.398" onclick="seekReciteSentence('xsx_00', 90.497, 19)" title="点击从该句起播">四梁八柱十明确，十四坚持路线图，六个坚持铸精髓，新的飞跃展宏图。</span></div>
           </div>
         </div>
                   </div>
@@ -26369,26 +26424,28 @@ const TOTAL_CHAPTERS = 47;
     function highlightChapterReciteSentence(cid, sentIdx, smoothScroll = true) {
       const sents = CHAPTER_RECITE_SENTENCES[cid];
       if (!sents || sentIdx < 0 || sentIdx >= sents.length) return;
-
-      if (playingChapterSentenceIdx !== -1 && sents[playingChapterSentenceIdx]) {
-        const oldDomId = sents[playingChapterSentenceIdx].domId;
-        const oldEl = document.getElementById(oldDomId);
-        if (oldEl) oldEl.classList.remove('active-sentence', 'active-recite-row');
-      }
-
       playingChapterSentenceIdx = sentIdx;
-      const curSent = sents[sentIdx];
-      const targetEl = document.getElementById(curSent.domId);
+
+      // 清除旧高亮
+      document.querySelectorAll('.active-sentence, .active-recite-row').forEach(el => {
+        el.classList.remove('active-sentence', 'active-recite-row');
+      });
+
+      const cur = sents[sentIdx];
+      if (!cur || !cur.domId) return;
+      const targetEl = document.getElementById(cur.domId);
       if (targetEl) {
         targetEl.classList.add('active-sentence', 'active-recite-row');
-        // 特性 2：用户手势滑动 2.5s 防冲突机制
+        // 对抗性防御：仅当音频播放章节与当前用户浏览章节一致时，才允许自动滚动！防止隐藏章节拉扯视口
+        const curBrowsingArt = pointEntries[currentChapterIndex];
+        const isCurrentBrowsing = curBrowsingArt && (curBrowsingArt.id === cid);
         const now = Date.now();
-        if (smoothScroll && (now - lastUserScrollTime > 2500)) {
+        if (isCurrentBrowsing && smoothScroll && (now - lastUserScrollTime > 2500)) {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }
 
-      // 同步悬浮播放台标题与实时提示
+      // 实时同步电台标题与当前句子
       const dockTitle = document.getElementById('audioDockTitle');
       if (dockTitle && curSent.text) {
         dockTitle.setAttribute('title', curSent.text);
@@ -26494,6 +26551,13 @@ const TOTAL_CHAPTERS = 47;
         function jumpToPlayingReciteChapter() {
       if (!playingChapterId) return;
       switchMainTab('recite');
+
+      // 找到正在播放章节的索引，若不为当前章节则立即翻页切入
+      const playingIdx = pointEntries.findIndex(art => art.id === playingChapterId);
+      if (playingIdx !== -1 && playingIdx !== currentChapterIndex) {
+        showChapterPage(playingIdx, false);
+      }
+
       ensureReciteViewLocked(playingChapterId);
       if (playingChapterSentenceIdx >= 0 && CHAPTER_RECITE_SENTENCES[playingChapterId]) {
         const curSent = CHAPTER_RECITE_SENTENCES[playingChapterId][playingChapterSentenceIdx];
@@ -27442,7 +27506,7 @@ const TOTAL_CHAPTERS = 47;
   // =========================================================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=4.9.0', { scope: './' })
+      navigator.serviceWorker.register('./sw.js?v=4.9.1', { scope: './' })
         .then(reg => {
           reg.update();
           reg.onupdatefound = () => {
