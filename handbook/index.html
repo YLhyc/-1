@@ -2,6 +2,14 @@
 <html lang="zh-CN" style="background-color: #f4f1ea;">
 <head>
   <meta charset="utf-8">
+<script>
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  if (document.body) document.body.scrollTop = 0;
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -149,7 +157,7 @@
     body.theme-dark .chain-node { background: #222623; border-color: var(--stone-border); color: #d5c7b3; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background-color: var(--bg); }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: auto !important; background-color: var(--bg); }
     body {
       background-color: var(--bg);
       color: var(--ink);
@@ -5959,6 +5967,94 @@ body.mode-mask .xt-keyword.cloze.revealed {
       visibility: hidden !important;
       height: 0 !important;
       overflow: hidden !important;
+    }
+
+
+    /* =========================================================================
+       Claude UI 核心布局硬约束 (固定顶栏 + 常驻底栏 + 内容安全边距)
+       ========================================================================= */
+    .top-bar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: 56px !important;
+      z-index: 9999 !important;
+      background: rgba(247, 243, 232, 0.96) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border-bottom: 0.5px solid var(--line-subtle) !important;
+      box-shadow: 0 1px 3px rgba(44, 36, 29, 0.04) !important;
+    }
+    body.theme-dark .top-bar {
+      background: rgba(24, 28, 25, 0.96) !important;
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .top-wrap.claude-top-wrap {
+      height: 56px !important;
+      padding: 0 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+
+    /* 正文容器严格预留顶栏与底栏安全边距，彻底告别遮挡与闪烁 */
+    .container {
+      max-width: 780px !important;
+      margin: 0 auto !important;
+      padding-top: calc(64px + env(safe-area-inset-top, 0px)) !important;
+      padding-bottom: calc(130px + env(safe-area-inset-bottom, 24px)) !important;
+      padding-left: 14px !important;
+      padding-right: 14px !important;
+    }
+
+    /* 常驻底部三栏导航 Docked Bottom Nav */
+    .docked-bottom-nav {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: calc(52px + env(safe-area-inset-bottom, 0px)) !important;
+      padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      z-index: 9999 !important;
+      background: rgba(247, 243, 232, 0.96) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-top: 0.5px solid var(--line-subtle) !important;
+    }
+    body.theme-dark .docked-bottom-nav {
+      background: rgba(24, 28, 25, 0.96) !important;
+      border-top: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* 浮动播放药丸与断点续播药丸：精确定位于常驻底栏正上方 */
+    .audio-float-dock, #audioFloatDock {
+      position: fixed !important;
+      bottom: calc(58px + env(safe-area-inset-bottom, 0px)) !important;
+      left: 12px !important;
+      right: 12px !important;
+      max-width: 680px !important;
+      margin: 0 auto !important;
+      z-index: 9998 !important;
+    }
+    #resumeCapsulePill {
+      position: fixed !important;
+      bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+      right: 12px !important;
+      z-index: 9998 !important;
+    }
+
+    /* 彻底杜绝旧版残留条目 */
+    .bottom-dock-bar {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      width: 0 !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
     }
 
 </style>
@@ -25205,27 +25301,7 @@ body.mode-mask .xt-keyword.cloze.revealed {
   </div>
 
   <!-- 底部固定微操作台 -->
-  <footer class="bottom-dock-bar" style="display: none !important;">
-    <div class="bottom-dock-left">
-      <button type="button" class="bottom-btn" onclick="openDrawer()" title="打开目录">
-        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        <span>目录</span>
-      </button>
-      <button type="button" class="bottom-btn" onclick="openRandomChapter()" title="随机盲背翻章">
-        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <span>抽题</span>
-      </button>
-    </div>
-    <div class="bottom-dock-center">
-      <span class="study-progress-text">已研 <strong id="bottomStudiedCount">0</strong> / 47 章 (<span id="bottomPercentBadge">0%</span>)</span>
-    </div>
-    <div class="bottom-dock-right">
-      <button type="button" class="bottom-btn" onclick="openExportModal()" title="查看疑难标记清单">
-        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        <span>清单</span>
-      </button>
-    </div>
-  </footer>
+  
 
   <!-- 疑难清单导出浮层 -->
   <div class="modal-overlay" id="exportModal" style="display: none;" onclick="if(event.target===this) closeExportModal();">
@@ -25907,7 +25983,6 @@ const TOTAL_CHAPTERS = 47;
         if (i === index) {
           art.classList.add('active-chapter-page');
           art.style.setProperty('display', 'block', 'important');
-        } else {
           art.classList.remove('active-chapter-page');
           art.style.setProperty('display', 'none', 'important');
         }
@@ -25917,20 +25992,24 @@ const TOTAL_CHAPTERS = 47;
       updateChapterPagingUI(index);
 
       // 视窗滚动置顶
-      if (smoothScroll) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+      // 彻底置顶：执行并在后续关键渲染周期确认，彻底解决移动端回弹/定位于底部的问题
+      const forceScrollToTop = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        if (document.body) document.body.scrollTop = 0;
+      };
+      forceScrollToTop();
+      requestAnimationFrame(forceScrollToTop);
+      setTimeout(forceScrollToTop, 30);
+      setTimeout(forceScrollToTop, 120);
+      setTimeout(forceScrollToTop, 300);
       }
-    }
 
     function prevBookPage() {
       if (currentChapterIndex > 0) {
         showChapterPage(currentChapterIndex - 1, false);
-      } else {
         showToast('已经是第一章');
       }
-    }
 
     function nextBookPage() {
       if (currentChapterIndex < TOTAL_CHAPTERS - 1) {
@@ -27267,13 +27346,13 @@ const TOTAL_CHAPTERS = 47;
       const secRecite = document.getElementById('sectionRecite');
       const secTuijie = document.getElementById('sectionTuijie');
       const tjPlayer = document.getElementById('tjFloatingPlayer');
-      const reciteBottomDock = document.querySelector('.bottom-dock-bar');
+      
 
       if (secHome) secHome.style.display = 'none';
       if (secRecite) secRecite.style.display = 'none';
       if (secTuijie) secTuijie.style.display = 'none';
       if (tjPlayer) tjPlayer.style.display = 'none';
-      if (reciteBottomDock) reciteBottomDock.style.display = 'none';
+      
 
       // 永远清除 mode-book-paging，锁定纯净垂直瀑布流
       document.body.classList.remove('tab-tuijie-active', 'tab-home-active', 'tab-recite-active', 'mode-book-paging');
@@ -27312,9 +27391,9 @@ const TOTAL_CHAPTERS = 47;
         const tabEl = document.getElementById('mainTabRecite');
         if (tabEl) tabEl.classList.add('active');
         if (secRecite) secRecite.style.display = 'block';
-        if (reciteBottomDock && !document.body.classList.contains('audio-dock-visible')) {
-          reciteBottomDock.style.display = 'flex';
-        }
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        
       }
 
       // 修复板块记忆持久化
@@ -27342,7 +27421,7 @@ const TOTAL_CHAPTERS = 47;
   // =========================================================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=4.5.0', { scope: './' })
+      navigator.serviceWorker.register('./sw.js?v=4.8.0', { scope: './' })
         .then(reg => {
           reg.update();
           reg.onupdatefound = () => {
@@ -27377,8 +27456,18 @@ const TOTAL_CHAPTERS = 47;
       const initialTab = (savedTab && ['recite', 'tuijie', 'home'].includes(savedTab)) ? savedTab : 'recite';
       switchMainTab(initialTab);
       // 确保进入页面或刷新时彻底回到顶部，绝不落在卡片底部
-      window.scrollTo(0, 0);
-      setTimeout(() => window.scrollTo(0, 0), 60);
+      // 确保页面刷新或重进时绝对锁定置顶，禁止 iOS Safari 自动恢复滚到卡片底部
+      const forceScrollOnLoad = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        if (document.body) document.body.scrollTop = 0;
+      };
+      forceScrollOnLoad();
+      requestAnimationFrame(forceScrollOnLoad);
+      setTimeout(forceScrollOnLoad, 30);
+      setTimeout(forceScrollOnLoad, 100);
+      setTimeout(forceScrollOnLoad, 250);
+      setTimeout(forceScrollOnLoad, 600);
 
       // 检查历史断点续播进度
       checkAndDisplayBreakpointResume();

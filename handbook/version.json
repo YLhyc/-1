@@ -1,12 +1,12 @@
 {
-  "version": "4.7.0",
-  "updated_at": "2026-11-06T11:05:00+08:00",
+  "version": "4.8.0",
+  "updated_at": "2026-11-06T11:25:00+08:00",
   "features": [
-    "【架构级重构】顶栏彻底改为 position: fixed !important（高56px，z-index: 9999），无论页面如何滚动，顶栏永远稳固钉在屏幕最顶端，彻底消灭顶栏消失或滚出视窗的Bug",
-    "【底部全局TabBar全面恢复与常驻】底部导航栏（首页 / 背诵手册 / 腿姐带背）全面恢复常驻显示（position: fixed !important，高52px+安全区），杜绝导航栏丢失",
-    "【销毁旧版杂质底栏】永久隐藏并销毁旧版底栏（≡ 目录 已研 0/47 章 (0%) 清单 ☆ 抽题），消除底层堆叠重影冲突",
-    "【强制禁用浏览器历史滚动恢复】启用 history.scrollRestoration = 'manual'，并在每次打开页面与切章时精准强制置顶（window.scrollTo(0, 0)），彻底解决重开后直接落在卡片底部（戊戌维新题眼）的严重视觉错位问题",
-    "【浮窗高度完美协同】音频悬浮条与断点续播胶囊精准吸附在底部导航栏上方（bottom: 60px+安全区），正文容器底部留足 115px 呼吸边距，彻底消灭遮挡",
-    "PWA 离线缓存键升级至 kyzz-cache-v4.7.0，三端代码 SHA256 绝对一致"
+    "彻底删除旧版残留底栏DOM节点与JS触发（消灭[≡ 目录][☆ 抽题]已研 0/47 章[💾 清单]）",
+    "移动端置顶彻底锁定：head首行注入 history.scrollRestoration = manual 并多帧重置 scrollTop=0，解决刷新直接落在卡片底部的问题",
+    "Claude UI 顶栏 56px position:fixed !important 顶级置顶（z-index: 9999），正文 paddingTop 严格避让",
+    "常驻底栏 TabBar（首页/背诵手册/腿姐带背）position:fixed 永久显示（z-index: 9999）",
+    "断点续播药丸与浮动音频播放条精确定位在 TabBar 上方，彻底杜绝元素错乱重叠",
+    "PWA 离线缓存升级为 kyzz-cache-v4.8.0，强制清除旧版缓存"
   ]
 }
