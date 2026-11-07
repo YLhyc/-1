@@ -6129,6 +6129,454 @@ body.mode-mask .xt-keyword.cloze.revealed {
       bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
       z-index: 9998 !important;
     }
+
+/* ==========================================================================
+   徐涛选择题带背板块 (Xu Tao Multiple Choice Recite Section)
+   严格遵守 Claude UI Warm Paper (Palette B) 设计规范与 iPhone 安全区
+   ========================================================================== */
+
+/* 首页入口卡片徽章微调 */
+.entry-card-badge.xt {
+  background: rgba(184, 80, 66, 0.12) !important;
+  color: #B85042 !important;
+  border: 0.5px solid rgba(184, 80, 66, 0.3) !important;
+}
+
+/* 主板块容器 */
+#sectionXutao {
+  min-height: 100vh;
+  background-color: var(--bg-canvas, #FBF8F2);
+  color: var(--text-primary, #2A2421);
+  box-sizing: border-box;
+}
+
+/* 顶部吸顶区域 */
+.xt-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: var(--bg-canvas, #FBF8F2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 14px 8px 14px;
+  border-bottom: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.4));
+}
+
+.xt-top-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.xt-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.xt-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #B85042;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+}
+
+.xt-brand-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary, #2A2421);
+}
+
+.xt-stat-pill {
+  font-size: 11px;
+  color: var(--text-secondary, #6E6359);
+  background: var(--bg-surface, #F4EEE4);
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.4));
+}
+
+/* 16 期 Day Chips 横向滚动条 */
+.xt-day-nav-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0 4px 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.xt-day-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.xt-day-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 18px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--bg-surface, #F4EEE4);
+  color: var(--text-secondary, #6E6359);
+  border: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.45));
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  white-space: nowrap;
+}
+
+.xt-chip-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(184, 80, 66, 0.1);
+  color: #B85042;
+}
+
+.xt-chip-day {
+  font-weight: 600;
+}
+
+.xt-day-chip.active {
+  background: #2A2421;
+  color: #FBF8F2;
+  border-color: #2A2421;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.xt-day-chip.active .xt-chip-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+/* 主内容容器 */
+.xt-content-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 14px 14px calc(128px + env(safe-area-inset-bottom, 0px)) 14px;
+}
+
+/* 顶部 Hero 卡片 */
+.xt-day-hero-card {
+  background: var(--bg-surface, #F4EEE4);
+  border: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.45));
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.xt-hero-tag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.xt-hero-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #B85042;
+  background: rgba(184, 80, 66, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.xt-hero-duration {
+  font-size: 11.5px;
+  color: var(--text-secondary, #6E6359);
+}
+
+.xt-hero-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: var(--text-primary, #2A2421);
+  line-height: 1.35;
+}
+
+.xt-hero-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary, #6E6359);
+  line-height: 1.5;
+  margin: 0 0 14px 0;
+}
+
+.xt-hero-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.xt-hero-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #B85042;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(184, 80, 66, 0.25);
+}
+.xt-hero-play-btn:active {
+  transform: scale(0.97);
+}
+
+.xt-hero-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(200, 185, 165, 0.25);
+  color: var(--text-primary, #2A2421);
+  border: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.5));
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 核心考点卡片 */
+.xt-point-card {
+  background: var(--bg-surface, #F4EEE4);
+  border: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.45));
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.xt-point-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 0.5px dashed var(--border-subtle, rgba(200, 185, 165, 0.45));
+}
+
+.xt-point-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(212, 163, 115, 0.18);
+  color: #925828;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.xt-point-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary, #2A2421);
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.xt-point-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.xt-point-item {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary, #2A2421);
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 14px;
+}
+.xt-point-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #B85042;
+  font-weight: bold;
+}
+.xt-point-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 挖空与高亮交互 */
+.xt-keyword.cloze {
+  display: inline;
+  background: rgba(184, 80, 66, 0.08);
+  color: #B85042;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border-bottom: 1.5px dotted #B85042;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cloze-hidden .xt-keyword.cloze,
+.xt-keyword.cloze.is-masked {
+  background: rgba(110, 99, 89, 0.15) !important;
+  color: transparent !important;
+  border-bottom: 1.5px solid var(--text-secondary, #6E6359) !important;
+  user-select: none;
+}
+
+.cloze-hidden .xt-keyword.cloze::after,
+.xt-keyword.cloze.is-masked::after {
+  content: attr(data-ghost);
+  color: var(--text-secondary, #6E6359);
+  letter-spacing: 1px;
+}
+
+/* 底部常驻悬浮播放器 */
+.xt-floating-player {
+  position: fixed !important;
+  bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 9998 !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 14px;
+  background: rgba(251, 248, 242, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 0.5px solid var(--border-subtle, rgba(200, 185, 165, 0.5));
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.xt-player-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.xt-player-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.xt-player-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.xt-player-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #B85042;
+  background: rgba(184, 80, 66, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.xt-player-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary, #2A2421);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.xt-player-time {
+  font-size: 10.5px;
+  color: var(--text-secondary, #6E6359);
+  flex-shrink: 0;
+}
+
+.xt-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(200, 185, 165, 0.35);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.xt-progress-bar {
+  height: 100%;
+  background: #B85042;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.xt-player-right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* 深色模式适配 */
+body.dark-mode #sectionXutao {
+  background-color: #1A1816;
+  color: #EDE8E1;
+}
+body.dark-mode .xt-sticky-top {
+  background: #1A1816;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .xt-day-chip {
+  background: #252220;
+  color: #A39B92;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+body.dark-mode .xt-day-chip.active {
+  background: #EDE8E1;
+  color: #1A1816;
+  border-color: #EDE8E1;
+}
+body.dark-mode .xt-day-hero-card,
+body.dark-mode .xt-point-card {
+  background: #252220;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+body.dark-mode .xt-hero-title,
+body.dark-mode .xt-point-title {
+  color: #EDE8E1;
+}
+body.dark-mode .xt-hero-subtitle,
+body.dark-mode .xt-point-item {
+  color: #C7C0B6;
+}
+body.dark-mode .xt-floating-player {
+  background: rgba(26, 24, 22, 0.94);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .xt-player-title {
+  color: #EDE8E1;
+}
+
 </style>
 </head>
 <body class="theme-paper tab-recite-active mode-scroll-flow">
@@ -6188,6 +6636,23 @@ body.mode-mask .xt-keyword.cloze.revealed {
             </div>
             <button type="button" class="entry-card-action-btn primary" onclick="switchMainTab('tuijie')">
               <span>立即进入腿姐带背</span>
+            </button>
+          </article>
+
+          <article class="home-section-entry-card">
+            <div class="entry-card-header">
+              <span class="entry-card-badge xt">名师原声 · 选择题</span>
+              <span class="entry-tag-item">全 16 期全录</span>
+            </div>
+            <h2 class="entry-card-title">徐涛考研政治选择题带背</h2>
+            <p class="entry-card-desc">微信公众号原版 16 期选择题必背原声音频与精炼题眼，马原、思修、史纲全覆盖，碎片时间高效磨耳朵。</p>
+            <div class="entry-card-tags">
+              <span class="entry-tag-item">马原选择题 (D01-D08)</span>
+              <span class="entry-tag-item">思修选择题 (D09-D11)</span>
+              <span class="entry-tag-item">史纲选择题 (D12-D16)</span>
+            </div>
+            <button type="button" class="entry-card-action-btn primary" onclick="switchMainTab('xutao')">
+              <span>进入徐涛选择题</span>
             </button>
           </article>
         </div>
@@ -25488,6 +25953,62 @@ body.mode-mask .xt-keyword.cloze.revealed {
       </div>
     </section>
 
+  <!-- 板块 4：徐涛选择题（16期全录 · 官方原声音频与核心题眼） -->
+  <section id="sectionXutao" class="main-app-tab-section" style="display: none;">
+    <!-- 原声音频播放器 -->
+    <audio id="xtAudioPlayer" preload="none"></audio>
+
+    <!-- 顶部标题与设置 -->
+    <header class="xt-sticky-top">
+      <div class="xt-top-brand-row">
+        <div class="xt-brand-group">
+          <span class="xt-brand-badge">徐涛</span>
+          <span class="xt-brand-title">选择题带背</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="xt-stat-pill font-mono" id="xtOverviewStat">16期全录</span>
+        </div>
+      </div>
+
+      <!-- 16 期 Day Chips 导航条 -->
+      <div class="xt-day-nav-scroll" id="xtDayChips"></div>
+    </header>
+
+    <!-- 主内容容器 -->
+    <main class="xt-content-container" id="xtContentArea"></main>
+
+    <!-- 底部常驻悬浮播放控制条 -->
+    <div class="xt-floating-player" id="xtFloatingPlayer">
+      <div class="xt-player-left">
+        <button type="button" class="dock-nav-btn" onclick="xtPlayPrevDay()" title="上一期">
+          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+        </button>
+        <button type="button" class="dock-main-play-disc" id="xtPlayBtn" onclick="xtTogglePlay()" title="播放/暂停">
+          <svg class="ui-svg sm xt-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          <svg class="ui-svg sm xt-icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <button type="button" class="dock-nav-btn" onclick="xtPlayNextDay()" title="下一期">
+          <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        </button>
+      </div>
+      <div class="xt-player-center">
+        <div class="xt-player-meta">
+          <span class="xt-player-badge font-mono" id="xtPlayerDayTag">Day 01</span>
+          <span class="xt-player-title" id="xtPlayerTitle">马原导论 + 唯物论</span>
+          <span class="xt-player-time font-mono" id="xtPlayerTime">00:00 / 03:02</span>
+        </div>
+        <div class="xt-progress-track" id="xtProgressTrack" onclick="xtSeekTrack(event)">
+          <div class="xt-progress-bar" id="xtProgressBar" style="width: 0%;"></div>
+        </div>
+      </div>
+      <div class="xt-player-right">
+        <button type="button" class="dock-speed-pill" onclick="xtCycleSpeed()" title="切换倍速">
+          <span id="xtSpeedLabel">1.0x</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
     <!-- 统一底部 Fixed Bottom TabBar (0 图标字体 · 纯 SVG 矢量) -->
     <nav class="docked-bottom-nav">
       <div class="bottom-tab-item" id="mainTabHome" onclick="switchMainTab('home')">
@@ -25497,6 +26018,10 @@ body.mode-mask .xt-keyword.cloze.revealed {
       <div class="bottom-tab-item active" id="mainTabRecite" onclick="switchMainTab('recite')">
         <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
         <span>背诵手册</span>
+      </div>
+      <div class="bottom-tab-item" id="mainTabXutao" onclick="switchMainTab('xutao')">
+        <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 16 12 12 8"/></svg>
+        <span>徐涛选择题</span>
       </div>
       <div class="bottom-tab-item" id="mainTabTuijie" onclick="switchMainTab('tuijie')">
         <svg class="ui-svg xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
@@ -27430,12 +27955,14 @@ const TOTAL_CHAPTERS = 47;
       const secHome = document.getElementById('sectionHome');
       const secRecite = document.getElementById('sectionRecite');
       const secTuijie = document.getElementById('sectionTuijie');
+      const secXutao = document.getElementById('sectionXutao');
       const tjPlayer = document.getElementById('tjFloatingPlayer');
       
 
       if (secHome) secHome.style.display = 'none';
       if (secRecite) secRecite.style.display = 'none';
       if (secTuijie) secTuijie.style.display = 'none';
+      if (secXutao) secXutao.style.display = 'none';
       if (tjPlayer) tjPlayer.style.display = 'none';
       
 
@@ -27444,6 +27971,7 @@ const TOTAL_CHAPTERS = 47;
       document.body.classList.add('mode-scroll-flow');
 
       if (tabKey === 'home') {
+        if (typeof xtPauseAudio === 'function') xtPauseAudio();
         if (typeof tjPauseAudio === 'function') tjPauseAudio();
         if (chapterReciteAudio && !chapterReciteAudio.paused) chapterReciteAudio.pause();
         if (reciteAudio && !reciteAudio.paused) reciteAudio.pause();
@@ -27458,7 +27986,20 @@ const TOTAL_CHAPTERS = 47;
         if (studiedEl && typeof studiedChapters !== 'undefined') {
           studiedEl.innerText = `核心背诵已学: ${studiedChapters.size} / 47 章`;
         }
+      } else if (tabKey === 'xutao') {
+        if (typeof tjPauseAudio === 'function') tjPauseAudio();
+        if (chapterReciteAudio && !chapterReciteAudio.paused) chapterReciteAudio.pause();
+        if (reciteAudio && !reciteAudio.paused) reciteAudio.pause();
+
+        document.body.classList.add('tab-xutao-active');
+        const tabEl = document.getElementById('mainTabXutao');
+        if (tabEl) tabEl.classList.add('active');
+        const secXutao = document.getElementById('sectionXutao');
+        if (secXutao) secXutao.style.display = 'block';
+        if (typeof xtInit === 'function') xtInit();
+        window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (tabKey === 'tuijie') {
+        if (typeof xtPauseAudio === 'function') xtPauseAudio();
         if (chapterReciteAudio && !chapterReciteAudio.paused) chapterReciteAudio.pause();
         if (reciteAudio && !reciteAudio.paused) reciteAudio.pause();
 
@@ -27471,6 +28012,7 @@ const TOTAL_CHAPTERS = 47;
       } else {
         // Recite Handbook (默认：核心背诵手卷)
         if (typeof tjPauseAudio === 'function') tjPauseAudio();
+        if (typeof xtPauseAudio === 'function') xtPauseAudio();
 
         document.body.classList.add('tab-recite-active');
         const tabEl = document.getElementById('mainTabRecite');
@@ -27506,7 +28048,7 @@ const TOTAL_CHAPTERS = 47;
   // =========================================================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=4.9.1', { scope: './' })
+      navigator.serviceWorker.register('./sw.js?v=5.0.0', { scope: './' })
         .then(reg => {
           reg.update();
           reg.onupdatefound = () => {
@@ -27557,6 +28099,279 @@ const TOTAL_CHAPTERS = 47;
       // 检查历史断点续播进度
       checkAndDisplayBreakpointResume();
     });
+
+
+
+
+    // =========================================================================
+    // 徐涛选择题带背板块业务逻辑 (16 期官方原声与核心考点)
+    // =========================================================================
+    const xtAllDaysData = [{"day": 1, "title": "Day 1 马原导论 + 唯物论", "short_topic": "马原导论 + 物质与意识", "subject": "马原", "badge": "马原篇 · 导论与唯物论", "duration_sec": 182, "audio_file": "audio_xutao/xt_d01.mp3", "points": [{"title": "马克思主义的创立与基本特征", "badge": "导论核心", "items": ["马克思主义首要的和基本的观点是：<strong class=\"xt-keyword cloze\" data-cloze=\"实践观点\" data-ghost=\"实··点\">实践观点</strong>。", "马克思主义最鲜明的品格是：<strong class=\"xt-keyword cloze\" data-cloze=\"人民性\" data-ghost=\"人·性\">人民性</strong>（人民至上是政治立场）。", "马克思一生的两大历史性发现：<strong class=\"xt-keyword cloze\" data-cloze=\"唯物史观\" data-ghost=\"唯··观\">唯物史观</strong>与<strong class=\"xt-keyword cloze\" data-cloze=\"剩余价值学说\" data-ghost=\"剩····说\">剩余价值学说</strong>。"]}, {"title": "物质范畴与物质的存在方式", "badge": "唯物论高频", "items": ["物质的唯一特性是：<strong class=\"xt-keyword cloze\" data-cloze=\"客观实在性\" data-ghost=\"客···性\">客观实在性</strong>（存在于人的意识之外，为人的意识所反映）。", "物质的根本属性和存在方式是：<strong class=\"xt-keyword cloze\" data-cloze=\"运动\" data-ghost=\"运·\">运动</strong>；物质运动的存在方式是：<strong class=\"xt-keyword cloze\" data-cloze=\"时间和空间\" data-ghost=\"时···间\">时间和空间</strong>。", "时间和空间是客观的、绝对的，其具体特性是可变的、相对的。"]}, {"title": "意识的起源、本质与能动作用", "badge": "易混陷阱", "items": ["意识是人脑的机能和属性，是客观世界的主观映象（内容是客观的，形式是主观的）。", "意识能动作用的最高表现和根本标志是：<strong class=\"xt-keyword cloze\" data-cloze=\"能动地改造客观世界\" data-ghost=\"能······界\">能动地改造客观世界</strong>。", "【易混陷阱】意识不能直接创造物质实体，必须通过<strong class=\"xt-keyword cloze\" data-cloze=\"实践\" data-ghost=\"实·\">实践</strong>这一中介。"]}]}, {"day": 2, "title": "Day 2 马原唯物论 + 辩证法", "short_topic": "物质世界统一性 + 联系与发展", "subject": "马原", "badge": "马原篇 · 辩证法总特征", "duration_sec": 132, "audio_file": "audio_xutao/xt_d02.mp3", "points": [{"title": "世界的物质统一性原理", "badge": "唯物论基石", "items": ["世界统一于物质，一切从实际出发是马克思主义哲学的根本要求。", "自然界与人类社会都具有客观物质性，社会的物质性主要体现在<strong class=\"xt-keyword cloze\" data-cloze=\"物质生产方式\" data-ghost=\"物····式\">物质生产方式</strong>是社会发展的决定力量。"]}, {"title": "普遍联系与永恒发展（辩证法两大总特征）", "badge": "总特征考点", "items": ["联系的客观性：联系是客观事物固有的，不以人的意志为转移（反对主观臆造的联系）。", "联系的普遍性与多样性：事物之间、事物内部各要素之间相互影响、相互制约。", "发展的实质是：<strong class=\"xt-keyword cloze\" data-cloze=\"新事物的产生和旧事物的灭亡\" data-ghost=\"新·········亡\">新事物的产生和旧事物的灭亡</strong>。新事物不可战胜。"]}]}, {"day": 3, "title": "Day 3 马原认识论", "short_topic": "实践、认识、真理与价值", "subject": "马原", "badge": "马原篇 · 认识论", "duration_sec": 228, "audio_file": "audio_xutao/xt_d03.mp3", "points": [{"title": "实践对认识的决定作用", "badge": "认识论首要", "items": ["实践是认识的来源（唯一来源），是认识发展的动力，是检验真理的唯一标准，是认识的目的。", "认识的两次飞跃：第一次从感性认识到理性认识；第二次从<strong class=\"xt-keyword cloze\" data-cloze=\"理性认识到实践\" data-ghost=\"理····践\">理性认识到实践</strong>（更重要的一次飞跃）。"]}, {"title": "真理的客观性、绝对性与相对性", "badge": "真理观核心", "items": ["真理的本质属性是：<strong class=\"xt-keyword cloze\" data-cloze=\"客观性\" data-ghost=\"客·性\">客观性</strong>（真理的内容和检验标准是客观的，形式是主观的）。", "真理的绝对性与相对性是同一真理的两种属性，二者相互包含、辩证统一。", "真理与谬误相伴而生，在一定条件下相互转化。"]}, {"title": "真理尺度与价值尺度", "badge": "实践双重尺度", "items": ["真理尺度体现了合规律性；价值尺度体现了合目的性。", "人类一切成功的实践活动都是真理尺度和价值尺度的统一。"]}]}, {"day": 4, "title": "Day 4 马原唯物史观", "short_topic": "社会基本矛盾 + 人民群众", "subject": "马原", "badge": "马原篇 · 唯物史观", "duration_sec": 254, "audio_file": "audio_xutao/xt_d04.mp3", "points": [{"title": "社会存在与社会意识的辩证关系", "badge": "历史观基本问题", "items": ["社会存在决定社会意识；社会意识具有相对独立性（最突出表现是<strong class=\"xt-keyword cloze\" data-cloze=\"反作用于社会存在\" data-ghost=\"反·····在\">反作用于社会存在</strong>）。", "生产方式（生产力与生产关系）是社会历史发展的决定力量。"]}, {"title": "社会基本矛盾是社会发展的根本动力", "badge": "根本动力", "items": ["人类社会两对基本矛盾：生产力与生产关系、经济基础与上层建筑。", "生产力是社会发展的<strong class=\"xt-keyword cloze\" data-cloze=\"最终决定力量\" data-ghost=\"最····量\">最终决定力量</strong>。", "上层建筑一定要适合经济基础状况的规律是社会发展的基本规律。"]}, {"title": "人民群众在历史发展中的作用", "badge": "历史主体", "items": ["人民群众是历史的创造者（物质财富、精神财富的创造者，社会变革的决定力量）。", "唯物史观坚持群众史观，坚决反对英雄史观。"]}]}, {"day": 5, "title": "Day 5 马原劳动价值论 + 剩余价值论（一）", "short_topic": "商品二因素与劳动的二重性", "subject": "马原", "badge": "政经篇 · 劳动价值论", "duration_sec": 235, "audio_file": "audio_xutao/xt_d05.mp3", "points": [{"title": "商品二因素与劳动二重性", "badge": "政治经济学枢纽", "items": ["商品具有<strong class=\"xt-keyword cloze\" data-cloze=\"使用价值\" data-ghost=\"使··值\">使用价值</strong>和<strong class=\"xt-keyword cloze\" data-cloze=\"价值\" data-ghost=\"价·\">价值</strong>二因素；劳动的二重性是：<strong class=\"xt-keyword cloze\" data-cloze=\"具体劳动\" data-ghost=\"具··动\">具体劳动</strong>与<strong class=\"xt-keyword cloze\" data-cloze=\"抽象劳动\" data-ghost=\"抽··动\">抽象劳动</strong>。", "具体劳动创造使用价值（自然属性）；抽象劳动形成商品的价值（社会属性、唯一源泉）。", "商品二因素是由劳动二重性决定的，劳动二重性学说是理解马克思主义政治经济学的枢纽。"]}, {"title": "商品的价值量与劳动生产率", "badge": "选择题计算规律", "items": ["商品价值量由<strong class=\"xt-keyword cloze\" data-cloze=\"社会必要劳动时间\" data-ghost=\"社······间\">社会必要劳动时间</strong>决定。", "单位商品的价值量与生产该商品的劳动生产率成反比，与体现在商品中的劳动量成正比。"]}]}, {"day": 6, "title": "Day 6 剩余价值论深入", "short_topic": "资本主义剥削与剩余价值生产", "subject": "马原", "badge": "政经篇 · 剩余价值论", "duration_sec": 217, "audio_file": "audio_xutao/xt_d06.mp3", "points": [{"title": "劳动力成为商品与资本主义生产过程", "badge": "资本主义前提", "items": ["劳动力成为商品是货币转化为资本的前提。劳动力商品的使用价值是价值的源泉，能创造出比自身价值更大的价值（剩余价值）。", "不变资本（c）以生产资料形式存在；可变资本（v）以劳动力形式存在（剩余价值的唯一源泉）。"]}, {"title": "绝对剩余价值与相对剩余价值", "badge": "两类剩余价值", "items": ["绝对剩余价值生产：在必要劳动时间不变的条件下，延长工作日的长度或提高劳动强度生产的剩余价值。", "相对剩余价值生产：在工作日长度不变的条件下，通过缩短必要劳动时间、相对延长剩余劳动时间生产的剩余价值（全社会劳动生产率普遍提高的结果）。", "超额剩余价值：个别企业首先提高劳动生产率获得的超额利润。"]}]}, {"day": 7, "title": "Day 7 马原资本主义发展（一）", "short_topic": "自由竞争到垄断资本主义", "subject": "马原", "badge": "政经篇 · 垄断资本主义", "duration_sec": 209, "audio_file": "audio_xutao/xt_d07.mp3", "points": [{"title": "生产集中与资本集中", "badge": "垄断的形成", "items": ["自由竞争引起生产集中和资本集中，生产和资本集中发展到一定阶段必然引起垄断。", "垄断是指少数资本主义大企业为了获取高额垄断利润，对生产和市场实行控制的协定或同盟。"]}, {"title": "国家垄断资本主义的形成与实质", "badge": "国垄实质", "items": ["国家垄断资本主义是国家政权和私人垄断资本融合在一起的垄断资本主义。", "国家垄断资本主义的实质：在资产阶级国家参与下，巩固垄断资本的统治，保证垄断资本获取高额利润，并不改变资本主义的阶级剥削本质。"]}]}, {"day": 8, "title": "Day 8 资本主义发展（二）+ 科学社会主义", "short_topic": "经济全球化与社会主义必然趋势", "subject": "马原", "badge": "马原篇 · 科社核心", "duration_sec": 304, "audio_file": "audio_xutao/xt_d08.mp3", "points": [{"title": "经济全球化与资本主义历史局限性", "badge": "全球化双刃剑", "items": ["经济全球化是一把双刃剑，既促进了生产力发展，也加剧了资本主义基本矛盾（生产社会化与生产资料私人占有）。", "资本主义被社会主义所取代是历史发展的必然趋势。"]}, {"title": "社会主义从空想到科学的发展", "badge": "科学社会主义", "items": ["空想社会主义是科学社会主义的直接思想来源，但其局限在于没有找到实现理想的社会力量和阶级基础。", "唯物史观和剩余价值学说把社会主义从空想变成了科学。"]}]}, {"day": 9, "title": "Day 9 思修思想篇（第一~三章）", "short_topic": "人生观、理想信念与中国精神", "subject": "思修", "badge": "思修篇 · 思想篇", "duration_sec": 201, "audio_file": "audio_xutao/xt_d09.mp3", "points": [{"title": "人生观与人生价值", "badge": "人生目的与态度", "items": ["人生观的核心是：<strong class=\"xt-keyword cloze\" data-cloze=\"人生目的\" data-ghost=\"人·目·\">人生目的</strong>（决定人生道路、态度和价值选择）。", "评价人生价值的根本尺度是：<strong class=\"xt-keyword cloze\" data-cloze=\"看一个人是否用自己的劳动为社会做出贡献\" data-ghost=\"看·············献\">看一个人是否用自己的劳动为社会做出贡献</strong>（社会价值是第一位的）。"]}, {"title": "理想信念与中国精神", "badge": "理想与精神", "items": ["理想信念是精神之钙，马克思主义信仰是共产党人的政治灵魂。", "中国精神以<strong class=\"xt-keyword cloze\" data-cloze=\"爱国主义\" data-ghost=\"爱···\">爱国主义</strong>为核心的民族精神和以<strong class=\"xt-keyword cloze\" data-cloze=\"改革创新\" data-ghost=\"改··新\">改革创新</strong>为核心的时代精神。"]}]}, {"day": 10, "title": "Day 10 思修道德篇（第四~五章）", "short_topic": "社会主义道德与核心价值观", "subject": "思修", "badge": "思修篇 · 道德篇", "duration_sec": 178, "audio_file": "audio_xutao/xt_d10.mp3", "points": [{"title": "社会主义道德的核心与原则", "badge": "道德核心", "items": ["社会主义道德建设的核心是：<strong class=\"xt-keyword cloze\" data-cloze=\"为人民服务\" data-ghost=\"为····\">为人民服务</strong>；原则是：<strong class=\"xt-keyword cloze\" data-cloze=\"集体主义\" data-ghost=\"集···\">集体主义</strong>。", "公共生活、职业生活、家庭生活的基本道德规范是选择题重点考查对象。"]}, {"title": "社会主义核心价值观", "badge": "核心价值观", "items": ["国家层面：富强、民主、文明、和谐；", "社会层面：自由、平等、公正、法治；", "公民层面：爱国、敬业、诚信、友善（社会主义核心价值观是当代中国精神的集中体现）。"]}]}, {"day": 11, "title": "Day 11 思修法治篇（第六章）", "short_topic": "全面依法治国与法治思维", "subject": "思修", "badge": "思修篇 · 法治篇", "duration_sec": 233, "audio_file": "audio_xutao/xt_d11.mp3", "points": [{"title": "中国特色社会主义法治道路", "badge": "法治总目标", "items": ["全面依法治国的总目标：建设中国特色社会主义法治体系，建设社会主义法治国家。", "党的领导是社会主义法治的根本保证，也是中国特色社会主义法治区别于资本主义法治的根本标志。"]}, {"title": "法治思维的基本内容与法律权利", "badge": "法治思维", "items": ["法治思维包含法律至上、权力制约、公平正义、人权保障、正当程序。", "权利保障是法治的出发点和落脚点，宪法是国家的根本法，具有最高的法律地位和效力。"]}]}, {"day": 12, "title": "Day 12 史纲篇（旧民主主义探索）", "short_topic": "列强侵略与早期救国探索", "subject": "史纲", "badge": "史纲篇 · 早期探索", "duration_sec": 309, "audio_file": "audio_xutao/xt_d12.mp3", "points": [{"title": "近代中国国情与两大主要矛盾", "badge": "近代总国情", "items": ["近代中国最基本的国情：半殖民地半封建社会。", "两大主要矛盾：帝国主义和中华民族的矛盾（最主要矛盾）、封建主义和人民大众的矛盾。", "两大历史任务：争得民族独立和人民解放；实现国家富强和人民富裕。"]}, {"title": "太平天国、洋务运动与戊戌变法对比", "badge": "早期三大阶级探索", "items": ["太平天国农民阶级：《天朝田亩制度》（绝对平均主义，空想）与《资政新篇》（首个资本主义色彩方案）。", "洋务运动地主阶级：“中体西用”，根本目的在于维护封建统治，甲午战败标志破产。", "戊戌变法民族资产阶级改良派：百日维新，企图自上而下建立君主立宪，因封建守旧势力反扑而失败。"]}]}, {"day": 13, "title": "Day 13 史纲篇（辛亥革命与新文化运动）", "short_topic": "辛亥革命与五四前夜", "subject": "史纲", "badge": "史纲篇 · 辛亥革命", "duration_sec": 321, "audio_file": "audio_xutao/xt_d13.mp3", "points": [{"title": "辛亥革命的历史功绩与局限", "badge": "推翻帝制", "items": ["同盟会纲领（三民主义）：民族（驱除鞑虏恢复中华）、民权（创立民国，核心）、民生（平均地权）。", "历史功绩：推翻清王朝，结束统治中国两千多年的封建君主专制制度，建立了第一个共和政体。", "失败根源：民族资产阶级的软弱性和妥协性，没有彻底的反帝反封建纲领，没有依靠广大工农群众。"]}, {"title": "新文化运动与马克思主义在中国的传播", "badge": "五四前奏", "items": ["新文化运动基本口号：民主（德先生）与科学（赛先生），前期的性质是资产阶级民主主义文化。", "十月革命一声炮响，给中国送来了马克思列宁主义，李大钊是中国第一个马克思主义者。"]}]}, {"day": 14, "title": "Day 14 史纲篇（五四运动与建党开天辟地）", "short_topic": "五四运动与中国共产党诞生", "subject": "史纲", "badge": "史纲篇 · 开天辟地", "duration_sec": 393, "audio_file": "audio_xutao/xt_d14.mp3", "points": [{"title": "五四运动：新民主主义革命的开端", "badge": "革命分水岭", "items": ["导火索：巴黎和会上中国外交的失败。", "五四运动特点：彻底反帝反封建的革命性、广泛的群众动员，标志着中国工人阶级开始作为独立政治力量登上历史舞台。", "新旧民主主义革命的根本区别在于：<strong class=\"xt-keyword cloze\" data-cloze=\"无产阶级的领导权\" data-ghost=\"无······权\">无产阶级的领导权</strong>。"]}, {"title": "中国共产党成立是开天辟地的大事变", "badge": "建党伟业", "items": ["中共一大宣告中国共产党正式成立，确立了奋斗目标。", "中共二大第一次明确提出了彻底的反帝反封建的民主革命纲领（最高纲领与最低纲领）。"]}]}, {"day": 15, "title": "Day 15 史纲篇（土地革命与红军长征）", "short_topic": "井冈山斗争、遵义会议与长征胜利", "subject": "史纲", "badge": "史纲篇 · 土地革命", "duration_sec": 230, "audio_file": "audio_xutao/xt_d15.mp3", "points": [{"title": "农村包围城市、武装夺取政权的道路", "badge": "工农武装割据", "items": ["三湾改编确立了“党指挥枪”和“支部建在连上”的根本原则。", "《井冈山土地法》到《兴国土地法》的政策演进：从“没收一切土地”到“没收一切公共土地及地主阶级土地”（保护中农利益）。", "毛泽东思想在土地革命战争时期初步形成（标志是农村包围城市道路理论的提出）。"]}, {"title": "遵义会议与长征的伟大胜利", "badge": "生死攸关的转折", "items": ["遵义会议集中解决了当时具有决定意义的军事问题和组织问题。", "遵义会议是中国共产党历史上一个生死攸关的转折点，标志着党在政治上开始走向成熟。"]}]}, {"day": 16, "title": "Day 16 史纲篇（全民族抗战与解放战争胜利）", "short_topic": "抗日民族统一战线与新中国诞生", "subject": "史纲", "badge": "史纲篇 · 走向胜利", "duration_sec": 351, "audio_file": "audio_xutao/xt_d16.mp3", "points": [{"title": "抗日民族统一战线与全民族抗战", "badge": "中流砥柱", "items": ["瓦窑堡会议确立了建立抗日民族统一战线的方针；西安事变的和平解决成为时局转换的枢纽。", "抗日民族统一战线策略总方针：发展进步势力、争取中间势力、孤立顽固势力。", "中国共产党在全民族抗战中起到了中流砥柱的作用。"]}, {"title": "解放战争与中华人民共和国的成立", "badge": "翻天覆地", "items": ["中共七届二中全会：提出“两个务必”（务必继续保持谦虚谨慎不骄不躁作风，务必继续保持艰苦奋斗作风），实现党的工作重心由乡村转移到城市。", "中华人民共和国的成立，彻底结束了旧中国半殖民地半封建社会的历史，彻底结束了极少数剥削者统治广大劳动人民的历史，标志着新民主主义革命的基本胜利。"]}]}];
+    let xtCurrentDayIndex = 0;
+    let xtCurrentSpeed = 1.0;
+    let xtAudioPlayer = null;
+    let xtIsPlaying = false;
+    let xtHasInit = false;
+
+    function xtGetAudioEl() {
+      if (!xtAudioPlayer) {
+        xtAudioPlayer = document.getElementById('xtAudioPlayer');
+        if (xtAudioPlayer) {
+          xtAudioPlayer.addEventListener('timeupdate', xtOnTimeUpdate);
+          xtAudioPlayer.addEventListener('ended', xtOnEnded);
+          xtAudioPlayer.addEventListener('play', () => xtSetPlayState(true));
+          xtAudioPlayer.addEventListener('pause', () => xtSetPlayState(false));
+          xtAudioPlayer.addEventListener('error', (e) => {
+            console.error('XT Audio playback error:', e);
+            showToast('徐涛音频加载异常');
+            xtSetPlayState(false);
+          });
+        }
+      }
+      return xtAudioPlayer;
+    }
+
+    function xtInit() {
+      if (xtHasInit) return;
+      xtHasInit = true;
+
+      // 渲染 Day Chips
+      const chipsWrap = document.getElementById('xtDayChips');
+      if (chipsWrap) {
+        chipsWrap.innerHTML = xtAllDaysData.map((d, i) => `
+          <button type="button" class="xt-day-chip ${i === 0 ? 'active' : ''}" id="xt_chip_${i}" onclick="xtSelectDay(${i})">
+            <span class="xt-chip-badge">${d.subject}</span>
+            <span class="xt-chip-day">Day ${String(d.day).padStart(2, '0')}</span>
+          </button>
+        `).join('');
+      }
+
+      // 读取历史停留 Day
+      try {
+        const saved = localStorage.getItem('kyzz_last_xt_day');
+        if (saved !== null) {
+          const idx = parseInt(saved, 10);
+          if (!isNaN(idx) && idx >= 0 && idx < xtAllDaysData.length) {
+            xtCurrentDayIndex = idx;
+          }
+        }
+      } catch(e) {}
+
+      xtRenderCurrentDay();
+    }
+
+    function xtSelectDay(dayIdx) {
+      if (dayIdx < 0 || dayIdx >= xtAllDaysData.length) return;
+      const wasPlaying = xtIsPlaying;
+      if (wasPlaying) {
+        xtPauseAudio();
+      }
+      xtCurrentDayIndex = dayIdx;
+      try {
+        localStorage.setItem('kyzz_last_xt_day', dayIdx);
+      } catch(e) {}
+
+      // 更新 chip 高亮
+      document.querySelectorAll('.xt-day-chip').forEach((btn, i) => {
+        btn.classList.toggle('active', i === dayIdx);
+        if (i === dayIdx) {
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      });
+
+      xtRenderCurrentDay();
+
+      if (wasPlaying) {
+        setTimeout(() => xtPlayAudio(), 100);
+      }
+    }
+
+    function xtRenderCurrentDay() {
+      const d = xtAllDaysData[xtCurrentDayIndex];
+      if (!d) return;
+
+      // 1. 同步顶部悬浮 Chip
+      document.querySelectorAll('.xt-day-chip').forEach((btn, i) => {
+        btn.classList.toggle('active', i === xtCurrentDayIndex);
+      });
+
+      // 2. 渲染正文卡片
+      const area = document.getElementById('xtContentArea');
+      if (area) {
+        const durM = Math.floor(d.duration_sec / 60);
+        const durS = d.duration_sec % 60;
+        const durStr = `${String(durM).padStart(2, '0')}:${String(durS).padStart(2, '0')}`;
+
+        let pointsHtml = d.points.map((pt, pIdx) => `
+          <div class="xt-point-card">
+            <div class="xt-point-header">
+              <span class="xt-point-badge">${pt.badge || '核心考点'}</span>
+              <h3 class="xt-point-title">${pt.title}</h3>
+            </div>
+            <ul class="xt-point-list">
+              ${pt.items.map(it => `<li class="xt-point-item">${it}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('');
+
+        area.innerHTML = `
+          <div class="xt-day-hero-card">
+            <div class="xt-hero-tag-row">
+              <span class="xt-hero-badge">${d.badge}</span>
+              <span class="xt-hero-duration font-mono">时长 ${durStr}</span>
+            </div>
+            <h2 class="xt-hero-title">${d.title}</h2>
+            <p class="xt-hero-subtitle">考研政治徐涛老师官方原声选择题带背 · 核心考点与帽子题精要</p>
+            <div class="xt-hero-action-row">
+              <button type="button" class="xt-hero-play-btn" onclick="xtTogglePlay()">
+                <svg class="ui-svg sm" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                <span id="xtHeroPlayText">${xtIsPlaying ? '暂停带背' : '播放原声带背'}</span>
+              </button>
+              <button type="button" class="xt-hero-secondary-btn" onclick="maskAllCloze()" title="挖空背诵">
+                <span>挖空遮罩</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="xt-day-body">
+            ${pointsHtml}
+          </div>
+        `;
+      }
+
+      // 3. 同步底栏播放器信息
+      const tagEl = document.getElementById('xtPlayerDayTag');
+      if (tagEl) tagEl.textContent = `Day ${String(d.day).padStart(2, '0')}`;
+      const titleEl = document.getElementById('xtPlayerTitle');
+      if (titleEl) titleEl.textContent = d.short_topic;
+      const timeEl = document.getElementById('xtPlayerTime');
+      if (timeEl) {
+        const durM = Math.floor(d.duration_sec / 60);
+        const durS = d.duration_sec % 60;
+        timeEl.textContent = `00:00 / ${String(durM).padStart(2, '0')}:${String(durS).padStart(2, '0')}`;
+      }
+
+      // 4. 装载音频源
+      const a = xtGetAudioEl();
+      if (a) {
+        a.src = d.audio_file;
+        a.playbackRate = xtCurrentSpeed;
+      }
+    }
+
+    function xtPlayAudio() {
+      const a = xtGetAudioEl();
+      if (!a) return;
+      // 互斥：暂停背诵手册音频与腿姐音频
+      if (chapterReciteAudio && !chapterReciteAudio.paused) chapterReciteAudio.pause();
+      if (reciteAudio && !reciteAudio.paused) reciteAudio.pause();
+      if (typeof tjPauseAudio === 'function') tjPauseAudio();
+
+      const d = xtAllDaysData[xtCurrentDayIndex];
+      if (a.src.indexOf(d.audio_file) === -1) {
+        a.src = d.audio_file;
+      }
+      a.playbackRate = xtCurrentSpeed;
+      a.play().then(() => {
+        xtSetPlayState(true);
+      }).catch(err => {
+        console.warn('XT autoplay prevented:', err);
+        xtSetPlayState(false);
+      });
+    }
+
+    function xtPauseAudio() {
+      const a = xtGetAudioEl();
+      if (a && !a.paused) {
+        a.pause();
+      }
+      xtSetPlayState(false);
+    }
+
+    function xtTogglePlay() {
+      const a = xtGetAudioEl();
+      if (!a) return;
+      if (a.paused) {
+        xtPlayAudio();
+      } else {
+        xtPauseAudio();
+      }
+    }
+
+    function xtSetPlayState(isPlaying) {
+      xtIsPlaying = isPlaying;
+      const playIcon = document.querySelector('#xtPlayBtn .xt-icon-play');
+      const pauseIcon = document.querySelector('#xtPlayBtn .xt-icon-pause');
+      if (playIcon) playIcon.style.display = isPlaying ? 'none' : 'block';
+      if (pauseIcon) pauseIcon.style.display = isPlaying ? 'block' : 'none';
+
+      const heroText = document.getElementById('xtHeroPlayText');
+      if (heroText) heroText.textContent = isPlaying ? '暂停带背' : '播放原声带背';
+    }
+
+    function xtOnTimeUpdate() {
+      const a = xtGetAudioEl();
+      if (!a || !a.duration) return;
+      const cur = a.currentTime;
+      const dur = a.duration;
+      const pct = (cur / dur) * 100;
+
+      const pBar = document.getElementById('xtProgressBar');
+      if (pBar) pBar.style.width = pct + '%';
+
+      const timeEl = document.getElementById('xtPlayerTime');
+      if (timeEl) {
+        timeEl.textContent = `${formatAudioTime(cur)} / ${formatAudioTime(dur)}`;
+      }
+    }
+
+    function xtOnEnded() {
+      xtSetPlayState(false);
+      // 自动播放下一期
+      if (xtCurrentDayIndex < xtAllDaysData.length - 1) {
+        xtSelectDay(xtCurrentDayIndex + 1);
+        setTimeout(() => xtPlayAudio(), 400);
+      }
+    }
+
+    function xtPlayPrevDay() {
+      if (xtCurrentDayIndex > 0) {
+        xtSelectDay(xtCurrentDayIndex - 1);
+      } else {
+        showToast('已经是第一期');
+      }
+    }
+
+    function xtPlayNextDay() {
+      if (xtCurrentDayIndex < xtAllDaysData.length - 1) {
+        xtSelectDay(xtCurrentDayIndex + 1);
+      } else {
+        showToast('已经是最后一期');
+      }
+    }
+
+    function xtSeekTrack(e) {
+      const a = xtGetAudioEl();
+      const track = document.getElementById('xtProgressTrack');
+      if (!a || !a.duration || !track) return;
+      const rect = track.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+      a.currentTime = pct * a.duration;
+    }
+
+    function xtCycleSpeed() {
+      const speeds = [1.0, 1.25, 1.5, 2.0];
+      let idx = speeds.indexOf(xtCurrentSpeed);
+      idx = (idx + 1) % speeds.length;
+      xtCurrentSpeed = speeds[idx];
+      const a = xtGetAudioEl();
+      if (a) a.playbackRate = xtCurrentSpeed;
+      const lbl = document.getElementById('xtSpeedLabel');
+      if (lbl) lbl.textContent = xtCurrentSpeed + 'x';
+      showToast(`徐涛倍速: ${xtCurrentSpeed}x`);
+    }
+
 
 </script>
 
