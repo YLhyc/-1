@@ -1,5 +1,5 @@
-// Service Worker v5.0.0 - 2027 考研政治核心背诵笔记 (PWA 生产版)
-const CACHE_NAME = 'kyzz-cache-v5.0.0';
+// Service Worker v5.1.0 - 2027 考研政治核心背诵笔记 (PWA 生产版)
+const CACHE_NAME = 'kyzz-cache-v5.1.0';
 
 // 核心离线静态资源白名单
 const CORE_ASSETS = [
@@ -24,7 +24,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[SW v5.0.0] Deleting obsolete cache:', key);
+            console.log('[SW v5.1.0] Deleting obsolete cache:', key);
             return caches.delete(key);
           }
         })
