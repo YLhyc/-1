@@ -80,7 +80,7 @@
     border:1px solid rgba(5,122,157,.15); background:rgba(239,249,255,.9); color:#057a9d;
     cursor:pointer; transition:transform 120ms ease; -webkit-tap-highlight-color:transparent; flex-shrink:0;
   }
-  #view-today-recite .vc-pronounce-btn, #view-groups.vocab-card-view .vc-pronounce-btn:active { transform:scale(.92); }
+  #view-today-recite .vc-pronounce-btn:active, #view-groups.vocab-card-view .vc-pronounce-btn:active { transform:scale(.92); }
   #view-today-recite .vc-phase1-prompt, #view-groups.vocab-card-view .vc-phase1-prompt {
     display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 16px; margin:10px 0 4px;
     border:1.5px dashed rgba(5,122,157,.22); border-radius:18px; background:rgba(240,249,255,.45);
@@ -112,17 +112,17 @@
     gap:2px; padding:5px 4px; transition:transform 120ms ease, background-color 140ms ease;
     -webkit-tap-highlight-color:transparent;
   }
-  #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn:active { transform:scale(.95); }
-  #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn .rate-name { font-size:13px; font-weight:750; line-height:1.1; }
-  #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn .rate-hint { font-size:10px; opacity:.8; line-height:1; }
+  #view-today-recite .recite-rate-btn:active, #view-groups.vocab-card-view .recite-rate-btn:active { transform:scale(.95); }
+  #view-today-recite .recite-rate-btn .rate-name, #view-groups.vocab-card-view .recite-rate-btn .rate-name { font-size:13px; font-weight:750; line-height:1.1; }
+  #view-today-recite .recite-rate-btn .rate-hint, #view-groups.vocab-card-view .recite-rate-btn .rate-hint { font-size:10px; opacity:.8; line-height:1; }
   #view-today-recite .recite-rate-forget, #view-groups.vocab-card-view .recite-rate-forget { color:#dc2626; background:#fef2f2; border-color:rgba(220,38,38,.2); }
-  #view-today-recite .recite-rate-forget, #view-groups.vocab-card-view .recite-rate-forget:active { background:#fee2e2; }
+  #view-today-recite .recite-rate-forget:active, #view-groups.vocab-card-view .recite-rate-forget:active { background:#fee2e2; }
   #view-today-recite .recite-rate-uncertain, #view-groups.vocab-card-view .recite-rate-uncertain { color:#d97706; background:#fffbeb; border-color:rgba(217,119,6,.2); }
-  #view-today-recite .recite-rate-uncertain, #view-groups.vocab-card-view .recite-rate-uncertain:active { background:#fef3c7; }
+  #view-today-recite .recite-rate-uncertain:active, #view-groups.vocab-card-view .recite-rate-uncertain:active { background:#fef3c7; }
   #view-today-recite .recite-rate-familiar, #view-groups.vocab-card-view .recite-rate-familiar { color:#059669; background:#ecfdf5; border-color:rgba(5,150,105,.2); }
-  #view-today-recite .recite-rate-familiar, #view-groups.vocab-card-view .recite-rate-familiar:active { background:#d1fae5; }
+  #view-today-recite .recite-rate-familiar:active, #view-groups.vocab-card-view .recite-rate-familiar:active { background:#d1fae5; }
   #view-today-recite .recite-rate-mastered, #view-groups.vocab-card-view .recite-rate-mastered { color:#4f46e5; background:#eef2ff; border-color:rgba(79,70,229,.2); }
-  #view-today-recite .recite-rate-mastered, #view-groups.vocab-card-view .recite-rate-mastered:active { background:#e0e7ff; }
+  #view-today-recite .recite-rate-mastered:active, #view-groups.vocab-card-view .recite-rate-mastered:active { background:#e0e7ff; }
   #view-today-recite .recite-reveal-trigger, #view-groups.vocab-card-view .recite-reveal-trigger { color:#0369a1; background:#f0f9ff; border-color:rgba(3,105,161,.2); flex-direction:row; gap:6px; }
   #view-today-recite .recite-rate-affirm, #view-groups.vocab-card-view .recite-rate-affirm { color:#b91c1c; background:#fff1f2; border-color:rgba(225,29,72,.25); font-weight:800; flex-direction:row; gap:6px; }
   #view-today-recite .recite-rate-affirm:active, #view-groups.vocab-card-view .recite-rate-affirm:active { background:#ffe4e6; }
@@ -2226,6 +2226,9 @@
     }
   }
 </style>
+<link rel="stylesheet" href="desktop-layout.css?v=2.3.1">
+<link rel="stylesheet" href="theme.css?v=2.3.1">
+<script src="theme-core.js?v=2.3.1"></script>
 </head>
 <body>
 <div class="update-banner" id="updateBanner" role="status" aria-live="polite" aria-atomic="true" onclick="checkForAppUpdate()">正在检查应用更新…</div>
@@ -2244,13 +2247,14 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.2.9 · 检查缓存…</button></div>
-    <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.3.1 · 检查缓存…</button></div>
+    <div class="app-tools"><button type="button" class="sync-status-pill" id="homeSyncPill" data-sync-pill onclick="onSyncPillClick()" title="三端云同步状态"><span class="sync-pill-dot" aria-hidden="true"></span><span class="sync-pill-text">同步</span></button><button type="button" class="app-icon-btn theme-toggle-btn" data-theme-toggle aria-label="切换外观主题"></button><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
   <h1 class="today-title">把复习放回今天。</h1>
   <p class="today-sub">先完成一段可持续的学习，再继续推进新词。</p>
   <div class="home-mode" id="homeMode"></div>
+  <div class="home-tasks-grid">
   <section class="today-task" onclick="openMorning()" id="morningHomeCard">
     <div class="today-task-top"><div><div class="today-task-label">今日主任务</div><div class="today-task-title" id="morningCardTitle">25 分钟晨听</div><div class="today-task-meta" id="morningCardSub">到期、困难、久未听与新词</div><div class="today-task-meta" id="morningCardStats"></div></div><div class="today-task-count"><span id="morningCardCount">—</span><small>预计词数</small></div></div>
     <div class="today-task-mix" aria-label="晨听任务构成"><i class="due" id="morningCardDueMix"></i><i class="hard" id="morningCardHardMix"></i><i class="stale" id="morningCardStaleMix"></i><i class="fresh" id="morningCardFreshMix"></i></div>
@@ -2260,9 +2264,10 @@
     <div class="today-task-top"><div><div class="today-task-label">主动回忆</div><div class="today-task-title">今日背诵</div><div class="today-task-meta" id="todayReciteCardSub">跨词库整理今天该背的词</div></div><div class="recall-orbit" id="todayReciteOrbit"><span id="todayReciteCardCount">0<small>待背</small></span></div></div>
     <button class="task-button" id="todayReciteCardButton" onclick="event.stopPropagation();openTodayRecite()">开始背诵</button>
   </section>
+  </div>
   <div class="app-section-title"><h2>继续学习</h2><span>上次位置</span></div>
   <div class="source-list" id="resumeCard">
-    <button class="source-row" onclick="showLibrary()"><span class="source-mark">›</span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="showLibrary()"><span class="source-mark"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
   </div>
   <div class="app-section-title"><h2>词库</h2><span>学习与复习入口</span></div>
   <div class="source-list">
@@ -2281,13 +2286,13 @@
       <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">463 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="openRedBook()">
-      <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549词 · <span id="statHbDone">尚未开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549词 · <span id="statHbDone">尚未开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
     <button class="source-row" onclick="location.href='uf/'">
-      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
     <button class="source-row" onclick="showReview()">
-      <span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">主动到期</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按主动背诵间隔安排</span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"/><path d="M16 16h5v5"/></svg></span><span class="source-main"><span class="source-name">主动到期</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按主动背诵间隔安排</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
   </div>
   <div class="app-section-title"><h2>本周节奏</h2><span>真实学习记录</span></div>
@@ -2304,13 +2309,13 @@
 
 <!-- ═══════════ LIBRARY ═══════════ -->
 <div id="view-library" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">词库</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">词库</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button></div></div>
   <div class="source-list">
-    <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="showFocus()"><span class="source-mark amber">★</span><span class="source-main"><span class="source-name">精选学习</span><span class="source-meta"><span id="libraryFocusCount">0词</span> · 深入辨义与复测</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='wordbank/'"><span class="source-mark">固</span><span class="source-main"><span class="source-name">固定搭配</span><span class="source-meta">单词本 · 分组学习</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='sprint-vocab.html'" style="background:rgba(5, 122, 157, 0.04);">
+    <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="showFocus()"><span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="source-main"><span class="source-name">精选学习</span><span class="source-meta"><span id="libraryFocusCount">0词</span> · 深入辨义与复测</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="location.href='wordbank/'"><span class="source-mark">固</span><span class="source-main"><span class="source-name">固定搭配</span><span class="source-meta">单词本 · 分组学习</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+<button class="source-row" onclick="location.href='sprint-vocab.html'" style="background:rgba(5, 122, 157, 0.04);">
       <span class="source-mark" style="background:#fee2e2; color:#dc2626; font-weight:800; font-size:12px; border:1px solid #fca5a5;">40</span>
       <span class="source-main">
         <span class="source-name" style="display:flex; align-items:center; gap:6px;">
@@ -2319,18 +2324,18 @@
         </span>
         <span class="source-meta">130 词 · 考场三大降维法则 · 沉浸抽认卡</span>
       </span>
-      <span class="source-arrow">›</span>
+      <span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
   </div>
   <div class="app-section-title"><h2>复习入口</h2></div>
   <div class="source-list">
-    <button class="source-row" onclick="showReview()"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和主动背诵</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewLibraryCount">0词</span> · 左划恢复</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="showReview()"><span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"/><path d="M16 16h5v5"/></svg></span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和主动背诵</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewLibraryCount">0词</span> · 左划恢复</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
   </div>
   <div class="app-section-title"><h2>冲刺与导出</h2></div>
   <div class="source-list">
-    <button class="source-row" onclick="SprintExport.openModal()"><span class="source-mark purple"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></span><span class="source-main"><span class="source-name">冲刺词单打印 · Anki 导出</span><span class="source-meta">A4 折页背诵单 · 错词集 · 词族清单 · Anki 牌组</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="SprintExport.openModal()"><span class="source-mark purple"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></span><span class="source-main"><span class="source-name">冲刺词单打印 · Anki 导出</span><span class="source-meta">A4 折页背诵单 · 错词集 · 词族清单 · Anki 牌组</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
   </div>
 </div>
 
@@ -2342,12 +2347,12 @@
 
 <!-- ═══════════ REVIEW ═══════════ -->
 <div id="view-review" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">复习</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">复习</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button></div></div>
   <section class="today-task"><div class="today-task-count" style="min-width:0;text-align:left"><span id="reviewDueCount">0</span><small>个单词需要回顾</small></div><button class="task-button" onclick="openTodayRecite()" style="margin-top:13px">开始今日背诵</button></section>
   <div class="app-section-title"><h2>优先复习</h2></div>
   <div class="review-list" id="reviewList"></div>
   <div class="app-section-title"><h2>管理</h2></div>
-  <div class="source-list"><button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewCount">0词</span> · 左划可恢复</span></span><span class="source-arrow">›</span></button></div>
+  <div class="source-list"><button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewCount">0词</span> · 左划可恢复</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button></div>
 </div>
 
 <div id="view-excluded-review" class="app-page" style="display:none;">
@@ -2418,10 +2423,10 @@
         </button>
         <button type="button" class="github-token-copy-btn" id="githubTokenCopyBtn" onclick="copyGithubToken()" aria-label="复制 Token" title="复制 Token">复制</button>
       </div>
-      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked onchange="githubBackupConfigChanged()">全自动备份（首次自动创建，之后最多每 6 小时更新）</label>
+      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked onchange="githubBackupConfigChanged()">自动三端双向同步（手机 / iPad / 电脑切回前台自动合并，编辑约 12 秒后自动上传）</label>
       <div class="github-backup-actions">
-        <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即备份</button>
-        <button class="github-backup-btn github-backup-download" id="githubRestoreBtn" onclick="githubRestoreNow()">云端恢复</button>
+        <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即双向同步</button>
+        <button class="github-backup-btn github-backup-download" id="githubRestoreBtn" onclick="githubRestoreNow()">强制云端覆盖</button>
         <button class="github-backup-btn github-backup-disconnect" id="githubDisconnectBtn" onclick="disconnectGithubBackup()">清除本机 GitHub 配置</button>
       </div>
       <div class="github-backup-status" id="githubBackupStatus"></div>
@@ -2434,12 +2439,12 @@
 <div class="sync-modal" id="syncModal">
   <div class="sync-modal-bg" onclick="toggleSyncPanel()"></div>
   <div class="sync-modal-card">
-    <div class="sync-title">☁ 跨设备 / 跨模式同步</div>
+    <div class="sync-title"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>跨设备 / 跨模式同步</div>
     <div class="sync-tab">
       <span id="syncTabVocab" class="active" onclick="switchSyncTab('vocab')">生词本</span>
       <span id="syncTabHb" onclick="switchSyncTab('hongbaoshu')">红宝书</span>
     </div>
-    <div class="sync-desc">iPhone上App和浏览器数据独立<br>切换模式前：导出→粘贴导入→合并完成</div>
+    <div class="sync-desc">iPhone上App和浏览器数据独立<br>切换模式前：导出 → 粘贴导入 → 合并完成</div>
     <textarea class="sync-textarea" id="syncText" placeholder="在此粘贴同步码…"></textarea>
     <div class="sync-btn-row">
       <button class="sync-action sync-export" onclick="doExport()">导出</button>
@@ -2652,7 +2657,7 @@
     <span class="morning-nav-title">晨听完成</span>
   </div>
   <div class="morning-summary">
-    <div class="ms-icon">🌅</div>
+    <div class="ms-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M4.93 10.93l2.83-2.83M2 18h2M20 18h2M16.24 8.1l2.83 2.83M22 22H2M8 18a4 4 0 0 1 8 0"/></svg></div>
     <div class="ms-title" id="msTitle"></div>
     <div class="ms-sub" id="msSub"></div>
     <div class="morning-summary-stats">
@@ -2677,29 +2682,39 @@
 
 <!-- ═══════════ LEARNING PROGRESS ═══════════ -->
 <div id="view-progress" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">进度</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">进度</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button></div></div>
   <div class="progress-page" id="progressContent"></div>
 </div>
 
 <div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
 <div class="app-tabbar-host" id="appTabbarHost">
 <nav class="app-tabbar" id="appTabbar" aria-label="主导航">
+  <div class="app-sidebar-head">
+    <div class="app-sidebar-brand">Words</div>
+    <div class="app-sidebar-sub">考研英语 · 三端同步工作台</div>
+  </div>
   <div class="app-tab-indicator" aria-hidden="true"></div>
   <button class="app-tab active" data-tab="home" onclick="showHome()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.8 12 3l9 7.8V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span><span>今日</span></button>
   <button class="app-tab" data-tab="library" onclick="showLibrary()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M7 8h10M7 12h10M7 16h6"></path></svg></span><span>词库</span></button>
   <button class="app-tab" data-tab="review" onclick="showReview()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7v5l3.5 2"></path></svg></span><span>复习</span></button>
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
+  <div class="app-sidebar-foot">
+    <button type="button" class="sync-status-pill" data-sync-pill onclick="onSyncPillClick()"><span class="sync-pill-dot" aria-hidden="true"></span><span class="sync-pill-text">同步</span></button>
+    <button type="button" class="sync-status-pill theme-toggle-pill" data-theme-toggle aria-label="切换外观主题"></button>
+    <div class="app-sidebar-shortcuts"><strong>键盘快捷键</strong>空格 翻卡/暂停 · 1-4 评分<br>R 重读 · Z 撤销 · ←/→ 切词</div>
+  </div>
 </nav>
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.2.9"></script>
-<script src="focus-core.js?v=2.2.9"></script>
-<script src="study-copy.js?v=2.2.9"></script>
-<script src="word-network.js?v=2.2.9"></script>
-<script src="sprint-export.js?v=2.2.9"></script>
-<script src="audio-cache.js?v=2.2.9"></script>
-<script src="ui-motion.js?v=2.2.9"></script>
+<script src="review-core.js?v=2.3.1"></script>
+<script src="sync-core.js?v=2.3.1"></script>
+<script src="focus-core.js?v=2.3.1"></script>
+<script src="study-copy.js?v=2.3.1"></script>
+<script src="word-network.js?v=2.3.1"></script>
+<script src="sprint-export.js?v=2.3.1"></script>
+<script src="audio-cache.js?v=2.3.1"></script>
+<script src="ui-motion.js?v=2.3.1"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2784,8 +2799,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0], "43": [43, 0], "44": [44, 0], "45": [45, 0], "46": [46, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.2.9";
-var BUILD_TS = 1793359422;
+var APP_BUILD_ID = "2.3.1";
+var BUILD_TS = 1794639680;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3125,7 +3140,7 @@ if (needRecovery) {
   var banner = document.getElementById('updateBanner');
   if (banner) {
     banner.style.background = '#ff9500';
-    banner.innerHTML = '⚠ 检测到备份数据，<u style="cursor:pointer" onclick="restoreBackups()">点击恢复学习进度</u>';
+    banner.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-right:6px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>检测到备份数据，<u style="cursor:pointer" onclick="restoreBackups()">点击恢复学习进度</u>';
     banner.dataset.wordsBannerKind = 'recovery';
     banner.classList.add('show');
   }
@@ -3136,6 +3151,9 @@ function restoreBackups() {
     var bk = localStorage.getItem(k + '_backup');
     if (bk) localStorage.setItem(k, bk);
   });
+  if (typeof WordsSync !== 'undefined' && typeof WordsSync.resetSyncBaseline === 'function') {
+    WordsSync.resetSyncBaseline();
+  }
   location.reload();
 }
 
@@ -3344,7 +3362,7 @@ function renderFocusLesson() {
   if (focusLessonStage === 'prompt') {
     html += '<div class="focus-sentence">' + escapeHTML(lesson.prompt_sentence) + '</div><div class="focus-question">' + escapeHTML(lesson.prompt_question) + '</div><div class="focus-choices">' + focusChoiceHTML(lesson.prompt_choices,Number(lesson.prompt_answer),focusPromptChoice,'prompt') + '</div><div class="focus-feedback">' + (focusPromptChoice === null ? '先按语境判断，不要求一次答对。' : focusPromptChoice === Number(lesson.prompt_answer) ? '判断正确。接下来把这种感觉串到其他义项。' : '方向不完全对。现在从核心动作重新建立联系。') + '</div><div class="focus-lesson-controls"><button class="focus-secondary" onclick="focusGo(&quot;teach&quot;)">完全陌生，直接学</button><button class="focus-primary" onclick="focusGo(&quot;teach&quot;)"' + (focusPromptChoice === null ? ' disabled' : '') + '>继续</button></div>';
   } else if (focusLessonStage === 'teach') {
-    html += '<div class="focus-core-box"><strong>' + escapeHTML(lesson.semantic_core) + '</strong><p>' + escapeHTML(lesson.core_note) + '</p></div><div class="focus-senses">' + lesson.senses.map(function(sense,index){return '<section class="focus-sense' + (index ? ' closed' : '') + '" id="focusSense' + index + '"><button class="focus-sense-toggle" onclick="focusToggleSense(' + index + ')"><span><span class="focus-sense-title">' + escapeHTML(sense.label) + '</span><span class="focus-sense-boundary">' + escapeHTML(sense.boundary) + '</span></span><span class="focus-sense-caret">›</span></button><div class="focus-examples">' + sense.examples.map(function(ex,i){return '<div class="focus-example"><div class="focus-example-en">' + (i+1) + '. ' + escapeHTML(ex.en) + '</div><div class="focus-example-cn">' + escapeHTML(ex.cn) + '</div></div>';}).join('') + '</div></section>';}).join('') + '</div><div class="focus-closing">' + escapeHTML(lesson.closing_rule) + '</div><div class="focus-lesson-controls single"><button class="focus-primary" onclick="focusGo(&quot;compare&quot;)">看看近义词边界</button></div>';
+    html += '<div class="focus-core-box"><strong>' + escapeHTML(lesson.semantic_core) + '</strong><p>' + escapeHTML(lesson.core_note) + '</p></div><div class="focus-senses">' + lesson.senses.map(function(sense,index){return '<section class="focus-sense' + (index ? ' closed' : '') + '" id="focusSense' + index + '"><button class="focus-sense-toggle" onclick="focusToggleSense(' + index + ')"><span><span class="focus-sense-title">' + escapeHTML(sense.label) + '</span><span class="focus-sense-boundary">' + escapeHTML(sense.boundary) + '</span></span><span class="focus-sense-caret" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></button><div class="focus-examples">' + sense.examples.map(function(ex,i){return '<div class="focus-example"><div class="focus-example-en">' + (i+1) + '. ' + escapeHTML(ex.en) + '</div><div class="focus-example-cn">' + escapeHTML(ex.cn) + '</div></div>';}).join('') + '</div></section>';}).join('') + '</div><div class="focus-closing">' + escapeHTML(lesson.closing_rule) + '</div><div class="focus-lesson-controls single"><button class="focus-primary" onclick="focusGo(&quot;compare&quot;)">看看近义词边界</button></div>';
   } else if (focusLessonStage === 'compare') {
     html += '<div class="focus-core-box"><strong>' + escapeHTML(lesson.semantic_core) + '</strong><p>不要把相近词背成同一个中文，判断它们各自强调的动作边界。</p></div><div class="focus-compare-list">' + lesson.contrasts.map(function(item){return '<div class="focus-compare"><strong>' + escapeHTML(item.word) + '</strong><span>' + escapeHTML(item.boundary) + '</span></div>';}).join('') + '</div><div class="focus-lesson-controls"><button class="focus-secondary" onclick="focusGo(&quot;teach&quot;)">返回核心</button><button class="focus-primary" onclick="focusGo(&quot;test&quot;)">换个语境试试</button></div>';
   } else if (focusLessonStage === 'test') {
@@ -3383,11 +3401,11 @@ function renderResumeCard() {
   var c = document.getElementById('resumeCard'); if (!c) return;
   var r = loadLearningResume();
   if (!r) {
-    c.innerHTML = '<button class="source-row" onclick="showLibrary()"><span class="source-mark">›</span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow">›</span></button>';
+    c.innerHTML = '<button class="source-row" onclick="showLibrary()"><span class="source-mark"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
     return;
   }
   var isHb = r.source === 'hongbaoshu', title = isHb ? '继续红宝书' : '继续生词本', mode = r.mode === 'recite' ? '背诵' : '聆听';
-  c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow">›</span></button>';
+  c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
 }
 var homeRefreshTimer = 0;
 function refreshHomeDynamicUI() {
@@ -3432,7 +3450,7 @@ function showReview() {
   if (!container) return;
   if (!list.length) {
     container.innerHTML = '<div class="review-empty">暂时没有到期单词。<br>背诵评分后，系统会按间隔安排下一次复习。</div>'
-      + '<button class="source-row" onclick="location.href=&quot;uf/&quot;"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta">查看已标记的不熟词</span></span><span class="source-arrow">›</span></button>';
+      + '<button class="source-row" onclick="location.href=&quot;uf/&quot;"><span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"/><path d="M16 16h5v5"/></svg></span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta">查看已标记的不熟词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
     updateExcludedReviewCount();
     return;
   }
@@ -4243,8 +4261,63 @@ function todayReciteCardClick(event) {
   if (event.target.closest('button, a, input, select, textarea, .vc-example-pager, .archive-review-action')) return;
   if (!todayReciteShown) todayReciteShow('familiar');
 }
+var cardWordAudio = null;
+var cardWordAudioToken = 0;
+function stopCardWordAudio() {
+  cardWordAudioToken++;
+  if (cardWordAudio) {
+    try { cardWordAudio.pause(); cardWordAudio.currentTime = 0; } catch (e) {}
+  }
+  if (typeof window !== 'undefined' && window.speechSynthesis) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+}
+function playCardAudioBlob(url, fallbackEn, token) {
+  if (token !== cardWordAudioToken) return;
+  if (!cardWordAudio) cardWordAudio = new Audio();
+  try {
+    cardWordAudio.pause();
+    cardWordAudio.src = url;
+    cardWordAudio.currentTime = 0;
+    var p = cardWordAudio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(function() {
+        if (token === cardWordAudioToken && typeof speakWeb === 'function') speakWeb(fallbackEn, 'en-US', function(){});
+      });
+    }
+  } catch (e) {
+    if (token === cardWordAudioToken && typeof speakWeb === 'function') speakWeb(fallbackEn, 'en-US', function(){});
+  }
+}
 function playCardWordAudio(en) {
   if (!en) return;
+  stopCardWordAudio();
+  var token = cardWordAudioToken;
+  var gw = -1;
+  if (typeof VOCAB !== 'undefined' && Array.isArray(VOCAB)) {
+    for (var i = 0; i < VOCAB.length; i++) {
+      if (VOCAB[i] && VOCAB[i].en === en) { gw = i; break; }
+    }
+  }
+  if (gw >= 0 && typeof preloaded !== 'undefined') {
+    var blobUrl = preloaded[String(gw) + '_en'];
+    if (blobUrl) {
+      playCardAudioBlob(blobUrl, en, token);
+      return;
+    }
+    if (typeof getAudioFile === 'function' && typeof waitForAudioFile === 'function' && (typeof navigator === 'undefined' || navigator.onLine !== false)) {
+      var af = getAudioFile(Math.floor(gw / GROUP_SIZE));
+      if (af && af.fileIdx !== undefined) {
+        waitForAudioFile(af.fileIdx, function(err) {
+          if (token !== cardWordAudioToken) return;
+          var loadedUrl = !err ? preloaded[String(gw) + '_en'] : '';
+          if (loadedUrl) playCardAudioBlob(loadedUrl, en, token);
+          else if (typeof speakWeb === 'function') speakWeb(en, 'en-US', function(){});
+        });
+        return;
+      }
+    }
+  }
   if (typeof speakWeb === 'function') speakWeb(en, 'en-US', function(){});
 }
 function insertReciteRepeatWord(queue, currentIdx, reEntry, step) {
@@ -4618,13 +4691,56 @@ function bindTodayReciteSwipe() {
 }
 if (typeof window !== 'undefined' && window.addEventListener) {
   window.addEventListener('keydown', function(event) {
-    if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    var target = event.target;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
+
+    var diagEl = document.getElementById('diagOverlay');
+    var backupEl = document.getElementById('backupModal');
+    var syncEl = document.getElementById('syncModal');
+    var cacheEl = document.getElementById('cacheModal');
+    var exitSheetEl = document.getElementById('morningExitSheet');
+    var sprintEl = document.getElementById('sprintExportModal');
+
+    if (event.key === 'Escape') {
+      if (sprintEl && sprintEl.classList.contains('open')) { event.preventDefault(); if (typeof SprintExport !== 'undefined' && typeof SprintExport.closeModal === 'function') SprintExport.closeModal(); else sprintEl.classList.remove('open'); return; }
+      if (diagEl && diagEl.style.display !== 'none') { event.preventDefault(); diagEl.style.display = 'none'; return; }
+      if (backupEl && backupEl.classList.contains('show')) { event.preventDefault(); closeBackupCenter(); return; }
+      if (syncEl && syncEl.classList.contains('show')) { event.preventDefault(); toggleSyncPanel(); return; }
+      if (cacheEl && cacheEl.classList.contains('show')) { event.preventDefault(); closeCacheManager(); return; }
+      if (exitSheetEl && exitSheetEl.classList.contains('show')) { event.preventDefault(); closeMorningExitSheet(); return; }
+    }
+
+    if ((sprintEl && sprintEl.classList.contains('open')) ||
+        (diagEl && diagEl.style.display !== 'none') ||
+        (backupEl && backupEl.classList.contains('show')) ||
+        (syncEl && syncEl.classList.contains('show')) ||
+        (cacheEl && cacheEl.classList.contains('show')) ||
+        (exitSheetEl && exitSheetEl.classList.contains('show'))) {
+      return;
+    }
+
+    var morningPlayerView = document.getElementById('view-morning-player');
+    if (morningPlayerView && morningPlayerView.style.display !== 'none') {
+      if (event.repeat) return;
+      if (event.code === 'Space') { event.preventDefault(); toggleMorningPause(); }
+      else if (event.key === 'ArrowLeft' || event.key === 'j' || event.key === 'J') { event.preventDefault(); prevMorningWord(); }
+      else if (event.key === 'ArrowRight' || event.key === 'l' || event.key === 'L') { event.preventDefault(); nextMorningWord(); }
+      else if (event.key === 'r' || event.key === 'R') { event.preventDefault(); replayMorningWord(); }
+      else if (event.key === 's' || event.key === 'S') { event.preventDefault(); skipMorningWord(); }
+      else if (event.key === '1') { event.preventDefault(); markMorningHard(); }
+      else if (event.key === '2' || event.key === '3') { event.preventDefault(); markMorningFamiliar(); }
+      else if (event.key === 'Escape') { event.preventDefault(); confirmEndMorning(); }
+      return;
+    }
+
     var todayView = document.getElementById('view-today-recite');
-    var isToday = (todayView && todayView.style.display !== 'none' && todayReciteStarted && !todayReciteDone);
+    var isToday = !!(todayView && todayView.style.display !== 'none' && todayReciteStarted && !todayReciteDone);
     var groupsView = document.getElementById('view-groups');
-    var isVocabRecite = (groupsView && groupsView.style.display !== 'none' && currentDict === 'vocab' && vocabStudyMode === 'recite' && !vocabReciteDone);
+    var isVocabRecite = !!(groupsView && groupsView.style.display !== 'none' && currentDict === 'vocab' && vocabStudyMode === 'recite' && !vocabReciteDone);
 
     if (!isToday && !isVocabRecite) return;
+    if (event.repeat) return;
 
     var flowMode = getReciteFlowMode();
     var isShown = isToday ? ((flowMode === 'direct_4tier') ? true : todayReciteShown) : ((flowMode === 'direct_4tier') ? true : vocabReciteShown);
@@ -4632,6 +4748,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     var rateFn = isToday ? todayReciteRate : vocabReciteRate;
     var showFn = isToday ? todayReciteShow : vocabReciteShow;
     var undoFn = isToday ? todayReciteUndoLast : vocabReciteUndoLast;
+    var currentEn = isToday
+      ? (todayReciteItems && todayReciteItems[todayReciteIdx] ? todayReciteItems[todayReciteIdx].en : '')
+      : (vocabCardCurrentWord() ? vocabCardCurrentWord().en : '');
 
     if (event.code === 'Space') {
       event.preventDefault();
@@ -4639,6 +4758,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
         showFn('familiar');
       } else if (initialSense === 'unfamiliar') {
         rateFn('forget');
+      } else if (currentEn) {
+        playCardWordAudio(currentEn);
       }
     } else if (event.key === '1') {
       event.preventDefault();
@@ -4663,6 +4784,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     } else if (event.key === 'z' || event.key === 'Z') {
       event.preventDefault();
       undoFn();
+    } else if (event.key === 'r' || event.key === 'R') {
+      event.preventDefault();
+      if (currentEn) playCardWordAudio(currentEn);
     }
   });
 }
@@ -4789,7 +4913,7 @@ function renderUnits() {
     html += '<button class="unit-btn" onclick="showGroups(' + u + ')">';
     html += 'U' + (u+1);
     html += '<span class="u-label">' + words.length + '词';
-    if (familiar > 0) html += ' <span class="unit-badge done">✓' + familiar + '</span>';
+    if (familiar > 0) html += ' <span class="unit-badge done"><svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>' + familiar + '</span>';
     html += '</span>';
     if (pct > 0) html += '<div class="unit-progress"><div class="unit-progress-bar" style="width:' + pct + '%"></div></div>';
     html += '</button>';
@@ -6022,17 +6146,17 @@ function speakWeb(text, lang, onEnd) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = lang;
   u.rate = 0.85;
-  var keepAlive = setInterval(function() {
+  var keepAlive = (text && String(text).length > 60) ? setInterval(function() {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.pause();
       window.speechSynthesis.resume();
     }
-  }, 5000);
+  }, 5000) : null;
   var settled = false;
   var done = function(err) {
     if (settled) return;
     settled = true;
-    clearInterval(keepAlive);
+    if (keepAlive) clearInterval(keepAlive);
     onEnd(err || null);
   };
   u.onstart = function() { if (onStart) onStart(); };
@@ -6892,11 +7016,20 @@ function hideScheduleFeedback() {
 
 function createLearningBackup() {
   var all = {};
+  if (typeof WordsSync !== 'undefined' && WordsSync.captureLocalChanges) {
+    var captured = WordsSync.captureLocalChanges(localStorage, Date.now());
+    return WordsSync.buildCloudPayload(captured.data, captured.meta);
+  }
   ['vocab','hongbaoshu'].forEach(function(d) {
     all[d] = { p: loadPrefs(d), c: loadCounts(d) };
   });
   all.uf = safeJsonFromStorage('uf_prefs', {});
   all.uf_counts = safeJsonFromStorage('uf_counts', {});
+  all.wb = {
+    p: safeJsonFromStorage('wb_prefs', {}),
+    deleted: safeJsonFromStorage('wb_deleted', []),
+    pinned: safeJsonFromStorage('wb_pinned', [])
+  };
   all.activity = safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
   all.recall = ReviewCore.loadRecallQuality();
   all.review = safeJsonFromStorage(REVIEW_META_KEY, {});
@@ -6952,7 +7085,7 @@ function validateDictBackup(name, data) {
 
 function validateLearningBackup(all) {
   if (!isPlainObject(all)) throw new Error('备份数据格式错误');
-  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded && !all.learningResume) throw new Error('没有找到可恢复的学习记录');
+  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.wb && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded && !all.learningResume) throw new Error('没有找到可恢复的学习记录');
   validateDictBackup('生词本', all.vocab || {});
   validateDictBackup('红宝书', all.hongbaoshu || {});
   if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
@@ -7022,6 +7155,11 @@ function applyLearningBackup(all) {
   });
   localStorage.setItem('uf_prefs', JSON.stringify(isPlainObject(all.uf) ? all.uf : {}));
   localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
+  if (all.wb && isPlainObject(all.wb)) {
+    if (isPlainObject(all.wb.p)) localStorage.setItem('wb_prefs', JSON.stringify(all.wb.p));
+    if (Array.isArray(all.wb.deleted)) localStorage.setItem('wb_deleted', JSON.stringify(all.wb.deleted));
+    if (Array.isArray(all.wb.pinned)) localStorage.setItem('wb_pinned', JSON.stringify(all.wb.pinned));
+  }
   if (isPlainObject(all.activity)) localStorage.setItem(ACTIVITY_KEY, JSON.stringify(all.activity));
   if (isPlainObject(all.recall)) localStorage.setItem(RECALL_KEY, JSON.stringify(all.recall)); else localStorage.removeItem(RECALL_KEY);
   if (isPlainObject(all.review)) localStorage.setItem(REVIEW_META_KEY, JSON.stringify(all.review));
@@ -7047,6 +7185,9 @@ function applyLearningBackup(all) {
     if (!isPlainObject(all.learningResume)) throw new Error('继续学习进度格式错误');
     if (['vocab','hongbaoshu'].indexOf(all.learningResume.source) < 0 || !isFinite(Number(all.learningResume.unitIdx)) || Number(all.learningResume.unitIdx) < 0) throw new Error('继续学习来源或 Unit 无效');
     if (all.learningResume.order && !Array.isArray(all.learningResume.order)) throw new Error('继续学习顺序格式错误');
+  }
+  if (typeof WordsSync !== 'undefined' && WordsSync.resetSyncBaseline) {
+    WordsSync.resetSyncBaseline();
   }
   FocusCore.refreshButtons();
   updateFocusLibraryCount();
@@ -7132,9 +7273,10 @@ function githubBackupConfigChanged() {
   var config = readGithubBackupForm();
   saveGithubBackupConfig(config);
   localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
-  if (config.auto && config.token && !config.gistId) {
-    showGithubBackupStatus('正在自动创建首份私有备份…', '');
-    return maybeAutoGithubBackup();
+  if (typeof WordsSync !== 'undefined') WordsSync.renderStatusPills();
+  if (config.auto && config.token) {
+    showGithubBackupStatus(config.gistId ? '正在双向同步云端记录…' : '正在自动创建首份私有云同步…', '');
+    return githubBackupNow(true);
   }
   updateGithubBackupUI();
   return Promise.resolve(config);
@@ -7268,23 +7410,87 @@ function updateGithubBackupUI() {
   var last = localStorage.getItem(GITHUB_BACKUP_LAST_KEY);
   var error = localStorage.getItem(GITHUB_BACKUP_ERROR_KEY);
   if (error) {
-    showGithubBackupStatus('上次自动备份失败：' + error, 'err');
+    showGithubBackupStatus('上次同步失败：' + error, 'err');
   } else if (config.gistId && last) {
-    showGithubBackupStatus('云备份已连接 · 上次云备份 ' + formatLocalTime(last), 'ok');
+    showGithubBackupStatus('三端双向同步已连接 · 上次同步 ' + formatLocalTime(last), 'ok');
   } else if (config.token) {
-    showGithubBackupStatus(config.auto ? 'Token 已保存，将自动创建首份私有备份。' : 'Token 已保存，自动备份当前已关闭。', '');
+    showGithubBackupStatus(config.auto ? 'Token 已保存，将自动初始化云端同步。' : 'Token 已保存，自动同步当前已关闭。', '');
   } else {
-    showGithubBackupStatus('未配置云备份，本地导出和恢复仍可正常使用。', '');
+    showGithubBackupStatus('未配置云同步，可填写 Token 后在手机/iPad/电脑间实时双向同步。', '');
+  }
+  if (typeof WordsSync !== 'undefined') WordsSync.renderStatusPills();
+}
+
+function refreshVisibleAppAfterSync(detail) {
+  try {
+    FocusCore.refreshButtons();
+    updateFocusLibraryCount();
+    updateExcludedReviewCount();
+    updateHomeStats();
+    refreshHomeDynamicUI();
+    updateBackupStatus();
+    if (typeof activeViewName !== 'undefined') {
+      if (activeViewName === 'review' && typeof showReview === 'function') showReview();
+      else if (activeViewName === 'excluded-review' && typeof renderExcludedReview === 'function') renderExcludedReview();
+      else if (activeViewName === 'progress' && typeof showProgress === 'function') showProgress();
+      else if (activeViewName === 'focus' && typeof renderFocus === 'function') renderFocus();
+      else if (activeViewName === 'units' && currentDict && typeof renderUnits === 'function') renderUnits();
+      else if (activeViewName === 'groups' && currentDict === 'vocab' && vocabStudyMode !== 'recite' && currentGroup < 0 && typeof renderGroups === 'function') renderGroups();
+      else if (activeViewName === 'morning-home' && typeof refreshMorningHome === 'function') refreshMorningHome();
+    }
+    if (detail && detail.reason === 'manual_btn') {
+      showScheduleFeedback('已合并三端最新记录');
+    }
+  } catch (e) {}
+}
+
+function onSyncPillClick() {
+  var cfg = typeof WordsSync !== 'undefined' ? WordsSync.loadGithubConfig() : loadGithubBackupConfig();
+  if (!cfg.token) {
+    openBackupCenter();
+    return;
+  }
+  if (typeof WordsSync !== 'undefined') {
+    WordsSync.syncNow({ reason: 'pill_click', interactive: true, force: true }).then(function(res) {
+      updateBackupStatus();
+      updateGithubBackupUI();
+      if (res && res.localChanged) showScheduleFeedback('已拉取并合并最新记录');
+      else if (res && !res.skipped) showScheduleFeedback('云端记录已是最新');
+    }).catch(function(err) {
+      showScheduleFeedback('同步失败：' + (err && err.message ? err.message : String(err)));
+    });
+  } else {
+    githubBackupNow();
   }
 }
 
-function githubBackupNow() {
+function githubBackupNow(silent) {
   var config = readGithubBackupForm();
-  if (!config.token) { showGithubBackupStatus('请先填写仅含 gist 权限的 GitHub Token。', 'err'); return; }
+  if (!config.token) { showGithubBackupStatus('请先填写仅含 gist 权限的 GitHub Token。', 'err'); return Promise.resolve(null); }
   saveGithubBackupConfig(config);
   setGithubBackupBusy(true);
-  showGithubBackupStatus('正在上传私有备份…', '');
-  uploadGithubBackup(config).then(function(saved) {
+  showGithubBackupStatus('正在拉取并双向合并三端记录…', '');
+  if (typeof WordsSync !== 'undefined') {
+    return WordsSync.syncNow({ config: config, reason: silent ? 'auto_init' : 'manual_btn', interactive: true, force: true }).then(function(res) {
+      var updatedCfg = WordsSync.loadGithubConfig();
+      var gistEl = document.getElementById('githubGistInput');
+      if (gistEl && updatedCfg.gistId) gistEl.value = updatedCfg.gistId;
+      setGithubBackupBusy(false);
+      updateGithubBackupUI();
+      updateBackupStatus();
+      var msg = (res && res.localChanged)
+        ? '双向同步完成（已合并新记录）· ' + formatLocalTime(Date.now())
+        : '双向同步完成（已最新）· ' + formatLocalTime(Date.now());
+      showGithubBackupStatus(msg, 'ok');
+      refreshVisibleAppAfterSync({ reason: 'manual_btn' });
+      return res;
+    }).catch(function(error) {
+      setGithubBackupBusy(false);
+      showGithubBackupStatus('同步失败：' + (error && error.message ? error.message : String(error)), 'err');
+      return null;
+    });
+  }
+  return uploadGithubBackup(config).then(function(saved) {
     var gistEl = document.getElementById('githubGistInput');
     if (gistEl) gistEl.value = saved.gistId;
     setGithubBackupBusy(false);
@@ -7304,12 +7510,13 @@ function githubRestoreNow() {
   showGithubBackupStatus('正在读取云端备份…', '');
   downloadGithubBackup(config).then(function(all) {
     setGithubBackupBusy(false);
-    if (!confirm('云端恢复会覆盖当前学习记录。继续前会自动保存一份本地临时备份，确定恢复吗？')) return;
+    if (!confirm('强制覆盖会用云端记录替换当前本机记录（通常推荐使用「立即双向同步」自动合并）。继续前会保存临时备份，确定覆盖吗？')) return;
     savePreImportBackup();
     applyLearningBackup(all);
     localStorage.setItem(GITHUB_BACKUP_LAST_KEY, String(Date.now()));
     localStorage.removeItem(ACTIVITY_DIRTY_KEY);
     localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+    if (typeof WordsSync !== 'undefined') WordsSync.renderStatusPills();
     showGithubBackupStatus('云端恢复成功，即将刷新页面…', 'ok');
     setTimeout(function() { location.reload(); }, 800);
   }).catch(function(error) {
@@ -7324,42 +7531,18 @@ function disconnectGithubBackup() {
   localStorage.removeItem(GITHUB_BACKUP_CONFIG_KEY);
   localStorage.removeItem(GITHUB_BACKUP_LAST_KEY);
   localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+  if (typeof WordsSync !== 'undefined') {
+    WordsSync.resetSyncBaseline();
+    WordsSync.renderStatusPills();
+  }
   updateGithubBackupUI();
 }
 
 function maybeAutoGithubBackup() {
-  var config = loadGithubBackupConfig();
-  if (!config.auto || !config.token) return Promise.resolve(null);
-  if (githubAutoBackupPromise) return githubAutoBackupPromise;
-  var isInitial = !config.gistId;
-  var dirty = Number(localStorage.getItem(ACTIVITY_DIRTY_KEY) || 0);
-  var last = Number(localStorage.getItem(GITHUB_BACKUP_LAST_KEY) || 0);
-  if (!isInitial && (!dirty || dirty <= last)) {
-    if (dirty) localStorage.removeItem(ACTIVITY_DIRTY_KEY);
-    return Promise.resolve(null);
+  if (typeof WordsSync !== 'undefined') {
+    return WordsSync.maybePullSync('auto_backup', 20000);
   }
-  if (!isInitial && last && Date.now() - last < GITHUB_BACKUP_INTERVAL_MS) return Promise.resolve(null);
-  if (isInitial) {
-    setGithubBackupBusy(true);
-    showGithubBackupStatus('正在自动创建首份私有备份…', '');
-  }
-  githubAutoBackupPromise = uploadGithubBackup(config).then(function(saved) {
-    if (isInitial) {
-      setGithubBackupBusy(false);
-      updateGithubBackupUI();
-      showGithubBackupStatus('首份云备份已自动创建 · ' + formatLocalTime(Date.now()), 'ok');
-    }
-    return saved;
-  }).catch(function(error) {
-    if (isInitial) setGithubBackupBusy(false);
-    localStorage.setItem(GITHUB_BACKUP_ERROR_KEY, error.message || String(error));
-    showGithubBackupStatus('自动备份失败：' + (error.message || String(error)), 'err');
-    return null;
-  }).then(function(result) {
-    githubAutoBackupPromise = null;
-    return result;
-  });
-  return githubAutoBackupPromise;
+  return Promise.resolve(null);
 }
 
 function progressDayAt(offset) {
@@ -7763,7 +7946,7 @@ function renderEbbinghausDashboard() {
     + '<div class="eb-advice-content">'
     + '<div class="eb-advice-title">艾宾浩斯备考指导</div>'
     + '<div class="eb-advice-text">' + data.advice + '</div>'
-    + (data.todayDue > 0 ? '<button class="eb-start-btn" onclick="showView(&quot;today-recite&quot;)">开始今日复习 (' + data.todayDue + ')<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>' : '')
+    + (data.todayDue > 0 ? '<button class="eb-start-btn" onclick="openTodayRecite()">开始今日复习 (' + data.todayDue + ')<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>' : '')
     + '</div>'
     + '</div>';
 
@@ -8117,15 +8300,25 @@ function showDiagnostic() {
 // ═══════════ INIT ═══════════
 (function() {
   var el = document.getElementById('homeMode');
+  var phoneIcon = '<svg class="mode-badge-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+  var globeIcon = '<svg class="mode-badge-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+  var arrowIcon = '<svg class="home-sync-arrow" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px;margin-left:3px;"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
   if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-    el.innerHTML = '<span class="mode-app">📱 App模式 · 数据独立</span> ';
+    el.innerHTML = '<span class="mode-app">' + phoneIcon + 'App模式 · 数据独立</span> ';
   } else {
-    el.innerHTML = '<span class="mode-safari">🌐 浏览器模式 · 数据独立</span> ';
+    el.innerHTML = '<span class="mode-safari">' + globeIcon + '浏览器模式 · 数据独立</span> ';
   }
-  el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 →</span>';
+  el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 ' + arrowIcon + '</span>';
 })();
-setTimeout(maybeAutoGithubBackup, 1200);
-setInterval(maybeAutoGithubBackup, GITHUB_BACKUP_POLL_MS);
+if (typeof WordsSync !== 'undefined') {
+  WordsSync.installLifecycle({
+    startupDelayMs: 1200,
+    onApplied: refreshVisibleAppAfterSync
+  });
+}
+if (/[?&]open=backup(?:&|$)/.test(location.search)) {
+  setTimeout(function() { if (typeof openBackupCenter === 'function') openBackupCenter(); }, 250);
+}
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
     saveMorningActiveSession('background');
@@ -8133,7 +8326,6 @@ document.addEventListener('visibilitychange', function() {
   } else {
     syncMorningPlayback();
     scheduleHomeDynamicRefresh();
-    setTimeout(maybeAutoGithubBackup, 500);
   }
 });
 window.addEventListener('pagehide', function() {
@@ -8142,7 +8334,6 @@ window.addEventListener('pagehide', function() {
 });
 window.addEventListener('pageshow', function() { syncMorningPlayback(); scheduleHomeDynamicRefresh(); });
 window.addEventListener('focus', function() { syncMorningPlayback(); scheduleHomeDynamicRefresh(); });
-window.addEventListener('online', function() { setTimeout(maybeAutoGithubBackup, 500); });
 
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
@@ -8401,8 +8592,9 @@ function updateMorningMeta(item, result) {
   saveMorningMeta(meta);
   // A recitation-due word advances its recall interval only after an explicit
   // morning familiar/hard rating. Passive listening keeps it due for later.
-  if (item.reviewDue && (result === 'familiar' || result === 'hard')) {
+  if (item.reviewDue && !item.morningReviewRated && (result === 'familiar' || result === 'hard')) {
     rateReview(reviewSourceForMorning(item), item.en, result === 'familiar');
+    item.morningReviewRated = true;
   }
   if (result === 'familiar' || result === 'hard') {
     var feedback = (result === 'familiar' ? '已标记熟悉' : '已标记不熟悉') + ' · 晨听：' + (result === 'familiar' ? '熟悉节奏' : '困难强化轮') + ' · 下次晨听：' + intervalDays(m, pref[item.en]) + '天后';
@@ -8620,7 +8812,13 @@ function buildMorningQueue(randomFn) {
     totalSec += dur;
   }
 
-  q = WordsSessionOrder.shuffle(q, randomFn);
+  var urgentDue = [];
+  var nonDue = [];
+  for (var qi = 0; qi < q.length; qi++) {
+    if (q[qi] && q[qi].reviewDue) urgentDue.push(q[qi]);
+    else nonDue.push(q[qi]);
+  }
+  q = urgentDue.concat(WordsSessionOrder.shuffle(nonDue, randomFn));
 
   morningQueue = q;
   morningQueueEstSec = totalSec;
@@ -8629,6 +8827,7 @@ function buildMorningQueue(randomFn) {
     q[i].morningCompleted = false;
     q[i].morningSkipped = false;
     q[i].morningPrefCaptured = false;
+    q[i].morningReviewRated = false;
   }
   morningQueueBuiltAt = Date.now();
   scheduleMorningFirstAudioPrefetch();
@@ -8792,7 +8991,7 @@ function showMorningLoading() {
 
 function hideAllViews(options) {
   var opts = options || {};
-  var views = ['view-home', 'view-library', 'view-review', 'view-excluded-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
+  var views = ['view-home', 'view-library', 'view-review', 'view-excluded-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress', 'view-focus'];
   for (var i = 0; i < views.length; i++) {
     var el = document.getElementById(views[i]);
     if (el) { el.style.display = 'none'; el.scrollTop = 0; }
@@ -8940,10 +9139,11 @@ function showMorningQueue() {
     if (groups[g].words.length === 0) continue;
     var grp = groups[g];
     var showAll = grp.words.length <= 8;
+    var mqChevronDown = '<svg class="mq-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
     h += '<div class="morning-queue-section">';
     h += '<div class="morning-queue-header" onclick="toggleMQGroup(this)" data-group="' + grp.key + '" style="border-left:3px solid ' + grp.color + ';">';
     h += '<span>' + grp.label + ' <span class="mq-count">' + grp.words.length + '词</span></span>';
-    h += '<span class="mq-count" id="mqToggle_' + grp.key + '">' + (showAll ? '' : '展开全部 ▸') + '</span>';
+    h += '<span class="mq-count" id="mqToggle_' + grp.key + '">' + (showAll ? '' : '展开全部 ' + mqChevronDown) + '</span>';
     h += '</div>';
     h += '<div class="morning-queue-list" id="mqList_' + grp.key + '" style="' + (showAll ? '' : 'display:none;') + '">';
     var limit = showAll ? grp.words.length : 8;
@@ -8964,12 +9164,14 @@ function toggleMQGroup(el) {
   var grp = el.getAttribute('data-group');
   var list = document.getElementById('mqList_' + grp);
   var toggle = document.getElementById('mqToggle_' + grp);
+  var mqChevronDown = '<svg class="mq-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
+  var mqChevronUp = '<svg class="mq-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg>';
   if (list.style.display === 'none') {
     list.style.display = 'block';
-    if (toggle) toggle.textContent = '收起 ▴';
+    if (toggle) toggle.innerHTML = '收起 ' + mqChevronUp;
   } else {
     list.style.display = 'none';
-    if (toggle) toggle.textContent = '展开全部 ▸';
+    if (toggle) toggle.innerHTML = '展开全部 ' + mqChevronDown;
   }
 }
 
@@ -10551,6 +10753,7 @@ function undoMorningRating() {
   item.morningPrefCaptured = false;
   item.morningRatingState = null;
   item.morningPlaybackRating = null;
+  item.morningReviewRated = false;
   morningRatingRestartPending = null;
   updateMorningRatingUI();
   saveMorningActiveSession('rating_undo');
@@ -10576,13 +10779,15 @@ function setMorningCurrentRating(rating) {
   var item = morningQueue[morningPos];
   if (item.morningRating === rating) return;
   var source = item.source === 'hb' ? 'hongbaoshu' : 'vocab';
-  var state = ReviewCore.applyRating(source, item.en, rating === 'familiar', 'morning');
-  if (!item.morningPrefCaptured) {
-    item.morningHadPrefBeforeRating = state.hadPref;
-    item.morningPrefBeforeRating = state.oldPref;
-    item.morningRatingState = state;
-    item.morningPrefCaptured = true;
+  if (item.morningPrefCaptured && item.morningRatingState && typeof ReviewCore.undoRating === 'function') {
+    ReviewCore.undoRating(item.morningRatingState);
   }
+  var state = ReviewCore.applyRating(source, item.en, rating === 'familiar', 'morning', { reviewDue: !!item.reviewDue });
+  item.morningHadPrefBeforeRating = state.hadPref;
+  item.morningPrefBeforeRating = state.oldPref;
+  item.morningRatingState = state;
+  item.morningPrefCaptured = true;
+  item.morningReviewRated = !!item.reviewDue;
   item.morningRating = rating;
   updateMorningRatingUI();
   saveMorningActiveSession('rating');
@@ -10851,8 +11056,13 @@ function showMorningReview() {
   var d7Min = Math.round(d7Duration / 60000);
   var d30Min = Math.round(d30Duration / 60000);
 
+  var chartIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>';
+  var warnIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  var listIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>';
+  var noteIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+
   var html = '';
-  html += '<h3>📊 统计概览</h3>';
+  html += '<h3 class="mr-heading">' + chartIcon + '<span>统计概览</span></h3>';
   html += '<div class="morning-review-stats">';
   html += '<div class="morning-review-stat"><div class="mr-num">' + d7Days + '</div><div class="mr-label">近7天晨读</div></div>';
   html += '<div class="morning-review-stat"><div class="mr-num">' + d7Words + '</div><div class="mr-label">近7天词数</div></div>';
@@ -10861,14 +11071,14 @@ function showMorningReview() {
   html += '<div class="morning-review-stat"><div class="mr-num">' + d30Words + '</div><div class="mr-label">近30天词数</div></div>';
   html += '<div class="morning-review-stat"><div class="mr-num">' + d30Min + '分</div><div class="mr-label">近30天时长</div></div>';
   html += '</div>';
-  html += '<div style="display:flex;gap:12px;margin-bottom:6px;font-size:13px;">';
-  html += '<span>🔴 困难词：' + totalHard + '</span>';
-  html += '<span>🟢 已熟练：' + totalFamiliar + '</span>';
-  html += '<span>📝 总记录：' + wordStats.length + '词</span>';
+  html += '<div style="display:flex;gap:12px;margin-bottom:6px;font-size:13px;align-items:center;">';
+  html += '<span style="display:inline-flex;align-items:center;"><span class="mr-dot mr-dot-hard" aria-hidden="true"></span>困难词：' + totalHard + '</span>';
+  html += '<span style="display:inline-flex;align-items:center;"><span class="mr-dot mr-dot-fam" aria-hidden="true"></span>已熟练：' + totalFamiliar + '</span>';
+  html += '<span style="display:inline-flex;align-items:center;"><span style="display:inline-flex;margin-right:4px;">' + noteIcon + '</span>总记录：' + wordStats.length + '词</span>';
   html += '</div>';
 
   if (priorityReview.length > 0) {
-    html += '<h3>⚠️ 需优先复习（' + priorityReview.length + '词）</h3>';
+    html += '<h3 class="mr-heading">' + warnIcon + '<span>需优先复习（' + priorityReview.length + '词）</span></h3>';
     html += '<ul class="mr-word-list">';
     for (var i = 0; i < Math.min(30, priorityReview.length); i++) {
       var w = priorityReview[i];
@@ -10884,7 +11094,7 @@ function showMorningReview() {
     html += '</ul>';
   }
 
-  html += '<h3>📋 最近活跃词（按时间）</h3>';
+  html += '<h3 class="mr-heading">' + listIcon + '<span>最近活跃词（按时间）</span></h3>';
   html += '<ul class="mr-word-list">';
   var shown = 0;
   for (var i = 0; i < wordStats.length && shown < 50; i++) {
@@ -10894,7 +11104,7 @@ function showMorningReview() {
     var daysAgo = w.lastAt > 0 ? Math.floor((tk - w.lastAt) / 86400000) : '--';
     html += '<li class="mr-word-item">';
     html += '<div><span class="mr-w-en">' + escHtml(w.en) + '</span><span class="mr-w-cn">' + escHtml(w.cn) + '</span></div>';
-    html += '<div class="mr-w-meta">听' + w.totalCompletions + '次 · ' + (w.hardHits > 0 ? '🔴' : '') + ' ' + (typeof daysAgo === 'number' ? daysAgo + '天前' : '--') + '</div>';
+    html += '<div class="mr-w-meta">听' + w.totalCompletions + '次 · ' + (w.hardHits > 0 ? '<span class="mr-dot mr-dot-hard" title="困难" aria-hidden="true"></span> ' : '') + (typeof daysAgo === 'number' ? daysAgo + '天前' : '--') + '</div>';
     html += '</li>';
   }
   html += '</ul>';

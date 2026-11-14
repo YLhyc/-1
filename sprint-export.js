@@ -14,9 +14,52 @@
       .replace(/'/g, '&#39;');
   }
 
+  function getDictIndex() {
+    var map = Object.create(null);
+    if (Array.isArray(global.VOCAB)) {
+      for (var i = 0; i < global.VOCAB.length; i++) {
+        var v = global.VOCAB[i];
+        if (v && v.en) {
+          var k = String(v.en).trim().toLowerCase();
+          if (k && !map[k]) map[k] = v.cn || '';
+        }
+      }
+    }
+    if (Array.isArray(global.HONGBAOSHU)) {
+      for (var j = 0; j < global.HONGBAOSHU.length; j++) {
+        var h = global.HONGBAOSHU[j];
+        if (h && h.en) {
+          var hk = String(h.en).trim().toLowerCase();
+          if (hk && !map[hk]) map[hk] = h.cn || '';
+        }
+      }
+    }
+    return map;
+  }
+
+  function ensureHongbaoshu(callback) {
+    if (Array.isArray(global.HONGBAOSHU) || typeof global.loadHB !== 'function') {
+      if (typeof callback === 'function') callback();
+      return;
+    }
+    try {
+      global.loadHB(function() {
+        if (typeof callback === 'function') callback();
+      });
+    } catch(e) {
+      if (typeof callback === 'function') callback();
+    }
+  }
+
   function collectWords(sourceType) {
     var result = [];
     var seen = Object.create(null);
+    var dictMap = null;
+
+    function getDict() {
+      if (!dictMap) dictMap = getDictIndex();
+      return dictMap;
+    }
 
     function add(en, cn, meta) {
       if (!en) return;
@@ -24,68 +67,156 @@
       if (!clean || seen[clean]) return;
       seen[clean] = true;
       result.push({
-        en: en,
+        en: String(en).trim(),
         cn: cn || '',
         meta: meta || {}
       });
     }
 
     if (sourceType === 'hard') {
+      var dMap = getDict();
       if (global.ReviewCore && global.ReviewCore.loadReviewMeta) {
         var meta = global.ReviewCore.loadReviewMeta();
         for (var k in meta) {
           var item = meta[k];
-          if (!item || !item.en) continue;
-          if (item.lapses >= 1 || item.lastRating === 'forget' || item.lastRating === 'uncertain') {
-            add(item.en, item.cn, { lapses: item.lapses, source: item.source || 'review' });
+          if (!item) continue;
+          var split = k.indexOf(':');
+          if (split <= 0) continue;
+          var rawSrc = k.slice(0, split);
+          var en = k.slice(split + 1);
+          var src = (global.ReviewCore && global.ReviewCore.reviewSource)
+            ? global.ReviewCore.reviewSource(rawSrc)
+            : (rawSrc === 'hb' ? 'hongbaoshu' : rawSrc);
+          if (global.ReviewCore && global.ReviewCore.isExcluded && global.ReviewCore.isExcluded(src, en)) continue;
+          var lapses = Number(item.lapses) || 0;
+          var hardHits = Number(item.hardHits) || 0;
+          var lastRating = item.lastRating;
+          if (lapses >= 1 || hardHits >= 1 || lastRating === 'forget' || lastRating === 'uncertain' || lastRating === 'hard') {
+            var cn = item.cn || dMap[en.toLowerCase()] || '';
+            add(en, cn, { lapses: lapses, hardHits: hardHits, source: src });
           }
         }
       }
       try {
-        var uf = JSON.parse(localStorage.getItem('unfamiliar_words_v1') || '{}');
-        for (var w in uf) {
-          if (uf[w]) add(w, uf[w].cn || '', { source: 'unfamiliar' });
+        var vvP = JSON.parse(localStorage.getItem('vv_prefs') || '{}');
+        for (var vw in vvP) {
+          if (vvP[vw] === 'hard') {
+            if (global.ReviewCore && global.ReviewCore.isExcluded && global.ReviewCore.isExcluded('vocab', vw)) continue;
+            add(vw, dMap[vw.toLowerCase()] || '', { source: 'vocab' });
+          }
+        }
+      } catch(e) {}
+      try {
+        var hbP = JSON.parse(localStorage.getItem('hb_prefs') || '{}');
+        for (var hw in hbP) {
+          if (hbP[hw] === 'hard') {
+            if (global.ReviewCore && global.ReviewCore.isExcluded && global.ReviewCore.isExcluded('hongbaoshu', hw)) continue;
+            add(hw, dMap[hw.toLowerCase()] || '', { source: 'hongbaoshu' });
+          }
+        }
+      } catch(e) {}
+      try {
+        var ufP = JSON.parse(localStorage.getItem('uf_prefs') || '{}');
+        for (var uk in ufP) {
+          if (ufP[uk] === 'veryhard') {
+            var uen = uk;
+            var usrc = 'vocab';
+            if (uk.indexOf('vocab_') === 0) {
+              uen = uk.slice(6);
+              usrc = 'vocab';
+            } else if (uk.indexOf('hb_') === 0) {
+              uen = uk.slice(3);
+              usrc = 'hongbaoshu';
+            }
+            if (global.ReviewCore && global.ReviewCore.isExcluded && global.ReviewCore.isExcluded(usrc, uen)) continue;
+            add(uen, dMap[uen.toLowerCase()] || '', { source: usrc });
+          }
+        }
+      } catch(e) {}
+      try {
+        var wbP = JSON.parse(localStorage.getItem('wb_prefs') || '{}');
+        for (var wk in wbP) {
+          if (wbP[wk] === 'hard') {
+            var wbWord = null;
+            var under = wk.lastIndexOf('_');
+            if (under > 0 && Array.isArray(global.ENTRIES)) {
+              var eId = wk.slice(0, under);
+              var wIdx = parseInt(wk.slice(under + 1), 10);
+              for (var ei = 0; ei < global.ENTRIES.length; ei++) {
+                if (global.ENTRIES[ei] && global.ENTRIES[ei].id === eId && Array.isArray(global.ENTRIES[ei].words)) {
+                  wbWord = global.ENTRIES[ei].words[wIdx];
+                  break;
+                }
+              }
+            }
+            if (wbWord && wbWord.en) {
+              add(wbWord.en, wbWord.cn || dMap[wbWord.en.toLowerCase()] || '', { source: 'wordbank' });
+            } else if (!/^[0-9a-zA-Z_-]+_[0-9]+$/.test(wk)) {
+              add(wk, dMap[wk.toLowerCase()] || '', { source: 'wordbank' });
+            }
+          }
+        }
+      } catch(e) {}
+      try {
+        var ufOld = JSON.parse(localStorage.getItem('unfamiliar_words_v1') || '{}');
+        for (var uw in ufOld) {
+          if (ufOld[uw]) {
+            var ucn = (typeof ufOld[uw] === 'object' && ufOld[uw].cn) ? ufOld[uw].cn : (dMap[uw.toLowerCase()] || '');
+            add(uw, ucn, { source: 'unfamiliar' });
+          }
         }
       } catch(e) {}
     } else if (sourceType === 'due') {
       if (global.ReviewCore && global.ReviewCore.getDueReviewItems) {
         var dueList = global.ReviewCore.getDueReviewItems();
+        var dMapDue = getDict();
         dueList.forEach(function(item) {
-          add(item.en, item.cn, { dueAt: item.dueAt, source: item.source });
+          if (!item || !item.en) return;
+          var cn = item.cn || dMapDue[item.en.toLowerCase()] || '';
+          add(item.en, cn, { dueAt: item.dueAt, lapses: item.lapses, source: item.source });
         });
       }
     } else if (sourceType === 'roots') {
       if (global.WordNetwork && global.WordNetwork.ROOT_FAMILIES) {
-        global.WordNetwork.ROOT_FAMILIES.forEach(function(rf) {
-          rf.family.forEach(function(item) {
-            add(item.en, (item.pos ? item.pos + ' ' : '') + (item.cn || ''), {
-              root: rf.root,
-              rootMean: rf.mean
+        var families = global.WordNetwork.ROOT_FAMILIES;
+        var rfList = Array.isArray(families) ? families : Object.keys(families).map(function(k) { return families[k]; });
+        rfList.forEach(function(rf) {
+          if (!rf) return;
+          var wordsList = rf.words || rf.family;
+          var rMean = rf.meaning || rf.mean || '';
+          if (Array.isArray(wordsList)) {
+            wordsList.forEach(function(item) {
+              if (!item || !item.en) return;
+              var def = (item.pos ? item.pos + ' ' : '') + (item.cn || '');
+              add(item.en, def, {
+                root: rf.root || '',
+                rootMean: rMean
+              });
             });
-          });
+          }
         });
       }
     } else if (sourceType === 'confusables') {
       if (global.WordNetwork && global.WordNetwork.CONFUSABLE_LIST) {
         global.WordNetwork.CONFUSABLE_LIST.forEach(function(pair) {
+          if (!pair || !Array.isArray(pair.words)) return;
           pair.words.forEach(function(w) {
-            add(w, pair.analysis, { confusableGroup: pair.words.join(' vs ') });
+            add(w, pair.analysis || '', { confusableGroup: pair.words.join(' vs ') });
           });
         });
       }
     } else if (sourceType === 'vocab') {
       if (Array.isArray(global.VOCAB)) {
         global.VOCAB.forEach(function(item) {
-          add(item.en, item.cn, { sound: item.sound });
+          if (item && item.en) add(item.en, item.cn, { sound: item.sound, source: 'vocab' });
         });
       }
-    }
-
-    // Fallback: If filtered list is empty, default to vocab words so user always has printable material
-    if (!result.length && Array.isArray(global.VOCAB)) {
-      global.VOCAB.slice(0, 50).forEach(function(item) {
-        add(item.en, item.cn, { fallback: true });
-      });
+    } else if (sourceType === 'hb' || sourceType === 'hongbaoshu') {
+      if (Array.isArray(global.HONGBAOSHU)) {
+        global.HONGBAOSHU.forEach(function(item) {
+          if (item && item.en) add(item.en, item.cn, { sound: item.sound, source: 'hongbaoshu' });
+        });
+      }
     }
 
     return result;
@@ -104,7 +235,7 @@
         if (net.hasNetwork) {
           if (net.root) {
             extraHtml += '<div style="margin-top:6px;font-size:12px;color:#07536a;"><b>词根：</b>' +
-              escapeHTML(net.root.root) + ' (' + escapeHTML(net.root.mean) + ')</div>';
+              escapeHTML(net.root.root) + ' (' + escapeHTML(net.root.meaning || net.root.mean || '') + ')</div>';
           }
           if (net.confusable) {
             extraHtml += '<div style="margin-top:4px;font-size:11px;color:#b45309;"><b>形近辨析：</b>' +
@@ -148,7 +279,8 @@
       if (global.WordNetwork && global.WordNetwork.lookup) {
         var net = global.WordNetwork.lookup(w.en);
         if (net.hasNetwork && net.root) {
-          rootNote = '<span class="sprint-print-root">[' + escapeHTML(net.root.root) + ':' + escapeHTML(net.root.mean) + ']</span>';
+          var rMean = net.root.meaning || net.root.mean || '';
+          rootNote = '<span class="sprint-print-root">[' + escapeHTML(net.root.root) + (rMean ? ':' + escapeHTML(rMean) : '') + ']</span>';
         }
       }
       html += '<div class="sprint-print-row">' +
@@ -177,7 +309,9 @@
       due: '待复习高危词',
       roots: '30+经典词根家族',
       confusables: '27+真题形近辨析',
-      vocab: '考研核心生词本'
+      vocab: '考研核心生词本',
+      hb: '红宝书核心词库',
+      hongbaoshu: '红宝书核心词库'
     };
     return map[f] || '精选词单';
   }
@@ -198,33 +332,47 @@
 
   function triggerPrint() {
     if (typeof document === 'undefined') return;
-    var words = cachedWords.length ? cachedWords : collectWords(currentFilter);
-    var label = getFilterLabel(currentFilter);
-    var container = document.getElementById('sprintPrintZone');
-    if (!container) {
-      container = document.createElement('div');
-      container.id = 'sprintPrintZone';
-      document.body.appendChild(container);
-    }
-    container.innerHTML = generatePrintableMarkup(words, label, label);
-    window.print();
+    ensureHongbaoshu(function() {
+      var words = collectWords(currentFilter);
+      if (!words.length) {
+        showToast('当前分类暂无可打印的单词');
+        return;
+      }
+      cachedWords = words;
+      var label = getFilterLabel(currentFilter);
+      var container = document.getElementById('sprintPrintZone');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'sprintPrintZone';
+        document.body.appendChild(container);
+      }
+      container.innerHTML = generatePrintableMarkup(words, label, label);
+      window.print();
+    });
   }
 
   function copyAnkiText() {
     if (typeof document === 'undefined') return;
-    var words = cachedWords.length ? cachedWords : collectWords(currentFilter);
-    var label = getFilterLabel(currentFilter);
-    var tsv = generateAnkiTsv(words, '考研英语::' + label);
+    ensureHongbaoshu(function() {
+      var words = collectWords(currentFilter);
+      if (!words.length) {
+        showToast('当前分类暂无词汇可导出');
+        return;
+      }
+      cachedWords = words;
+      var label = getFilterLabel(currentFilter);
+      var tsv = generateAnkiTsv(words, '考研英语::' + label);
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(tsv).then(function() {
-        showToast('已复制 ' + words.length + ' 词 Anki TSV 文本');
-      }).catch(function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(tsv).then(function() {
+          showToast('已复制 ' + words.length + ' 词 Anki TSV 文本');
+        }).catch(function() {
+          fallbackCopy(tsv, words.length);
+        });
+      } else {
         fallbackCopy(tsv, words.length);
-      });
-    } else {
-      fallbackCopy(tsv, words.length);
-    }
+      }
+    });
   }
 
   function fallbackCopy(text, count) {
@@ -245,24 +393,36 @@
 
   function downloadAnkiFile() {
     if (typeof document === 'undefined') return;
-    var words = cachedWords.length ? cachedWords : collectWords(currentFilter);
-    var label = getFilterLabel(currentFilter);
-    var tsv = generateAnkiTsv(words, '考研英语::' + label);
-    var blob = new Blob([tsv], { type: 'text/tab-separated-values;charset=utf-8' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'kaoyan_sprint_' + currentFilter + '_' + words.length + 'words.tsv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-    showToast('已生成并下载 ' + words.length + ' 词 Anki 牌组');
+    ensureHongbaoshu(function() {
+      var words = collectWords(currentFilter);
+      if (!words.length) {
+        showToast('当前分类暂无词汇可导出');
+        return;
+      }
+      cachedWords = words;
+      var label = getFilterLabel(currentFilter);
+      var tsv = generateAnkiTsv(words, '考研英语::' + label);
+      var blob = new Blob([tsv], { type: 'text/tab-separated-values;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'kaoyan_sprint_' + currentFilter + '_' + words.length + 'words.tsv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+      showToast('已生成并下载 ' + words.length + ' 词 Anki 牌组');
+    });
   }
 
   function switchFilter(f) {
     currentFilter = f;
     updateModalContent();
+    if (!Array.isArray(global.HONGBAOSHU) && typeof global.loadHB === 'function') {
+      ensureHongbaoshu(function() {
+        if (currentFilter === f) updateModalContent();
+      });
+    }
   }
 
   function updateModalContent() {
@@ -305,6 +465,11 @@
     if (!modal) return;
     updateModalContent();
     modal.classList.add('open');
+    if (!Array.isArray(global.HONGBAOSHU) && typeof global.loadHB === 'function') {
+      ensureHongbaoshu(function() {
+        updateModalContent();
+      });
+    }
   }
 
   function closeModal() {
@@ -422,7 +587,8 @@
     downloadAnki: downloadAnkiFile,
     switchFilter: switchFilter,
     openModal: openModal,
-    closeModal: closeModal
+    closeModal: closeModal,
+    refreshPreview: updateModalContent
   };
 
   if (typeof document !== 'undefined') {

@@ -1,0 +1,536 @@
+/* Responsive layout & desktop interaction enhancements for iPad (>=768px) & Windows/Mac Desktop (>=1100px) */
+
+/* ── 1. Cross-device Sync Status Pill ── */
+.sync-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 4px 12px rgba(7, 83, 106, .08), inset 0 1px rgba(255, 255, 255, .9);
+  color: #315666;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform .14s ease, background-color .16s ease, border-color .16s ease;
+}
+.sync-status-pill:active { transform: scale(.96); }
+.sync-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8e9ea8;
+  flex: none;
+}
+.sync-status-pill.sync-pill-ok .sync-pill-dot { background: #1fa463; }
+.sync-status-pill.sync-pill-syncing .sync-pill-dot {
+  background: #057a9d;
+  animation: wordsSyncPulse 1.1s ease-in-out infinite;
+}
+.sync-status-pill.sync-pill-pending .sync-pill-dot { background: #e08e0b; }
+.sync-status-pill.sync-pill-error {
+  color: #c62828;
+  background: rgba(254, 242, 242, .92);
+  border-color: rgba(220, 38, 38, .28);
+}
+.sync-status-pill.sync-pill-error .sync-pill-dot { background: #dc2626; }
+.sync-status-pill.sync-pill-unconfigured { color: #5b7482; }
+
+@keyframes wordsSyncPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .45; transform: scale(.78); }
+}
+
+/* Sub-app nav bar alignment for sync pill */
+#view-units .nav-bar .sync-status-pill {
+  margin-left: auto;
+}
+.wb-home-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .86);
+  background: rgba(255, 255, 255, .72);
+  color: #057a9d;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Mobile wrapper neutralizer for desktop grids */
+.home-tasks-grid { display: contents; }
+.app-sidebar-head,
+.app-sidebar-foot { display: none; }
+
+/* ── 2. Windows / Mouse / Fine-pointer Polish (any viewport with mouse) ── */
+@media (hover: hover) and (pointer: fine) {
+  body .app-page,
+  body .morning-view,
+  body #view-units,
+  body #view-groups,
+  body #view-trash,
+  body #view-home,
+  body #view-recycle,
+  body #view-group,
+  .vc-cn-note,
+  .review-list,
+  .sync-modal-card {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(5, 122, 157, .28) transparent;
+  }
+  body .app-page::-webkit-scrollbar,
+  body .morning-view::-webkit-scrollbar,
+  .vc-cn-note::-webkit-scrollbar {
+    display: block;
+    width: 7px;
+    height: 7px;
+  }
+  body .app-page::-webkit-scrollbar-thumb,
+  body .morning-view::-webkit-scrollbar-thumb,
+  .vc-cn-note::-webkit-scrollbar-thumb {
+    background: rgba(5, 122, 157, .26);
+    border-radius: 999px;
+  }
+  body .app-page::-webkit-scrollbar-thumb:hover,
+  body .morning-view::-webkit-scrollbar-thumb:hover,
+  .vc-cn-note::-webkit-scrollbar-thumb:hover {
+    background: rgba(5, 122, 157, .46);
+  }
+
+  /* Allow selecting & copying English words / Chinese definitions / examples with mouse */
+  .vc-word,
+  .vc-cn,
+  .vc-cn-note,
+  .vc-ex-en,
+  .vc-ex-cn,
+  .wb-en,
+  .wb-cn,
+  .mc-en,
+  .mc-cn,
+  .mc-example-en,
+  .mc-example-cn,
+  .focus-word,
+  .review-en,
+  .review-cn,
+  .vc-word-network {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  /* Desktop hover feedback */
+  .sync-status-pill:hover {
+    background: rgba(255, 255, 255, .96);
+    border-color: rgba(5, 122, 157, .25);
+  }
+  .unit-btn:hover,
+  .today-task:hover,
+  .entry-item:hover,
+  .app-icon-btn:hover,
+  .vc-btn:hover,
+  .mc-btn:hover,
+  .recite-rate-btn:hover,
+  .vc-pronounce-btn:hover {
+    filter: brightness(.98);
+    box-shadow: 0 8px 22px rgba(7, 83, 106, .12);
+  }
+  .source-row:hover {
+    background: rgba(235, 248, 252, .75);
+  }
+
+  /* Reveal swipe action buttons on hover/focus without needing touch horizontal swipe */
+  .word-swipe:not(.swiped) .ws-actions,
+  .entry-swipe:not(.swiped) .es-actions {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    top: 50%;
+    bottom: auto;
+    right: 6px;
+    transform: translateY(-50%);
+    gap: 4px;
+    padding: 3px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 6px 16px rgba(15, 45, 60, .14);
+    transition: opacity .14s ease;
+  }
+  .word-swipe:not(.swiped):hover .ws-actions,
+  .word-swipe:not(.swiped):focus-within .ws-actions,
+  .entry-swipe:not(.swiped):hover .es-actions,
+  .entry-swipe:not(.swiped):focus-within .es-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .word-swipe:not(.swiped) .ws-btn,
+  .entry-swipe:not(.swiped) .es-btn {
+    min-width: 40px;
+    height: 28px;
+    padding: 0 9px;
+    border-radius: 7px;
+    font-size: 11px;
+  }
+
+  /* Excluded review restore button hover reveal */
+  .archive-swipe:not(.swiped) .archive-action {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    top: 50%;
+    bottom: auto;
+    right: 10px;
+    transform: translateY(-50%);
+    height: 30px;
+    width: auto;
+    padding: 0 12px;
+    border-radius: 8px;
+    transition: opacity .14s ease;
+  }
+  .archive-swipe:not(.swiped):hover .archive-action,
+  .archive-swipe:not(.swiped):focus-within .archive-action {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Wordblock cursor */
+  .word-block { cursor: pointer; }
+}
+
+/* ── 3. iPad / Tablet Layout (>= 768px) ── */
+@media (min-width: 768px) {
+  body .app-page,
+  body .morning-view {
+    max-width: 840px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 108px;
+  }
+  body .app-topbar {
+    margin: 0 -24px 20px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .home-tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+  .home-tasks-grid > .today-task {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .home-tasks-grid > .today-task + .today-task {
+    margin-top: 0;
+  }
+
+  .home-metrics {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .home-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .home-actions .home-link:last-child {
+    grid-column: auto;
+  }
+
+  .unit-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+  }
+
+  #view-library .source-list,
+  #view-review .review-list,
+  #view-review .source-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #view-library .source-row,
+  #view-review .source-row {
+    border-bottom: 1px solid rgba(216, 229, 241, .6);
+    border-right: 1px solid rgba(216, 229, 241, .5);
+  }
+
+  .app-tabbar {
+    max-width: 740px;
+  }
+
+  #view-today-recite .vocab-card,
+  #view-today-recite .vocab-card-long,
+  #view-groups.vocab-card-view .vocab-card,
+  #view-groups.vocab-card-view .vocab-card-long {
+    width: min(88vw, 620px);
+  }
+  #view-today-recite .recite-rate-actions,
+  #view-groups.vocab-card-view .recite-rate-actions {
+    width: min(100%, 520px);
+  }
+
+  /* Sub-apps on iPad */
+  body #view-units,
+  body #view-groups,
+  body #view-trash,
+  body #view-home,
+  body #view-recycle,
+  body #view-group {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  body #entryList.entry-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  body .uf-recite-card,
+  body .vocab-card {
+    width: min(86vw, 600px);
+  }
+  body .recite-rate-actions {
+    width: min(100%, 520px);
+  }
+}
+
+/* ── 4. Recite 2-column reading split for revealed long cards (>= 1024px) ── */
+@media (min-width: 1024px) {
+  #view-today-recite .vocab-card-long,
+  #view-groups.vocab-card-view .vocab-card-long,
+  body #view-groups.recite-view .vocab-card {
+    width: min(90vw, 840px);
+    max-height: 62dvh;
+    padding: 22px 26px;
+  }
+  #view-today-recite .vc-phase2-content:not(.recite-hidden),
+  #view-groups.vocab-card-view .vc-phase2-content:not(.recite-hidden),
+  body #view-groups.recite-view .vc-phase2-content:not(.recite-hidden) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 12px 18px;
+    align-items: start;
+  }
+  #view-today-recite .vc-phase2-content:not(.recite-hidden) .vc-sentence-zone,
+  #view-groups.vocab-card-view .vc-phase2-content:not(.recite-hidden) .vc-sentence-zone,
+  body #view-groups.recite-view .vc-phase2-content:not(.recite-hidden) .vc-sentence-zone,
+  body #view-groups.recite-view .vc-phase2-content:not(.recite-hidden) .hb-example-box {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: stretch;
+    margin-top: 0;
+  }
+  #view-today-recite .vc-cn-note,
+  #view-groups.vocab-card-view .vc-cn-note {
+    max-height: 220px;
+  }
+}
+
+/* ── 5. Windows / Desktop Left Glass Sidebar + Wide Workspace (>= 1100px) ── */
+@media (min-width: 1100px) {
+  /* Transform bottom floating tabbar into fixed left glass sidebar */
+  .app-tabbar:not(.hidden) {
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    bottom: 16px;
+    right: auto;
+    width: 224px;
+    max-width: 224px;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 18px 12px 14px;
+    border-radius: 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    overflow-y: auto;
+    z-index: 90;
+  }
+  .app-tab-indicator {
+    display: none !important;
+  }
+  .app-sidebar-head {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px 10px 14px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(92, 132, 145, .14);
+  }
+  .app-sidebar-brand {
+    font-size: 20px;
+    font-weight: 850;
+    color: var(--deep, #0b3c4d);
+    letter-spacing: -.01em;
+  }
+  .app-sidebar-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: #5f7a85;
+  }
+  .app-tab {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 11px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.2;
+  }
+  .app-tab.active {
+    background: #d7edf0;
+    color: var(--ocean, #057a9d);
+    box-shadow: inset 0 1px rgba(255, 255, 255, .75);
+  }
+  .app-tab:hover:not(.active) {
+    background: rgba(5, 122, 157, .07);
+    color: #10283a;
+  }
+
+  .app-sidebar-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding: 12px 6px 2px;
+    border-top: 1px solid rgba(92, 132, 145, .14);
+  }
+  .app-sidebar-foot .sync-status-pill {
+    width: 100%;
+    justify-content: center;
+    height: 34px;
+  }
+  .app-sidebar-shortcuts {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(235, 246, 248, .72);
+    border: 1px solid rgba(92, 132, 145, .1);
+    font-size: 11px;
+    line-height: 1.55;
+    color: #5b7482;
+  }
+  .app-sidebar-shortcuts strong {
+    display: block;
+    color: #2c4a57;
+    margin-bottom: 2px;
+  }
+
+  /* Primary tab views shift right to clear 224px sidebar cleanly */
+  #view-home.app-page,
+  #view-library.app-page,
+  #view-review.app-page,
+  #view-progress.app-page {
+    max-width: 1060px;
+    width: calc(100% - 268px);
+    margin-left: 254px;
+    margin-right: auto;
+    padding-left: 28px;
+    padding-right: 28px;
+    padding-bottom: 48px;
+  }
+
+  /* Immersive views (sidebar hidden) center across full desktop window */
+  #view-units.app-page,
+  #view-groups.app-page,
+  #view-focus.app-page,
+  #view-excluded-review.app-page,
+  #view-today-recite.app-page,
+  #view-morning-home.morning-view,
+  #view-morning-queue.morning-view,
+  #view-morning-review.morning-view,
+  #view-morning-summary.morning-view {
+    max-width: 1080px;
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-bottom: 56px;
+  }
+  #view-home .app-topbar,
+  #view-library .app-topbar,
+  #view-review .app-topbar,
+  #view-progress .app-topbar {
+    margin-left: -28px;
+    margin-right: -28px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  /* Constrain Morning Player topbar & card cleanly on wide desktop monitors */
+  #view-morning-player.morning-view {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #view-morning-player .morning-player {
+    max-width: 920px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  #view-morning-player .morning-player-top {
+    border-radius: 0 0 22px 22px;
+    border-left: 1px solid rgba(255, 255, 255, .82);
+    border-right: 1px solid rgba(255, 255, 255, .82);
+  }
+  #view-morning-player .morning-player-card {
+    width: min(86vw, 680px);
+    min-height: 360px;
+  }
+
+  /* Listen Mode 2-column groups in main app & sub-apps */
+  #view-groups:not(.vocab-card-view) #groupContainer,
+  body #view-groups:not(.recite-view) #groupContainer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  #view-groups:not(.vocab-card-view) #groupContainer > .study-mode,
+  #view-groups:not(.vocab-card-view) #groupContainer > .empty-msg,
+  body #view-groups:not(.recite-view) #groupContainer > .study-mode,
+  body #view-groups:not(.recite-view) #groupContainer > .empty-msg {
+    grid-column: 1 / -1;
+  }
+  #view-groups:not(.vocab-card-view) .group-card,
+  #view-groups:not(.vocab-card-view) .word-group,
+  body #view-groups:not(.recite-view) .word-group {
+    margin-bottom: 0;
+  }
+
+  /* Desktop progress dashboard multi-column */
+  #progressContent .progress-grid,
+  #progressContent .morning-review-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* Sub-app desktop comfortable max-width */
+  body #view-units,
+  body #view-groups,
+  body #view-trash,
+  body #view-home,
+  body #view-recycle,
+  body #view-group {
+    max-width: 1120px;
+  }
+  body #entryList.entry-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
