@@ -11,6 +11,9 @@
     wbPrefs: 'wb_prefs',
     wbDeleted: 'wb_deleted',
     wbPinned: 'wb_pinned',
+    spPrefs: 'sp_prefs',
+    sprintMastered: 'sprint_mastered_words',
+    sprintWeak: 'sprint_weak_words',
     activity: 'learning_activity_v1',
     recall: 'recall_quality_v1',
     review: 'review_meta_v1',
@@ -44,12 +47,13 @@
   var GITHUB_BACKUP_FILE = 'kaoyan-english-review-backup.json';
 
   var MAP_STORE_KEYS = [
-    'vocabPrefs', 'hbPrefs', 'ufPrefs', 'wbPrefs',
+    'vocabPrefs', 'hbPrefs', 'ufPrefs', 'wbPrefs', 'spPrefs',
     'review', 'excluded', 'focus', 'wbDeleted', 'morMeta'
   ];
   var SCALAR_STORE_KEYS = [
     'learningResume', 'todaySettings', 'todaySession', 'todayRotation',
-    'morSettings', 'morCursor', 'morActive', 'morTiming', 'wbPinned'
+    'morSettings', 'morCursor', 'morActive', 'morTiming', 'wbPinned',
+    'sprintMastered', 'sprintWeak'
   ];
 
   var WATCHED_RAW_KEYS = {};
@@ -264,6 +268,11 @@
         deleted: normalizeWbDeleted(readKey(st, STORAGE_KEYS.wbDeleted, [])),
         pinned: Array.isArray(readKey(st, STORAGE_KEYS.wbPinned, [])) ? readKey(st, STORAGE_KEYS.wbPinned, []) : []
       },
+      sprint: {
+        p: isPlainObject(readKey(st, STORAGE_KEYS.spPrefs, {})) ? readKey(st, STORAGE_KEYS.spPrefs, {}) : {},
+        mastered: Array.isArray(readKey(st, STORAGE_KEYS.sprintMastered, [])) ? readKey(st, STORAGE_KEYS.sprintMastered, []) : [],
+        weak: Array.isArray(readKey(st, STORAGE_KEYS.sprintWeak, [])) ? readKey(st, STORAGE_KEYS.sprintWeak, []) : []
+      },
       activity: isPlainObject(activityRaw) && isPlainObject(activityRaw.days) ? activityRaw : { days: {} },
       recall: isPlainObject(recallRaw) && isPlainObject(recallRaw.days) ? recallRaw : { days: {} },
       review: isPlainObject(readKey(st, STORAGE_KEYS.review, {})) ? readKey(st, STORAGE_KEYS.review, {}) : {},
@@ -293,6 +302,7 @@
     var v = isPlainObject(a.vocab) ? a.vocab : {};
     var hb = isPlainObject(a.hongbaoshu) ? a.hongbaoshu : {};
     var wb = isPlainObject(a.wb) ? a.wb : {};
+    var sp = isPlainObject(a.sprint) ? a.sprint : {};
     var tr = isPlainObject(a.todayRecite) ? a.todayRecite : {};
     var mor = isPlainObject(a.morning) ? a.morning : {};
 
@@ -311,6 +321,11 @@
         p: isPlainObject(wb.p) ? wb.p : {},
         deleted: normalizeWbDeleted(wb.deleted),
         pinned: Array.isArray(wb.pinned) ? wb.pinned.slice() : []
+      },
+      sprint: {
+        p: isPlainObject(sp.p) ? sp.p : {},
+        mastered: Array.isArray(sp.mastered) ? sp.mastered.slice() : [],
+        weak: Array.isArray(sp.weak) ? sp.weak.slice() : []
       },
       activity: isPlainObject(a.activity) && isPlainObject(a.activity.days) ? a.activity : { days: {} },
       recall: isPlainObject(a.recall) && isPlainObject(a.recall.days) ? a.recall : { days: {} },
@@ -342,6 +357,7 @@
       hbPrefs: (data.hongbaoshu && data.hongbaoshu.p) || {},
       ufPrefs: data.uf || {},
       wbPrefs: (data.wb && data.wb.p) || {},
+      spPrefs: (data.sprint && data.sprint.p) || {},
       review: data.review || {},
       excluded: data.excluded || {},
       focus: data.focus || {},
@@ -360,7 +376,9 @@
       morCursor: (data.morning && data.morning.cursor) || {},
       morActive: (data.morning && data.morning.active) || null,
       morTiming: (data.morning && data.morning.timing) || {},
-      wbPinned: (data.wb && data.wb.pinned) || []
+      wbPinned: (data.wb && data.wb.pinned) || [],
+      sprintMastered: (data.sprint && data.sprint.mastered) || [],
+      sprintWeak: (data.sprint && data.sprint.weak) || []
     };
   }
 
@@ -765,6 +783,16 @@
       });
       outScalars.wbPinned = unionPinned;
     }
+    ['sprintMastered', 'sprintWeak'].forEach(function (spKey) {
+      if (!hasBase && Array.isArray(lScalars[spKey]) && Array.isArray(rScalars[spKey])) {
+        var spSeen = {};
+        var unionList = [];
+        lScalars[spKey].concat(rScalars[spKey]).forEach(function (w) {
+          if (w && !spSeen[w]) { spSeen[w] = true; unionList.push(w); }
+        });
+        outScalars[spKey] = unionList;
+      }
+    });
 
     var mergedData = {
       vocab: {
@@ -781,6 +809,11 @@
         p: outMaps.wbPrefs,
         deleted: wbDeletedMapToArray(outMaps.wbDeleted),
         pinned: Array.isArray(outScalars.wbPinned) ? outScalars.wbPinned : []
+      },
+      sprint: {
+        p: outMaps.spPrefs,
+        mastered: Array.isArray(outScalars.sprintMastered) ? outScalars.sprintMastered : [],
+        weak: Array.isArray(outScalars.sprintWeak) ? outScalars.sprintWeak : []
       },
       activity: {
         days: mergeNestedCounterTree(hasBase, base && base.activity.days, local.activity.days, remote.activity.days)
@@ -845,6 +878,9 @@
       if (!writeKey(st, STORAGE_KEYS.wbPrefs, norm.wb.p)) ok = false;
       if (!writeKey(st, STORAGE_KEYS.wbDeleted, norm.wb.deleted)) ok = false;
       if (!writeKey(st, STORAGE_KEYS.wbPinned, norm.wb.pinned)) ok = false;
+      if (!writeKey(st, STORAGE_KEYS.spPrefs, norm.sprint.p)) ok = false;
+      if (!writeKey(st, STORAGE_KEYS.sprintMastered, norm.sprint.mastered)) ok = false;
+      if (!writeKey(st, STORAGE_KEYS.sprintWeak, norm.sprint.weak)) ok = false;
       if (!writeKey(st, STORAGE_KEYS.activity, norm.activity)) ok = false;
       if (norm.recall && norm.recall.days && Object.keys(norm.recall.days).length) {
         if (!writeKey(st, STORAGE_KEYS.recall, norm.recall)) ok = false;

@@ -86,13 +86,16 @@
     return true;
   }
   function reviewSource(source) {
-    return source === 'hb' ? 'hongbaoshu' : source;
+    if (source === 'hb') return 'hongbaoshu';
+    if (source === 'sp') return 'sprint';
+    return source;
   }
   function preferenceStorageKey(source) {
     var s = reviewSource(source);
     if (s === 'hongbaoshu' || s === 'hb') return 'hb_prefs';
     if (s === 'uf') return 'uf_prefs';
     if (s === 'wb' || s === 'wordbank') return 'wb_prefs';
+    if (s === 'sp' || s === 'sprint') return 'sp_prefs';
     return 'vv_prefs';
   }
   function normalizeRating(value) {
