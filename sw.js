@@ -1,19 +1,14 @@
-const CACHE = 'kv-2.3.3';
+const CACHE = 'kv-2.3.1';
 const APP_SHELL = [
   'index.html',
-  'desktop-layout.css?v=2.3.3',
-  'theme.css?v=2.3.3',
-  'theme-core.js?v=2.3.3',
-  'review-core.js?v=2.3.3',
-  'sprint-vocab-data.js?v=2.3.3',
-  'sync-core.js?v=2.3.3',
-  'focus-core.js?v=2.3.3',
-  'study-copy.js?v=2.3.3',
-  'word-network.js?v=2.3.3',
-  'sprint-export.js?v=2.3.3',
-  'audio-cache.js?v=2.3.3',
-  'ui-motion.js?v=2.3.3',
-  'hongbaoshu.json?v=2.3.3',
+  'review-core.js?v=2.3.1',
+  'focus-core.js?v=2.3.1',
+  'study-copy.js?v=2.3.1',
+  'word-network.js?v=2.3.1',
+  'sprint-export.js?v=2.3.1',
+  'audio-cache.js?v=2.3.1',
+  'ui-motion.js?v=2.3.1',
+  'hongbaoshu.json?v=2.3.1',
   'manifest.json',
   'hb/index.html',
   'uf/index.html',
@@ -22,22 +17,6 @@ const APP_SHELL = [
   'icons/words-180.png',
   'icons/words-192.png',
   'icons/words-512.png'
-];
-const CRITICAL_SHELL = [
-  'index.html',
-  'desktop-layout.css?v=2.3.3',
-  'theme.css?v=2.3.3',
-  'theme-core.js?v=2.3.3',
-  'review-core.js?v=2.3.3',
-  'sprint-vocab-data.js?v=2.3.3',
-  'sync-core.js?v=2.3.3',
-  'focus-core.js?v=2.3.3',
-  'study-copy.js?v=2.3.3',
-  'word-network.js?v=2.3.3',
-  'sprint-export.js?v=2.3.3',
-  'audio-cache.js?v=2.3.3',
-  'ui-motion.js?v=2.3.3',
-  'hongbaoshu.json?v=2.3.3'
 ];
 function cacheAppShell() {
   return caches.open(CACHE).then(cache =>
@@ -65,9 +44,19 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(cache => Promise.all(CRITICAL_SHELL.map(url => cache.match(url))))
+      .then(cache => Promise.all([
+        cache.match('index.html'),
+        cache.match('review-core.js?v=2.3.1'),
+        cache.match('focus-core.js?v=2.3.1'),
+        cache.match('study-copy.js?v=2.3.1'),
+        cache.match('word-network.js?v=2.3.1'),
+        cache.match('sprint-export.js?v=2.3.1'),
+        cache.match('audio-cache.js?v=2.3.1'),
+        cache.match('ui-motion.js?v=2.3.1'),
+        cache.match('hongbaoshu.json?v=2.3.1')
+      ]))
       .then(shell => shell.every(Boolean)
-        ? caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('kv-') && k !== CACHE).map(k => caches.delete(k))))
+        ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
         : null)
       .then(() => self.clients.claim())
   );
@@ -75,8 +64,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   const isSameOrigin = u.origin === self.location.origin;
-  const isAudioBundle = /\/audio_g\d+\.json$/.test(u.pathname) || /\/hb\/audio_unit\d+\.json$/.test(u.pathname) || /\/wordbank\/audio\/.+\.mp3$/.test(u.pathname);
-  const isCoreData = /\/hongbaoshu\.json$/.test(u.pathname) || /\/hb\/words\.json$/.test(u.pathname);
+  const isAudioBundle = /\/audio_g\d+\.json$/.test(u.pathname) || /\/hb\/audio_unit\d+\.json$/.test(u.pathname);
+  const isCoreData = /\/hongbaoshu\.json$/.test(u.pathname);
   // Large audio bundles are cache-first. The page keeps only the most recent bounded set.
   if (isAudioBundle) {
     e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request).then(r => {
