@@ -8,11 +8,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="冲刺专题词">
-  <script src="theme-core.js?v=2.3.3"></script>
-  <script src="review-core.js?v=2.3.3"></script>
-  <script src="focus-core.js?v=2.3.3"></script>
-  <script src="study-copy.js?v=2.3.3"></script>
-  <script src="sprint-vocab-data.js?v=2.3.3"></script>
+  <script src="theme-core.js?v=2.4.0"></script>
+  <script src="review-core.js?v=2.4.0"></script>
+  <script src="focus-core.js?v=2.4.0"></script>
+  <script src="study-copy.js?v=2.4.0"></script>
+  <script src="sprint-vocab-data.js?v=2.4.0"></script>
+  <script src="sprint-export.js?v=2.4.0"></script>
   <style>
     :root {
       --ease-out: cubic-bezier(.23, 1, .32, 1);
@@ -456,11 +457,9 @@
       -webkit-backdrop-filter: blur(2px);
       transition: all 0.2s;
     }
-    @media (prefers-color-scheme: dark) {
-      .mask-overlay {
-        background: rgba(19, 39, 51, 0.85);
-        border-color: var(--border);
-      }
+    html[data-theme="dark"] .mask-overlay {
+      background: rgba(19, 39, 51, 0.85);
+      border-color: var(--border);
     }
 
     .meaning-text {
@@ -480,11 +479,9 @@
       border-radius: 4px;
       margin-bottom: 5px;
     }
-    @media (prefers-color-scheme: dark) {
-      .contrast-box {
-        color: #fbbf24;
-        background: rgba(245, 158, 11, 0.15);
-      }
+    html[data-theme="dark"] .contrast-box {
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
     }
     .contrast-box.pos-dir {
       color: #047857;
@@ -681,6 +678,53 @@
     .fc-word-area {
       text-align: center;
       margin: 14px 0 10px;
+    }
+    .fc-listen-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .fc-listen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .fc-listen-btn.active {
+      background: var(--ocean);
+      border-color: var(--ocean);
+      color: #fff;
+    }
+    .fc-auto-status {
+      font-size: 11px;
+      color: var(--ocean);
+      font-weight: 600;
+      min-height: 16px;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .fc-word-text.blind-hidden {
+      filter: blur(12px);
+      opacity: 0.16;
+      user-select: none;
+    }
+    .fc-blind-hint {
+      font-size: 11.5px;
+      color: var(--ocean);
+      font-weight: 600;
+      margin-top: 2px;
     }
     .fc-word-text {
       font-size: 34px;
@@ -925,6 +969,10 @@
       </div>
       <div class="header-actions">
         <button type="button" class="btn-action" data-theme-toggle aria-label="切换外观主题" style="width:30px;padding:0;justify-content:center;"></button>
+        <button type="button" class="btn-action" onclick="openSprintExport()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          导出
+        </button>
         <button class="btn-action" onclick="toggleModal(true)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
           口诀
@@ -982,12 +1030,24 @@
         <span><strong id="fcCurrentIndex">1</strong> / <span id="fcTotalIndex">130</span></span>
       </div>
 
-      <!-- 英文单词始终清晰呈现！ -->
+      <!-- 英文单词（盲听模式下未揭晓前模糊隐藏） -->
       <div class="fc-word-area">
         <div class="fc-word-text" id="fcWord">Word</div>
-        <button class="btn-speak" onclick="speakWord(document.getElementById('fcWord').innerText)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-        </button>
+        <div class="fc-blind-hint" id="fcBlindHint" style="display:none;">盲听辨音中 · 轻触喇叭重播</div>
+        <div class="fc-listen-bar">
+          <button type="button" class="btn-speak" id="fcBtnSpeak" onclick="speakCurrentFcWord()" aria-label="朗读当前单词">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+          <button type="button" class="fc-listen-btn" id="btnBlindListen" onclick="toggleBlindListen()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            只听不看
+          </button>
+          <button type="button" class="fc-listen-btn" id="btnAutoPlay" onclick="toggleAutoPlay()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="btnAutoPlayText">自动连播</span>
+          </button>
+        </div>
+        <div class="fc-auto-status" id="fcAutoStatus"></div>
       </div>
 
       <!-- 交互盲测互动选择区（未揭晓时呈现） -->
@@ -1080,6 +1140,14 @@
 
     let fcIndex = 0;
     let fcAnswered = false;
+    let blindListenMode = false;
+    let autoPlayMode = false;
+    let autoPlayToken = 0;
+    let autoPlayTimer = null;
+    let speakSeqToken = 0;
+    let sprintAudioEl = null;
+    let hbIndexMapPromise = null;
+    const sprintWordBlobCache = Object.create(null);
 
     VOCAB_DATA.forEach((item, idx) => {
       cardMaskStates[idx] = true;
@@ -1107,15 +1175,19 @@
       return state;
     }
 
-    function clearSprintReviewMastered(word) {
+    function clearSprintPref(word, expectedPref) {
       try {
         const sp = readJsonSafe('sp_prefs', {});
-        if (sp[word] === 'familiar') {
+        if (!expectedPref || sp[word] === expectedPref) {
           delete sp[word];
           localStorage.setItem('sp_prefs', JSON.stringify(sp));
           localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
         }
       } catch (e) {}
+    }
+
+    function clearSprintReviewMastered(word) {
+      clearSprintPref(word, 'familiar');
     }
 
     function migrateAndSyncSprintReviews() {
@@ -1312,7 +1384,12 @@
 
       const item = filtered[fcIndex];
       document.getElementById('fcCurrentIndex').innerText = fcIndex + 1;
-      document.getElementById('fcWord').innerText = item.word;
+      const fcWordEl = document.getElementById('fcWord');
+      fcWordEl.innerText = item.word;
+      const isBlindMasked = blindListenMode && !fcAnswered;
+      fcWordEl.classList.toggle('blind-hidden', isBlindMasked);
+      const blindHintEl = document.getElementById('fcBlindHint');
+      if (blindHintEl) blindHintEl.style.display = isBlindMasked ? 'block' : 'none';
 
       const badgeEl = document.getElementById('fcBlindBadge');
       const quizBox = document.getElementById('fcQuizBox');
@@ -1432,6 +1509,15 @@
 
       fcAnswered = true;
 
+      if (!isCorrect) {
+        weakSet.add(item.word);
+        masteredSet.delete(item.word);
+        saveSets();
+        applySprintReviewRating(item.word, 'forget', 'sprint_quiz');
+      }
+
+      renderFlashcard();
+
       if (isCorrect) {
         deckCard.classList.add('success-flash');
         banner.className = 'fc-result-banner success';
@@ -1440,16 +1526,11 @@
         deckCard.classList.add('wrong-flash');
         banner.className = 'fc-result-banner fail';
         banner.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>判断有误！已加入「待巩固」与今日背诵复习池';
-        weakSet.add(item.word);
-        masteredSet.delete(item.word);
-        saveSets();
-        applySprintReviewRating(item.word, 'forget', 'sprint_quiz');
       }
-
-      renderFlashcard();
     }
 
     function fcNextWord() {
+      stopAutoPlay();
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
       const word = filtered[fcIndex].word;
@@ -1460,9 +1541,11 @@
       fcAnswered = false;
       fcIndex++;
       renderFlashcard();
+      if (blindListenMode && viewMode === 'card') speakCurrentFcWord();
     }
 
     function fcMarkWeak() {
+      stopAutoPlay();
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
       const word = filtered[fcIndex].word;
@@ -1473,9 +1556,11 @@
       fcAnswered = false;
       fcIndex++;
       renderFlashcard();
+      if (blindListenMode && viewMode === 'card') speakCurrentFcWord();
     }
 
     function switchViewMode(mode) {
+      stopAutoPlay();
       viewMode = mode;
       const listEl = document.getElementById('vocabList');
       const deckEl = document.getElementById('flashcardDeck');
@@ -1527,6 +1612,7 @@
     }
 
     function switchCategory(cat, btn) {
+      stopAutoPlay();
       currentCategory = cat;
       document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
@@ -1537,6 +1623,7 @@
     }
 
     function handleSearch() {
+      stopAutoPlay();
       searchQuery = document.getElementById('searchInput').value.trim();
       fcIndex = 0;
       fcAnswered = false;
@@ -1560,8 +1647,7 @@
     function toggleWeak(word) {
       if (weakSet.has(word)) {
         weakSet.delete(word);
-        const idx = VOCAB_DATA.findIndex((item) => item.word === word);
-        if (idx >= 0) applySprintReviewRating(word, 'familiar', 'recite');
+        clearSprintPref(word, 'hard');
       } else {
         weakSet.add(word);
         masteredSet.delete(word);
@@ -1599,13 +1685,223 @@
       document.getElementById('weakCountBadge').innerText = weakSet.size;
     }
 
-    function speakWord(word) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(word);
-      utter.lang = 'en-US';
-      utter.rate = 0.9;
-      window.speechSynthesis.speak(utter);
+    function openSprintExport() {
+      if (typeof SprintExport === 'undefined' || !SprintExport.openModal) return;
+      const filterMap = {
+        all: 'sprint_all',
+        weak: 'sprint_weak',
+        attitude: 'sprint_attitude',
+        polysemy: 'sprint_polysemy',
+        logic: 'sprint_logic'
+      };
+      SprintExport.openModal(filterMap[currentCategory] || 'sprint_all');
+    }
+
+    function b64ToAudioBlobUrl(b64) {
+      const raw = atob(b64);
+      const bytes = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+      return URL.createObjectURL(new Blob([bytes], { type: 'audio/mpeg' }));
+    }
+
+    function getHbWordIndexMap() {
+      if (hbIndexMapPromise) return hbIndexMapPromise;
+      if (!('caches' in window)) {
+        hbIndexMapPromise = Promise.resolve(null);
+        return hbIndexMapPromise;
+      }
+      hbIndexMapPromise = caches.match('hongbaoshu.json', { ignoreSearch: true })
+        .then(res => res ? res.json() : null)
+        .then(list => {
+          if (!Array.isArray(list)) return null;
+          const map = Object.create(null);
+          for (let i = 0; i < list.length; i++) {
+            const w = list[i] && list[i].en ? String(list[i].en).trim().toLowerCase() : '';
+            if (w && map[w] === undefined) map[w] = i;
+          }
+          return map;
+        })
+        .catch(() => null);
+      return hbIndexMapPromise;
+    }
+
+    function resolveCachedWordAudio(word) {
+      const key = String(word || '').trim().toLowerCase();
+      if (!key) return Promise.resolve(null);
+      if (sprintWordBlobCache[key]) return Promise.resolve(sprintWordBlobCache[key]);
+      if (!('caches' in window)) return Promise.resolve(null);
+      return getHbWordIndexMap().then(map => {
+        if (!map || map[key] === undefined) return null;
+        const idx = map[key];
+        const unit = Math.floor(idx / 30);
+        const offset = idx % 30;
+        return caches.match('hb/audio_unit' + unit + '.json', { ignoreSearch: true })
+          .then(res => res ? res.json() : null)
+          .then(bundle => {
+            const entry = bundle && Array.isArray(bundle.words) ? bundle.words[offset] : null;
+            if (!entry || !entry.en) return null;
+            const url = b64ToAudioBlobUrl(entry.en);
+            sprintWordBlobCache[key] = url;
+            return url;
+          })
+          .catch(() => null);
+      }).catch(() => null);
+    }
+
+    function cancelSpeechAndAudio() {
+      speakSeqToken++;
+      if (sprintAudioEl) {
+        try {
+          sprintAudioEl.onended = null;
+          sprintAudioEl.onerror = null;
+          sprintAudioEl.pause();
+          sprintAudioEl.currentTime = 0;
+        } catch (e) {}
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+
+    function speakWithTts(word, token, onDone) {
+      if (token !== speakSeqToken) return;
+      if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(guard);
+        if (token === speakSeqToken && typeof onDone === 'function') onDone();
+      };
+      const guard = setTimeout(done, 5000);
+      try {
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = 'en-US';
+        utter.rate = 0.9;
+        utter.onend = done;
+        utter.onerror = done;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {
+        done();
+      }
+    }
+
+    function speakWord(word, onDone) {
+      cancelSpeechAndAudio();
+      const token = speakSeqToken;
+      if (!word) {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+      resolveCachedWordAudio(word).then(blobUrl => {
+        if (token !== speakSeqToken) return;
+        if (blobUrl) {
+          if (!sprintAudioEl) sprintAudioEl = new Audio();
+          sprintAudioEl.onended = () => { if (token === speakSeqToken && typeof onDone === 'function') onDone(); };
+          sprintAudioEl.onerror = () => speakWithTts(word, token, onDone);
+          sprintAudioEl.src = blobUrl;
+          sprintAudioEl.currentTime = 0;
+          const p = sprintAudioEl.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(() => speakWithTts(word, token, onDone));
+          }
+          return;
+        }
+        speakWithTts(word, token, onDone);
+      });
+    }
+
+    function speakCurrentFcWord(onDone) {
+      const filtered = getFilteredData();
+      if (!filtered.length) return;
+      const item = filtered[fcIndex];
+      if (item && item.word) speakWord(item.word, onDone);
+    }
+
+    function setAutoStatus(msg) {
+      const el = document.getElementById('fcAutoStatus');
+      if (el) el.innerText = msg || '';
+    }
+
+    function updateAutoPlayBtnUI() {
+      const btn = document.getElementById('btnAutoPlay');
+      const txt = document.getElementById('btnAutoPlayText');
+      if (btn) btn.classList.toggle('active', autoPlayMode);
+      if (txt) txt.innerText = autoPlayMode ? '暂停连播' : '自动连播';
+    }
+
+    function stopAutoPlay() {
+      autoPlayMode = false;
+      autoPlayToken++;
+      if (autoPlayTimer) {
+        clearTimeout(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+      cancelSpeechAndAudio();
+      updateAutoPlayBtnUI();
+      setAutoStatus('');
+    }
+
+    function toggleBlindListen() {
+      blindListenMode = !blindListenMode;
+      const btn = document.getElementById('btnBlindListen');
+      if (btn) btn.classList.toggle('active', blindListenMode);
+      if (viewMode === 'card') {
+        renderFlashcard();
+        if (blindListenMode && !fcAnswered) speakCurrentFcWord();
+      }
+    }
+
+    function runAutoPlayStep() {
+      const myToken = autoPlayToken;
+      if (!autoPlayMode || viewMode !== 'card') return;
+      const filtered = getFilteredData();
+      if (!filtered.length) { stopAutoPlay(); return; }
+      const item = filtered[fcIndex];
+      if (!fcAnswered) {
+        setAutoStatus('正在朗读英文…');
+        speakWord(item.word, () => {
+          if (!autoPlayMode || myToken !== autoPlayToken) return;
+          setAutoStatus('思考 2s… 即将揭晓');
+          autoPlayTimer = setTimeout(() => {
+            if (!autoPlayMode || myToken !== autoPlayToken) return;
+            fcAnswered = true;
+            renderFlashcard();
+            setAutoStatus('已揭晓考点，即将下一词…');
+            autoPlayTimer = setTimeout(() => {
+              if (!autoPlayMode || myToken !== autoPlayToken) return;
+              fcIndex = (fcIndex + 1) % filtered.length;
+              fcAnswered = false;
+              renderFlashcard();
+              runAutoPlayStep();
+            }, 1800);
+          }, 2000);
+        });
+      } else {
+        setAutoStatus('即将下一词…');
+        autoPlayTimer = setTimeout(() => {
+          if (!autoPlayMode || myToken !== autoPlayToken) return;
+          fcIndex = (fcIndex + 1) % filtered.length;
+          fcAnswered = false;
+          renderFlashcard();
+          runAutoPlayStep();
+        }, 1500);
+      }
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayMode) {
+        stopAutoPlay();
+        return;
+      }
+      if (viewMode !== 'card') switchViewMode('card');
+      autoPlayMode = true;
+      autoPlayToken++;
+      updateAutoPlayBtnUI();
+      runAutoPlayStep();
     }
 
     function toggleModal(open) {

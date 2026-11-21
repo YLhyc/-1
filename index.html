@@ -1967,12 +1967,12 @@
     #view-today-recite .vocab-card-long,
     #view-groups.vocab-card-view .vocab-card,
     #view-groups.vocab-card-view .vocab-card-long {
-      width: min(90vw, 700px) !important;
-      max-width: 700px !important;
-      height: 100% !important;
-      max-height: min(55dvh, 500px) !important;
+      width: min(90vw, 700px);
+      max-width: 840px;
+      height: 100%;
+      max-height: min(55dvh, 500px);
       min-height: 360px !important;
-      padding: 26px 32px 22px !important;
+      padding: 26px 32px 22px;
       border-radius: 32px !important;
       margin: 0 auto !important;
       box-shadow: 0 24px 56px rgba(12,66,84,.16), inset 0 1px rgba(255,255,255,.9) !important;
@@ -2250,10 +2250,97 @@
       border-radius: 14px !important;
     }
   }
+  .sprint-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 14px; margin: 0 0 12px; border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255,255,255,.88), rgba(240,249,255,.84));
+    border: 1px solid rgba(5,122,157,.16); box-shadow: 0 8px 20px rgba(7,83,106,.06);
+  }
+  .sprint-banner.is-active {
+    background: linear-gradient(135deg, rgba(254,242,242,.92), rgba(255,247,237,.92));
+    border-color: rgba(220,38,38,.26);
+  }
+  .sprint-banner-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .sprint-banner-icon {
+    width: 34px; height: 34px; border-radius: 11px; flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(5,122,157,.1); color: #057a9d;
+  }
+  .sprint-banner.is-active .sprint-banner-icon { background: rgba(220,38,38,.12); color: #dc2626; }
+  .sprint-banner-title { font-size: 14px; font-weight: 800; color: #0b3c4d; line-height: 1.25; }
+  .sprint-banner-sub { font-size: 11.5px; color: #567380; margin-top: 2px; line-height: 1.35; }
+  .sprint-toggle-btn {
+    flex: none; min-height: 34px; padding: 0 13px; border-radius: 999px;
+    border: 1px solid rgba(5,122,157,.24); background: #fff; color: #057a9d;
+    font-size: 12px; font-weight: 750; cursor: pointer; transition: all .15s ease;
+  }
+  .sprint-banner.is-active .sprint-toggle-btn {
+    background: #dc2626; border-color: #dc2626; color: #fff;
+  }
+  .home-sprint-actions {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;
+  }
+  .sprint-action-chip {
+    flex: 1 1 180px; display: inline-flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 10px 13px; border-radius: 14px; border: 1px solid rgba(217,119,6,.22);
+    background: rgba(255,251,235,.88); color: #92400e; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; transition: transform .12s ease;
+  }
+  .sprint-action-chip:active { transform: scale(.98); }
+  .sprint-action-chip-left { display: inline-flex; align-items: center; gap: 7px; }
+  .sprint-action-chip-badge {
+    padding: 2px 8px; border-radius: 999px; background: rgba(217,119,6,.14);
+    font-size: 11px; font-weight: 800; color: #b45309;
+  }
+  .sprint-action-chip.is-danger {
+    border-color: rgba(220,38,38,.25); background: rgba(254,242,242,.9); color: #991b1b;
+  }
+  .sprint-action-chip.is-danger .sprint-action-chip-badge {
+    background: rgba(220,38,38,.14); color: #b91c1c;
+  }
+  .vc-trick-alert-pill {
+    display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px;
+    background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.28);
+    color: #b91c1c; font-size: 10.5px; font-weight: 800;
+  }
+  .vc-net-chip.vc-net-chip-readonly {
+    opacity: .66; cursor: default; border-style: dashed;
+  }
+  .vc-net-chip.vc-net-chip-readonly:active { transform: none; background: rgba(7,83,106,.05); }
+  html[data-theme="dark"] .sprint-banner {
+    background: var(--surface, #12222b); border-color: rgba(148,209,224,.18);
+  }
+  html[data-theme="dark"] .sprint-banner.is-active {
+    background: linear-gradient(135deg, rgba(127,29,29,.32), rgba(120,53,15,.26));
+    border-color: rgba(248,113,113,.35);
+  }
+  html[data-theme="dark"] .sprint-banner-title { color: #e7f2f6; }
+  html[data-theme="dark"] .sprint-banner-sub { color: #8ea9b5; }
+  html[data-theme="dark"] .sprint-toggle-btn {
+    background: var(--surface-2, #172b36); border-color: rgba(56,189,248,.3); color: #38bdf8;
+  }
+  html[data-theme="dark"] .sprint-banner.is-active .sprint-toggle-btn {
+    background: #dc2626; border-color: #ef4444; color: #fff;
+  }
+  html[data-theme="dark"] .sprint-action-chip {
+    background: rgba(120,53,15,.28); border-color: rgba(245,158,11,.3); color: #fde68a;
+  }
+  html[data-theme="dark"] .sprint-action-chip-badge {
+    background: rgba(245,158,11,.22); color: #fbbf24;
+  }
+  html[data-theme="dark"] .sprint-action-chip.is-danger {
+    background: rgba(127,29,29,.3); border-color: rgba(239,68,68,.35); color: #fecaca;
+  }
+  html[data-theme="dark"] .sprint-action-chip.is-danger .sprint-action-chip-badge {
+    background: rgba(239,68,68,.24); color: #fca5a5;
+  }
+  html[data-theme="dark"] .vc-trick-alert-pill {
+    background: rgba(239,68,68,.2); border-color: rgba(248,113,113,.38); color: #fca5a5;
+  }
 </style>
-<link rel="stylesheet" href="desktop-layout.css?v=2.3.3">
-<link rel="stylesheet" href="theme.css?v=2.3.3">
-<script src="theme-core.js?v=2.3.3"></script>
+<link rel="stylesheet" href="desktop-layout.css?v=2.4.0">
+<link rel="stylesheet" href="theme.css?v=2.4.0">
+<script src="theme-core.js?v=2.4.0"></script>
 </head>
 <body>
 <div class="update-banner" id="updateBanner" role="status" aria-live="polite" aria-atomic="true" onclick="checkForAppUpdate()">正在检查应用更新…</div>
@@ -2272,13 +2359,41 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.3.3 · 检查缓存…</button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.4.0 · 检查缓存…</button></div>
     <div class="app-tools"><button type="button" class="sync-status-pill" id="homeSyncPill" data-sync-pill onclick="onSyncPillClick()" title="三端云同步状态"><span class="sync-pill-dot" aria-hidden="true"></span><span class="sync-pill-text">同步</span></button><button type="button" class="app-icon-btn theme-toggle-btn" data-theme-toggle aria-label="切换外观主题"></button><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
   <h1 class="today-title">把复习放回今天。</h1>
   <p class="today-sub">先完成一段可持续的学习，再继续推进新词。</p>
   <div class="home-mode" id="homeMode"></div>
+  <section class="sprint-banner" id="homeSprintBanner">
+    <div class="sprint-banner-info">
+      <span class="sprint-banner-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </span>
+      <div>
+        <div class="sprint-banner-title" id="homeSprintTitle">考前冲刺模式 · 未开启</div>
+        <div class="sprint-banner-sub" id="homeSprintSub">开启后停用新词注入，聚焦到期/高频/核心词 + 考前3天封顶</div>
+      </div>
+    </div>
+    <button type="button" class="sprint-toggle-btn" id="sprintModeToggleBtn" onclick="toggleHomeSprintMode()">开启冲刺</button>
+  </section>
+  <div class="home-sprint-actions" id="homeSprintActions">
+    <button type="button" class="sprint-action-chip" id="homeWrongPackBtn" onclick="openHighFreqWrongPack()">
+      <span class="sprint-action-chip-left">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>高频错词急救包</span>
+      </span>
+      <span class="sprint-action-chip-badge" id="homeWrongPackCount">0 词</span>
+    </button>
+    <button type="button" class="sprint-action-chip is-danger" id="homeDebtSmoothBtn" onclick="quickSmoothCriticalDebt()" style="display:none">
+      <span class="sprint-action-chip-left">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span id="homeDebtSmoothLabel">积压过多 · 一键平滑3天债务</span>
+      </span>
+      <span class="sprint-action-chip-badge" id="homeDebtSmoothCount">0 词</span>
+    </button>
+  </div>
   <div class="home-tasks-grid">
   <section class="today-task" onclick="openMorning()" id="morningHomeCard">
     <div class="today-task-top"><div><div class="today-task-label">今日主任务</div><div class="today-task-title" id="morningCardTitle">25 分钟晨听</div><div class="today-task-meta" id="morningCardSub">到期、困难、久未听与新词</div><div class="today-task-meta" id="morningCardStats"></div></div><div class="today-task-count"><span id="morningCardCount">—</span><small>预计词数</small></div></div>
@@ -2732,15 +2847,15 @@
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.3.3"></script>
-<script src="sprint-vocab-data.js?v=2.3.3"></script>
-<script src="sync-core.js?v=2.3.3"></script>
-<script src="focus-core.js?v=2.3.3"></script>
-<script src="study-copy.js?v=2.3.3"></script>
-<script src="word-network.js?v=2.3.3"></script>
-<script src="sprint-export.js?v=2.3.3"></script>
-<script src="audio-cache.js?v=2.3.3"></script>
-<script src="ui-motion.js?v=2.3.3"></script>
+<script src="review-core.js?v=2.4.0"></script>
+<script src="sprint-vocab-data.js?v=2.4.0"></script>
+<script src="sync-core.js?v=2.4.0"></script>
+<script src="focus-core.js?v=2.4.0"></script>
+<script src="study-copy.js?v=2.4.0"></script>
+<script src="word-network.js?v=2.4.0"></script>
+<script src="sprint-export.js?v=2.4.0"></script>
+<script src="audio-cache.js?v=2.4.0"></script>
+<script src="ui-motion.js?v=2.4.0"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2825,8 +2940,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0], "43": [43, 0], "44": [44, 0], "45": [45, 0], "46": [46, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.3.3";
-var BUILD_TS = 1794819900;
+var APP_BUILD_ID = "2.4.0";
+var BUILD_TS = 1795226713;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3452,6 +3567,145 @@ function renderResumeCard() {
   var isHb = r.source === 'hongbaoshu', title = isHb ? '继续红宝书' : '继续生词本', mode = r.mode === 'recite' ? '背诵' : '聆听';
   c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
 }
+function getWordSprintMeta(en, cn) {
+  var key = String(en || '').trim().toLowerCase();
+  if (!key || typeof WordNetwork === 'undefined' || !WordNetwork.renderNetworkHtml) {
+    return { stars: 3, isTrick: false };
+  }
+  var html = WordNetwork.renderNetworkHtml(key, true, cn || '');
+  var isTrick = html.indexOf('momo-trick-card') !== -1;
+  var pillMatch = html.match(/<span class="momo-freq-pill">[\s\S]*?<\/span>/);
+  var stars = pillMatch ? (pillMatch[0].match(/<polygon /g) || []).length : 3;
+  return { stars: stars || 3, isTrick: isTrick };
+}
+var _knownDictWordsCache = null;
+var _knownDictWordsHbLen = -1;
+function getKnownDictWordSet() {
+  var hbLen = Array.isArray(HONGBAOSHU) ? HONGBAOSHU.length : -1;
+  if (_knownDictWordsCache && _knownDictWordsHbLen === hbLen) return _knownDictWordsCache;
+  var set = Object.create(null);
+  if (Array.isArray(VOCAB)) {
+    for (var i = 0; i < VOCAB.length; i++) {
+      if (VOCAB[i] && VOCAB[i].en) set[String(VOCAB[i].en).trim().toLowerCase()] = true;
+    }
+  }
+  if (Array.isArray(HONGBAOSHU)) {
+    for (var j = 0; j < HONGBAOSHU.length; j++) {
+      if (HONGBAOSHU[j] && HONGBAOSHU[j].en) set[String(HONGBAOSHU[j].en).trim().toLowerCase()] = true;
+    }
+  }
+  _knownDictWordsCache = set;
+  _knownDictWordsHbLen = hbLen;
+  return set;
+}
+function guardWordNetworkChips(container) {
+  if (!container || !container.querySelectorAll) return;
+  var known = getKnownDictWordSet();
+  container.querySelectorAll('.vc-net-chip').forEach(function(chip) {
+    var b = chip.querySelector('b');
+    var word = b ? String(b.textContent || '').trim().toLowerCase() : '';
+    if (!word || known[word]) return;
+    chip.removeAttribute('onclick');
+    chip.classList.add('vc-net-chip-readonly');
+    chip.setAttribute('aria-disabled', 'true');
+    chip.setAttribute('title', '词库外拓展词（仅作词族参考）');
+  });
+}
+function updateHomeSprintUI() {
+  if (typeof ReviewCore === 'undefined') return;
+  var active = ReviewCore.isSprintMode();
+  var daysLeft = ReviewCore.getExamDaysLeft();
+  var banner = document.getElementById('homeSprintBanner');
+  var titleEl = document.getElementById('homeSprintTitle');
+  var subEl = document.getElementById('homeSprintSub');
+  var btnEl = document.getElementById('sprintModeToggleBtn');
+  if (banner) banner.classList.toggle('is-active', active);
+  if (titleEl) {
+    titleEl.textContent = active
+      ? ('考前冲刺模式 · 已开启' + (daysLeft > 0 ? '（距考试 ' + daysLeft + ' 天）' : ''))
+      : ('考前冲刺模式 · 未开启' + (daysLeft > 0 ? '（距考试 ' + daysLeft + ' 天）' : ''));
+  }
+  if (subEl) {
+    subEl.textContent = active
+      ? '已关闭新词注入，聚焦到期/高频/核心词（familiar 封顶不晚于考前 3 天）'
+      : '开启后停用新词注入，聚焦到期/高频/核心词 + 考前 3 天封顶';
+  }
+  if (btnEl) btnEl.textContent = active ? '退出冲刺' : '开启冲刺';
+  var wrongItems = ReviewCore.getHighFreqWrongItems();
+  var wrongCountEl = document.getElementById('homeWrongPackCount');
+  if (wrongCountEl) wrongCountEl.textContent = wrongItems.length + ' 词';
+  var dueItems = getDueReviewItems();
+  var now = Date.now();
+  var overdueCount = 0;
+  for (var i = 0; i < dueItems.length; i++) {
+    if (dueItems[i].dueAt && (now - dueItems[i].dueAt) > 86400000) overdueCount++;
+  }
+  var debtBtn = document.getElementById('homeDebtSmoothBtn');
+  var debtCountEl = document.getElementById('homeDebtSmoothCount');
+  if (debtBtn) debtBtn.style.display = overdueCount > 80 ? 'inline-flex' : 'none';
+  if (debtCountEl) debtCountEl.textContent = overdueCount + ' 词逾期';
+}
+function toggleHomeSprintMode() {
+  if (typeof ReviewCore === 'undefined') return;
+  var next = !ReviewCore.isSprintMode();
+  ReviewCore.setSprintMode(next);
+  updateHomeSprintUI();
+  updateTodayReciteCard();
+  if (typeof updateMorningCard === 'function') updateMorningCard();
+  if (typeof showScheduleFeedback === 'function') {
+    showScheduleFeedback(next ? '已开启考前冲刺模式（停用新词 + 考前3天封顶）' : '已切换回常规学习模式');
+  }
+}
+function quickSmoothCriticalDebt() {
+  if (typeof ReviewCore === 'undefined') return;
+  var res = ReviewCore.smoothBacklog(3);
+  if (res && res.smoothed > 0) {
+    showScheduleFeedback('已智能平滑 ' + res.smoothed + ' 个逾期词至未来 3 天');
+  } else if (res && res.alreadySmoothed) {
+    showScheduleFeedback('当前已有生效中的平滑分摊计划');
+  } else {
+    showScheduleFeedback('当前无需要平滑的逾期词');
+  }
+  updateHomeSprintUI();
+  updateTodayReciteCard();
+}
+function openHighFreqWrongPack() {
+  if (typeof ReviewCore === 'undefined') return;
+  function launch() {
+    var rawList = ReviewCore.getHighFreqWrongItems();
+    var hydrated = [];
+    for (var i = 0; i < rawList.length; i++) {
+      var r = rawList[i];
+      var found = todayReciteWord(r.source, r.en);
+      if (!found) continue;
+      hydrated.push({
+        source: r.source, tier: r.tier, en: r.en, item: found.item, index: found.index,
+        kind: 'hard', dueAt: r.dueAt || 0, lapses: r.lapses || 0, isSmoothed: false
+      });
+      if (hydrated.length >= 40) break;
+    }
+    if (!hydrated.length) {
+      if (typeof showScheduleFeedback === 'function') showScheduleFeedback('太棒了！当前没有连续遗忘（lapses>=2）的顽固词');
+      return;
+    }
+    stopAll();
+    showView('today-recite', { skipHomeStats: true });
+    todayRecitePool = hydrated.slice();
+    todayReciteItems = WordsSessionOrder.shuffle(hydrated);
+    todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null;
+    todayReciteDone = false; todayReciteStarted = true; todayRecitePracticeOnly = false;
+    todayReciteCompletionId = ''; todayReciteHardReinforcement = [];
+    todayReciteStats = { id: Date.now().toString(36), target: todayReciteItems.length, familiar: 0, hard: 0, due: 0, startedAt: Date.now() };
+    saveTodayReciteSession();
+    renderTodayRecite();
+  }
+  if (!HONGBAOSHU) loadHB(function(err) {
+    if (err) HONGBAOSHU = [];
+    launch();
+  });
+  else launch();
+}
+
 var homeRefreshTimer = 0;
 function refreshHomeDynamicUI() {
   var appTodayDate = document.getElementById('appTodayDate');
@@ -3462,6 +3716,7 @@ function refreshHomeDynamicUI() {
       node.textContent = (now.getMonth() + 1) + '月' + now.getDate() + '日';
     });
   }
+  updateHomeSprintUI();
   renderResumeCard();
   updateTodayReciteCard();
   if (typeof updateMorningCard === 'function') updateMorningCard();
@@ -3779,12 +4034,20 @@ function restoreTodayReciteSession() {
   if (session.undo && session.undo.entry) {
     var undoEntry = hydrateTodayReciteEntry(session.undo.entry);
     if (undoEntry) {
-      var restoredState = session.undo.state || {
+      var isSpecialUndo = !!(session.undo.isSpacer || session.undo.isLeechAction);
+      var restoredState = session.undo.state || (!isSpecialUndo ? {
         source: undoEntry.source, en: undoEntry.en, hadPref: !!session.undo.old,
         oldPref: session.undo.old || null, oldReview: session.undo.review || {},
         reviewApplied: true, familiar: !!session.undo.familiar, mode: 'recite'
+      } : null);
+      todayReciteUndo = {
+        idx: session.undo.idx, entry: undoEntry, key: session.undo.key, state: restoredState,
+        activitySource: session.undo.activitySource, activityMode: session.undo.activityMode,
+        familiar: !!session.undo.familiar, practiceOnly: !!session.undo.practiceOnly,
+        isSpacer: !!session.undo.isSpacer, isLeechAction: !!session.undo.isLeechAction,
+        action: session.undo.action || '',
+        insertedIndices: Array.isArray(session.undo.insertedIndices) ? session.undo.insertedIndices : []
       };
-      todayReciteUndo = { idx: session.undo.idx, entry: undoEntry, key: session.undo.key, state: restoredState, activitySource: session.undo.activitySource, activityMode: session.undo.activityMode, familiar: !!session.undo.familiar, practiceOnly: !!session.undo.practiceOnly };
     }
   }
   return true;
@@ -3849,12 +4112,17 @@ function syncSprintLegacySets(en, rating) {
 function buildTodayReciteItems(includeRated, options) {
   syncSprintLegacyWeakPool();
   var settings = loadTodayReciteSettings();
+  var sprintActive = typeof ReviewCore !== 'undefined' && ReviewCore.isSprintMode && ReviewCore.isSprintMode();
   var scope = (options && options.scope) ? options.scope : settings.scope;
-  var includeFresh = (options && typeof options.includeFreshVocab === 'boolean') ? options.includeFreshVocab : settings.includeFreshVocab;
+  var includeFresh = sprintActive ? false : ((options && typeof options.includeFreshVocab === 'boolean') ? options.includeFreshVocab : settings.includeFreshVocab);
   var out = [], seen = {}, rated = includeRated ? {} : getTodayReciteRated();
   function add(source, en, kind, dueAt, lapses, isSmoothed) {
     if (scope === 'vocab_only' && todayReciteSourceTier(source) !== 1) return;
     var found = todayReciteWord(source, en); if (!found) return;
+    if (sprintActive && todayReciteSourceTier(source) === 2 && !(lapses > 0)) {
+      var sm = getWordSprintMeta(en, found.item && found.item.cn);
+      if (sm.stars <= 2 && !sm.isTrick) return;
+    }
     var key = source + ':' + en; if (seen[key]) return; seen[key] = true;
     if (rated[key]) return;
     out.push({
@@ -4430,6 +4698,9 @@ function renderTodayRecite() {
     customRateBarHtml = renderTodayReciteRateBar(isEffectiveShown);
   }
 
+  var trickPillHtml = getWordSprintMeta(w.en, w.cn).isTrick
+    ? '<span class="vc-trick-alert-pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>熟词僻义</span>'
+    : '';
   c.innerHTML = '<div class="vocab-card-shell">' +
     '<div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div>' +
     '<div class="vocab-card-stage">' +
@@ -4437,6 +4708,7 @@ function renderTodayRecite() {
         leechBannerHtml +
         '<div class="vc-top-meta">' +
           '<span class="vc-tag-source' + (isSpacer ? '' : srcTagClass) + '">' + (isSpacer ? '回溯巩固' : src) + '</span>' +
+          trickPillHtml +
           extraMetaTag +
         '</div>' +
         '<div class="vc-word-row">' +
@@ -4471,6 +4743,7 @@ function renderTodayRecite() {
     customRateBarHtml +
     '<div class="vc-hint"><button class="home-link" onclick="toggleReciteFlowMode()">' + (flowMode === 'direct_4tier' ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>常驻四档 (点击切自省)' : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>两阶段自省 (点击切常驻)') + '</button> · <button class="home-link" onclick="resetTodayReciteSession()">重选任务量</button></div>' +
   '</div>';
+  guardWordNetworkChips(c);
   bindTodayReciteSwipe();
 }
 function todayReciteShow(initialSense) {
@@ -4687,10 +4960,12 @@ function todayReciteLeechAction(action) {
   var src = entry.source || 'vocab';
   var insertedIndices = null;
   var reInsertedIdx = null;
+  var wasInFocus = false;
 
   if (action === 'defer') {
-    if (typeof FocusCore !== 'undefined' && FocusCore.add) {
-      FocusCore.add(en, cn, src, '顽固难词 · 认知熔断');
+    if (typeof FocusCore !== 'undefined') {
+      if (FocusCore.isSelected) wasInFocus = !!FocusCore.isSelected(en);
+      if (FocusCore.add) FocusCore.add(en, cn, src, '顽固难词 · 认知熔断');
     }
     if (typeof showScheduleFeedback === 'function') {
       showScheduleFeedback('已加入重点攻关词池，今晚专属攻坚', 'review');
@@ -4716,6 +4991,7 @@ function todayReciteLeechAction(action) {
     entry: entry,
     isLeechAction: true,
     action: action,
+    wasInFocus: wasInFocus,
     insertedIndices: insertedIndices,
     reInsertedIdx: reInsertedIdx
   };
@@ -4847,6 +5123,7 @@ function todayReciteRate(ratingOrFamiliar) {
 function todayReciteUndoLast() {
   var u = todayReciteUndo; if (!u) return;
   if (u.isSpacer) {
+    removeTodayReciteCompletion();
     todayReciteIdx = u.idx;
     todayReciteDone = false;
     todayReciteShown = false;
@@ -4857,7 +5134,7 @@ function todayReciteUndoLast() {
     return;
   }
   if (u.isLeechAction) {
-    if (u.action === 'defer') {
+    if (u.action === 'defer' && !u.wasInFocus) {
       if (typeof FocusCore !== 'undefined' && FocusCore.remove) {
         FocusCore.remove(u.entry.en || (u.entry.item && u.entry.item.en));
       }
@@ -4871,6 +5148,7 @@ function todayReciteUndoLast() {
     } else if (u.reInsertedIdx !== null && u.reInsertedIdx < todayReciteItems.length) {
       todayReciteItems.splice(u.reInsertedIdx, 1);
     }
+    removeTodayReciteCompletion();
     todayReciteIdx = u.idx;
     todayReciteDone = false;
     todayReciteShown = false;
@@ -5833,6 +6111,9 @@ function renderVocabRecite(entries) {
     extraMetaTag = '<span class="vc-tag-repeat">组内重现第 ' + (e.repeatCount || 1) + ' 次' + (e.repeatType === 'forget' ? (e.repeatStage === 2 ? ' · 终极巩固' : ' · 短期重现') : (e.repeatType === 'uncertain' ? ' · 模糊回马枪' : '')) + '</span>';
   }
 
+  var trickPillHtml = getWordSprintMeta(w.en, w.cn).isTrick
+    ? '<span class="vc-trick-alert-pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>熟词僻义</span>'
+    : '';
   c.innerHTML = '<div class="vocab-card-shell">' +
     '<div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div>' +
     filterBarHtml +
@@ -5842,6 +6123,7 @@ function renderVocabRecite(entries) {
         leechBannerHtml +
         '<div class="vc-top-meta">' +
           '<span class="vc-tag-source">' + (isSpacer ? '回溯巩固' : ('生词本 · Unit ' + (currentUnit + 1))) + '</span>' +
+          trickPillHtml +
           extraMetaTag +
         '</div>' +
         '<div class="vc-word-row">' +
@@ -5877,6 +6159,7 @@ function renderVocabRecite(entries) {
     '<div class="vc-recite-nav"><button class="home-link" onclick="toggleReciteFlowMode()">' + (flowMode === 'direct_4tier' ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>常驻四档 (点击切自省)' : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>两阶段自省 (点击切常驻)') + '</button> · <button class="home-link" onclick="setVocabStudyMode(&quot;listen&quot;)">切换为聆听</button></div>' +
     '<div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div>' +
   '</div>';
+  guardWordNetworkChips(c);
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(initialSense) {
@@ -7712,9 +7995,11 @@ function applyLearningBackup(all) {
 }
 
 function savePreImportBackup() {
-  var snapshot = createLearningBackup();
-  localStorage.setItem(PRE_IMPORT_BACKUP_KEY, JSON.stringify(snapshot));
-  localStorage.setItem(PRE_IMPORT_BACKUP_TS_KEY, String(Date.now()));
+  try {
+    var snapshot = createLearningBackup();
+    localStorage.setItem(PRE_IMPORT_BACKUP_KEY, JSON.stringify(snapshot));
+    localStorage.setItem(PRE_IMPORT_BACKUP_TS_KEY, String(Date.now()));
+  } catch (e) {}
 }
 
 function showBackupMsg(text, cls) {
@@ -9245,7 +9530,8 @@ function buildMorningQueue(randomFn) {
   var all = buildMorningCandidates();
   morningSettings = loadMorningSettings();
   var freshRatios = [0.20, 0.35, 0.50, 0.65, 0.80];
-  var freshRatio = freshRatios[morningSettings.freshRatioStep] || 0.50;
+  var sprintActive = typeof ReviewCore !== 'undefined' && ReviewCore.isSprintMode && ReviewCore.isSprintMode();
+  var freshRatio = sprintActive ? 0 : (freshRatios[morningSettings.freshRatioStep] || 0.50);
   // Due cards retain priority; this slider apportions new words against the ordinary old-word pools.
   var oldRatio = 1 - freshRatio;
   var mix = { due: oldRatio * 0.40, stale: oldRatio * 0.35, hard: oldRatio * 0.25, fresh: freshRatio };
@@ -9375,7 +9661,7 @@ function getMorningStats() {
 function serializeMorningItem(item) {
   var out = {};
   ['source','key','en','cn','ex','ex_cn','examples','idx','dict','reason','reviewDue','reviewDueAt','_estSec',
-   'morningRating','morningCompleted','morningSkipped','morningPrefCaptured','morningHadPrefBeforeRating',
+   'morningRating','morningCompleted','morningSkipped','morningPrefCaptured','morningReviewRated','morningHadPrefBeforeRating',
    'morningPrefBeforeRating','morningRatingState','morningPlaybackRating'].forEach(function(key) {
     if (item[key] !== undefined) out[key] = item[key];
   });
@@ -10293,6 +10579,31 @@ function morningGetAu(slot) {
   return morningAuB;
 }
 
+var MORNING_SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+function primeMorningAudioSlots() {
+  [0, 1].forEach(function(slot) {
+    var au = morningGetAu(slot);
+    if (!au || au._morningPrimed) return;
+    try {
+      au.muted = false;
+      au.src = MORNING_SILENT_WAV;
+      var p = au.play();
+      au._morningPrimed = true;
+      if (p && typeof p.then === 'function') {
+        p.then(function() {
+          if ((slot === 0 ? morningAuUrlA : morningAuUrlB) === null) {
+            try { au.pause(); } catch (e) {}
+          }
+        }).catch(function() {});
+      } else {
+        if ((slot === 0 ? morningAuUrlA : morningAuUrlB) === null) {
+          try { au.pause(); } catch (e) {}
+        }
+      }
+    } catch (e) {}
+  });
+}
+
 function morningClearAudioWatchdog() {
   if (morningAudioWatchdog) clearTimeout(morningAudioWatchdog);
   morningAudioWatchdog = null;
@@ -10349,17 +10660,14 @@ function morningPreloadAu(slot, url) {
 
 function morningResetAu(slot) {
   var au = morningGetAu(slot);
+  morningDetachAu(au);
   releaseAudioElement(au);
-  var fresh = new Audio();
-  fresh.preload = 'auto';
   if (slot === 0) {
-    morningAuA = fresh;
     morningAuUrlA = null;
   } else {
-    morningAuB = fresh;
     morningAuUrlB = null;
   }
-  return fresh;
+  return au;
 }
 
 function morningStopAudio() {
@@ -10917,6 +11225,7 @@ function prepareMorningPlayer() {
 }
 
 function startNewMorning() {
+  if (typeof primeMorningAudioSlots === 'function') primeMorningAudioSlots();
   if (loadMorningActiveSession()) archiveMorningActiveSession('replaced');
   if (!morningQueue.length || morningQueueBuiltAt <= Date.now() - 600000) buildMorningQueue();
   if (morningQueue.length === 0) { alert('队列为空，请先生成队列'); return; }
@@ -10950,6 +11259,7 @@ function startMorning() {
 }
 
 function resumeMorningSession() {
+  if (typeof primeMorningAudioSlots === 'function') primeMorningAudioSlots();
   var active = loadMorningActiveSession();
   if (!active) { refreshMorningQueue(); return; }
   morningQueue = active.queue.map(function(item) { return Object.assign({}, item); });
@@ -11177,6 +11487,7 @@ function toggleMorningPause() {
   if (!morningPlaying) return;
   var au = morningGetAu(morningSlot);
   if (morningPaused) {
+    if (typeof primeMorningAudioSlots === 'function') primeMorningAudioSlots();
     attemptMorningResume(true);
   } else {
     morningClearAudioWatchdog();

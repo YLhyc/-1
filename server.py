@@ -2,6 +2,7 @@
 import http.server
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -9,6 +10,7 @@ import urllib.parse
 
 HOST = "127.0.0.1"
 PORT = 8080
+ALLOWED_ORIGIN_RE = re.compile(r"^https?://(127\.0\.0\.1|localhost)(:\d+)?$")
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SYNC_FILE = os.path.join(ROOT, "review_sync.json")
 WWW_REPO = r"D:\AAA考研\英语复习助手\www"
@@ -20,7 +22,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=ROOT, **kwargs)
 
     def end_headers(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
+        origin = self.headers.get("Origin", "")
+        if ALLOWED_ORIGIN_RE.match(origin):
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
+        else:
+            self.send_header("Access-Control-Allow-Origin", f"http://{HOST}:{PORT}")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         super().end_headers()
@@ -54,6 +61,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     ["git", "-C", WWW_REPO, "pull", "origin", "main"],
                     capture_output=True, text=True, timeout=30
                 )
+                if r.returncode != 0:
+                    self.send_response(500)
+                    self.end_headers()
+                    err = r.stderr.strip() or r.stdout.strip() or f"git pull exited {r.returncode}"
+                    self.wfile.write(json.dumps({"ok": False, "error": err}).encode())
+                    return
                 # Copy pulled file so local server serves the latest
                 if os.path.exists(WWW_SYNC):
                     shutil.copy2(WWW_SYNC, SYNC_FILE)
@@ -69,18 +82,30 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         if parsed.path == "/api/git-push":
             try:
-                subprocess.run(
+                r_add = subprocess.run(
                     ["git", "-C", WWW_REPO, "add", WWW_SYNC],
-                    capture_output=True, timeout=10
+                    capture_output=True, text=True, timeout=10
                 )
+                if r_add.returncode != 0:
+                    self.send_response(500)
+                    self.end_headers()
+                    err = r_add.stderr.strip() or r_add.stdout.strip() or f"git add exited {r_add.returncode}"
+                    self.wfile.write(json.dumps({"ok": False, "error": err}).encode())
+                    return
                 subprocess.run(
                     ["git", "-C", WWW_REPO, "commit", "-m", "复习数据同步"],
-                    capture_output=True, timeout=10
+                    capture_output=True, text=True, timeout=10
                 )
                 r = subprocess.run(
                     ["git", "-C", WWW_REPO, "push", "origin", "main"],
                     capture_output=True, text=True, timeout=30
                 )
+                if r.returncode != 0:
+                    self.send_response(500)
+                    self.end_headers()
+                    err = r.stderr.strip() or r.stdout.strip() or f"git push exited {r.returncode}"
+                    self.wfile.write(json.dumps({"ok": False, "error": err}).encode())
+                    return
                 self.send_response(200)
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": True, "output": r.stdout.strip() or "pushed"}).encode())

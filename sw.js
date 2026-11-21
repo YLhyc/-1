@@ -1,19 +1,19 @@
-const CACHE = 'kv-2.3.3';
+const CACHE = 'kv-2.4.0';
 const APP_SHELL = [
   'index.html',
-  'desktop-layout.css?v=2.3.3',
-  'theme.css?v=2.3.3',
-  'theme-core.js?v=2.3.3',
-  'review-core.js?v=2.3.3',
-  'sprint-vocab-data.js?v=2.3.3',
-  'sync-core.js?v=2.3.3',
-  'focus-core.js?v=2.3.3',
-  'study-copy.js?v=2.3.3',
-  'word-network.js?v=2.3.3',
-  'sprint-export.js?v=2.3.3',
-  'audio-cache.js?v=2.3.3',
-  'ui-motion.js?v=2.3.3',
-  'hongbaoshu.json?v=2.3.3',
+  'desktop-layout.css?v=2.4.0',
+  'theme.css?v=2.4.0',
+  'theme-core.js?v=2.4.0',
+  'review-core.js?v=2.4.0',
+  'sprint-vocab-data.js?v=2.4.0',
+  'sync-core.js?v=2.4.0',
+  'focus-core.js?v=2.4.0',
+  'study-copy.js?v=2.4.0',
+  'word-network.js?v=2.4.0',
+  'sprint-export.js?v=2.4.0',
+  'audio-cache.js?v=2.4.0',
+  'ui-motion.js?v=2.4.0',
+  'hongbaoshu.json?v=2.4.0',
   'manifest.json',
   'hb/index.html',
   'uf/index.html',
@@ -25,19 +25,19 @@ const APP_SHELL = [
 ];
 const CRITICAL_SHELL = [
   'index.html',
-  'desktop-layout.css?v=2.3.3',
-  'theme.css?v=2.3.3',
-  'theme-core.js?v=2.3.3',
-  'review-core.js?v=2.3.3',
-  'sprint-vocab-data.js?v=2.3.3',
-  'sync-core.js?v=2.3.3',
-  'focus-core.js?v=2.3.3',
-  'study-copy.js?v=2.3.3',
-  'word-network.js?v=2.3.3',
-  'sprint-export.js?v=2.3.3',
-  'audio-cache.js?v=2.3.3',
-  'ui-motion.js?v=2.3.3',
-  'hongbaoshu.json?v=2.3.3'
+  'desktop-layout.css?v=2.4.0',
+  'theme.css?v=2.4.0',
+  'theme-core.js?v=2.4.0',
+  'review-core.js?v=2.4.0',
+  'sprint-vocab-data.js?v=2.4.0',
+  'sync-core.js?v=2.4.0',
+  'focus-core.js?v=2.4.0',
+  'study-copy.js?v=2.4.0',
+  'word-network.js?v=2.4.0',
+  'sprint-export.js?v=2.4.0',
+  'audio-cache.js?v=2.4.0',
+  'ui-motion.js?v=2.4.0',
+  'hongbaoshu.json?v=2.4.0'
 ];
 function cacheAppShell() {
   return caches.open(CACHE).then(cache =>
@@ -50,10 +50,11 @@ function matchNavigation(request) {
   if (/\/hb\/(?:index\.html)?$/.test(pathname)) fallback = 'hb/index.html';
   else if (/\/uf\/(?:index\.html)?$/.test(pathname)) fallback = 'uf/index.html';
   else if (/\/wordbank\/(?:index\.html)?$/.test(pathname)) fallback = 'wordbank/index.html';
+  else if (/\/sprint-vocab\.html$/.test(pathname)) fallback = 'sprint-vocab.html';
   return caches.open(CACHE)
-    .then(cache => cache.match(request)
+    .then(cache => cache.match(request, { ignoreSearch: true })
       .then(cached => cached || cache.match(fallback)))
-    .then(cached => cached || caches.match(request))
+    .then(cached => cached || caches.match(request, { ignoreSearch: true }))
     .then(cached => cached || caches.match(fallback));
 }
 self.addEventListener('install', e => {
@@ -111,11 +112,19 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request).then(r => {
         if (!r.ok) return r;
-        if (isSameOrigin && u.search.indexOf('t=') === -1) {
-          const c = r.clone(); caches.open(CACHE).then(ca => ca.put(e.request, c));
+        if (isSameOrigin) {
+          const c = r.clone();
+          if (u.search.indexOf('t=') === -1) {
+            caches.open(CACHE).then(ca => ca.put(e.request, c));
+          } else {
+            const cleanUrl = new URL(u.href);
+            cleanUrl.searchParams.delete('t');
+            const cleanReq = new Request(cleanUrl.href, { method: 'GET' });
+            caches.open(CACHE).then(ca => ca.put(cleanReq, c));
+          }
         }
         return r;
-      }).catch(() => caches.match(e.request))
+      }).catch(() => caches.match(e.request, { ignoreSearch: true }))
     );
     return;
   }

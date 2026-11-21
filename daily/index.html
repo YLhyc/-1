@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#1a1a2e">
 <title>考研每日晨报</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.svg">
 <script src="fsrs.js"></script>
 <style>
 :root {
@@ -442,12 +442,6 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); line-he
     </div>
   </div>
 
-  <div class="tools-bar" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 14px;padding:0 14px;">
-    <a href="mistakes.html" style="font-size:.72rem;padding:6px 14px;border-radius:99px;text-decoration:none;background:var(--card);color:var(--text);border:1px solid var(--border);font-weight:600;white-space:nowrap;">错题回顾</a>
-    <a href="classical-reader.html" style="font-size:.72rem;padding:6px 14px;border-radius:99px;text-decoration:none;background:var(--card);color:var(--text);border:1px solid var(--border);font-weight:600;white-space:nowrap;">古文对照阅读</a>
-    <a href="heatmap.html" style="font-size:.72rem;padding:6px 14px;border-radius:99px;text-decoration:none;background:var(--card);color:var(--text);border:1px solid var(--border);font-weight:600;white-space:nowrap;">考点热力图</a>
-    <a href="flashcards.html" style="font-size:.72rem;padding:6px 14px;border-radius:99px;text-decoration:none;background:var(--card);color:var(--text);border:1px solid var(--border);font-weight:600;white-space:nowrap;">抽认卡</a>
-  </div>
   <div class="footer">每日自动生成 · 清晨朗读回顾 · <span class="dbg" onclick="showVoiceDebug()">语音调试</span></div>
 </div>
 
@@ -757,12 +751,15 @@ function toggleDateRow(row) {
 }
 
 // ====== TTS / AUDIO ======
+var _hasSpeech = typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+var _audioPlayToken = 0;
+
 function toggleSubjAudio(event, subjectId, dateStr) {
   event.stopPropagation();
   const btn = event.currentTarget;
 
   // 点同一个按钮 → 暂停
-  if (curBtn === btn && (curAudio || (curUtt && window.speechSynthesis.speaking))) {
+  if (curBtn === btn && (curAudio || (curUtt && _hasSpeech && window.speechSynthesis.speaking))) {
     stopAll();
     return;
   }
@@ -802,32 +799,40 @@ function toggleSubjAudio(event, subjectId, dateStr) {
 }
 
 function playAudio(url, btn) {
+  var token = ++_audioPlayToken;
   var a = new Audio(url);
+  curAudio = a;
+  curBtn = btn;
   // Watchdog: an element whose play() resolved but which never fires
   // playing/ended/error (typical after an iOS media interruption) must not
   // leave the button stuck on ⏸️ forever.
   var wd = null, snap = 0;
   function finish() {
     if (wd) { clearTimeout(wd); wd = null; }
-    resetBtn(btn); curAudio = null; curBtn = null;
+    resetBtn(btn);
+    if (curAudio === a) { curAudio = null; curBtn = null; }
   }
   function arm() {
     if (wd) clearTimeout(wd);
     snap = isFinite(a.currentTime) ? a.currentTime : 0;
     wd = setTimeout(function() {
       wd = null;
-      if (curAudio !== a) return;
+      if (token !== _audioPlayToken || curAudio !== a) return;
       if (isFinite(a.currentTime) && a.currentTime > snap + 0.05) { arm(); return; }
       finish();
     }, 8000);
   }
-  a.onplay = function() { btn.classList.add('playing'); btn.textContent = '⏸️'; curAudio = a; curBtn = btn; arm(); };
-  a.onended = finish;
-  a.onerror = finish;
-  a.play().catch(finish);
+  a.onplay = function() {
+    if (token !== _audioPlayToken || curAudio !== a) { try { a.pause(); } catch(e) {} return; }
+    btn.classList.add('playing'); btn.textContent = '⏸️'; curAudio = a; curBtn = btn; arm();
+  };
+  a.onended = function() { if (token === _audioPlayToken && curAudio === a) finish(); };
+  a.onerror = function() { if (token === _audioPlayToken && curAudio === a) finish(); };
+  a.play().catch(function() { if (token === _audioPlayToken && curAudio === a) finish(); });
 }
 
 function stopAll() {
+  _audioPlayToken++;
   if (curAudio) { curAudio.pause(); curAudio.currentTime = 0; curAudio = null; }
   stopTts();
 }
@@ -843,14 +848,17 @@ function flattenPoints(points) {
 
 let _voiceCache = null;
 function getVoicesList() {
+  if (!_hasSpeech) return [];
   if (_voiceCache && _voiceCache.length > 0) return _voiceCache;
-  var v = speechSynthesis.getVoices();
+  var v = window.speechSynthesis.getVoices();
   if (v && v.length > 0) _voiceCache = v;
   return v || [];
 }
-speechSynthesis.onvoiceschanged = function() {
-  _voiceCache = speechSynthesis.getVoices();
-};
+if (_hasSpeech) {
+  window.speechSynthesis.onvoiceschanged = function() {
+    _voiceCache = window.speechSynthesis.getVoices();
+  };
+}
 
 function pickVoice(lang) {
   var voices = getVoicesList();
@@ -907,6 +915,7 @@ function pickVoice(lang) {
 
 var _speakFinish = null;
 function speak(text, subjectId, btn) {
+  if (!_hasSpeech) { resetBtn(btn); return; }
   var u = new SpeechSynthesisUtterance(text);
   var lang = subjectId === 'english' ? 'en-US' : 'zh-CN';
   u.lang = lang;
@@ -941,7 +950,7 @@ function speak(text, subjectId, btn) {
 }
 
 function stopTts() {
-  window.speechSynthesis.cancel();
+  if (_hasSpeech) { try { window.speechSynthesis.cancel(); } catch(e) {} }
   if (_speakFinish) _speakFinish();
   if (curBtn) resetBtn(curBtn);
   curUtt=null; curBtn=null;
@@ -1892,11 +1901,11 @@ function showVoiceDebug() {
 }
 function hideVoiceDebug() {
   document.getElementById('dbgOverlay').classList.remove('show');
-  window.speechSynthesis.cancel();
+  if (_hasSpeech) { try { window.speechSynthesis.cancel(); } catch(e) {} }
 }
 
 function refreshVoiceDebug() {
-  var voices = speechSynthesis.getVoices();
+  var voices = getVoicesList();
   var note = document.getElementById('dbgNote');
   var table = document.getElementById('dbgTable');
 
@@ -1942,8 +1951,9 @@ function refreshVoiceDebug() {
 }
 
 function testVoice(voiceURI) {
+  if (!_hasSpeech) return;
   window.speechSynthesis.cancel();
-  var voices = speechSynthesis.getVoices();
+  var voices = getVoicesList();
   var voice = null;
   for (var i = 0; i < voices.length; i++) {
     if (voices[i].voiceURI === voiceURI) { voice = voices[i]; break; }

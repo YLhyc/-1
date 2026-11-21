@@ -640,10 +640,7 @@
     var pickRemote = rTime > lTime;
     var winner = cloneJson(pickRemote ? rv : lv);
     if (!isPlainObject(winner)) return winner;
-    winner.hardHits = Math.max(Number(lv.hardHits) || 0, Number(rv.hardHits) || 0);
-    winner.familiarHits = Math.max(Number(lv.familiarHits) || 0, Number(rv.familiarHits) || 0);
-    winner.reps = Math.max(Number(lv.reps) || 0, Number(rv.reps) || 0);
-    winner.lastAt = Math.max(Number(lv.lastAt) || 0, Number(rv.lastAt) || 0);
+    winner.lapses = Math.max(Number(lv.lapses) || 0, Number(rv.lapses) || 0);
     winner.updatedAt = Math.max(Number(lv.updatedAt) || 0, Number(rv.updatedAt) || 0, lTime || 0, rTime || 0);
     return winner;
   }
@@ -1135,6 +1132,8 @@
     var pills = document.querySelectorAll('[data-sync-pill]');
     if (!pills || !pills.length) return;
     var cfg = loadGithubConfig();
+    var st = getStore();
+    var isDirty = _status.dirty || !!(st && st.getItem(ACTIVITY_DIRTY_KEY));
     var text = '未同步', cls = 'sync-pill-idle', title = '点击配置三端同步';
     if (!cfg.token) {
       text = '未连接云同步';
@@ -1148,7 +1147,7 @@
       text = '同步失败';
       cls = 'sync-pill-error';
       title = (_status.message || '同步失败') + ' · 点击重试';
-    } else if (_status.dirty) {
+    } else if (isDirty) {
       text = '待同步';
       cls = 'sync-pill-pending';
       title = '本地有新学习记录，点击立即同步';
@@ -1276,7 +1275,9 @@
 
         var needsUpload = merged.remoteChanged || !remote.hasSyncSchema || fresh.dirtyDetected || (st && !!st.getItem(ACTIVITY_DIRTY_KEY));
         if (merged.localChanged) {
-          applyDataToStorage(merged.mergedData, merged.mergedMeta, st);
+          if (!applyDataToStorage(merged.mergedData, merged.mergedMeta, st)) {
+            throw new Error('本地存储空间不足，无法完整写入云端合并记录');
+          }
         } else {
           writeKey(st, SYNC_META_KEY, merged.mergedMeta);
           writeKey(st, SYNC_LAST_SEEN_KEY, merged.mergedData);

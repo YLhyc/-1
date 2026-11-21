@@ -2,6 +2,7 @@
   'use strict';
 
   var currentFilter = 'hard';
+  var printMode = 'standard';
   var cachedWords = [];
 
   function escapeHTML(str) {
@@ -166,6 +167,33 @@
           }
         }
       } catch(e) {}
+      try {
+        var sprintMap = Object.create(null);
+        if (Array.isArray(global.SPRINT_VOCAB_DATA)) {
+          for (var si = 0; si < global.SPRINT_VOCAB_DATA.length; si++) {
+            var sv = global.SPRINT_VOCAB_DATA[si];
+            if (sv && sv.word) sprintMap[String(sv.word).trim().toLowerCase()] = sv.meaning || '';
+          }
+        }
+        var swList = JSON.parse(localStorage.getItem('sprint_weak_words') || '[]');
+        if (Array.isArray(swList)) {
+          for (var swi = 0; swi < swList.length; swi++) {
+            var sw = swList[swi];
+            if (!sw) continue;
+            if (global.ReviewCore && global.ReviewCore.isExcluded && global.ReviewCore.isExcluded('sprint', sw)) continue;
+            var scn = dMap[String(sw).toLowerCase()] || sprintMap[String(sw).toLowerCase()] || '';
+            add(sw, scn, { source: 'sprint' });
+          }
+        }
+        var spP = JSON.parse(localStorage.getItem('sp_prefs') || '{}');
+        for (var spw in spP) {
+          if (spP[spw] === 'hard') {
+            if (global.ReviewCore && global.ReviewCore.isExcluded && global.ReviewCore.isExcluded('sprint', spw)) continue;
+            var spcn = dMap[spw.toLowerCase()] || sprintMap[spw.toLowerCase()] || '';
+            add(spw, spcn, { source: 'sprint' });
+          }
+        }
+      } catch(e) {}
     } else if (sourceType === 'due') {
       if (global.ReviewCore && global.ReviewCore.getDueReviewItems) {
         var dueList = global.ReviewCore.getDueReviewItems();
@@ -217,6 +245,36 @@
           if (item && item.en) add(item.en, item.cn, { sound: item.sound, source: 'hongbaoshu' });
         });
       }
+    } else if (sourceType === 'sprint_all' || sourceType === 'sprint_weak' || sourceType === 'sprint_attitude' || sourceType === 'sprint_logic' || sourceType === 'sprint_polysemy') {
+      var sprintList = Array.isArray(global.SPRINT_VOCAB_DATA) ? global.SPRINT_VOCAB_DATA : [];
+      var weakSet = Object.create(null);
+      if (sourceType === 'sprint_weak') {
+        try {
+          var swArr = JSON.parse(localStorage.getItem('sprint_weak_words') || '[]');
+          if (Array.isArray(swArr)) {
+            swArr.forEach(function(w) { if (w) weakSet[String(w).trim().toLowerCase()] = true; });
+          }
+          var spPrefs = JSON.parse(localStorage.getItem('sp_prefs') || '{}');
+          for (var spKey in spPrefs) {
+            if (spPrefs[spKey] === 'hard') weakSet[String(spKey).trim().toLowerCase()] = true;
+          }
+        } catch(e) {}
+      }
+      sprintList.forEach(function(item) {
+        if (!item || !item.word) return;
+        var wLower = String(item.word).trim().toLowerCase();
+        if (sourceType === 'sprint_weak' && !weakSet[wLower]) return;
+        if (sourceType === 'sprint_attitude' && item.category !== 'attitude') return;
+        if (sourceType === 'sprint_logic' && item.category !== 'logic') return;
+        if (sourceType === 'sprint_polysemy' && item.category !== 'polysemy') return;
+        add(item.word, item.meaning || '', {
+          badge: item.badge || '',
+          contrast: item.contrast || '',
+          category: item.category || '',
+          type: item.type || '',
+          source: 'sprint'
+        });
+      });
     }
 
     return result;
@@ -259,30 +317,41 @@
     return lines.join('\n');
   }
 
-  function generatePrintableMarkup(words, title, filterName) {
+  function generatePrintableMarkup(words, title, filterName, mode) {
+    var activeMode = mode || printMode || 'standard';
+    var isCompact = activeMode === 'compact';
     var now = new Date();
     var nowStr = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate();
-    var html = '<div class="sprint-print-sheet">' +
+    var tipText = isCompact
+      ? '极简考前急救版 · 双栏高密度排版（每页约80~100词）'
+      : '使用说明：沿中虚线对折即可遮挡中文自测';
+    var html = '<div class="sprint-print-sheet' + (isCompact ? ' is-compact' : '') + '">' +
       '<div class="sprint-print-header">' +
-        '<div class="sprint-print-title">考研英语冲刺折页背诵单 · ' + escapeHTML(title || '重点词单') + '</div>' +
+        '<div class="sprint-print-title">' + (isCompact ? '考前急救速记单 · ' : '考研英语冲刺折页背诵单 · ') + escapeHTML(title || '重点词单') + '</div>' +
         '<div class="sprint-print-meta">' +
           '<span>分类：' + escapeHTML(filterName || '精选词库') + '</span>' +
           '<span>词量：' + words.length + ' 词</span>' +
-          '<span>导出日期：' + nowStr + '</span>' +
-          '<span>使用说明：沿中虚线对折即可遮挡中文自测</span>' +
+          '<span>导出：' + nowStr + '</span>' +
+          '<span>' + tipText + '</span>' +
         '</div>' +
       '</div>' +
-      '<div class="sprint-print-grid">';
+      '<div class="sprint-print-grid' + (isCompact ? ' is-compact' : '') + '">';
 
     words.forEach(function(w, idx) {
       var rootNote = '';
-      if (global.WordNetwork && global.WordNetwork.lookup) {
+      var badgeTag = '';
+      if (w.meta && w.meta.badge) {
+        badgeTag = '<span class="sprint-print-tag">[' + escapeHTML(w.meta.badge) + ']</span>';
+      }
+      if (!isCompact && global.WordNetwork && global.WordNetwork.lookup) {
         var net = global.WordNetwork.lookup(w.en);
         if (net.hasNetwork && net.root) {
           var rMean = net.root.meaning || net.root.mean || '';
           rootNote = '<span class="sprint-print-root">[' + escapeHTML(net.root.root) + (rMean ? ':' + escapeHTML(rMean) : '') + ']</span>';
         }
       }
+      var cnText = String(w.cn || '').replace(/\s+/g, ' ');
+      if (isCompact && cnText.length > 26) cnText = cnText.slice(0, 25) + '…';
       html += '<div class="sprint-print-row">' +
         '<div class="sprint-col-en">' +
           '<span class="sprint-row-num">' + (idx + 1) + '.</span>' +
@@ -291,13 +360,14 @@
         '</div>' +
         '<div class="sprint-col-fold">┊</div>' +
         '<div class="sprint-col-cn">' +
-          '<span class="sprint-word-cn">' + escapeHTML(w.cn) + '</span>' +
+          badgeTag +
+          '<span class="sprint-word-cn">' + escapeHTML(cnText) + '</span>' +
         '</div>' +
       '</div>';
     });
 
     html += '</div>' +
-      '<div class="sprint-print-footer">Words 考研英语复习助手 · 冲刺打印折页清单 · 沉着应考 · 祝金榜题名</div>' +
+      '<div class="sprint-print-footer">Words 考研英语复习助手 · 冲刺打印清单 · 沉着应考 · 祝金榜题名</div>' +
     '</div>';
 
     return html;
@@ -307,6 +377,11 @@
     var map = {
       hard: '易错攻坚词',
       due: '待复习高危词',
+      sprint_weak: '专题待巩固词',
+      sprint_all: '考前专题词全量',
+      sprint_attitude: '专题·态度题眼',
+      sprint_logic: '专题·逻辑动词',
+      sprint_polysemy: '专题·熟词僻义',
       roots: '30+经典词根家族',
       confusables: '27+真题形近辨析',
       vocab: '考研核心生词本',
@@ -346,7 +421,7 @@
         container.id = 'sprintPrintZone';
         document.body.appendChild(container);
       }
-      container.innerHTML = generatePrintableMarkup(words, label, label);
+      container.innerHTML = generatePrintableMarkup(words, label, label, printMode);
       window.print();
     });
   }
@@ -413,6 +488,15 @@
       setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
       showToast('已生成并下载 ' + words.length + ' 词 Anki 牌组');
     });
+  }
+
+  function setPrintMode(mode) {
+    printMode = (mode === 'compact') ? 'compact' : 'standard';
+    if (typeof document !== 'undefined') {
+      document.querySelectorAll('.sprint-mode-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-mode') === printMode);
+      });
+    }
   }
 
   function switchFilter(f) {
@@ -495,7 +579,10 @@
         '.sprint-filter-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}' +
         '.sprint-filter-pill{padding:5px 11px;border-radius:999px;border:1px solid rgba(7,83,106,.15);background:rgba(7,83,106,.04);color:var(--ink,#102a36);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease;-webkit-tap-highlight-color:transparent}' +
         '.sprint-filter-pill.active{background:var(--deep,#07536a);border-color:var(--deep,#07536a);color:#fff;box-shadow:0 3px 8px rgba(7,83,106,.22)}' +
-        '.sprint-summary-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(239,249,255,.85);border:1px solid rgba(20,112,159,.12);border-radius:10px;font-size:12px;color:var(--ocean,#14709f);font-weight:700;margin-bottom:12px}' +
+        '.sprint-summary-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 12px;background:rgba(239,249,255,.85);border:1px solid rgba(20,112,159,.12);border-radius:10px;font-size:12px;color:var(--ocean,#14709f);font-weight:700;margin-bottom:12px}' +
+        '.sprint-mode-switch{display:inline-flex;background:rgba(7,83,106,.08);padding:2px;border-radius:8px;gap:2px}' +
+        '.sprint-mode-btn{border:none;background:transparent;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;color:var(--muted,#5f747d);cursor:pointer}' +
+        '.sprint-mode-btn.active{background:#fff;color:var(--deep,#07536a);box-shadow:0 1px 2px rgba(0,0,0,.08)}' +
         '.sprint-preview-box{border:1px solid rgba(7,83,106,.1);border-radius:12px;background:rgba(255,255,255,.6);padding:10px 12px;max-height:150px;overflow-y:auto;font-size:12px;margin-bottom:14px}' +
         '.sprint-preview-item{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed rgba(7,83,106,.08)}' +
         '.sprint-preview-item:last-child{border-bottom:none}' +
@@ -508,20 +595,44 @@
         '.sprint-btn-secondary{background:rgba(7,83,106,.06);color:var(--deep,#07536a)}' +
         '.sprint-toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 85px);z-index:10030;transform:translate(-50%,10px);padding:8px 16px;border-radius:999px;background:rgba(19,43,57,.92);color:#fff;font-size:12px;font-weight:700;opacity:0;pointer-events:none;transition:all .18s ease}' +
         '.sprint-toast.show{opacity:1;transform:translate(-50%,0)}' +
+        'html[data-theme="dark"] .sprint-modal-card{background:rgba(15,31,40,.96);border-color:rgba(56,189,248,.22);color:#f0fdf4}' +
+        'html[data-theme="dark"] .sprint-modal-head{background:rgba(19,39,51,.9);border-bottom-color:rgba(56,189,248,.14)}' +
+        'html[data-theme="dark"] .sprint-modal-title{color:#38bdf8}' +
+        'html[data-theme="dark"] .sprint-modal-close{background:rgba(56,189,248,.14);color:#38bdf8}' +
+        'html[data-theme="dark"] .sprint-filter-pill{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:#e2e8f0}' +
+        'html[data-theme="dark"] .sprint-filter-pill.active{background:#0ea5e9;border-color:#0ea5e9;color:#fff}' +
+        'html[data-theme="dark"] .sprint-summary-bar{background:rgba(14,165,233,.14);border-color:rgba(56,189,248,.22);color:#38bdf8}' +
+        'html[data-theme="dark"] .sprint-mode-switch{background:rgba(56,189,248,.12)}' +
+        'html[data-theme="dark"] .sprint-mode-btn{color:#94a3b8}' +
+        'html[data-theme="dark"] .sprint-mode-btn.active{background:#0ea5e9;color:#fff}' +
+        'html[data-theme="dark"] .sprint-preview-box{background:rgba(9,19,25,.65);border-color:rgba(56,189,248,.18)}' +
+        'html[data-theme="dark"] .sprint-preview-item{border-bottom-color:rgba(56,189,248,.1)}' +
+        'html[data-theme="dark"] .sprint-preview-en{color:#38bdf8}' +
+        'html[data-theme="dark"] .sprint-preview-cn{color:#94a3b8}' +
+        'html[data-theme="dark"] .sprint-btn-secondary{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.22);color:#e2e8f0}' +
+        'html[data-theme="dark"] .sprint-btn-primary{background:#0ea5e9;border-color:#0ea5e9;color:#fff}' +
         '@media print{' +
           'body>*{display:none!important}' +
-          '#sprintPrintZone{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:8mm 10mm!important;background:#fff!important;color:#000!important}' +
+          '#sprintPrintZone{display:block!important;position:static!important;width:100%!important;padding:0!important;background:#fff!important;color:#000!important}' +
           '.sprint-print-sheet{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC",serif}' +
           '.sprint-print-header{border-bottom:2px solid #000;padding-bottom:5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-end}' +
           '.sprint-print-title{font-size:15pt;font-weight:900;color:#000}' +
           '.sprint-print-meta{font-size:8.5pt;color:#333;display:flex;gap:10px}' +
-          '.sprint-print-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}' +
-          '.sprint-print-row{display:flex;align-items:baseline;padding:2.5px 0;border-bottom:.5pt dashed #bbb;break-inside:avoid;font-size:9.5pt;line-height:1.3}' +
-          '.sprint-col-en{flex:0 0 46%;font-weight:700;color:#000;display:flex;align-items:baseline;gap:4px}' +
-          '.sprint-row-num{font-size:8pt;color:#666;min-width:14px}' +
+          '.sprint-print-grid{display:block}' +
+          '.sprint-print-grid.is-compact{column-count:2;column-gap:12px;column-rule:1px solid #d4d4d8}' +
+          '.sprint-print-row{display:flex;align-items:baseline;padding:3px 0;border-bottom:.5pt dashed #bbb;break-inside:avoid;font-size:9.5pt;line-height:1.35}' +
+          '.sprint-print-grid.is-compact .sprint-print-row{padding:1.5px 0;font-size:8pt;line-height:1.2;border-bottom:.4pt dashed #d4d4d8}' +
+          '.sprint-col-en{flex:0 0 46%;font-weight:700;color:#000;display:flex;align-items:baseline;gap:4px;min-width:0}' +
+          '.sprint-print-grid.is-compact .sprint-col-en{flex:0 0 44%;gap:2px}' +
+          '.sprint-row-num{font-size:8pt;color:#666;min-width:16px}' +
+          '.sprint-print-grid.is-compact .sprint-row-num{font-size:7pt;min-width:13px}' +
           '.sprint-word-en{font-weight:800;font-size:10pt}' +
-          '.sprint-col-fold{flex:0 0 10px;text-align:center;color:#888;font-size:8.5pt;user-select:none}' +
-          '.sprint-col-cn{flex:1;color:#111;font-size:9pt}' +
+          '.sprint-print-grid.is-compact .sprint-word-en{font-size:8.4pt}' +
+          '.sprint-col-fold{flex:0 0 12px;text-align:center;color:#888;font-size:8.5pt;user-select:none}' +
+          '.sprint-print-grid.is-compact .sprint-col-fold{flex:0 0 8px;font-size:7.5pt}' +
+          '.sprint-col-cn{flex:1;color:#111;font-size:9pt;min-width:0}' +
+          '.sprint-print-grid.is-compact .sprint-col-cn{font-size:7.8pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+          '.sprint-print-tag{font-size:7.5pt;font-weight:700;color:#333;margin-right:3px}' +
           '.sprint-print-root{font-size:8pt;color:#555;margin-left:3px;font-weight:normal}' +
           '.sprint-print-footer{margin-top:12px;border-top:1px solid #ddd;padding-top:4px;font-size:8pt;color:#666;text-align:center}' +
           '@page{size:A4 portrait;margin:10mm 8mm}' +
@@ -548,13 +659,21 @@
             '<div class="sprint-filter-pills">' +
               '<button class="sprint-filter-pill active" data-filter="hard" onclick="SprintExport.switchFilter(\'hard\')">易错攻坚词</button>' +
               '<button class="sprint-filter-pill" data-filter="due" onclick="SprintExport.switchFilter(\'due\')">待复习高危</button>' +
+              '<button class="sprint-filter-pill" data-filter="sprint_weak" onclick="SprintExport.switchFilter(\'sprint_weak\')">专题待巩固</button>' +
+              '<button class="sprint-filter-pill" data-filter="sprint_all" onclick="SprintExport.switchFilter(\'sprint_all\')">考前专题词</button>' +
+              '<button class="sprint-filter-pill" data-filter="sprint_attitude" onclick="SprintExport.switchFilter(\'sprint_attitude\')">态度题眼</button>' +
+              '<button class="sprint-filter-pill" data-filter="sprint_logic" onclick="SprintExport.switchFilter(\'sprint_logic\')">逻辑动词</button>' +
+              '<button class="sprint-filter-pill" data-filter="sprint_polysemy" onclick="SprintExport.switchFilter(\'sprint_polysemy\')">熟词僻义</button>' +
               '<button class="sprint-filter-pill" data-filter="roots" onclick="SprintExport.switchFilter(\'roots\')">30+词根家族</button>' +
               '<button class="sprint-filter-pill" data-filter="confusables" onclick="SprintExport.switchFilter(\'confusables\')">27+形近辨析</button>' +
               '<button class="sprint-filter-pill" data-filter="vocab" onclick="SprintExport.switchFilter(\'vocab\')">生词本全量</button>' +
             '</div>' +
             '<div class="sprint-summary-bar">' +
               '<span>当前已筛选：<b id="sprintCount">0</b> 词</span>' +
-              '<span style="font-size:11px;font-weight:normal;opacity:.85;">适合双面打印与 Anki 刷词</span>' +
+              '<div class="sprint-mode-switch">' +
+                '<button type="button" class="sprint-mode-btn active" data-mode="standard" onclick="SprintExport.setPrintMode(\'standard\')">标准折页</button>' +
+                '<button type="button" class="sprint-mode-btn" data-mode="compact" onclick="SprintExport.setPrintMode(\'compact\')">极简急救(80~100词/页)</button>' +
+              '</div>' +
             '</div>' +
             '<div class="sprint-preview-box" id="sprintPreview"></div>' +
             '<div class="sprint-actions-grid">' +
@@ -586,6 +705,7 @@
     copyAnki: copyAnkiText,
     downloadAnki: downloadAnkiFile,
     switchFilter: switchFilter,
+    setPrintMode: setPrintMode,
     openModal: openModal,
     closeModal: closeModal,
     refreshPreview: updateModalContent
