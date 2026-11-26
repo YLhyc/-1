@@ -5,6 +5,9 @@
   var ACTIVITY_KEY = 'learning_activity_v1';
   var RECALL_KEY = 'recall_quality_v1';
   var ACTIVITY_DIRTY_KEY = 'learning_activity_dirty_v1';
+  var EXAM_DATE_KEY = 'exam_date_v1';
+  var SPRINT_MODE_KEY = 'sprint_mode_v1';
+  var DEFAULT_EXAM_DATE = '2026-12-19';
   var DAY_MS = 86400000;
   var excludedCache = null;
 
@@ -12,13 +15,88 @@
     try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
     catch(e) { return fallback; }
   }
+  function safeSet(key, val) {
+    try { localStorage.setItem(key, String(val)); return true; }
+    catch(e) { return false; }
+  }
+  function safeRemove(key) {
+    try { localStorage.removeItem(key); return true; }
+    catch(e) { return false; }
+  }
   function isObject(obj) { return !!obj && typeof obj === 'object' && !Array.isArray(obj); }
   function localDayKey(ts) {
     var d = new Date(ts || Date.now());
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
+  function getExamDate() {
+    try {
+      var v = localStorage.getItem(EXAM_DATE_KEY);
+      if (v && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    } catch (e) {}
+    return DEFAULT_EXAM_DATE;
+  }
+  function setExamDate(dateStr) {
+    var clean = String(dateStr || '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(clean)) clean = DEFAULT_EXAM_DATE;
+    safeSet(EXAM_DATE_KEY, clean);
+    return clean;
+  }
+  function isSprintMode() {
+    try { return localStorage.getItem(SPRINT_MODE_KEY) === '1'; }
+    catch (e) { return false; }
+  }
+  function setSprintMode(enabled) {
+    if (enabled) safeSet(SPRINT_MODE_KEY, '1');
+    else safeRemove(SPRINT_MODE_KEY);
+    return !!enabled;
+  }
+  function getExamDaysLeft(now) {
+    var at = Number(now) || Date.now();
+    var ts = new Date(getExamDate() + 'T09:00:00').getTime();
+    if (!isFinite(ts)) return 0;
+    return Math.ceil((ts - at) / DAY_MS);
+  }
+  function getExamCapDueAt(now) {
+    var at = Number(now) || Date.now();
+    var ts = new Date(getExamDate() + 'T09:00:00').getTime();
+    if (!isFinite(ts) || ts <= at) return 0;
+    var capAt = ts - 3 * DAY_MS;
+    if (capAt < at + DAY_MS) return 0;
+    return capAt;
+  }
+  function getHighFreqWrongItems(options) {
+    var opts = options || {};
+    var minLapses = Number(opts.minLapses) || 2;
+    var minHardHits = Number(opts.minHardHits) || 2;
+    var meta = loadReviewMeta(), excluded = loadExcluded(), items = [], seen = Object.create(null);
+    Object.keys(meta).forEach(function(key) {
+      var entry = meta[key], split = key.indexOf(':');
+      if (!entry || split < 1) return;
+      var canonical = reviewSource(key.slice(0, split)), en = key.slice(split + 1);
+      if (Object.prototype.hasOwnProperty.call(excluded, exclusionKey(canonical, en))) return;
+      var dedupeKey = canonical + ':' + en;
+      if (seen[dedupeKey]) return;
+      seen[dedupeKey] = true;
+      var lapses = Number(entry.lapses) || 0, hardHits = Number(entry.hardHits) || 0;
+      if (lapses < minLapses && hardHits < minHardHits) return;
+      var tier = (canonical === 'vocab' || canonical === 'sprint') ? 1 : 2;
+      items.push({
+        source: canonical, en: en, lapses: lapses, hardHits: hardHits,
+        dueAt: effectiveDueAt(entry), lastRating: entry.lastRating || '', tier: tier
+      });
+    });
+    items.sort(function(a, b) {
+      if (a.tier !== b.tier) return a.tier - b.tier;
+      var scoreA = a.hardHits * 3 + a.lapses * 2;
+      var scoreB = b.hardHits * 3 + b.lapses * 2;
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      return (a.dueAt || 0) - (b.dueAt || 0);
+    });
+    return items;
+  }
+
   function loadReviewMeta() { return safeJson(REVIEW_META_KEY, {}); }
-  function saveReviewMeta(meta) { localStorage.setItem(REVIEW_META_KEY, JSON.stringify(meta || {})); }
+  function saveReviewMeta(meta) { safeSet(REVIEW_META_KEY, JSON.stringify(meta || {})); }
   function loadExcluded() {
     if (excludedCache) return excludedCache;
     excludedCache = safeJson(EXCLUDED_KEY, {});
@@ -26,9 +104,9 @@
   }
   function saveExcluded(data) {
     excludedCache = data || {};
-    if (data && Object.keys(data).length) localStorage.setItem(EXCLUDED_KEY, JSON.stringify(data));
-    else localStorage.removeItem(EXCLUDED_KEY);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (data && Object.keys(data).length) safeSet(EXCLUDED_KEY, JSON.stringify(data));
+    else safeRemove(EXCLUDED_KEY);
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
   if (global.addEventListener) {
     global.addEventListener('storage', function(event) {
@@ -55,7 +133,7 @@
       oldReview: meta[key] ? cloneValue(meta[key]) : null
     };
     prefs[en] = 'hidden';
-    localStorage.setItem(prefsKey, JSON.stringify(prefs));
+    safeSet(prefsKey, JSON.stringify(prefs));
     if (meta[key]) { delete meta[key]; saveReviewMeta(meta); }
     saveExcluded(excluded);
     return excluded[key];
@@ -67,8 +145,8 @@
     var prefsKey = preferenceStorageKey(canonical), prefs = safeJson(prefsKey, {});
     if (entry.hadPref) prefs[en] = entry.oldPref;
     else delete prefs[en];
-    if (Object.keys(prefs).length) localStorage.setItem(prefsKey, JSON.stringify(prefs));
-    else localStorage.removeItem(prefsKey);
+    if (Object.keys(prefs).length) safeSet(prefsKey, JSON.stringify(prefs));
+    else safeRemove(prefsKey);
     var meta = loadReviewMeta();
     var now = Date.now();
     if (entry.oldReview && isObject(entry.oldReview)) {
@@ -86,10 +164,17 @@
     return true;
   }
   function reviewSource(source) {
-    return source === 'hb' ? 'hongbaoshu' : source;
+    if (source === 'hb') return 'hongbaoshu';
+    if (source === 'sp') return 'sprint';
+    return source;
   }
   function preferenceStorageKey(source) {
-    return reviewSource(source) === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs';
+    var s = reviewSource(source);
+    if (s === 'hongbaoshu' || s === 'hb') return 'hb_prefs';
+    if (s === 'uf') return 'uf_prefs';
+    if (s === 'wb' || s === 'wordbank') return 'wb_prefs';
+    if (s === 'sp' || s === 'sprint') return 'sp_prefs';
+    return 'vv_prefs';
   }
   function normalizeRating(value) {
     if (value === true) return 'familiar';
@@ -109,8 +194,8 @@
     var hadPref = Object.prototype.hasOwnProperty.call(prefs, en);
     var oldPref = hadPref ? prefs[en] : null;
     prefs[en] = isFamiliar ? 'familiar' : 'hard';
-    localStorage.setItem(storageKey, JSON.stringify(prefs));
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeSet(storageKey, JSON.stringify(prefs));
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
     var opts = options || {}, oldReview = null, reviewApplied = false;
     var canonicalSource = reviewSource(source);
     var reviewBefore = mode === 'recite' ? loadReviewMeta()[canonicalSource + ':' + en] : null;
@@ -139,15 +224,19 @@
     var storageKey = preferenceStorageKey(state.source), prefs = safeJson(storageKey, {});
     if (state.hadPref) prefs[state.en] = state.oldPref;
     else delete prefs[state.en];
-    if (Object.keys(prefs).length) localStorage.setItem(storageKey, JSON.stringify(prefs));
-    else localStorage.removeItem(storageKey);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (Object.keys(prefs).length) safeSet(storageKey, JSON.stringify(prefs));
+    else safeRemove(storageKey);
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
     if (state.reviewApplied) undoReview(state.source, state.en, state.oldReview || {});
     if (state.recallOutcome) undoRecallOutcome(state.recallOutcome);
   }
   function rateReview(source, en, ratingOrFamiliar, options) {
     var rating = normalizeRating(ratingOrFamiliar);
-    var meta = loadReviewMeta(), key = source + ':' + en, old = meta[key] || {};
+    var canonical = reviewSource(source);
+    var meta = loadReviewMeta(), key = canonical + ':' + en;
+    var legacyKey = (canonical === 'hongbaoshu' ? 'hb:' + en : null);
+    var old = meta[key] || (legacyKey ? meta[legacyKey] : null) || {};
+    if (legacyKey && meta[legacyKey]) delete meta[legacyKey];
     var opts = options || {};
     var next = {
       streak: Number(old.streak) || 0,
@@ -167,8 +256,6 @@
       } else {
         next.intervalDays = baseInterval;
       }
-      // Sprint cap: keep familiar review intervals within 7 days before the exam.
-      next.intervalDays = Math.min(7, next.intervalDays);
       next.hardDueAt = 0;
       next.hardHits = 0;
     } else if (rating === 'mastered') {
@@ -179,40 +266,59 @@
     } else if (rating === 'uncertain') {
       next.streak = Math.max(0, Math.floor(next.streak * 0.5));
       next.hardHits++;
-      var prevInterval = Number(old.intervalDays) || 2;
+      var prevInterval = old.lastRating === 'mastered' ? 14 : Math.min(30, Number(old.intervalDays) || 2);
       next.intervalDays = Math.max(1, Math.round(prevInterval * 0.5));
       next.hardDueAt = now + next.intervalDays * DAY_MS;
     } else {
       next.streak = 0;
       next.lapses++;
       next.hardHits++;
-      next.intervalDays = next.hardHits === 1 ? 2 : 1;
+      next.intervalDays = 1;
       next.hardDueAt = now + next.intervalDays * DAY_MS;
     }
     next.lastReviewAt = now;
     next.nextDueAt = next.lastReviewAt + next.intervalDays * DAY_MS;
+    if (rating === 'familiar' && (isSprintMode() || opts.examCap)) {
+      var capAt = getExamCapDueAt(now);
+      if (capAt && next.nextDueAt > capAt) {
+        next.nextDueAt = Math.max(now + DAY_MS, capAt);
+        next.intervalDays = Math.max(1, Math.round((next.nextDueAt - now) / DAY_MS));
+        next.examCapped = true;
+      }
+    }
     meta[key] = next;
     saveReviewMeta(meta);
     return old;
   }
   function scheduleHardOnly(source, en) {
-    var meta = loadReviewMeta(), key = exclusionKey(source, en), old = meta[key] || {};
+    var canonical = reviewSource(source);
+    var meta = loadReviewMeta(), key = exclusionKey(canonical, en);
+    var legacyKey = (canonical === 'hongbaoshu' ? 'hb:' + en : null);
+    var old = meta[key] || (legacyKey ? meta[legacyKey] : null) || {};
+    if (legacyKey && meta[legacyKey]) delete meta[legacyKey];
     var hardHits = Number(old.hardHits) || 0;
     if (!hardHits && Number(old.lapses) > 0) hardHits = 1;
     hardHits++;
-    var interval = hardHits === 1 ? 2 : 1;
+    var interval = 1;
+    var now = Date.now();
+    var due = now + interval * DAY_MS;
     meta[key] = {
       streak: 0, lapses: (Number(old.lapses) || 0) + 1, hardHits: hardHits,
-      intervalDays: interval, lastReviewAt: Date.now(),
-      hardDueAt: Date.now() + interval * DAY_MS
+      intervalDays: interval, lastReviewAt: now,
+      hardDueAt: due,
+      nextDueAt: due,
+      lastRating: 'forget'
     };
     saveReviewMeta(meta);
     return old;
   }
   function undoReview(source, en, old) {
-    var meta = loadReviewMeta(), key = source + ':' + en;
+    var canonical = reviewSource(source);
+    var meta = loadReviewMeta(), key = canonical + ':' + en;
+    var legacyKey = (canonical === 'hongbaoshu' ? 'hb:' + en : null);
+    if (legacyKey && meta[legacyKey]) delete meta[legacyKey];
     if (old && Object.keys(old).length) meta[key] = old; else delete meta[key];
-    if (Object.keys(meta).length) saveReviewMeta(meta); else localStorage.removeItem(REVIEW_META_KEY);
+    if (Object.keys(meta).length) saveReviewMeta(meta); else safeRemove(REVIEW_META_KEY);
   }
   function loadRecallQuality() { return safeJson(RECALL_KEY, { days: {} }); }
   function saveRecallQuality(data) {
@@ -222,13 +328,13 @@
       var ts = new Date(day + 'T00:00:00').getTime();
       if (!isFinite(ts) || ts < cutoff) delete days[day];
     });
-    if (Object.keys(days).length) localStorage.setItem(RECALL_KEY, JSON.stringify({ days: days }));
-    else localStorage.removeItem(RECALL_KEY);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    if (Object.keys(days).length) safeSet(RECALL_KEY, JSON.stringify({ days: days }));
+    else safeRemove(RECALL_KEY);
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
   function wasScheduledRecall(entry, at) {
     if (!isObject(entry) || !Number(entry.lastReviewAt)) return false;
-    var due = Number(entry.hardDueAt) || Number(entry.nextDueAt) || 0;
+    var due = effectiveDueAt(entry);
     return due > 0 && due <= (at || Date.now());
   }
   function recordRecallOutcome(source, en, familiarOrRating, mode, options) {
@@ -281,40 +387,72 @@
     if (!bucket.total) delete data.days[event.day];
     saveRecallQuality(data);
   }
+  function effectiveDueAt(entry) {
+    if (!entry || !isObject(entry)) return 0;
+    var hardDue = Number(entry.hardDueAt) || 0;
+    var nextDue = Number(entry.nextDueAt) || 0;
+    var rating = entry.lastRating;
+    if (rating === 'familiar' || rating === 'mastered') {
+      return nextDue;
+    }
+    if (hardDue > 0 && nextDue > 0) {
+      return Math.min(hardDue, nextDue);
+    }
+    return hardDue || nextDue || 0;
+  }
   function getDueReviewItems(now) {
     var meta = loadReviewMeta(), excluded = loadExcluded(), at = now || Date.now(), items = [];
+    var seen = Object.create(null);
     Object.keys(meta).forEach(function(key) {
       var entry = meta[key];
       var split = key.indexOf(':');
-      var source = key.slice(0, split), en = key.slice(split + 1);
-      if (!entry || split < 1 || Object.prototype.hasOwnProperty.call(excluded, exclusionKey(source, en))) return;
-      var dueAt = entry.nextDueAt || entry.hardDueAt;
+      if (!entry || split < 1) return;
+      var rawSource = key.slice(0, split), en = key.slice(split + 1);
+      var canonical = reviewSource(rawSource);
+      if (Object.prototype.hasOwnProperty.call(excluded, exclusionKey(canonical, en))) return;
+      var dueAt = effectiveDueAt(entry);
       if (!dueAt || dueAt > at) return;
-      items.push({ source: source, en: en, dueAt: dueAt, lapses: Number(entry.lapses) || 0 });
+      var dedupeKey = canonical + ':' + en;
+      if (seen[dedupeKey]) return;
+      seen[dedupeKey] = true;
+      items.push({ source: canonical, en: en, dueAt: dueAt, lapses: Number(entry.lapses) || 0 });
     });
     items.sort(function(a, b) { return a.dueAt - b.dueAt; });
     return items;
   }
   function getHardDueReviewItems(now) {
     var meta = loadReviewMeta(), excluded = loadExcluded(), at = now || Date.now(), items = [];
+    var seen = Object.create(null);
     Object.keys(meta).forEach(function(key) {
       var entry = meta[key], split = key.indexOf(':');
-      var source = key.slice(0, split), en = key.slice(split + 1);
-      if (!entry || split < 1 || Object.prototype.hasOwnProperty.call(excluded, exclusionKey(source, en))) return;
+      if (!entry || split < 1) return;
+      var rawSource = key.slice(0, split), en = key.slice(split + 1);
+      var canonical = reviewSource(rawSource);
+      if (Object.prototype.hasOwnProperty.call(excluded, exclusionKey(canonical, en))) return;
       if (!entry.hardDueAt || entry.hardDueAt > at) return;
-      items.push({ source: source, en: en, dueAt: entry.hardDueAt, lapses: Number(entry.lapses) || 0 });
+      var dedupeKey = canonical + ':' + en;
+      if (seen[dedupeKey]) return;
+      seen[dedupeKey] = true;
+      items.push({ source: canonical, en: en, dueAt: entry.hardDueAt, lapses: Number(entry.lapses) || 0 });
     });
     items.sort(function(a, b) { return a.dueAt - b.dueAt; });
     return items;
   }
   function upcomingReviewCount(hours) {
     var meta = loadReviewMeta(), excluded = loadExcluded(), now = Date.now(), end = now + (hours || 24) * 3600000, count = 0;
+    var seen = Object.create(null);
     Object.keys(meta).forEach(function(key) {
-      var due = Number(meta[key] && meta[key].nextDueAt) || 0;
-      var hardDue = Number(meta[key] && meta[key].hardDueAt) || 0;
+      var entry = meta[key];
       var split = key.indexOf(':');
-      if (split > 0 && Object.prototype.hasOwnProperty.call(excluded, exclusionKey(key.slice(0, split), key.slice(split + 1)))) return;
-      if ((due > now && due <= end) || (hardDue > now && hardDue <= end)) count++;
+      if (!entry || split < 1) return;
+      var rawSource = key.slice(0, split), en = key.slice(split + 1);
+      var canonical = reviewSource(rawSource);
+      if (Object.prototype.hasOwnProperty.call(excluded, exclusionKey(canonical, en))) return;
+      var dedupeKey = canonical + ':' + en;
+      if (seen[dedupeKey]) return;
+      seen[dedupeKey] = true;
+      var due = effectiveDueAt(entry);
+      if (due > now && due <= end) count++;
     });
     return count;
   }
@@ -326,31 +464,37 @@
       var ts = new Date(day + 'T00:00:00').getTime();
       if (!isFinite(ts) || ts < cutoff) delete days[day];
     });
-    localStorage.setItem(ACTIVITY_KEY, JSON.stringify({ days: days }));
+    safeSet(ACTIVITY_KEY, JSON.stringify({ days: days }));
   }
   function recordLearningActivity(source, en, mode) {
     if (!source || !en) return;
+    var canonical = reviewSource(source);
     var activity = loadLearningActivity();
     if (!isObject(activity.days)) activity.days = {};
     var day = localDayKey();
     var bucket = activity.days[day] || { words: {}, modes: {}, updatedAt: 0 };
     if (!isObject(bucket.words)) bucket.words = {};
     if (!isObject(bucket.modes)) bucket.modes = {};
-    var key = source + ':' + en;
+    var key = canonical + ':' + en;
     bucket.words[key] = (bucket.words[key] || 0) + 1;
-    mode = mode || source;
+    mode = mode || canonical;
     bucket.modes[mode] = (bucket.modes[mode] || 0) + 1;
     bucket.updatedAt = Date.now();
     activity.days[day] = bucket;
     saveLearningActivity(activity);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
   function undoLearningActivity(source, en, mode) {
     var activity = loadLearningActivity(), day = localDayKey();
-    var bucket = activity.days && activity.days[day], key = source + ':' + en;
-    if (!bucket || !bucket.words || !bucket.words[key]) return;
-    bucket.words[key]--;
-    if (bucket.words[key] <= 0) delete bucket.words[key];
+    var bucket = activity.days && activity.days[day];
+    if (!bucket || !bucket.words) return;
+    var canonical = reviewSource(source);
+    var key = canonical + ':' + en;
+    var targetKey = bucket.words[key] ? key : (bucket.words[source + ':' + en] ? source + ':' + en : (canonical === 'hongbaoshu' && bucket.words['hb:' + en] ? 'hb:' + en : key));
+    if (!bucket.words[targetKey]) return;
+    bucket.words[targetKey]--;
+    if (bucket.words[targetKey] <= 0) delete bucket.words[targetKey];
+    mode = mode || canonical;
     if (bucket.modes && bucket.modes[mode]) {
       bucket.modes[mode]--;
       if (bucket.modes[mode] <= 0) delete bucket.modes[mode];
@@ -358,26 +502,28 @@
     bucket.updatedAt = Date.now();
     if (!Object.keys(bucket.words).length) delete activity.days[day];
     saveLearningActivity(activity);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
   }
 
   var SMOOTH_BACKUP_KEY = 'review_smooth_backup_v1';
   function hasSmoothBackup() {
-    try {
-      var raw = localStorage.getItem(SMOOTH_BACKUP_KEY);
-      return !!(raw && JSON.parse(raw));
-    } catch (e) {
-      return false;
-    }
+    var b = getSmoothBackupInfo();
+    return !!(b && isObject(b.items) && Object.keys(b.items).length > 0);
   }
   function getSmoothBackupInfo() {
     return safeJson(SMOOTH_BACKUP_KEY, null);
   }
   function smoothBacklog(days) {
     days = Math.max(2, Math.min(7, Math.floor(Number(days) || 5)));
+    if (hasSmoothBackup()) {
+      var existing = getSmoothBackupInfo();
+      return { smoothed: 0, days: (existing && existing.days) || days, totalCandidates: 0, alreadySmoothed: true };
+    }
     var meta = loadReviewMeta();
     var excluded = loadExcluded();
     var now = Date.now();
+    var nowDate = new Date(now);
+    var todayStart = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0).getTime();
     var dayMs = DAY_MS;
     var overdueCandidates = [];
     Object.keys(meta).forEach(function(key) {
@@ -387,7 +533,7 @@
       if (split < 1) return;
       var source = key.slice(0, split), en = key.slice(split + 1);
       if (Object.prototype.hasOwnProperty.call(excluded, exclusionKey(source, en))) return;
-      var dueAt = entry.nextDueAt || entry.hardDueAt || 0;
+      var dueAt = effectiveDueAt(entry);
       if (dueAt > 0 && (now - dueAt) > dayMs) {
         var lapses = Number(entry.lapses) || 0;
         var streak = Number(entry.streak) || 0;
@@ -412,8 +558,9 @@
         isSmoothed: !!orig.isSmoothed
       };
       var targetDayOffset = (idx % days) + 1;
-      var jitter = (idx * 37) % (3 * 3600000);
-      var newDue = now + targetDayOffset * dayMs + jitter;
+      var slotIndex = Math.floor(idx / days);
+      var jitter = ((targetDayOffset * 19 + slotIndex * 43) * 60000) % (3 * 3600000);
+      var newDue = todayStart + targetDayOffset * dayMs + 8 * 3600000 + jitter;
       if (orig.nextDueAt) orig.nextDueAt = newDue;
       if (orig.hardDueAt) orig.hardDueAt = newDue;
       orig.updatedAt = now;
@@ -426,8 +573,8 @@
       count: overdueCandidates.length,
       items: backupItems
     };
-    localStorage.setItem(SMOOTH_BACKUP_KEY, JSON.stringify(backup));
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(now));
+    safeSet(SMOOTH_BACKUP_KEY, JSON.stringify(backup));
+    safeSet(ACTIVITY_DIRTY_KEY, String(now));
     return {
       smoothed: overdueCandidates.length,
       days: days,
@@ -436,23 +583,25 @@
   }
   function undoSmoothBacklog() {
     var backup = getSmoothBackupInfo();
-    if (!backup || !backup.items) return 0;
+    if (!backup || !backup.items || !isObject(backup.items)) return 0;
     var meta = loadReviewMeta();
     var count = 0;
     Object.keys(backup.items).forEach(function(key) {
       if (meta[key]) {
         var saved = backup.items[key];
-        if (typeof saved.nextDueAt !== 'undefined') meta[key].nextDueAt = saved.nextDueAt;
-        if (typeof saved.hardDueAt !== 'undefined') meta[key].hardDueAt = saved.hardDueAt;
-        if (typeof saved.updatedAt !== 'undefined') meta[key].updatedAt = saved.updatedAt;
-        if (saved.isSmoothed) meta[key].isSmoothed = true;
-        else delete meta[key].isSmoothed;
-        count++;
+        if (saved && typeof saved === 'object') {
+          if (typeof saved.nextDueAt !== 'undefined') meta[key].nextDueAt = saved.nextDueAt;
+          if (typeof saved.hardDueAt !== 'undefined') meta[key].hardDueAt = saved.hardDueAt;
+          if (typeof saved.updatedAt !== 'undefined') meta[key].updatedAt = saved.updatedAt;
+          if (saved.isSmoothed) meta[key].isSmoothed = true;
+          else delete meta[key].isSmoothed;
+          count++;
+        }
       }
     });
     saveReviewMeta(meta);
-    localStorage.removeItem(SMOOTH_BACKUP_KEY);
-    localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+    safeRemove(SMOOTH_BACKUP_KEY);
+    safeSet(ACTIVITY_DIRTY_KEY, String(Date.now()));
     return count;
   }
 
@@ -495,14 +644,18 @@
     var totalRetention = 0;
     var retentionCount = 0;
 
+    var seenForecast = Object.create(null);
     var keys = Object.keys(meta);
     for (var k = 0; k < keys.length; k++) {
       var key = keys[k];
       var split = key.indexOf(':');
       if (split < 1) continue;
-      var source = key.slice(0, split);
+      var source = reviewSource(key.slice(0, split));
       var en = key.slice(split + 1);
       if (Object.prototype.hasOwnProperty.call(excluded, exclusionKey(source, en))) continue;
+      var dedupeKey = source + ':' + en;
+      if (seenForecast[dedupeKey]) continue;
+      seenForecast[dedupeKey] = true;
 
       var entry = meta[key];
       if (!entry || !isObject(entry)) continue;
@@ -513,7 +666,7 @@
       var hardHits = Number(entry.hardHits) || 0;
       var intervalDays = Math.max(1, Number(entry.intervalDays) || 1);
       var lastReviewAt = Number(entry.lastReviewAt) || 0;
-      var dueAt = Number(entry.hardDueAt) || Number(entry.nextDueAt) || 0;
+      var dueAt = effectiveDueAt(entry);
       var isUrgent = (lapses > 0 || hardHits > 0 || entry.lastRating === 'forget' || entry.lastRating === 'uncertain');
 
       if (lapses > 0 || hardHits > 0) {
@@ -540,8 +693,7 @@
           if (isUrgent) forecast[0].urgent++; else forecast[0].normal++;
           if (forecast[0].words.length < 5) forecast[0].words.push(en);
         } else {
-          var diffMs = dueAt - todayEnd;
-          var dayIdx = Math.floor(diffMs / DAY_MS) + 1;
+          var dayIdx = Math.floor((dueAt - todayStart) / DAY_MS);
           if (dayIdx >= 1 && dayIdx <= 7) {
             forecast[dayIdx].total++;
             if (isUrgent) forecast[dayIdx].urgent++; else forecast[dayIdx].normal++;
@@ -604,7 +756,17 @@
     ACTIVITY_KEY: ACTIVITY_KEY,
     RECALL_KEY: RECALL_KEY,
     ACTIVITY_DIRTY_KEY: ACTIVITY_DIRTY_KEY,
+    EXAM_DATE_KEY: EXAM_DATE_KEY,
+    SPRINT_MODE_KEY: SPRINT_MODE_KEY,
+    DEFAULT_EXAM_DATE: DEFAULT_EXAM_DATE,
     SMOOTH_BACKUP_KEY: SMOOTH_BACKUP_KEY,
+    getExamDate: getExamDate,
+    setExamDate: setExamDate,
+    isSprintMode: isSprintMode,
+    setSprintMode: setSprintMode,
+    getExamDaysLeft: getExamDaysLeft,
+    getExamCapDueAt: getExamCapDueAt,
+    getHighFreqWrongItems: getHighFreqWrongItems,
     safeJson: safeJson,
     localDayKey: localDayKey,
     loadReviewMeta: loadReviewMeta,
@@ -627,6 +789,7 @@
     recordRecallOutcome: recordRecallOutcome,
     undoRecallOutcome: undoRecallOutcome,
     wasScheduledRecall: wasScheduledRecall,
+    effectiveDueAt: effectiveDueAt,
     getDueReviewItems: getDueReviewItems,
     getHardDueReviewItems: getHardDueReviewItems,
     upcomingReviewCount: upcomingReviewCount,

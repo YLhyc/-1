@@ -80,7 +80,7 @@
     border:1px solid rgba(5,122,157,.15); background:rgba(239,249,255,.9); color:#057a9d;
     cursor:pointer; transition:transform 120ms ease; -webkit-tap-highlight-color:transparent; flex-shrink:0;
   }
-  #view-today-recite .vc-pronounce-btn, #view-groups.vocab-card-view .vc-pronounce-btn:active { transform:scale(.92); }
+  #view-today-recite .vc-pronounce-btn:active, #view-groups.vocab-card-view .vc-pronounce-btn:active { transform:scale(.92); }
   #view-today-recite .vc-phase1-prompt, #view-groups.vocab-card-view .vc-phase1-prompt {
     display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 16px; margin:10px 0 4px;
     border:1.5px dashed rgba(5,122,157,.22); border-radius:18px; background:rgba(240,249,255,.45);
@@ -112,17 +112,17 @@
     gap:2px; padding:5px 4px; transition:transform 120ms ease, background-color 140ms ease;
     -webkit-tap-highlight-color:transparent;
   }
-  #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn:active { transform:scale(.95); }
-  #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn .rate-name { font-size:13px; font-weight:750; line-height:1.1; }
-  #view-today-recite .recite-rate-btn, #view-groups.vocab-card-view .recite-rate-btn .rate-hint { font-size:10px; opacity:.8; line-height:1; }
+  #view-today-recite .recite-rate-btn:active, #view-groups.vocab-card-view .recite-rate-btn:active { transform:scale(.95); }
+  #view-today-recite .recite-rate-btn .rate-name, #view-groups.vocab-card-view .recite-rate-btn .rate-name { font-size:13px; font-weight:750; line-height:1.1; }
+  #view-today-recite .recite-rate-btn .rate-hint, #view-groups.vocab-card-view .recite-rate-btn .rate-hint { font-size:10px; opacity:.8; line-height:1; }
   #view-today-recite .recite-rate-forget, #view-groups.vocab-card-view .recite-rate-forget { color:#dc2626; background:#fef2f2; border-color:rgba(220,38,38,.2); }
-  #view-today-recite .recite-rate-forget, #view-groups.vocab-card-view .recite-rate-forget:active { background:#fee2e2; }
+  #view-today-recite .recite-rate-forget:active, #view-groups.vocab-card-view .recite-rate-forget:active { background:#fee2e2; }
   #view-today-recite .recite-rate-uncertain, #view-groups.vocab-card-view .recite-rate-uncertain { color:#d97706; background:#fffbeb; border-color:rgba(217,119,6,.2); }
-  #view-today-recite .recite-rate-uncertain, #view-groups.vocab-card-view .recite-rate-uncertain:active { background:#fef3c7; }
+  #view-today-recite .recite-rate-uncertain:active, #view-groups.vocab-card-view .recite-rate-uncertain:active { background:#fef3c7; }
   #view-today-recite .recite-rate-familiar, #view-groups.vocab-card-view .recite-rate-familiar { color:#059669; background:#ecfdf5; border-color:rgba(5,150,105,.2); }
-  #view-today-recite .recite-rate-familiar, #view-groups.vocab-card-view .recite-rate-familiar:active { background:#d1fae5; }
+  #view-today-recite .recite-rate-familiar:active, #view-groups.vocab-card-view .recite-rate-familiar:active { background:#d1fae5; }
   #view-today-recite .recite-rate-mastered, #view-groups.vocab-card-view .recite-rate-mastered { color:#4f46e5; background:#eef2ff; border-color:rgba(79,70,229,.2); }
-  #view-today-recite .recite-rate-mastered, #view-groups.vocab-card-view .recite-rate-mastered:active { background:#e0e7ff; }
+  #view-today-recite .recite-rate-mastered:active, #view-groups.vocab-card-view .recite-rate-mastered:active { background:#e0e7ff; }
   #view-today-recite .recite-reveal-trigger, #view-groups.vocab-card-view .recite-reveal-trigger { color:#0369a1; background:#f0f9ff; border-color:rgba(3,105,161,.2); flex-direction:row; gap:6px; }
   #view-today-recite .recite-rate-affirm, #view-groups.vocab-card-view .recite-rate-affirm { color:#b91c1c; background:#fff1f2; border-color:rgba(225,29,72,.25); font-weight:800; flex-direction:row; gap:6px; }
   #view-today-recite .recite-rate-affirm:active, #view-groups.vocab-card-view .recite-rate-affirm:active { background:#ffe4e6; }
@@ -331,6 +331,20 @@
   .debt-smoother-btn:active { transform:scale(.97); }
   .debt-smoother-undo-btn { display:inline-flex; align-items:center; justify-content:center; padding:6px 12px; border:1px solid #10b981; border-radius:8px; background:#fff; color:#047857; font-size:12px; font-weight:600; cursor:pointer; }
   .debt-smoother-undo-btn:active { transform:scale(.97); }
+  .recite-priority-banner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin:12px 0 8px; padding:10px 12px; border-radius:12px; background:linear-gradient(135deg, rgba(16,185,129,.1), rgba(14,165,233,.08)); border:1px solid rgba(16,185,129,.26); font-size:12px; color:#0f5132; font-weight:600; }
+  .recite-priority-pill { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px; background:#059669; color:#fff; font-size:11px; font-weight:750; }
+  .recite-scope-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0 8px; }
+  .recite-scope-pill { min-height:40px; padding:7px 10px; border:1px solid #d5e3ee; border-radius:11px; background:#f7fbff; color:#34516d; font-size:12px; font-weight:700; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+  .recite-scope-pill small { font-size:10px; font-weight:500; opacity:.82; }
+  .recite-scope-pill.active { background:#0f5f7a; border-color:#0f5f7a; color:#fff; box-shadow:0 4px 12px rgba(15,95,122,.18); }
+  .recite-toggle-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:6px 0 10px; padding:8px 12px; border-radius:11px; background:rgba(240,246,248,.75); border:1px solid rgba(92,132,145,.16); font-size:12px; color:#34516d; }
+  .recite-toggle-chip { flex:none; height:28px; padding:0 11px; border-radius:999px; border:1px solid #c9dbe7; background:#fff; color:#4b6780; font-size:11px; font-weight:700; cursor:pointer; }
+  .recite-toggle-chip.active { background:#059669; border-color:#059669; color:#fff; }
+  .vc-tag-source.tier1 { background:rgba(16,185,129,.14); color:#047857; border:1px solid rgba(16,185,129,.3); font-weight:800; }
+  .vc-tag-source.tier-sprint { background:rgba(124,58,237,.13); color:#6d28d9; border:1px solid rgba(124,58,237,.28); font-weight:800; }
+  .vocab-filter-bar { display:inline-flex; align-items:center; justify-content:center; gap:6px; margin:4px auto 8px; padding:3px; border-radius:999px; background:rgba(216,229,241,.48); }
+  .vocab-filter-pill { border:0; background:transparent; color:#4b6780; font-size:11px; font-weight:700; padding:5px 11px; border-radius:999px; cursor:pointer; }
+  .vocab-filter-pill.active { background:#fff; color:#0f5f7a; box-shadow:0 2px 6px rgba(15,95,122,.14); }
   .recite-availability { color:#71869a; font-size:12px; text-align:center; margin-top:7px; }
   .recite-summary { max-width:540px; margin:18px auto 0; padding:24px 20px; border-radius:16px; background:rgba(255,255,255,.92); text-align:center; box-shadow:0 10px 28px rgba(46,100,148,.1); }
   .recite-summary h2 { font-size:23px; margin-bottom:5px; }
@@ -1727,12 +1741,8 @@
   }
   .vc-confuse-text { color:#92400e; font-size:11px; }
 
-  /* ═══════════ iPad / Tablet 专属大屏与全屏铺满响应式适配 ═══════════ */
-  @media (min-width: 601px) {
-    /* 1. 消除两侧窄边，全局渐变与页面容器彻底铺满 iPad 屏幕 */
-    html, body {
-      background: linear-gradient(145deg, #ccebf4 0%, #e8f6f8 47%, #f7f9f8 72%, #edf6f3 100%) !important;
-    }
+  /* ═══════════ iPad / Tablet 专属大屏与全屏铺满响应式适配 (601px–1099px 壳层/底栏；>=601px 公共卡片/模态) ═══════════ */
+  @media (min-width: 601px) and (max-width: 1099px) {
     .app-page,
     .morning-view {
       max-width: 100% !important;
@@ -1778,6 +1788,43 @@
       padding: 10px 18px !important;
       border-radius: 24px !important;
       box-sizing: border-box !important;
+    }
+
+    /* 底部导航栏自适应居中悬浮胶囊 (仅 iPad/平板；>=1100px 由 desktop-layout.css 转为左侧栏) */
+    .app-tabbar {
+      left: 0 !important;
+      right: 0 !important;
+      margin: 0 auto !important;
+      transform: none !important;
+      width: min(calc(100% - 64px), 720px) !important;
+      max-width: 720px !important;
+      height: 64px !important;
+      min-height: 64px !important;
+      padding: 6px 14px !important;
+      border-radius: 26px !important;
+      bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+      box-shadow: 0 16px 40px rgba(18,65,78,.18) !important;
+    }
+    .app-tab {
+      min-height: 50px !important;
+      font-size: 11.5px !important;
+      gap: 4px !important;
+      border-radius: 18px !important;
+    }
+    .app-tab-symbol { width: 22px !important; height: 22px !important; }
+    .app-tab-symbol svg { width: 22px !important; height: 22px !important; }
+  }
+
+  @media (min-width: 601px) {
+    /* 1. 消除两侧窄边，全局渐变与背景铺满大屏；隐藏视图严格保持 display:none */
+    html, body {
+      background: linear-gradient(145deg, #ccebf4 0%, #e8f6f8 47%, #f7f9f8 72%, #edf6f3 100%) !important;
+    }
+    .app-page[style*="display: none"],
+    .app-page[style*="display:none"],
+    .morning-view[style*="display: none"],
+    .morning-view[style*="display:none"] {
+      display: none !important;
     }
     .app-brand { font-size: 20px !important; }
     .nav-title, .morning-nav-title { font-size: 18px !important; }
@@ -1835,8 +1882,8 @@
     }
 
     /* ═══════════ 2. 背诵模式 (#view-today-recite & #view-groups.vocab-card-view) 专属黄金垂直律动 ═══════════ */
-    #view-today-recite,
-    #view-groups.vocab-card-view {
+    #view-today-recite:not([style*="display: none"]):not([style*="display:none"]),
+    #view-groups.vocab-card-view:not([style*="display: none"]):not([style*="display:none"]) {
       height: 100vh !important;
       height: 100dvh !important;
       padding: calc(8px + env(safe-area-inset-top)) clamp(16px, 4vw, 40px) calc(16px + env(safe-area-inset-bottom)) !important;
@@ -1920,12 +1967,12 @@
     #view-today-recite .vocab-card-long,
     #view-groups.vocab-card-view .vocab-card,
     #view-groups.vocab-card-view .vocab-card-long {
-      width: min(90vw, 700px) !important;
-      max-width: 700px !important;
-      height: 100% !important;
-      max-height: min(55dvh, 500px) !important;
+      width: min(90vw, 700px);
+      max-width: 840px;
+      height: 100%;
+      max-height: min(55dvh, 500px);
       min-height: 360px !important;
-      padding: 26px 32px 22px !important;
+      padding: 26px 32px 22px;
       border-radius: 32px !important;
       margin: 0 auto !important;
       box-shadow: 0 24px 56px rgba(12,66,84,.16), inset 0 1px rgba(255,255,255,.9) !important;
@@ -2020,7 +2067,7 @@
       overflow-x: hidden !important;
       overflow-y: auto !important;
     }
-    #view-morning-player {
+    #view-morning-player:not([style*="display: none"]):not([style*="display:none"]) {
       position: absolute !important;
       inset: 0 !important;
       width: 100% !important;
@@ -2149,29 +2196,7 @@
       height: 62px !important;
     }
 
-    /* ═══════════ 4. 底部导航栏自适应居中悬浮胶囊 ═══════════ */
-    .app-tabbar {
-      left: 0 !important;
-      right: 0 !important;
-      margin: 0 auto !important;
-      transform: none !important;
-      width: min(calc(100% - 64px), 720px) !important;
-      max-width: 720px !important;
-      height: 64px !important;
-      min-height: 64px !important;
-      padding: 6px 14px !important;
-      border-radius: 26px !important;
-      bottom: calc(16px + env(safe-area-inset-bottom)) !important;
-      box-shadow: 0 16px 40px rgba(18,65,78,.18) !important;
-    }
-    .app-tab {
-      min-height: 50px !important;
-      font-size: 11.5px !important;
-      gap: 4px !important;
-      border-radius: 18px !important;
-    }
-    .app-tab-symbol { width: 22px !important; height: 22px !important; }
-    .app-tab-symbol svg { width: 22px !important; height: 22px !important; }
+    /* (底部悬浮 .app-tabbar 规则已上收至 601px–1099px 媒体查询，避免覆盖桌面端左侧栏) */
 
     /* ═══════════ 5. 栅格布局（单元列表 6 列、进度面板 4 列） ═══════════ */
     #view-units {
@@ -2225,7 +2250,97 @@
       border-radius: 14px !important;
     }
   }
+  .sprint-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 14px; margin: 0 0 12px; border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255,255,255,.88), rgba(240,249,255,.84));
+    border: 1px solid rgba(5,122,157,.16); box-shadow: 0 8px 20px rgba(7,83,106,.06);
+  }
+  .sprint-banner.is-active {
+    background: linear-gradient(135deg, rgba(254,242,242,.92), rgba(255,247,237,.92));
+    border-color: rgba(220,38,38,.26);
+  }
+  .sprint-banner-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .sprint-banner-icon {
+    width: 34px; height: 34px; border-radius: 11px; flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(5,122,157,.1); color: #057a9d;
+  }
+  .sprint-banner.is-active .sprint-banner-icon { background: rgba(220,38,38,.12); color: #dc2626; }
+  .sprint-banner-title { font-size: 14px; font-weight: 800; color: #0b3c4d; line-height: 1.25; }
+  .sprint-banner-sub { font-size: 11.5px; color: #567380; margin-top: 2px; line-height: 1.35; }
+  .sprint-toggle-btn {
+    flex: none; min-height: 34px; padding: 0 13px; border-radius: 999px;
+    border: 1px solid rgba(5,122,157,.24); background: #fff; color: #057a9d;
+    font-size: 12px; font-weight: 750; cursor: pointer; transition: all .15s ease;
+  }
+  .sprint-banner.is-active .sprint-toggle-btn {
+    background: #dc2626; border-color: #dc2626; color: #fff;
+  }
+  .home-sprint-actions {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;
+  }
+  .sprint-action-chip {
+    flex: 1 1 180px; display: inline-flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 10px 13px; border-radius: 14px; border: 1px solid rgba(217,119,6,.22);
+    background: rgba(255,251,235,.88); color: #92400e; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; transition: transform .12s ease;
+  }
+  .sprint-action-chip:active { transform: scale(.98); }
+  .sprint-action-chip-left { display: inline-flex; align-items: center; gap: 7px; }
+  .sprint-action-chip-badge {
+    padding: 2px 8px; border-radius: 999px; background: rgba(217,119,6,.14);
+    font-size: 11px; font-weight: 800; color: #b45309;
+  }
+  .sprint-action-chip.is-danger {
+    border-color: rgba(220,38,38,.25); background: rgba(254,242,242,.9); color: #991b1b;
+  }
+  .sprint-action-chip.is-danger .sprint-action-chip-badge {
+    background: rgba(220,38,38,.14); color: #b91c1c;
+  }
+  .vc-trick-alert-pill {
+    display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px;
+    background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.28);
+    color: #b91c1c; font-size: 10.5px; font-weight: 800;
+  }
+  .vc-net-chip.vc-net-chip-readonly {
+    opacity: .66; cursor: default; border-style: dashed;
+  }
+  .vc-net-chip.vc-net-chip-readonly:active { transform: none; background: rgba(7,83,106,.05); }
+  html[data-theme="dark"] .sprint-banner {
+    background: var(--surface, #12222b); border-color: rgba(148,209,224,.18);
+  }
+  html[data-theme="dark"] .sprint-banner.is-active {
+    background: linear-gradient(135deg, rgba(127,29,29,.32), rgba(120,53,15,.26));
+    border-color: rgba(248,113,113,.35);
+  }
+  html[data-theme="dark"] .sprint-banner-title { color: #e7f2f6; }
+  html[data-theme="dark"] .sprint-banner-sub { color: #8ea9b5; }
+  html[data-theme="dark"] .sprint-toggle-btn {
+    background: var(--surface-2, #172b36); border-color: rgba(56,189,248,.3); color: #38bdf8;
+  }
+  html[data-theme="dark"] .sprint-banner.is-active .sprint-toggle-btn {
+    background: #dc2626; border-color: #ef4444; color: #fff;
+  }
+  html[data-theme="dark"] .sprint-action-chip {
+    background: rgba(120,53,15,.28); border-color: rgba(245,158,11,.3); color: #fde68a;
+  }
+  html[data-theme="dark"] .sprint-action-chip-badge {
+    background: rgba(245,158,11,.22); color: #fbbf24;
+  }
+  html[data-theme="dark"] .sprint-action-chip.is-danger {
+    background: rgba(127,29,29,.3); border-color: rgba(239,68,68,.35); color: #fecaca;
+  }
+  html[data-theme="dark"] .sprint-action-chip.is-danger .sprint-action-chip-badge {
+    background: rgba(239,68,68,.24); color: #fca5a5;
+  }
+  html[data-theme="dark"] .vc-trick-alert-pill {
+    background: rgba(239,68,68,.2); border-color: rgba(248,113,113,.38); color: #fca5a5;
+  }
 </style>
+<link rel="stylesheet" href="desktop-layout.css?v=2.4.1">
+<link rel="stylesheet" href="theme.css?v=2.4.1">
+<script src="theme-core.js?v=2.4.1"></script>
 </head>
 <body>
 <div class="update-banner" id="updateBanner" role="status" aria-live="polite" aria-atomic="true" onclick="checkForAppUpdate()">正在检查应用更新…</div>
@@ -2244,13 +2359,42 @@
 <!-- ═══════════ TODAY ═══════════ -->
 <div id="view-home" class="app-page">
   <div class="app-topbar">
-    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.3.2 · 检查缓存…</button></div>
-    <div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
+    <div class="app-brand-stack"><div class="app-brand">Words</div><div class="app-date" id="appTodayDate">今日</div><button type="button" class="app-version" id="appVersionBadge" onclick="updateAppVersionBadge()">版本 2.4.1 · 检查缓存…</button></div>
+    <div class="app-tools"><button type="button" class="sync-status-pill" id="homeSyncPill" data-sync-pill onclick="onSyncPillClick()" title="三端云同步状态"><span class="sync-pill-dot" aria-hidden="true"></span><span class="sync-pill-text">同步</span></button><button type="button" class="app-icon-btn theme-toggle-btn" data-theme-toggle aria-label="切换外观主题"></button><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button><button type="button" class="app-icon-btn app-update-btn" id="appUpdateButton" aria-label="更新应用" title="更新应用" onclick="checkForAppUpdate()"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"></path><path d="M16 16h5v5"></path></svg></button></div>
   </div>
   <div class="today-kicker">今日</div>
   <h1 class="today-title">把复习放回今天。</h1>
   <p class="today-sub">先完成一段可持续的学习，再继续推进新词。</p>
   <div class="home-mode" id="homeMode"></div>
+  <section class="sprint-banner" id="homeSprintBanner">
+    <div class="sprint-banner-info">
+      <span class="sprint-banner-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </span>
+      <div>
+        <div class="sprint-banner-title" id="homeSprintTitle">考前冲刺模式 · 未开启</div>
+        <div class="sprint-banner-sub" id="homeSprintSub">开启后停用新词注入，聚焦到期/高频/核心词 + 考前3天封顶</div>
+      </div>
+    </div>
+    <button type="button" class="sprint-toggle-btn" id="sprintModeToggleBtn" onclick="toggleHomeSprintMode()">开启冲刺</button>
+  </section>
+  <div class="home-sprint-actions" id="homeSprintActions">
+    <button type="button" class="sprint-action-chip" id="homeWrongPackBtn" onclick="openHighFreqWrongPack()">
+      <span class="sprint-action-chip-left">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>高频错词急救包</span>
+      </span>
+      <span class="sprint-action-chip-badge" id="homeWrongPackCount">0 词</span>
+    </button>
+    <button type="button" class="sprint-action-chip is-danger" id="homeDebtSmoothBtn" onclick="quickSmoothCriticalDebt()" style="display:none">
+      <span class="sprint-action-chip-left">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span id="homeDebtSmoothLabel">积压过多 · 一键平滑3天债务</span>
+      </span>
+      <span class="sprint-action-chip-badge" id="homeDebtSmoothCount">0 词</span>
+    </button>
+  </div>
+  <div class="home-tasks-grid">
   <section class="today-task" onclick="openMorning()" id="morningHomeCard">
     <div class="today-task-top"><div><div class="today-task-label">今日主任务</div><div class="today-task-title" id="morningCardTitle">25 分钟晨听</div><div class="today-task-meta" id="morningCardSub">到期、困难、久未听与新词</div><div class="today-task-meta" id="morningCardStats"></div></div><div class="today-task-count"><span id="morningCardCount">—</span><small>预计词数</small></div></div>
     <div class="today-task-mix" aria-label="晨听任务构成"><i class="due" id="morningCardDueMix"></i><i class="hard" id="morningCardHardMix"></i><i class="stale" id="morningCardStaleMix"></i><i class="fresh" id="morningCardFreshMix"></i></div>
@@ -2260,14 +2404,15 @@
     <div class="today-task-top"><div><div class="today-task-label">主动回忆</div><div class="today-task-title">今日背诵</div><div class="today-task-meta" id="todayReciteCardSub">跨词库整理今天该背的词</div></div><div class="recall-orbit" id="todayReciteOrbit"><span id="todayReciteCardCount">0<small>待背</small></span></div></div>
     <button class="task-button" id="todayReciteCardButton" onclick="event.stopPropagation();openTodayRecite()">开始背诵</button>
   </section>
+  </div>
   <div class="app-section-title"><h2>继续学习</h2><span>上次位置</span></div>
   <div class="source-list" id="resumeCard">
-    <button class="source-row" onclick="showLibrary()"><span class="source-mark">›</span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="showLibrary()"><span class="source-mark"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
   </div>
   <div class="app-section-title"><h2>词库</h2><span>学习与复习入口</span></div>
   <div class="source-list">
     <button class="source-row" onclick="location.href='sprint-vocab.html'" style="background:rgba(5, 122, 157, 0.04); border-left:3px solid #dc2626;">
-      <span class="source-mark" style="background:#fee2e2; color:#dc2626; font-weight:800; font-size:12px; border:1px solid #fca5a5;">30</span>
+      <span class="source-mark" style="background:#fee2e2; color:#dc2626; font-weight:800; font-size:12px; border:1px solid #fca5a5;">40</span>
       <span class="source-main">
         <span class="source-name" style="display:flex; align-items:center; gap:6px;">
           考前冲刺专题词
@@ -2278,16 +2423,16 @@
       <span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="openDict('vocab')">
-      <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">556 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta"><span id="statVocabTotal">463 词</span> · <span id="statVocabDone">0 熟</span></span><span class="source-bar"><i id="homeVocabBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
     </button>
     <button class="source-row" onclick="openRedBook()">
-      <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549词 · <span id="statHbDone">尚未开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549词 · <span id="statHbDone">尚未开始</span></span><span class="source-bar"><i id="homeHbBar" style="width:0"></i></span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
     <button class="source-row" onclick="location.href='uf/'">
-      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟词池</span><span class="source-meta"><span id="statHardTotal">0词</span><span id="statHardMeta"></span> · 听力强化与主动背诵</span><span class="source-bar"><i id="homeHardBar" style="width:0"></i></span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
     <button class="source-row" onclick="showReview()">
-      <span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">主动到期</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按主动背诵间隔安排</span></span><span class="source-arrow">›</span>
+      <span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"/><path d="M16 16h5v5"/></svg></span><span class="source-main"><span class="source-name">主动到期</span><span class="source-meta"><span id="statDueTotal">0词</span> · 按主动背诵间隔安排</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
   </div>
   <div class="app-section-title"><h2>本周节奏</h2><span>真实学习记录</span></div>
@@ -2304,33 +2449,33 @@
 
 <!-- ═══════════ LIBRARY ═══════════ -->
 <div id="view-library" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">词库</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">词库</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button></div></div>
   <div class="source-list">
-    <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="showFocus()"><span class="source-mark amber">★</span><span class="source-main"><span class="source-name">精选学习</span><span class="source-meta"><span id="libraryFocusCount">0词</span> · 深入辨义与复测</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='wordbank/'"><span class="source-mark">固</span><span class="source-main"><span class="source-name">固定搭配</span><span class="source-meta">单词本 · 分组学习</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='sprint-vocab.html'" style="background:rgba(5, 122, 157, 0.04);">
-      <span class="source-mark" style="background:#fee2e2; color:#dc2626; font-weight:800; font-size:12px; border:1px solid #fca5a5;">30</span>
+    <button class="source-row" onclick="openDict('vocab')"><span class="source-mark">A</span><span class="source-main"><span class="source-name">生词本</span><span class="source-meta">例句、聆听和背诵</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="openRedBook()"><span class="source-mark green">R</span><span class="source-main"><span class="source-name">红宝书</span><span class="source-meta">6549 词 · 按 Unit 学习</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="showFocus()"><span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="source-main"><span class="source-name">精选学习</span><span class="source-meta"><span id="libraryFocusCount">0词</span> · 深入辨义与复测</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="location.href='wordbank/'"><span class="source-mark">固</span><span class="source-main"><span class="source-name">固定搭配</span><span class="source-meta">单词本 · 分组学习</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+<button class="source-row" onclick="location.href='sprint-vocab.html'" style="background:rgba(5, 122, 157, 0.04);">
+      <span class="source-mark" style="background:#fee2e2; color:#dc2626; font-weight:800; font-size:12px; border:1px solid #fca5a5;">40</span>
       <span class="source-main">
         <span class="source-name" style="display:flex; align-items:center; gap:6px;">
           考前冲刺专题词
           <span style="font-size:10px; line-height:1.2; padding:1px 5px; border-radius:4px; background:#dc2626; color:#fff; font-weight:700;">必背题眼</span>
         </span>
-        <span class="source-meta">232 词 · 考场降维法则 + 114 核心盲测 · 沉浸抽认卡</span>
+        <span class="source-meta">232 词 · 130 题眼专题 + 114 个人核心 · 闪电抽认卡</span>
       </span>
-      <span class="source-arrow">›</span>
+      <span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>
     </button>
   </div>
   <div class="app-section-title"><h2>复习入口</h2></div>
   <div class="source-list">
-    <button class="source-row" onclick="showReview()"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和主动背诵</span></span><span class="source-arrow">›</span></button>
-    <button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewLibraryCount">0词</span> · 左划恢复</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="showReview()"><span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"/><path d="M16 16h5v5"/></svg></span><span class="source-main"><span class="source-name">到期复习</span><span class="source-meta">间隔复习状态与不熟单词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="location.href='uf/'"><span class="source-mark amber">!</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta"><span id="libraryHardCount">0词</span> · 聆听和主动背诵</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
+    <button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewLibraryCount">0词</span> · 左划恢复</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
   </div>
   <div class="app-section-title"><h2>冲刺与导出</h2></div>
   <div class="source-list">
-    <button class="source-row" onclick="SprintExport.openModal()"><span class="source-mark purple"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></span><span class="source-main"><span class="source-name">冲刺词单打印 · Anki 导出</span><span class="source-meta">A4 折页背诵单 · 错词集 · 词族清单 · Anki 牌组</span></span><span class="source-arrow">›</span></button>
+    <button class="source-row" onclick="SprintExport.openModal()"><span class="source-mark purple"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></span><span class="source-main"><span class="source-name">冲刺词单打印 · Anki 导出</span><span class="source-meta">A4 折页背诵单 · 错词集 · 词族清单 · Anki 牌组</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>
   </div>
 </div>
 
@@ -2342,12 +2487,12 @@
 
 <!-- ═══════════ REVIEW ═══════════ -->
 <div id="view-review" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">复习</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">复习</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button></div></div>
   <section class="today-task"><div class="today-task-count" style="min-width:0;text-align:left"><span id="reviewDueCount">0</span><small>个单词需要回顾</small></div><button class="task-button" onclick="openTodayRecite()" style="margin-top:13px">开始今日背诵</button></section>
   <div class="app-section-title"><h2>优先复习</h2></div>
   <div class="review-list" id="reviewList"></div>
   <div class="app-section-title"><h2>管理</h2></div>
-  <div class="source-list"><button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewCount">0词</span> · 左划可恢复</span></span><span class="source-arrow">›</span></button></div>
+  <div class="source-list"><button class="source-row" onclick="showExcludedReview()"><span class="source-mark">−</span><span class="source-main"><span class="source-name">已移出复习</span><span class="source-meta"><span id="excludedReviewCount">0词</span> · 左划可恢复</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button></div>
 </div>
 
 <div id="view-excluded-review" class="app-page" style="display:none;">
@@ -2386,7 +2531,7 @@
     <span class="nav-title" id="groupTitle"></span>
   </div>
   <div class="toggle-row">
-    <input type="checkbox" id="showHiddenToggleG" onchange="renderGroups()">
+    <input type="checkbox" id="showHiddenToggleG" onchange="resetVocabReciteSession();clearVocabReciteSession();renderGroups()">
     <label for="showHiddenToggleG">显示已隐藏的词</label>
   </div>
   <div id="groupContainer"></div>
@@ -2418,10 +2563,10 @@
         </button>
         <button type="button" class="github-token-copy-btn" id="githubTokenCopyBtn" onclick="copyGithubToken()" aria-label="复制 Token" title="复制 Token">复制</button>
       </div>
-      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked onchange="githubBackupConfigChanged()">全自动备份（首次自动创建，之后最多每 6 小时更新）</label>
+      <label class="github-backup-toggle"><input id="githubAutoBackup" type="checkbox" checked onchange="githubBackupConfigChanged()">自动三端双向同步（手机 / iPad / 电脑切回前台自动合并，编辑约 12 秒后自动上传）</label>
       <div class="github-backup-actions">
-        <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即备份</button>
-        <button class="github-backup-btn github-backup-download" id="githubRestoreBtn" onclick="githubRestoreNow()">云端恢复</button>
+        <button class="github-backup-btn github-backup-upload" id="githubUploadBtn" onclick="githubBackupNow()">立即双向同步</button>
+        <button class="github-backup-btn github-backup-download" id="githubRestoreBtn" onclick="githubRestoreNow()">强制云端覆盖</button>
         <button class="github-backup-btn github-backup-disconnect" id="githubDisconnectBtn" onclick="disconnectGithubBackup()">清除本机 GitHub 配置</button>
       </div>
       <div class="github-backup-status" id="githubBackupStatus"></div>
@@ -2434,12 +2579,12 @@
 <div class="sync-modal" id="syncModal">
   <div class="sync-modal-bg" onclick="toggleSyncPanel()"></div>
   <div class="sync-modal-card">
-    <div class="sync-title">☁ 跨设备 / 跨模式同步</div>
+    <div class="sync-title"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>跨设备 / 跨模式同步</div>
     <div class="sync-tab">
       <span id="syncTabVocab" class="active" onclick="switchSyncTab('vocab')">生词本</span>
       <span id="syncTabHb" onclick="switchSyncTab('hongbaoshu')">红宝书</span>
     </div>
-    <div class="sync-desc">iPhone上App和浏览器数据独立<br>切换模式前：导出→粘贴导入→合并完成</div>
+    <div class="sync-desc">iPhone上App和浏览器数据独立<br>切换模式前：导出 → 粘贴导入 → 合并完成</div>
     <textarea class="sync-textarea" id="syncText" placeholder="在此粘贴同步码…"></textarea>
     <div class="sync-btn-row">
       <button class="sync-action sync-export" onclick="doExport()">导出</button>
@@ -2652,7 +2797,7 @@
     <span class="morning-nav-title">晨听完成</span>
   </div>
   <div class="morning-summary">
-    <div class="ms-icon">🌅</div>
+    <div class="ms-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M4.93 10.93l2.83-2.83M2 18h2M20 18h2M16.24 8.1l2.83 2.83M22 22H2M8 18a4 4 0 0 1 8 0"/></svg></div>
     <div class="ms-title" id="msTitle"></div>
     <div class="ms-sub" id="msSub"></div>
     <div class="morning-summary-stats">
@@ -2677,29 +2822,40 @@
 
 <!-- ═══════════ LEARNING PROGRESS ═══════════ -->
 <div id="view-progress" class="app-page" style="display:none;">
-  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">进度</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()">⋯</button></div></div>
+  <div class="app-topbar"><div class="app-brand-stack"><div class="app-brand">进度</div><div class="app-date">Words · <span class="appCurrentDate"></span></div></div><div class="app-tools"><button class="app-icon-btn" aria-label="学习记录备份" onclick="openBackupCenter()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg></button></div></div>
   <div class="progress-page" id="progressContent"></div>
 </div>
 
 <div class="app-edge-back" id="appEdgeBack" aria-hidden="true"><span>‹</span></div>
 <div class="app-tabbar-host" id="appTabbarHost">
 <nav class="app-tabbar" id="appTabbar" aria-label="主导航">
+  <div class="app-sidebar-head">
+    <div class="app-sidebar-brand">Words</div>
+    <div class="app-sidebar-sub">考研英语 · 三端同步工作台</div>
+  </div>
   <div class="app-tab-indicator" aria-hidden="true"></div>
   <button class="app-tab active" data-tab="home" onclick="showHome()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.8 12 3l9 7.8V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span><span>今日</span></button>
   <button class="app-tab" data-tab="library" onclick="showLibrary()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M7 8h10M7 12h10M7 16h6"></path></svg></span><span>词库</span></button>
   <button class="app-tab" data-tab="review" onclick="showReview()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7v5l3.5 2"></path></svg></span><span>复习</span></button>
   <button class="app-tab" data-tab="progress" onclick="showProgress()"><span class="app-tab-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19V8"></path><path d="M3 19h18"></path></svg></span><span>进度</span></button>
+  <div class="app-sidebar-foot">
+    <button type="button" class="sync-status-pill" data-sync-pill onclick="onSyncPillClick()"><span class="sync-pill-dot" aria-hidden="true"></span><span class="sync-pill-text">同步</span></button>
+    <button type="button" class="sync-status-pill theme-toggle-pill" data-theme-toggle aria-label="切换外观主题"></button>
+    <div class="app-sidebar-shortcuts"><strong>键盘快捷键</strong>空格 翻卡/暂停 · 1-4 评分<br>R 重读 · Z 撤销 · ←/→ 切词</div>
+  </div>
 </nav>
 </div>
 <div id="sprintPrintZone" style="display:none;"></div>
 
-<script src="review-core.js?v=2.3.2"></script>
-<script src="focus-core.js?v=2.3.2"></script>
-<script src="study-copy.js?v=2.3.2"></script>
-<script src="word-network.js?v=2.3.2"></script>
-<script src="sprint-export.js?v=2.3.2"></script>
-<script src="audio-cache.js?v=2.3.2"></script>
-<script src="ui-motion.js?v=2.3.2"></script>
+<script src="review-core.js?v=2.4.1"></script>
+<script src="sprint-vocab-data.js?v=2.4.1"></script>
+<script src="sync-core.js?v=2.4.1"></script>
+<script src="focus-core.js?v=2.4.1"></script>
+<script src="study-copy.js?v=2.4.1"></script>
+<script src="word-network.js?v=2.4.1"></script>
+<script src="sprint-export.js?v=2.4.1"></script>
+<script src="audio-cache.js?v=2.4.1"></script>
+<script src="ui-motion.js?v=2.4.1"></script>
 <script>
 window.onerror = function(msg, url, line, col, err) {
   try { console.error('App error:', msg, line, col, err); } catch(e) {}
@@ -2784,8 +2940,8 @@ function loadHB(cb) {
 }
 var AUDIO_MAP = {"0": [0, 0], "1": [1, 0], "2": [2, 0], "3": [3, 0], "4": [4, 0], "5": [5, 0], "6": [6, 0], "7": [7, 0], "8": [8, 0], "9": [9, 0], "10": [10, 0], "11": [11, 0], "12": [12, 0], "13": [13, 0], "14": [14, 0], "15": [15, 0], "16": [16, 0], "17": [17, 0], "18": [18, 0], "19": [19, 0], "20": [20, 0], "21": [21, 0], "22": [22, 0], "23": [23, 0], "24": [24, 0], "25": [25, 0], "26": [26, 0], "27": [27, 0], "28": [28, 0], "29": [29, 0], "30": [30, 0], "31": [31, 0], "32": [32, 0], "33": [33, 0], "34": [34, 0], "35": [35, 0], "36": [36, 0], "37": [37, 0], "38": [38, 0], "39": [39, 0], "40": [40, 0], "41": [41, 0], "42": [42, 0], "43": [43, 0], "44": [44, 0], "45": [45, 0], "46": [46, 0], "47": [47, 0], "48": [48, 0], "49": [49, 0], "50": [50, 0], "51": [51, 0], "52": [52, 0], "53": [53, 0], "54": [54, 0], "55": [55, 0]};
 var HAS_VOCAB_AUDIO = true;
-var APP_BUILD_ID = "2.3.2";
-var BUILD_TS = 1795664259;
+var APP_BUILD_ID = "2.4.1";
+var BUILD_TS = 1795226713;
 var UNIT_SIZE = 30;
 var GROUP_SIZE = 10;
 
@@ -3025,10 +3181,12 @@ function prefsKey() { return currentDict === 'vocab' ? 'vv_prefs' : 'hb_prefs'; 
 function countsKey() { return currentDict === 'vocab' ? 'vv_counts' : 'hb_counts'; }
 
 function loadPrefs(dict) {
-  try { return JSON.parse(localStorage.getItem(dict === 'vocab' ? 'vv_prefs' : 'hb_prefs') || '{}'); } catch(e) { return {}; }
+  var key = dict === 'vocab' ? 'vv_prefs' : (dict === 'sprint' || dict === 'sp') ? 'sp_prefs' : 'hb_prefs';
+  try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) { return {}; }
 }
 function savePrefs(dict, obj) {
-  localStorage.setItem(dict === 'vocab' ? 'vv_prefs' : dict === 'hongbaoshu' ? 'hb_prefs' : 'vv_prefs', JSON.stringify(obj));
+  var key = dict === 'vocab' ? 'vv_prefs' : dict === 'hongbaoshu' ? 'hb_prefs' : (dict === 'sprint' || dict === 'sp') ? 'sp_prefs' : 'vv_prefs';
+  localStorage.setItem(key, JSON.stringify(obj));
   localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
 }
 function loadCounts(dict) {
@@ -3039,9 +3197,26 @@ function saveCounts(dict, obj) {
   localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
 }
 
+var _sprintWordsCache = null;
+function getSprintWords() {
+  if (_sprintWordsCache) return _sprintWordsCache;
+  var raw = Array.isArray(window.SPRINT_VOCAB_DATA) ? window.SPRINT_VOCAB_DATA : [];
+  _sprintWordsCache = raw.map(function(w) {
+    return {
+      en: w.word,
+      cn: w.meaning || '',
+      cn_note: [w.badge, w.contrast, w.note].filter(Boolean).join(' · '),
+      sprintMeta: w
+    };
+  });
+  return _sprintWordsCache;
+}
+
 // ═══════════ WORDS ═══════════
 function getWords(dict) {
-  return dict === 'vocab' ? VOCAB : HONGBAOSHU;
+  if (dict === 'vocab') return VOCAB;
+  if (dict === 'sprint' || dict === 'sp') return getSprintWords();
+  return HONGBAOSHU;
 }
 
 function getUnitWords(dict, unitIdx) {
@@ -3125,7 +3300,7 @@ if (needRecovery) {
   var banner = document.getElementById('updateBanner');
   if (banner) {
     banner.style.background = '#ff9500';
-    banner.innerHTML = '⚠ 检测到备份数据，<u style="cursor:pointer" onclick="restoreBackups()">点击恢复学习进度</u>';
+    banner.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-right:6px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>检测到备份数据，<u style="cursor:pointer" onclick="restoreBackups()">点击恢复学习进度</u>';
     banner.dataset.wordsBannerKind = 'recovery';
     banner.classList.add('show');
   }
@@ -3136,6 +3311,9 @@ function restoreBackups() {
     var bk = localStorage.getItem(k + '_backup');
     if (bk) localStorage.setItem(k, bk);
   });
+  if (typeof WordsSync !== 'undefined' && typeof WordsSync.resetSyncBaseline === 'function') {
+    WordsSync.resetSyncBaseline();
+  }
   location.reload();
 }
 
@@ -3344,7 +3522,7 @@ function renderFocusLesson() {
   if (focusLessonStage === 'prompt') {
     html += '<div class="focus-sentence">' + escapeHTML(lesson.prompt_sentence) + '</div><div class="focus-question">' + escapeHTML(lesson.prompt_question) + '</div><div class="focus-choices">' + focusChoiceHTML(lesson.prompt_choices,Number(lesson.prompt_answer),focusPromptChoice,'prompt') + '</div><div class="focus-feedback">' + (focusPromptChoice === null ? '先按语境判断，不要求一次答对。' : focusPromptChoice === Number(lesson.prompt_answer) ? '判断正确。接下来把这种感觉串到其他义项。' : '方向不完全对。现在从核心动作重新建立联系。') + '</div><div class="focus-lesson-controls"><button class="focus-secondary" onclick="focusGo(&quot;teach&quot;)">完全陌生，直接学</button><button class="focus-primary" onclick="focusGo(&quot;teach&quot;)"' + (focusPromptChoice === null ? ' disabled' : '') + '>继续</button></div>';
   } else if (focusLessonStage === 'teach') {
-    html += '<div class="focus-core-box"><strong>' + escapeHTML(lesson.semantic_core) + '</strong><p>' + escapeHTML(lesson.core_note) + '</p></div><div class="focus-senses">' + lesson.senses.map(function(sense,index){return '<section class="focus-sense' + (index ? ' closed' : '') + '" id="focusSense' + index + '"><button class="focus-sense-toggle" onclick="focusToggleSense(' + index + ')"><span><span class="focus-sense-title">' + escapeHTML(sense.label) + '</span><span class="focus-sense-boundary">' + escapeHTML(sense.boundary) + '</span></span><span class="focus-sense-caret">›</span></button><div class="focus-examples">' + sense.examples.map(function(ex,i){return '<div class="focus-example"><div class="focus-example-en">' + (i+1) + '. ' + escapeHTML(ex.en) + '</div><div class="focus-example-cn">' + escapeHTML(ex.cn) + '</div></div>';}).join('') + '</div></section>';}).join('') + '</div><div class="focus-closing">' + escapeHTML(lesson.closing_rule) + '</div><div class="focus-lesson-controls single"><button class="focus-primary" onclick="focusGo(&quot;compare&quot;)">看看近义词边界</button></div>';
+    html += '<div class="focus-core-box"><strong>' + escapeHTML(lesson.semantic_core) + '</strong><p>' + escapeHTML(lesson.core_note) + '</p></div><div class="focus-senses">' + lesson.senses.map(function(sense,index){return '<section class="focus-sense' + (index ? ' closed' : '') + '" id="focusSense' + index + '"><button class="focus-sense-toggle" onclick="focusToggleSense(' + index + ')"><span><span class="focus-sense-title">' + escapeHTML(sense.label) + '</span><span class="focus-sense-boundary">' + escapeHTML(sense.boundary) + '</span></span><span class="focus-sense-caret" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span></button><div class="focus-examples">' + sense.examples.map(function(ex,i){return '<div class="focus-example"><div class="focus-example-en">' + (i+1) + '. ' + escapeHTML(ex.en) + '</div><div class="focus-example-cn">' + escapeHTML(ex.cn) + '</div></div>';}).join('') + '</div></section>';}).join('') + '</div><div class="focus-closing">' + escapeHTML(lesson.closing_rule) + '</div><div class="focus-lesson-controls single"><button class="focus-primary" onclick="focusGo(&quot;compare&quot;)">看看近义词边界</button></div>';
   } else if (focusLessonStage === 'compare') {
     html += '<div class="focus-core-box"><strong>' + escapeHTML(lesson.semantic_core) + '</strong><p>不要把相近词背成同一个中文，判断它们各自强调的动作边界。</p></div><div class="focus-compare-list">' + lesson.contrasts.map(function(item){return '<div class="focus-compare"><strong>' + escapeHTML(item.word) + '</strong><span>' + escapeHTML(item.boundary) + '</span></div>';}).join('') + '</div><div class="focus-lesson-controls"><button class="focus-secondary" onclick="focusGo(&quot;teach&quot;)">返回核心</button><button class="focus-primary" onclick="focusGo(&quot;test&quot;)">换个语境试试</button></div>';
   } else if (focusLessonStage === 'test') {
@@ -3383,12 +3561,151 @@ function renderResumeCard() {
   var c = document.getElementById('resumeCard'); if (!c) return;
   var r = loadLearningResume();
   if (!r) {
-    c.innerHTML = '<button class="source-row" onclick="showLibrary()"><span class="source-mark">›</span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow">›</span></button>';
+    c.innerHTML = '<button class="source-row" onclick="showLibrary()"><span class="source-mark"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span><span class="source-main"><span class="source-name">从词库开始</span><span class="source-meta">选择一个 Unit，系统会记住位置</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
     return;
   }
   var isHb = r.source === 'hongbaoshu', title = isHb ? '继续红宝书' : '继续生词本', mode = r.mode === 'recite' ? '背诵' : '聆听';
-  c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow">›</span></button>';
+  c.innerHTML = '<button class="source-row" onclick="continueLearning()"><span class="source-mark ' + (isHb ? 'green' : '') + '">' + (isHb ? 'R' : 'A') + '</span><span class="source-main"><span class="source-name">' + title + '</span><span class="source-meta">Unit ' + (r.unitIdx + 1) + ' · ' + mode + ' · 第 ' + (r.itemIdx + 1) + ' 词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
 }
+function getWordSprintMeta(en, cn) {
+  var key = String(en || '').trim().toLowerCase();
+  if (!key || typeof WordNetwork === 'undefined' || !WordNetwork.renderNetworkHtml) {
+    return { stars: 3, isTrick: false };
+  }
+  var html = WordNetwork.renderNetworkHtml(key, true, cn || '');
+  var isTrick = html.indexOf('momo-trick-card') !== -1;
+  var pillMatch = html.match(/<span class="momo-freq-pill">[\s\S]*?<\/span>/);
+  var stars = pillMatch ? (pillMatch[0].match(/<polygon /g) || []).length : 3;
+  return { stars: stars || 3, isTrick: isTrick };
+}
+var _knownDictWordsCache = null;
+var _knownDictWordsHbLen = -1;
+function getKnownDictWordSet() {
+  var hbLen = Array.isArray(HONGBAOSHU) ? HONGBAOSHU.length : -1;
+  if (_knownDictWordsCache && _knownDictWordsHbLen === hbLen) return _knownDictWordsCache;
+  var set = Object.create(null);
+  if (Array.isArray(VOCAB)) {
+    for (var i = 0; i < VOCAB.length; i++) {
+      if (VOCAB[i] && VOCAB[i].en) set[String(VOCAB[i].en).trim().toLowerCase()] = true;
+    }
+  }
+  if (Array.isArray(HONGBAOSHU)) {
+    for (var j = 0; j < HONGBAOSHU.length; j++) {
+      if (HONGBAOSHU[j] && HONGBAOSHU[j].en) set[String(HONGBAOSHU[j].en).trim().toLowerCase()] = true;
+    }
+  }
+  _knownDictWordsCache = set;
+  _knownDictWordsHbLen = hbLen;
+  return set;
+}
+function guardWordNetworkChips(container) {
+  if (!container || !container.querySelectorAll) return;
+  var known = getKnownDictWordSet();
+  container.querySelectorAll('.vc-net-chip').forEach(function(chip) {
+    var b = chip.querySelector('b');
+    var word = b ? String(b.textContent || '').trim().toLowerCase() : '';
+    if (!word || known[word]) return;
+    chip.removeAttribute('onclick');
+    chip.classList.add('vc-net-chip-readonly');
+    chip.setAttribute('aria-disabled', 'true');
+    chip.setAttribute('title', '词库外拓展词（仅作词族参考）');
+  });
+}
+function updateHomeSprintUI() {
+  if (typeof ReviewCore === 'undefined') return;
+  var active = ReviewCore.isSprintMode();
+  var daysLeft = ReviewCore.getExamDaysLeft();
+  var banner = document.getElementById('homeSprintBanner');
+  var titleEl = document.getElementById('homeSprintTitle');
+  var subEl = document.getElementById('homeSprintSub');
+  var btnEl = document.getElementById('sprintModeToggleBtn');
+  if (banner) banner.classList.toggle('is-active', active);
+  if (titleEl) {
+    titleEl.textContent = active
+      ? ('考前冲刺模式 · 已开启' + (daysLeft > 0 ? '（距考试 ' + daysLeft + ' 天）' : ''))
+      : ('考前冲刺模式 · 未开启' + (daysLeft > 0 ? '（距考试 ' + daysLeft + ' 天）' : ''));
+  }
+  if (subEl) {
+    subEl.textContent = active
+      ? '已关闭新词注入，聚焦到期/高频/核心词（familiar 封顶不晚于考前 3 天）'
+      : '开启后停用新词注入，聚焦到期/高频/核心词 + 考前 3 天封顶';
+  }
+  if (btnEl) btnEl.textContent = active ? '退出冲刺' : '开启冲刺';
+  var wrongItems = ReviewCore.getHighFreqWrongItems();
+  var wrongCountEl = document.getElementById('homeWrongPackCount');
+  if (wrongCountEl) wrongCountEl.textContent = wrongItems.length + ' 词';
+  var dueItems = getDueReviewItems();
+  var now = Date.now();
+  var overdueCount = 0;
+  for (var i = 0; i < dueItems.length; i++) {
+    if (dueItems[i].dueAt && (now - dueItems[i].dueAt) > 86400000) overdueCount++;
+  }
+  var debtBtn = document.getElementById('homeDebtSmoothBtn');
+  var debtCountEl = document.getElementById('homeDebtSmoothCount');
+  if (debtBtn) debtBtn.style.display = overdueCount > 80 ? 'inline-flex' : 'none';
+  if (debtCountEl) debtCountEl.textContent = overdueCount + ' 词逾期';
+}
+function toggleHomeSprintMode() {
+  if (typeof ReviewCore === 'undefined') return;
+  var next = !ReviewCore.isSprintMode();
+  ReviewCore.setSprintMode(next);
+  updateHomeSprintUI();
+  updateTodayReciteCard();
+  if (typeof updateMorningCard === 'function') updateMorningCard();
+  if (typeof showScheduleFeedback === 'function') {
+    showScheduleFeedback(next ? '已开启考前冲刺模式（停用新词 + 考前3天封顶）' : '已切换回常规学习模式');
+  }
+}
+function quickSmoothCriticalDebt() {
+  if (typeof ReviewCore === 'undefined') return;
+  var res = ReviewCore.smoothBacklog(3);
+  if (res && res.smoothed > 0) {
+    showScheduleFeedback('已智能平滑 ' + res.smoothed + ' 个逾期词至未来 3 天');
+  } else if (res && res.alreadySmoothed) {
+    showScheduleFeedback('当前已有生效中的平滑分摊计划');
+  } else {
+    showScheduleFeedback('当前无需要平滑的逾期词');
+  }
+  updateHomeSprintUI();
+  updateTodayReciteCard();
+}
+function openHighFreqWrongPack() {
+  if (typeof ReviewCore === 'undefined') return;
+  function launch() {
+    var rawList = ReviewCore.getHighFreqWrongItems();
+    var hydrated = [];
+    for (var i = 0; i < rawList.length; i++) {
+      var r = rawList[i];
+      var found = todayReciteWord(r.source, r.en);
+      if (!found) continue;
+      hydrated.push({
+        source: r.source, tier: r.tier, en: r.en, item: found.item, index: found.index,
+        kind: 'hard', dueAt: r.dueAt || 0, lapses: r.lapses || 0, isSmoothed: false
+      });
+      if (hydrated.length >= 40) break;
+    }
+    if (!hydrated.length) {
+      if (typeof showScheduleFeedback === 'function') showScheduleFeedback('太棒了！当前没有连续遗忘（lapses>=2）的顽固词');
+      return;
+    }
+    stopAll();
+    showView('today-recite', { skipHomeStats: true });
+    todayRecitePool = hydrated.slice();
+    todayReciteItems = WordsSessionOrder.shuffle(hydrated);
+    todayReciteIdx = 0; todayReciteShown = false; todayReciteUndo = null;
+    todayReciteDone = false; todayReciteStarted = true; todayRecitePracticeOnly = false;
+    todayReciteCompletionId = ''; todayReciteHardReinforcement = [];
+    todayReciteStats = { id: Date.now().toString(36), target: todayReciteItems.length, familiar: 0, hard: 0, due: 0, startedAt: Date.now() };
+    saveTodayReciteSession();
+    renderTodayRecite();
+  }
+  if (!HONGBAOSHU) loadHB(function(err) {
+    if (err) HONGBAOSHU = [];
+    launch();
+  });
+  else launch();
+}
+
 var homeRefreshTimer = 0;
 function refreshHomeDynamicUI() {
   var appTodayDate = document.getElementById('appTodayDate');
@@ -3399,6 +3716,7 @@ function refreshHomeDynamicUI() {
       node.textContent = (now.getMonth() + 1) + '月' + now.getDate() + '日';
     });
   }
+  updateHomeSprintUI();
   renderResumeCard();
   updateTodayReciteCard();
   if (typeof updateMorningCard === 'function') updateMorningCard();
@@ -3421,7 +3739,7 @@ function continueLearning() {
 }
 
 function reviewSourceLabel(source) {
-  return source === 'vocab' ? '生词本' : source === 'hongbaoshu' ? '红宝书' : '复习词';
+  return source === 'vocab' ? '生词本' : source === 'sprint' ? '冲刺专题' : source === 'hongbaoshu' ? '红宝书' : '复习词';
 }
 
 function showReview() {
@@ -3432,21 +3750,23 @@ function showReview() {
   if (!container) return;
   if (!list.length) {
     container.innerHTML = '<div class="review-empty">暂时没有到期单词。<br>背诵评分后，系统会按间隔安排下一次复习。</div>'
-      + '<button class="source-row" onclick="location.href=&quot;uf/&quot;"><span class="source-mark amber">↻</span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta">查看已标记的不熟词</span></span><span class="source-arrow">›</span></button>';
+      + '<button class="source-row" onclick="location.href=&quot;uf/&quot;"><span class="source-mark amber"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.62-6.15L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.62 6.15L21 16"/><path d="M16 16h5v5"/></svg></span><span class="source-main"><span class="source-name">不熟单词</span><span class="source-meta">查看已标记的不熟词</span></span><span class="source-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span></button>';
     updateExcludedReviewCount();
     return;
   }
   var html = '';
   for (var i = 0; i < list.length; i++) {
     var item = list[i], due = item.dueAt < Date.now() - 86400000 ? '已逾期' : '今天复习';
-    html += '<div class="review-item"><div class="source-mark ' + (item.source === 'vocab' ? '' : 'green') + '">' + (item.source === 'vocab' ? 'A' : 'R') + '</div><div class="review-word">' + escapeHTML(item.en) + '<div class="review-source">' + reviewSourceLabel(item.source) + (item.lapses ? ' · 遗忘 ' + item.lapses + ' 次' : '') + '</div></div><div class="review-due">' + due + '</div><button class="review-go" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="openDueReviewFromButton(this)">复习</button><button class="review-go" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="archiveReviewFromButton(this)">移出</button></div>';
+    var markClass = item.source === 'vocab' ? '' : (item.source === 'sprint' ? 'purple' : 'green');
+    var markLetter = item.source === 'vocab' ? 'A' : (item.source === 'sprint' ? 'S' : 'R');
+    html += '<div class="review-item"><div class="source-mark ' + markClass + '">' + markLetter + '</div><div class="review-word">' + escapeHTML(item.en) + '<div class="review-source">' + reviewSourceLabel(item.source) + (item.lapses ? ' · 遗忘 ' + item.lapses + ' 次' : '') + '</div></div><div class="review-due">' + due + '</div><button class="review-go" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="openDueReviewFromButton(this)">复习</button><button class="review-go" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="archiveReviewFromButton(this)">移出</button></div>';
   }
   container.innerHTML = html;
   updateExcludedReviewCount();
 }
 
 function excludedReviewMeaning(source, en) {
-  var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []);
+  var words = source === 'vocab' ? VOCAB : source === 'sprint' ? getSprintWords() : (HONGBAOSHU || []);
   for (var i = 0; i < words.length; i++) if (words[i].en === en) return words[i].cn || '';
   return '';
 }
@@ -3461,10 +3781,14 @@ function archiveReviewWord(source, en, meaning) {
       todayReciteItems.splice(todayReciteIdx, 1);
       if (todayReciteIdx >= todayReciteItems.length) todayReciteIdx = Math.max(0, todayReciteItems.length - 1);
       if (!todayReciteItems.length) todayReciteDone = true;
+      saveTodayReciteSession();
       renderTodayRecite();
     } else if (activeViewName === 'groups' && vocabStudyMode === 'recite') {
-      var entries = getVocabCardEntries();
-      if (vocabCardIdx >= entries.length) vocabReciteDone = true;
+      var entries = getVocabReciteEntries();
+      if (vocabCardIdx >= 0 && vocabCardIdx < entries.length) entries.splice(vocabCardIdx, 1);
+      if (vocabCardIdx >= entries.length) vocabCardIdx = Math.max(0, entries.length - 1);
+      if (!entries.length) vocabReciteDone = true;
+      saveVocabReciteSession();
       renderVocabCardMode();
     } else if (document.getElementById('view-morning-player') && document.getElementById('view-morning-player').style.display !== 'none') {
       nextMorningWord();
@@ -3499,8 +3823,10 @@ function renderExcludedReview() {
   if (!keys.length) { c.innerHTML = '<div class="archive-empty">还没有移出复习的单词。</div>'; return; }
   var html = '';
   keys.forEach(function(key) {
-    var item = data[key], source = item.source === 'hongbaoshu' ? '红宝书' : '生词本';
-    html += '<div class="archive-swipe" data-archive-key="' + escapeHTML(key) + '"><button class="archive-action" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="restoreArchivedFromButton(this)">恢复</button><div class="archive-content"><div class="source-mark ' + (item.source === 'vocab' ? '' : 'green') + '">' + (item.source === 'vocab' ? 'A' : 'R') + '</div><div class="archive-word">' + escapeHTML(item.en) + '<div class="archive-meta">' + escapeHTML(item.meaning || '') + ' · ' + source + '</div></div><div class="archive-date">' + formatArchiveDate(item.archivedAt) + '</div></div></div>';
+    var item = data[key], source = reviewSourceLabel(item.source);
+    var markClass = item.source === 'vocab' ? '' : (item.source === 'sprint' ? 'purple' : 'green');
+    var markLetter = item.source === 'vocab' ? 'A' : (item.source === 'sprint' ? 'S' : 'R');
+    html += '<div class="archive-swipe" data-archive-key="' + escapeHTML(key) + '"><button class="archive-action" data-source="' + escapeHTML(item.source) + '" data-en="' + escapeHTML(item.en) + '" onclick="restoreArchivedFromButton(this)">恢复</button><div class="archive-content"><div class="source-mark ' + markClass + '">' + markLetter + '</div><div class="archive-word">' + escapeHTML(item.en) + '<div class="archive-meta">' + escapeHTML(item.meaning || '') + ' · ' + source + '</div></div><div class="archive-date">' + formatArchiveDate(item.archivedAt) + '</div></div></div>';
   });
   c.innerHTML = html;
   WordsMotion.bindRevealList({root:c, itemSelector:'.archive-swipe', contentSelector:'.archive-content', width:82, edgeReserve:22});
@@ -3521,20 +3847,54 @@ var TODAY_RECITE_SESSION_KEY = 'today_recite_session_v1';
 var TODAY_RECITE_ROTATION_KEY = 'today_recite_rotation_v1';
 var todayRecitePool = [], todayReciteItems = [], todayReciteIdx = 0, todayReciteShown = false, todayReciteUndo = null, todayReciteDone = false, todayReciteStarted = false;
 var todayReciteStats = null, todayReciteCompletionId = '', todayRecitePracticeOnly = false, todayReciteHardReinforcement = [];
-var todayReciteWordIndexes = { vocab: null, hongbaoshu: null };
+var todayReciteWordIndexes = { vocab: null, sprint: null, hongbaoshu: null };
 function loadTodayReciteSettings() {
-  var s = safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30 });
+  var s = safeJsonFromStorage(TODAY_RECITE_SETTINGS_KEY, { limit: 30, scope: 'all', includeFreshVocab: true, freshVocabCap: 15 });
+  if (!isPlainObject(s)) s = {};
   var n = Math.floor(Number(s && s.limit));
   if (!Number.isFinite(n) || n < 10 || n > 200) n = 30;
-  s.limit = n;
-  return s;
+  var scope = (s.scope === 'vocab_only') ? 'vocab_only' : 'all';
+  var includeFreshVocab = (typeof s.includeFreshVocab === 'boolean') ? s.includeFreshVocab : true;
+  var freshVocabCap = Math.floor(Number(s.freshVocabCap));
+  if (!Number.isFinite(freshVocabCap) || freshVocabCap < 5 || freshVocabCap > 60) freshVocabCap = 15;
+  return {
+    limit: n,
+    scope: scope,
+    includeFreshVocab: includeFreshVocab,
+    freshVocabCap: freshVocabCap,
+    updatedAt: Number(s.updatedAt) || 0
+  };
+}
+function saveTodayReciteSettings(patch) {
+  var next = Object.assign({}, loadTodayReciteSettings(), patch || {});
+  var limit = Math.floor(Number(next.limit));
+  if (!Number.isFinite(limit) || limit < 10 || limit > 200) limit = 30;
+  next.limit = limit;
+  next.scope = next.scope === 'vocab_only' ? 'vocab_only' : 'all';
+  next.includeFreshVocab = next.includeFreshVocab !== false;
+  var freshCap = Math.floor(Number(next.freshVocabCap));
+  if (!Number.isFinite(freshCap) || freshCap < 5 || freshCap > 60) freshCap = 15;
+  next.freshVocabCap = freshCap;
+  next.updatedAt = Date.now();
+  localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify(next));
+  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
+  return next;
 }
 function saveTodayReciteLimit(limit) {
-  limit = Math.floor(Number(limit));
-  if (!Number.isFinite(limit) || limit < 10 || limit > 200) limit = 30;
-  localStorage.setItem(TODAY_RECITE_SETTINGS_KEY, JSON.stringify({ limit: limit }));
-  localStorage.setItem(ACTIVITY_DIRTY_KEY, String(Date.now()));
-  return limit;
+  return saveTodayReciteSettings({ limit: limit }).limit;
+}
+function chooseTodayReciteScope(scope) {
+  saveTodayReciteSettings({ scope: scope === 'vocab_only' ? 'vocab_only' : 'all' });
+  todayRecitePool = buildTodayReciteItems(false);
+  renderTodayRecite();
+  updateTodayReciteCard();
+}
+function toggleTodayReciteFreshVocab() {
+  var cur = loadTodayReciteSettings();
+  saveTodayReciteSettings({ includeFreshVocab: !cur.includeFreshVocab });
+  todayRecitePool = buildTodayReciteItems(false);
+  renderTodayRecite();
+  updateTodayReciteCard();
 }
 function loadTodayReciteRotation() {
   var state = safeJsonFromStorage(TODAY_RECITE_ROTATION_KEY, { cursor: 0 });
@@ -3674,18 +4034,26 @@ function restoreTodayReciteSession() {
   if (session.undo && session.undo.entry) {
     var undoEntry = hydrateTodayReciteEntry(session.undo.entry);
     if (undoEntry) {
-      var restoredState = session.undo.state || {
+      var isSpecialUndo = !!(session.undo.isSpacer || session.undo.isLeechAction);
+      var restoredState = session.undo.state || (!isSpecialUndo ? {
         source: undoEntry.source, en: undoEntry.en, hadPref: !!session.undo.old,
         oldPref: session.undo.old || null, oldReview: session.undo.review || {},
         reviewApplied: true, familiar: !!session.undo.familiar, mode: 'recite'
+      } : null);
+      todayReciteUndo = {
+        idx: session.undo.idx, entry: undoEntry, key: session.undo.key, state: restoredState,
+        activitySource: session.undo.activitySource, activityMode: session.undo.activityMode,
+        familiar: !!session.undo.familiar, practiceOnly: !!session.undo.practiceOnly,
+        isSpacer: !!session.undo.isSpacer, isLeechAction: !!session.undo.isLeechAction,
+        action: session.undo.action || '',
+        insertedIndices: Array.isArray(session.undo.insertedIndices) ? session.undo.insertedIndices : []
       };
-      todayReciteUndo = { idx: session.undo.idx, entry: undoEntry, key: session.undo.key, state: restoredState, activitySource: session.undo.activitySource, activityMode: session.undo.activityMode, familiar: !!session.undo.familiar, practiceOnly: !!session.undo.practiceOnly };
     }
   }
   return true;
 }
 function todayReciteWord(source, en) {
-  var words = source === 'vocab' ? VOCAB : (HONGBAOSHU || []), cached = todayReciteWordIndexes[source];
+  var words = source === 'vocab' ? VOCAB : source === 'sprint' ? getSprintWords() : (HONGBAOSHU || []), cached = todayReciteWordIndexes[source];
   if (!cached || cached.words !== words) {
     var byEn = Object.create(null);
     for (var i = 0; i < words.length; i++) {
@@ -3698,13 +4066,76 @@ function todayReciteWord(source, en) {
   var index = cached.byEn[en];
   return typeof index === 'number' ? { item: words[index], index: index } : null;
 }
-function buildTodayReciteItems(includeRated) {
+function todayReciteSourceTier(source) {
+  return (source === 'vocab' || source === 'sprint') ? 1 : 2;
+}
+function syncSprintLegacyWeakPool() {
+  if (typeof ReviewCore === 'undefined') return;
+  try {
+    var weakList = safeJsonFromStorage('sprint_weak_words', []);
+    if (!Array.isArray(weakList) || !weakList.length) return;
+    var spPrefs = loadPrefs('sprint');
+    var meta = loadReviewMeta();
+    var touched = false;
+    weakList.forEach(function(w) {
+      if (!w || meta['sprint:' + w] || spPrefs[w]) return;
+      ReviewCore.applyRating('sprint', w, 'forget', 'recite');
+      touched = true;
+    });
+    if (touched) localStorage.setItem('sprint_review_migrated_v1', '1');
+  } catch (e) {}
+}
+function syncSprintLegacySets(en, rating) {
+  if (!en) return;
+  try {
+    var mastered = safeJsonFromStorage('sprint_mastered_words', []);
+    var weak = safeJsonFromStorage('sprint_weak_words', []);
+    if (!Array.isArray(mastered)) mastered = [];
+    if (!Array.isArray(weak)) weak = [];
+    var mSet = {}, wSet = {};
+    mastered.forEach(function(w) { if (w) mSet[w] = true; });
+    weak.forEach(function(w) { if (w) wSet[w] = true; });
+    if (rating === 'familiar' || rating === 'mastered') {
+      mSet[en] = true;
+      delete wSet[en];
+    } else if (rating === 'forget' || rating === 'uncertain' || rating === 'hard') {
+      wSet[en] = true;
+      delete mSet[en];
+    } else if (rating === 'clear') {
+      delete mSet[en];
+      delete wSet[en];
+    }
+    localStorage.setItem('sprint_mastered_words', JSON.stringify(Object.keys(mSet)));
+    localStorage.setItem('sprint_weak_words', JSON.stringify(Object.keys(wSet)));
+  } catch (e) {}
+}
+function buildTodayReciteItems(includeRated, options) {
+  syncSprintLegacyWeakPool();
+  var settings = loadTodayReciteSettings();
+  var sprintActive = typeof ReviewCore !== 'undefined' && ReviewCore.isSprintMode && ReviewCore.isSprintMode();
+  var scope = (options && options.scope) ? options.scope : settings.scope;
+  var includeFresh = sprintActive ? false : ((options && typeof options.includeFreshVocab === 'boolean') ? options.includeFreshVocab : settings.includeFreshVocab);
   var out = [], seen = {}, rated = includeRated ? {} : getTodayReciteRated();
   function add(source, en, kind, dueAt, lapses, isSmoothed) {
+    if (scope === 'vocab_only' && todayReciteSourceTier(source) !== 1) return;
     var found = todayReciteWord(source, en); if (!found) return;
+    if (sprintActive && todayReciteSourceTier(source) === 2 && !(lapses > 0)) {
+      var sm = getWordSprintMeta(en, found.item && found.item.cn);
+      if (sm.stars <= 2 && !sm.isTrick) return;
+    }
     var key = source + ':' + en; if (seen[key]) return; seen[key] = true;
     if (rated[key]) return;
-    out.push({ source: source, en: en, item: found.item, index: found.index, kind: kind, dueAt: dueAt || 0, lapses: lapses || 0, isSmoothed: !!isSmoothed });
+    out.push({
+      source: source,
+      tier: todayReciteSourceTier(source),
+      en: en,
+      item: found.item,
+      index: found.index,
+      kind: kind,
+      dueAt: dueAt || 0,
+      lapses: lapses || 0,
+      isSmoothed: !!isSmoothed
+    });
   }
   var reviewMeta = loadReviewMeta(), now = Date.now();
   getDueReviewItems().forEach(function(d) {
@@ -3715,7 +4146,13 @@ function buildTodayReciteItems(includeRated) {
     var m = reviewMeta[d.source + ':' + d.en];
     add(d.source, d.en, 'hard', d.dueAt, d.lapses, m && m.isSmoothed);
   });
-  [{ source: 'vocab', prefs: loadPrefs('vocab'), words: VOCAB }, { source: 'hongbaoshu', prefs: loadPrefs('hongbaoshu'), words: HONGBAOSHU || [] }].forEach(function(dict) {
+  var vocabPrefs = loadPrefs('vocab'), sprintPrefs = loadPrefs('sprint'), sprintWords = getSprintWords();
+  [
+    { source: 'vocab', prefs: vocabPrefs, words: VOCAB },
+    { source: 'sprint', prefs: sprintPrefs, words: sprintWords },
+    { source: 'hongbaoshu', prefs: loadPrefs('hongbaoshu'), words: HONGBAOSHU || [] }
+  ].forEach(function(dict) {
+    if (scope === 'vocab_only' && todayReciteSourceTier(dict.source) !== 1) return;
     for (var i = 0; i < dict.words.length; i++) {
       var en = dict.words[i].en, review = reviewMeta[dict.source + ':' + en];
       if (dict.prefs[en] !== 'hard') continue;
@@ -3723,38 +4160,102 @@ function buildTodayReciteItems(includeRated) {
       add(dict.source, en, 'hard', review && review.hardDueAt ? review.hardDueAt : 0, review && review.lapses, review && review.isSmoothed);
     }
   });
-  out.sort(function(a, b) { if (a.kind !== b.kind) return a.kind === 'due' ? -1 : 1; return (a.dueAt || 0) - (b.dueAt || 0); });
+  if (includeFresh && Array.isArray(VOCAB)) {
+    for (var vi = VOCAB.length - 1; vi >= 0; vi--) {
+      var ven = VOCAB[vi] && VOCAB[vi].en;
+      if (!ven) continue;
+      if (typeof ReviewCore.isExcluded === 'function' && ReviewCore.isExcluded('vocab', ven)) continue;
+      if (reviewMeta['vocab:' + ven] || vocabPrefs[ven]) continue;
+      add('vocab', ven, 'fresh', 0, 0, false);
+    }
+  }
+  var kindOrder = { due: 0, hard: 1, fresh: 2 };
+  out.sort(function(a, b) {
+    var ta = todayReciteSourceTier(a.source), tb = todayReciteSourceTier(b.source);
+    if (ta !== tb) return ta - tb;
+    var ka = kindOrder[a.kind] !== undefined ? kindOrder[a.kind] : 9;
+    var kb = kindOrder[b.kind] !== undefined ? kindOrder[b.kind] : 9;
+    if (ka !== kb) return ka - kb;
+    if (a.kind === 'fresh') return (b.index || 0) - (a.index || 0);
+    return (a.dueAt || 0) - (b.dueAt || 0);
+  });
   return out;
 }
 function selectTodayReciteItems(pool, limit, randomFn) {
   limit = Math.max(1, Number(limit) || 30);
-  var due = pool.filter(function(item) { return item.kind === 'due'; });
-  var hard = pool.filter(function(item) { return item.kind === 'hard'; });
+  var settings = loadTodayReciteSettings();
   var rotation = loadTodayReciteRotation();
-  if (hard.length) {
-    var cursor = rotation.cursor % hard.length;
-    hard = hard.slice(cursor).concat(hard.slice(0, cursor));
+  var t1Due = [], t1Hard = [], t1Fresh = [], t2Due = [], t2Hard = [];
+  pool.forEach(function(item) {
+    if (!item) return;
+    if (todayReciteSourceTier(item.source) === 1) {
+      if (item.kind === 'due') t1Due.push(item);
+      else if (item.kind === 'hard') t1Hard.push(item);
+      else t1Fresh.push(item);
+    } else {
+      if (item.kind === 'due') t2Due.push(item);
+      else if (item.kind === 'hard') t2Hard.push(item);
+    }
+  });
+  function rotateHard(list) {
+    if (!list.length) return [];
+    var cursor = rotation.cursor % list.length;
+    return list.slice(cursor).concat(list.slice(0, cursor));
   }
-  // Keep a quarter of the daily task available for hard words when both pools exist.
-  var hardQuota = due.length && hard.length ? Math.min(hard.length, Math.max(1, Math.floor(limit * 0.25))) : Math.min(hard.length, limit);
-  var selected = [];
-  var dueTake = Math.min(due.length, limit - hardQuota);
-  selected = selected.concat(due.slice(0, dueTake));
-  selected = selected.concat(hard.slice(0, hardQuota));
-  var remaining = limit - selected.length;
-  if (remaining > 0) selected = selected.concat(due.slice(dueTake, dueTake + remaining));
-  remaining = limit - selected.length;
-  if (remaining > 0) selected = selected.concat(hard.slice(hardQuota, hardQuota + remaining));
-  var selectedHard = selected.filter(function(item) { return item.kind === 'hard'; }).length;
-  if (selectedHard && hard.length) saveTodayReciteRotation({ cursor: (rotation.cursor + selectedHard) % hard.length });
-  return WordsSessionOrder.shuffle(selected, randomFn);
+  function pickDueAndHard(dueList, hardList, quota) {
+    if (quota <= 0) return [];
+    var hardQuota = dueList.length && hardList.length
+      ? Math.min(hardList.length, Math.max(1, Math.floor(quota * 0.25)))
+      : Math.min(hardList.length, quota);
+    var picked = [];
+    var dueTake = Math.min(dueList.length, quota - hardQuota);
+    picked = picked.concat(dueList.slice(0, dueTake));
+    picked = picked.concat(hardList.slice(0, hardQuota));
+    var left = quota - picked.length;
+    if (left > 0) picked = picked.concat(dueList.slice(dueTake, dueTake + left));
+    left = quota - picked.length;
+    if (left > 0) picked = picked.concat(hardList.slice(hardQuota, hardQuota + left));
+    return picked;
+  }
+  t1Hard = rotateHard(t1Hard);
+  t2Hard = rotateHard(t2Hard);
+
+  // Keep reading vocab & sprint strictly prioritized before hongbaoshu.
+  var tier1Selected = pickDueAndHard(t1Due, t1Hard, limit);
+  var remaining = limit - tier1Selected.length;
+  var freshUsed = 0;
+  if (remaining > 0 && t1Fresh.length) {
+    var hasTier2 = (t2Due.length + t2Hard.length) > 0;
+    var freshCap = (hasTier2 && settings.scope !== 'vocab_only')
+      ? Math.min(remaining, Math.max(5, Number(settings.freshVocabCap) || 15))
+      : remaining;
+    tier1Selected = tier1Selected.concat(t1Fresh.slice(0, freshCap));
+    freshUsed = Math.min(freshCap, t1Fresh.length);
+    remaining = limit - tier1Selected.length;
+  }
+  var tier2Selected = remaining > 0 ? pickDueAndHard(t2Due, t2Hard, remaining) : [];
+  remaining = limit - tier1Selected.length - tier2Selected.length;
+  if (remaining > 0 && freshUsed < t1Fresh.length) {
+    tier1Selected = tier1Selected.concat(t1Fresh.slice(freshUsed, freshUsed + remaining));
+  }
+
+  var selectedHard = tier1Selected.concat(tier2Selected).filter(function(item) { return item.kind === 'hard'; }).length;
+  var totalHardPool = t1Hard.length + t2Hard.length;
+  if (selectedHard && totalHardPool) {
+    saveTodayReciteRotation({ cursor: (rotation.cursor + selectedHard) % totalHardPool });
+  }
+  return WordsSessionOrder.shuffle(tier1Selected, randomFn).concat(WordsSessionOrder.shuffle(tier2Selected, randomFn));
 }
 function todayRecitePoolStats(pool) {
   var now = Date.now(), dayMs = 86400000;
-  var out = { total: pool.length, due: 0, hard: 0, freshDue: 0, overdue: 0, highLapse: 0, debtRatio: 0, healthLevel: 'healthy' };
+  var out = { total: pool.length, due: 0, hard: 0, fresh: 0, freshDue: 0, overdue: 0, highLapse: 0, tier1: 0, tier2: 0, tier1Due: 0, tier1Hard: 0, tier1Fresh: 0, debtRatio: 0, healthLevel: 'healthy' };
   pool.forEach(function(item) {
+    var isTier1 = todayReciteSourceTier(item.source) === 1;
+    if (isTier1) out.tier1++;
+    else out.tier2++;
     if (item.kind === 'due') {
       out.due++;
+      if (isTier1) out.tier1Due++;
       var overdueMs = (item.dueAt && item.dueAt > 0) ? (now - item.dueAt) : 0;
       if (overdueMs > dayMs) {
         out.overdue++;
@@ -3763,15 +4264,19 @@ function todayRecitePoolStats(pool) {
       }
     } else if (item.kind === 'hard') {
       out.hard++;
+      if (isTier1) out.tier1Hard++;
+    } else if (item.kind === 'fresh') {
+      out.fresh++;
+      if (isTier1) out.tier1Fresh++;
     }
     if ((item.lapses || 0) >= 3) {
       out.highLapse++;
     }
   });
   out.debtRatio = out.due ? Math.round((out.overdue / out.due) * 100) : 0;
-  if (out.overdue > 80 || out.total > 200) {
+  if (out.overdue > 80 || (out.due + out.hard) > 200) {
     out.healthLevel = 'critical';
-  } else if (out.overdue > 20 || out.total > 70) {
+  } else if (out.overdue > 20 || (out.due + out.hard) > 70) {
     out.healthLevel = 'warning';
   } else {
     out.healthLevel = 'healthy';
@@ -3780,15 +4285,15 @@ function todayRecitePoolStats(pool) {
 }
 function todayReciteBacklogText(pool, limit) {
   var stats = todayRecitePoolStats(pool), planned = Math.min(Math.max(1, Number(limit) || 30), stats.total);
-  var future = ReviewCore.upcomingReviewCount(24), days = stats.total ? Math.ceil((stats.total + future) / Math.max(1, planned)) : 0;
-  var text = '当前积压 ' + stats.total + ' 词（到期 ' + stats.due + ' · 不熟 ' + stats.hard + '）· 今日安排 ' + planned + ' 词 · 明日预计 ' + future + ' 词';
-  if (days > 1) text += ' · 按当前数量约 ' + days + ' 天清完';
+  var future = ReviewCore.upcomingReviewCount(24), activeDebt = stats.due + stats.hard, days = activeDebt ? Math.ceil((activeDebt + future) / Math.max(1, planned)) : 0;
+  var text = '当前待背 ' + stats.total + ' 词（生词本优先 ' + stats.tier1 + ' · 到期 ' + stats.due + ' · 不熟 ' + stats.hard + (stats.fresh ? ' · 未背新词 ' + stats.fresh : '') + '）· 今日安排 ' + planned + ' 词 · 明日预计 ' + future + ' 词';
+  if (days > 1) text += ' · 按当前数量约 ' + days + ' 天清完复习债务';
   if (stats.hard > planned) text += ' · 不熟词超过今日容量，将按轮换顺延';
   return text;
 }
 function countHardReciteItems() {
   var total = 0;
-  [['vocab', VOCAB], ['hongbaoshu', HONGBAOSHU || []]].forEach(function(dict) {
+  [['vocab', VOCAB], ['sprint', getSprintWords()], ['hongbaoshu', HONGBAOSHU || []]].forEach(function(dict) {
     var prefs = loadPrefs(dict[0]), words = dict[1];
     if (words.length) {
       for (var i = 0; i < words.length; i++) if (prefs[words[i].en] === 'hard') total++;
@@ -3814,9 +4319,11 @@ function updateTodayReciteCard() {
   }
   if (button) button.textContent = '开始背诵';
   var due = getDueReviewItems(), hard = countHardReciteItems(), day = getTodayReciteDayStats();
-  var base = '到期 ' + due.length + ' 词 · 不熟 ' + hard + ' 词';
+  var pool = HONGBAOSHU ? buildTodayReciteItems(false) : null;
+  var tier1Pending = pool ? pool.filter(function(item) { return todayReciteSourceTier(item.source) === 1; }).length : 0;
+  var base = '到期 ' + due.length + ' 词 · 不熟 ' + hard + ' 词' + (tier1Pending ? ' · 生词本优先 ' + tier1Pending : '');
   el.textContent = day.completed ? '今天已背 ' + day.completed + ' 词 · ' + base : base;
-  var pending = HONGBAOSHU ? buildTodayReciteItems(false).length : Math.max(due.length, hard);
+  var pending = pool ? pool.length : Math.max(due.length, hard);
   if (count) count.innerHTML = pending + '<small>待背</small>';
   if (orbit) orbit.style.setProperty('--recall-progress', day.completed ? Math.min(100, Math.round(day.completed / Math.max(1, day.completed + pending) * 100)) + '%' : '0%');
 }
@@ -3972,11 +4479,21 @@ function renderTodayReciteRateBar(isShown) {
 function renderTodayRecite() {
   var c = document.getElementById('todayReciteContainer'); if (!c) return;
   if (!todayReciteStarted) {
+    var settings = loadTodayReciteSettings();
     var hasSmooth = ReviewCore.hasSmoothBackup();
     var smoothInfo = hasSmooth ? ReviewCore.getSmoothBackupInfo() : null;
+    var scopeToggleHtml = '<div class="recite-scope-row">' +
+      '<button class="recite-scope-pill' + (settings.scope === 'all' ? ' active' : '') + '" onclick="chooseTodayReciteScope(&quot;all&quot;)"><span>全部词库 · 生词本优先</span><small>阅读生词本/专题优先排前</small></button>' +
+      '<button class="recite-scope-pill' + (settings.scope === 'vocab_only' ? ' active' : '') + '" onclick="chooseTodayReciteScope(&quot;vocab_only&quot;)"><span>仅背生词本 / 专题</span><small>考前直击阅读核心生词</small></button>' +
+    '</div>' +
+    '<div class="recite-toggle-row">' +
+      '<span>自动纳入生词本未背新词（避免加词后长期未启动）</span>' +
+      '<button class="recite-toggle-chip' + (settings.includeFreshVocab ? ' active' : '') + '" onclick="toggleTodayReciteFreshVocab()">' + (settings.includeFreshVocab ? '已开启' : '已关闭') + '</button>' +
+    '</div>';
     if (!todayRecitePool.length) {
-      if (hasSmooth) {
-        c.innerHTML = '<div class="review-empty">' +
+      if (hasSmooth && settings.scope === 'all') {
+        c.innerHTML = '<div class="recite-setup">' + scopeToggleHtml +
+          '<div class="review-empty" style="margin-top:10px;">' +
           '<div style="font-size:16px;font-weight:700;color:var(--deep);margin-bottom:8px;">已启用债务平滑分摊</div>' +
           '已将往日积压词错峰分流至未来 ' + (smoothInfo && smoothInfo.days ? smoothInfo.days : 5) + ' 天，今天暂无到期债务。<br>享受轻松一天，或继续推进新词。' +
           '</div>' +
@@ -3986,13 +4503,15 @@ function renderTodayRecite() {
               '撤销平滑 · 恢复原排程' +
             '</button>' +
           '</div>' +
-          '<button class="task-button" onclick="continueLearning()">继续学习</button>';
+          '<button class="task-button" onclick="continueLearning()">继续学习</button></div>';
         return;
       }
-      c.innerHTML = '<div class="review-empty">今天没有到期或不熟词。<br>继续推进新词，下一次评分后会自动进入这里。</div><button class="task-button" onclick="continueLearning()">继续学习</button>';
+      c.innerHTML = '<div class="recite-setup">' + scopeToggleHtml +
+        '<div class="review-empty" style="margin-top:10px;">' + (settings.scope === 'vocab_only' ? '当前生词本/专题今日待背已清零。<br>可切换为「全部词库」复习红宝书，或继续推进新词。' : '今天没有到期或不熟词。<br>继续推进新词，下一次评分后会自动进入这里。') + '</div>' +
+        '<button class="task-button" onclick="continueLearning()">继续学习</button></div>';
       return;
     }
-    var selected = loadTodayReciteSettings().limit, choices = [20, 30, 50, 60, 80, 100], buttons = '';
+    var selected = settings.limit, choices = [20, 30, 50, 60, 80, 100], buttons = '';
     choices.forEach(function(n) { buttons += '<button class="recite-limit' + (selected === n ? ' active' : '') + '" onclick="chooseTodayReciteLimit(' + n + ')">' + n + '</button>'; });
     var planned = Math.min(selected, todayRecitePool.length);
     var stats = todayRecitePoolStats(todayRecitePool);
@@ -4015,6 +4534,11 @@ function renderTodayRecite() {
       '</div>';
     }
 
+    var priorityBannerHtml = '<div class="recite-priority-banner">' +
+      '<span class="recite-priority-pill">★ 最高优先级</span>' +
+      '<span>生词本/专题 ' + stats.tier1 + ' 词（复习 ' + (stats.tier1Due + stats.tier1Hard) + ' + 新词 ' + stats.tier1Fresh + '）· 红宝书 ' + stats.tier2 + ' 词</span>' +
+    '</div>';
+
     var breakdownHtml = '<div class="debt-breakdown-grid">' +
       '<div class="debt-stat-box"><span class="debt-stat-num fresh">' + stats.freshDue + '</span><span class="debt-stat-lbl">今日到期</span></div>' +
       '<div class="debt-stat-box"><span class="debt-stat-num overdue">' + stats.overdue + '</span><span class="debt-stat-lbl">往日积压</span></div>' +
@@ -4036,7 +4560,7 @@ function renderTodayRecite() {
           '</button>' +
         '</div>' +
       '</div>';
-    } else if (stats.overdue >= 15 || stats.total >= 60) {
+    } else if (stats.overdue >= 15 || (stats.due + stats.hard) >= 60) {
       smoothHtml = '<div class="debt-smoother-card">' +
         '<div class="debt-smoother-hdr">' +
           '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></svg>' +
@@ -4056,7 +4580,9 @@ function renderTodayRecite() {
         '<h2>选择今天的背诵量</h2>' +
         healthBadge +
       '</div>' +
-      '<p>到期词优先，同时保留不熟词轮换名额，避免困难词长期排不到。</p>' +
+      '<p>优先提取阅读生词本与冲刺专题，其次按到期与不熟轮换抽取红宝书。</p>' +
+      priorityBannerHtml +
+      scopeToggleHtml +
       breakdownHtml +
       '<div class="recite-limit-grid">' + buttons + '</div>' +
       '<div class="recite-custom-row">' +
@@ -4082,7 +4608,9 @@ function renderTodayRecite() {
   if (todayReciteIdx < 0 || todayReciteIdx >= todayReciteItems.length) todayReciteIdx = 0;
   var flowMode = getReciteFlowMode();
   var isEffectiveShown = (flowMode === 'direct_4tier') ? true : todayReciteShown;
-  var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = isEffectiveShown ? '' : ' recite-hidden', src = entry.source === 'vocab' ? '生词本' : '红宝书';
+  var entry = todayReciteItems[todayReciteIdx], w = entry.item, hidden = isEffectiveShown ? '' : ' recite-hidden';
+  var src = entry.source === 'vocab' ? '★ 阅读生词本' : (entry.source === 'sprint' ? '★ 冲刺专题' : '红宝书');
+  var srcTagClass = entry.source === 'vocab' ? ' tier1' : (entry.source === 'sprint' ? ' tier-sprint' : '');
   var now = Date.now(), dayMs = 86400000;
   var overdueDays = (entry.dueAt && now > entry.dueAt) ? Math.floor((now - entry.dueAt) / dayMs) : 0;
 
@@ -4102,6 +4630,8 @@ function renderTodayRecite() {
     tag = '认知熔断';
   } else if (entry.isRepeat) {
     tag = '重现攻克';
+  } else if (entry.kind === 'fresh') {
+    tag = entry.source === 'sprint' ? '冲刺新词' : '生词本新词';
   } else if (entry.kind === 'due') {
     if (entry.isSmoothed) {
       tag = '平滑出清';
@@ -4168,13 +4698,17 @@ function renderTodayRecite() {
     customRateBarHtml = renderTodayReciteRateBar(isEffectiveShown);
   }
 
+  var trickPillHtml = getWordSprintMeta(w.en, w.cn).isTrick
+    ? '<span class="vc-trick-alert-pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>熟词僻义</span>'
+    : '';
   c.innerHTML = '<div class="vocab-card-shell">' +
     '<div class="vocab-card-progress">' + (todayReciteIdx + 1) + ' / ' + todayReciteItems.length + ' · ' + tag + '</div>' +
     '<div class="vocab-card-stage">' +
       '<div class="vocab-card vocab-card-long' + (isEffectiveShown ? ' revealed' : '') + (isSpacer ? ' vc-spacer-card' : '') + '" id="todayReciteCard" onclick="todayReciteCardClick(event)">' +
         leechBannerHtml +
         '<div class="vc-top-meta">' +
-          '<span class="vc-tag-source">' + (isSpacer ? '回溯巩固' : src) + '</span>' +
+          '<span class="vc-tag-source' + (isSpacer ? '' : srcTagClass) + '">' + (isSpacer ? '回溯巩固' : src) + '</span>' +
+          trickPillHtml +
           extraMetaTag +
         '</div>' +
         '<div class="vc-word-row">' +
@@ -4209,6 +4743,7 @@ function renderTodayRecite() {
     customRateBarHtml +
     '<div class="vc-hint"><button class="home-link" onclick="toggleReciteFlowMode()">' + (flowMode === 'direct_4tier' ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>常驻四档 (点击切自省)' : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>两阶段自省 (点击切常驻)') + '</button> · <button class="home-link" onclick="resetTodayReciteSession()">重选任务量</button></div>' +
   '</div>';
+  guardWordNetworkChips(c);
   bindTodayReciteSwipe();
 }
 function todayReciteShow(initialSense) {
@@ -4243,8 +4778,63 @@ function todayReciteCardClick(event) {
   if (event.target.closest('button, a, input, select, textarea, .vc-example-pager, .archive-review-action')) return;
   if (!todayReciteShown) todayReciteShow('familiar');
 }
+var cardWordAudio = null;
+var cardWordAudioToken = 0;
+function stopCardWordAudio() {
+  cardWordAudioToken++;
+  if (cardWordAudio) {
+    try { cardWordAudio.pause(); cardWordAudio.currentTime = 0; } catch (e) {}
+  }
+  if (typeof window !== 'undefined' && window.speechSynthesis) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+}
+function playCardAudioBlob(url, fallbackEn, token) {
+  if (token !== cardWordAudioToken) return;
+  if (!cardWordAudio) cardWordAudio = new Audio();
+  try {
+    cardWordAudio.pause();
+    cardWordAudio.src = url;
+    cardWordAudio.currentTime = 0;
+    var p = cardWordAudio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(function() {
+        if (token === cardWordAudioToken && typeof speakWeb === 'function') speakWeb(fallbackEn, 'en-US', function(){});
+      });
+    }
+  } catch (e) {
+    if (token === cardWordAudioToken && typeof speakWeb === 'function') speakWeb(fallbackEn, 'en-US', function(){});
+  }
+}
 function playCardWordAudio(en) {
   if (!en) return;
+  stopCardWordAudio();
+  var token = cardWordAudioToken;
+  var gw = -1;
+  if (typeof VOCAB !== 'undefined' && Array.isArray(VOCAB)) {
+    for (var i = 0; i < VOCAB.length; i++) {
+      if (VOCAB[i] && VOCAB[i].en === en) { gw = i; break; }
+    }
+  }
+  if (gw >= 0 && typeof preloaded !== 'undefined') {
+    var blobUrl = preloaded[String(gw) + '_en'];
+    if (blobUrl) {
+      playCardAudioBlob(blobUrl, en, token);
+      return;
+    }
+    if (typeof getAudioFile === 'function' && typeof waitForAudioFile === 'function' && (typeof navigator === 'undefined' || navigator.onLine !== false)) {
+      var af = getAudioFile(Math.floor(gw / GROUP_SIZE));
+      if (af && af.fileIdx !== undefined) {
+        waitForAudioFile(af.fileIdx, function(err) {
+          if (token !== cardWordAudioToken) return;
+          var loadedUrl = !err ? preloaded[String(gw) + '_en'] : '';
+          if (loadedUrl) playCardAudioBlob(loadedUrl, en, token);
+          else if (typeof speakWeb === 'function') speakWeb(en, 'en-US', function(){});
+        });
+        return;
+      }
+    }
+  }
   if (typeof speakWeb === 'function') speakWeb(en, 'en-US', function(){});
 }
 function insertReciteRepeatWord(queue, currentIdx, reEntry, step) {
@@ -4370,10 +4960,12 @@ function todayReciteLeechAction(action) {
   var src = entry.source || 'vocab';
   var insertedIndices = null;
   var reInsertedIdx = null;
+  var wasInFocus = false;
 
   if (action === 'defer') {
-    if (typeof FocusCore !== 'undefined' && FocusCore.add) {
-      FocusCore.add(en, cn, src, '顽固难词 · 认知熔断');
+    if (typeof FocusCore !== 'undefined') {
+      if (FocusCore.isSelected) wasInFocus = !!FocusCore.isSelected(en);
+      if (FocusCore.add) FocusCore.add(en, cn, src, '顽固难词 · 认知熔断');
     }
     if (typeof showScheduleFeedback === 'function') {
       showScheduleFeedback('已加入重点攻关词池，今晚专属攻坚', 'review');
@@ -4399,6 +4991,7 @@ function todayReciteLeechAction(action) {
     entry: entry,
     isLeechAction: true,
     action: action,
+    wasInFocus: wasInFocus,
     insertedIndices: insertedIndices,
     reInsertedIdx: reInsertedIdx
   };
@@ -4432,10 +5025,11 @@ function todayReciteRate(ratingOrFamiliar) {
   }
   var rating = ReviewCore.normalizeRating(ratingOrFamiliar);
   var isFamiliar = (rating === 'familiar' || rating === 'mastered');
-  var key = '', activitySource = entry.source === 'hongbaoshu' ? 'hb' : 'vocab', state = null, practiceRecallOutcome = null;
+  var key = '', activitySource = entry.source === 'hongbaoshu' ? 'hb' : (entry.source === 'sprint' ? 'sprint' : 'vocab'), state = null, practiceRecallOutcome = null;
   if (!todayRecitePracticeOnly && !entry.isRepeat) {
-    key = prefKey(entry.source, entry.index);
+    key = entry.source === 'sprint' ? entry.en : prefKey(entry.source, entry.index);
     state = ReviewCore.applyRating(entry.source, entry.en, rating, 'recite');
+    if (entry.source === 'sprint') syncSprintLegacySets(entry.en, rating);
     markTodayReciteRated(entry, 1);
     showRatingFeedback(entry.source, entry.en, rating, 'recite');
   } else {
@@ -4529,6 +5123,7 @@ function todayReciteRate(ratingOrFamiliar) {
 function todayReciteUndoLast() {
   var u = todayReciteUndo; if (!u) return;
   if (u.isSpacer) {
+    removeTodayReciteCompletion();
     todayReciteIdx = u.idx;
     todayReciteDone = false;
     todayReciteShown = false;
@@ -4539,7 +5134,7 @@ function todayReciteUndoLast() {
     return;
   }
   if (u.isLeechAction) {
-    if (u.action === 'defer') {
+    if (u.action === 'defer' && !u.wasInFocus) {
       if (typeof FocusCore !== 'undefined' && FocusCore.remove) {
         FocusCore.remove(u.entry.en || (u.entry.item && u.entry.item.en));
       }
@@ -4553,6 +5148,7 @@ function todayReciteUndoLast() {
     } else if (u.reInsertedIdx !== null && u.reInsertedIdx < todayReciteItems.length) {
       todayReciteItems.splice(u.reInsertedIdx, 1);
     }
+    removeTodayReciteCompletion();
     todayReciteIdx = u.idx;
     todayReciteDone = false;
     todayReciteShown = false;
@@ -4573,6 +5169,9 @@ function todayReciteUndoLast() {
   }
   if (!u.practiceOnly && u.state) {
     ReviewCore.undoRating(u.state); markTodayReciteRated(u.entry, -1);
+    if (u.entry && u.entry.source === 'sprint') {
+      syncSprintLegacySets(u.entry.en, u.state.oldPref || 'clear');
+    }
   }
   if (u.practiceRecallOutcome) ReviewCore.undoRecallOutcome(u.practiceRecallOutcome);
   undoLearningActivity(u.activitySource, u.entry.en, u.activityMode || 'today_recite');
@@ -4618,13 +5217,56 @@ function bindTodayReciteSwipe() {
 }
 if (typeof window !== 'undefined' && window.addEventListener) {
   window.addEventListener('keydown', function(event) {
-    if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    var target = event.target;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
+
+    var diagEl = document.getElementById('diagOverlay');
+    var backupEl = document.getElementById('backupModal');
+    var syncEl = document.getElementById('syncModal');
+    var cacheEl = document.getElementById('cacheModal');
+    var exitSheetEl = document.getElementById('morningExitSheet');
+    var sprintEl = document.getElementById('sprintExportModal');
+
+    if (event.key === 'Escape') {
+      if (sprintEl && sprintEl.classList.contains('open')) { event.preventDefault(); if (typeof SprintExport !== 'undefined' && typeof SprintExport.closeModal === 'function') SprintExport.closeModal(); else sprintEl.classList.remove('open'); return; }
+      if (diagEl && diagEl.style.display !== 'none') { event.preventDefault(); diagEl.style.display = 'none'; return; }
+      if (backupEl && backupEl.classList.contains('show')) { event.preventDefault(); closeBackupCenter(); return; }
+      if (syncEl && syncEl.classList.contains('show')) { event.preventDefault(); toggleSyncPanel(); return; }
+      if (cacheEl && cacheEl.classList.contains('show')) { event.preventDefault(); closeCacheManager(); return; }
+      if (exitSheetEl && exitSheetEl.classList.contains('show')) { event.preventDefault(); closeMorningExitSheet(); return; }
+    }
+
+    if ((sprintEl && sprintEl.classList.contains('open')) ||
+        (diagEl && diagEl.style.display !== 'none') ||
+        (backupEl && backupEl.classList.contains('show')) ||
+        (syncEl && syncEl.classList.contains('show')) ||
+        (cacheEl && cacheEl.classList.contains('show')) ||
+        (exitSheetEl && exitSheetEl.classList.contains('show'))) {
+      return;
+    }
+
+    var morningPlayerView = document.getElementById('view-morning-player');
+    if (morningPlayerView && morningPlayerView.style.display !== 'none') {
+      if (event.repeat) return;
+      if (event.code === 'Space') { event.preventDefault(); toggleMorningPause(); }
+      else if (event.key === 'ArrowLeft' || event.key === 'j' || event.key === 'J') { event.preventDefault(); prevMorningWord(); }
+      else if (event.key === 'ArrowRight' || event.key === 'l' || event.key === 'L') { event.preventDefault(); nextMorningWord(); }
+      else if (event.key === 'r' || event.key === 'R') { event.preventDefault(); replayMorningWord(); }
+      else if (event.key === 's' || event.key === 'S') { event.preventDefault(); skipMorningWord(); }
+      else if (event.key === '1') { event.preventDefault(); markMorningHard(); }
+      else if (event.key === '2' || event.key === '3') { event.preventDefault(); markMorningFamiliar(); }
+      else if (event.key === 'Escape') { event.preventDefault(); confirmEndMorning(); }
+      return;
+    }
+
     var todayView = document.getElementById('view-today-recite');
-    var isToday = (todayView && todayView.style.display !== 'none' && todayReciteStarted && !todayReciteDone);
+    var isToday = !!(todayView && todayView.style.display !== 'none' && todayReciteStarted && !todayReciteDone);
     var groupsView = document.getElementById('view-groups');
-    var isVocabRecite = (groupsView && groupsView.style.display !== 'none' && currentDict === 'vocab' && vocabStudyMode === 'recite' && !vocabReciteDone);
+    var isVocabRecite = !!(groupsView && groupsView.style.display !== 'none' && currentDict === 'vocab' && vocabStudyMode === 'recite' && !vocabReciteDone);
 
     if (!isToday && !isVocabRecite) return;
+    if (event.repeat) return;
 
     var flowMode = getReciteFlowMode();
     var isShown = isToday ? ((flowMode === 'direct_4tier') ? true : todayReciteShown) : ((flowMode === 'direct_4tier') ? true : vocabReciteShown);
@@ -4632,13 +5274,43 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     var rateFn = isToday ? todayReciteRate : vocabReciteRate;
     var showFn = isToday ? todayReciteShow : vocabReciteShow;
     var undoFn = isToday ? todayReciteUndoLast : vocabReciteUndoLast;
+    var spacerFn = isToday ? todayRecitePassSpacer : vocabRecitePassSpacer;
+    var leechFn = isToday ? todayReciteLeechAction : vocabReciteLeechAction;
+    var vocabEntries = isToday ? null : (typeof getVocabReciteEntries === 'function' ? getVocabReciteEntries() : null);
+    var activeEntry = isToday
+      ? (todayReciteItems && todayReciteItems[todayReciteIdx] ? todayReciteItems[todayReciteIdx] : null)
+      : (vocabEntries && vocabEntries[vocabCardIdx] ? vocabEntries[vocabCardIdx] : null);
+    var currentEn = activeEntry ? (activeEntry.en || (activeEntry.item && activeEntry.item.en) || '') : '';
+    var isSpacer = !!(activeEntry && activeEntry.isSpacer);
+    var isLeech = !!(activeEntry && activeEntry.isRepeat && (activeEntry.repeatCount || 0) >= 4 && !activeEntry.leechFinalTry);
 
-    if (event.code === 'Space') {
+    if (isSpacer) {
+      if (event.code === 'Space' || event.key === 'Enter' || event.key === '1' || event.key === '2' || event.key === '3' || event.key === '4') {
+        event.preventDefault();
+        spacerFn();
+        return;
+      }
+    } else if (isLeech) {
+      if (event.key === '1') {
+        event.preventDefault();
+        leechFn('defer');
+        return;
+      }
+      if (event.key === '2' || event.code === 'Space' || event.key === 'Enter') {
+        event.preventDefault();
+        leechFn('retry');
+        return;
+      }
+    }
+
+    if (event.code === 'Space' || event.key === 'Enter') {
       event.preventDefault();
       if (!isShown) {
         showFn('familiar');
       } else if (initialSense === 'unfamiliar') {
         rateFn('forget');
+      } else if (currentEn && event.code === 'Space') {
+        playCardWordAudio(currentEn);
       }
     } else if (event.key === '1') {
       event.preventDefault();
@@ -4663,6 +5335,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     } else if (event.key === 'z' || event.key === 'Z') {
       event.preventDefault();
       undoFn();
+    } else if (event.key === 'r' || event.key === 'R') {
+      event.preventDefault();
+      if (currentEn) playCardWordAudio(currentEn);
     }
   });
 }
@@ -4672,6 +5347,10 @@ function openDueReviewFromButton(button) {
 }
 
 function openDueReview(source, en) {
+  if (source === 'sprint') {
+    location.href = 'sprint-vocab.html?word=' + encodeURIComponent(en || '');
+    return;
+  }
   function openAt(words) {
     var index = -1;
     for (var i = 0; i < words.length; i++) if (words[i].en === en) { index = i; break; }
@@ -4682,8 +5361,11 @@ function openDueReview(source, en) {
       return;
     }
     currentDict = 'vocab';
-    showGroups(unit);
     vocabStudyMode = 'recite'; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+    vocabReciteFilter = 'all';
+    localStorage.setItem(VOCAB_RECITE_FILTER_KEY, 'all');
+    clearVocabReciteSession();
+    showGroups(unit, { forceReset: true });
     var targetPosition = Math.min(localIndex, Math.max(0, vocabCardOrder.length - 1));
     var currentPosition = vocabCardOrder.indexOf(localIndex);
     if (currentPosition >= 0 && currentPosition !== targetPosition) {
@@ -4691,11 +5373,13 @@ function openDueReview(source, en) {
       vocabCardOrder[targetPosition] = localIndex;
       vocabCardOrder[currentPosition] = displaced;
     }
-    var entries = getVocabCardEntries(), cardIndex = -1;
+    resetVocabReciteSession();
+    var entries = getVocabReciteEntries(), cardIndex = -1;
     for (var j = 0; j < entries.length; j++) if (entries[j].localIdx === localIndex) { cardIndex = j; break; }
     if (cardIndex < 0) {
       var toggle = document.getElementById('showHiddenToggleG'); if (toggle) toggle.checked = true;
-      entries = getVocabCardEntries();
+      resetVocabReciteSession();
+      entries = getVocabReciteEntries();
       for (var k = 0; k < entries.length; k++) if (entries[k].localIdx === localIndex) { cardIndex = k; break; }
     }
     vocabCardIdx = Math.max(0, cardIndex);
@@ -4747,6 +5431,9 @@ function showGroups(unitIdx, options) {
     vocabCardIdx = Math.max(0, Math.min(Number.isFinite(resumeIndex) ? resumeIndex : 0, Math.max(0, words.length - 1)));
     vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
     resetVocabReciteSession();
+    if (!opts.forceReset && vocabStudyMode === 'recite') {
+      restoreVocabReciteSession(unitIdx);
+    }
     saveLearningResume('vocab', unitIdx, vocabStudyMode, vocabCardIdx, vocabCardOrder);
   }
   showView('groups');
@@ -4789,7 +5476,7 @@ function renderUnits() {
     html += '<button class="unit-btn" onclick="showGroups(' + u + ')">';
     html += 'U' + (u+1);
     html += '<span class="u-label">' + words.length + '词';
-    if (familiar > 0) html += ' <span class="unit-badge done">✓' + familiar + '</span>';
+    if (familiar > 0) html += ' <span class="unit-badge done"><svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px;margin-right:2px;"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>' + familiar + '</span>';
     html += '</span>';
     if (pct > 0) html += '<div class="unit-progress"><div class="unit-progress-bar" style="width:' + pct + '%"></div></div>';
     html += '</button>';
@@ -4964,23 +5651,173 @@ var vocabCardTouchX = 0, vocabCardTouchY = 0, vocabCardDragging = false;
 var vocabCardStepInfo = null;
 var vocabCardPlayToken = 0;
 var vocabCardAudioAttemptSerial = 0;
+var VOCAB_RECITE_SESSION_KEY = 'vocab_recite_session_v1';
+var VOCAB_RECITE_FILTER_KEY = 'vocab_recite_filter_v1';
 var vocabCardAudioFailed = false;
 var vocabCardRetryPlayback = null;
 var vocabCardCountedPlayToken = 0;
 var vocabStudyMode = localStorage.getItem('vocab_study_mode_v1') || 'listen';
 var vocabReciteShown = false, vocabReciteUndo = null, vocabReciteDone = false;
+var vocabReciteStats = null, vocabRecitePracticeOnly = false, vocabReciteHardReinforcement = [];
+var vocabReciteFilter = localStorage.getItem(VOCAB_RECITE_FILTER_KEY) || 'due_unmastered';
+if (vocabReciteFilter !== 'all' && vocabReciteFilter !== 'due_unmastered') vocabReciteFilter = 'due_unmastered';
 var vocabCardOrder = [], vocabCardOrderUnit = -1;
 var vocabReciteSessionEntries = null, vocabReciteSessionUnit = -1;
+
+function getVocabReciteFilteredEntries() {
+  var base = getVocabCardEntries();
+  if (vocabReciteFilter === 'all') return base;
+  var now = Date.now(), meta = loadReviewMeta();
+  return base.filter(function(e) {
+    var en = e.item && e.item.en;
+    if (!en) return false;
+    if (typeof ReviewCore.isExcluded === 'function' && ReviewCore.isExcluded('vocab', en)) return false;
+    if (e.pref === 'familiar') {
+      var rm = meta['vocab:' + en];
+      if (!rm || !rm.nextDueAt || rm.nextDueAt > now) return false;
+    }
+    return true;
+  });
+}
+function packVocabReciteEntry(e) {
+  if (!e) return null;
+  return {
+    localIdx: Number(e.localIdx) || 0,
+    isRepeat: !!e.isRepeat,
+    repeatType: e.repeatType || '',
+    repeatStage: Number(e.repeatStage) || 0,
+    repeatCount: Number(e.repeatCount) || 0,
+    leechFinalTry: !!e.leechFinalTry,
+    isSpacer: !!e.isSpacer,
+    hasRated: !!e.hasRated
+  };
+}
+function hydrateVocabReciteEntry(unitIdx, p) {
+  if (!p || typeof p.localIdx !== 'number') return null;
+  var words = getUnitWords('vocab', unitIdx);
+  var item = words[p.localIdx];
+  if (!item) return null;
+  var gw = unitIdx * UNIT_SIZE + p.localIdx;
+  var pref = loadPrefs('vocab')[prefKey('vocab', gw)] || '';
+  var out = { item: item, localIdx: p.localIdx, pref: pref };
+  if (p.isRepeat) out.isRepeat = true;
+  if (p.repeatType) out.repeatType = p.repeatType;
+  if (p.repeatStage) out.repeatStage = p.repeatStage;
+  if (p.repeatCount) out.repeatCount = p.repeatCount;
+  if (p.leechFinalTry) out.leechFinalTry = true;
+  if (p.isSpacer) out.isSpacer = true;
+  if (p.hasRated) out.hasRated = true;
+  return out;
+}
+function readVocabReciteSession() {
+  var session = safeJsonFromStorage(VOCAB_RECITE_SESSION_KEY, null);
+  if (!session || !Array.isArray(session.items) || !session.items.length) return null;
+  if (session.savedAt && Date.now() - session.savedAt > 86400000) return null;
+  return session;
+}
+function saveVocabReciteSession() {
+  if (currentDict !== 'vocab' || vocabStudyMode !== 'recite' || vocabReciteDone || !vocabReciteSessionEntries || !vocabReciteSessionEntries.length) return;
+  try {
+    localStorage.setItem(VOCAB_RECITE_SESSION_KEY, JSON.stringify({
+      unitIdx: currentUnit,
+      idx: vocabCardIdx,
+      filter: vocabReciteFilter,
+      practiceOnly: !!vocabRecitePracticeOnly,
+      order: Array.isArray(vocabCardOrder) ? vocabCardOrder : [],
+      items: vocabReciteSessionEntries.map(packVocabReciteEntry).filter(Boolean),
+      stats: vocabReciteStats || { familiar: 0, hard: 0, total: vocabReciteSessionEntries.length },
+      hardReinforcement: (vocabReciteHardReinforcement || []).map(function(e) { return e && e.localIdx; }).filter(function(n) { return typeof n === 'number'; }),
+      undo: vocabReciteUndo ? Object.assign({}, vocabReciteUndo, { e: packVocabReciteEntry(vocabReciteUndo.e) }) : null,
+      savedAt: Date.now()
+    }));
+  } catch (err) {}
+}
+function clearVocabReciteSession() {
+  try { localStorage.removeItem(VOCAB_RECITE_SESSION_KEY); } catch (e) {}
+}
+function restoreVocabReciteSession(unitIdx) {
+  var session = readVocabReciteSession();
+  if (!session || Number(session.unitIdx) !== Number(unitIdx)) return false;
+  var items = session.items.map(function(p) { return hydrateVocabReciteEntry(unitIdx, p); }).filter(Boolean);
+  if (!items.length) { clearVocabReciteSession(); return false; }
+  if (session.filter === 'all' || session.filter === 'due_unmastered') vocabReciteFilter = session.filter;
+  if (Array.isArray(session.order) && session.order.length === getUnitWords('vocab', unitIdx).length) {
+    vocabCardOrder = session.order.slice();
+    vocabCardOrderUnit = unitIdx;
+  }
+  vocabReciteSessionEntries = items;
+  vocabReciteSessionUnit = unitIdx;
+  vocabCardIdx = Math.max(0, Math.min(Number(session.idx) || 0, items.length - 1));
+  vocabReciteStats = session.stats || { familiar: 0, hard: 0, total: items.length };
+  vocabRecitePracticeOnly = !!session.practiceOnly;
+  vocabReciteDone = false;
+  vocabReciteShown = false;
+  vocabReciteHardReinforcement = [];
+  if (Array.isArray(session.hardReinforcement)) {
+    session.hardReinforcement.forEach(function(li) {
+      var hydrated = hydrateVocabReciteEntry(unitIdx, { localIdx: li });
+      if (hydrated) vocabReciteHardReinforcement.push(hydrated);
+    });
+  }
+  vocabReciteUndo = null;
+  if (session.undo && session.undo.e) {
+    var undoEntry = hydrateVocabReciteEntry(unitIdx, session.undo.e);
+    if (undoEntry) vocabReciteUndo = Object.assign({}, session.undo, { e: undoEntry });
+  }
+  return true;
+}
 function getVocabReciteEntries() {
   if (!vocabReciteSessionEntries || vocabReciteSessionUnit !== currentUnit) {
-    vocabReciteSessionEntries = getVocabCardEntries();
-    vocabReciteSessionUnit = currentUnit;
+    if (!restoreVocabReciteSession(currentUnit)) {
+      vocabReciteSessionEntries = getVocabReciteFilteredEntries();
+      vocabReciteSessionUnit = currentUnit;
+      vocabReciteStats = { familiar: 0, hard: 0, total: vocabReciteSessionEntries.length };
+      vocabRecitePracticeOnly = false;
+      vocabReciteHardReinforcement = [];
+    }
   }
   return vocabReciteSessionEntries;
 }
 function resetVocabReciteSession() {
   vocabReciteSessionEntries = null;
   vocabReciteSessionUnit = -1;
+}
+function setVocabReciteFilter(filter) {
+  vocabReciteFilter = filter === 'all' ? 'all' : 'due_unmastered';
+  localStorage.setItem(VOCAB_RECITE_FILTER_KEY, vocabReciteFilter);
+  clearVocabReciteSession();
+  resetVocabReciteSession();
+  vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+  vocabRecitePracticeOnly = false; vocabReciteHardReinforcement = [];
+  renderVocabCardMode();
+}
+function startVocabReciteRepeat() {
+  var base = getVocabReciteFilteredEntries();
+  if (!base.length) base = getVocabCardEntries();
+  if (!base.length) return;
+  vocabReciteSessionEntries = base;
+  vocabReciteSessionUnit = currentUnit;
+  vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+  vocabRecitePracticeOnly = true;
+  vocabReciteStats = { familiar: 0, hard: 0, total: base.length };
+  saveVocabReciteSession();
+  renderVocabRecite(vocabReciteSessionEntries);
+}
+function startVocabReciteHardReinforcement() {
+  var unique = [], seen = {};
+  (vocabReciteHardReinforcement || []).forEach(function(item) {
+    if (!item || !item.item) return;
+    var key = item.item.en;
+    if (!seen[key]) { seen[key] = true; unique.push(Object.assign({}, item, { isRepeat: false, isSpacer: false })); }
+  });
+  if (!unique.length) return;
+  vocabReciteSessionEntries = unique;
+  vocabReciteSessionUnit = currentUnit;
+  vocabCardIdx = 0; vocabReciteShown = false; vocabReciteUndo = null; vocabReciteDone = false;
+  vocabRecitePracticeOnly = true;
+  vocabReciteStats = { familiar: 0, hard: 0, total: unique.length };
+  saveVocabReciteSession();
+  renderVocabRecite(vocabReciteSessionEntries);
 }
 
 function cardUtilityIcon(name) {
@@ -5017,6 +5854,18 @@ function getCardExamples(item) {
   return list.filter(function(example) { return example && example.en; });
 }
 function cardDetailMarkup(item, hidden) {
+  if (item && item.sprintMeta) {
+    var sm = item.sprintMeta;
+    return '<div class="vc-cn-note' + (hidden || '') + '">'
+      + '<div class="vc-cn-note-hdr">'
+      + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>'
+      + '<span>冲刺专题考点 · ' + escapeHTML(sm.badge || '') + '</span>'
+      + '</div>'
+      + '<div class="vc-cn-note-body">'
+      + (sm.contrast ? '<div style="font-weight:700;margin-bottom:4px;">' + escapeHTML(sm.contrast) + '</div>' : '')
+      + (sm.note ? '<div>' + escapeHTML(sm.note) + '</div>' : '')
+      + '</div></div>';
+  }
   var detail = item && item.cn_note ? '<div class="vc-cn-note' + (hidden || '') + '">'
       + '<div class="vc-cn-note-hdr">'
       + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>'
@@ -5055,6 +5904,11 @@ function cardExampleStep(button, delta) {
 
 function renderVocabCardMode() {
   var container = document.getElementById('groupContainer');
+  if (vocabStudyMode === 'recite') {
+    saveLearningResume('vocab', currentUnit, vocabStudyMode, vocabCardIdx);
+    renderVocabRecite(getVocabReciteEntries());
+    return;
+  }
   var entries = getVocabCardEntries();
   var words = entries.map(function(e) { return e.item; });
   if (!words.length) {
@@ -5063,7 +5917,6 @@ function renderVocabCardMode() {
   }
   if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
   saveLearningResume('vocab', currentUnit, vocabStudyMode, vocabCardIdx);
-  if (vocabStudyMode === 'recite') { renderVocabRecite(getVocabReciteEntries()); return; }
   container.innerHTML = ''
     + '<div class="vocab-card-shell">'
     + '<div class="study-mode"><button class="active">聆听</button><button onclick="setVocabStudyMode(&quot;recite&quot;)">背诵</button></div>'
@@ -5111,6 +5964,7 @@ function vocabCardCurrentPref() {
 
 function setVocabStudyMode(mode) {
   vocabCardStop(true); vocabStudyMode=mode; vocabReciteShown=false; vocabReciteDone=false;
+  clearVocabReciteSession();
   resetVocabReciteSession();
   localStorage.setItem('vocab_study_mode_v1',mode); saveLearningResume('vocab', currentUnit, mode, vocabCardIdx);
   renderVocabCardMode();
@@ -5181,11 +6035,37 @@ function vocabReciteCardClick(event) {
   if (!vocabReciteShown) vocabReciteShow();
 }
 function renderVocabRecite(entries) {
-  var e = entries[vocabCardIdx], w = e.item, c = document.getElementById('groupContainer');
-  if (vocabReciteDone) {
-    c.innerHTML = '<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div><div class="empty-msg">本单元背诵已完成！</div><div class="vocab-card-controls"><button class="vc-btn" aria-label="撤销" title="撤销" onclick="vocabReciteUndoLast()"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button></div></div>';
+  var c = document.getElementById('groupContainer');
+  var filterBarHtml = '<div class="vocab-filter-bar">' +
+    '<button class="vocab-filter-pill' + (vocabReciteFilter === 'due_unmastered' ? ' active' : '') + '" onclick="setVocabReciteFilter(&quot;due_unmastered&quot;)">待学/到期</button>' +
+    '<button class="vocab-filter-pill' + (vocabReciteFilter === 'all' ? ' active' : '') + '" onclick="setVocabReciteFilter(&quot;all&quot;)">全单元</button>' +
+  '</div>';
+  var totalUnitWords = getVocabCardEntries().length;
+  if (!entries || !entries.length) {
+    c.innerHTML = '<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div>' + filterBarHtml +
+      '<div class="recite-summary" style="margin-top:10px;"><h2>本单元待学已清零</h2><div class="recite-summary-sub">本单元 ' + totalUnitWords + ' 词当前均已标熟或尚未到期</div>' +
+      (totalUnitWords ? '<button class="task-button" onclick="setVocabReciteFilter(&quot;all&quot;)">复习全单元（' + totalUnitWords + ' 词）</button>' : '') +
+      '<button class="task-button" style="background:#426a8e;margin-top:8px;" onclick="setVocabStudyMode(&quot;listen&quot;)">切换为聆听模式</button></div></div>';
     return;
   }
+  if (vocabReciteDone) {
+    var st = vocabReciteStats || { familiar: 0, hard: 0, total: entries.length };
+    var uniqueHard = [], hSeen = {};
+    (vocabReciteHardReinforcement || []).forEach(function(item) {
+      if (item && item.item && !hSeen[item.item.en]) { hSeen[item.item.en] = true; uniqueHard.push(item); }
+    });
+    c.innerHTML = '<div class="vocab-card-shell"><div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div>' + filterBarHtml +
+      '<div class="recite-summary" style="margin-top:8px;"><h2>' + (vocabRecitePracticeOnly ? '本轮强化练习完成' : 'Unit ' + (currentUnit + 1) + ' 背诵已完成') + '</h2>' +
+      '<div class="recite-summary-sub">本次共练习 ' + entries.length + ' 卡片 · 已同步至今日背诵防重记录</div>' +
+      '<div class="recite-summary-grid"><div class="recite-summary-stat"><div class="recite-summary-num">' + (st.familiar || 0) + '</div><div class="recite-summary-label">首次熟悉</div></div><div class="recite-summary-stat"><div class="recite-summary-num">' + (st.hard || 0) + '</div><div class="recite-summary-label">首次不熟/模糊</div></div></div>' +
+      (!vocabRecitePracticeOnly && uniqueHard.length ? '<button class="task-button" onclick="startVocabReciteHardReinforcement()">再过一遍不熟词（强化 · ' + uniqueHard.length + ' 词）</button>' : '') +
+      '<button class="task-button" onclick="startVocabReciteRepeat()">再背本单元（练习）</button>' +
+      '<div class="vocab-card-controls"><button class="vc-btn" aria-label="撤销" title="撤销" onclick="vocabReciteUndoLast()"' + (vocabReciteUndo ? '' : ' disabled') + '><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button><button class="vc-btn vc-btn-main" onclick="showUnits()">完成</button></div>' +
+      '</div></div>';
+    return;
+  }
+  if (vocabCardIdx < 0 || vocabCardIdx >= entries.length) vocabCardIdx = 0;
+  var e = entries[vocabCardIdx], w = e.item;
   var flowMode = getReciteFlowMode();
   var isLeech = !!(e.isRepeat && (e.repeatCount || 0) >= 4 && !e.leechFinalTry);
   var isSpacer = !!e.isSpacer;
@@ -5231,14 +6111,19 @@ function renderVocabRecite(entries) {
     extraMetaTag = '<span class="vc-tag-repeat">组内重现第 ' + (e.repeatCount || 1) + ' 次' + (e.repeatType === 'forget' ? (e.repeatStage === 2 ? ' · 终极巩固' : ' · 短期重现') : (e.repeatType === 'uncertain' ? ' · 模糊回马枪' : '')) + '</span>';
   }
 
+  var trickPillHtml = getWordSprintMeta(w.en, w.cn).isTrick
+    ? '<span class="vc-trick-alert-pill"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>熟词僻义</span>'
+    : '';
   c.innerHTML = '<div class="vocab-card-shell">' +
     '<div class="study-mode"><button onclick="setVocabStudyMode(&quot;listen&quot;)">聆听</button><button class="active">背诵</button></div>' +
+    filterBarHtml +
     '<div class="vocab-card-progress">' + (vocabCardIdx + 1) + ' / ' + entries.length + (isSpacer ? ' · 回溯巩固' : isLeech ? ' · 认知熔断' : e.isRepeat ? ' · 重现攻克' : '') + '</div>' +
     '<div class="vocab-card-stage">' +
-      '<div class="vocab-card vocab-card-long' + (isEffectiveShown ? ' revealed' : '') + (isSpacer ? ' vc-spacer-card' : '') + '" id="vocabCard" onclick="vocabReciteShow()">' +
+      '<div class="vocab-card vocab-card-long' + (isEffectiveShown ? ' revealed' : '') + (isSpacer ? ' vc-spacer-card' : '') + '" id="vocabCard" onclick="vocabReciteCardClick(event)">' +
         leechBannerHtml +
         '<div class="vc-top-meta">' +
           '<span class="vc-tag-source">' + (isSpacer ? '回溯巩固' : ('生词本 · Unit ' + (currentUnit + 1))) + '</span>' +
+          trickPillHtml +
           extraMetaTag +
         '</div>' +
         '<div class="vc-word-row">' +
@@ -5274,6 +6159,7 @@ function renderVocabRecite(entries) {
     '<div class="vc-recite-nav"><button class="home-link" onclick="toggleReciteFlowMode()">' + (flowMode === 'direct_4tier' ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>常驻四档 (点击切自省)' : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>两阶段自省 (点击切常驻)') + '</button> · <button class="home-link" onclick="setVocabStudyMode(&quot;listen&quot;)">切换为聆听</button></div>' +
     '<div class="vc-hint">也可左划熟悉 · 右划不熟悉 · 评分后自动下一张</div>' +
   '</div>';
+  guardWordNetworkChips(c);
   bindVocabReciteSwipe();
 }
 function vocabReciteShow(initialSense) {
@@ -5308,8 +6194,10 @@ function vocabRecitePassSpacer() {
   haptic(10);
   if (vocabCardIdx < entries.length - 1) {
     vocabCardIdx++;
+    saveVocabReciteSession();
   } else {
     vocabReciteDone = true;
+    clearVocabReciteSession();
   }
   vocabReciteShown = false;
   vocabReciteInitialSense = null;
@@ -5359,8 +6247,10 @@ function vocabReciteLeechAction(action) {
   haptic(18);
   if (vocabCardIdx < entries.length - 1) {
     vocabCardIdx++;
+    saveVocabReciteSession();
   } else {
     vocabReciteDone = true;
+    clearVocabReciteSession();
   }
   vocabReciteShown = false;
   vocabReciteInitialSense = null;
@@ -5384,28 +6274,32 @@ function vocabReciteRate(ratingOrFamiliar) {
   var rating = ReviewCore.normalizeRating(ratingOrFamiliar);
   var isFamiliar = (rating === 'familiar' || rating === 'mastered');
   var k = prefKey('vocab',vocabCardLocalToGW(e.localIdx));
-  var state = null, practiceRecallOutcome = null;
-  if (!e.isRepeat) {
+  var state = null, practiceRecallOutcome = null, markedTodayRated = false;
+  if (!vocabRecitePracticeOnly && !e.isRepeat) {
     state = ReviewCore.applyRating('vocab', e.item.en, rating, 'recite');
+    markTodayReciteRated({ source: 'vocab', en: e.item.en }, 1);
+    markedTodayRated = true;
     showRatingFeedback('vocab', e.item.en, rating, 'recite');
   } else {
     practiceRecallOutcome = ReviewCore.recordRecallOutcome('vocab', e.item.en, rating, 'vocab_recite_repeat', { practice: true });
     showRatingFeedback('vocab', e.item.en, rating, 'recite');
   }
-  recordLearningActivity('vocab', e.item.en, e.isRepeat ? 'vocab_recite_repeat' : 'vocab_recite');
+  recordLearningActivity('vocab', e.item.en, (vocabRecitePracticeOnly || e.isRepeat) ? 'vocab_recite_repeat' : 'vocab_recite');
 
-  var reInsertedIdx = null, insertedIndices = [];
+  var reInsertedIdx = null, insertedIndices = [], addedHardReinforcement = false;
   if (!e.isRepeat) {
     if (rating === 'forget') {
       var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'forget', repeatStage: 1, repeatCount: 1 });
       var res = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 3);
       reInsertedIdx = (typeof res === 'object' && res !== null) ? res.targetIdx : res;
       insertedIndices = (typeof res === 'object' && res !== null && res.insertedIndices) ? res.insertedIndices : (reInsertedIdx !== null ? [reInsertedIdx] : []);
+      if (!vocabRecitePracticeOnly) { vocabReciteHardReinforcement.push(e); addedHardReinforcement = true; }
     } else if (rating === 'uncertain') {
       var reEntry = Object.assign({}, e, { isRepeat: true, repeatType: 'uncertain', repeatStage: 1, repeatCount: 1 });
       var res = insertReciteRepeatWord(entries, vocabCardIdx, reEntry, 5);
       reInsertedIdx = (typeof res === 'object' && res !== null) ? res.targetIdx : res;
       insertedIndices = (typeof res === 'object' && res !== null && res.insertedIndices) ? res.insertedIndices : (reInsertedIdx !== null ? [reInsertedIdx] : []);
+      if (!vocabRecitePracticeOnly) { vocabReciteHardReinforcement.push(e); addedHardReinforcement = true; }
     }
   } else {
     if (e.repeatType === 'forget') {
@@ -5445,9 +6339,17 @@ function vocabReciteRate(ratingOrFamiliar) {
     }
   }
 
+  if (!vocabReciteStats) vocabReciteStats = { familiar: 0, hard: 0, total: entries.length };
+  if (!e.isRepeat && !e.isSpacer) {
+    if (isFamiliar) vocabReciteStats.familiar++; else vocabReciteStats.hard++;
+  }
+
   vocabReciteUndo = {
-    idx: vocabCardIdx, state: state, en: e.item.en,
+    idx: vocabCardIdx, e: e, state: state, en: e.item.en,
     familiar: isFamiliar, rating: rating, isRepeat: !!e.isRepeat,
+    practiceOnly: !!vocabRecitePracticeOnly,
+    markedTodayRated: markedTodayRated,
+    addedHardReinforcement: addedHardReinforcement,
     practiceRecallOutcome: practiceRecallOutcome,
     reInsertedIdx: reInsertedIdx,
     insertedIndices: insertedIndices
@@ -5456,8 +6358,10 @@ function vocabReciteRate(ratingOrFamiliar) {
   updateHomeStats();
   if (vocabCardIdx < entries.length - 1) {
     vocabCardIdx++;
+    saveVocabReciteSession();
   } else {
     vocabReciteDone = true;
+    clearVocabReciteSession();
   }
   vocabReciteShown = false;
   vocabReciteInitialSense = null;
@@ -5471,6 +6375,7 @@ function vocabReciteUndoLast() {
     vocabReciteDone = false;
     vocabReciteShown = false;
     vocabReciteUndo = null;
+    saveVocabReciteSession();
     haptic(10);
     renderVocabRecite(entries);
     return;
@@ -5494,6 +6399,7 @@ function vocabReciteUndoLast() {
     vocabReciteDone = false;
     vocabReciteShown = false;
     vocabReciteUndo = null;
+    saveVocabReciteSession();
     haptic(10);
     renderVocabRecite(entries);
     return;
@@ -5508,15 +6414,24 @@ function vocabReciteUndoLast() {
     entries.splice(u.reInsertedIdx, 1);
   }
   if (u.state) ReviewCore.undoRating(u.state);
+  if (u.markedTodayRated) markTodayReciteRated({ source: 'vocab', en: u.en }, -1);
   if (u.practiceRecallOutcome) {
     ReviewCore.undoRecallOutcome(u.practiceRecallOutcome);
   }
-  undoLearningActivity('vocab', u.en, u.isRepeat ? 'vocab_recite_repeat' : 'vocab_recite');
+  undoLearningActivity('vocab', u.en, (u.practiceOnly || u.isRepeat) ? 'vocab_recite_repeat' : 'vocab_recite');
   hideScheduleFeedback();
+  if (vocabReciteStats && !u.isRepeat) {
+    if (u.familiar) vocabReciteStats.familiar = Math.max(0, vocabReciteStats.familiar - 1);
+    else vocabReciteStats.hard = Math.max(0, vocabReciteStats.hard - 1);
+  }
+  if (u.addedHardReinforcement && vocabReciteHardReinforcement.length) {
+    vocabReciteHardReinforcement.pop();
+  }
   vocabCardIdx = u.idx;
   vocabReciteDone = false;
   vocabReciteShown = false;
   vocabReciteUndo = null;
+  saveVocabReciteSession();
   haptic(10);
   updateHomeStats();
   renderVocabRecite(entries);
@@ -6022,17 +6937,17 @@ function speakWeb(text, lang, onEnd) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = lang;
   u.rate = 0.85;
-  var keepAlive = setInterval(function() {
+  var keepAlive = (text && String(text).length > 60) ? setInterval(function() {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.pause();
       window.speechSynthesis.resume();
     }
-  }, 5000);
+  }, 5000) : null;
   var settled = false;
   var done = function(err) {
     if (settled) return;
     settled = true;
-    clearInterval(keepAlive);
+    if (keepAlive) clearInterval(keepAlive);
     onEnd(err || null);
   };
   u.onstart = function() { if (onStart) onStart(); };
@@ -6892,11 +7807,25 @@ function hideScheduleFeedback() {
 
 function createLearningBackup() {
   var all = {};
+  if (typeof WordsSync !== 'undefined' && WordsSync.captureLocalChanges) {
+    var captured = WordsSync.captureLocalChanges(localStorage, Date.now());
+    return WordsSync.buildCloudPayload(captured.data, captured.meta);
+  }
   ['vocab','hongbaoshu'].forEach(function(d) {
     all[d] = { p: loadPrefs(d), c: loadCounts(d) };
   });
   all.uf = safeJsonFromStorage('uf_prefs', {});
   all.uf_counts = safeJsonFromStorage('uf_counts', {});
+  all.wb = {
+    p: safeJsonFromStorage('wb_prefs', {}),
+    deleted: safeJsonFromStorage('wb_deleted', []),
+    pinned: safeJsonFromStorage('wb_pinned', [])
+  };
+  all.sprint = {
+    p: loadPrefs('sprint'),
+    mastered: safeJsonFromStorage('sprint_mastered_words', []),
+    weak: safeJsonFromStorage('sprint_weak_words', [])
+  };
   all.activity = safeJsonFromStorage(ACTIVITY_KEY, { days: {} });
   all.recall = ReviewCore.loadRecallQuality();
   all.review = safeJsonFromStorage(REVIEW_META_KEY, {});
@@ -6952,7 +7881,7 @@ function validateDictBackup(name, data) {
 
 function validateLearningBackup(all) {
   if (!isPlainObject(all)) throw new Error('备份数据格式错误');
-  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded && !all.learningResume) throw new Error('没有找到可恢复的学习记录');
+  if (!all.vocab && !all.hongbaoshu && !all.uf && !all.uf_counts && !all.wb && !all.morning && !all.review && !all.recall && !all.focus && !all.excluded && !all.learningResume) throw new Error('没有找到可恢复的学习记录');
   validateDictBackup('生词本', all.vocab || {});
   validateDictBackup('红宝书', all.hongbaoshu || {});
   if (all.uf && !isPlainObject(all.uf)) throw new Error('不熟词标记格式错误');
@@ -7022,6 +7951,16 @@ function applyLearningBackup(all) {
   });
   localStorage.setItem('uf_prefs', JSON.stringify(isPlainObject(all.uf) ? all.uf : {}));
   localStorage.setItem('uf_counts', JSON.stringify(isPlainObject(all.uf_counts) ? all.uf_counts : {}));
+  if (all.wb && isPlainObject(all.wb)) {
+    if (isPlainObject(all.wb.p)) localStorage.setItem('wb_prefs', JSON.stringify(all.wb.p));
+    if (Array.isArray(all.wb.deleted)) localStorage.setItem('wb_deleted', JSON.stringify(all.wb.deleted));
+    if (Array.isArray(all.wb.pinned)) localStorage.setItem('wb_pinned', JSON.stringify(all.wb.pinned));
+  }
+  if (all.sprint && isPlainObject(all.sprint)) {
+    if (isPlainObject(all.sprint.p)) savePrefs('sprint', all.sprint.p);
+    if (Array.isArray(all.sprint.mastered)) localStorage.setItem('sprint_mastered_words', JSON.stringify(all.sprint.mastered));
+    if (Array.isArray(all.sprint.weak)) localStorage.setItem('sprint_weak_words', JSON.stringify(all.sprint.weak));
+  }
   if (isPlainObject(all.activity)) localStorage.setItem(ACTIVITY_KEY, JSON.stringify(all.activity));
   if (isPlainObject(all.recall)) localStorage.setItem(RECALL_KEY, JSON.stringify(all.recall)); else localStorage.removeItem(RECALL_KEY);
   if (isPlainObject(all.review)) localStorage.setItem(REVIEW_META_KEY, JSON.stringify(all.review));
@@ -7048,14 +7987,19 @@ function applyLearningBackup(all) {
     if (['vocab','hongbaoshu'].indexOf(all.learningResume.source) < 0 || !isFinite(Number(all.learningResume.unitIdx)) || Number(all.learningResume.unitIdx) < 0) throw new Error('继续学习来源或 Unit 无效');
     if (all.learningResume.order && !Array.isArray(all.learningResume.order)) throw new Error('继续学习顺序格式错误');
   }
+  if (typeof WordsSync !== 'undefined' && WordsSync.resetSyncBaseline) {
+    WordsSync.resetSyncBaseline();
+  }
   FocusCore.refreshButtons();
   updateFocusLibraryCount();
 }
 
 function savePreImportBackup() {
-  var snapshot = createLearningBackup();
-  localStorage.setItem(PRE_IMPORT_BACKUP_KEY, JSON.stringify(snapshot));
-  localStorage.setItem(PRE_IMPORT_BACKUP_TS_KEY, String(Date.now()));
+  try {
+    var snapshot = createLearningBackup();
+    localStorage.setItem(PRE_IMPORT_BACKUP_KEY, JSON.stringify(snapshot));
+    localStorage.setItem(PRE_IMPORT_BACKUP_TS_KEY, String(Date.now()));
+  } catch (e) {}
 }
 
 function showBackupMsg(text, cls) {
@@ -7132,9 +8076,10 @@ function githubBackupConfigChanged() {
   var config = readGithubBackupForm();
   saveGithubBackupConfig(config);
   localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
-  if (config.auto && config.token && !config.gistId) {
-    showGithubBackupStatus('正在自动创建首份私有备份…', '');
-    return maybeAutoGithubBackup();
+  if (typeof WordsSync !== 'undefined') WordsSync.renderStatusPills();
+  if (config.auto && config.token) {
+    showGithubBackupStatus(config.gistId ? '正在双向同步云端记录…' : '正在自动创建首份私有云同步…', '');
+    return githubBackupNow(true);
   }
   updateGithubBackupUI();
   return Promise.resolve(config);
@@ -7268,23 +8213,87 @@ function updateGithubBackupUI() {
   var last = localStorage.getItem(GITHUB_BACKUP_LAST_KEY);
   var error = localStorage.getItem(GITHUB_BACKUP_ERROR_KEY);
   if (error) {
-    showGithubBackupStatus('上次自动备份失败：' + error, 'err');
+    showGithubBackupStatus('上次同步失败：' + error, 'err');
   } else if (config.gistId && last) {
-    showGithubBackupStatus('云备份已连接 · 上次云备份 ' + formatLocalTime(last), 'ok');
+    showGithubBackupStatus('三端双向同步已连接 · 上次同步 ' + formatLocalTime(last), 'ok');
   } else if (config.token) {
-    showGithubBackupStatus(config.auto ? 'Token 已保存，将自动创建首份私有备份。' : 'Token 已保存，自动备份当前已关闭。', '');
+    showGithubBackupStatus(config.auto ? 'Token 已保存，将自动初始化云端同步。' : 'Token 已保存，自动同步当前已关闭。', '');
   } else {
-    showGithubBackupStatus('未配置云备份，本地导出和恢复仍可正常使用。', '');
+    showGithubBackupStatus('未配置云同步，可填写 Token 后在手机/iPad/电脑间实时双向同步。', '');
+  }
+  if (typeof WordsSync !== 'undefined') WordsSync.renderStatusPills();
+}
+
+function refreshVisibleAppAfterSync(detail) {
+  try {
+    FocusCore.refreshButtons();
+    updateFocusLibraryCount();
+    updateExcludedReviewCount();
+    updateHomeStats();
+    refreshHomeDynamicUI();
+    updateBackupStatus();
+    if (typeof activeViewName !== 'undefined') {
+      if (activeViewName === 'review' && typeof showReview === 'function') showReview();
+      else if (activeViewName === 'excluded-review' && typeof renderExcludedReview === 'function') renderExcludedReview();
+      else if (activeViewName === 'progress' && typeof showProgress === 'function') showProgress();
+      else if (activeViewName === 'focus' && typeof renderFocus === 'function') renderFocus();
+      else if (activeViewName === 'units' && currentDict && typeof renderUnits === 'function') renderUnits();
+      else if (activeViewName === 'groups' && currentDict === 'vocab' && vocabStudyMode !== 'recite' && currentGroup < 0 && typeof renderGroups === 'function') renderGroups();
+      else if (activeViewName === 'morning-home' && typeof refreshMorningHome === 'function') refreshMorningHome();
+    }
+    if (detail && detail.reason === 'manual_btn') {
+      showScheduleFeedback('已合并三端最新记录');
+    }
+  } catch (e) {}
+}
+
+function onSyncPillClick() {
+  var cfg = typeof WordsSync !== 'undefined' ? WordsSync.loadGithubConfig() : loadGithubBackupConfig();
+  if (!cfg.token) {
+    openBackupCenter();
+    return;
+  }
+  if (typeof WordsSync !== 'undefined') {
+    WordsSync.syncNow({ reason: 'pill_click', interactive: true, force: true }).then(function(res) {
+      updateBackupStatus();
+      updateGithubBackupUI();
+      if (res && res.localChanged) showScheduleFeedback('已拉取并合并最新记录');
+      else if (res && !res.skipped) showScheduleFeedback('云端记录已是最新');
+    }).catch(function(err) {
+      showScheduleFeedback('同步失败：' + (err && err.message ? err.message : String(err)));
+    });
+  } else {
+    githubBackupNow();
   }
 }
 
-function githubBackupNow() {
+function githubBackupNow(silent) {
   var config = readGithubBackupForm();
-  if (!config.token) { showGithubBackupStatus('请先填写仅含 gist 权限的 GitHub Token。', 'err'); return; }
+  if (!config.token) { showGithubBackupStatus('请先填写仅含 gist 权限的 GitHub Token。', 'err'); return Promise.resolve(null); }
   saveGithubBackupConfig(config);
   setGithubBackupBusy(true);
-  showGithubBackupStatus('正在上传私有备份…', '');
-  uploadGithubBackup(config).then(function(saved) {
+  showGithubBackupStatus('正在拉取并双向合并三端记录…', '');
+  if (typeof WordsSync !== 'undefined') {
+    return WordsSync.syncNow({ config: config, reason: silent ? 'auto_init' : 'manual_btn', interactive: true, force: true }).then(function(res) {
+      var updatedCfg = WordsSync.loadGithubConfig();
+      var gistEl = document.getElementById('githubGistInput');
+      if (gistEl && updatedCfg.gistId) gistEl.value = updatedCfg.gistId;
+      setGithubBackupBusy(false);
+      updateGithubBackupUI();
+      updateBackupStatus();
+      var msg = (res && res.localChanged)
+        ? '双向同步完成（已合并新记录）· ' + formatLocalTime(Date.now())
+        : '双向同步完成（已最新）· ' + formatLocalTime(Date.now());
+      showGithubBackupStatus(msg, 'ok');
+      refreshVisibleAppAfterSync({ reason: 'manual_btn' });
+      return res;
+    }).catch(function(error) {
+      setGithubBackupBusy(false);
+      showGithubBackupStatus('同步失败：' + (error && error.message ? error.message : String(error)), 'err');
+      return null;
+    });
+  }
+  return uploadGithubBackup(config).then(function(saved) {
     var gistEl = document.getElementById('githubGistInput');
     if (gistEl) gistEl.value = saved.gistId;
     setGithubBackupBusy(false);
@@ -7304,12 +8313,13 @@ function githubRestoreNow() {
   showGithubBackupStatus('正在读取云端备份…', '');
   downloadGithubBackup(config).then(function(all) {
     setGithubBackupBusy(false);
-    if (!confirm('云端恢复会覆盖当前学习记录。继续前会自动保存一份本地临时备份，确定恢复吗？')) return;
+    if (!confirm('强制覆盖会用云端记录替换当前本机记录（通常推荐使用「立即双向同步」自动合并）。继续前会保存临时备份，确定覆盖吗？')) return;
     savePreImportBackup();
     applyLearningBackup(all);
     localStorage.setItem(GITHUB_BACKUP_LAST_KEY, String(Date.now()));
     localStorage.removeItem(ACTIVITY_DIRTY_KEY);
     localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+    if (typeof WordsSync !== 'undefined') WordsSync.renderStatusPills();
     showGithubBackupStatus('云端恢复成功，即将刷新页面…', 'ok');
     setTimeout(function() { location.reload(); }, 800);
   }).catch(function(error) {
@@ -7324,42 +8334,18 @@ function disconnectGithubBackup() {
   localStorage.removeItem(GITHUB_BACKUP_CONFIG_KEY);
   localStorage.removeItem(GITHUB_BACKUP_LAST_KEY);
   localStorage.removeItem(GITHUB_BACKUP_ERROR_KEY);
+  if (typeof WordsSync !== 'undefined') {
+    WordsSync.resetSyncBaseline();
+    WordsSync.renderStatusPills();
+  }
   updateGithubBackupUI();
 }
 
 function maybeAutoGithubBackup() {
-  var config = loadGithubBackupConfig();
-  if (!config.auto || !config.token) return Promise.resolve(null);
-  if (githubAutoBackupPromise) return githubAutoBackupPromise;
-  var isInitial = !config.gistId;
-  var dirty = Number(localStorage.getItem(ACTIVITY_DIRTY_KEY) || 0);
-  var last = Number(localStorage.getItem(GITHUB_BACKUP_LAST_KEY) || 0);
-  if (!isInitial && (!dirty || dirty <= last)) {
-    if (dirty) localStorage.removeItem(ACTIVITY_DIRTY_KEY);
-    return Promise.resolve(null);
+  if (typeof WordsSync !== 'undefined') {
+    return WordsSync.maybePullSync('auto_backup', 20000);
   }
-  if (!isInitial && last && Date.now() - last < GITHUB_BACKUP_INTERVAL_MS) return Promise.resolve(null);
-  if (isInitial) {
-    setGithubBackupBusy(true);
-    showGithubBackupStatus('正在自动创建首份私有备份…', '');
-  }
-  githubAutoBackupPromise = uploadGithubBackup(config).then(function(saved) {
-    if (isInitial) {
-      setGithubBackupBusy(false);
-      updateGithubBackupUI();
-      showGithubBackupStatus('首份云备份已自动创建 · ' + formatLocalTime(Date.now()), 'ok');
-    }
-    return saved;
-  }).catch(function(error) {
-    if (isInitial) setGithubBackupBusy(false);
-    localStorage.setItem(GITHUB_BACKUP_ERROR_KEY, error.message || String(error));
-    showGithubBackupStatus('自动备份失败：' + (error.message || String(error)), 'err');
-    return null;
-  }).then(function(result) {
-    githubAutoBackupPromise = null;
-    return result;
-  });
-  return githubAutoBackupPromise;
+  return Promise.resolve(null);
 }
 
 function progressDayAt(offset) {
@@ -7763,7 +8749,7 @@ function renderEbbinghausDashboard() {
     + '<div class="eb-advice-content">'
     + '<div class="eb-advice-title">艾宾浩斯备考指导</div>'
     + '<div class="eb-advice-text">' + data.advice + '</div>'
-    + (data.todayDue > 0 ? '<button class="eb-start-btn" onclick="showView(&quot;today-recite&quot;)">开始今日复习 (' + data.todayDue + ')<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>' : '')
+    + (data.todayDue > 0 ? '<button class="eb-start-btn" onclick="openTodayRecite()">开始今日复习 (' + data.todayDue + ')<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>' : '')
     + '</div>'
     + '</div>';
 
@@ -8117,15 +9103,25 @@ function showDiagnostic() {
 // ═══════════ INIT ═══════════
 (function() {
   var el = document.getElementById('homeMode');
+  var phoneIcon = '<svg class="mode-badge-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+  var globeIcon = '<svg class="mode-badge-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+  var arrowIcon = '<svg class="home-sync-arrow" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px;margin-left:3px;"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
   if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-    el.innerHTML = '<span class="mode-app">📱 App模式 · 数据独立</span> ';
+    el.innerHTML = '<span class="mode-app">' + phoneIcon + 'App模式 · 数据独立</span> ';
   } else {
-    el.innerHTML = '<span class="mode-safari">🌐 浏览器模式 · 数据独立</span> ';
+    el.innerHTML = '<span class="mode-safari">' + globeIcon + '浏览器模式 · 数据独立</span> ';
   }
-  el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 →</span>';
+  el.innerHTML += '<span class="mode-sync-hint" onclick="toggleSyncPanel()">切换模式？点此同步 ' + arrowIcon + '</span>';
 })();
-setTimeout(maybeAutoGithubBackup, 1200);
-setInterval(maybeAutoGithubBackup, GITHUB_BACKUP_POLL_MS);
+if (typeof WordsSync !== 'undefined') {
+  WordsSync.installLifecycle({
+    startupDelayMs: 1200,
+    onApplied: refreshVisibleAppAfterSync
+  });
+}
+if (/[?&]open=backup(?:&|$)/.test(location.search)) {
+  setTimeout(function() { if (typeof openBackupCenter === 'function') openBackupCenter(); }, 250);
+}
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
     saveMorningActiveSession('background');
@@ -8133,7 +9129,6 @@ document.addEventListener('visibilitychange', function() {
   } else {
     syncMorningPlayback();
     scheduleHomeDynamicRefresh();
-    setTimeout(maybeAutoGithubBackup, 500);
   }
 });
 window.addEventListener('pagehide', function() {
@@ -8142,7 +9137,6 @@ window.addEventListener('pagehide', function() {
 });
 window.addEventListener('pageshow', function() { syncMorningPlayback(); scheduleHomeDynamicRefresh(); });
 window.addEventListener('focus', function() { syncMorningPlayback(); scheduleHomeDynamicRefresh(); });
-window.addEventListener('online', function() { setTimeout(maybeAutoGithubBackup, 500); });
 
 // ═══════════ Service Worker ═══════════
 if ('serviceWorker' in navigator) {
@@ -8401,8 +9395,9 @@ function updateMorningMeta(item, result) {
   saveMorningMeta(meta);
   // A recitation-due word advances its recall interval only after an explicit
   // morning familiar/hard rating. Passive listening keeps it due for later.
-  if (item.reviewDue && (result === 'familiar' || result === 'hard')) {
+  if (item.reviewDue && !item.morningReviewRated && (result === 'familiar' || result === 'hard')) {
     rateReview(reviewSourceForMorning(item), item.en, result === 'familiar');
+    item.morningReviewRated = true;
   }
   if (result === 'familiar' || result === 'hard') {
     var feedback = (result === 'familiar' ? '已标记熟悉' : '已标记不熟悉') + ' · 晨听：' + (result === 'familiar' ? '熟悉节奏' : '困难强化轮') + ' · 下次晨听：' + intervalDays(m, pref[item.en]) + '天后';
@@ -8535,7 +9530,8 @@ function buildMorningQueue(randomFn) {
   var all = buildMorningCandidates();
   morningSettings = loadMorningSettings();
   var freshRatios = [0.20, 0.35, 0.50, 0.65, 0.80];
-  var freshRatio = freshRatios[morningSettings.freshRatioStep] || 0.50;
+  var sprintActive = typeof ReviewCore !== 'undefined' && ReviewCore.isSprintMode && ReviewCore.isSprintMode();
+  var freshRatio = sprintActive ? 0 : (freshRatios[morningSettings.freshRatioStep] || 0.50);
   // Due cards retain priority; this slider apportions new words against the ordinary old-word pools.
   var oldRatio = 1 - freshRatio;
   var mix = { due: oldRatio * 0.40, stale: oldRatio * 0.35, hard: oldRatio * 0.25, fresh: freshRatio };
@@ -8620,7 +9616,13 @@ function buildMorningQueue(randomFn) {
     totalSec += dur;
   }
 
-  q = WordsSessionOrder.shuffle(q, randomFn);
+  var urgentDue = [];
+  var nonDue = [];
+  for (var qi = 0; qi < q.length; qi++) {
+    if (q[qi] && q[qi].reviewDue) urgentDue.push(q[qi]);
+    else nonDue.push(q[qi]);
+  }
+  q = urgentDue.concat(WordsSessionOrder.shuffle(nonDue, randomFn));
 
   morningQueue = q;
   morningQueueEstSec = totalSec;
@@ -8629,6 +9631,7 @@ function buildMorningQueue(randomFn) {
     q[i].morningCompleted = false;
     q[i].morningSkipped = false;
     q[i].morningPrefCaptured = false;
+    q[i].morningReviewRated = false;
   }
   morningQueueBuiltAt = Date.now();
   scheduleMorningFirstAudioPrefetch();
@@ -8658,7 +9661,7 @@ function getMorningStats() {
 function serializeMorningItem(item) {
   var out = {};
   ['source','key','en','cn','ex','ex_cn','examples','idx','dict','reason','reviewDue','reviewDueAt','_estSec',
-   'morningRating','morningCompleted','morningSkipped','morningPrefCaptured','morningHadPrefBeforeRating',
+   'morningRating','morningCompleted','morningSkipped','morningPrefCaptured','morningReviewRated','morningHadPrefBeforeRating',
    'morningPrefBeforeRating','morningRatingState','morningPlaybackRating'].forEach(function(key) {
     if (item[key] !== undefined) out[key] = item[key];
   });
@@ -8792,7 +9795,7 @@ function showMorningLoading() {
 
 function hideAllViews(options) {
   var opts = options || {};
-  var views = ['view-home', 'view-library', 'view-review', 'view-excluded-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress'];
+  var views = ['view-home', 'view-library', 'view-review', 'view-excluded-review', 'view-today-recite', 'view-units', 'view-groups', 'view-morning-loading', 'view-morning-error', 'view-morning-home', 'view-morning-queue', 'view-morning-player', 'view-morning-summary', 'view-morning-review', 'view-progress', 'view-focus'];
   for (var i = 0; i < views.length; i++) {
     var el = document.getElementById(views[i]);
     if (el) { el.style.display = 'none'; el.scrollTop = 0; }
@@ -8940,10 +9943,11 @@ function showMorningQueue() {
     if (groups[g].words.length === 0) continue;
     var grp = groups[g];
     var showAll = grp.words.length <= 8;
+    var mqChevronDown = '<svg class="mq-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
     h += '<div class="morning-queue-section">';
     h += '<div class="morning-queue-header" onclick="toggleMQGroup(this)" data-group="' + grp.key + '" style="border-left:3px solid ' + grp.color + ';">';
     h += '<span>' + grp.label + ' <span class="mq-count">' + grp.words.length + '词</span></span>';
-    h += '<span class="mq-count" id="mqToggle_' + grp.key + '">' + (showAll ? '' : '展开全部 ▸') + '</span>';
+    h += '<span class="mq-count" id="mqToggle_' + grp.key + '">' + (showAll ? '' : '展开全部 ' + mqChevronDown) + '</span>';
     h += '</div>';
     h += '<div class="morning-queue-list" id="mqList_' + grp.key + '" style="' + (showAll ? '' : 'display:none;') + '">';
     var limit = showAll ? grp.words.length : 8;
@@ -8964,12 +9968,14 @@ function toggleMQGroup(el) {
   var grp = el.getAttribute('data-group');
   var list = document.getElementById('mqList_' + grp);
   var toggle = document.getElementById('mqToggle_' + grp);
+  var mqChevronDown = '<svg class="mq-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
+  var mqChevronUp = '<svg class="mq-chevron" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg>';
   if (list.style.display === 'none') {
     list.style.display = 'block';
-    if (toggle) toggle.textContent = '收起 ▴';
+    if (toggle) toggle.innerHTML = '收起 ' + mqChevronUp;
   } else {
     list.style.display = 'none';
-    if (toggle) toggle.textContent = '展开全部 ▸';
+    if (toggle) toggle.innerHTML = '展开全部 ' + mqChevronDown;
   }
 }
 
@@ -9573,6 +10579,31 @@ function morningGetAu(slot) {
   return morningAuB;
 }
 
+var MORNING_SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+function primeMorningAudioSlots() {
+  [0, 1].forEach(function(slot) {
+    var au = morningGetAu(slot);
+    if (!au || au._morningPrimed) return;
+    try {
+      au.muted = false;
+      au.src = MORNING_SILENT_WAV;
+      var p = au.play();
+      au._morningPrimed = true;
+      if (p && typeof p.then === 'function') {
+        p.then(function() {
+          if ((slot === 0 ? morningAuUrlA : morningAuUrlB) === null) {
+            try { au.pause(); } catch (e) {}
+          }
+        }).catch(function() {});
+      } else {
+        if ((slot === 0 ? morningAuUrlA : morningAuUrlB) === null) {
+          try { au.pause(); } catch (e) {}
+        }
+      }
+    } catch (e) {}
+  });
+}
+
 function morningClearAudioWatchdog() {
   if (morningAudioWatchdog) clearTimeout(morningAudioWatchdog);
   morningAudioWatchdog = null;
@@ -9629,17 +10660,14 @@ function morningPreloadAu(slot, url) {
 
 function morningResetAu(slot) {
   var au = morningGetAu(slot);
+  morningDetachAu(au);
   releaseAudioElement(au);
-  var fresh = new Audio();
-  fresh.preload = 'auto';
   if (slot === 0) {
-    morningAuA = fresh;
     morningAuUrlA = null;
   } else {
-    morningAuB = fresh;
     morningAuUrlB = null;
   }
-  return fresh;
+  return au;
 }
 
 function morningStopAudio() {
@@ -10197,6 +11225,7 @@ function prepareMorningPlayer() {
 }
 
 function startNewMorning() {
+  if (typeof primeMorningAudioSlots === 'function') primeMorningAudioSlots();
   if (loadMorningActiveSession()) archiveMorningActiveSession('replaced');
   if (!morningQueue.length || morningQueueBuiltAt <= Date.now() - 600000) buildMorningQueue();
   if (morningQueue.length === 0) { alert('队列为空，请先生成队列'); return; }
@@ -10230,6 +11259,7 @@ function startMorning() {
 }
 
 function resumeMorningSession() {
+  if (typeof primeMorningAudioSlots === 'function') primeMorningAudioSlots();
   var active = loadMorningActiveSession();
   if (!active) { refreshMorningQueue(); return; }
   morningQueue = active.queue.map(function(item) { return Object.assign({}, item); });
@@ -10457,6 +11487,7 @@ function toggleMorningPause() {
   if (!morningPlaying) return;
   var au = morningGetAu(morningSlot);
   if (morningPaused) {
+    if (typeof primeMorningAudioSlots === 'function') primeMorningAudioSlots();
     attemptMorningResume(true);
   } else {
     morningClearAudioWatchdog();
@@ -10551,6 +11582,7 @@ function undoMorningRating() {
   item.morningPrefCaptured = false;
   item.morningRatingState = null;
   item.morningPlaybackRating = null;
+  item.morningReviewRated = false;
   morningRatingRestartPending = null;
   updateMorningRatingUI();
   saveMorningActiveSession('rating_undo');
@@ -10576,13 +11608,15 @@ function setMorningCurrentRating(rating) {
   var item = morningQueue[morningPos];
   if (item.morningRating === rating) return;
   var source = item.source === 'hb' ? 'hongbaoshu' : 'vocab';
-  var state = ReviewCore.applyRating(source, item.en, rating === 'familiar', 'morning');
-  if (!item.morningPrefCaptured) {
-    item.morningHadPrefBeforeRating = state.hadPref;
-    item.morningPrefBeforeRating = state.oldPref;
-    item.morningRatingState = state;
-    item.morningPrefCaptured = true;
+  if (item.morningPrefCaptured && item.morningRatingState && typeof ReviewCore.undoRating === 'function') {
+    ReviewCore.undoRating(item.morningRatingState);
   }
+  var state = ReviewCore.applyRating(source, item.en, rating === 'familiar', 'morning', { reviewDue: !!item.reviewDue });
+  item.morningHadPrefBeforeRating = state.hadPref;
+  item.morningPrefBeforeRating = state.oldPref;
+  item.morningRatingState = state;
+  item.morningPrefCaptured = true;
+  item.morningReviewRated = !!item.reviewDue;
   item.morningRating = rating;
   updateMorningRatingUI();
   saveMorningActiveSession('rating');
@@ -10851,8 +11885,13 @@ function showMorningReview() {
   var d7Min = Math.round(d7Duration / 60000);
   var d30Min = Math.round(d30Duration / 60000);
 
+  var chartIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>';
+  var warnIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  var listIcon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>';
+  var noteIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+
   var html = '';
-  html += '<h3>📊 统计概览</h3>';
+  html += '<h3 class="mr-heading">' + chartIcon + '<span>统计概览</span></h3>';
   html += '<div class="morning-review-stats">';
   html += '<div class="morning-review-stat"><div class="mr-num">' + d7Days + '</div><div class="mr-label">近7天晨读</div></div>';
   html += '<div class="morning-review-stat"><div class="mr-num">' + d7Words + '</div><div class="mr-label">近7天词数</div></div>';
@@ -10861,14 +11900,14 @@ function showMorningReview() {
   html += '<div class="morning-review-stat"><div class="mr-num">' + d30Words + '</div><div class="mr-label">近30天词数</div></div>';
   html += '<div class="morning-review-stat"><div class="mr-num">' + d30Min + '分</div><div class="mr-label">近30天时长</div></div>';
   html += '</div>';
-  html += '<div style="display:flex;gap:12px;margin-bottom:6px;font-size:13px;">';
-  html += '<span>🔴 困难词：' + totalHard + '</span>';
-  html += '<span>🟢 已熟练：' + totalFamiliar + '</span>';
-  html += '<span>📝 总记录：' + wordStats.length + '词</span>';
+  html += '<div style="display:flex;gap:12px;margin-bottom:6px;font-size:13px;align-items:center;">';
+  html += '<span style="display:inline-flex;align-items:center;"><span class="mr-dot mr-dot-hard" aria-hidden="true"></span>困难词：' + totalHard + '</span>';
+  html += '<span style="display:inline-flex;align-items:center;"><span class="mr-dot mr-dot-fam" aria-hidden="true"></span>已熟练：' + totalFamiliar + '</span>';
+  html += '<span style="display:inline-flex;align-items:center;"><span style="display:inline-flex;margin-right:4px;">' + noteIcon + '</span>总记录：' + wordStats.length + '词</span>';
   html += '</div>';
 
   if (priorityReview.length > 0) {
-    html += '<h3>⚠️ 需优先复习（' + priorityReview.length + '词）</h3>';
+    html += '<h3 class="mr-heading">' + warnIcon + '<span>需优先复习（' + priorityReview.length + '词）</span></h3>';
     html += '<ul class="mr-word-list">';
     for (var i = 0; i < Math.min(30, priorityReview.length); i++) {
       var w = priorityReview[i];
@@ -10884,7 +11923,7 @@ function showMorningReview() {
     html += '</ul>';
   }
 
-  html += '<h3>📋 最近活跃词（按时间）</h3>';
+  html += '<h3 class="mr-heading">' + listIcon + '<span>最近活跃词（按时间）</span></h3>';
   html += '<ul class="mr-word-list">';
   var shown = 0;
   for (var i = 0; i < wordStats.length && shown < 50; i++) {
@@ -10894,7 +11933,7 @@ function showMorningReview() {
     var daysAgo = w.lastAt > 0 ? Math.floor((tk - w.lastAt) / 86400000) : '--';
     html += '<li class="mr-word-item">';
     html += '<div><span class="mr-w-en">' + escHtml(w.en) + '</span><span class="mr-w-cn">' + escHtml(w.cn) + '</span></div>';
-    html += '<div class="mr-w-meta">听' + w.totalCompletions + '次 · ' + (w.hardHits > 0 ? '🔴' : '') + ' ' + (typeof daysAgo === 'number' ? daysAgo + '天前' : '--') + '</div>';
+    html += '<div class="mr-w-meta">听' + w.totalCompletions + '次 · ' + (w.hardHits > 0 ? '<span class="mr-dot mr-dot-hard" title="困难" aria-hidden="true"></span> ' : '') + (typeof daysAgo === 'number' ? daysAgo + '天前' : '--') + '</div>';
     html += '</li>';
   }
   html += '</ul>';

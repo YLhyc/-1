@@ -4,14 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>考前冲刺专题词 · Words 英语一专属</title>
+  <meta name="theme-color" content="#cfe5eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="冲刺专题词">
+  <script src="theme-core.js?v=2.4.1"></script>
+  <script src="review-core.js?v=2.4.1"></script>
+  <script src="focus-core.js?v=2.4.1"></script>
+  <script src="study-copy.js?v=2.4.1"></script>
+  <script src="sprint-vocab-data.js?v=2.4.1"></script>
+  <script src="sprint-export.js?v=2.4.1"></script>
   <style>
     :root {
       --ease-out: cubic-bezier(.23, 1, .32, 1);
       --ease-spring: cubic-bezier(.175, .885, .32, 1.275);
-
+      
       /* Words 原生质感调色板 */
       --deep: #07536a;
       --ocean: #057a9d;
@@ -23,7 +30,7 @@
       --surface-card: #ffffff;
       --border: #d4e2e6;
       --border-subtle: #e8eff2;
-
+      
       --accent: #057a9d;
       --accent-soft: rgba(5, 122, 157, 0.1);
 
@@ -52,18 +59,13 @@
       --badge-poly-text: #d97706;
       --badge-poly-border: #fde68a;
 
-      --badge-tier3-bg: rgba(5, 122, 157, 0.09);
-      --badge-tier3-text: #057a9d;
-      --badge-tier3-border: rgba(5, 122, 157, 0.28);
-
       --shadow-sm: 0 1px 3px rgba(16, 42, 54, 0.05);
       --shadow-md: 0 6px 18px rgba(16, 42, 54, 0.08);
       --shadow-lg: 0 10px 28px rgba(16, 42, 54, 0.12);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Segoe UI", Roboto, sans-serif;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
+    html[data-theme="dark"] {
         --deep: #38bdf8;
         --ocean: #0ea5e9;
         --mint: #34d399;
@@ -102,12 +104,15 @@
         --badge-poly-text: #fbbf24;
         --badge-poly-border: rgba(217, 119, 6, 0.4);
 
-        --badge-tier3-bg: rgba(56, 189, 248, 0.16);
-        --badge-tier3-text: #38bdf8;
-        --badge-tier3-border: rgba(56, 189, 248, 0.35);
-
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
         --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
     }
 
@@ -119,14 +124,6 @@
       line-height: 1.5;
       padding-bottom: 95px;
       -webkit-font-smoothing: antialiased;
-    }
-
-    .ui-ico {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      vertical-align: middle;
-      flex-shrink: 0;
     }
 
     /* 顶部导航与操作栏（Words 统一质感） */
@@ -161,7 +158,9 @@
       border-radius: 18px;
       transition: all 0.2s;
     }
-    .nav-back:active { opacity: 0.7; }
+    .nav-back:active {
+      opacity: 0.7;
+    }
     .header-center-title {
       font-size: 16px;
       font-weight: 700;
@@ -230,9 +229,11 @@
       outline: none;
       transition: border-color 0.2s;
     }
-    .search-input:focus { border-color: var(--ocean); }
+    .search-input:focus {
+      border-color: var(--ocean);
+    }
 
-    /* 模式切换胶囊 */
+    /* 模式切换胶囊 (清单 vs 沉浸抽认卡) */
     .view-mode-toggle {
       display: flex;
       background: var(--canvas);
@@ -271,9 +272,6 @@
     .tabs-row::-webkit-scrollbar { display: none; }
     .tab-pill {
       flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
       padding: 5px 12px;
       border-radius: 13px;
       font-size: 12px;
@@ -297,48 +295,6 @@
       background: #d97706;
       color: #ffffff;
       border-color: #d97706;
-    }
-    .tab-pill.core-tab {
-      color: #b91c1c;
-      border-color: rgba(220, 38, 38, 0.32);
-    }
-    .tab-pill.core-tab.active {
-      background: #dc2626;
-      color: #ffffff;
-      border-color: #dc2626;
-    }
-
-    /* 个人核心子筛选条 */
-    .sub-tabs-row {
-      display: none;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-top: 7px;
-      padding-top: 7px;
-      border-top: 1px dashed var(--border-subtle);
-    }
-    .sub-tabs-row.visible { display: flex; }
-    .sub-tabs-row::-webkit-scrollbar { display: none; }
-    .sub-pill {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 10px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 600;
-      background: var(--canvas);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    .sub-pill.active {
-      background: var(--ink);
-      color: var(--surface);
-      border-color: var(--ink);
     }
 
     /* 进度统计栏 */
@@ -376,41 +332,36 @@
       text-decoration: underline;
     }
 
-    /* 徽章样式 */
-    .badge-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
+    /* ================================================= */
+    /* 徽章样式：中性防剧透灰标 vs 揭晓后真身 */
+    /* ================================================= */
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 3.5px;
+      gap: 3px;
       font-size: 11px;
       font-weight: 700;
       padding: 2.5px 8px;
       border-radius: 6px;
       border: 1px solid transparent;
       transition: all 0.2s;
-      line-height: 1.25;
     }
+    /* 防剧透中性灰标 */
     .badge-blind {
       background: var(--badge-neutral-grey-bg);
       color: var(--badge-neutral-grey);
       border-color: var(--badge-neutral-grey-border);
     }
+    /* 揭晓后的真身徽章 */
     .badge-pos { background: var(--badge-pos-bg); color: var(--badge-pos-text); border-color: var(--badge-pos-border); }
     .badge-neg { background: var(--badge-neg-bg); color: var(--badge-neg-text); border-color: var(--badge-neg-border); }
     .badge-neutral { background: var(--badge-neutral-bg); color: var(--badge-neutral-text); border-color: var(--badge-neutral-border); }
     .badge-warn { background: var(--badge-warn-bg); color: var(--badge-warn-text); border-color: var(--badge-warn-border); }
     .badge-poly { background: var(--badge-poly-bg); color: var(--badge-poly-text); border-color: var(--badge-poly-border); }
-    .badge-tier1 { background: var(--badge-neg-bg); color: var(--badge-neg-text); border-color: var(--badge-neg-border); }
-    .badge-tier2 { background: var(--badge-poly-bg); color: var(--badge-poly-text); border-color: var(--badge-poly-border); }
-    .badge-tier3 { background: var(--badge-tier3-bg); color: var(--badge-tier3-text); border-color: var(--badge-tier3-border); }
 
-    /* 清单列表 */
+    /* ================================================= */
+    /* 视图一：清单列表 */
+    /* ================================================= */
     .vocab-container {
       max-width: 680px;
       margin: 0 auto;
@@ -436,32 +387,24 @@
     .vocab-card.is-weak {
       border-left: 4px solid #f59e0b;
     }
-    .vocab-card.is-tier1 {
-      border-left: 4px solid #dc2626;
-    }
-    .vocab-card.is-weak.is-tier1 {
-      border-left: 4px solid #f59e0b;
-    }
 
+    /* 单词头部（永远清晰显示，绝对不遮挡） */
     .card-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
       margin-bottom: 6px;
     }
     .word-title-wrap {
       display: flex;
       align-items: baseline;
       gap: 8px;
-      min-width: 0;
     }
     .word-text {
       font-size: 20px;
       font-weight: 800;
       color: var(--ink);
       letter-spacing: -0.3px;
-      word-break: break-word;
     }
     .btn-speak {
       background: none;
@@ -472,10 +415,13 @@
       display: inline-flex;
       align-items: center;
       border-radius: 4px;
-      flex-shrink: 0;
     }
-    .btn-speak svg { width: 16px; height: 16px; }
+    .btn-speak svg {
+      width: 16px;
+      height: 16px;
+    }
 
+    /* 遮挡区域容器 */
     .card-body-wrapper {
       position: relative;
       min-height: 52px;
@@ -483,7 +429,9 @@
       cursor: pointer;
       border-radius: 8px;
     }
-    .card-body { transition: opacity 0.2s, filter 0.2s; }
+    .card-body {
+      transition: opacity 0.2s, filter 0.2s;
+    }
     .card-body.masked {
       filter: blur(8px);
       opacity: 0.12;
@@ -491,6 +439,7 @@
       pointer-events: none;
     }
 
+    /* 清单遮挡提示层（中性防剧透，邀请用户自测） */
     .mask-overlay {
       position: absolute;
       inset: 0;
@@ -508,11 +457,9 @@
       -webkit-backdrop-filter: blur(2px);
       transition: all 0.2s;
     }
-    @media (prefers-color-scheme: dark) {
-      .mask-overlay {
-        background: rgba(19, 39, 51, 0.85);
-        border-color: var(--border);
-      }
+    html[data-theme="dark"] .mask-overlay {
+      background: rgba(19, 39, 51, 0.85);
+      border-color: var(--border);
     }
 
     .meaning-text {
@@ -523,23 +470,18 @@
       line-height: 1.4;
     }
     .contrast-box {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
       font-size: 12.5px;
       font-weight: 600;
       color: #b45309;
       background: rgba(245, 158, 11, 0.08);
       border-left: 3px solid #f59e0b;
-      padding: 5px 9px;
+      padding: 4px 9px;
       border-radius: 4px;
       margin-bottom: 5px;
     }
-    @media (prefers-color-scheme: dark) {
-      .contrast-box {
-        color: #fbbf24;
-        background: rgba(245, 158, 11, 0.15);
-      }
+    html[data-theme="dark"] .contrast-box {
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
     }
     .contrast-box.pos-dir {
       color: #047857;
@@ -551,21 +493,11 @@
       background: rgba(220, 38, 38, 0.08);
       border-left-color: #ef4444;
     }
-    .contrast-box.core-ctx {
-      color: var(--deep);
-      background: var(--accent-soft);
-      border-left-color: var(--ocean);
-      font-weight: 500;
-    }
-    @media (prefers-color-scheme: dark) {
-      .contrast-box.pos-dir { color: #34d399; }
-      .contrast-box.neg-dir { color: #f87171; }
-    }
 
     .note-text {
       font-size: 11.5px;
       color: var(--muted);
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .card-footer {
@@ -584,7 +516,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
     .btn-weak-toggle.active {
       color: #d97706;
@@ -608,8 +540,93 @@
       color: #fff;
       border-color: var(--mint);
     }
+    .card-footer-left, .card-footer-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .overlap-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12);
+      color: #047857;
+      border: 1px solid rgba(16, 185, 129, 0.28);
+    }
+    .overlap-pill.hard {
+      background: rgba(245, 158, 11, 0.14);
+      color: #b45309;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .btn-mini-util, .focus-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 26px;
+      padding: 0 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .focus-toggle-btn.is-focused {
+      color: #d97706;
+      border-color: rgba(217, 119, 6, 0.35);
+      background: rgba(245, 158, 11, 0.1);
+    }
+    .fc-util-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .study-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 28px;
+      padding: 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .study-copy-icon {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .card-footer .focus-compact {
+      width: 28px;
+      height: 28px;
+      min-height: 28px;
+      flex: 0 0 28px;
+    }
+    .card-footer .focus-star {
+      width: 14px;
+      height: 14px;
+    }
 
-    /* 抽认卡模式 */
+    /* ================================================= */
+    /* 视图二：抽认卡模式（核心提分互动：单手盲选判定！） */
+    /* ================================================= */
     .flashcard-view {
       display: none;
       max-width: 520px;
@@ -618,7 +635,9 @@
       flex-direction: column;
       align-items: center;
     }
-    .flashcard-view.active { display: flex; }
+    .flashcard-view.active {
+      display: flex;
+    }
     .flashcard-deck {
       width: 100%;
       min-height: 400px;
@@ -633,6 +652,7 @@
       position: relative;
       transition: all 0.25s var(--ease-out);
     }
+    /* 正反馈与负反馈动态边框光效 */
     .flashcard-deck.success-flash {
       border-color: #10b981;
       box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
@@ -659,15 +679,62 @@
       text-align: center;
       margin: 14px 0 10px;
     }
+    .fc-listen-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .fc-listen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .fc-listen-btn.active {
+      background: var(--ocean);
+      border-color: var(--ocean);
+      color: #fff;
+    }
+    .fc-auto-status {
+      font-size: 11px;
+      color: var(--ocean);
+      font-weight: 600;
+      min-height: 16px;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .fc-word-text.blind-hidden {
+      filter: blur(12px);
+      opacity: 0.16;
+      user-select: none;
+    }
+    .fc-blind-hint {
+      font-size: 11.5px;
+      color: var(--ocean);
+      font-weight: 600;
+      margin-top: 2px;
+    }
     .fc-word-text {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 800;
       letter-spacing: -0.5px;
       color: var(--ink);
       margin-bottom: 6px;
-      word-break: break-word;
     }
 
+    /* 盲测互动选择区（未揭晓时呈现） */
     .fc-quiz-box {
       background: var(--canvas);
       border: 1px solid var(--border);
@@ -688,14 +755,21 @@
       justify-content: center;
       gap: 5px;
     }
-    .fc-options-grid { display: grid; gap: 8px; }
-    .fc-options-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-    .fc-options-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .fc-options-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .fc-options-grid.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .fc-options-grid.cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
     .btn-fc-choice {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 10px 6px;
+      padding: 10px 4px;
       font-size: 13px;
       font-weight: 700;
       color: var(--ink);
@@ -707,11 +781,6 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.03);
       transition: all 0.15s;
     }
-    .btn-fc-choice .choice-head {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
     .btn-fc-choice span.sub-tip {
       font-size: 10px;
       font-weight: 500;
@@ -722,6 +791,7 @@
       background: var(--accent-soft);
     }
 
+    /* 揭晓后的内容区 */
     .fc-content-area {
       display: flex;
       flex-direction: column;
@@ -755,6 +825,7 @@
       border: 1px solid #fecaca;
     }
 
+    /* 抽认卡底部大控制键 */
     .fc-actions-row {
       display: flex;
       gap: 12px;
@@ -775,7 +846,9 @@
       gap: 6px;
       transition: transform 0.15s, opacity 0.2s;
     }
-    .btn-fc-action:active { transform: scale(0.97); }
+    .btn-fc-action:active {
+      transform: scale(0.97);
+    }
     .btn-fc-hard {
       background: #fef2f2;
       color: #dc2626;
@@ -815,7 +888,6 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      white-space: nowrap;
     }
     .dock-divider {
       width: 1px;
@@ -836,7 +908,9 @@
       justify-content: center;
       padding: 16px;
     }
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open {
+      display: flex;
+    }
     .modal-content {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -860,33 +934,58 @@
       font-size: 16.5px;
       font-weight: 700;
       color: var(--ink);
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
     }
     .btn-close {
       background: none;
       border: none;
+      font-size: 22px;
       color: var(--muted);
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4px;
-      border-radius: 8px;
+      line-height: 1;
     }
     .rule-item {
       margin-bottom: 14px;
       font-size: 13px;
       line-height: 1.6;
     }
-    .rule-item strong.rule-head {
+    .rule-item strong {
       color: var(--ocean);
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      display: block;
       margin-bottom: 3px;
     }
+
+    .subtabs-row {
+      display: none;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 14px 2px;
+      scrollbar-width: none;
+    }
+    .subtabs-row.visible { display: flex; }
+    .subtabs-row::-webkit-scrollbar { display: none; }
+    .subtab-pill {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .subtab-pill.active {
+      background: var(--ocean);
+      color: #fff;
+      border-color: var(--ocean);
+    }
+    .subtab-pill.tier1.active {
+      background: #dc2626;
+      border-color: #dc2626;
+    }
+    .badge-core-t1 { background: var(--badge-neg-bg); color: var(--badge-neg-text); border: 1px solid var(--badge-neg-border); }
+    .badge-core-t2 { background: var(--badge-poly-bg); color: var(--badge-poly-text); border: 1px solid var(--badge-poly-border); }
+    .badge-core-t3 { background: var(--badge-neutral-bg); color: var(--badge-neutral-text); border: 1px solid var(--badge-neutral-border); }
   </style>
 </head>
 <body>
@@ -895,15 +994,20 @@
   <header class="header-bar">
     <div class="header-top">
       <a href="index.html" class="nav-back">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
         Words
       </a>
       <div class="header-center-title">
-        冲刺专题词 <span class="tag-sprint">考前30天</span>
+        冲刺专题词 <span class="tag-sprint">考前冲刺</span>
       </div>
       <div class="header-actions">
+        <button type="button" class="btn-action" data-theme-toggle aria-label="切换外观主题" style="width:30px;padding:0;justify-content:center;"></button>
+        <button type="button" class="btn-action" onclick="openSprintExport()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          导出
+        </button>
         <button class="btn-action" onclick="toggleModal(true)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
           口诀
         </button>
       </div>
@@ -912,16 +1016,16 @@
     <!-- 搜索与视图模式切换 -->
     <div class="controls-row">
       <div class="search-input-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" id="searchInput" class="search-input" placeholder="输入单词、考点或词义..." oninput="handleSearch()">
       </div>
       <div class="view-mode-toggle">
         <button class="view-mode-btn active" id="btnModeList" onclick="switchViewMode('list')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           清单
         </button>
         <button class="view-mode-btn" id="btnModeCard" onclick="switchViewMode('card')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
           抽认卡
         </button>
       </div>
@@ -930,22 +1034,17 @@
     <!-- 一级分类 Tab -->
     <div class="tabs-row">
       <button class="tab-pill active" onclick="switchCategory('all', this)">全部 (232)</button>
-      <button class="tab-pill weak" id="tabWeak" onclick="switchCategory('weak', this)">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        待巩固 (<span id="weakCountBadge">0</span>)
-      </button>
-      <button class="tab-pill core-tab" onclick="switchCategory('core', this)">个人核心 (114)</button>
+      <button class="tab-pill weak" id="tabWeak" onclick="switchCategory('weak', this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" style="vertical-align:-1.5px;margin-right:3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>待巩固 (<span id="weakCountBadge">0</span>)</button>
+      <button class="tab-pill" onclick="switchCategory('core', this)">个人核心 (114)</button>
       <button class="tab-pill" onclick="switchCategory('attitude', this)">态度路标 (35)</button>
       <button class="tab-pill" onclick="switchCategory('polysemy', this)">熟词僻义 (55)</button>
       <button class="tab-pill" onclick="switchCategory('logic', this)">逻辑动词 (40)</button>
     </div>
-
-    <!-- 个人核心二级分层筛选 -->
-    <div class="sub-tabs-row" id="coreSubTabs">
-      <button class="sub-pill active" onclick="switchCoreTier('all', this)">全部核心 (114)</button>
-      <button class="sub-pill" onclick="switchCoreTier('tier1', this)">红警遗忘 (16)</button>
-      <button class="sub-pill" onclick="switchCoreTier('tier2', this)">选项杀手 (40)</button>
-      <button class="sub-pill" onclick="switchCoreTier('tier3', this)">定位核心 (58)</button>
+    <div class="subtabs-row" id="coreSubtabs">
+      <button class="subtab-pill active" onclick="switchCoreTier('all', this)">全部核心 (114)</button>
+      <button class="subtab-pill tier1" onclick="switchCoreTier('tier1', this)">红警遗忘 (16)</button>
+      <button class="subtab-pill" onclick="switchCoreTier('tier2', this)">选项杀手 (40)</button>
+      <button class="subtab-pill" onclick="switchCoreTier('tier3', this)">定位核心 (58)</button>
     </div>
   </header>
 
@@ -959,9 +1058,11 @@
   </div>
 
   <!-- ================= 视图一：清单视图 ================= -->
-  <main class="vocab-container" id="vocabList"></main>
+  <main class="vocab-container" id="vocabList">
+    <!-- JS 渲染 -->
+  </main>
 
-  <!-- ================= 视图二：沉浸抽认卡视图 ================= -->
+  <!-- ================= 视图二：沉浸抽认卡视图（强互动盲选） ================= -->
   <main class="flashcard-view" id="flashcardDeck">
     <div class="flashcard-deck" id="fcDeckCard">
       <div class="fc-index-row">
@@ -969,20 +1070,35 @@
         <span><strong id="fcCurrentIndex">1</strong> / <span id="fcTotalIndex">232</span></span>
       </div>
 
+      <!-- 英文单词（盲听模式下未揭晓前模糊隐藏） -->
       <div class="fc-word-area">
         <div class="fc-word-text" id="fcWord">Word</div>
-        <button class="btn-speak" onclick="speakWord(document.getElementById('fcWord').innerText)" aria-label="朗读发音">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-        </button>
+        <div class="fc-blind-hint" id="fcBlindHint" style="display:none;">盲听辨音中 · 轻触喇叭重播</div>
+        <div class="fc-listen-bar">
+          <button type="button" class="btn-speak" id="fcBtnSpeak" onclick="speakCurrentFcWord()" aria-label="朗读当前单词">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+          <button type="button" class="fc-listen-btn" id="btnBlindListen" onclick="toggleBlindListen()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            只听不看
+          </button>
+          <button type="button" class="fc-listen-btn" id="btnAutoPlay" onclick="toggleAutoPlay()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="btnAutoPlayText">自动连播</span>
+          </button>
+        </div>
+        <div class="fc-auto-status" id="fcAutoStatus"></div>
       </div>
 
-      <!-- 交互盲测互动选择区 -->
+      <!-- 交互盲测互动选择区（未揭晓时呈现） -->
       <div class="fc-quiz-box" id="fcQuizBox">
         <div class="fc-quiz-title" id="fcQuizTitle">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <span>考场推导：判断该词核心属性</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          考场推导：判断该词核心属性
         </div>
-        <div class="fc-options-grid" id="fcOptionsGrid"></div>
+        <div class="fc-options-grid" id="fcOptionsGrid">
+          <!-- 动态注入单手选项 -->
+        </div>
       </div>
 
       <!-- 揭晓后的答案与真题考点区 -->
@@ -997,20 +1113,20 @@
     <!-- 抽认卡底部大控制键 -->
     <div class="fc-actions-row">
       <button class="btn-fc-action btn-fc-hard" onclick="fcMarkWeak()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         加待巩固 (下一个)
       </button>
       <button class="btn-fc-action btn-fc-easy" onclick="fcNextWord()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         秒杀掌握 (下一个)
       </button>
     </div>
   </main>
 
-  <!-- 底部快捷悬浮控制坞 -->
+  <!-- 底部快捷悬浮控制坞 (清单模式可用) -->
   <div class="bottom-dock" id="bottomDock">
     <button class="dock-btn" id="btnToggleMask" onclick="toggleMaskMode()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       <span id="dockMaskText">遮挡自测</span>
     </button>
     <div class="dock-divider"></div>
@@ -1023,2494 +1139,40 @@
   <div class="modal-overlay" id="tipsModal" onclick="if(event.target===this) toggleModal(false)">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          考前 30 天考场降维法则与 114 核心盲测
-        </h3>
-        <button class="btn-close" onclick="toggleModal(false)" aria-label="关闭">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <h3 class="modal-title" style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ocean)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>考前冲刺四大降维法则</h3>
+        <button class="btn-close" onclick="toggleModal(false)">&times;</button>
       </div>
       <div class="rule-item">
-        <strong class="rule-head">1. 个人核心 (114 词) 3 分钟盲测法</strong>
-        <p>• <strong>Tier 1 红警遗忘 (16)</strong>：生词本中曾多次遗忘的高危词，务必 1 秒脱口而出。<br>
-        • <strong>Tier 2 选项杀手 (40)</strong>：直接出现在题干与选项中决定正误的动词、态度与短语。<br>
-        • <strong>Tier 3 定位核心 (58)</strong>：跨年份政经/社科文章定位句剥皮必认核心词。</p>
-      </div>
-      <div class="rule-item">
-        <strong class="rule-head">2. 态度题：正 / 负 / 陪跑三色法则</strong>
+        <strong>1. 态度题：正/负/陪跑三色法则</strong>
         <p>• <strong>绿灯（正向支持）</strong>：supportive, approving, optimistic（议论文正解）<br>
         • <strong>红灯（批判质疑·高频题眼）</strong>：critical, skeptical, suspicious（揭露商业垄断、学术造假最爱正解）<br>
-        • <strong>灰灯（必死陪跑）</strong>：indifferent（冷漠）, subjective, confused（95% 见之秒排，不用回文核对）</p>
+        • <strong>灰灯（必死陪跑）</strong>：indifferent（冷漠）, subjective, confused（95%见之秒排，不用回文核对）</p>
       </div>
       <div class="rule-item">
-        <strong class="rule-head">3. 逻辑动词：只看箭头方向</strong>
-        <p>• <strong>[+] 撑腰促进</strong>：bolster, reinforce, foster, substantiate（前后逻辑同向一致）<br>
-        • <strong>[-] 削弱阻碍</strong>：undermine, impede, curb, compromise（前后逻辑反转，选项反向设坑主犯）</p>
+        <strong>2. 逻辑动词：只看“箭头方向”</strong>
+        <p>• <strong>撑腰促进 (+)</strong>：bolster, reinforce, foster, substantiate（前后逻辑同向一致）<br>
+        • <strong>削弱阻碍 (-)</strong>：undermine, impede, curb, compromise（前后逻辑反转，选项反向设坑主犯）</p>
       </div>
       <div class="rule-item">
-        <strong class="rule-head">4. 熟词僻义：秒切第一反射</strong>
+        <strong>3. 熟词僻义：秒切“第一反射”</strong>
         <p>• address = 解决危机（not 地址）<br>
         • spell = 招致灾难厄运（not 拼写）<br>
         • weather = 平稳度过危机（not 天气）<br>
         • champion = 捍卫支持民权（not 冠军）</p>
       </div>
       <div class="rule-item">
-        <strong class="rule-head">5. 极速冲刺自测技巧</strong>
-        <p>抽认卡模式下，自己点击选项推导正负向或进行 2 秒盲测；卡壳/选错会自动收录进「待巩固」词池，选对自动跳下一词，打造高强度考场反射。</p>
+        <strong>4. 极速冲刺自测技巧</strong>
+        <p>抽认卡模式下，自己点击选项推导正负向；选错系统自动收录进「待巩固」，选对自动跳下一词，打造高强度考场反射！</p>
       </div>
     </div>
   </div>
 
   <script>
-    const VOCAB_DATA = [
-  {
-    "word": "supportive",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "支持的，拥护的",
-    "contrast": "作者正面挺某种改革举措",
-    "note": "真题阅读正面议论文高频正解"
-  },
-  {
-    "word": "optimistic",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "乐观的",
-    "contrast": "对科技发展、产业转型持积极预期",
-    "note": "常与 skeptical / worried 形成反差考查"
-  },
-  {
-    "word": "approving",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "赞成的，称许的",
-    "contrast": "明确赞许某项政策或研究成果",
-    "note": "直接体现作者肯定倾向"
-  },
-  {
-    "word": "sympathetic",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "同情的，赞同认可的",
-    "contrast": "赞同/共情 ≠ 仅怜悯",
-    "note": "常用于作者对弱势群体或先锋理念的态度"
-  },
-  {
-    "word": "appreciative",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "欣赏的，感激的",
-    "contrast": "正面认可艺术、文化或社会贡献",
-    "note": "褒义考查题眼"
-  },
-  {
-    "word": "favorable",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "赞许的，有利的",
-    "contrast": "持赞同态度 (favorable towards) ≠ 喜爱的",
-    "note": "态度题常考正向选项"
-  },
-  {
-    "word": "confident",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "有信心的，确信的",
-    "contrast": "对克服危机或方案可行性抱有坚定信心",
-    "note": "通常伴随严谨论据"
-  },
-  {
-    "word": "tolerant",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "包容的，宽容的",
-    "contrast": "对多元文化、争议技术持开放接纳态度",
-    "note": "社会学题材常见正向立场"
-  },
-  {
-    "word": "receptive",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "乐于接受的，虚心的",
-    "contrast": "对新思想、新批评愿意吸纳倾听",
-    "note": "态度题高分生动选项"
-  },
-  {
-    "word": "enthusiastic",
-    "category": "attitude",
-    "type": "pos",
-    "badge": "正向支持",
-    "meaning": "热情的，高度认可的",
-    "contrast": "[注意] 仅在文中有极强正面溢美之词时入选",
-    "note": "若文章仅客观论述，此项通常嫌太极端"
-  },
-  {
-    "word": "critical",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "批判的，挑剔的",
-    "contrast": "批判抨击 (critical of) ≠ 危急严重的",
-    "note": "【考研核心题眼】揭露资本、学术造假正解"
-  },
-  {
-    "word": "skeptical",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "怀疑的，存疑的",
-    "contrast": "对夸张宣传、未经验证的技术持质疑审视",
-    "note": "【最高频态度正解】命题人最爱态度"
-  },
-  {
-    "word": "suspicious",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "起疑心的，猜疑的",
-    "contrast": "对商业机构的隐藏动机深表怀疑",
-    "note": "常与商业垄断、数据隐私题材挂钩"
-  },
-  {
-    "word": "dubious",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "怀疑的，不可信的",
-    "contrast": "认为某些论调证据不足或荒谬",
-    "note": "常考态度题同义替换",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "coreMeaning": "可疑的；靠不住的"
-  },
-  {
-    "word": "scornful",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "轻蔑的，嘲讽蔑视的",
-    "contrast": "带有冷嘲热讽的贬抑感情色彩",
-    "note": "真题评论文中批判性词汇"
-  },
-  {
-    "word": "contemptuous",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "鄙视的，蔑视的",
-    "contrast": "对愚蠢政令或倒退行径的不屑",
-    "note": "强批判立场词"
-  },
-  {
-    "word": "cynical",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "愤世嫉俗的，讽刺怀疑的",
-    "contrast": "认为人做事皆自私利己的怀疑主义",
-    "note": "批判商业运作内幕常现"
-  },
-  {
-    "word": "intolerant",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "不容忍的，无法忍受的",
-    "contrast": "对腐败、低效、虚伪的零容忍立场",
-    "note": "明确负面批判"
-  },
-  {
-    "word": "pessimistic",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "悲观的",
-    "contrast": "对生态恶化、传统行业衰落的消极预期",
-    "note": "常与 optimistic 对立设置"
-  },
-  {
-    "word": "dismissive",
-    "category": "attitude",
-    "type": "neg",
-    "badge": "批判题眼",
-    "meaning": "不屑一顾的，轻蔑抛弃的",
-    "contrast": "直接否定或无视某种无稽之谈",
-    "note": "高阶批判态度词"
-  },
-  {
-    "word": "objective",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "客观中立的",
-    "contrast": "不偏不倚呈现双边论据，不下绝对结论",
-    "note": "【说明文/自然科学文】标准高频正解"
-  },
-  {
-    "word": "impartial",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "公正的，不偏不倚的",
-    "contrast": "兼听则明，两方观点平衡陈述",
-    "note": "社科法理类篇目常考"
-  },
-  {
-    "word": "detached",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "超然独立的，客观冷静的",
-    "contrast": "冷静超然 (keep detached) ≠ 脱离的分离的",
-    "note": "学术研究者标准态度"
-  },
-  {
-    "word": "cautious",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "谨慎小心的",
-    "contrast": "承认前景但警告潜在风险，常带 reserved",
-    "note": "考研高频稳妥正解"
-  },
-  {
-    "word": "reserved",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "有保留的，内敛克制的",
-    "contrast": "有保留的赞同 (reserved approval) ≠ 预订的",
-    "note": "典型折中审慎立场"
-  },
-  {
-    "word": "neutral",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "中立的",
-    "contrast": "纯报告性事实记录，不表露喜恶",
-    "note": "科普短文常见"
-  },
-  {
-    "word": "pragmatic",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "务实的，注重实效的",
-    "contrast": "注重现实可操作性而非理想空谈",
-    "note": "政策与管理考题常见"
-  },
-  {
-    "word": "realistic",
-    "category": "attitude",
-    "type": "neutral",
-    "badge": "客观谨慎",
-    "meaning": "现实的，面对实际的",
-    "contrast": "正视困难现状，不作脱离实际幻想",
-    "note": "社科经济分析常见"
-  },
-  {
-    "word": "indifferent",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "漠不关心的，冷漠的",
-    "contrast": "[排除] 95%见之即排！学术作者绝不可能漠不关心",
-    "note": "【致命陷阱】考场直接秒杀排除"
-  },
-  {
-    "word": "unconcerned",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "漫不经心的，毫不挂虑的",
-    "contrast": "[排除] 绝不可能写一千字文章却表示无所谓",
-    "note": "考场直接秒杀排除"
-  },
-  {
-    "word": "ambiguous",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "模棱两可的，模糊不清的",
-    "contrast": "[排除] 作者观点可以复杂审慎，绝不能首鼠两端",
-    "note": "考场直接秒杀排除",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "coreMeaning": "模棱两可的"
-  },
-  {
-    "word": "confused",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "困惑混乱的",
-    "contrast": "[排除] 命题人不会选定一个自己都糊涂的作者",
-    "note": "考场直接秒杀排除"
-  },
-  {
-    "word": "puzzled",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "茫然不解的",
-    "contrast": "[排除] 遇到科学未解之谜也用 curious 而非 puzzled",
-    "note": "考场直接秒杀排除"
-  },
-  {
-    "word": "biased",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "有偏见的，片面的",
-    "contrast": "[排除] 作者不会自我定性为带有偏见",
-    "note": "考场直接秒杀排除",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "coreMeaning": "有偏见的"
-  },
-  {
-    "word": "arbitrary",
-    "category": "attitude",
-    "type": "warn",
-    "badge": "必排陪跑",
-    "meaning": "武断随意的",
-    "contrast": "[排除] 贬义极端词，绝非作者自我写照",
-    "note": "考场直接秒杀排除",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "coreMeaning": "武断的；专横的"
-  },
-  {
-    "word": "address",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "解决，处理 (deal with / tackle)",
-    "contrast": "应对危机 (address the crisis) ≠ 地址/致辞",
-    "note": "真题例：address the housing shortage"
-  },
-  {
-    "word": "spell",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "招致，带来（灾祸/厄运）",
-    "contrast": "招致厄运 (spell disaster) ≠ 拼写单词",
-    "note": "真题例：spell ruin for local retailers"
-  },
-  {
-    "word": "compromise",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "危及，损害 (undermine / damage)",
-    "contrast": "损害安全 (compromise security) ≠ 妥协折中",
-    "note": "真题例：compromise national interests"
-  },
-  {
-    "word": "contain",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "遏制，控制扩散 (halt / curb)",
-    "contrast": "遏制通胀 (contain inflation) ≠ 包含容纳",
-    "note": "真题例：contain the spread of wildfire"
-  },
-  {
-    "word": "check",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "制止，阻碍，控制 (restraint)",
-    "contrast": "抑制冲动 (keep temper in check) ≠ 检查/支票",
-    "note": "真题例：checks and balances (制约与平衡)"
-  },
-  {
-    "word": "weather",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "平安度过（经济风暴/危机）",
-    "contrast": "渡过衰退 (weather the recession) ≠ 天气气候",
-    "note": "真题例：weather the economic storm"
-  },
-  {
-    "word": "champion",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "捍卫，积极支持 (defend / advocate)",
-    "contrast": "捍卫民权 (champion civil rights) ≠ 体育冠军",
-    "note": "真题例：champion the cause of free trade"
-  },
-  {
-    "word": "court",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "招致，招惹风险是非 (invite)",
-    "contrast": "自招争议 (court controversy) ≠ 法庭/球场",
-    "note": "真题例：court disaster by taking excessive risks"
-  },
-  {
-    "word": "count",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "有价值，重要；罪状指控",
-    "contrast": "每一秒都很关键 (every second counts) ≠ 数数字",
-    "note": "真题例：guilty on all counts (各项罪名成立)"
-  },
-  {
-    "word": "cater for",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "迎合，投合低级趣味",
-    "contrast": "迎合大众趣味 (cater to public taste) ≠ 提供饮食",
-    "note": "真题常含批评商业媒体之意"
-  },
-  {
-    "word": "subject to",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "易受……影响的；受制于",
-    "contrast": "易受波动 (subject to fluctuations) ≠ 科目/主题",
-    "note": "真题常考法令或市场制约机制"
-  },
-  {
-    "word": "balance",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "余款，差额；结余",
-    "contrast": "银行余额 (account balance) ≠ 身体平衡",
-    "note": "经济商业阅读常考 balance sheet"
-  },
-  {
-    "word": "credit",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "把……归功于 (credit A with B)；赞誉",
-    "contrast": "归功于技术创新 ≠ 信用卡/信用",
-    "note": "真题例：be credited with inventing..."
-  },
-  {
-    "word": "discipline",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "学科，学术领域",
-    "contrast": "交叉学科 (interdisciplinary) ≠ 纪律惩处",
-    "note": "高等教育与科研类篇目高频"
-  },
-  {
-    "word": "harbor",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "心怀（怨恨/希望）；窝藏",
-    "contrast": "心怀怀疑 (harbor doubts) ≠ 轮船港口",
-    "note": "真题例：harbor reservations about AI"
-  },
-  {
-    "word": "casual",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "漫不经心的，草率随意的",
-    "contrast": "草率态度 (casual disregard) ≠ 休闲便服",
-    "note": "2025 Text 1 选项题眼词"
-  },
-  {
-    "word": "climate",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "社会风气，大环境，思潮",
-    "contrast": "政治/投资气候 (investment climate) ≠ 自然气候",
-    "note": "真题例：the current economic climate"
-  },
-  {
-    "word": "desert",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "抛弃，背弃；荒芜的",
-    "contrast": "抛弃传统原则 (desert the principle) ≠ 沙漠荒漠",
-    "note": "2025 Text 1 题眼词"
-  },
-  {
-    "word": "observe",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "遵守规则；评论指出",
-    "contrast": "遵守法律 (observe laws) / 评论道 ≠ 用眼观察",
-    "note": "学术引用常写 As Smith observed..."
-  },
-  {
-    "word": "doctor",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "篡改，伪造（数据/事实）",
-    "contrast": "篡改实验报告 (doctor the data) ≠ 医院医生",
-    "note": "揭露学术造假篇目关键动词"
-  },
-  {
-    "word": "novel",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "新颖的，前所未有的",
-    "contrast": "新颖疗法 (a novel approach) ≠ 长篇小说",
-    "note": "科技与教学创新篇目高频赞赏词"
-  },
-  {
-    "word": "rent",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "裂缝，分裂，撕裂 (rend的过去式)",
-    "contrast": "意见分歧撕裂 (rent the party) ≠ 房屋租金",
-    "note": "政治与社会撕裂题材考点"
-  },
-  {
-    "word": "wage",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "发动，开展（斗争/运动/战争）",
-    "contrast": "开展扫盲斗争 (wage a campaign) ≠ 工人工资",
-    "note": "真题例：wage war against poverty"
-  },
-  {
-    "word": "school",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "学派，流派；鱼群",
-    "contrast": "芝加哥学派 (a school of thought) ≠ 中小学校",
-    "note": "人文社科类学术论战高频"
-  },
-  {
-    "word": "agency",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "主观能动性，自主力量",
-    "contrast": "人的能动性 (human agency) ≠ 中介/代理处",
-    "note": "哲学、社科及AI伦理篇目必考"
-  },
-  {
-    "word": "pool",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "集中，汇集（资金/智力资源）",
-    "contrast": "共享人才库 (pool resources) ≠ 游泳水池",
-    "note": "产学研联合体常考动词"
-  },
-  {
-    "word": "mirror",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "真实反映，映射，与……极其相似",
-    "contrast": "反映现实矛盾 (mirror the reality) ≠ 梳妆镜子",
-    "note": "分析文学与时代关系高频词"
-  },
-  {
-    "word": "couch",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "以……辞令表达，隐晦措辞",
-    "contrast": "措辞含蓄 (couched in polite terms) ≠ 客厅沙发",
-    "note": "外交与商业公关辞令常考"
-  },
-  {
-    "word": "arrest",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "阻止，遏制发展；吸引（注意力）",
-    "contrast": "遏制病情恶化 (arrest the decline) ≠ 警方逮捕",
-    "note": "真题例：arrest public attention"
-  },
-  {
-    "word": "commission",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "委托制作；委任执役",
-    "contrast": "委托开展调查 (commission a survey) ≠ 销售佣金",
-    "note": "2025 Text 1 原文原句考点"
-  },
-  {
-    "word": "air",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "公开发表，宣泄；电视广播播出",
-    "contrast": "公开发表异见 (air grievances) ≠ 呼吸空气",
-    "note": "媒体与言论自由篇目常考"
-  },
-  {
-    "word": "flat",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "断然的，斩钉截铁的；经济萧条的",
-    "contrast": "断然拒绝 (a flat refusal) ≠ 平坦的/公寓",
-    "note": "态度与论辩描写考点"
-  },
-  {
-    "word": "sound",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "合理的，可靠扎实的，健康的",
-    "contrast": "扎实有力的论证 (sound reasoning) ≠ 声音响声",
-    "note": "【高频赞美词】赞赏论点合理"
-  },
-  {
-    "word": "fashion",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "手工塑造，制作，形成",
-    "contrast": "打造新模式 (fashion a response) ≠ 服装时装",
-    "note": "真题例：fashion tools out of stones"
-  },
-  {
-    "word": "plant",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "栽赃；暗插眼线卧底；工厂",
-    "contrast": "栽赃伪造证据 (plant evidence) ≠ 种植植物",
-    "note": "司法与侦探类故事常见"
-  },
-  {
-    "word": "shade",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "细微差别 (nuance)；微量",
-    "contrast": "细微意义差别 (shades of meaning) ≠ 树荫遮阳",
-    "note": "语言学与文学赏析考点"
-  },
-  {
-    "word": "table",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "美式：搁置讨论；英式：提交讨论",
-    "contrast": "暂时搁置法案 (table the bill) ≠ 吃饭桌子",
-    "note": "英美议会政治报道常考陷阱"
-  },
-  {
-    "word": "coin",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "创造（新词语、新概念）",
-    "contrast": "创造新术语 (coin a new term) ≠ 金属硬币",
-    "note": "真题文化科普篇目必考"
-  },
-  {
-    "word": "smart",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "剧烈刺痛；深受创伤蒙受打击",
-    "contrast": "仍受失利折磨 (smart from defeat) ≠ 聪明的",
-    "note": "描写经济与民生受损高频"
-  },
-  {
-    "word": "exercise",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "行使，运用（权力、权利或判断）",
-    "contrast": "行使否决权 (exercise caution/power) ≠ 体育锻炼",
-    "note": "法律与政治制度高频搭配"
-  },
-  {
-    "word": "digest",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "文摘，简报；深刻领会吸收",
-    "contrast": "吸收海量信息 (digest the facts) ≠ 肠胃消化",
-    "note": "信息爆炸与阅读方式篇目考点"
-  },
-  {
-    "word": "secure",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "设法弄到，争取到；系紧固定",
-    "contrast": "争取到科研经费 (secure funding) ≠ 安全可靠的",
-    "note": "大学科研与商战篇目高频"
-  },
-  {
-    "word": "tax",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "使承受沉重负担；耗尽心力",
-    "contrast": "耗尽承受力 (tax one's patience) ≠ 国家税收",
-    "note": "描写医疗系统或精神压力考点"
-  },
-  {
-    "word": "gross",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "极其严重的，公然恶劣的；总额",
-    "contrast": "严重失职 (gross negligence) ≠ 恶心粗俗的",
-    "note": "法理批判与商界丑闻高频词"
-  },
-  {
-    "word": "mean",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "平均数；简陋贫寒的",
-    "contrast": "黄金中道/均值 (the golden mean) ≠ 吝啬/意味着",
-    "note": "统计学与社会阶层篇目考点"
-  },
-  {
-    "word": "minute",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "微小的，极其详尽细致的 [mai'nju:t]",
-    "contrast": "细枝末节 (in minute detail) ≠ 时间分钟",
-    "note": "显微科技与刑侦取证考点"
-  },
-  {
-    "word": "party",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "合同当事人，诉讼参与方",
-    "contrast": "第三方机构 (a third party) ≠ 狂欢聚会",
-    "note": "法律合同与国际公约常考"
-  },
-  {
-    "word": "patent",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "显而易见的，公然的 (obvious)",
-    "contrast": "弥天大谎/荒谬 (patent absurdity) ≠ 发明专利",
-    "note": "批判性议论文犀利措辞"
-  },
-  {
-    "word": "save",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "除……之外 (except / save for)",
-    "contrast": "除一人外全部 (all save one) ≠ 拯救挽救",
-    "note": "长难句经典否定排除陷阱"
-  },
-  {
-    "word": "second",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "赞同，附议支持动议",
-    "contrast": "附议提案 (second the motion) ≠ 第二/秒钟",
-    "note": "立法与决议表决篇目常考"
-  },
-  {
-    "word": "spring",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "突然涌现，猛然跳出 (spring from)",
-    "contrast": "泉涌般产生 (spring to life) ≠ 温暖春天",
-    "note": "描写新业态迅猛兴起"
-  },
-  {
-    "word": "state",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "正式郑重声明，陈述",
-    "contrast": "正式表明立场 (state the case) ≠ 国家/身体状态",
-    "note": "学术转述高频动词"
-  },
-  {
-    "word": "stem from",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "起源于，由于……引起",
-    "contrast": "源于历史旧怨 (stem from prejudice) ≠ 植物茎杆",
-    "note": "【因果关系题眼】同义于 originate from"
-  },
-  {
-    "word": "treat",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "系统论述，探讨专著",
-    "contrast": "系统探讨该课题 (treat the subject) ≠ 对待/请客",
-    "note": "学术文献评论高频"
-  },
-  {
-    "word": "want",
-    "category": "polysemy",
-    "type": "poly",
-    "badge": "考研僻义",
-    "meaning": "匮乏，贫困缺乏 (lack / poverty)",
-    "contrast": "因缺乏证据 (for want of evidence) ≠ 渴望想要",
-    "note": "经典固定短语高频设题点"
-  },
-  {
-    "word": "bolster",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "支持，加强，为……撑腰",
-    "contrast": "巩固论点 (bolster the argument) [同向支持]",
-    "note": "【正解高频】为假说或政策提供支撑"
-  },
-  {
-    "word": "reinforce",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "增强，加固，强化",
-    "contrast": "强化偏见/共识 (reinforce consensus)",
-    "note": "加强既有逻辑走向",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "coreMeaning": "加强；巩固"
-  },
-  {
-    "word": "foster",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "培养，促进，助长",
-    "contrast": "促进创新生态 (foster innovation)",
-    "note": "政策与教育利好高频词",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "coreMeaning": "培养；促进"
-  },
-  {
-    "word": "facilitate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "促进，使便利，推动",
-    "contrast": "促进贸易流通 (facilitate exchange)",
-    "note": "良性机制运行题眼",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "coreMeaning": "促进；使更容易"
-  },
-  {
-    "word": "substantiate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "证实，证明……属实",
-    "contrast": "用数据确证假说 (substantiate claims)",
-    "note": "科学论证题正解替换 prove"
-  },
-  {
-    "word": "propel",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "推动，驱使……向前",
-    "contrast": "驱动产业变革 (propel growth)",
-    "note": "强力正向推力"
-  },
-  {
-    "word": "endorse",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "背书，公开赞同认可",
-    "contrast": "专家背书提议 (endorse the plan)",
-    "note": "作者或权威支持观点时常用"
-  },
-  {
-    "word": "uphold",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "维护，支持，确认判决",
-    "contrast": "捍卫正义宪法 (uphold the constitution)",
-    "note": "法律案件最终审判高频"
-  },
-  {
-    "word": "stimulate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "激发，刺激促进",
-    "contrast": "刺激经济复苏 (stimulate demand)",
-    "note": "积极干预措施正向效果",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "coreMeaning": "激发；刺激"
-  },
-  {
-    "word": "advance",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "推进，提出（理论观感）",
-    "contrast": "提出开创新说 (advance a hypothesis)",
-    "note": "学术探索正向动词"
-  },
-  {
-    "word": "affirm",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "断言，肯定证实",
-    "contrast": "肯定人本价值 (affirm the value)",
-    "note": "正向结论升华"
-  },
-  {
-    "word": "vindicate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "证明……清白，证实……正确",
-    "contrast": "事实证明先驱无误 (vindicate theory)",
-    "note": "翻案文章正向高光词"
-  },
-  {
-    "word": "corroborate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "确证，提供证据支持",
-    "contrast": "独立实验互相印证 (corroborate evidence)",
-    "note": "实证主义论文核心动词"
-  },
-  {
-    "word": "buttress",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "支持，加固，为……充当支柱",
-    "contrast": "支撑摇摇欲坠的论点 (buttress the claim)",
-    "note": "形象化支持论点动词"
-  },
-  {
-    "word": "advocate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "提倡，主张，拥护",
-    "contrast": "提倡绿色税制 (advocate reform)",
-    "note": "改革建议段落题眼"
-  },
-  {
-    "word": "nurture",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "养育，悉心培育",
-    "contrast": "培育创新幼苗 (nurture talent)",
-    "note": "人文关怀类题眼"
-  },
-  {
-    "word": "generate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "催生，产生，激发",
-    "contrast": "催生巨大财富/争议 (generate interest)",
-    "note": "因果链条起始动词"
-  },
-  {
-    "word": "warrant",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "使……显得必要正当；保证",
-    "contrast": "该情况值得进一步深究 (warrant investigation)",
-    "note": "学术论证正当性题眼"
-  },
-  {
-    "word": "cultivate",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "培养，树立，营造",
-    "contrast": "培养审辩思维 (cultivate critical thinking)",
-    "note": "积极正面倡导"
-  },
-  {
-    "word": "underpin",
-    "category": "logic",
-    "type": "pos",
-    "badge": "撑腰促进",
-    "meaning": "巩固，构成……的基石",
-    "contrast": "支撑整个理论大厦 (underpin the theory)",
-    "note": "核心底层支撑逻辑"
-  },
-  {
-    "word": "undermine",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "暗中破坏，逐渐削弱根基",
-    "contrast": "破坏公信力 (undermine credibility) [反向拆台]",
-    "note": "【考研极高频】正反逻辑反转主犯"
-  },
-  {
-    "word": "impede",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "阻碍，妨碍进展",
-    "contrast": "繁文缛节阻碍创新 (impede progress)",
-    "note": "批判官僚主义高频词"
-  },
-  {
-    "word": "hamper",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "牵制，妨碍，束缚",
-    "contrast": "资金匮乏束缚手脚 (hamper efforts)",
-    "note": "同义替换 block / delay"
-  },
-  {
-    "word": "curb",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "控制，约束，勒紧缰绳",
-    "contrast": "抑制碳排放/通胀 (curb emissions)",
-    "note": "治理负面现象动词",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "coreMeaning": "抑制；控制"
-  },
-  {
-    "word": "erode",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "侵蚀，蚕食，逐渐损害",
-    "contrast": "通胀蚕食购买力 (erode trust/purchasing power)",
-    "note": "长期隐蔽衰退题眼"
-  },
-  {
-    "word": "dampen",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "挫伤，抑制（热情/信心）",
-    "contrast": "挫伤投资热情 (dampen enthusiasm)",
-    "note": "心理与市场预期降温"
-  },
-  {
-    "word": "stifle",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "扼杀，压制，使窒息",
-    "contrast": "垄断扼杀自由竞争 (stifle competition)",
-    "note": "反垄断与学术自由篇目高频"
-  },
-  {
-    "word": "suppress",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "压制，隐瞒（不利事实）",
-    "contrast": "隐瞒临床实验副作用 (suppress evidence)",
-    "note": "揭露造假关键负向动词"
-  },
-  {
-    "word": "obstruct",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "阻挠，人为设置障碍",
-    "contrast": "蓄意阻挠司法公正 (obstruct justice)",
-    "note": "强力反向阻碍"
-  },
-  {
-    "word": "impair",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "损害，削弱（功能/健康/判断）",
-    "contrast": "睡眠不足损害认知 (impair judgment)",
-    "note": "脑科学与公共卫生常考",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "coreMeaning": "损害；削弱"
-  },
-  {
-    "word": "hinder",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "妨碍，拖后腿",
-    "contrast": "贸易壁垒妨碍复苏 (hinder development)",
-    "note": "2023 Text 4 选项设坑词",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "coreMeaning": "阻碍；妨碍"
-  },
-  {
-    "word": "counteract",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "抵消，对抗，中和",
-    "contrast": "积极政策抵消冲击 (counteract negative effects)",
-    "note": "力道相互对抗逻辑"
-  },
-  {
-    "word": "detract from",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "减损，贬低……的价值",
-    "contrast": "瑕疵减损整部巨著魅力 (detract from merits)",
-    "note": "评论写作与文本赏析常考"
-  },
-  {
-    "word": "negate",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "否定，取消，使无效",
-    "contrast": "这一漏洞全盘否定结论 (negate the premise)",
-    "note": "逻辑反驳致命一击"
-  },
-  {
-    "word": "diminish",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "减少，降低，贬低重要性",
-    "contrast": "权威影响力下降 (diminish importance)",
-    "note": "渐进削弱过程",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "coreMeaning": "减少；削弱"
-  },
-  {
-    "word": "jeopardize",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "使陷入险境，危及",
-    "contrast": "激进盲动危及全局 (jeopardize future)",
-    "note": "比 compromise 更强烈的危机动词"
-  },
-  {
-    "word": "frustrate",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "挫败，阻挠……实现",
-    "contrast": "既得利益挫败改革 (frustrate reform)",
-    "note": "阻挠方案落地常用"
-  },
-  {
-    "word": "restrain",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "制止，克制，管束",
-    "contrast": "约束垄断巨头行为 (restrain monopolies)",
-    "note": "监管干预正反博弈"
-  },
-  {
-    "word": "preclude",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "排除，预先阻止，妨碍",
-    "contrast": "严苛前置条件排除可能性 (preclude options)",
-    "note": "排他性逻辑推论词"
-  },
-  {
-    "word": "deplete",
-    "category": "logic",
-    "type": "neg",
-    "badge": "削弱阻碍",
-    "meaning": "耗尽，大量消耗",
-    "contrast": "过度开采耗尽天然资源 (deplete resources)",
-    "note": "环境与能源主题高频"
-  },
-  {
-    "word": "promote",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "提升；促进；推销",
-    "contrast": "例句：The policy aims to promote better education.（这项政策旨在促进更好的教育。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 促进不是硬推，而是扫清障碍、提供支持、创造条件，让某件事更容易发生、更快成长、更稳落地；考研也常考商业推销、宣传推介。"
-  },
-  {
-    "word": "fare",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "票价；乘客；进展",
-    "contrast": "例句：The bus fare has increased to two dollars.（公共汽车费已涨到两美元。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 坐车坐船付的钱，是乘客换来的通行权凭证；反过来，乘客本身也叫fare，因为交了钱，就成了运输服务的对象和收入来源。"
-  },
-  {
-    "word": "surpass",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "超过；超越",
-    "contrast": "例句：Online viewing has surpassed traditional cable television.（在线观看已经超过了传统有线电视。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 不是略高一点，而是稳稳压过、明显领先，在用户数量、观看时长、销售额或纪录上彻底反超打破。"
-  },
-  {
-    "word": "intensify",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "加强；加剧",
-    "contrast": "例句：The storm intensified during the night.（暴风雨在夜间加剧了。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 火力全开，声音更大、风更猛、情绪更烫，所有相关要素都往顶点奔去，停不下来。"
-  },
-  {
-    "word": "executive",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "高管；主管；执行的",
-    "contrast": "例句：A company executive explained the new policy.（一名公司高管解释了这项新政策。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 字面是‘执行任务的人’，特指在组织中握有决策权、能调动资源并为结果担责的管理者，不是普通员工，而是拍板定调、推事落地的关键角色。"
-  },
-  {
-    "word": "regulate",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "监管；调节",
-    "contrast": "例句：The agency regulates water pollution nationwide.（该机构在全国范围内监管水污染。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 像交通警察盯住路口，也像恒温器自动调温——既用规则约束行为，也靠机制维持平衡。"
-  },
-  {
-    "word": "shrink",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "缩小；萎缩；减少",
-    "contrast": "例句：Legal action has helped shrink the illegal market.（法律行动有助于缩小非法市场。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 过去式 shrank，过去分词 shrunk；像热胀冷缩中的‘缩’，既指物理衣物缩水与市场范围缩小，也常用于经济阅读中形容价值、利润或文凭地位的萎缩缩水（the shrinking value of a degree）。"
-  },
-  {
-    "word": "stake",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "利害关系；风险；赌注",
-    "contrast": "例句：Lawmakers should see the enormous stakes involved.（立法者应看清其中巨大的利害关系。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 原指插在地上的木桩（赌局中押注所立之处），既代表投入的风险，也标定利害攸关的地界，所以‘利害关系’和‘赌注’共享‘把身家押在某事上’的核心动作。"
-  },
-  {
-    "word": "inspect",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "检查；视察",
-    "contrast": "例句：The building is regularly inspected for fire safety.（这栋建筑会定期进行消防安全检查。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 带着目的、逐项查看细节，像安检员盯行李、医生查伤口、老师阅卷——不是随便看看，而是按标准一条条核对有没有问题、符不符合要求。"
-  },
-  {
-    "word": "dismiss",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "驳回；解雇；摒弃",
-    "contrast": "例句：The committee dismissed the proposal as unrealistic.（委员会认为该提议不切实际而对其不屑一顾。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 像挥手赶走一只苍蝇——认定某事不值一顾而驳回，在劳动法语境下也专指依法或强制“解雇、开除”员工。"
-  },
-  {
-    "word": "prominent",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "重要的；突出的",
-    "contrast": "例句：She is a prominent figure in the field of artificial intelligence.（她是人工智能领域的一位杰出人物。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 像站在高处或聚光灯下一样显眼突出，既指地位重要杰出，也指商场书店展位、外貌或特征特别显眼醒目（prominent areas）。"
-  },
-  {
-    "word": "vice versa",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "反之亦然",
-    "contrast": "例句：Parents influence their children, and vice versa.（父母会影响孩子，反之亦然。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 表示如果前面所述陈述的主谓宾调换过来，其命题同样成立，写作与长难句中极常见的精炼互逆表达。"
-  },
-  {
-    "word": "adverse",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "不利的；有害的",
-    "contrast": "例句：The drug may cause adverse reactions in some patients.（这种药物可能在某些患者身上引起不良反应。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 对人或事起反作用、带来损害，像逆风挡路、冷水浇头，既指健康上的副作用，也指局势中的不利因素。"
-  },
-  {
-    "word": "immune",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "免疫的；不受影响的",
-    "contrast": "例句：No industry is completely immune from the impacts of global economic slowdown.（没有任何一个行业能够完全不受全球经济放缓带来的冲击与影响。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 医学上指人体具有抵抗病毒的免疫力；学术与社科语境常搭配 be immune to/from 表示免除责罚或不受外部干扰。"
-  },
-  {
-    "word": "exclude",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "排除；排斥",
-    "contrast": "例句：The price excludes tax and service charges.（价格不包括税费和服务费。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ 像筛子滤豆子，把某人某物从整体里挑出来扔掉：价格单上剔除税费，名单上划掉名字，规则里写明‘不包括’某类情况。"
-  },
-  {
-    "word": "impose",
-    "category": "core",
-    "type": "tier1",
-    "coreTier": "tier1",
-    "coreBadge": "红警遗忘",
-    "coreSub": "Tier 1 · 红警遗忘词",
-    "badge": "红警遗忘",
-    "meaning": "推行；强制实行；强加于",
-    "contrast": "例句：The government decided to impose strict limits on executive pay.（政府决定对高管薪酬实施严格限制。）",
-    "note": "Tier 1 · 红警遗忘词 ｜ im-（向上向内）+ pose（摆、放），把税款、法律或限制强行加在别人头上，常搭配 impose A on B。"
-  },
-  {
-    "word": "infer",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "推断",
-    "contrast": "例句：We can infer the author's view from this sentence.（我们可以从这个句子推断作者的观点。）",
-    "note": "Tier 2 · 题干推理动词 ｜ 推断不是瞎猜，而是抓住文本里埋着的线索（用词、对比、因果），像侦探一样拼出作者没明说但逻辑必然的部分。"
-  },
-  {
-    "word": "postpone",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "推迟；延期",
-    "contrast": "例句：The committee decided to postpone the conference until next spring.（委员会决定将学术研讨会推迟至明年春季举行。）",
-    "note": "Tier 2 · 题干推理动词 ｜ post-（向后、较晚）+ pone/pose（放置），把预定安排往后挪一挪放一放，在时间维度上向后推迟延期。"
-  },
-  {
-    "word": "illustrate",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "说明；阐明",
-    "contrast": "例句：This example illustrates the main point.（这个例子说明了主要观点。）",
-    "note": "Tier 2 · 题干推理动词 ｜ 不是干讲道理，而是用一个具体、鲜活的例子当镜子，把抽象观点照得清清楚楚、一目了然。"
-  },
-  {
-    "word": "reassess",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "重新评估",
-    "contrast": "例句：The company had to reassess its marketing strategy after sales dropped.（在销售额大幅下滑后，该公司不得不重新评估其营销策略。）",
-    "note": "Tier 2 · 题干推理动词 ｜ re-（再次、重新）+ assess（评定估算），基于新暴露出的现实问题或变化，对原定方案进行第二次全方位审视。"
-  },
-  {
-    "word": "seek",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "寻求；试图",
-    "contrast": "例句：The reform sought to strike a balance between innovation and regulation.（这场改革试图在激发创新活力与强化合规监管之间寻求动态平衡。）",
-    "note": "Tier 2 · 题干推理动词 ｜ 过去式与过去分词为 sought，搭配 seek to do sth. 表达主观努力尝试实现某目标。"
-  },
-  {
-    "word": "evade",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "逃避；规避",
-    "contrast": "例句：The dishonest businessman attempted to evade local property taxes.（这位不诚实的商人试图偷逃地方房产税。）",
-    "note": "Tier 2 · 题干推理动词 ｜ e-（向外）+ vad-（走步），一抬腿溜到监管视线之外，特指用不法手段逃避法律义务、缴税职责或尖锐问题。"
-  },
-  {
-    "word": "exemplify",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "是……的典范；举例说明",
-    "contrast": "例句：His groundbreaking work exemplifies the power of artistic integration.（他的开创性成果生动体现了艺术与科学跨界深度融通的巨大力量。）",
-    "note": "Tier 2 · 题干推理动词 ｜ example + -ify，以活生生的典型范例展现抽象概念，论述文核心标志动词。"
-  },
-  {
-    "word": "exaggerate",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "夸大；夸张",
-    "contrast": "例句：The report exaggerated the risks of the economic reform.（这份报告夸大了经济改革的风险。）",
-    "note": "Tier 2 · 题干推理动词 ｜ 把事实拉长、放大、加粗，像对着放大镜看蚂蚁，让它看起来像大象，结果失真，但目的常是为了引起注意或强化立场。"
-  },
-  {
-    "word": "duplicate",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "复制；重复",
-    "contrast": "例句：Please keep the original contract and return the signed duplicate to our office.（请保留合同原件，并将签字后的副本返还给我们办公室。）",
-    "note": "Tier 2 · 题干推理动词 ｜ du-（双、二）+ plic（折叠），一分为二折成双份，特指依法复制、照抄完全一模一样的克隆体或正式副本。"
-  },
-  {
-    "word": "integrate",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干推理动词",
-    "badge": "选项杀手",
-    "meaning": "融入；使结合",
-    "contrast": "例句：The programme integrates older residents into nursery life.（该项目让养老院居民融入幼儿园生活。）",
-    "note": "Tier 2 · 题干推理动词 ｜ 不是让老人旁观或被安排活动，而是拆掉幼儿园和养老院之间的心理与空间隔墙，让他们真实参与日常、拥有角色、建立关系。"
-  },
-  {
-    "word": "sophisticated",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "复杂的；精密的",
-    "contrast": "例句：The study used a sophisticated method to measure progress.（这项研究使用了精密的方法来衡量进步。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 精密的东西不是单纯复杂，而是各部件严丝合缝、经得起细看和深挖，稍有偏差就影响整体运转。"
-  },
-  {
-    "word": "prevailing",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "盛行的；普遍存在的",
-    "contrast": "例句：The prevailing opinion is that the market will recover next year.（主流普遍的看法是市场将在明年复苏。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 来自动词 prevail（占优势、获胜），形容在特定群体或社会中占压倒性主流地位的观点、风气或情绪。"
-  },
-  {
-    "word": "formidable",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "令人生畏的；难对付的",
-    "contrast": "例句：The task seemed formidable at first.（这个任务起初看起来令人畏惧。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 令人生畏不是单纯难，而是眼前任务大到让你第一反应是退缩——它看起来耗时长、门槛高、失败风险明显。"
-  },
-  {
-    "word": "slack",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "萧条的；松弛的",
-    "contrast": "例句：Business is always slack during the winter months.（在冬季这几个月里，生意总是非常萧条清淡。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 原指绳索没有拉紧、松垮下垂，引申为市场没有活力、交易清淡冷落，或人工作态度懒散懈怠。"
-  },
-  {
-    "word": "reluctant",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "不情愿的",
-    "contrast": "例句：She was reluctant to accept the simple explanation.（她不情愿接受这个简单解释。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 不情愿不是拒绝，而是心里拉起一道小警戒线——知道该做，但本能抵触，需要多一点理由或缓冲才肯迈步。"
-  },
-  {
-    "word": "considerably",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "相当大地；显著地",
-    "contrast": "例句：Housing prices have fallen considerably over the past year.（在过去一年里，房屋价格已经大幅下滑。）",
-    "note": "Tier 2 · 选项态度评价 ｜ consider（考虑）的副词衍生，程度大到‘必须引起严肃重视、极为显著’，写作与阅读核心高分词。"
-  },
-  {
-    "word": "grave",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "严重的；严峻的",
-    "contrast": "例句：Climate change poses a grave threat.（气候变化构成严重威胁。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 不是一般严重，而是像悬崖边站着、病入膏肓那样，已逼近底线，再拖一步就可能崩塌或不可逆。"
-  },
-  {
-    "word": "flawed",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "有缺陷的",
-    "contrast": "例句：The argument was based on a flawed assumption about human behavior.（该论点建立在一个关于人类行为的有缺陷假设之上。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 来自 flaw（裂缝、瑕疵），形容理论、工艺、物品或性格存在明显漏洞破绽，反义词为 flawless（无瑕的）。"
-  },
-  {
-    "word": "groundless",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "毫无根据的",
-    "contrast": "例句：The fear proved to be groundless.（这种担忧被证明毫无根据。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 不是暂时没证据，而是从根上就找不到任何支撑它的事实、逻辑或经验，像建在空气上的楼。"
-  },
-  {
-    "word": "profound",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "深远的；深刻的",
-    "contrast": "例句：The scientific revolution brought about a profound change in how humans understand nature.（科学革命给人类认识自然的方式带来了极其深远深刻的变革。）",
-    "note": "Tier 2 · 选项态度评价 ｜ pro-（向下）+ found（底部），深入到底层的见解或变革，常搭配 profound impact（深远影响）、significance（重大意义）。"
-  },
-  {
-    "word": "urgent / urgency",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "紧急的；紧迫性",
-    "contrast": "例句：The problem requires urgent action.（这个问题需要紧急行动。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 不是‘早点做更好’，而是事情已卡在临界点上，再等一分钟，损失就会翻倍甚至失控。"
-  },
-  {
-    "word": "insufficient",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "不充足的；匮乏的",
-    "contrast": "例句：The evidence was insufficient to support their final conclusion.（该证据不足以支撑他们的最终结论。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 像烧水只加了半壶水——量不够、力度不够、支撑点不够，不足以让结论沸腾起来、站稳脚跟。"
-  },
-  {
-    "word": "exempt",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "豁免；被免除的",
-    "contrast": "例句：Non-profit institutions are usually exempt from corporate income taxes.（非营利性科研机构通常被免征企业所得税。）",
-    "note": "Tier 2 · 选项态度评价 ｜ ex-（出、外）+ empt（拿取），将某人从既定负担或义务中单独抽离出来，常搭配 exempt sb. from sth.。"
-  },
-  {
-    "word": "irrational",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "不理智的；非理性的",
-    "contrast": "例句：Panicking in a crisis is an irrational response.（在危机中惊慌失措是一种非理性的反应。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 否定前缀 ir- + rational（理智的），违背逻辑常理、受情绪冲动或偏见支配而作出的反常判断。"
-  },
-  {
-    "word": "due",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "应有的；恰当的；到期的",
-    "contrast": "例句：We should attach due importance to wetlands protection.（我们应给予湿地保护应有的重视。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 强调‘该给多少就给多少’：重要性要配得上其实际分量，期限要卡准应到之时，态度要恰如其分，不多不少，不早不晚。"
-  },
-  {
-    "word": "feasible",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "切实可行的",
-    "contrast": "例句：Building more affordable homes is a feasible way to solve the crisis.（建造更多平价房是化解危机的切实可行之道。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 能够落到实处、付诸行动并产生预期效果的方案；否定形式为 unfeasible（不可行的）。"
-  },
-  {
-    "word": "omission",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "遗漏；忽略",
-    "contrast": "例句：The omission of one detail changed the meaning.（遗漏一个细节改变了意思。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 遗漏不是忘记小事，而是漏掉关键一环——就像拼图缺了中心块，整个画面意义就塌了一角。"
-  },
-  {
-    "word": "suspicion",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "怀疑",
-    "contrast": "例句：The sudden change raised public suspicion.（突然的变化引发了公众怀疑。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 不是确凿怀疑某人做了坏事，而是心里悄悄升起一丝不对劲的感觉，像闻到一丝焦糊味，说不清哪不对，但警觉已经拉响。"
-  },
-  {
-    "word": "initiative",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 选项态度评价",
-    "badge": "选项杀手",
-    "meaning": "倡议；新方案",
-    "contrast": "例句：The city launched an initiative to cut waste.（这座城市发起了一项减少浪费的倡议。）",
-    "note": "Tier 2 · 选项态度评价 ｜ 不是被动等待，而是有人主动迈出第一步，提出想法、组织行动，把一个新点子变成实际推进的方案。"
-  },
-  {
-    "word": "identify with",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干高频短语",
-    "badge": "选项杀手",
-    "meaning": "与……共情；认同",
-    "contrast": "例句：Students identify with characters who face real problems.（学生会认同那些面对真实问题的人物。）",
-    "note": "Tier 2 · 题干高频短语 ｜ 认同不是觉得对方厉害，而是读到某个角色时心头一热：‘这说的不就是我吗？’——情绪和处境瞬间接通。"
-  },
-  {
-    "word": "comply with",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干高频短语",
-    "badge": "选项杀手",
-    "meaning": "遵从；服从",
-    "contrast": "例句：All imported vehicles must comply with national safety standards.（所有进口车辆必须严格遵从国家安全标准。）",
-    "note": "Tier 2 · 题干高频短语 ｜ 面对法规、合同或权威命令，毫无保留地照章办事、不打折扣地执行，违背即构成违约违法。"
-  },
-  {
-    "word": "fall off",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干高频短语",
-    "badge": "选项杀手",
-    "meaning": "下降；减少",
-    "contrast": "例句：Tourism has fallen off sharply due to the travel restrictions.（由于旅行限制，旅游业出现了大幅度萎缩下滑。）",
-    "note": "Tier 2 · 题干高频短语 ｜ 事物的数量、热度或销量从原本高位滑落下来，比抽象的 decrease 更具动态视觉感。"
-  },
-  {
-    "word": "stick together",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干高频短语",
-    "badge": "选项杀手",
-    "meaning": "团结一致",
-    "contrast": "例句：Small communities often stick together during difficult economic times.（在艰难的经济时期，小社区往往会紧紧团结在一起。）",
-    "note": "Tier 2 · 题干高频短语 ｜ 像胶水粘在一起一样紧密不分离，指弱小个体为了抵御外部严峻挑战而自发形成的互助抱团状态。"
-  },
-  {
-    "word": "preference",
-    "category": "core",
-    "type": "tier2",
-    "coreTier": "tier2",
-    "coreBadge": "选项杀手",
-    "coreSub": "Tier 2 · 题干高频短语",
-    "badge": "选项杀手",
-    "meaning": "偏好",
-    "contrast": "例句：Many readers have a preference for clear examples.（许多读者偏好清楚的例子。）",
-    "note": "Tier 2 · 题干高频短语 ｜ 偏好不是随便喜欢，而是长期实践中形成的稳定倾向——面对多个选项，你下意识先伸手拿的那个。"
-  },
-  {
-    "word": "demonstrate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "展示；证明",
-    "contrast": "例句：The experiment demonstrated the value of the method.（这个实验证明了该方法的价值。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 不是口头说说，而是拿出看得见的结果、过程或例子，像举起一块铁证，让人一眼就信服。"
-  },
-  {
-    "word": "inform",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "影响；告知",
-    "contrast": "例句：Evidence should inform every serious decision.（每个严肃决定都应以证据为依据。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 不是单向通知，而是让信息像水流进土壤一样渗入决策或理解之中，悄悄改变方向、质地和结果。"
-  },
-  {
-    "word": "eliminate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "消除；根除",
-    "contrast": "例句：No single policy can eliminate piracy completely.（没有一项政策能够完全消除盗版。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 像拔草除根，指彻底清除某个问题存在的所有条件和痕迹，不留残余、不反复发作，比如清空服务器、关闭域名、断掉资金链。"
-  },
-  {
-    "word": "mitigate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "减轻；缓解",
-    "contrast": "例句：New rules may mitigate the damage.（新规则可能减轻损害。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 不指望彻底消灭问题，而是像往滚烫锅里加水降温、给伤口敷药止痛那样，让坏结果变轻、变慢、变小，争取缓冲和转机。"
-  },
-  {
-    "word": "tackle",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "着手处理",
-    "contrast": "例句：We need to tackle the copyright problem.（我们需要解决版权问题。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 像伸手抓住问题的把手，稳住、发力、开始干——不是观望或计划，而是直接上手拆解、分配任务、堵漏洞，带着行动优先的紧迫感。"
-  },
-  {
-    "word": "alleviate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "减轻；缓解",
-    "contrast": "例句：This new drug can significantly alleviate the symptoms of arthritis.（这种新药能显著减轻关节炎的症状。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 不让问题消失，而是实实在在压低它的强度、缩短它的持续时间、减少它带来的痛苦，比如退烧、止痛、减压。"
-  },
-  {
-    "word": "conceal",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "隐瞒；掩盖",
-    "contrast": "例句：He tried to conceal his disappointment behind a forced smile.（他试图用勉强的微笑来掩饰自己的失望。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 把不想让人看见的东西往暗处塞、往深处压、往假象后面藏——可能是实物（如信件），也可能是情绪（如失望）、事实（如错误），核心是主动遮掩，不让它露出来被看见。"
-  },
-  {
-    "word": "concede",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "承认；让步",
-    "contrast": "例句：He finally conceded that he had made a mistake.（他终于承认自己犯了个错误。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 明明心里不服，却当着众人面低头承认对方有理，或是咬牙让出自己坚持的立场，像棋手推倒自己的王认输。"
-  },
-  {
-    "word": "conform",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "遵守；顺从",
-    "contrast": "例句：The design must conform to safety standards.（这项设计必须符合安全标准。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 不是勉强应付，而是主动调整自己去贴合外部标准——像把衣服按尺码改得严丝合缝，确保每处细节都达标，否则就不算合格。"
-  },
-  {
-    "word": "induce",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "引起；促使",
-    "contrast": "例句：The drug may induce sleep.（这种药可能会引起睡眠。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 不是直接命令或强制，而是用某种条件、刺激或环境悄悄推一把，让结果自然发生——像用药触发身体原本就有的睡眠开关，而非硬塞你入睡。"
-  },
-  {
-    "word": "aggravate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "加重；恶化",
-    "contrast": "例句：Lack of sleep can aggravate the problem.（睡眠不足可能使问题恶化。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 本来就有病，再添把火——让问题更重、更难治，也让人心烦到极点，恨不得拍桌子。"
-  },
-  {
-    "word": "deteriorate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "恶化；变坏",
-    "contrast": "例句：His health began to deteriorate rapidly.（他的健康状况开始迅速恶化。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 像一块布被反复搓洗，颜色变淡、纤维松散、一扯就破，健康或状况就这样无声无息地垮下去。"
-  },
-  {
-    "word": "escalate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "升级；加剧",
-    "contrast": "例句：The dispute could escalate into a wider conflict.（这场争端可能升级为更大范围的冲突。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 事情像爬楼梯一样一级级往上蹿，争端变冲突，冲突变战争，每一步都更难回头。"
-  },
-  {
-    "word": "trigger",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "触发；引发",
-    "contrast": "例句：The ruling triggered nationwide concern.（裁决引发了全国范围的担忧。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 本义是扳机——轻轻一扣就引发整把枪发射，因此专指那种微小但关键的动作或事件，一旦发生，立刻启动连锁反应，不可逆转。"
-  },
-  {
-    "word": "constrain",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "限制；束缚",
-    "contrast": "例句：Strict laws severely constrain the firm's ability to adjust management.（严苛的法规严重束缚了该企业调整其管理团队的能力。）",
-    "note": "Tier 3 · 社科核心动词 ｜ con-（共同）+ strain（拉紧），用绳索死死勒住对方双手，核心搭配 constrain sb. from doing sth.。"
-  },
-  {
-    "word": "perceive",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "感知；视作",
-    "contrast": "例句：The public perceived the new policy as a step in the right direction.（公众认为这项新政策是朝着正确方向迈出的一步。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 包含感官察觉与主观认知双重含义；其分词形容词 perceived 常指“被公认的、被外界广泛感知到的”。"
-  },
-  {
-    "word": "inflate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "虚增；抬高",
-    "contrast": "例句：The company was accused of using deceptive accounting to inflate its profits.（该公司被指控采用欺诈性会计手段虚增利润。）",
-    "note": "Tier 3 · 社科核心动词 ｜ in-（向内）+ flat（吹气），往内部吹气使其虚胖，引申为虚假抬高数据、物价或通货膨胀。"
-  },
-  {
-    "word": "accrue",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "累积；增加",
-    "contrast": "例句：High-yield savings accounts allow interest to accrue over time.（高收益储蓄账户允许利息随着时间逐步累积增长。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 随着时间推移、日积月累而自然产生的数量增长或权益累积，常修饰引用数、利息与经验。"
-  },
-  {
-    "word": "crumble",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "瓦解；崩解",
-    "contrast": "例句：Ancient stone monuments slowly crumble under the relentless assault of acid rain.（古老的石碑在酸雨无休止的侵蚀下正缓慢碎裂风化瓦解。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 来自 crumb（面包碎屑），描摹固体物质因老化、重压或风化而不断掉渣碎裂成细末的物理过程与社会解体。"
-  },
-  {
-    "word": "disintegrate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "崩溃；解体",
-    "contrast": "例句：The meteor heated up and disintegrated as it entered Earth's atmosphere.（流星进入地球大气层时剧烈升温并彻底碎裂解体。）",
-    "note": "Tier 3 · 社科核心动词 ｜ dis-（拆散）+ integrate（使成为一体），打破原有的物理化学或政治有机统一体，使其散架化为乌有。"
-  },
-  {
-    "word": "undergo",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "经历；经受",
-    "contrast": "例句：The patient will undergo a major heart surgery tomorrow.（病人明天将接受一次重大的心脏手术。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 亲身经历一个过程，尤其指被动承受某种有压力、有变化或不可控的事件，比如手术、考验、转变等。"
-  },
-  {
-    "word": "mislead",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 社科核心动词",
-    "badge": "定位核心",
-    "meaning": "误导",
-    "contrast": "例句：The advertisement deliberately misled consumers about the product's effectiveness.（该广告在产品效果方面故意误导消费者。）",
-    "note": "Tier 3 · 社科核心动词 ｜ 用错误信息或片面说法让人产生误解，就像悄悄调转路标，让对方不知不觉走上错路。"
-  },
-  {
-    "word": "evident",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "明显的",
-    "contrast": "例句：It is evident that practice improves fluency.（很明显，练习能提升流利度。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 不是靠猜测或推理才明白，而是像摆在眼前的东西，眼睛一扫就直接撞进脑子里，连犹豫的余地都没有。"
-  },
-  {
-    "word": "resilient",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "有韧性的",
-    "contrast": "例句：Resilient students recover quickly from mistakes.（有韧性的学生能很快从错误中恢复。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 不是硬扛不倒，而是像弹簧被压下去后自动弹回原状——受挫时变形，但底子没断，很快恢复弹性与功能。"
-  },
-  {
-    "word": "unintended",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "非预期的",
-    "contrast": "例句：The policy had unintended effects on small businesses.（这项政策对小企业产生了意料之外的影响。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 做事时没料到、没打算、也没法提前防备的后果——像推倒第一块多米诺骨牌，后面倒下的全不在计划里。"
-  },
-  {
-    "word": "legitimate",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "合法的；正当的",
-    "contrast": "例句：Consumers should use legitimate streaming platforms.（消费者应使用合法的流媒体平台。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 经法律认可、平台授权、创作者同意的，能放心用、不怕侵权、也不助长盗版的正规渠道。"
-  },
-  {
-    "word": "scarce / scarcely",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "稀缺的；几乎不",
-    "contrast": "例句：Clean water is scarce in the dry season.（旱季清洁水源很稀缺。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 东西少到不够分、不够用、让人着急找——不是绝对没有，而是供应远跟不上需求，连基本满足都困难。"
-  },
-  {
-    "word": "partly",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "部分地",
-    "contrast": "例句：The price fell partly because energy became cheaper.（价格下降部分是因为能源变便宜了。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 事情不是全因某个原因，而是这个原因起了作用，但还有别的因素掺在里面，就像蛋糕甜味‘部分来自糖’，糖重要，但奶油和烘烤也少不了。"
-  },
-  {
-    "word": "absurd",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "荒谬的",
-    "contrast": "例句：It would be absurd to judge the method without testing it.（不经过测试就评价这种方法是荒谬的。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 明显违背常识、逻辑或现实条件，让人一听就摇头说‘这怎么可能’——不是观点不同，而是根本站不住脚。"
-  },
-  {
-    "word": "vulnerable",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "脆弱的",
-    "contrast": "例句：Coastal cities are particularly vulnerable to rising sea levels.（沿海城市尤其容易遭受海平面上升带来的冲击与伤害。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 考研极高频词，形容身体、心理、文物或生态系统缺乏抵御能力，极易被外部破坏因素攻破伤害。"
-  },
-  {
-    "word": "inherently",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "固有地；本质上",
-    "contrast": "例句：Deep-sea exploration remains an inherently risky scientific enterprise.（深海探测本质上依然是一项天生充满风险的科学事业。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ in-（在内）+ here（粘附），指某种属性深深扎根于事物骨子内部、与生俱来不可分割的本质状态。"
-  },
-  {
-    "word": "stringent",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "严苛的",
-    "contrast": "例句：The central bank imposed stringent rules on commercial lending.（央行对商业贷款实施了极其严苛的规定。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 与 constrain 同源词根 string（勒紧），把制度条文的绳子勒到极致，意为严厉苛刻、毫无通融余地。"
-  },
-  {
-    "word": "excessive",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "过度的",
-    "contrast": "例句：Excessive government intervention often distorts natural market signals.（过度的政府干预往往会扭曲正常的市场信号。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ ex-（超出）+ cess（走），走得太远越过了合理适度的边界，在政策评论中几乎固定带有强烈的负面批评色彩。"
-  },
-  {
-    "word": "adversely",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "不利地",
-    "contrast": "例句：Excessive red tape can adversely affect business investment confidence.（过多的繁文缛节会对企业的投资信心产生负面影响。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 原型形容词 adverse 的派生副词，常与 affect / impact 连用（adversely affect）表达负面打击效应。"
-  },
-  {
-    "word": "marginal",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "微小的；边缘的",
-    "contrast": "例句：Strict firing rules often hurt marginal job applicants the most.（严苛的解雇法规往往对处于就业边缘的求职者伤害最大。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 源自原型 margin（边缘/差额），形容处于行业边缘、实力刚好踩在及格线上下、最易被波动淘汰的人。"
-  },
-  {
-    "word": "prudent",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "谨慎明智的",
-    "contrast": "例句：It would be prudent to save some money.（存下一些钱会是明智而谨慎的做法。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 做事前先想三步：有没有风险？值不值得？有没有退路？像老司机过弯前先看后视镜、松油门、握紧方向，每一步都带着预见和分寸。"
-  },
-  {
-    "word": "reckless",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "鲁莽的",
-    "contrast": "例句：Reckless spending can lead to serious debt.（鲁莽消费可能导致严重债务。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 像蒙眼开车，不管红灯、不看油表、不问后果——只凭一时冲动猛踩油门，以为爽在当下，实则正冲向悬崖边缘。"
-  },
-  {
-    "word": "rampant",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "猖獗泛滥的",
-    "contrast": "例句：Rampant corruption undermined public trust in the judicial system.（肆虐泛滥的腐败侵蚀了公众对司法体系的信任。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 形容违法犯罪、通货膨胀或恶劣社会风气彻底失控、如野草般无节制肆虐生长的严峻态势。"
-  },
-  {
-    "word": "albeit",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 逻辑态度形副",
-    "badge": "定位核心",
-    "meaning": "尽管；虽然",
-    "contrast": "例句：The university made steady, albeit slow, progress in scientific research.（该大学在科学研究方面取得了稳步的、尽管有些缓慢的进展。）",
-    "note": "Tier 3 · 逻辑态度形副 ｜ 源自 al be it (that)，高阶书面语连词，常接短语引出优雅轻微的让步限定，相当于 although/though。"
-  },
-  {
-    "word": "at stake",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "利害攸关；处于险境",
-    "contrast": "例句：With thousands of jobs at stake, the government decided to bail out the company.（在数千个就业岗位关乎存亡的关头，政府决定对该公司实施救助。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 源自赌博台面上的赌注（stake），比喻所有筹码全押在上面，成败存亡在此一举的重大关头。"
-  },
-  {
-    "word": "at odds with",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "与……相悖",
-    "contrast": "例句：Their interests are at odds with environmental protection.（他们的利益与环境保护相冲突。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 像两股方向相反的力顶在一起，谁也不让步——利益目标与环保目标在根本逻辑上拧着劲儿，无法同时满足。"
-  },
-  {
-    "word": "steer clear of",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "避开；远离",
-    "contrast": "例句：Smart investors steer clear of schemes that promise unrealistically high returns.（精明的投资者会远离那些承诺不切实际高额回报的骗局。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 航海术语化用：驾驶船只绕开暗礁浅滩，引申为明智地离危险人物、是非陷阱或造假活动远远的。"
-  },
-  {
-    "word": "in terms of",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "就……而言",
-    "contrast": "例句：The city ranks highest in terms of public transportation quality.（在公共交通质量方面，该城市排名最高。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 考研论述黄金路标：从宏观大千世界中圈定一个具体的切入维度或评价指标，以便展开深入剖析。"
-  },
-  {
-    "word": "be found wanting",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "被证实不合格",
-    "contrast": "例句：His leadership skills were thoroughly tested during the crisis and found wanting.（他的领导才能在危机中经受了全面检验，结果被证明大有欠缺。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 源自圣经典故‘在天平上被称量显出不足’，形容原本令人信服的美好承诺或理论在实践中彻底败下阵来。"
-  },
-  {
-    "word": "may well",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "极有可能",
-    "contrast": "例句：With proper guidance, this initial setback may well turn into a valuable lesson.（如果得到恰当的指引，这次初期的挫折极有可能转变为一堂弥足珍贵的教训。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 情态动词后跟 well 表示充分合理性与极大可能性，等同于 be very likely to，考研中表达高度推断。"
-  },
-  {
-    "word": "scale back",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "缩减规模",
-    "contrast": "例句：The company decided to scale back its expansion.（公司决定缩减扩张规模。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 像把一张铺开的地图慢慢卷小，有意识地收窄范围、降低目标或减少投入，让计划变得更可控。"
-  },
-  {
-    "word": "cut back",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "削减；减少",
-    "contrast": "例句：Families had to cut back on energy use.（家庭不得不减少能源使用。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 像拧紧水龙头一样，主动减少某项消耗——不一定是砍掉，而是节制用量、控制节奏。"
-  },
-  {
-    "word": "make the case",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "论证观点",
-    "contrast": "例句：The author makes the case for early action.（作者为早期行动说明理由。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 不是简单表态，而是拿出事实、逻辑和例子，一层层搭建理由，让别人觉得‘这观点真站得住脚’。"
-  },
-  {
-    "word": "lend itself to",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "适合；有助于",
-    "contrast": "例句：The topic lends itself to classroom discussion.（这个话题适合课堂讨论。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 某事本身自带便利性或适配性，不用硬拗就能自然融入某个场景，就像钥匙刚好匹配锁芯。"
-  },
-  {
-    "word": "single out",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "单独挑出",
-    "contrast": "例句：The commission singled out weak leadership as the main bottleneck.（委员会特别指出领导力薄弱是主要的发展瓶颈。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 从一堆可能的原因或人群里单单把某一项拎出来强调，常接 as 引出它的核心地位或罪魁属性。"
-  },
-  {
-    "word": "status quo",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "现状",
-    "contrast": "例句：Many people prefer to maintain the status quo rather than take risks.（许多人宁愿维持现状也不愿冒险。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 拉丁经典短语，字面为‘事物所处的原初状态’，社科政经阅读中常与 reform（改革）或 challenge（挑战）形成对立。"
-  },
-  {
-    "word": "de facto",
-    "category": "core",
-    "type": "tier3",
-    "coreTier": "tier3",
-    "coreBadge": "定位核心",
-    "coreSub": "Tier 3 · 学术固定搭配",
-    "badge": "定位核心",
-    "meaning": "事实上的",
-    "contrast": "例句：Although not officially designated, it became the de facto capital.（尽管未被正式指定，它却成了事实上的首都。）",
-    "note": "Tier 3 · 学术固定搭配 ｜ 拉丁短语借词，de（按照）+ facto（事实），指某事物虽然名义或法律上未被正式承认，但客观事实和功能完全就是它。"
-  }
-];
+    const VOCAB_DATA = Array.isArray(window.SPRINT_VOCAB_DATA) ? window.SPRINT_VOCAB_DATA : [];
 
     let viewMode = 'list';
     let currentCategory = 'all';
-    let coreTierFilter = 'all';
+    let currentCoreTier = 'all';
     let searchQuery = '';
     let isMaskMode = true;
     let cardMaskStates = {};
@@ -3519,47 +1181,109 @@
 
     let fcIndex = 0;
     let fcAnswered = false;
+    let blindListenMode = false;
+    let autoPlayMode = false;
+    let autoPlayToken = 0;
+    let autoPlayTimer = null;
+    let speakSeqToken = 0;
+    let sprintAudioEl = null;
+    let hbIndexMapPromise = null;
+    const sprintWordBlobCache = Object.create(null);
 
     VOCAB_DATA.forEach((item, idx) => {
       cardMaskStates[idx] = true;
     });
 
-    function escapeHtml(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    function escapeHTML(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    function iconSvg(kind, size) {
-      const s = size || 12;
-      const base = `width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"`;
-      if (kind === 'pos') return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="9"/><polyline points="9 12 11.5 14.5 15.5 9.5"/></svg>`;
-      if (kind === 'neg') return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
-      if (kind === 'neutral') return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="9"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`;
-      if (kind === 'warn') return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="9"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
-      if (kind === 'poly') return `<svg class="ui-ico" ${base}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
-      if (kind === 'up') return `<svg class="ui-ico" ${base}><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>`;
-      if (kind === 'down') return `<svg class="ui-ico" ${base}><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>`;
-      if (kind === 'tier1') return `<svg class="ui-ico" ${base}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
-      if (kind === 'tier2') return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/></svg>`;
-      if (kind === 'tier3') return `<svg class="ui-ico" ${base}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
-      if (kind === 'target') return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>`;
-      if (kind === 'eye') return `<svg class="ui-ico" ${base}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-      return `<svg class="ui-ico" ${base}><circle cx="12" cy="12" r="9"/></svg>`;
+    function readJsonSafe(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
     }
 
-    const TIER_ORDER = { tier1: 1, tier2: 2, tier3: 3 };
+    function applySprintReviewRating(word, rating, mode) {
+      if (!word || typeof ReviewCore === 'undefined') return null;
+      const state = ReviewCore.applyRating('sprint', word, rating, mode || 'recite');
+      ReviewCore.recordLearningActivity('sprint', word, mode || 'sprint_study');
+      return state;
+    }
+
+    function clearSprintPref(word, expectedPref) {
+      try {
+        const sp = readJsonSafe('sp_prefs', {});
+        if (!expectedPref || sp[word] === expectedPref) {
+          delete sp[word];
+          localStorage.setItem('sp_prefs', JSON.stringify(sp));
+          localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
+        }
+      } catch (e) {}
+    }
+
+    function clearSprintReviewMastered(word) {
+      clearSprintPref(word, 'familiar');
+    }
+
+    function migrateAndSyncSprintReviews() {
+      if (typeof ReviewCore === 'undefined') return;
+      const meta = ReviewCore.loadReviewMeta();
+      const spPrefs = readJsonSafe('sp_prefs', {});
+      const alreadyMigrated = localStorage.getItem('sprint_review_migrated_v1') === '1';
+
+      if (!alreadyMigrated) {
+        weakSet.forEach((w) => {
+          if (!w) return;
+          if (!meta['sprint:' + w] && !spPrefs[w]) {
+            ReviewCore.applyRating('sprint', w, 'forget', 'recite');
+          }
+        });
+        masteredSet.forEach((w) => {
+          if (!w || weakSet.has(w)) return;
+          if (!meta['sprint:' + w] && !spPrefs[w]) {
+            ReviewCore.applyRating('sprint', w, 'familiar', 'recite');
+          }
+        });
+        localStorage.setItem('sprint_review_migrated_v1', '1');
+      }
+
+      // Sync sp_prefs updates pulled via cloud sync or 今日背诵 back to sprint sets
+      const latestPrefs = readJsonSafe('sp_prefs', {});
+      let changed = false;
+      Object.keys(latestPrefs).forEach((w) => {
+        if (latestPrefs[w] === 'hard') {
+          if (!weakSet.has(w)) { weakSet.add(w); changed = true; }
+          if (masteredSet.has(w)) { masteredSet.delete(w); changed = true; }
+        } else if (latestPrefs[w] === 'familiar') {
+          if (!masteredSet.has(w)) { masteredSet.add(w); changed = true; }
+          if (weakSet.has(w)) { weakSet.delete(w); changed = true; }
+        }
+      });
+      if (changed) saveSets();
+    }
+
+    function vocabOverlapBadgeHTML(word) {
+      const vv = readJsonSafe('vv_prefs', {});
+      const meta = (typeof ReviewCore !== 'undefined') ? ReviewCore.loadReviewMeta() : {};
+      if (vv[word] === 'hard') return '<span class="overlap-pill hard">生词本不熟</span>';
+      if (vv[word] || meta['vocab:' + word]) return '<span class="overlap-pill">生词本重合</span>';
+      return '';
+    }
 
     function getFilteredData() {
-      let list = VOCAB_DATA.filter((item) => {
+      const tierOrder = { tier1: 1, tier2: 2, tier3: 3 };
+      const list = VOCAB_DATA.filter((item) => {
         if (currentCategory === 'weak') {
           if (!weakSet.has(item.word)) return false;
         } else if (currentCategory === 'core') {
-          if (item.category !== 'core' && !item.coreTier) return false;
-          if (coreTierFilter !== 'all' && item.coreTier !== coreTierFilter) return false;
+          if (!item.coreTier) return false;
+          if (currentCoreTier !== 'all' && item.coreTier !== currentCoreTier) return false;
         } else if (currentCategory !== 'all' && item.category !== currentCategory) {
           return false;
         }
@@ -3568,77 +1292,27 @@
         return item.word.toLowerCase().includes(q) ||
                item.meaning.toLowerCase().includes(q) ||
                (item.coreMeaning && item.coreMeaning.toLowerCase().includes(q)) ||
-               item.contrast.toLowerCase().includes(q) ||
-               (item.note && item.note.toLowerCase().includes(q)) ||
-               (item.coreSub && item.coreSub.toLowerCase().includes(q));
+               (item.contrast && item.contrast.toLowerCase().includes(q)) ||
+               (item.note && item.note.toLowerCase().includes(q));
       });
       if (currentCategory === 'core') {
-        list = list.slice().sort((a, b) => (TIER_ORDER[a.coreTier] || 9) - (TIER_ORDER[b.coreTier] || 9));
+        return list.slice().sort((a, b) => (tierOrder[a.coreTier] || 9) - (tierOrder[b.coreTier] || 9));
       }
       return list;
     }
 
-    function getBlindCategoryName(item) {
-      if (currentCategory === 'core' || item.category === 'core') return '个人核心';
-      if (item.category === 'attitude') return '态度题眼';
-      if (item.category === 'logic') return '逻辑动词';
-      if (item.category === 'polysemy') return '熟词僻义';
+    // 获取未揭晓时的中性分类名称（绝不剧透正负向！）
+    function getBlindCategoryName(category) {
+      if (currentCategory === 'core' || category === 'core') return '个人核心';
+      if (category === 'attitude') return '态度题眼';
+      if (category === 'logic') return '逻辑动词';
+      if (category === 'polysemy') return '熟词僻义';
       return '考点便签';
     }
 
-    function getPrimaryBadgeSpec(item) {
-      if (currentCategory === 'core' && item.coreTier) {
-        return {
-          cls: 'badge-' + item.coreTier,
-          icon: item.coreTier,
-          label: item.coreBadge
-        };
-      }
-      if (item.category === 'logic') {
-        return {
-          cls: item.type === 'pos' ? 'badge-pos' : 'badge-neg',
-          icon: item.type === 'pos' ? 'up' : 'down',
-          label: item.badge
-        };
-      }
-      if (item.category === 'polysemy') {
-        return { cls: 'badge-poly', icon: 'poly', label: item.badge };
-      }
-      if (item.category === 'core') {
-        return { cls: 'badge-' + item.type, icon: item.type, label: item.badge };
-      }
-      // attitude
-      return { cls: 'badge-' + item.type, icon: item.type, label: item.badge };
-    }
-
-    function renderBadgeGroup(item) {
-      const primary = getPrimaryBadgeSpec(item);
-      let html = `<span class="badge ${primary.cls}">${iconSvg(primary.icon, 11)}<span>${escapeHtml(primary.label)}</span></span>`;
-      if (item.coreTier && item.category !== 'core') {
-        if (currentCategory === 'core') {
-          const catLabel = item.category === 'attitude' ? '兼态度' : '兼逻辑';
-          html += `<span class="badge badge-blind">${escapeHtml(catLabel)}</span>`;
-        } else {
-          html += `<span class="badge badge-${item.coreTier}">${iconSvg(item.coreTier, 11)}<span>${escapeHtml(item.coreBadge)}</span></span>`;
-        }
-      }
-      return `<div class="badge-group">${html}</div>`;
-    }
-
-    function getContrastSpec(item) {
-      if (item.category === 'logic') {
-        if (item.type === 'pos') return { cls: 'contrast-box pos-dir', icon: 'up' };
-        return { cls: 'contrast-box neg-dir', icon: 'down' };
-      }
-      if (item.category === 'core') {
-        return { cls: 'contrast-box core-ctx', icon: item.coreTier || 'tier3' };
-      }
-      if (item.category === 'polysemy') {
-        return { cls: 'contrast-box', icon: 'poly' };
-      }
-      return { cls: 'contrast-box', icon: item.type === 'pos' ? 'pos' : (item.type === 'neg' ? 'neg' : 'neutral') };
-    }
-
+    // ==========================================
+    // 渲染视图一：清单模式
+    // ==========================================
     function renderList() {
       const container = document.getElementById('vocabList');
       const filtered = getFilteredData();
@@ -3650,51 +1324,80 @@
         const isMastered = masteredSet.has(item.word);
         const isWeak = weakSet.has(item.word);
         const isMasked = isMaskMode && cardMaskStates[originalIndex];
-        const isTier1 = item.coreTier === 'tier1';
 
+        let badgeClass = 'badge-pos';
+        let displayBadge = item.badge || '核心词';
+        if (currentCategory === 'core' || item.category === 'core') {
+          if (item.coreTier === 'tier1') badgeClass = 'badge-core-t1';
+          else if (item.coreTier === 'tier2') badgeClass = 'badge-core-t2';
+          else badgeClass = 'badge-core-t3';
+          displayBadge = item.coreBadge || item.badge || '个人核心';
+        } else if (item.type === 'neg') badgeClass = 'badge-neg';
+        else if (item.type === 'neutral') badgeClass = 'badge-neutral';
+        else if (item.type === 'warn') badgeClass = 'badge-warn';
+        else if (item.type === 'poly') badgeClass = 'badge-poly';
+
+        let contrastClass = 'contrast-box';
+        if (item.type === 'pos' && item.category === 'logic') contrastClass += ' pos-dir';
+        else if (item.type === 'neg' && item.category === 'logic') contrastClass += ' neg-dir';
+
+        // 核心防剧透逻辑：未揭晓时只显示中性灰标；揭晓后才亮出真实角色！
         const badgeHtml = isMasked
-          ? `<span class="badge badge-blind">${getBlindCategoryName(item)}</span>`
-          : renderBadgeGroup(item);
-
-        const cSpec = getContrastSpec(item);
-        const displayMeaning = (currentCategory === 'core' && item.coreMeaning) ? item.coreMeaning : item.meaning;
-        const safeWordAttr = escapeHtml(item.word);
+          ? `<span class="badge badge-blind">${getBlindCategoryName(item.category)}</span>`
+          : `<span class="badge ${badgeClass}">${escapeHTML(displayBadge)}</span>`;
+        const overlapHtml = vocabOverlapBadgeHTML(item.word);
+        const focusBtnHtml = (typeof FocusCore !== 'undefined')
+          ? FocusCore.buttonHTML(item.word, item.meaning, 'sprint', '冲刺专题', { compact: true })
+          : '';
+        const copyBtnHtml = (typeof StudyCopy !== 'undefined')
+          ? StudyCopy.buttonHTML(item.word, item.meaning, 'btn-mini-util')
+          : '';
+        const safeWord = escapeHTML(item.word);
 
         html += `
-          <div class="vocab-card ${isMastered ? 'mastered' : ''} ${isWeak ? 'is-weak' : ''} ${isTier1 ? 'is-tier1' : ''}">
+          <div class="vocab-card ${isMastered ? 'mastered' : ''} ${isWeak ? 'is-weak' : ''}">
+            <!-- 头部英文单词：永远清晰可见！ -->
             <div class="card-head">
               <div class="word-title-wrap">
-                <span class="word-text">${escapeHtml(item.word)}</span>
-                <button class="btn-speak" title="朗读发音" data-word="${safeWordAttr}" onclick="speakWord(this.dataset.word)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                <span class="word-text">${safeWord}</span>
+                <button class="btn-speak" title="朗读发音" data-speak-word="${safeWord}" onclick="speakWord(this.getAttribute('data-speak-word'))">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
                 </button>
+                ${overlapHtml}
               </div>
               ${badgeHtml}
             </div>
 
+            <!-- 仅释义与考点区进行遮挡自测 -->
             <div class="card-body-wrapper" onclick="toggleSingleCard(${originalIndex})">
               <div class="card-body ${isMasked ? 'masked' : ''}">
-                <div class="meaning-text">${escapeHtml(displayMeaning)}</div>
-                <div class="${cSpec.cls}">${iconSvg(cSpec.icon, 13)}<span>${escapeHtml(item.contrast)}</span></div>
-                <div class="note-text">${escapeHtml(item.note || '')}</div>
+                <div class="meaning-text">${escapeHTML(item.meaning)}</div>
+                <div class="${contrastClass}">${escapeHTML(item.contrast)}</div>
+                <div class="note-text">${escapeHTML(item.note || '')}</div>
               </div>
               ${isMasked ? `
                 <div class="mask-overlay">
-                  ${iconSvg('eye', 13)}
-                  <span>脑海推导词义与正负向，轻触揭晓</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                  <span>脑海推导正负/僻义，轻触揭晓</span>
                 </div>
               ` : ''}
             </div>
 
             <div class="card-footer">
-              <button class="btn-weak-toggle ${isWeak ? 'active' : ''}" data-word="${safeWordAttr}" onclick="toggleWeak(this.dataset.word)">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="${isWeak ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span>${isWeak ? '已加待巩固' : '加待巩固'}</span>
-              </button>
-              <button class="btn-check" data-word="${safeWordAttr}" onclick="toggleMastered(this.dataset.word)">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>${isMastered ? '已掌握' : '标记掌握'}</span>
-              </button>
+              <div class="card-footer-left">
+                <button class="btn-weak-toggle ${isWeak ? 'active' : ''}" data-word="${safeWord}" onclick="toggleWeak(this.getAttribute('data-word'))">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="${isWeak ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>${isWeak ? '已加待巩固' : '加待巩固'}</span>
+                </button>
+              </div>
+              <div class="card-footer-right">
+                ${focusBtnHtml}
+                ${copyBtnHtml}
+                <button class="btn-check" data-word="${safeWord}" onclick="toggleMastered(this.getAttribute('data-word'))">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>${isMastered ? '已掌握' : '标记掌握'}</span>
+                </button>
+              </div>
             </div>
           </div>
         `;
@@ -3705,17 +1408,19 @@
       }
 
       container.innerHTML = html;
-      updateStats(filtered);
+      updateStats();
     }
 
-    function renderFlashcard(flashCls) {
+    // ==========================================
+    // 渲染视图二：抽认卡模式（强对抗盲选）
+    // ==========================================
+    function renderFlashcard() {
       const filtered = getFilteredData();
       const total = filtered.length;
       document.getElementById('fcTotalIndex').innerText = total;
-      document.getElementById('totalVisibleCount').innerText = total;
 
       const deckCard = document.getElementById('fcDeckCard');
-      deckCard.className = flashCls ? ('flashcard-deck ' + flashCls) : 'flashcard-deck';
+      deckCard.className = 'flashcard-deck';
 
       if (total === 0) {
         document.getElementById('fcWord').innerText = '空';
@@ -3726,7 +1431,8 @@
         document.getElementById('fcMeaning').innerText = '没有符合条件的单词';
         document.getElementById('fcContrast').innerText = '';
         document.getElementById('fcNote').innerText = '';
-        updateStats(filtered);
+        const oldBar = document.getElementById('fcUtilBar');
+        if (oldBar) oldBar.innerHTML = '';
         return;
       }
 
@@ -3735,7 +1441,12 @@
 
       const item = filtered[fcIndex];
       document.getElementById('fcCurrentIndex').innerText = fcIndex + 1;
-      document.getElementById('fcWord').innerText = item.word;
+      const fcWordEl = document.getElementById('fcWord');
+      fcWordEl.innerText = item.word;
+      const isBlindMasked = blindListenMode && !fcAnswered;
+      fcWordEl.classList.toggle('blind-hidden', isBlindMasked);
+      const blindHintEl = document.getElementById('fcBlindHint');
+      if (blindHintEl) blindHintEl.style.display = isBlindMasked ? 'block' : 'none';
 
       const badgeEl = document.getElementById('fcBlindBadge');
       const quizBox = document.getElementById('fcQuizBox');
@@ -3743,144 +1454,184 @@
       const optionsGrid = document.getElementById('fcOptionsGrid');
 
       if (!fcAnswered) {
-        badgeEl.innerHTML = escapeHtml(getBlindCategoryName(item));
+        // 未回答前：纯粹中性灰标，绝不剧透正负向！
+        badgeEl.innerText = getBlindCategoryName(item.category);
         badgeEl.className = 'badge badge-blind';
 
         quizBox.style.display = 'flex';
         contentArea.style.display = 'none';
 
-        if (currentCategory !== 'core' && item.category === 'attitude') {
-          document.getElementById('fcQuizTitle').innerHTML = `${iconSvg('target', 14)}<span>考场判定：作者对此立场是？</span>`;
+        // 依据分类生成单手选项
+        if (item.category === 'attitude') {
+          document.getElementById('fcQuizTitle').innerText = '考场判定：作者对此立场是？';
           optionsGrid.className = 'fc-options-grid cols-3';
           optionsGrid.innerHTML = `
             <button class="btn-fc-choice" onclick="handleFcChoice('pos')">
-              <span class="choice-head" style="color:var(--badge-pos-text);">${iconSvg('pos', 14)}正向</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;"><i style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;"></i>正向</span>
               <span class="sub-tip">支持/赞同</span>
             </button>
             <button class="btn-fc-choice" onclick="handleFcChoice('neg')">
-              <span class="choice-head" style="color:var(--badge-neg-text);">${iconSvg('neg', 14)}批判</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;"><i style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></i>批判</span>
               <span class="sub-tip">质疑/题眼</span>
             </button>
             <button class="btn-fc-choice" onclick="handleFcChoice('other')">
-              <span class="choice-head" style="color:var(--badge-neutral-text);">${iconSvg('neutral', 14)}客观/陪跑</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;"><i style="width:8px;height:8px;border-radius:50%;background:#94a3b8;display:inline-block;"></i>客观/陪跑</span>
               <span class="sub-tip">审慎/秒排</span>
             </button>
           `;
-        } else if (currentCategory !== 'core' && item.category === 'logic') {
-          document.getElementById('fcQuizTitle').innerHTML = `${iconSvg('target', 14)}<span>考场判定：逻辑论点走向是？</span>`;
+        } else if (item.category === 'logic') {
+          document.getElementById('fcQuizTitle').innerText = '考场判定：逻辑论点走向是？';
           optionsGrid.className = 'fc-options-grid cols-2';
           optionsGrid.innerHTML = `
             <button class="btn-fc-choice" onclick="handleFcChoice('pos')">
-              <span class="choice-head" style="color:var(--badge-pos-text);">${iconSvg('up', 14)}撑腰促进</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>撑腰促进</span>
               <span class="sub-tip">同向强化/证实</span>
             </button>
             <button class="btn-fc-choice" onclick="handleFcChoice('neg')">
-              <span class="choice-head" style="color:var(--badge-neg-text);">${iconSvg('down', 14)}削弱阻碍</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>削弱阻碍</span>
               <span class="sub-tip">反向拆台/反转</span>
             </button>
           `;
-        } else if (currentCategory === 'core' || item.category === 'core') {
-          document.getElementById('fcQuizTitle').innerHTML = `${iconSvg('target', 14)}<span>考场盲测：2 秒内脱口而出核心义</span>`;
-          optionsGrid.className = 'fc-options-grid cols-2';
-          optionsGrid.innerHTML = `
-            <button class="btn-fc-choice" onclick="handleFcChoice('reveal')">
-              <span class="choice-head" style="color:var(--badge-pos-text);">${iconSvg('pos', 14)}秒出词义</span>
-              <span class="sub-tip">点击揭晓核对</span>
-            </button>
-            <button class="btn-fc-choice" onclick="handleFcChoice('forget')">
-              <span class="choice-head" style="color:var(--badge-neg-text);">${iconSvg('tier1', 14)}卡壳想不起</span>
-              <span class="sub-tip">揭晓并标待巩固</span>
-            </button>
-          `;
-        } else {
-          document.getElementById('fcQuizTitle').innerHTML = `${iconSvg('target', 14)}<span>熟词僻义：字面陷阱防范</span>`;
+        } else if (item.category === 'core') {
+          document.getElementById('fcQuizTitle').innerText = '个人核心提纯词：2秒盲测第一反应';
           optionsGrid.className = 'fc-options-grid';
           optionsGrid.innerHTML = `
             <button class="btn-fc-choice" onclick="handleFcChoice('reveal')">
-              <span class="choice-head" style="color:var(--badge-poly-text);">${iconSvg('poly', 14)}考研真题第一反射是？</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>脑海脱口而出核心义 / 态度方向</span>
+              <span class="sub-tip">点击揭晓考场释义</span>
+            </button>
+          `;
+        } else {
+          document.getElementById('fcQuizTitle').innerText = '熟词僻义：初中字面陷阱防范';
+          optionsGrid.className = 'fc-options-grid';
+          optionsGrid.innerHTML = `
+            <button class="btn-fc-choice" onclick="handleFcChoice('reveal')">
+              <span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>考研真题第一反射是？</span>
               <span class="sub-tip">点击揭晓真题考法</span>
             </button>
           `;
         }
       } else {
-        const primary = getPrimaryBadgeSpec(item);
-        badgeEl.innerHTML = `${iconSvg(primary.icon, 11)}<span>${escapeHtml(primary.label)}</span>`;
-        badgeEl.className = 'badge ' + primary.cls;
+        // 揭晓后：展示真实角色徽标与详细考点
+        const fcBadgeText = (currentCategory === 'core' || item.category === 'core') ? (item.coreBadge || item.badge) : item.badge;
+        badgeEl.innerText = fcBadgeText;
+        badgeEl.className = 'badge';
+        if (currentCategory === 'core' || item.category === 'core') {
+          if (item.coreTier === 'tier1') badgeEl.classList.add('badge-core-t1');
+          else if (item.coreTier === 'tier2') badgeEl.classList.add('badge-core-t2');
+          else badgeEl.classList.add('badge-core-t3');
+        } else if (item.type === 'neg') badgeEl.classList.add('badge-neg');
+        else if (item.type === 'neutral') badgeEl.classList.add('badge-neutral');
+        else if (item.type === 'warn') badgeEl.classList.add('badge-warn');
+        else if (item.type === 'poly') badgeEl.classList.add('badge-poly');
+        else badgeEl.classList.add('badge-pos');
 
         quizBox.style.display = 'none';
         contentArea.style.display = 'flex';
 
-        const displayMeaning = (currentCategory === 'core' && item.coreMeaning) ? item.coreMeaning : item.meaning;
-        document.getElementById('fcMeaning').innerText = displayMeaning;
+        document.getElementById('fcMeaning').innerText = item.meaning;
 
-        const cSpec = getContrastSpec(item);
         const contrastEl = document.getElementById('fcContrast');
-        contrastEl.innerHTML = `${iconSvg(cSpec.icon, 13)}<span>${escapeHtml(item.contrast)}</span>`;
-        contrastEl.className = cSpec.cls;
+        contrastEl.innerText = item.contrast;
+        contrastEl.className = 'contrast-box';
+        if (item.type === 'pos' && item.category === 'logic') contrastEl.classList.add('pos-dir');
+        else if (item.type === 'neg' && item.category === 'logic') contrastEl.classList.add('neg-dir');
 
         document.getElementById('fcNote').innerText = item.note || '';
+
+        let utilBar = document.getElementById('fcUtilBar');
+        if (!utilBar) {
+          utilBar = document.createElement('div');
+          utilBar.id = 'fcUtilBar';
+          utilBar.className = 'fc-util-bar';
+          contentArea.appendChild(utilBar);
+        }
+        const overlapHtml = vocabOverlapBadgeHTML(item.word);
+        const focusBtnHtml = (typeof FocusCore !== 'undefined')
+          ? FocusCore.buttonHTML(item.word, item.meaning, 'sprint', '冲刺专题', { compact: true })
+          : '';
+        const copyBtnHtml = (typeof StudyCopy !== 'undefined')
+          ? StudyCopy.buttonHTML(item.word, item.meaning, 'btn-mini-util')
+          : '';
+        utilBar.innerHTML = overlapHtml + focusBtnHtml + copyBtnHtml;
       }
-      updateStats(filtered);
+      updateStats();
     }
 
+    // 处理抽认卡选择判定（揭晓验证，不提前直接标熟；判错自动入待巩固与今日复习）
     function handleFcChoice(chosen) {
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
       const item = filtered[fcIndex];
       const banner = document.getElementById('fcResultBanner');
+      const deckCard = document.getElementById('fcDeckCard');
 
       let isCorrect = false;
-      if (currentCategory !== 'core' && item.category === 'attitude') {
+      if (item.category === 'attitude') {
         if (chosen === 'pos' && item.type === 'pos') isCorrect = true;
         else if (chosen === 'neg' && item.type === 'neg') isCorrect = true;
         else if (chosen === 'other' && (item.type === 'neutral' || item.type === 'warn')) isCorrect = true;
-      } else if (currentCategory !== 'core' && item.category === 'logic') {
+      } else if (item.category === 'logic') {
         if (chosen === 'pos' && item.type === 'pos') isCorrect = true;
         else if (chosen === 'neg' && item.type === 'neg') isCorrect = true;
       } else {
-        isCorrect = chosen !== 'forget';
+        isCorrect = true;
       }
 
       fcAnswered = true;
 
-      if (isCorrect) {
-        banner.className = 'fc-result-banner success';
-        banner.innerHTML = `${iconSvg('pos', 13)}<span>判断准确，核对释义后可进入下一词</span>`;
-        masteredSet.add(item.word);
-        saveSets();
-        renderFlashcard('success-flash');
-      } else {
-        banner.className = 'fc-result-banner fail';
-        banner.innerHTML = `${iconSvg('tier1', 13)}<span>已自动收入「待巩固」词池，重点复扫</span>`;
+      if (!isCorrect) {
         weakSet.add(item.word);
         masteredSet.delete(item.word);
         saveSets();
-        renderFlashcard('wrong-flash');
+        applySprintReviewRating(item.word, 'forget', 'sprint_quiz');
+      }
+
+      renderFlashcard();
+
+      if (isCorrect) {
+        deckCard.classList.add('success-flash');
+        banner.className = 'fc-result-banner success';
+        banner.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>判定准确！请核对真实释义后点击下方「秒杀掌握」或「加待巩固」';
+      } else {
+        deckCard.classList.add('wrong-flash');
+        banner.className = 'fc-result-banner fail';
+        banner.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>判断有误！已加入「待巩固」与今日背诵复习池';
       }
     }
 
     function fcNextWord() {
+      stopAutoPlay();
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
-      masteredSet.add(filtered[fcIndex].word);
+      const word = filtered[fcIndex].word;
+      masteredSet.add(word);
+      weakSet.delete(word);
       saveSets();
+      applySprintReviewRating(word, 'familiar', 'recite');
       fcAnswered = false;
       fcIndex++;
       renderFlashcard();
+      if (blindListenMode && viewMode === 'card') speakCurrentFcWord();
     }
 
     function fcMarkWeak() {
+      stopAutoPlay();
       const filtered = getFilteredData();
       if (filtered.length === 0) return;
-      weakSet.add(filtered[fcIndex].word);
-      masteredSet.delete(filtered[fcIndex].word);
+      const word = filtered[fcIndex].word;
+      weakSet.add(word);
+      masteredSet.delete(word);
       saveSets();
+      applySprintReviewRating(word, 'forget', 'recite');
       fcAnswered = false;
       fcIndex++;
       renderFlashcard();
+      if (blindListenMode && viewMode === 'card') speakCurrentFcWord();
     }
 
     function switchViewMode(mode) {
+      stopAutoPlay();
       viewMode = mode;
       const listEl = document.getElementById('vocabList');
       const deckEl = document.getElementById('flashcardDeck');
@@ -3932,15 +1683,12 @@
     }
 
     function switchCategory(cat, btn) {
+      stopAutoPlay();
       currentCategory = cat;
       document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
-      btn.classList.add('active');
-      const subTabs = document.getElementById('coreSubTabs');
-      if (cat === 'core') {
-        subTabs.classList.add('visible');
-      } else {
-        subTabs.classList.remove('visible');
-      }
+      if (btn) btn.classList.add('active');
+      const subEl = document.getElementById('coreSubtabs');
+      if (subEl) subEl.classList.toggle('visible', cat === 'core');
       fcIndex = 0;
       fcAnswered = false;
       if (viewMode === 'list') renderList();
@@ -3948,9 +1696,10 @@
     }
 
     function switchCoreTier(tier, btn) {
-      coreTierFilter = tier;
-      document.querySelectorAll('.sub-pill').forEach(el => el.classList.remove('active'));
-      btn.classList.add('active');
+      stopAutoPlay();
+      currentCoreTier = tier;
+      document.querySelectorAll('.subtab-pill').forEach(el => el.classList.remove('active'));
+      if (btn) btn.classList.add('active');
       fcIndex = 0;
       fcAnswered = false;
       if (viewMode === 'list') renderList();
@@ -3958,6 +1707,7 @@
     }
 
     function handleSearch() {
+      stopAutoPlay();
       searchQuery = document.getElementById('searchInput').value.trim();
       fcIndex = 0;
       fcAnswered = false;
@@ -3968,9 +1718,11 @@
     function toggleMastered(word) {
       if (masteredSet.has(word)) {
         masteredSet.delete(word);
+        clearSprintReviewMastered(word);
       } else {
         masteredSet.add(word);
         weakSet.delete(word);
+        applySprintReviewRating(word, 'familiar', 'recite');
       }
       saveSets();
       renderList();
@@ -3979,9 +1731,11 @@
     function toggleWeak(word) {
       if (weakSet.has(word)) {
         weakSet.delete(word);
+        clearSprintPref(word, 'hard');
       } else {
         weakSet.add(word);
         masteredSet.delete(word);
+        applySprintReviewRating(word, 'forget', 'recite');
       }
       saveSets();
       renderList();
@@ -3990,11 +1744,13 @@
     function saveSets() {
       localStorage.setItem('sprint_mastered_words', JSON.stringify(Array.from(masteredSet)));
       localStorage.setItem('sprint_weak_words', JSON.stringify(Array.from(weakSet)));
+      localStorage.setItem('learning_activity_dirty_v1', String(Date.now()));
       updateStats();
     }
 
     function resetProgress() {
       if (confirm('确定要重置已打勾掌握的进度吗？')) {
+        Array.from(masteredSet).forEach((w) => clearSprintReviewMastered(w));
         masteredSet.clear();
         saveSets();
         if (viewMode === 'list') renderList();
@@ -4002,27 +1758,234 @@
       }
     }
 
-    function updateStats(filteredList) {
-      const list = filteredList || getFilteredData();
+    function updateStats() {
       const countEl = document.getElementById('masteredCount');
       const fillEl = document.getElementById('progressFill');
-      const total = list.length;
-      const mastered = list.filter(w => masteredSet.has(w.word)).length;
+      const total = VOCAB_DATA.length || 1;
+      const mastered = VOCAB_DATA.filter(w => masteredSet.has(w.word)).length;
       countEl.innerText = mastered;
-      const pct = total ? Math.round((mastered / total) * 100) : 0;
+      const pct = Math.round((mastered / total) * 100);
       fillEl.style.width = pct + '%';
-      const weakInPool = VOCAB_DATA.filter(w => weakSet.has(w.word)).length;
-      document.getElementById('weakCountBadge').innerText = weakInPool;
+      document.getElementById('weakCountBadge').innerText = weakSet.size;
     }
 
-    function speakWord(word) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const spoken = String(word || '').replace(/\s*\/\s*/g, ', ');
-      const utter = new SpeechSynthesisUtterance(spoken);
-      utter.lang = 'en-US';
-      utter.rate = 0.9;
-      window.speechSynthesis.speak(utter);
+    function openSprintExport() {
+      if (typeof SprintExport === 'undefined' || !SprintExport.openModal) return;
+      const filterMap = {
+        all: 'sprint_all',
+        weak: 'sprint_weak',
+        attitude: 'sprint_attitude',
+        polysemy: 'sprint_polysemy',
+        logic: 'sprint_logic'
+      };
+      SprintExport.openModal(filterMap[currentCategory] || 'sprint_all');
+    }
+
+    function b64ToAudioBlobUrl(b64) {
+      const raw = atob(b64);
+      const bytes = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+      return URL.createObjectURL(new Blob([bytes], { type: 'audio/mpeg' }));
+    }
+
+    function getHbWordIndexMap() {
+      if (hbIndexMapPromise) return hbIndexMapPromise;
+      if (!('caches' in window)) {
+        hbIndexMapPromise = Promise.resolve(null);
+        return hbIndexMapPromise;
+      }
+      hbIndexMapPromise = caches.match('hongbaoshu.json', { ignoreSearch: true })
+        .then(res => res ? res.json() : null)
+        .then(list => {
+          if (!Array.isArray(list)) return null;
+          const map = Object.create(null);
+          for (let i = 0; i < list.length; i++) {
+            const w = list[i] && list[i].en ? String(list[i].en).trim().toLowerCase() : '';
+            if (w && map[w] === undefined) map[w] = i;
+          }
+          return map;
+        })
+        .catch(() => null);
+      return hbIndexMapPromise;
+    }
+
+    function resolveCachedWordAudio(word) {
+      const key = String(word || '').trim().toLowerCase();
+      if (!key) return Promise.resolve(null);
+      if (sprintWordBlobCache[key]) return Promise.resolve(sprintWordBlobCache[key]);
+      if (!('caches' in window)) return Promise.resolve(null);
+      return getHbWordIndexMap().then(map => {
+        if (!map || map[key] === undefined) return null;
+        const idx = map[key];
+        const unit = Math.floor(idx / 30);
+        const offset = idx % 30;
+        return caches.match('hb/audio_unit' + unit + '.json', { ignoreSearch: true })
+          .then(res => res ? res.json() : null)
+          .then(bundle => {
+            const entry = bundle && Array.isArray(bundle.words) ? bundle.words[offset] : null;
+            if (!entry || !entry.en) return null;
+            const url = b64ToAudioBlobUrl(entry.en);
+            sprintWordBlobCache[key] = url;
+            return url;
+          })
+          .catch(() => null);
+      }).catch(() => null);
+    }
+
+    function cancelSpeechAndAudio() {
+      speakSeqToken++;
+      if (sprintAudioEl) {
+        try {
+          sprintAudioEl.onended = null;
+          sprintAudioEl.onerror = null;
+          sprintAudioEl.pause();
+          sprintAudioEl.currentTime = 0;
+        } catch (e) {}
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+
+    function speakWithTts(word, token, onDone) {
+      if (token !== speakSeqToken) return;
+      if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(guard);
+        if (token === speakSeqToken && typeof onDone === 'function') onDone();
+      };
+      const guard = setTimeout(done, 5000);
+      try {
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = 'en-US';
+        utter.rate = 0.9;
+        utter.onend = done;
+        utter.onerror = done;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {
+        done();
+      }
+    }
+
+    function speakWord(word, onDone) {
+      cancelSpeechAndAudio();
+      const token = speakSeqToken;
+      if (!word) {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+      resolveCachedWordAudio(word).then(blobUrl => {
+        if (token !== speakSeqToken) return;
+        if (blobUrl) {
+          if (!sprintAudioEl) sprintAudioEl = new Audio();
+          sprintAudioEl.onended = () => { if (token === speakSeqToken && typeof onDone === 'function') onDone(); };
+          sprintAudioEl.onerror = () => speakWithTts(word, token, onDone);
+          sprintAudioEl.src = blobUrl;
+          sprintAudioEl.currentTime = 0;
+          const p = sprintAudioEl.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(() => speakWithTts(word, token, onDone));
+          }
+          return;
+        }
+        speakWithTts(word, token, onDone);
+      });
+    }
+
+    function speakCurrentFcWord(onDone) {
+      const filtered = getFilteredData();
+      if (!filtered.length) return;
+      const item = filtered[fcIndex];
+      if (item && item.word) speakWord(item.word, onDone);
+    }
+
+    function setAutoStatus(msg) {
+      const el = document.getElementById('fcAutoStatus');
+      if (el) el.innerText = msg || '';
+    }
+
+    function updateAutoPlayBtnUI() {
+      const btn = document.getElementById('btnAutoPlay');
+      const txt = document.getElementById('btnAutoPlayText');
+      if (btn) btn.classList.toggle('active', autoPlayMode);
+      if (txt) txt.innerText = autoPlayMode ? '暂停连播' : '自动连播';
+    }
+
+    function stopAutoPlay() {
+      autoPlayMode = false;
+      autoPlayToken++;
+      if (autoPlayTimer) {
+        clearTimeout(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+      cancelSpeechAndAudio();
+      updateAutoPlayBtnUI();
+      setAutoStatus('');
+    }
+
+    function toggleBlindListen() {
+      blindListenMode = !blindListenMode;
+      const btn = document.getElementById('btnBlindListen');
+      if (btn) btn.classList.toggle('active', blindListenMode);
+      if (viewMode === 'card') {
+        renderFlashcard();
+        if (blindListenMode && !fcAnswered) speakCurrentFcWord();
+      }
+    }
+
+    function runAutoPlayStep() {
+      const myToken = autoPlayToken;
+      if (!autoPlayMode || viewMode !== 'card') return;
+      const filtered = getFilteredData();
+      if (!filtered.length) { stopAutoPlay(); return; }
+      const item = filtered[fcIndex];
+      if (!fcAnswered) {
+        setAutoStatus('正在朗读英文…');
+        speakWord(item.word, () => {
+          if (!autoPlayMode || myToken !== autoPlayToken) return;
+          setAutoStatus('思考 2s… 即将揭晓');
+          autoPlayTimer = setTimeout(() => {
+            if (!autoPlayMode || myToken !== autoPlayToken) return;
+            fcAnswered = true;
+            renderFlashcard();
+            setAutoStatus('已揭晓考点，即将下一词…');
+            autoPlayTimer = setTimeout(() => {
+              if (!autoPlayMode || myToken !== autoPlayToken) return;
+              fcIndex = (fcIndex + 1) % filtered.length;
+              fcAnswered = false;
+              renderFlashcard();
+              runAutoPlayStep();
+            }, 1800);
+          }, 2000);
+        });
+      } else {
+        setAutoStatus('即将下一词…');
+        autoPlayTimer = setTimeout(() => {
+          if (!autoPlayMode || myToken !== autoPlayToken) return;
+          fcIndex = (fcIndex + 1) % filtered.length;
+          fcAnswered = false;
+          renderFlashcard();
+          runAutoPlayStep();
+        }, 1500);
+      }
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayMode) {
+        stopAutoPlay();
+        return;
+      }
+      if (viewMode !== 'card') switchViewMode('card');
+      autoPlayMode = true;
+      autoPlayToken++;
+      updateAutoPlayBtnUI();
+      runAutoPlayStep();
     }
 
     function toggleModal(open) {
@@ -4031,7 +1994,23 @@
       else m.classList.remove('open');
     }
 
-    // 初始化
+    function applyInitialQueryParam() {
+      try {
+        const params = new URLSearchParams(window.location.search || '');
+        const word = (params.get('word') || '').trim();
+        if (word) {
+          searchQuery = word;
+          const input = document.getElementById('searchInput');
+          if (input) input.value = word;
+          const idx = VOCAB_DATA.findIndex((item) => item.word === word);
+          if (idx >= 0) cardMaskStates[idx] = false;
+        }
+      } catch (e) {}
+    }
+
+    // 初始化：先迁移/同步 ReviewCore，再渲染页面
+    migrateAndSyncSprintReviews();
+    applyInitialQueryParam();
     renderList();
   </script>
 </body>
