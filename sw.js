@@ -1,19 +1,14 @@
-const CACHE = 'kv-2.4.0';
+const CACHE = 'kv-2.3.2';
 const APP_SHELL = [
   'index.html',
-  'desktop-layout.css?v=2.4.0',
-  'theme.css?v=2.4.0',
-  'theme-core.js?v=2.4.0',
-  'review-core.js?v=2.4.0',
-  'sprint-vocab-data.js?v=2.4.0',
-  'sync-core.js?v=2.4.0',
-  'focus-core.js?v=2.4.0',
-  'study-copy.js?v=2.4.0',
-  'word-network.js?v=2.4.0',
-  'sprint-export.js?v=2.4.0',
-  'audio-cache.js?v=2.4.0',
-  'ui-motion.js?v=2.4.0',
-  'hongbaoshu.json?v=2.4.0',
+  'review-core.js?v=2.3.2',
+  'focus-core.js?v=2.3.2',
+  'study-copy.js?v=2.3.2',
+  'word-network.js?v=2.3.2',
+  'sprint-export.js?v=2.3.2',
+  'audio-cache.js?v=2.3.2',
+  'ui-motion.js?v=2.3.2',
+  'hongbaoshu.json?v=2.3.2',
   'manifest.json',
   'hb/index.html',
   'uf/index.html',
@@ -22,22 +17,6 @@ const APP_SHELL = [
   'icons/words-180.png',
   'icons/words-192.png',
   'icons/words-512.png'
-];
-const CRITICAL_SHELL = [
-  'index.html',
-  'desktop-layout.css?v=2.4.0',
-  'theme.css?v=2.4.0',
-  'theme-core.js?v=2.4.0',
-  'review-core.js?v=2.4.0',
-  'sprint-vocab-data.js?v=2.4.0',
-  'sync-core.js?v=2.4.0',
-  'focus-core.js?v=2.4.0',
-  'study-copy.js?v=2.4.0',
-  'word-network.js?v=2.4.0',
-  'sprint-export.js?v=2.4.0',
-  'audio-cache.js?v=2.4.0',
-  'ui-motion.js?v=2.4.0',
-  'hongbaoshu.json?v=2.4.0'
 ];
 function cacheAppShell() {
   return caches.open(CACHE).then(cache =>
@@ -52,9 +31,9 @@ function matchNavigation(request) {
   else if (/\/wordbank\/(?:index\.html)?$/.test(pathname)) fallback = 'wordbank/index.html';
   else if (/\/sprint-vocab\.html$/.test(pathname)) fallback = 'sprint-vocab.html';
   return caches.open(CACHE)
-    .then(cache => cache.match(request, { ignoreSearch: true })
+    .then(cache => cache.match(request)
       .then(cached => cached || cache.match(fallback)))
-    .then(cached => cached || caches.match(request, { ignoreSearch: true }))
+    .then(cached => cached || caches.match(request))
     .then(cached => cached || caches.match(fallback));
 }
 self.addEventListener('install', e => {
@@ -66,9 +45,20 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(cache => Promise.all(CRITICAL_SHELL.map(url => cache.match(url))))
+      .then(cache => Promise.all([
+        cache.match('index.html'),
+        cache.match('review-core.js?v=2.3.2'),
+        cache.match('focus-core.js?v=2.3.2'),
+        cache.match('study-copy.js?v=2.3.2'),
+        cache.match('word-network.js?v=2.3.2'),
+        cache.match('sprint-export.js?v=2.3.2'),
+        cache.match('audio-cache.js?v=2.3.2'),
+        cache.match('ui-motion.js?v=2.3.2'),
+        cache.match('hongbaoshu.json?v=2.3.2'),
+        cache.match('sprint-vocab.html')
+      ]))
       .then(shell => shell.every(Boolean)
-        ? caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('kv-') && k !== CACHE).map(k => caches.delete(k))))
+        ? caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
         : null)
       .then(() => self.clients.claim())
   );
@@ -76,8 +66,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   const isSameOrigin = u.origin === self.location.origin;
-  const isAudioBundle = /\/audio_g\d+\.json$/.test(u.pathname) || /\/hb\/audio_unit\d+\.json$/.test(u.pathname) || /\/wordbank\/audio\/.+\.mp3$/.test(u.pathname);
-  const isCoreData = /\/hongbaoshu\.json$/.test(u.pathname) || /\/hb\/words\.json$/.test(u.pathname);
+  const isAudioBundle = /\/audio_g\d+\.json$/.test(u.pathname) || /\/hb\/audio_unit\d+\.json$/.test(u.pathname);
+  const isCoreData = /\/hongbaoshu\.json$/.test(u.pathname);
   // Large audio bundles are cache-first. The page keeps only the most recent bounded set.
   if (isAudioBundle) {
     e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request).then(r => {
@@ -112,19 +102,11 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request).then(r => {
         if (!r.ok) return r;
-        if (isSameOrigin) {
-          const c = r.clone();
-          if (u.search.indexOf('t=') === -1) {
-            caches.open(CACHE).then(ca => ca.put(e.request, c));
-          } else {
-            const cleanUrl = new URL(u.href);
-            cleanUrl.searchParams.delete('t');
-            const cleanReq = new Request(cleanUrl.href, { method: 'GET' });
-            caches.open(CACHE).then(ca => ca.put(cleanReq, c));
-          }
+        if (isSameOrigin && u.search.indexOf('t=') === -1) {
+          const c = r.clone(); caches.open(CACHE).then(ca => ca.put(e.request, c));
         }
         return r;
-      }).catch(() => caches.match(e.request, { ignoreSearch: true }))
+      }).catch(() => caches.match(e.request))
     );
     return;
   }
