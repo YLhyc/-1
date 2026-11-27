@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>706 繁体识记</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="706繁體" />
@@ -11,6 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png" />
+  <title>706 繁体识记</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -20,44 +20,49 @@
       --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
       --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-      /* Palette B: Warm Parchment */
-      --background: #faf9f5;
+      --bg: #faf9f5;
       --surface: #f3f1ea;
-      --surface-elevated: #ffffff;
+      --surface-card: #ffffff;
       --surface-hover: #ebe7dc;
       --text: #141413;
-      --text-secondary: #5c5a53;
-      --text-tertiary: #8c887e;
+      --text-2: #5c5a53;
+      --text-3: #8c887e;
       --border: #e4e1d6;
       --border-strong: #cfcab8;
 
       --accent: #d97757;
-      --success: #2f7d4a;
-      --success-bg: #ebf5ee;
-      --warning: #c46b16;
-      --warning-bg: #fdf3e7;
-      --error: #c93b2b;
-      --error-bg: #fbeceb;
+      --accent-soft: #fdf2ee;
+      --ok: #2f7d4a;
+      --ok-soft: #ebf5ee;
+      --warn: #c46b16;
+      --warn-soft: #fdf3e7;
+      --err: #c93b2b;
+      --err-soft: #fbeceb;
+      --indigo: #4338ca;
+      --indigo-soft: #eef2ff;
     }
 
     [data-mode="dark"] {
-      --background: #141413;
+      --bg: #141413;
       --surface: #1c1b19;
-      --surface-elevated: #22211e;
+      --surface-card: #22211e;
       --surface-hover: #2a2824;
       --text: #ece9e0;
-      --text-secondary: #a6a298;
-      --text-tertiary: #737067;
+      --text-2: #a6a298;
+      --text-3: #737067;
       --border: #2b2a26;
       --border-strong: #3f3d37;
 
       --accent: #e08a6d;
-      --success: #4ade80;
-      --success-bg: rgba(74, 222, 128, 0.12);
-      --warning: #fbbf24;
-      --warning-bg: rgba(251, 191, 36, 0.12);
-      --error: #f87171;
-      --error-bg: rgba(248, 113, 113, 0.12);
+      --accent-soft: rgba(224, 138, 109, 0.14);
+      --ok: #4ade80;
+      --ok-soft: rgba(74, 222, 128, 0.13);
+      --warn: #fbbf24;
+      --warn-soft: rgba(251, 191, 36, 0.13);
+      --err: #f87171;
+      --err-soft: rgba(248, 113, 113, 0.13);
+      --indigo: #818cf8;
+      --indigo-soft: rgba(129, 140, 248, 0.14);
     }
 
     * {
@@ -72,22 +77,19 @@
       height: 100%;
       height: 100dvh;
       overflow: hidden;
-      background: var(--background);
+      background: var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
       -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    button { font: inherit; color: inherit; }
+    input { font: inherit; color: inherit; }
 
     :focus-visible {
       outline: 2px solid var(--text);
       outline-offset: 2px;
-      border-radius: 4px;
+      border-radius: 6px;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -98,131 +100,367 @@
       }
     }
 
-    /* Shell */
-    .app-shell {
+    /* ── App Views Container ── */
+    .app-root {
+      position: relative;
       width: 100%;
-      max-width: 520px;
+      max-width: 480px;
       height: 100%;
       height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      padding: calc(12px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom));
-      gap: 10px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: var(--bg);
     }
 
-    /* Header */
-    .top-bar {
+    .app-view {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+      padding: calc(12px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom));
+    }
+
+    .app-view.active {
+      display: flex;
+    }
+
+    .app-view::-webkit-scrollbar { display: none; }
+
+    /* Recite View is Full-Viewport Locked (No Vertical Scroll) */
+    #view-recite {
+      overflow: hidden;
+      padding: calc(10px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom));
+      touch-action: pan-y;
+    }
+
+    /* ── Top Chrome ── */
+    .topbar {
       flex: none;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .brand {
+    .brand-group {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .brand-title {
       font-family: var(--font-serif);
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 700;
-      color: var(--text);
       letter-spacing: 0.01em;
     }
 
-    .deck-badge {
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-3);
       font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      padding: 3px 9px;
-      border-radius: 999px;
     }
 
-    .top-actions {
+    .tool-btns {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      border: 0.5px solid var(--border);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 0.5px solid var(--border-strong);
       background: var(--surface);
-      color: var(--text-secondary);
+      color: var(--text-2);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
-    .icon-btn:hover {
-      background: var(--surface-hover);
+    .icon-btn:active { transform: scale(0.95); }
+    .icon-btn:disabled { opacity: 0.35; pointer-events: none; }
+
+    /* ── Today View (Words Style) ── */
+    .kicker {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .hero-card {
+      background: var(--surface-card);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .hero-meta {
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .hero-count {
+      text-align: right;
+      flex: none;
+    }
+
+    .hero-num {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
       color: var(--text);
     }
 
-    /* Filter Tabs */
-    .deck-tabs {
-      flex: none;
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-    }
-
-    .deck-tabs::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tab-btn {
-      flex: none;
-      height: 30px;
-      padding: 0 11px;
-      border-radius: 8px;
-      border: 0.5px solid var(--border);
-      background: var(--background);
-      color: var(--text-secondary);
+    .hero-unit {
       font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
+      color: var(--text-3);
+      margin-top: 3px;
+    }
+
+    .mix-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: var(--surface);
+      overflow: hidden;
+      display: flex;
+      margin: 14px 0 8px;
+    }
+
+    .mix-seg { height: 100%; transition: width 0.25s ease; }
+    .mix-due { background: var(--accent); }
+    .mix-hard { background: var(--err); }
+    .mix-fresh { background: var(--ok); }
+
+    .mix-legend {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-2);
+      margin-bottom: 14px;
+    }
+
+    .mix-legend span {
       display: inline-flex;
       align-items: center;
       gap: 5px;
     }
 
-    .tab-btn:hover {
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .limit-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 4px;
       background: var(--surface);
+      border-radius: 10px;
+      border: 0.5px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .limit-btn {
+      height: 30px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--text-2);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .limit-btn.active {
+      background: var(--surface-card);
       color: var(--text);
+      font-weight: 600;
+      border: 0.5px solid var(--border-strong);
     }
 
-    .tab-btn.active {
+    .primary-cta {
+      width: 100%;
+      height: 44px;
+      border-radius: 10px;
+      border: 0.5px solid var(--text);
       background: var(--text);
-      color: var(--background);
-      border-color: var(--text);
+      color: var(--bg);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .tab-count {
+    .primary-cta:active { transform: scale(0.985); }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 14px 2px 8px;
+    }
+
+    .section-head h2 {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .section-head span {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .deck-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .deck-row {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+
+    .deck-row:active { background: var(--surface-hover); }
+
+    .deck-row-title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .deck-row-sub {
+      font-size: 12px;
+      color: var(--text-2);
+    }
+
+    .deck-row-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: none;
+    }
+
+    .count-pill {
       font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
-      font-size: 11px;
-      opacity: 0.78;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--surface-card);
+      border: 0.5px solid var(--border);
+      color: var(--text-2);
     }
 
-    /* Progress Bar */
-    .progress-track {
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .metric-cell {
+      padding: 12px 8px;
+      text-align: center;
+      border-left: 0.5px solid var(--border);
+      border-top: 0.5px solid var(--border);
+    }
+
+    .metric-cell:nth-child(-n+3) { border-top: 0; }
+    .metric-cell:nth-child(3n+1) { border-left: 0; }
+
+    .metric-val {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .metric-lbl {
+      font-size: 12px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    /* ── Recite View (Words 2-Phase + 4-Tier) ── */
+    .recite-nav {
       flex: none;
-      width: 100%;
-      height: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .recite-progress-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .recite-progress-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-2);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-bar {
+      height: 4px;
       background: var(--border);
       border-radius: 2px;
       overflow: hidden;
@@ -232,113 +470,143 @@
       height: 100%;
       width: 0%;
       background: var(--accent);
-      transition: width 0.25s ease;
+      transition: width 0.2s ease;
     }
 
-    /* Stage */
-    .stage {
+    .card-stage {
       flex: 1 1 auto;
       min-height: 0;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      perspective: 1000px;
+      margin: 4px 0 10px;
     }
 
-    .flashcard {
-      position: absolute;
+    .vocab-card {
       width: 100%;
       height: 100%;
-      max-height: 460px;
-      background: var(--surface-elevated);
+      max-height: 440px;
+      background: var(--surface-card);
       border: 0.5px solid var(--border-strong);
-      border-radius: 14px;
-      padding: 20px 22px;
+      border-radius: 18px;
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      cursor: grab;
-      touch-action: none;
-      will-change: transform;
+      position: relative;
       user-select: none;
+      touch-action: pan-y;
+      will-change: transform;
+      cursor: grab;
       overflow: hidden;
     }
 
-    .flashcard:active {
-      cursor: grabbing;
-    }
+    .vocab-card.swipe-left { border-color: var(--ok); }
+    .vocab-card.swipe-right { border-color: var(--err); }
 
-    .card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .meta-tag {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      padding: 3px 10px;
-      border-radius: 6px;
-    }
-
-    .meta-tag.requeue {
-      color: var(--warning);
-      background: var(--warning-bg);
-      border-color: transparent;
-    }
-
-    .swipe-hint {
+    .swipe-stamp {
       position: absolute;
-      top: 20px;
-      padding: 4px 12px;
+      top: 16px;
+      padding: 4px 10px;
       border-radius: 6px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       opacity: 0;
       pointer-events: none;
       border: 0.5px solid currentColor;
+      z-index: 4;
     }
 
-    .swipe-hint.know { right: 20px; color: var(--success); background: var(--success-bg); }
-    .swipe-hint.unknown { left: 20px; color: var(--error); background: var(--error-bg); }
-    .swipe-hint.vague { top: 56px; left: 50%; transform: translateX(-50%); color: var(--warning); background: var(--warning-bg); }
+    .swipe-stamp.left { left: 16px; color: var(--ok); background: var(--ok-soft); }
+    .swipe-stamp.right { right: 16px; color: var(--err); background: var(--err-soft); }
 
-    /* Center Glyph */
-    .glyph-zone {
+    .vocab-card.swipe-left .swipe-stamp.left { opacity: 1; }
+    .vocab-card.swipe-right .swipe-stamp.right { opacity: 1; }
+
+    .vc-top-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .vc-tag {
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      color: var(--text-2);
+    }
+
+    .vc-tag.lapses {
+      color: var(--err);
+      background: var(--err-soft);
+      border-color: transparent;
+    }
+
+    .vc-tag.repeat {
+      color: var(--warn);
+      background: var(--warn-soft);
+      border-color: transparent;
+    }
+
+    .vc-glyph-wrap {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 8px 0;
+      min-height: 0;
+      padding: 6px 0;
     }
 
-    .trad-glyph {
+    .vc-trad {
       font-family: var(--font-serif);
-      font-size: 84px;
-      font-weight: 600;
-      line-height: 1.1;
+      font-size: clamp(64px, 18vw, 92px);
+      font-weight: 700;
+      line-height: 1.08;
       color: var(--text);
-      letter-spacing: 0.04em;
+      text-align: center;
     }
 
-    .tap-prompt {
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--text-tertiary);
+    /* Phase 1 Prompt (Strict No-Spoiler Blind Mode) */
+    .vc-phase1-prompt {
+      width: 100%;
+      border: 1px dashed var(--border-strong);
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .vc-phase1-prompt:active { background: var(--surface-hover); }
+    .vc-phase1-prompt.hidden { display: none; }
+
+    .vc-prompt-main {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
-    /* Answer Reveal Box */
-    .answer-box {
+    .vc-prompt-sub {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    /* Phase 2 Content */
+    .vc-phase2-content {
       border-top: 0.5px solid var(--border);
       padding-top: 14px;
       display: flex;
@@ -346,140 +614,106 @@
       gap: 8px;
     }
 
-    .answer-box.concealed {
-      filter: blur(8px);
-      opacity: 0.22;
-      pointer-events: none;
-    }
+    .vc-phase2-content.hidden { display: none; }
 
-    .ans-row {
+    .vc-ans-head {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
       gap: 10px;
     }
 
-    .simp-word {
+    .vc-simp {
       font-family: var(--font-serif);
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
       color: var(--text);
     }
 
-    .fam-words {
+    .vc-words {
       font-family: var(--font-serif);
       font-size: 14px;
       font-weight: 600;
       color: var(--accent);
     }
 
-    .ans-tip {
+    .vc-tip {
       font-family: var(--font-serif);
       font-size: 14px;
-      line-height: 1.65;
-      color: var(--text-secondary);
-      max-width: 65ch;
+      line-height: 1.6;
+      color: var(--text-2);
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
     }
 
-    /* Controls */
-    .tool-row {
+    /* Utility & Rate Bars */
+    .recite-utility {
       flex: none;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      margin-bottom: 8px;
     }
 
-    .secondary-btn {
+    .util-btn {
       height: 32px;
-      padding: 0 12px;
+      padding: 0 11px;
       border-radius: 8px;
       border: 0.5px solid var(--border-strong);
       background: var(--surface);
-      color: var(--text-secondary);
+      color: var(--text-2);
       font-size: 12px;
       font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .secondary-btn:hover {
-      background: var(--surface-hover);
-      color: var(--text);
-    }
+    .util-btn:disabled { opacity: 0.35; pointer-events: none; }
 
-    .stats-inline {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-      font-size: 12px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dot-stat {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    /* Rating Buttons */
-    .rating-bar {
+    .rate-grid {
       flex: none;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
 
+    .rate-grid.phase1 { grid-template-columns: 1fr 1fr; }
+    .rate-grid.phase2 { grid-template-columns: repeat(4, 1fr); }
+
     .rate-btn {
-      height: 48px;
+      height: 50px;
       border-radius: 10px;
       border: 0.5px solid var(--border-strong);
-      background: var(--surface-elevated);
-      cursor: pointer;
+      background: var(--surface-card);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 2px;
-      transition: background 0.12s ease, transform 0.1s ease;
+      cursor: pointer;
     }
 
-    .rate-btn:active {
-      transform: scale(0.98);
-    }
+    .rate-btn:active { transform: scale(0.96); }
+    .rate-btn .r-name { font-size: 13px; font-weight: 700; }
+    .rate-btn .r-hint { font-size: 11px; opacity: 0.8; font-family: var(--font-mono); }
 
-    .rate-btn .label {
-      font-size: 13px;
-      font-weight: 600;
-    }
+    .rate-btn.reveal { color: var(--text); background: var(--surface); border-color: var(--border-strong); }
+    .rate-btn.know-p1 { color: var(--ok); background: var(--ok-soft); border-color: var(--ok); }
+    .rate-btn.forget { color: var(--err); background: var(--err-soft); border-color: var(--err); }
+    .rate-btn.vague { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+    .rate-btn.familiar { color: var(--ok); background: var(--ok-soft); border-color: var(--ok); }
+    .rate-btn.mastered { color: var(--indigo); background: var(--indigo-soft); border-color: var(--indigo); }
 
-    .rate-btn .sub {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      opacity: 0.72;
-    }
-
-    .rate-btn.unknown { color: var(--error); border-color: var(--error); background: var(--error-bg); }
-    .rate-btn.vague { color: var(--warning); border-color: var(--warning); background: var(--warning-bg); }
-    .rate-btn.know { color: var(--success); border-color: var(--success); background: var(--success-bg); }
-
-    /* Summary Card */
     .summary-card {
       width: 100%;
-      background: var(--surface-elevated);
+      background: var(--surface-card);
       border: 0.5px solid var(--border-strong);
-      border-radius: 14px;
-      padding: 26px 22px;
+      border-radius: 16px;
+      padding: 24px 18px;
       display: none;
       flex-direction: column;
       align-items: center;
@@ -487,583 +721,1235 @@
       gap: 14px;
     }
 
-    .summary-title {
-      font-family: var(--font-serif);
-      font-size: 20px;
-      font-weight: 700;
-    }
+    .summary-card.active { display: flex; }
 
-    .summary-desc {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .summary-grid {
+    /* ── Library View (Search & Status Management) ── */
+    .search-box {
       width: 100%;
+      height: 38px;
+      border-radius: 10px;
+      border: 0.5px solid var(--border-strong);
+      background: var(--surface-card);
+      padding: 0 12px;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: 10px;
+      flex: none;
+    }
+
+    .filter-pills::-webkit-scrollbar { display: none; }
+
+    .filter-pill {
+      flex: none;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 8px;
+      border: 0.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .lib-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .lib-item {
+      background: var(--surface-card);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .lib-trad {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+      width: 38px;
+      text-align: center;
+      flex: none;
+      line-height: 1.1;
+    }
+
+    .lib-info { flex: 1; min-width: 0; }
+
+    .lib-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 3px;
+    }
+
+    .lib-simp { font-weight: 700; font-size: 14px; }
+    .lib-words { font-size: 12px; color: var(--accent); font-weight: 600; }
+    .lib-tip { font-size: 12px; color: var(--text-2); line-height: 1.45; }
+
+    .lib-act {
+      flex: none;
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 7px;
+      border: 0.5px solid var(--border-strong);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--text-2);
+      cursor: pointer;
+    }
+
+    /* ── Progress View ── */
+    .prog-panel {
+      background: var(--surface-card);
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .prog-title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .leech-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-top: 0.5px solid var(--border);
+      font-size: 13px;
+    }
+
+    .leech-row:first-of-type { border-top: 0; }
+
+    /* ── Bottom Floating Tabbar (Words A3 Style) ── */
+    .app-tabbar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      width: min(448px, calc(100% - 28px));
+      height: 58px;
+      background: var(--surface-card);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 18px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      padding: 4px;
+      z-index: 50;
     }
 
-    .stat-box {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 6px;
-    }
+    .app-tabbar.hidden { display: none; }
 
-    .stat-num {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .stat-lbl {
+    .tab-item {
+      border: 0;
+      background: transparent;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
       font-size: 12px;
-      color: var(--text-secondary);
-      margin-top: 3px;
+      font-weight: 500;
+      color: var(--text-3);
+      cursor: pointer;
     }
 
-    .primary-btn {
-      width: 100%;
-      height: 40px;
-      border-radius: 8px;
-      border: 0.5px solid var(--text);
-      background: var(--text);
-      color: var(--background);
-      font-size: 13px;
+    .tab-item.active {
+      background: var(--surface);
+      color: var(--text);
       font-weight: 600;
-      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: calc(14px + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%) translateY(-12px);
+      background: var(--text);
+      color: var(--bg);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="top-bar">
-      <div class="brand">
-        <span class="brand-title">706 繁体识记</span>
-        <span class="deck-badge" id="progressBadge">1 / 61</span>
+  <div class="toast" id="toast"></div>
+
+  <div class="app-root">
+    <!-- VIEW 1: 今日首页 -->
+    <section class="app-view active" id="view-today">
+      <div class="topbar">
+        <div class="brand-group">
+          <div class="brand-title">706 繁体识记</div>
+          <div class="brand-sub" id="examCountdown">距初试 22 天 · 2026-12-19</div>
+        </div>
+        <div class="tool-btns">
+          <button class="icon-btn" id="themeBtn" aria-label="切换日夜模式">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="top-actions">
-        <button class="icon-btn" id="shuffleBtn" title="打乱顺序">
+
+      <div class="kicker">今日调度队列</div>
+      <div class="hero-card">
+        <div class="hero-top">
+          <div>
+            <div class="hero-title" id="heroTitle">智能复习与盲区清仓</div>
+            <div class="hero-meta" id="heroMeta">优先调度到期词、错题回炉与未练盲区</div>
+          </div>
+          <div class="hero-count">
+            <div class="hero-num" id="heroDueNum">0</div>
+            <div class="hero-unit">待过关</div>
+          </div>
+        </div>
+
+        <div class="mix-bar">
+          <div class="mix-seg mix-due" id="segDue" style="width:33%"></div>
+          <div class="mix-seg mix-hard" id="segHard" style="width:33%"></div>
+          <div class="mix-seg mix-fresh" id="segFresh" style="width:34%"></div>
+        </div>
+        <div class="mix-legend">
+          <span><i class="dot" style="background:var(--accent)"></i>到期 <b id="cntDue">0</b></span>
+          <span><i class="dot" style="background:var(--err)"></i>错题 <b id="cntHard">0</b></span>
+          <span><i class="dot" style="background:var(--ok)"></i>未学 <b id="cntFresh">0</b></span>
+        </div>
+
+        <div class="limit-row" id="limitRow">
+          <button class="limit-btn" data-limit="15">15 张</button>
+          <button class="limit-btn active" data-limit="30">30 张</button>
+          <button class="limit-btn" data-limit="60">60 张</button>
+          <button class="limit-btn" data-limit="0">全部</button>
+        </div>
+
+        <button class="primary-cta" id="startTodayBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="6 3 20 12 6 21 6 3"></polygon>
+          </svg>
+          开始今日识记
+        </button>
+      </div>
+
+      <div class="section-head">
+        <h2>专项词库</h2>
+        <span>点击直接开练</span>
+      </div>
+      <div class="deck-list" id="deckList"></div>
+
+      <div class="section-head">
+        <h2>总体掌握概览</h2>
+        <span>本地持久存储</span>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-cell"><div class="metric-val" id="mTotal">0</div><div class="metric-lbl">总词条</div></div>
+        <div class="metric-cell"><div class="metric-val" id="mToday">0</div><div class="metric-lbl">今日已练</div></div>
+        <div class="metric-cell"><div class="metric-val" id="mMastered" style="color:var(--indigo)">0</div><div class="metric-lbl">已斩归档</div></div>
+        <div class="metric-cell"><div class="metric-val" id="mFamiliar" style="color:var(--ok)">0</div><div class="metric-lbl">熟知调度</div></div>
+        <div class="metric-cell"><div class="metric-val" id="mHard" style="color:var(--err)">0</div><div class="metric-lbl">易错重点</div></div>
+        <div class="metric-cell"><div class="metric-val" id="mFresh" style="color:var(--text-2)">0</div><div class="metric-lbl">尚未首测</div></div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: 沉浸式识记舞台 -->
+    <section class="app-view" id="view-recite">
+      <div class="recite-nav">
+        <button class="icon-btn" id="backHomeBtn" aria-label="返回首页">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="recite-progress-wrap">
+          <div class="recite-progress-top">
+            <span id="reciteDeckName">今日智能调度</span>
+            <span id="reciteCounter">1 / 30</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="reciteProgressFill"></div>
+          </div>
+        </div>
+        <button class="icon-btn" id="shuffleSessionBtn" aria-label="乱序重排">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="16 3 21 3 21 8"></polyline>
             <line x1="4" y1="20" x2="21" y2="3"></line>
             <polyline points="21 16 21 21 16 21"></polyline>
             <line x1="15" y1="15" x2="21" y2="21"></line>
-            <line x1="4" y1="4" x2="9" y2="9"></line>
-          </svg>
-        </button>
-        <button class="icon-btn" id="themeBtn" title="切换日夜模式">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-          </svg>
-        </button>
-        <button class="icon-btn" id="resetBtn" title="重置本组进度">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-            <path d="M3 3v5h5"></path>
           </svg>
         </button>
       </div>
-    </header>
 
-    <nav class="deck-tabs" id="deckTabs"></nav>
+      <div class="card-stage">
+        <div class="vocab-card" id="vocabCard">
+          <div class="swipe-stamp left">熟知</div>
+          <div class="swipe-stamp right">查看 / 忘记</div>
 
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
+          <div class="vc-top-meta">
+            <span class="vc-tag" id="vcTag">今日61</span>
+            <span class="vc-tag lapses" id="vcLapses" style="display:none;">错 0 次</span>
+            <span class="vc-tag repeat" id="vcRepeat" style="display:none;">本轮回炉</span>
+          </div>
 
-    <main class="stage" id="stage">
-      <div class="flashcard" id="flashcard">
-        <div class="swipe-hint unknown" id="hintUnknown">不认识 · 重排</div>
-        <div class="swipe-hint vague" id="hintVague">模糊 · 再看</div>
-        <div class="swipe-hint know" id="hintKnow">熟知 · 过关</div>
+          <div class="vc-glyph-wrap">
+            <div class="vc-trad" id="vcTrad">嚴</div>
+          </div>
 
-        <div class="card-meta">
-          <span class="meta-tag" id="cardGroup">今日 61 盲区</span>
-          <span class="meta-tag requeue" id="requeueTag" style="display:none;">错字回炉</span>
-        </div>
+          <!-- Phase 1: 无剧透盲测提示区 -->
+          <div class="vc-phase1-prompt" id="phase1Prompt">
+            <div class="vc-prompt-main">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              点击查看简体与口诀
+            </div>
+            <div class="vc-prompt-sub">先在心里写出简体与熟词，左滑直接过关</div>
+          </div>
 
-        <div class="glyph-zone" id="glyphZone">
-          <div class="trad-glyph" id="tradGlyph">嚴</div>
-          <div class="tap-prompt" id="tapPrompt">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-            点击卡片或按空格显示简体与记忆法
+          <!-- Phase 2: 答案与口诀揭示区 -->
+          <div class="vc-phase2-content hidden" id="phase2Content">
+            <div class="vc-ans-head">
+              <span class="vc-simp" id="vcSimp">严</span>
+              <span class="vc-words" id="vcWords">嚴肅 / 威嚴</span>
+            </div>
+            <div class="vc-tip" id="vcTip">上两“口”戴帽，下“厂”里藏“敢”，与“敢”完全不同。</div>
           </div>
         </div>
 
-        <div class="answer-box concealed" id="answerBox">
-          <div class="ans-row">
-            <span class="simp-word" id="simpWord">严</span>
-            <span class="fam-words" id="famWords">嚴肅 / 威嚴</span>
+        <div class="summary-card" id="summaryCard">
+          <div class="hero-title">本轮识记已完成</div>
+          <p class="hero-meta" id="summaryDesc">所有待复测与回炉字均已过关，调度间隔已自动更新。</p>
+          <div class="metrics-grid" style="width:100%">
+            <div class="metric-cell"><div class="metric-val" id="sumDone">0</div><div class="metric-lbl">本次完成</div></div>
+            <div class="metric-cell"><div class="metric-val" id="sumFamiliar" style="color:var(--ok)">0</div><div class="metric-lbl">一次熟知</div></div>
+            <div class="metric-cell"><div class="metric-val" id="sumHard" style="color:var(--err)">0</div><div class="metric-lbl">回炉巩固</div></div>
           </div>
-          <p class="ans-tip" id="ansTip">上两“口”戴帽，下“厂”里藏“敢”，与“敢”完全不同。</p>
+          <button class="primary-cta" id="summaryBackBtn">返回今日首页</button>
         </div>
       </div>
 
-      <div class="summary-card" id="summaryCard">
-        <div class="summary-title">本组识记已清仓</div>
-        <p class="summary-desc" id="summaryDesc">所有卡壳与模糊字均已通过回炉重测。</p>
-        <div class="summary-grid">
-          <div class="stat-box">
-            <div class="stat-num" style="color:var(--success);" id="sumKnow">0</div>
-            <div class="stat-lbl">一次熟知</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color:var(--warning);" id="sumVague">0</div>
-            <div class="stat-lbl">模糊回炉</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" style="color:var(--error);" id="sumUnknown">0</div>
-            <div class="stat-lbl">不认识重排</div>
-          </div>
-        </div>
-        <button class="primary-btn" id="restartBtn">重新刷一遍本组</button>
+      <div class="recite-utility" id="reciteUtility">
+        <button class="util-btn" id="undoBtn" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7v6h6"></path>
+            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+          </svg>
+          撤销上一张 (Z)
+        </button>
+        <span style="font-size:12px;color:var(--text-3);" id="nextDueHint"></span>
       </div>
-    </main>
 
-    <div class="tool-row" id="toolRow">
-      <button class="secondary-btn" id="toggleRevealBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-          <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-          <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-          <line x1="2" y1="2" x2="22" y2="22"></line>
+      <div class="rate-grid phase1" id="rateBar"></div>
+    </section>
+
+    <!-- VIEW 3: 词表与检索 -->
+    <section class="app-view" id="view-library">
+      <div class="topbar">
+        <div class="brand-group">
+          <div class="brand-title">繁体盲区词库</div>
+          <div class="brand-sub" id="libCountSub">共 116 条</div>
+        </div>
+      </div>
+      <input type="search" class="search-box" id="libSearch" placeholder="搜索繁体字、简体、熟词或口诀..." />
+      <div class="filter-pills" id="libFilters">
+        <button class="filter-pill active" data-filter="all">全部</button>
+        <button class="filter-pill" data-filter="hard">易错重点</button>
+        <button class="filter-pill" data-filter="learning">学习中</button>
+        <button class="filter-pill" data-filter="mastered">已斩归档</button>
+        <button class="filter-pill" data-filter="fresh">未首测</button>
+      </div>
+      <div class="lib-list" id="libList"></div>
+    </section>
+
+    <!-- VIEW 4: 错题档案与进度 -->
+    <section class="app-view" id="view-progress">
+      <div class="topbar">
+        <div class="brand-group">
+          <div class="brand-title">复习档案</div>
+          <div class="brand-sub">艾宾浩斯间隔封顶至考前 3 天</div>
+        </div>
+        <button class="util-btn" id="resetAllBtn" style="color:var(--err);border-color:var(--err);">清空记录</button>
+      </div>
+
+      <div class="prog-panel">
+        <div class="prog-title">高频错字排行（按遗忘次数）</div>
+        <div id="leechList"></div>
+      </div>
+    </section>
+
+    <!-- 底部悬浮 Tabbar -->
+    <nav class="app-tabbar" id="appTabbar">
+      <button class="tab-item active" data-tab="today">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
-        <span id="revealLabel">显示答案 (Space)</span>
+        今日
       </button>
-      <div class="stats-inline">
-        <span class="dot-stat"><span class="dot" style="background:var(--success);"></span><span id="liveKnow">0</span></span>
-        <span class="dot-stat"><span class="dot" style="background:var(--warning);"></span><span id="liveVague">0</span></span>
-        <span class="dot-stat"><span class="dot" style="background:var(--error);"></span><span id="liveUnknown">0</span></span>
-      </div>
-    </div>
-
-    <footer class="rating-bar" id="ratingBar">
-      <button class="rate-btn unknown" data-rate="unknown">
-        <span class="label">不认识</span>
-        <span class="sub">左滑 / 1</span>
+      <button class="tab-item" data-tab="library">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+        </svg>
+        词表
       </button>
-      <button class="rate-btn vague" data-rate="vague">
-        <span class="label">模糊</span>
-        <span class="sub">上滑 / 2</span>
+      <button class="tab-item" data-tab="progress">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        档案
       </button>
-      <button class="rate-btn know" data-rate="know">
-        <span class="label">熟知</span>
-        <span class="sub">右滑 / 3</span>
-      </button>
-    </footer>
+    </nav>
   </div>
 
   <script>
-    const DECK_DATA = [
-      // === 今日 180 卷 61 字盲区（A组形体大改 24 字） ===
-      { id: "n01", deck: "today61", tag: "今日61 · 形体大改", trad: "嚴", simp: "严", words: "嚴肅 / 威嚴", tip: "上两“口”戴帽，下“厂”里藏“敢”，与“敢”完全不同。" },
-      { id: "n02", deck: "today61", tag: "今日61 · 形体大改", trad: "講", simp: "讲", words: "講論 / 講學", tip: "左是“言（讠）”说话，不是“氵”。" },
-      { id: "n03", deck: "today61", tag: "今日61 · 形体大改", trad: "僕", simp: "仆", words: "僕從 / 臣僕", tip: "左“亻”右“菐”，双手捧尘土伺候人。" },
-      { id: "n04", deck: "today61", tag: "今日61 · 形体大改", trad: "執", simp: "执", words: "執政 / 執迷", tip: "左“幸”右“丸”，手里攥着东西。" },
-      { id: "n05", deck: "today61", tag: "今日61 · 形体大改", trad: "棄", simp: "弃", words: "棄置 / 遺棄", tip: "头顶“亠”像盖子，下边双手丢出去。" },
-      { id: "n06", deck: "today61", tag: "今日61 · 形体大改", trad: "肅", simp: "肃", words: "嚴肅 / 肅立", tip: "上下通贯像人正襟危坐。" },
-      { id: "n07", deck: "today61", tag: "今日61 · 形体大改", trad: "懲", simp: "惩", words: "懲罰 / 懲戒", tip: "上“徵”下“心”，心里警醒受罚。" },
-      { id: "n08", deck: "today61", tag: "今日61 · 形体大改", trad: "匯", simp: "汇", words: "匯聚 / 匯合", tip: "左框“匚”围着“淮”水，水流汇聚。" },
-      { id: "n09", deck: "today61", tag: "今日61 · 形体大改", trad: "嶽", simp: "岳", words: "五嶽 / 嶽鎮", tip: "上“山”下“獄”，高山如狱峙立。" },
-      { id: "n10", deck: "today61", tag: "今日61 · 形体大改", trad: "麥", simp: "麦", words: "麥秀 / 稻麥", tip: "上“來”下“夂”，天降麦种而来。" },
-      { id: "n11", deck: "today61", tag: "今日61 · 形体大改", trad: "攜", simp: "携", words: "攜帶 / 扶老攜幼", tip: "左“扌”拎着东西走。" },
-      { id: "n12", deck: "today61", tag: "今日61 · 形体大改", trad: "撫", simp: "抚", words: "撫慰 / 安撫", tip: "左“扌”右“無”，用手轻抚安顿。" },
-      { id: "n13", deck: "today61", tag: "今日61 · 形体大改", trad: "損", simp: "损", words: "損害 / 損益", tip: "左“扌”右“員”，手拿走财物导致减损。" },
-      { id: "n14", deck: "today61", tag: "今日61 · 形体大改", trad: "撲", simp: "扑", words: "撲滅 / 撲殺", tip: "左“扌”右“菐”，与“僕”同声旁，手拍打。" },
-      { id: "n15", deck: "today61", tag: "今日61 · 形体大改", trad: "護", simp: "护", words: "護衛 / 保護", tip: "左“言（讠）”右“蒦”，开口庇护。" },
-      { id: "n16", deck: "today61", tag: "今日61 · 形体大改", trad: "託", simp: "托", words: "託付 / 寄託", tip: "左“言（讠）”右“乇”，话语托付给别人。" },
-      { id: "n17", deck: "today61", tag: "今日61 · 形体大改", trad: "鞏", simp: "巩", words: "鞏固", tip: "下边是“革”，用皮革捆牢加固。" },
-      { id: "n18", deck: "today61", tag: "今日61 · 形体大改", trad: "豐", simp: "丰", words: "豐登 / 豐饒", tip: "下边是“豆”，祭器盛满祭品（区别于“丰采”之“丰”）。" },
-      { id: "n19", deck: "today61", tag: "今日61 · 形体大改", trad: "榮", simp: "荣", words: "榮辱 / 繁榮", tip: "上两团“火”下“木”，花朵繁盛如火。" },
-      { id: "n20", deck: "today61", tag: "今日61 · 形体大改", trad: "質", simp: "质", words: "質樸 / 質子", tip: "上两个“斤”下“貝”，称斤论两作抵押。" },
-      { id: "n21", deck: "today61", tag: "今日61 · 形体大改", trad: "繫", simp: "系", words: "維繫 / 繫獄", tip: "带“糸”（丝线）为“繫”，表示绑、联系。" },
-      { id: "n22", deck: "today61", tag: "今日61 · 形体大改", trad: "係", simp: "系", words: "實係 / 關係", tip: "带“亻”为“係”，表示关系、“是”。" },
-      { id: "n23", deck: "today61", tag: "今日61 · 形体大改", trad: "塵", simp: "尘", words: "塵埃 / 戰塵", tip: "上“鹿”下“土”，鹿群跑过扬起土。" },
-      { id: "n24", deck: "today61", tag: "今日61 · 形体大改", trad: "獸", simp: "兽", words: "禽獸 / 百獸", tip: "右半边是“犬”，野兽动物。" },
-      { id: "n25", deck: "today61", tag: "今日61 · 形体大改", trad: "導", simp: "导", words: "引導 / 疏導", tip: "上“道”下“寸”，用手引道路。" },
+    (function() {
+      'use strict';
 
-      // === 今日 180 卷 61 字盲区（B/C组 36 字） ===
-      { id: "n26", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "讚", simp: "赞", words: "讚美", tip: "言（讠）+ 贊，开口称赞。" },
-      { id: "n27", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鐵", simp: "铁", words: "鹽鐵 / 鐵甲", tip: "钅开头，金属铁器。" },
-      { id: "n28", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鎧", simp: "铠", words: "鎧甲", tip: "钅+ 豈，金属盔甲。" },
-      { id: "n29", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "遞", simp: "递", words: "傳遞", tip: "辶（走之底）表移动传递。" },
-      { id: "n30", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "進", simp: "进", words: "進退", tip: "辶 + 隹，向前行进。" },
-      { id: "n31", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "達", simp: "达", words: "通達", tip: "辶 + 幸，通达抵达。" },
-      { id: "n32", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "運", simp: "运", words: "轉運", tip: "辶 + 軍，军队拉货运输。" },
-      { id: "n33", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "遷", simp: "迁", words: "遷徙", tip: "辶表移动迁徙。" },
-      { id: "n34", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "趨", simp: "趋", words: "趨附", tip: "走字旁，快步趋向。" },
-      { id: "n35", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "躍", simp: "跃", words: "踴躍", tip: "足 + 翟，跳跃。" },
-      { id: "n36", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "擾", simp: "扰", words: "騷擾", tip: "扌 + 憂，动手扰乱。" },
-      { id: "n37", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "療", simp: "疗", words: "治療", tip: "疒（病字头），医治疾病。" },
-      { id: "n38", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "瘡", simp: "疮", words: "瘡痍", tip: "疒 + 倉，疮伤。" },
-      { id: "n39", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "藥", simp: "药", words: "醫藥", tip: "艹 + 樂，草药。" },
-      { id: "n40", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "簡", simp: "简", words: "竹簡", tip: "竹 + 間，竹简中间有缝。" },
-      { id: "n41", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "簾", simp: "帘", words: "珠簾", tip: "竹 + 廉，竹帘。" },
-      { id: "n42", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "襪", simp: "袜", words: "羅襪", tip: "衤开头，穿在脚上的袜子。" },
-      { id: "n43", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "幣", simp: "币", words: "幣帛", tip: "下边巾，古代礼帛货币。" },
-      { id: "n44", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "幟", simp: "帜", words: "旗幟", tip: "巾开头，旗帜。" },
-      { id: "n45", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鄰", simp: "邻", words: "鄰國", tip: "粦 + 阝（城邑），邻近邦国。" },
-      { id: "n46", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "廟", simp: "庙", words: "宗廟", tip: "广 + 朝，宗庙。" },
-      { id: "n47", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "壇", simp: "坛", words: "築壇", tip: "左土为祭坛，左缶（罈）为瓦罐。" },
-      { id: "n48", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "觸", simp: "触", words: "觸犯", tip: "角 + 蜀，兽角抵触。" },
-      { id: "n49", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "錄", simp: "录", words: "記錄", tip: "钅 + 录，记录。" },
-      { id: "n50", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "願", simp: "愿", words: "甘願", tip: "原 + 頁，心愿。" },
-      { id: "n51", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "億", simp: "亿", words: "億萬", tip: "亻 + 意，数目亿。" },
-      { id: "n52", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鬚", simp: "须", words: "鬚眉", tip: "髟表毛发，胡须（“必须”作須）。" },
-      { id: "n53", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "霧", simp: "雾", words: "雲霧", tip: "雨 + 務，水汽云雾。" },
-      { id: "n54", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "嶺", simp: "岭", words: "山嶺", tip: "山 + 領，山岭。" },
-      { id: "n55", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "艦", simp: "舰", words: "戰艦", tip: "舟 + 監，大船战舰。" },
-      { id: "n56", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "韻", simp: "韵", words: "音韻", tip: "音 + 員，声韵。" },
-      { id: "n57", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "賣", simp: "卖", words: "買賣", tip: "下边貝，交易卖出。" },
-      { id: "n58", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "價", simp: "价", words: "物價", tip: "亻 + 賈（商人），价格。" },
-      { id: "n59", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "險", simp: "险", words: "險阻", tip: "阝 + 僉，山势险要。" },
-      { id: "n60", deck: "today61", tag: "今日61 · 草书楷化", trad: "黨", simp: "党", words: "朋黨", tip: "尚 + 黑，结党偏私。" },
-      { id: "n61", deck: "today61", tag: "今日61 · 草书楷化", trad: "臺", simp: "台", words: "高臺", tip: "带“至”为楼台；原形“台”读 yí 指“我”。" },
-      { id: "n62", deck: "today61", tag: "今日61 · 草书楷化", trad: "兩", simp: "两", words: "兩軍", tip: "双双成对。" },
-      { id: "n63", deck: "today61", tag: "今日61 · 草书楷化", trad: "條", simp: "条", words: "條陳", tip: "攸 + 木，枝条、条目。" },
-      { id: "n64", deck: "today61", tag: "今日61 · 草书楷化", trad: "風", simp: "风", words: "風俗", tip: "几 + 虫，风气风俗。" },
+      const DECK_DATA = [
+        // 今日 61 盲区（含繫/係拆分为64条）
+        { id: "n01", deck: "today61", tag: "今日61 · 形体大改", trad: "嚴", simp: "严", words: "嚴肅 / 威嚴", tip: "上两“口”戴帽，下“厂”里藏“敢”，与“敢”完全不同。" },
+        { id: "n02", deck: "today61", tag: "今日61 · 形体大改", trad: "講", simp: "讲", words: "講論 / 講學", tip: "左是“言（讠）”说话，不是“氵”。" },
+        { id: "n03", deck: "today61", tag: "今日61 · 形体大改", trad: "僕", simp: "仆", words: "僕從 / 臣僕", tip: "左“亻”右“菐”，双手捧尘土伺候人。" },
+        { id: "n04", deck: "today61", tag: "今日61 · 形体大改", trad: "執", simp: "执", words: "執政 / 執迷", tip: "左“幸”右“丸”，手里攥着东西。" },
+        { id: "n05", deck: "today61", tag: "今日61 · 形体大改", trad: "棄", simp: "弃", words: "棄置 / 遺棄", tip: "头顶“亠”像盖子，下边双手丢出去。" },
+        { id: "n06", deck: "today61", tag: "今日61 · 形体大改", trad: "肅", simp: "肃", words: "嚴肅 / 肅立", tip: "上下通贯像人正襟危坐。" },
+        { id: "n07", deck: "today61", tag: "今日61 · 形体大改", trad: "懲", simp: "惩", words: "懲罰 / 懲戒", tip: "上“徵”下“心”，心里警醒受罚。" },
+        { id: "n08", deck: "today61", tag: "今日61 · 形体大改", trad: "匯", simp: "汇", words: "匯聚 / 匯合", tip: "左框“匚”围着“淮”水，水流汇聚。" },
+        { id: "n09", deck: "today61", tag: "今日61 · 形体大改", trad: "嶽", simp: "岳", words: "五嶽 / 嶽鎮", tip: "上“山”下“獄”，高山如狱峙立。" },
+        { id: "n10", deck: "today61", tag: "今日61 · 形体大改", trad: "麥", simp: "麦", words: "麥秀 / 稻麥", tip: "上“來”下“夂”，天降麦种而来。" },
+        { id: "n11", deck: "today61", tag: "今日61 · 形体大改", trad: "攜", simp: "携", words: "攜帶 / 扶老攜幼", tip: "左“扌”拎着东西走。" },
+        { id: "n12", deck: "today61", tag: "今日61 · 形体大改", trad: "撫", simp: "抚", words: "撫慰 / 安撫", tip: "左“扌”右“無”，用手轻抚安顿。" },
+        { id: "n13", deck: "today61", tag: "今日61 · 形体大改", trad: "損", simp: "损", words: "損害 / 損益", tip: "左“扌”右“員”，手拿走财物导致减损。" },
+        { id: "n14", deck: "today61", tag: "今日61 · 形体大改", trad: "撲", simp: "扑", words: "撲滅 / 撲殺", tip: "左“扌”右“菐”，与“僕”同声旁，手拍打。" },
+        { id: "n15", deck: "today61", tag: "今日61 · 形体大改", trad: "護", simp: "护", words: "護衛 / 保護", tip: "左“言（讠）”右“蒦”，开口庇护。" },
+        { id: "n16", deck: "today61", tag: "今日61 · 形体大改", trad: "託", simp: "托", words: "託付 / 寄託", tip: "左“言（讠）”右“乇”，话语托付给别人。" },
+        { id: "n17", deck: "today61", tag: "今日61 · 形体大改", trad: "鞏", simp: "巩", words: "鞏固", tip: "下边是“革”，用皮革捆牢加固。" },
+        { id: "n18", deck: "today61", tag: "今日61 · 形体大改", trad: "豐", simp: "丰", words: "豐登 / 豐饒", tip: "下边是“豆”，祭器盛满祭品（区别于“丰采”之“丰”）。" },
+        { id: "n19", deck: "today61", tag: "今日61 · 形体大改", trad: "榮", simp: "荣", words: "榮辱 / 繁榮", tip: "上两团“火”下“木”，花朵繁盛如火。" },
+        { id: "n20", deck: "today61", tag: "今日61 · 形体大改", trad: "質", simp: "质", words: "質樸 / 質子", tip: "上两个“斤”下“貝”，称斤论两作抵押。" },
+        { id: "n21", deck: "today61", tag: "今日61 · 形体大改", trad: "繫", simp: "系", words: "維繫 / 繫獄", tip: "带“糸”（丝线）为“繫”，表示绑、联系。" },
+        { id: "n22", deck: "today61", tag: "今日61 · 形体大改", trad: "係", simp: "系", words: "實係 / 關係", tip: "带“亻”为“係”，表示关系、“是”。" },
+        { id: "n23", deck: "today61", tag: "今日61 · 形体大改", trad: "塵", simp: "尘", words: "塵埃 / 戰塵", tip: "上“鹿”下“土”，鹿群跑过扬起土。" },
+        { id: "n24", deck: "today61", tag: "今日61 · 形体大改", trad: "獸", simp: "兽", words: "禽獸 / 百獸", tip: "右半边是“犬”，野兽动物。" },
+        { id: "n25", deck: "today61", tag: "今日61 · 形体大改", trad: "導", simp: "导", words: "引導 / 疏導", tip: "上“道”下“寸”，用手引道路。" },
+        { id: "n26", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "讚", simp: "赞", words: "讚美", tip: "言（讠）+ 贊，开口称赞。" },
+        { id: "n27", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鐵", simp: "铁", words: "鹽鐵 / 鐵甲", tip: "钅开头，金属铁器。" },
+        { id: "n28", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鎧", simp: "铠", words: "鎧甲", tip: "钅+ 豈，金属盔甲。" },
+        { id: "n29", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "遞", simp: "递", words: "傳遞", tip: "辶（走之底）表移动传递。" },
+        { id: "n30", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "進", simp: "进", words: "進退", tip: "辶 + 隹，向前行进。" },
+        { id: "n31", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "達", simp: "达", words: "通達", tip: "辶 + 幸，通达抵达。" },
+        { id: "n32", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "運", simp: "运", words: "轉運", tip: "辶 + 軍，军队拉货运输。" },
+        { id: "n33", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "遷", simp: "迁", words: "遷徙", tip: "辶表移动迁徙。" },
+        { id: "n34", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "趨", simp: "趋", words: "趨附", tip: "走字旁，快步趋向。" },
+        { id: "n35", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "躍", simp: "跃", words: "踴躍", tip: "足 + 翟，跳跃。" },
+        { id: "n36", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "擾", simp: "扰", words: "騷擾", tip: "扌 + 憂，动手扰乱。" },
+        { id: "n37", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "療", simp: "疗", words: "治療", tip: "疒（病字头），医治疾病。" },
+        { id: "n38", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "瘡", simp: "疮", words: "瘡痍", tip: "疒 + 倉，疮伤。" },
+        { id: "n39", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "藥", simp: "药", words: "醫藥", tip: "艹 + 樂，草药。" },
+        { id: "n40", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "簡", simp: "简", words: "竹簡", tip: "竹 + 間，竹简中间有缝。" },
+        { id: "n41", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "簾", simp: "帘", words: "珠簾", tip: "竹 + 廉，竹帘。" },
+        { id: "n42", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "襪", simp: "袜", words: "羅襪", tip: "衤开头，穿在脚上的袜子。" },
+        { id: "n43", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "幣", simp: "币", words: "幣帛", tip: "下边巾，古代礼帛货币。" },
+        { id: "n44", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "幟", simp: "帜", words: "旗幟", tip: "巾开头，旗帜。" },
+        { id: "n45", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鄰", simp: "邻", words: "鄰國", tip: "粦 + 阝（城邑），邻近邦国。" },
+        { id: "n46", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "廟", simp: "庙", words: "宗廟", tip: "广 + 朝，宗庙。" },
+        { id: "n47", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "壇", simp: "坛", words: "築壇", tip: "左土为祭坛，左缶（罈）为瓦罐。" },
+        { id: "n48", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "觸", simp: "触", words: "觸犯", tip: "角 + 蜀，兽角抵触。" },
+        { id: "n49", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "錄", simp: "录", words: "記錄", tip: "钅 + 录，记录。" },
+        { id: "n50", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "願", simp: "愿", words: "甘願", tip: "原 + 頁，心愿。" },
+        { id: "n51", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "億", simp: "亿", words: "億萬", tip: "亻 + 意，数目亿。" },
+        { id: "n52", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "鬚", simp: "须", words: "鬚眉", tip: "髟表毛发，胡须（“必须”作須）。" },
+        { id: "n53", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "霧", simp: "雾", words: "雲霧", tip: "雨 + 務，水汽云雾。" },
+        { id: "n54", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "嶺", simp: "岭", words: "山嶺", tip: "山 + 領，山岭。" },
+        { id: "n55", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "艦", simp: "舰", words: "戰艦", tip: "舟 + 監，大船战舰。" },
+        { id: "n56", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "韻", simp: "韵", words: "音韻", tip: "音 + 員，声韵。" },
+        { id: "n57", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "賣", simp: "卖", words: "買賣", tip: "下边貝，交易卖出。" },
+        { id: "n58", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "價", simp: "价", words: "物價", tip: "亻 + 賈（商人），价格。" },
+        { id: "n59", deck: "today61", tag: "今日61 · 偏旁熟词", trad: "險", simp: "险", words: "險阻", tip: "阝 + 僉，山势险要。" },
+        { id: "n60", deck: "today61", tag: "今日61 · 草书楷化", trad: "黨", simp: "党", words: "朋黨", tip: "尚 + 黑，结党偏私。" },
+        { id: "n61", deck: "today61", tag: "今日61 · 草书楷化", trad: "臺", simp: "台", words: "高臺", tip: "带“至”为楼台；原形“台”读 yí 指“我”。" },
+        { id: "n62", deck: "today61", tag: "今日61 · 草书楷化", trad: "兩", simp: "两", words: "兩軍", tip: "双双成对。" },
+        { id: "n63", deck: "today61", tag: "今日61 · 草书楷化", trad: "條", simp: "条", words: "條陳", tip: "攸 + 木，枝条、条目。" },
+        { id: "n64", deck: "today61", tag: "今日61 · 草书楷化", trad: "風", simp: "风", words: "風俗", tip: "几 + 虫，风气风俗。" },
 
-      // === 一简多繁高危辨析 ===
-      { id: "m01", deck: "multi", tag: "一简多繁 · 高危", trad: "歷 / 曆", simp: "历", words: "經歷 / 曆法", tip: "左下“止”（脚走过）→ 歷（经历）；左下“日”（时间）→ 曆（历法）。" },
-      { id: "m02", deck: "multi", tag: "一简多繁 · 高危", trad: "盡 / 儘", simp: "尽", words: "竭盡 / 儘快", tip: "无单人旁“盡”→ 竭尽；带单人旁“儘”→ 达到极限（尽管）。" },
-      { id: "m03", deck: "multi", tag: "一简多繁 · 高危", trad: "當 / 噹", simp: "当", words: "應當 / 叮噹", tip: "下“田”→ 应当/抵挡；带“口”→ 象声词。" },
-      { id: "m04", deck: "multi", tag: "一简多繁 · 高危", trad: "壇 / 罈", simp: "坛", words: "祭壇 / 酒罈", tip: "左“土”→ 祭坛；左“缶”→ 瓦罐。" },
-      { id: "m05", deck: "multi", tag: "一简多繁 · 高危", trad: "斗 / 鬭", simp: "斗", words: "斗升 / 爭鬭", tip: "“斗”为酒器/量器；两边开门争抢“鬭”为争斗。" },
-      { id: "m06", deck: "multi", tag: "一简多繁 · 高危", trad: "谷 / 穀", simp: "谷", words: "山谷 / 五穀", tip: "“谷”为山谷；左下带“禾”→ 粮食五谷。" },
-      { id: "m07", deck: "multi", tag: "一简多繁 · 高危", trad: "余 / 餘", simp: "余", words: "余馬 / 餘杯", tip: "“余”为第一人称“我”；带“飠”→ 吃剩的剩余。" },
-      { id: "m08", deck: "multi", tag: "一简多繁 · 高危", trad: "丑 / 醜", simp: "丑", words: "子丑 / 醜惡", tip: "“丑”为地支；带“酉/鬼”→ 丑恶、同类。" },
-      { id: "m09", deck: "multi", tag: "一简多繁 · 高危", trad: "飢 / 饑", simp: "饥", words: "飢飽 / 饑荒", tip: "右“几”→ 肚子饿；右“幾”→ 灾荒无粮。" },
-      { id: "m10", deck: "multi", tag: "一简多繁 · 高危", trad: "后 / 後", simp: "后", words: "皇后 / 先後", tip: "“后”仅指君主/皇后；“後”指先后/后代。" },
-      { id: "m11", deck: "multi", tag: "一简多繁 · 高危", trad: "發 / 髮", simp: "发", words: "出發 / 頭髮", tip: "发弓发射作“發”，下部“癶”；头发作“髮”，下部“友”。" },
+        // 一简多繁高危辨析
+        { id: "m01", deck: "multi", tag: "一简多繁 · 高危", trad: "歷 / 曆", simp: "历", words: "經歷 / 曆法", tip: "左下“止”（脚走过）→ 歷（经历）；左下“日”（时间）→ 曆（历法）。" },
+        { id: "m02", deck: "multi", tag: "一简多繁 · 高危", trad: "盡 / 儘", simp: "尽", words: "竭盡 / 儘快", tip: "无单人旁“盡”→ 竭尽；带单人旁“儘”→ 达到极限（尽管）。" },
+        { id: "m03", deck: "multi", tag: "一简多繁 · 高危", trad: "當 / 噹", simp: "当", words: "應當 / 叮噹", tip: "下“田”→ 应当/抵挡；带“口”→ 象声词。" },
+        { id: "m04", deck: "multi", tag: "一简多繁 · 高危", trad: "壇 / 罈", simp: "坛", words: "祭壇 / 酒罈", tip: "左“土”→ 祭坛；左“缶”→ 瓦罐。" },
+        { id: "m05", deck: "multi", tag: "一简多繁 · 高危", trad: "斗 / 鬭", simp: "斗", words: "斗升 / 爭鬭", tip: "“斗”为酒器/量器；两边开门争抢“鬭”为争斗。" },
+        { id: "m06", deck: "multi", tag: "一简多繁 · 高危", trad: "谷 / 穀", simp: "谷", words: "山谷 / 五穀", tip: "“谷”为山谷；左下带“禾”→ 粮食五谷。" },
+        { id: "m07", deck: "multi", tag: "一简多繁 · 高危", trad: "余 / 餘", simp: "余", words: "余馬 / 餘杯", tip: "“余”为第一人称“我”；带“飠”→ 吃剩的剩余。" },
+        { id: "m08", deck: "multi", tag: "一简多繁 · 高危", trad: "丑 / 醜", simp: "丑", words: "子丑 / 醜惡", tip: "“丑”为地支；带“酉/鬼”→ 丑恶、同类。" },
+        { id: "m09", deck: "multi", tag: "一简多繁 · 高危", trad: "飢 / 饑", simp: "饥", words: "飢飽 / 饑荒", tip: "右“几”→ 肚子饿；右“幾”→ 灾荒无粮。" },
+        { id: "m10", deck: "multi", tag: "一简多繁 · 高危", trad: "后 / 後", simp: "后", words: "皇后 / 先後", tip: "“后”仅指君主/皇后；“後”指先后/后代。" },
+        { id: "m11", deck: "multi", tag: "一简多繁 · 高危", trad: "發 / 髮", simp: "发", words: "出發 / 頭髮", tip: "发弓发射作“發”，下部“癶”；头发作“髮”，下部“友”。" },
 
-      // === 前期高频盲区（《庄辛》+ 前两批） ===
-      { id: "p01", deck: "prev", tag: "前期盲区 · 篇目", trad: "顧", simp: "顾", words: "見兔顧犬", tip: "左“雇”右“頁”（头），回头看须转头。" },
-      { id: "p02", deck: "prev", tag: "前期盲区 · 篇目", trad: "遲", simp: "迟", words: "未為遲也", tip: "辶里藏“犀”，犀牛笨重走得慢。" },
-      { id: "p03", deck: "prev", tag: "前期盲区 · 篇目", trad: "續", simp: "续", words: "絕長續短", tip: "糹+ 賣，把断丝接续。" },
-      { id: "p04", deck: "prev", tag: "前期盲区 · 篇目", trad: "豈", simp: "岂", words: "豈特百里", tip: "上“山”下“豆”，借作反问副词“岂”。" },
-      { id: "p05", deck: "prev", tag: "前期盲区 · 篇目", trad: "闢", simp: "辟", words: "田野闢", tip: "門内藏辟，打开门户 → 开垦、开辟（读 pì）。" },
-      { id: "p06", deck: "prev", tag: "前期盲区 · 篇目", trad: "鄄", simp: "鄄", words: "鄄城", tip: "左垔右阝（邑），读 juàn，春秋战国卫邑。" },
-      { id: "p07", deck: "prev", tag: "前期盲区 · 形体", trad: "擊", simp: "击", words: "擊鼓 / 追擊", tip: "右下有“手”，用手敲打。" },
-      { id: "p08", deck: "prev", tag: "前期盲区 · 形体", trad: "歸", simp: "归", words: "歸國 / 大歸", tip: "止（脚）+ 帚（扫帚），出嫁/返回。" },
-      { id: "p09", deck: "prev", tag: "前期盲区 · 形体", trad: "麗", simp: "丽", words: "華麗 / 附麗", tip: "上两并排鹿角，下“鹿”，成双华美。" },
-      { id: "p10", deck: "prev", tag: "前期盲区 · 形体", trad: "鹽", simp: "盐", words: "鹽鐵", tip: "下有“鹵”和“皿”，用器皿熬煮卤水制盐。" },
-      { id: "p11", deck: "prev", tag: "前期盲区 · 形体", trad: "鬱", simp: "郁", words: "鬱結", tip: "林中藏缶下有鬯，草木郁茂/忧愁郁结。" },
-      { id: "p12", deck: "prev", tag: "前期盲区 · 形体", trad: "龜", simp: "龟", words: "龜卜 / 龜甲", tip: "象形字，龟头爪甲尾。" },
-      { id: "p13", deck: "prev", tag: "前期盲区 · 形体", trad: "衛", simp: "卫", words: "護衛 / 衛國", tip: "外“行”（路口）内“韋”（巡逻），守卫。" },
-      { id: "p14", deck: "prev", tag: "前期盲区 · 形体", trad: "窮", simp: "穷", words: "窮困 / 無窮", tip: "穴下躬身，走投无路。" },
-      { id: "p15", deck: "prev", tag: "前期盲区 · 形体", trad: "衆", simp: "众", words: "衆人", tip: "上目下三人，众人。" },
-      { id: "p16", deck: "prev", tag: "前期盲区 · 盲测", trad: "歎", simp: "叹", words: "歎息", tip: "右“欠”张口出气是“叹”；“欢”作歡（左雚右欠）。" },
-      { id: "p17", deck: "prev", tag: "前期盲区 · 盲测", trad: "奮", simp: "奋", words: "奮發", tip: "鸟（隹）在“田”上展翅 = 奮；手（寸）抓鸟 = 奪。" },
-      { id: "p18", deck: "prev", tag: "前期盲区 · 盲测", trad: "蓋", simp: "盖", words: "蓋聞", tip: "艹 + 盍，草盖屋顶，文言高频发语词。" },
-      { id: "p19", deck: "prev", tag: "前期盲区 · 盲测", trad: "雖", simp: "虽", words: "雖然", tip: "口虫 + 隹，转折连词“虽然/即使”。" },
-      { id: "p20", deck: "prev", tag: "前期盲区 · 盲测", trad: "屬", simp: "属", words: "專屬 / 屬望", tip: "尸 + 蜀，归属（shǔ）/ 托付（zhǔ）。" },
-      { id: "p21", deck: "prev", tag: "前期盲区 · 盲测", trad: "滅", simp: "灭", words: "滅國", tip: "氵+ 威，水浇灭火。" },
-      { id: "p22", deck: "prev", tag: "前期盲区 · 盲测", trad: "關", simp: "关", words: "關隘", tip: "門里横插门闩“𢇅”为關；双手拉栓“幵”为開。" },
-      { id: "p23", deck: "prev", tag: "前期盲区 · 盲测", trad: "辭", simp: "辞", words: "言辭 / 辭別", tip: "右“辛”，理清言辞、推辞。" },
-      { id: "p24", deck: "prev", tag: "前期盲区 · 盲测", trad: "變", simp: "变", words: "變故", tip: "上“䜌”下“攵”，变动变故。" },
-      { id: "p25", deck: "prev", tag: "前期盲区 · 盲测", trad: "據", simp: "据", words: "據關中", tip: "左扌右豦，占据/依靠；“拒”繁简同形，勿混！" },
-      { id: "p26", deck: "prev", tag: "前期盲区 · 盲测", trad: "築", simp: "筑", words: "築城", tip: "竹 + 巩 + 木，夯土筑城。" },
-      { id: "p27", deck: "prev", tag: "前期盲区 · 盲测", trad: "禦", simp: "御", words: "抵禦", tip: "彳+卸+示，抵御（区别于驾车之御）。" },
-      { id: "p28", deck: "prev", tag: "前期盲区 · 盲测", trad: "圍", simp: "围", words: "圍城", tip: "囗 + 韋，包围。" },
-      { id: "p29", deck: "prev", tag: "前期盲区 · 盲测", trad: "虜", simp: "虏", words: "俘虜", tip: "虍 + 男 + 力，俘虏。" },
-      { id: "p30", deck: "prev", tag: "前期盲区 · 盲测", trad: "獻", simp: "献", words: "獻納", tip: "大鼎鬳 + 犬，进献。" },
-      { id: "p31", deck: "prev", tag: "前期盲区 · 盲测", trad: "懼", simp: "惧", words: "畏懼", tip: "忄+瞿（两目睁大），惊恐畏惧。" },
-      { id: "p32", deck: "prev", tag: "前期盲区 · 盲测", trad: "憂", simp: "忧", words: "憂患", tip: "頁（头）+ 心 + 夊，愁眉低头。" },
-      { id: "p33", deck: "prev", tag: "前期盲区 · 盲测", trad: "恥", simp: "耻", words: "羞恥", tip: "耳 + 心，内心羞愧耳根发红。" },
-      { id: "p34", deck: "prev", tag: "前期盲区 · 盲测", trad: "憐", simp: "怜", words: "哀憐", tip: "忄+ 粦，怜悯。" },
-      { id: "p35", deck: "prev", tag: "前期盲区 · 盲测", trad: "顯", simp: "显", words: "顯赫", tip: "右“頁”，明显显赫。" },
-      { id: "p36", deck: "prev", tag: "前期盲区 · 盲测", trad: "雙 / 隻", simp: "双 / 只", words: "雙璧 / 隻身", tip: "下皆为“又”（手）：手抓两鸟（隹隹）=雙；抓一鸟=隻。" },
-      { id: "p37", deck: "prev", tag: "前期盲区 · 盲测", trad: "靈", simp: "灵", words: "神靈", tip: "雨 + 三口 + 巫，神灵灵验。" },
-      { id: "p38", deck: "prev", tag: "前期盲区 · 盲测", trad: "徵", simp: "征", words: "徵召 / 徵驗", tip: "征召、证验、五声之徵作“徵”；征伐作“征”。" },
-      { id: "p39", deck: "prev", tag: "前期盲区 · 盲测", trad: "嘗", simp: "尝", words: "未嘗", tip: "尚 + 旨，品尝，文言副词“曾经”。" },
-      { id: "p40", deck: "prev", tag: "前期盲区 · 盲测", trad: "爾", simp: "尔", words: "爾輩 / 莞爾", tip: "第二人称“你”或词尾“……的样子”。" },
-      { id: "p41", deck: "prev", tag: "前期盲区 · 盲测", trad: "網", simp: "网", words: "羅網", tip: "糹+ 罔，渔网罗网。" }
-    ];
+        // 前期高频盲区
+        { id: "p01", deck: "prev", tag: "前期盲区 · 庄辛", trad: "顧", simp: "顾", words: "見兔顧犬", tip: "左“雇”右“頁”（头），回头看须转头。" },
+        { id: "p02", deck: "prev", tag: "前期盲区 · 庄辛", trad: "遲", simp: "迟", words: "未為遲也", tip: "辶里藏“犀”，犀牛笨重走得慢。" },
+        { id: "p03", deck: "prev", tag: "前期盲区 · 庄辛", trad: "續", simp: "续", words: "絕長續短", tip: "糹+ 賣，把断丝接续。" },
+        { id: "p04", deck: "prev", tag: "前期盲区 · 庄辛", trad: "豈", simp: "岂", words: "豈特百里", tip: "上“山”下“豆”，借作反问副词“岂”。" },
+        { id: "p05", deck: "prev", tag: "前期盲区 · 齐威王", trad: "闢", simp: "辟", words: "田野闢", tip: "門内藏辟，打开门户 → 开垦、开辟（读 pì）。" },
+        { id: "p06", deck: "prev", tag: "前期盲区 · 齐威王", trad: "鄄", simp: "鄄", words: "鄄城", tip: "左垔右阝（邑），读 juàn，春秋战国卫邑。" },
+        { id: "p07", deck: "prev", tag: "前期盲区 · 形体", trad: "擊", simp: "击", words: "擊鼓 / 追擊", tip: "右下有“手”，用手敲打。" },
+        { id: "p08", deck: "prev", tag: "前期盲区 · 形体", trad: "歸", simp: "归", words: "歸國 / 大歸", tip: "止（脚）+ 帚（扫帚），出嫁/返回。" },
+        { id: "p09", deck: "prev", tag: "前期盲区 · 形体", trad: "麗", simp: "丽", words: "華麗 / 附麗", tip: "上两并排鹿角，下“鹿”，成双华美。" },
+        { id: "p10", deck: "prev", tag: "前期盲区 · 形体", trad: "鹽", simp: "盐", words: "鹽鐵", tip: "下有“鹵”和“皿”，用器皿熬煮卤水制盐。" },
+        { id: "p11", deck: "prev", tag: "前期盲区 · 形体", trad: "鬱", simp: "郁", words: "鬱結", tip: "林中藏缶下有鬯，草木郁茂/忧愁郁结。" },
+        { id: "p12", deck: "prev", tag: "前期盲区 · 形体", trad: "龜", simp: "龟", words: "龜卜 / 龜甲", tip: "象形字，龟头爪甲尾。" },
+        { id: "p13", deck: "prev", tag: "前期盲区 · 形体", trad: "衛", simp: "卫", words: "護衛 / 衛國", tip: "外“行”（路口）内“韋”（巡逻），守卫。" },
+        { id: "p14", deck: "prev", tag: "前期盲区 · 形体", trad: "窮", simp: "穷", words: "窮困 / 無窮", tip: "穴下躬身，走投无路。" },
+        { id: "p15", deck: "prev", tag: "前期盲区 · 形体", trad: "衆", simp: "众", words: "衆人", tip: "上目下三人，众人。" },
+        { id: "p16", deck: "prev", tag: "前期盲区 · 盲测", trad: "歎", simp: "叹", words: "歎息", tip: "右“欠”张口出气是“叹”；“欢”作歡（左雚右欠）。" },
+        { id: "p17", deck: "prev", tag: "前期盲区 · 盲测", trad: "奮", simp: "奋", words: "奮發", tip: "鸟（隹）在“田”上展翅 = 奮；手（寸）抓鸟 = 奪。" },
+        { id: "p18", deck: "prev", tag: "前期盲区 · 盲测", trad: "蓋", simp: "盖", words: "蓋聞", tip: "艹 + 盍，草盖屋顶，文言高频发语词。" },
+        { id: "p19", deck: "prev", tag: "前期盲区 · 盲测", trad: "雖", simp: "虽", words: "雖然", tip: "口虫 + 隹，转折连词“虽然/即使”。" },
+        { id: "p20", deck: "prev", tag: "前期盲区 · 盲测", trad: "屬", simp: "属", words: "專屬 / 屬望", tip: "尸 + 蜀，归属（shǔ）/ 托付（zhǔ）。" },
+        { id: "p21", deck: "prev", tag: "前期盲区 · 盲测", trad: "滅", simp: "灭", words: "滅國", tip: "氵+ 威，水浇灭火。" },
+        { id: "p22", deck: "prev", tag: "前期盲区 · 盲测", trad: "關", simp: "关", words: "關隘", tip: "門里横插门闩“𢇅”为關；双手拉栓“幵”为開。" },
+        { id: "p23", deck: "prev", tag: "前期盲区 · 盲测", trad: "辭", simp: "辞", words: "言辭 / 辭別", tip: "右“辛”，理清言辞、推辞。" },
+        { id: "p24", deck: "prev", tag: "前期盲区 · 盲测", trad: "變", simp: "变", words: "變故", tip: "上“䜌”下“攵”，变动变故。" },
+        { id: "p25", deck: "prev", tag: "前期盲区 · 盲测", trad: "據", simp: "据", words: "據關中", tip: "左扌右豦，占据/依靠；“拒”繁简同形，勿混！" },
+        { id: "p26", deck: "prev", tag: "前期盲区 · 盲测", trad: "築", simp: "筑", words: "築城", tip: "竹 + 巩 + 木，夯土筑城。" },
+        { id: "p27", deck: "prev", tag: "前期盲区 · 盲测", trad: "禦", simp: "御", words: "抵禦", tip: "彳+卸+示，抵御（区别于驾车之御）。" },
+        { id: "p28", deck: "prev", tag: "前期盲区 · 盲测", trad: "圍", simp: "围", words: "圍城", tip: "囗 + 韋，包围。" },
+        { id: "p29", deck: "prev", tag: "前期盲区 · 盲测", trad: "虜", simp: "虏", words: "俘虜", tip: "虍 + 男 + 力，俘虏。" },
+        { id: "p30", deck: "prev", tag: "前期盲区 · 盲测", trad: "獻", simp: "献", words: "獻納", tip: "大鼎鬳 + 犬，进献。" },
+        { id: "p31", deck: "prev", tag: "前期盲区 · 盲测", trad: "懼", simp: "惧", words: "畏懼", tip: "忄+瞿（两目睁大），惊恐畏惧。" },
+        { id: "p32", deck: "prev", tag: "前期盲区 · 盲测", trad: "憂", simp: "忧", words: "憂患", tip: "頁（头）+ 心 + 夊，愁眉低头。" },
+        { id: "p33", deck: "prev", tag: "前期盲区 · 盲测", trad: "恥", simp: "耻", words: "羞恥", tip: "耳 + 心，内心羞愧耳根发红。" },
+        { id: "p34", deck: "prev", tag: "前期盲区 · 盲测", trad: "憐", simp: "怜", words: "哀憐", tip: "忄+ 粦，怜悯。" },
+        { id: "p35", deck: "prev", tag: "前期盲区 · 盲测", trad: "顯", simp: "显", words: "顯赫", tip: "右“頁”，明显显赫。" },
+        { id: "p36", deck: "prev", tag: "前期盲区 · 盲测", trad: "雙 / 隻", simp: "双 / 只", words: "雙璧 / 隻身", tip: "下皆为“又”（手）：手抓两鸟（隹隹）=雙；抓一鸟=隻。" },
+        { id: "p37", deck: "prev", tag: "前期盲区 · 盲测", trad: "靈", simp: "灵", words: "神靈", tip: "雨 + 三口 + 巫，神灵灵验。" },
+        { id: "p38", deck: "prev", tag: "前期盲区 · 盲测", trad: "徵", simp: "征", words: "徵召 / 徵驗", tip: "征召、证验、五声之徵作“徵”；征伐作“征”。" },
+        { id: "p39", deck: "prev", tag: "前期盲区 · 盲测", trad: "嘗", simp: "尝", words: "未嘗", tip: "尚 + 旨，品尝，文言副词“曾经”。" },
+        { id: "p40", deck: "prev", tag: "前期盲区 · 盲测", trad: "爾", simp: "尔", words: "爾輩 / 莞爾", tip: "第二人称“你”或词尾“……的样子”。" },
+        { id: "p41", deck: "prev", tag: "前期盲区 · 盲测", trad: "網", simp: "网", words: "羅網", tip: "糹+ 罔，渔网罗网。" }
+      ];
 
-    const DECK_TABS = [
-      { id: "today61", label: "今日 61 盲区" },
-      { id: "multi", label: "一简多繁高危" },
-      { id: "prev", label: "前期高频盲区" },
-      { id: "all", label: "全部词库" }
-    ];
+      const DAY_MS = 86400000;
+      const EXAM_TS = new Date('2026-12-19T09:00:00').getTime();
+      const STORAGE_KEY = 'trad706_words_engine_v2';
 
-    const STORAGE_KEY = "kaoyan706_trad_cards_v1";
-    let saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"known":{},"dark":false}');
-    if (saved.dark) document.documentElement.setAttribute("data-mode", "dark");
+      function todayKey() {
+        const d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      }
 
-    let currentDeckId = "today61";
-    let queue = [];
-    let totalInitial = 0;
-    let sessionStats = { know: 0, vague: 0, unknown: 0 };
-    let isRevealed = false;
-
-    const flashcard = document.getElementById("flashcard");
-    const summaryCard = document.getElementById("summaryCard");
-    const answerBox = document.getElementById("answerBox");
-    const tapPrompt = document.getElementById("tapPrompt");
-    const revealLabel = document.getElementById("revealLabel");
-    const toolRow = document.getElementById("toolRow");
-    const ratingBar = document.getElementById("ratingBar");
-
-    const hintUnknown = document.getElementById("hintUnknown");
-    const hintVague = document.getElementById("hintVague");
-    const hintKnow = document.getElementById("hintKnow");
-
-    function getDeckItems(deckId) {
-      return deckId === "all" ? DECK_DATA : DECK_DATA.filter(item => item.deck === deckId);
-    }
-
-    function renderTabs() {
-      const wrap = document.getElementById("deckTabs");
-      wrap.innerHTML = "";
-      DECK_TABS.forEach(tab => {
-        const items = getDeckItems(tab.id);
-        const btn = document.createElement("button");
-        btn.className = "tab-btn" + (tab.id === currentDeckId ? " active" : "");
-        btn.innerHTML = `${tab.label} <span class="tab-count">${items.length}</span>`;
-        btn.addEventListener("click", () => {
-          currentDeckId = tab.id;
-          initDeck();
-        });
-        wrap.appendChild(btn);
-      });
-    }
-
-    function initDeck(shuffle = false) {
-      let items = getDeckItems(currentDeckId).map(item => ({ ...item, requeued: false }));
-      if (shuffle) {
-        for (let i = items.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [items[i], items[j]] = [items[j], items[i]];
+      function loadState() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          return {
+            meta: parsed.meta || {},
+            daily: parsed.daily || {},
+            dark: !!parsed.dark,
+            limit: parsed.limit === undefined ? 30 : parsed.limit
+          };
+        } catch (e) {
+          return { meta: {}, daily: {}, dark: false, limit: 30 };
         }
       }
-      queue = items;
-      totalInitial = items.length;
-      sessionStats = { know: 0, vague: 0, unknown: 0 };
-      renderTabs();
-      renderCard();
-    }
 
-    function setReveal(state) {
-      isRevealed = state;
-      answerBox.classList.toggle("concealed", !state);
-      tapPrompt.style.visibility = state ? "hidden" : "visible";
-      revealLabel.textContent = state ? "隐藏答案 (Space)" : "显示答案 (Space)";
-    }
-
-    function renderCard() {
-      if (queue.length === 0) {
-        flashcard.style.display = "none";
-        toolRow.style.display = "none";
-        ratingBar.style.display = "none";
-        summaryCard.style.display = "flex";
-        document.getElementById("sumKnow").textContent = sessionStats.know;
-        document.getElementById("sumVague").textContent = sessionStats.vague;
-        document.getElementById("sumUnknown").textContent = sessionStats.unknown;
-        document.getElementById("progressBadge").textContent = `${totalInitial} / ${totalInitial}`;
-        document.getElementById("progressFill").style.width = "100%";
-        return;
+      let state = loadState();
+      function saveState() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
       }
 
-      const item = queue[0];
-      flashcard.style.display = "flex";
-      toolRow.style.display = "flex";
-      ratingBar.style.display = "grid";
-      summaryCard.style.display = "none";
+      if (state.dark) document.documentElement.setAttribute('data-mode', 'dark');
 
-      document.getElementById("cardGroup").textContent = item.tag;
-      document.getElementById("requeueTag").style.display = item.requeued ? "inline-flex" : "none";
-      document.getElementById("tradGlyph").textContent = item.trad;
-      document.getElementById("simpWord").textContent = item.simp;
-      document.getElementById("famWords").textContent = item.words;
-      document.getElementById("ansTip").textContent = item.tip;
+      function showToast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => el.classList.remove('show'), 1800);
+      }
 
-      const doneCount = Math.max(0, totalInitial - queue.length);
-      document.getElementById("progressBadge").textContent = `剩 ${queue.length} / ${totalInitial}`;
-      document.getElementById("progressFill").style.width = `${Math.min(100, (doneCount / totalInitial) * 100)}%`;
+      // ── ReviewCore-like Scheduling Engine ──
+      function getStatus(item) {
+        const m = state.meta[item.id];
+        if (!m) return 'fresh';
+        if (m.lastRating === 'mastered') return 'mastered';
+        if ((m.lapses || 0) >= 1 || m.lastRating === 'forget' || m.lastRating === 'uncertain') {
+          if ((m.streak || 0) >= 2 && m.lastRating === 'familiar') return 'familiar';
+          return 'hard';
+        }
+        return 'familiar';
+      }
 
-      document.getElementById("liveKnow").textContent = sessionStats.know;
-      document.getElementById("liveVague").textContent = sessionStats.vague;
-      document.getElementById("liveUnknown").textContent = sessionStats.unknown;
+      function isDue(item, now) {
+        const m = state.meta[item.id];
+        if (!m) return false;
+        if (m.lastRating === 'mastered') return false;
+        return (m.nextDueAt || 0) <= now;
+      }
 
-      setReveal(false);
-      setTransform(0, 0);
-      resetHints();
-    }
+      function applyReview(itemId, rating) {
+        const now = Date.now();
+        const prev = state.meta[itemId] ? Object.assign({}, state.meta[itemId]) : null;
+        const old = prev || { streak: 0, lapses: 0, intervalDays: 0, hardHits: 0, lastRating: '' };
+        const next = Object.assign({}, old, { lastRating: rating, lastReviewAt: now });
 
-    function resetHints() {
-      hintKnow.style.opacity = 0;
-      hintVague.style.opacity = 0;
-      hintUnknown.style.opacity = 0;
-    }
+        if (rating === 'familiar') {
+          next.streak = (old.streak || 0) + 1;
+          const intervals = [1, 3, 7, 14, 30];
+          const base = next.streak <= intervals.length ? intervals[next.streak - 1] : Math.round((old.intervalDays || 14) * 1.6);
+          next.intervalDays = base;
+          next.nextDueAt = now + base * DAY_MS;
+          // Exam Cap (do not schedule past 3 days before exam)
+          const capAt = EXAM_TS - 3 * DAY_MS;
+          if (capAt > now + DAY_MS && next.nextDueAt > capAt) {
+            next.nextDueAt = capAt;
+            next.intervalDays = Math.max(1, Math.round((capAt - now) / DAY_MS));
+          }
+        } else if (rating === 'mastered') {
+          next.streak = Math.max(old.streak || 0, 5) + 1;
+          next.intervalDays = 36500;
+          next.nextDueAt = now + 36500 * DAY_MS;
+        } else if (rating === 'uncertain') {
+          next.streak = Math.max(0, Math.floor((old.streak || 0) * 0.5));
+          next.hardHits = (old.hardHits || 0) + 1;
+          next.intervalDays = 1;
+          next.nextDueAt = now + DAY_MS;
+        } else {
+          // forget
+          next.streak = 0;
+          next.lapses = (old.lapses || 0) + 1;
+          next.hardHits = (old.hardHits || 0) + 1;
+          next.intervalDays = 1;
+          next.nextDueAt = now + DAY_MS;
+        }
 
-    let animFrame = null;
-    function setTransform(x, y) {
-      const rot = (x / 24).toFixed(2);
-      flashcard.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${rot}deg)`;
-    }
+        state.meta[itemId] = next;
+        const dk = todayKey();
+        state.daily[dk] = (state.daily[dk] || 0) + 1;
+        saveState();
+        return { prevMeta: prev, dailyKey: dk };
+      }
 
-    function springTo(tx, ty, onDone) {
-      if (animFrame) cancelAnimationFrame(animFrame);
-      const style = window.getComputedStyle(flashcard);
-      const matrix = new DOMMatrixReadOnly(style.transform);
-      let cx = matrix.m41 || 0;
-      let cy = matrix.m42 || 0;
-      let vx = 0, vy = 0;
-      let last = performance.now();
+      // ── Navigation ──
+      let activeTab = 'today';
+      function switchTab(tab) {
+        activeTab = tab;
+        document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-' + tab).classList.add('active');
+        document.getElementById('appTabbar').classList.toggle('hidden', tab === 'recite');
+        document.querySelectorAll('.tab-item').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+        if (tab === 'today') renderToday();
+        if (tab === 'library') renderLibrary();
+        if (tab === 'progress') renderProgress();
+      }
 
-      function tick(now) {
-        const dt = Math.min(32, Math.max(1, now - last)) / 1000;
-        last = now;
-        const ax = (tx - cx) * 520 - vx * 38;
-        const ay = (ty - cy) * 520 - vy * 38;
-        vx += ax * dt;
-        vy += ay * dt;
-        cx += vx * dt;
-        cy += vy * dt;
-        setTransform(cx, cy);
+      document.querySelectorAll('.tab-item').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
 
-        if (Math.abs(tx - cx) < 0.8 && Math.abs(vx) < 8 && Math.abs(ty - cy) < 0.8 && Math.abs(vy) < 8) {
-          setTransform(tx, ty);
-          if (onDone) onDone();
+      // ── Today Home ──
+      function renderToday() {
+        const now = Date.now();
+        const daysLeft = Math.max(0, Math.ceil((EXAM_TS - now) / DAY_MS));
+        document.getElementById('examCountdown').textContent = `距初试 ${daysLeft} 天 · 2026-12-19`;
+
+        let due = 0, hard = 0, fresh = 0, mastered = 0, familiar = 0;
+        DECK_DATA.forEach(item => {
+          const st = getStatus(item);
+          if (st === 'mastered') mastered++;
+          else if (st === 'hard') hard++;
+          else if (st === 'familiar') familiar++;
+          else fresh++;
+          if (isDue(item, now)) due++;
+        });
+
+        const needTotal = due + hard + fresh;
+        document.getElementById('heroDueNum').textContent = needTotal;
+        document.getElementById('cntDue').textContent = due;
+        document.getElementById('cntHard').textContent = hard;
+        document.getElementById('cntFresh').textContent = fresh;
+
+        const sum = Math.max(1, due + hard + fresh);
+        document.getElementById('segDue').style.width = ((due / sum) * 100).toFixed(1) + '%';
+        document.getElementById('segHard').style.width = ((hard / sum) * 100).toFixed(1) + '%';
+        document.getElementById('segFresh').style.width = ((fresh / sum) * 100).toFixed(1) + '%';
+
+        document.getElementById('mTotal').textContent = DECK_DATA.length;
+        document.getElementById('mToday').textContent = state.daily[todayKey()] || 0;
+        document.getElementById('mMastered').textContent = mastered;
+        document.getElementById('mFamiliar').textContent = familiar;
+        document.getElementById('mHard').textContent = hard;
+        document.getElementById('mFresh').textContent = fresh;
+
+        document.querySelectorAll('#limitRow .limit-btn').forEach(btn => {
+          btn.classList.toggle('active', Number(btn.dataset.limit) === state.limit);
+        });
+
+        // Decks
+        const decks = [
+          { id: 'today61', title: '今日 61 盲区专项', sub: '180 盲测卷红笔/画圈字（含熟词联想）' },
+          { id: 'multi', title: '一简多繁高危辨析', sub: '11 组同音替代必分字形' },
+          { id: 'prev', title: '前期高频盲区汇总', sub: '《庄辛》《齐威王》及前两批 41 字' },
+          { id: 'hard_only', title: '错题与模糊回炉专练', sub: '专攻历史遗忘或标记模糊的硬骨头' }
+        ];
+        const list = document.getElementById('deckList');
+        list.innerHTML = '';
+        decks.forEach(d => {
+          const items = d.id === 'hard_only'
+            ? DECK_DATA.filter(i => getStatus(i) === 'hard')
+            : DECK_DATA.filter(i => i.deck === d.id && getStatus(i) !== 'mastered');
+          const btn = document.createElement('button');
+          btn.className = 'deck-row';
+          btn.innerHTML = `
+            <div>
+              <div class="deck-row-title">${d.title}</div>
+              <div class="deck-row-sub">${d.sub}</div>
+            </div>
+            <div class="deck-row-right">
+              <span class="count-pill">${items.length} 字</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>`;
+          btn.addEventListener('click', () => startSession(d.id, d.title));
+          list.appendChild(btn);
+        });
+      }
+
+      document.querySelectorAll('#limitRow .limit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.limit = Number(btn.dataset.limit);
+          saveState();
+          renderToday();
+        });
+      });
+
+      document.getElementById('startTodayBtn').addEventListener('click', () => {
+        startSession('smart_today', '今日智能调度');
+      });
+
+      // ── Recite Session Engine (Words 2-Phase + 4-Tier + Undo + WordsMotion Swipe) ──
+      let session = {
+        title: '今日智能调度',
+        entries: [],
+        idx: 0,
+        shown: false,
+        done: false,
+        stats: { done: 0, familiar: 0, hard: 0 },
+        undo: null,
+        committing: false
+      };
+
+      function startSession(mode, title) {
+        const now = Date.now();
+        let pool = [];
+        if (mode === 'smart_today') {
+          const active = DECK_DATA.filter(i => getStatus(i) !== 'mastered');
+          const dueItems = active.filter(i => isDue(i, now));
+          const hardItems = active.filter(i => !isDue(i, now) && getStatus(i) === 'hard');
+          const freshItems = active.filter(i => !isDue(i, now) && getStatus(i) === 'fresh');
+          const restItems = active.filter(i => !isDue(i, now) && getStatus(i) === 'familiar');
+          pool = dueItems.concat(hardItems, freshItems);
+          if (pool.length === 0) pool = restItems;
+          if (state.limit > 0) pool = pool.slice(0, state.limit);
+        } else if (mode === 'hard_only') {
+          pool = DECK_DATA.filter(i => getStatus(i) === 'hard');
+        } else {
+          pool = DECK_DATA.filter(i => i.deck === mode && getStatus(i) !== 'mastered');
+        }
+
+        if (pool.length === 0) {
+          showToast('该组已全部过关或暂无错题');
           return;
         }
-        animFrame = requestAnimationFrame(tick);
-      }
-      animFrame = requestAnimationFrame(tick);
-    }
 
-    function rateCard(type) {
-      if (queue.length === 0) return;
-      const current = queue.shift();
-      sessionStats[type]++;
-
-      // Words-style spaced re-queueing inside session
-      if (type === "unknown") {
-        current.requeued = true;
-        const insertAt = Math.min(queue.length, 3);
-        queue.splice(insertAt, 0, current);
-      } else if (type === "vague") {
-        current.requeued = true;
-        const insertAt = Math.min(queue.length, 7);
-        queue.splice(insertAt, 0, current);
-      } else {
-        saved.known[current.id] = true;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        session = {
+          title: title,
+          entries: pool.map(item => ({ item: item, isRepeat: false, repeatCount: 0 })),
+          idx: 0,
+          shown: false,
+          done: false,
+          stats: { done: 0, familiar: 0, hard: 0 },
+          undo: null,
+          committing: false
+        };
+        switchTab('recite');
+        renderRecite();
       }
 
-      const tx = type === "know" ? window.innerWidth + 120 : (type === "unknown" ? -window.innerWidth - 120 : 0);
-      const ty = type === "vague" ? -window.innerHeight : 0;
+      const vocabCard = document.getElementById('vocabCard');
+      const phase1Prompt = document.getElementById('phase1Prompt');
+      const phase2Content = document.getElementById('phase2Content');
+      const rateBar = document.getElementById('rateBar');
+      const summaryCard = document.getElementById('summaryCard');
+      const reciteUtility = document.getElementById('reciteUtility');
 
-      springTo(tx, ty, renderCard);
-    }
+      function renderRecite() {
+        document.getElementById('reciteDeckName').textContent = session.title;
+        document.getElementById('undoBtn').disabled = !session.undo;
 
-    // Drag & Click Logic
-    let dragging = false, moved = false;
-    let sx = 0, sy = 0, dx = 0, dy = 0;
+        if (session.done || session.idx >= session.entries.length) {
+          vocabCard.style.display = 'none';
+          rateBar.style.display = 'none';
+          reciteUtility.style.display = 'none';
+          summaryCard.classList.add('active');
+          document.getElementById('reciteCounter').textContent = `${session.entries.length} / ${session.entries.length}`;
+          document.getElementById('reciteProgressFill').style.width = '100%';
+          document.getElementById('sumDone').textContent = session.stats.done;
+          document.getElementById('sumFamiliar').textContent = session.stats.familiar;
+          document.getElementById('sumHard').textContent = session.stats.hard;
+          return;
+        }
 
-    function pointerDown(e) {
-      if (queue.length === 0) return;
-      if (animFrame) cancelAnimationFrame(animFrame);
-      dragging = true;
-      moved = false;
-      sx = e.clientX ?? e.touches[0].clientX;
-      sy = e.clientY ?? e.touches[0].clientY;
-      dx = 0; dy = 0;
-    }
+        summaryCard.classList.remove('active');
+        vocabCard.style.display = 'flex';
+        rateBar.style.display = 'grid';
+        reciteUtility.style.display = 'flex';
+        vocabCard.style.transition = 'none';
+        vocabCard.style.transform = 'translate3d(0,0,0) rotate(0deg)';
+        vocabCard.classList.remove('swipe-left', 'swipe-right');
 
-    function pointerMove(e) {
-      if (!dragging) return;
-      const cx = e.clientX ?? e.touches[0].clientX;
-      const cy = e.clientY ?? e.touches[0].clientY;
-      dx = cx - sx;
-      dy = cy - sy;
-      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
-      setTransform(dx, dy);
+        const entry = session.entries[session.idx];
+        const item = entry.item;
+        const m = state.meta[item.id];
 
-      hintKnow.style.opacity = dx > 35 ? Math.min(1, (dx - 35) / 75) : 0;
-      hintUnknown.style.opacity = dx < -35 ? Math.min(1, (-dx - 35) / 75) : 0;
-      hintVague.style.opacity = (dy < -45 && Math.abs(dx) < 80) ? Math.min(1, (-dy - 45) / 75) : 0;
-    }
+        document.getElementById('reciteCounter').textContent = `${session.idx + 1} / ${session.entries.length}`;
+        document.getElementById('reciteProgressFill').style.width = ((session.idx / session.entries.length) * 100).toFixed(1) + '%';
 
-    function pointerUp() {
-      if (!dragging) return;
-      dragging = false;
-      resetHints();
+        document.getElementById('vcTag').textContent = item.tag;
+        const lapsesEl = document.getElementById('vcLapses');
+        if (m && m.lapses > 0) {
+          lapsesEl.style.display = 'inline-block';
+          lapsesEl.textContent = `错 ${m.lapses} 次`;
+        } else {
+          lapsesEl.style.display = 'none';
+        }
+        document.getElementById('vcRepeat').style.display = entry.isRepeat ? 'inline-block' : 'none';
 
-      if (!moved) {
-        setReveal(!isRevealed);
-        return;
+        document.getElementById('vcTrad').textContent = item.trad;
+        document.getElementById('vcSimp').textContent = item.simp;
+        document.getElementById('vcWords').textContent = item.words;
+        document.getElementById('vcTip').textContent = item.tip;
+
+        const dueHint = document.getElementById('nextDueHint');
+        if (m && m.intervalDays) {
+          dueHint.textContent = `当前间隔 ${m.intervalDays} 天`;
+        } else {
+          dueHint.textContent = '首次检验';
+        }
+
+        updatePhaseUI();
       }
 
-      if (dx > 105) {
-        rateCard("know");
-      } else if (dx < -105) {
-        rateCard("unknown");
-      } else if (dy < -110) {
-        rateCard("vague");
-      } else {
-        springTo(0, 0);
+      function updatePhaseUI() {
+        phase1Prompt.classList.toggle('hidden', session.shown);
+        phase2Content.classList.toggle('hidden', !session.shown);
+
+        if (!session.shown) {
+          rateBar.className = 'rate-grid phase1';
+          rateBar.innerHTML = `
+            <button class="rate-btn reveal" data-act="reveal">
+              <span class="r-name">看答案 / 记不清</span>
+              <span class="r-hint">点击卡片 / 空格</span>
+            </button>
+            <button class="rate-btn know-p1" data-act="rate" data-val="familiar">
+              <span class="r-name">直接认识</span>
+              <span class="r-hint">左滑 / 3</span>
+            </button>`;
+        } else {
+          rateBar.className = 'rate-grid phase2';
+          rateBar.innerHTML = `
+            <button class="rate-btn forget" data-act="rate" data-val="forget">
+              <span class="r-name">忘记</span>
+              <span class="r-hint">回炉 / 1</span>
+            </button>
+            <button class="rate-btn vague" data-act="rate" data-val="uncertain">
+              <span class="r-name">模糊</span>
+              <span class="r-hint">稍后 / 2</span>
+            </button>
+            <button class="rate-btn familiar" data-act="rate" data-val="familiar">
+              <span class="r-name">熟知</span>
+              <span class="r-hint">左滑 / 3</span>
+            </button>
+            <button class="rate-btn mastered" data-act="rate" data-val="mastered">
+              <span class="r-name">彻底斩</span>
+              <span class="r-hint">归档 / 4</span>
+            </button>`;
+        }
       }
-    }
 
-    flashcard.addEventListener("mousedown", pointerDown);
-    window.addEventListener("mousemove", pointerMove);
-    window.addEventListener("mouseup", pointerUp);
-    flashcard.addEventListener("touchstart", pointerDown, { passive: true });
-    window.addEventListener("touchmove", pointerMove, { passive: true });
-    window.addEventListener("touchend", pointerUp);
-
-    // Controls
-    document.querySelectorAll(".rate-btn").forEach(btn => {
-      btn.addEventListener("click", () => rateCard(btn.dataset.rate));
-    });
-
-    document.getElementById("toggleRevealBtn").addEventListener("click", () => setReveal(!isRevealed));
-    document.getElementById("shuffleBtn").addEventListener("click", () => initDeck(true));
-    document.getElementById("resetBtn").addEventListener("click", () => initDeck(false));
-    document.getElementById("restartBtn").addEventListener("click", () => initDeck(false));
-
-    document.getElementById("themeBtn").addEventListener("click", () => {
-      const isDark = document.documentElement.getAttribute("data-mode") === "dark";
-      if (isDark) {
-        document.documentElement.removeAttribute("data-mode");
-        saved.dark = false;
-      } else {
-        document.documentElement.setAttribute("data-mode", "dark");
-        saved.dark = true;
+      function revealPhase2() {
+        if (session.shown || session.done || session.committing) return;
+        session.shown = true;
+        updatePhaseUI();
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-    });
 
-    window.addEventListener("keydown", e => {
-      if (queue.length === 0) return;
-      if (e.key === " ") {
-        e.preventDefault();
-        setReveal(!isRevealed);
-      } else if (e.key === "1" || e.key === "ArrowLeft") {
-        rateCard("unknown");
-      } else if (e.key === "2" || e.key === "ArrowUp") {
-        rateCard("vague");
-      } else if (e.key === "3" || e.key === "ArrowRight") {
-        rateCard("know");
-      }
-    });
-
-    initDeck(false);
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      rateBar.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn || session.committing) return;
+        if (btn.dataset.act === 'reveal') {
+          revealPhase2();
+        } else if (btn.dataset.act === 'rate') {
+          commitRating(btn.dataset.val, 0);
+        }
       });
-    }
+
+      function commitRating(rating, swipeDir) {
+        if (session.committing || session.done || session.idx >= session.entries.length) return;
+        session.committing = true;
+
+        const entry = session.entries[session.idx];
+        const prevStats = Object.assign({}, session.stats);
+        let reviewUndo = null;
+        if (!entry.isRepeat) {
+          reviewUndo = applyReview(entry.item.id, rating);
+          session.stats.done++;
+          if (rating === 'familiar' || rating === 'mastered') session.stats.familiar++;
+          else session.stats.hard++;
+        }
+
+        // Words-style queue re-insertion
+        let insertedAt = null;
+        if (rating === 'forget') {
+          const step = Math.min(session.entries.length, session.idx + 3);
+          const reEntry = { item: entry.item, isRepeat: true, repeatCount: entry.repeatCount + 1 };
+          session.entries.splice(step, 0, reEntry);
+          insertedAt = step;
+        } else if (rating === 'uncertain') {
+          const step = Math.min(session.entries.length, session.idx + 6);
+          const reEntry = { item: entry.item, isRepeat: true, repeatCount: entry.repeatCount + 1 };
+          session.entries.splice(step, 0, reEntry);
+          insertedAt = step;
+        }
+
+        session.undo = {
+          idx: session.idx,
+          itemId: entry.item.id,
+          wasRepeat: entry.isRepeat,
+          reviewUndo: reviewUndo,
+          prevStats: prevStats,
+          insertedAt: insertedAt
+        };
+
+        const finishAdvance = () => {
+          session.committing = false;
+          if (session.idx < session.entries.length - 1) {
+            session.idx++;
+          } else {
+            session.done = true;
+          }
+          session.shown = false;
+          renderRecite();
+        };
+
+        if (swipeDir !== 0) {
+          const dist = Math.max(window.innerWidth * 0.95, 340);
+          vocabCard.style.transition = 'transform 115ms cubic-bezier(.23,1,.32,1)';
+          vocabCard.style.transform = `translate3d(${swipeDir * dist}px, 0, 0) rotate(${(swipeDir * dist / 22).toFixed(1)}deg)`;
+          setTimeout(finishAdvance, 120);
+        } else {
+          finishAdvance();
+        }
+      }
+
+      function undoLast() {
+        const u = session.undo;
+        if (!u || session.committing) return;
+        if (u.insertedAt !== null && u.insertedAt < session.entries.length) {
+          session.entries.splice(u.insertedAt, 1);
+        }
+        if (u.reviewUndo) {
+          if (u.reviewUndo.prevMeta) state.meta[u.itemId] = u.reviewUndo.prevMeta;
+          else delete state.meta[u.itemId];
+          state.daily[u.reviewUndo.dailyKey] = Math.max(0, (state.daily[u.reviewUndo.dailyKey] || 1) - 1);
+          saveState();
+        }
+        session.stats = u.prevStats;
+        session.idx = u.idx;
+        session.done = false;
+        session.shown = false;
+        session.undo = null;
+        renderRecite();
+        showToast('已撤回上一张');
+      }
+
+      document.getElementById('undoBtn').addEventListener('click', undoLast);
+      document.getElementById('backHomeBtn').addEventListener('click', () => switchTab('today'));
+      document.getElementById('summaryBackBtn').addEventListener('click', () => switchTab('today'));
+
+      document.getElementById('shuffleSessionBtn').addEventListener('click', () => {
+        if (session.done || session.idx >= session.entries.length - 1) return;
+        const head = session.entries.slice(0, session.idx);
+        const tail = session.entries.slice(session.idx);
+        for (let i = tail.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [tail[i], tail[j]] = [tail[j], tail[i]];
+        }
+        session.entries = head.concat(tail);
+        session.shown = false;
+        renderRecite();
+        showToast('剩余卡片已乱序');
+      });
+
+      // ── WordsMotion Pointer Swipe Engine (Strict Port from words/ui-motion.js) ──
+      (function bindSwipe() {
+        let drag = null;
+        const edgeReserve = 22;
+
+        function rubber(val, limit) {
+          const over = Math.abs(val) - limit;
+          if (over <= 0) return val;
+          return Math.sign(val) * (limit + (over * limit * 0.58) / (limit + 0.58 * over));
+        }
+
+        function setX(x) {
+          vocabCard.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0) rotate(${(x / 22).toFixed(2)}deg)`;
+        }
+
+        function settleHome() {
+          vocabCard.classList.remove('swipe-left', 'swipe-right');
+          vocabCard.style.transition = 'transform .18s cubic-bezier(.23,1,.32,1)';
+          setX(0);
+          setTimeout(() => { if (!drag) vocabCard.style.transition = ''; }, 185);
+        }
+
+        vocabCard.addEventListener('pointerdown', e => {
+          if (!e.isPrimary || drag || session.committing || e.button > 0 || e.clientX <= edgeReserve) return;
+          vocabCard.style.transition = 'none';
+          drag = {
+            id: e.pointerId,
+            sx: e.clientX,
+            sy: e.clientY,
+            axis: '',
+            x: 0,
+            moved: false,
+            captured: false
+          };
+          try { vocabCard.setPointerCapture(e.pointerId); drag.captured = true; } catch (err) {}
+        });
+
+        vocabCard.addEventListener('pointermove', e => {
+          if (!drag || e.pointerId !== drag.id) return;
+          const dx = e.clientX - drag.sx;
+          const dy = e.clientY - drag.sy;
+          if (!drag.axis) {
+            const ax = Math.abs(dx), ay = Math.abs(dy);
+            if (ax >= 6 && ax >= ay * 0.82) drag.axis = 'x';
+            else if (ay >= 12 && ay > ax * 1.25) drag.axis = 'y';
+          }
+          if (drag.axis !== 'x') return;
+          e.preventDefault();
+          drag.moved = true;
+          const x = rubber(dx, Math.max(window.innerWidth * 0.9, 240));
+          drag.x = x;
+          setX(x);
+          vocabCard.classList.toggle('swipe-left', x < -65);
+          vocabCard.classList.toggle('swipe-right', x > 65);
+        }, { passive: false });
+
+        function finish(e) {
+          if (!drag || e.pointerId !== drag.id) return;
+          const d = drag;
+          drag = null;
+          if (d.captured) { try { vocabCard.releasePointerCapture(e.pointerId); } catch (err) {} }
+
+          if (!d.moved && e.type === 'pointerup') {
+            settleHome();
+            if (!session.shown) revealPhase2();
+            return;
+          }
+          if (e.type === 'pointercancel' || d.axis !== 'x') {
+            settleHome();
+            return;
+          }
+          if (d.x < -80) {
+            // Left swipe -> Familiar (just like words!)
+            commitRating('familiar', -1);
+          } else if (d.x > 80) {
+            // Right swipe -> Phase 1 reveals answer, Phase 2 marks forget
+            if (!session.shown) {
+              settleHome();
+              revealPhase2();
+            } else {
+              commitRating('forget', 1);
+            }
+          } else {
+            settleHome();
+          }
+        }
+
+        vocabCard.addEventListener('pointerup', finish);
+        vocabCard.addEventListener('pointercancel', finish);
+      })();
+
+      // Keyboard shortcuts for desktop
+      window.addEventListener('keydown', e => {
+        if (activeTab !== 'recite' || session.done || session.committing) return;
+        if (e.key === ' ') {
+          e.preventDefault();
+          if (!session.shown) revealPhase2();
+        } else if (e.key === 'z' || e.key === 'Z') {
+          undoLast();
+        } else if (e.key === '1' && session.shown) {
+          commitRating('forget', 1);
+        } else if (e.key === '2' && session.shown) {
+          commitRating('uncertain', 0);
+        } else if (e.key === '3' || e.key === 'ArrowLeft') {
+          commitRating('familiar', -1);
+        } else if (e.key === '4' && session.shown) {
+          commitRating('mastered', -1);
+        } else if (e.key === 'ArrowRight') {
+          if (!session.shown) revealPhase2();
+          else commitRating('forget', 1);
+        }
+      });
+
+      // ── Library View ──
+      let libFilter = 'all';
+      function renderLibrary() {
+        const q = (document.getElementById('libSearch').value || '').trim().toLowerCase();
+        const filtered = DECK_DATA.filter(item => {
+          const st = getStatus(item);
+          if (libFilter === 'hard' && st !== 'hard') return false;
+          if (libFilter === 'learning' && st !== 'familiar') return false;
+          if (libFilter === 'mastered' && st !== 'mastered') return false;
+          if (libFilter === 'fresh' && st !== 'fresh') return false;
+          if (!q) return true;
+          return (item.trad + item.simp + item.words + item.tip).toLowerCase().includes(q);
+        });
+
+        document.getElementById('libCountSub').textContent = `显示 ${filtered.length} / ${DECK_DATA.length} 条`;
+        const list = document.getElementById('libList');
+        list.innerHTML = '';
+        filtered.forEach(item => {
+          const st = getStatus(item);
+          const row = document.createElement('div');
+          row.className = 'lib-item';
+          const actLabel = st === 'mastered' ? '恢复' : '斩掉';
+          row.innerHTML = `
+            <div class="lib-trad">${item.trad}</div>
+            <div class="lib-info">
+              <div class="lib-top">
+                <span class="lib-simp">${item.simp}</span>
+                <span class="lib-words">${item.words}</span>
+              </div>
+              <div class="lib-tip">${item.tip}</div>
+            </div>
+            <button class="lib-act">${actLabel}</button>`;
+          row.querySelector('.lib-act').addEventListener('click', () => {
+            if (st === 'mastered') {
+              delete state.meta[item.id];
+              saveState();
+              showToast(`已恢复「${item.trad}」`);
+            } else {
+              applyReview(item.id, 'mastered');
+              showToast(`已斩「${item.trad}」`);
+            }
+            renderLibrary();
+          });
+          list.appendChild(row);
+        });
+      }
+
+      document.getElementById('libSearch').addEventListener('input', renderLibrary);
+      document.querySelectorAll('#libFilters .filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          libFilter = btn.dataset.filter;
+          document.querySelectorAll('#libFilters .filter-pill').forEach(b => b.classList.toggle('active', b === btn));
+          renderLibrary();
+        });
+      });
+
+      // ── Progress View ──
+      function renderProgress() {
+        const leeches = DECK_DATA
+          .map(item => ({ item, meta: state.meta[item.id] }))
+          .filter(x => x.meta && (x.meta.lapses > 0 || x.meta.hardHits > 0))
+          .sort((a, b) => (b.meta.lapses * 3 + b.meta.hardHits) - (a.meta.lapses * 3 + a.meta.hardHits))
+          .slice(0, 15);
+
+        const wrap = document.getElementById('leechList');
+        if (leeches.length === 0) {
+          wrap.innerHTML = '<div style="font-size:13px;color:var(--text-3);padding:10px 0;">暂无错题记录，开刷后会自动统计高频错字。</div>';
+          return;
+        }
+        wrap.innerHTML = '';
+        leeches.forEach(x => {
+          const row = document.createElement('div');
+          row.className = 'leech-row';
+          row.innerHTML = `
+            <div>
+              <b style="font-family:var(--font-serif);font-size:18px;margin-right:8px;">${x.item.trad}</b>
+              <span style="color:var(--text-2)">${x.item.simp} · ${x.item.words}</span>
+            </div>
+            <span class="vc-tag lapses">错 ${x.meta.lapses || 0} 次</span>`;
+          wrap.appendChild(row);
+        });
+      }
+
+      document.getElementById('resetAllBtn').addEventListener('click', () => {
+        if (confirm('确定清空全部学习进度与错题记录吗？')) {
+          state.meta = {};
+          state.daily = {};
+          saveState();
+          renderProgress();
+          showToast('进度已全部重置');
+        }
+      });
+
+      // Theme Toggle
+      document.getElementById('themeBtn').addEventListener('click', () => {
+        state.dark = !state.dark;
+        if (state.dark) document.documentElement.setAttribute('data-mode', 'dark');
+        else document.documentElement.removeAttribute('data-mode');
+        saveState();
+      });
+
+      // Init
+      renderToday();
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    })();
   </script>
 </body>
 </html>
