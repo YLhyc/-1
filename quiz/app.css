@@ -41,6 +41,8 @@
   --radius-lg: 14px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --topbar-h: 57px;
+  --subbar-h: 84px;
 }
 
 [data-theme="dark"] {
@@ -224,6 +226,82 @@ button, input, textarea, select {
 .sync-dot.busy { background: var(--warning); }
 .sync-dot.err { background: var(--error); }
 
+.profile-mini-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.profile-pill-group {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  border: var(--hairline) solid var(--border-strong);
+  background: var(--surface);
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.profile-seg {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease;
+}
+
+.profile-seg.active {
+  background: var(--text);
+  color: var(--background);
+}
+
+.profile-seg.active[data-switch-profile="gf"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.profile-switch-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.profile-choice {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: var(--hairline) solid var(--border-strong);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.profile-choice strong {
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.profile-choice span {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+.profile-choice.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.profile-choice.active strong {
+  color: var(--accent-deep);
+}
+
 /* 书架页 */
 .hero-card {
   margin-top: 16px;
@@ -388,13 +466,20 @@ button, input, textarea, select {
   gap: 8px;
 }
 
-/* 刷题页次级工具条 */
+/* 刷题页次级悬浮控制条 */
 .quiz-subbar {
+  position: sticky;
+  top: var(--topbar-h, 57px);
+  z-index: 35;
+  margin: 0 -14px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--background) 94%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 10px 0;
+  gap: 8px;
   border-bottom: var(--hairline) solid var(--border);
   flex-wrap: wrap;
 }
@@ -477,6 +562,7 @@ button, input, textarea, select {
   border-radius: var(--radius-lg);
   border: var(--hairline) solid var(--border);
   background: var(--surface-elevated);
+  scroll-margin-top: calc(var(--topbar-h, 57px) + var(--subbar-h, 84px) + 10px);
 }
 
 .q-card.is-marked {

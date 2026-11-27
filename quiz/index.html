@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="./app.css">
 </head>
 <body>
-  <header class="topbar">
+  <header class="topbar" id="topbar">
     <div class="topbar-inner">
       <div class="topbar-left">
         <button id="backBtn" class="icon-btn hidden" type="button" aria-label="返回书架">
@@ -29,10 +29,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
           <span id="mistakesCountBadge">错题 0</span>
         </button>
-        <button id="syncOpenBtn" class="icon-btn" type="button" title="云同步与备份">
+        <button id="syncOpenBtn" class="icon-btn" type="button" title="身份切换与云同步">
           <span id="syncDot" class="sync-dot"></span>
+          <span id="activeProfileBadge" class="profile-mini-label">我的</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          <span class="hide-xs">同步</span>
         </button>
         <button id="themeBtn" class="icon-btn" type="button" aria-label="切换深浅主题" title="切换主题">
           <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -49,6 +49,10 @@
           <div>
             <h1>冲刺客观题全真模拟库</h1>
             <p class="hero-sub">27《肖八》全 8 套 + 27《徐涛十套卷》全 10 套 · 共 594 题离线可用</p>
+          </div>
+          <div class="profile-pill-group" id="heroProfileSwitch" role="group" aria-label="切换刷题身份">
+            <button type="button" class="profile-seg active" data-switch-profile="me">我的</button>
+            <button type="button" class="profile-seg" data-switch-profile="gf">女友</button>
           </div>
         </div>
         <div class="stats-row" id="libraryStats">
@@ -71,7 +75,7 @@
 
     <!-- 2. 刷题视图 -->
     <section id="quizView" class="hidden">
-      <div class="quiz-subbar">
+      <div class="quiz-subbar" id="quizSubbar">
         <div class="progress-wrap">
           <span class="p-text" id="quizProgressText">0 / 33</span>
           <div class="progress-track"><div class="progress-fill" id="quizProgressFill"></div></div>
@@ -102,7 +106,7 @@
         <div class="hero-head">
           <div>
             <h1>跨套卷错题与标疑本</h1>
-            <p class="hero-sub">自动汇总所有已交卷错题及标疑题，支持独立重做演练（不影响原卷成绩）与斩题归档</p>
+            <p class="hero-sub" id="mistakesOwnerSub">当前展示「我的」档案错题与标疑题，支持独立重做演练与斩题归档</p>
           </div>
           <button id="mistakesPracticeResetBtn" class="pill-btn" type="button">清空重做记录</button>
         </div>
@@ -131,7 +135,7 @@
     </section>
   </main>
 
-  <!-- 刷题底部操作栏 -->
+  <!-- 刷题底部悬浮操作栏 -->
   <div id="bottomDock" class="bottom-dock hidden">
     <div class="bottom-dock-inner">
       <button id="dockPrevBtn" class="dock-btn hidden" type="button">
@@ -156,7 +160,9 @@
   <div id="hlFloatBar" class="hl-float-bar hidden">
     <span>已选中文字</span>
     <button id="hlApplyBtn" class="hl-float-btn" type="button">标记高光</button>
-    <button id="hlCancelBtn" class="hl-float-close" type="button" aria-label="关闭">✕</button>
+    <button id="hlCancelBtn" class="hl-float-close" type="button" aria-label="关闭">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
   </div>
 
   <!-- 答题卡底部抽屉 -->
@@ -178,18 +184,34 @@
     </div>
   </div>
 
-  <!-- 云同步与备份抽屉 -->
+  <!-- 双人档案与云同步抽屉 -->
   <div id="syncBackdrop" class="sheet-backdrop hidden">
-    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="云端同步与备份">
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="身份档案与云端同步">
       <div class="sheet-head">
-        <h3>GitHub Gist 云同步与本地备份</h3>
+        <h3>刷题身份与 GitHub Gist 云同步</h3>
         <button id="closeSyncBtn" class="icon-btn" type="button">关闭</button>
       </div>
-      <div class="help-note">
-        <strong>如何实现电脑与手机进度互通：</strong><br>
-        1. 在 GitHub 生成一个仅勾选 <code>gist</code> 权限的 Token（Fine-grained token 选 <em>Account permissions → Gists: Read and write</em> 或 Classic token 选 <code>gist</code>）。<br>
-        2. 在电脑和手机填入同一个 Token 后点击「连接并立即同步」，系统会自动查找或创建一个<strong>私有 Gist</strong>（不会公开），按每套试卷最近修改时间自动合并进度、标疑与划线。
+
+      <div class="field-group">
+        <label class="field-label">1. 选择本机刷题身份（各自手机独立保存，互不覆盖）</label>
+        <div class="profile-switch-row" id="modalProfileSwitch">
+          <button type="button" class="profile-choice active" data-switch-profile="me">
+            <strong>我的存档</strong>
+            <span>保存于本机，云端写入 profiles.me</span>
+          </button>
+          <button type="button" class="profile-choice" data-switch-profile="gf">
+            <strong>女友存档</strong>
+            <span>保存于本机，云端写入 profiles.gf</span>
+          </button>
+        </div>
       </div>
+
+      <div class="help-note">
+        <strong>双人同库独立同步用法：</strong><br>
+        1. 你的手机/电脑选择「<strong>我的存档</strong>」，女友的手机访问同一网址后选择「<strong>女友存档</strong>」。<br>
+        2. 两台手机填入同一个仅勾选 <code>gist</code> 权限的 GitHub Token 并点击「连接并立即同步」，系统会自动在你的私有 Gist 中分槽保存 <code>profiles.me</code> 与 <code>profiles.gf</code>，彼此做题、划线、错题本完全独立且统一备份在你的云端。
+      </div>
+
       <div class="field-group">
         <label class="field-label" for="gistTokenInput">GitHub Personal Access Token（仅存本机浏览器）</label>
         <input id="gistTokenInput" class="field-input" type="password" placeholder="ghp_... 或 github_pat_...">
@@ -198,7 +220,7 @@
         <label class="field-label" for="gistIdInput">私有 Gist ID（留空则自动按描述查找或创建）</label>
         <input id="gistIdInput" class="field-input" type="text" placeholder="自动识别，无需手动填写">
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
         <label style="font-size:13px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
           <input id="autoSyncChk" type="checkbox" checked> 交卷/切题后自动静默同步
         </label>
@@ -209,10 +231,10 @@
         <button id="clearTokenBtn" class="dock-btn" type="button">清除本机 Token</button>
       </div>
       <hr style="border:none;border-top:var(--hairline) solid var(--border);margin:14px 0;">
-      <div class="field-label">离线文件兜底（导出 / 导入 JSON）</div>
+      <div class="field-label">当前身份离线文件备份（导出 / 导入 JSON）</div>
       <div class="btn-row">
-        <button id="exportBackupBtn" class="dock-btn" type="button">导出全部进度 JSON</button>
-        <button id="importBackupBtn" class="dock-btn" type="button">导入备份 JSON</button>
+        <button id="exportBackupBtn" class="dock-btn" type="button">导出当前身份 JSON</button>
+        <button id="importBackupBtn" class="dock-btn" type="button">导入备份到当前身份</button>
         <input id="importFileInput" type="file" accept=".json,application/json" class="hidden">
       </div>
     </div>

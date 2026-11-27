@@ -1,12 +1,56 @@
 /* 2027 考研政治刷题 PWA 核心逻辑 */
 const STORE_PREFIX = "politics_pwa_v1_";
-const PAPER_STATE_KEY = (pid) => `${STORE_PREFIX}paper_${pid}`;
-const MISTAKE_STATE_KEY = `${STORE_PREFIX}mistakes_meta`;
-const SETTINGS_KEY = `${STORE_PREFIX}settings`;
+const ACTIVE_PROFILE_KEY = `${STORE_PREFIX}active_profile`;
 const SYNC_CFG_KEY = `${STORE_PREFIX}sync_cfg`;
+const LEGACY_MIGRATED_KEY = `${STORE_PREFIX}migrated_v2`;
+
+const PROFILES = {
+  me: { id: "me", label: "我的" },
+  gf: { id: "gf", label: "女友" }
+};
+
+function getActiveProfileId() {
+  const v = localStorage.getItem(ACTIVE_PROFILE_KEY);
+  return v === "gf" ? "gf" : "me";
+}
+
+function getProfileLabel(profId = getActiveProfileId()) {
+  return PROFILES[profId]?.label || "我的";
+}
+
+const PAPER_STATE_KEY = (pid, profId = getActiveProfileId()) =>
+  `${STORE_PREFIX}prof_${profId}_paper_${pid}`;
+const MISTAKE_STATE_KEY = (profId = getActiveProfileId()) =>
+  `${STORE_PREFIX}prof_${profId}_mistakes_meta`;
+const SETTINGS_KEY = (profId = getActiveProfileId()) =>
+  `${STORE_PREFIX}prof_${profId}_settings`;
 
 const GIST_FILENAME = "politics_quiz_sync_v1.json";
 const GIST_DESC = "2027考研政治刷题PWA同步存档";
+
+function migrateLegacyV1KeysIfNeeded() {
+  if (localStorage.getItem(LEGACY_MIGRATED_KEY)) return;
+  const moves = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (!k || !k.startsWith(STORE_PREFIX)) continue;
+    if (k.startsWith(`${STORE_PREFIX}paper_`)) {
+      const pid = k.slice(`${STORE_PREFIX}paper_`.length);
+      moves.push([k, PAPER_STATE_KEY(pid, "me")]);
+    } else if (k === `${STORE_PREFIX}mistakes_meta`) {
+      moves.push([k, MISTAKE_STATE_KEY("me")]);
+    } else if (k === `${STORE_PREFIX}settings`) {
+      moves.push([k, SETTINGS_KEY("me")]);
+    }
+  }
+  moves.forEach(([oldK, newK]) => {
+    if (!localStorage.getItem(newK)) {
+      localStorage.setItem(newK, localStorage.getItem(oldK));
+    }
+    localStorage.removeItem(oldK);
+  });
+  localStorage.setItem(LEGACY_MIGRATED_KEY, "1");
+}
 
 const SVG = {
   moon: `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`,
@@ -86,17 +130,17 @@ function isTouchDevice() {
 }
 
 // ---------------- 设置与主题 ----------------
-function loadSettings() {
+function loadSettings(profId = getActiveProfileId()) {
   try {
-    return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {};
+    return JSON.parse(localStorage.getItem(SETTINGS_KEY(profId)) || "{}") || {};
   } catch {
     return {};
   }
 }
 
-function saveSettings(patch) {
-  const cur = { ...loadSettings(), ...patch };
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(cur));
+function saveSettings(patch, profId = getActiveProfileId()) {
+  const cur = { ...loadSettings(profId), ...patch };
+  localStorage.setItem(SETTINGS_KEY(profId), JSON.stringify(cur));
   return cur;
 }
 
@@ -123,9 +167,9 @@ function emptyPaperState() {
   };
 }
 
-function loadPaperState(paperId) {
+function loadPaperState(paperId, profId = getActiveProfileId()) {
   try {
-    const raw = localStorage.getItem(PAPER_STATE_KEY(paperId));
+    const raw = localStorage.getItem(PAPER_STATE_KEY(paperId, profId));
     if (!raw) return emptyPaperState();
     const parsed = JSON.parse(raw);
     return { ...emptyPaperState(), ...parsed };
@@ -134,25 +178,68 @@ function loadPaperState(paperId) {
   }
 }
 
-function savePaperState(paperId, state, triggerAutoSync = true) {
+function savePaperState(paperId, state, triggerAutoSync = true, profId = getActiveProfileId()) {
   state.updatedAt = nowMs();
-  localStorage.setItem(PAPER_STATE_KEY(paperId), JSON.stringify(state));
+  localStorage.setItem(PAPER_STATE_KEY(paperId, profId), JSON.stringify(state));
   if (triggerAutoSync) {
     scheduleAutoSync();
   }
 }
 
-function loadMistakeMeta() {
+function loadMistakeMeta(profId = getActiveProfileId()) {
   try {
-    return JSON.parse(localStorage.getItem(MISTAKE_STATE_KEY) || "{}") || {};
+    return JSON.parse(localStorage.getItem(MISTAKE_STATE_KEY(profId)) || "{}") || {};
   } catch {
     return {};
   }
 }
 
-function saveMistakeMeta(meta, triggerAutoSync = true) {
-  localStorage.setItem(MISTAKE_STATE_KEY, JSON.stringify(meta));
+function saveMistakeMeta(meta, triggerAutoSync = true, profId = getActiveProfileId()) {
+  localStorage.setItem(MISTAKE_STATE_KEY(profId), JSON.stringify(meta));
   if (triggerAutoSync) scheduleAutoSync();
+}
+
+function syncProfileUi() {
+  const profId = getActiveProfileId();
+  const label = getProfileLabel(profId);
+  const badge = document.getElementById("activeProfileBadge");
+  if (badge) badge.textContent = label;
+  document.querySelectorAll("[data-switch-profile]").forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-switch-profile") === profId);
+  });
+  const mSub = document.getElementById("mistakesOwnerSub");
+  if (mSub) {
+    mSub.textContent = `当前展示「${label}」档案错题与标疑题，支持独立重做演练与斩题归档`;
+  }
+}
+
+function switchActiveProfile(profId) {
+  const next = profId === "gf" ? "gf" : "me";
+  if (next === getActiveProfileId()) return;
+  stopTimer();
+  localStorage.setItem(ACTIVE_PROFILE_KEY, next);
+  app.mistakePractice = {};
+  applyTheme(loadSettings(next).theme || "warm");
+  syncProfileUi();
+
+  if (app.currentView === "quiz" && app.activePaper) {
+    app.activeState = loadPaperState(app.activePaper.paper_id, next);
+    app.currentIndex = 0;
+    app.onlyReview = false;
+    app.timerPaused = false;
+    renderQuizView();
+    if (!app.activeState.submitted) startTimer();
+  } else if (app.currentView === "mistakes") {
+    renderBookshelf();
+    openMistakesView();
+  } else {
+    renderBookshelf();
+  }
+  showToast(`已切换至「${getProfileLabel(next)}」独立存档`);
+  const cfg = loadSyncCfg();
+  if (cfg.token && navigator.onLine && cfg.autoSync !== false) {
+    syncWithGist(true);
+  }
 }
 
 // ---------------- 判分逻辑 ----------------
@@ -1000,41 +1087,65 @@ function setSyncIndicator(status, text) {
   if (lbl && text) lbl.textContent = text;
 }
 
-function collectFullLocalBundle() {
+function collectProfileBundle(profId = getActiveProfileId()) {
+  const prefix = `${STORE_PREFIX}prof_${profId}_paper_`;
   const papers = {};
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.startsWith(`${STORE_PREFIX}paper_`)) {
-      const pid = k.slice(`${STORE_PREFIX}paper_`.length);
-      papers[pid] = loadPaperState(pid);
+    if (k && k.startsWith(prefix)) {
+      const pid = k.slice(prefix.length);
+      papers[pid] = loadPaperState(pid, profId);
     }
   }
   return {
-    schema: "politics_quiz_pwa_sync_v1",
-    exportedAt: nowMs(),
+    label: getProfileLabel(profId),
+    updatedAt: nowMs(),
     papers,
-    mistakesMeta: loadMistakeMeta(),
-    settings: loadSettings()
+    mistakesMeta: loadMistakeMeta(profId),
+    settings: loadSettings(profId)
   };
 }
 
-function mergeRemoteBundle(remote) {
-  if (!remote || typeof remote !== "object") return false;
+function normalizeRemoteToV2(remote) {
+  if (!remote || typeof remote !== "object") {
+    return { schema: "politics_quiz_pwa_sync_v2", updatedAt: 0, profiles: {} };
+  }
+  if (remote.schema === "politics_quiz_pwa_sync_v2" && remote.profiles && typeof remote.profiles === "object") {
+    return remote;
+  }
+  // 兼容 v1 单人结构：自动归入 profiles.me
+  return {
+    schema: "politics_quiz_pwa_sync_v2",
+    updatedAt: remote.exportedAt || nowMs(),
+    profiles: {
+      me: {
+        label: "我的",
+        updatedAt: remote.exportedAt || nowMs(),
+        papers: remote.papers || {},
+        mistakesMeta: remote.mistakesMeta || {},
+        settings: remote.settings || {}
+      }
+    }
+  };
+}
+
+function mergeProfileIntoLocal(profId, remoteProf) {
+  if (!remoteProf || typeof remoteProf !== "object") return false;
   let changed = false;
 
   // 合并每套卷：updatedAt 更新者胜出
-  const rPapers = remote.papers || {};
+  const rPapers = remoteProf.papers || {};
   for (const [pid, rState] of Object.entries(rPapers)) {
-    const lState = loadPaperState(pid);
+    const lState = loadPaperState(pid, profId);
     if ((rState.updatedAt || 0) > (lState.updatedAt || 0)) {
-      localStorage.setItem(PAPER_STATE_KEY(pid), JSON.stringify({ ...emptyPaperState(), ...rState }));
+      localStorage.setItem(PAPER_STATE_KEY(pid, profId), JSON.stringify({ ...emptyPaperState(), ...rState }));
       changed = true;
     }
   }
 
   // 合并错题斩题标记：updatedAt 更新者胜出
-  const lMeta = loadMistakeMeta();
-  const rMeta = remote.mistakesMeta || {};
+  const lMeta = loadMistakeMeta(profId);
+  const rMeta = remoteProf.mistakesMeta || {};
   const mergedMeta = { ...lMeta };
   for (const [qid, rm] of Object.entries(rMeta)) {
     const lm = mergedMeta[qid];
@@ -1043,8 +1154,27 @@ function mergeRemoteBundle(remote) {
       changed = true;
     }
   }
-  localStorage.setItem(MISTAKE_STATE_KEY, JSON.stringify(mergedMeta));
+  localStorage.setItem(MISTAKE_STATE_KEY(profId), JSON.stringify(mergedMeta));
   return changed;
+}
+
+function mergeRemoteBundle(rawRemote, targetProfId = getActiveProfileId()) {
+  const v2 = normalizeRemoteToV2(rawRemote);
+  if (v2.profiles[targetProfId]) {
+    return mergeProfileIntoLocal(targetProfId, v2.profiles[targetProfId]);
+  }
+  return false;
+}
+
+function buildUpdatedCloudPayload(rawRemote, activeProfId = getActiveProfileId()) {
+  const v2 = normalizeRemoteToV2(rawRemote);
+  const nextProfiles = { ...(v2.profiles || {}) };
+  nextProfiles[activeProfId] = collectProfileBundle(activeProfId);
+  return {
+    schema: "politics_quiz_pwa_sync_v2",
+    updatedAt: nowMs(),
+    profiles: nextProfiles
+  };
 }
 
 async function gistApi(token, method, path, body = null) {
@@ -1077,7 +1207,7 @@ async function findOrCreateSyncGist(token, existingId) {
   if (found) {
     return await gistApi(token, "GET", `/gists/${found.id}`);
   }
-  const initial = collectFullLocalBundle();
+  const initial = buildUpdatedCloudPayload(null, getActiveProfileId());
   return await gistApi(token, "POST", "/gists", {
     description: GIST_DESC,
     public: false,
@@ -1094,6 +1224,7 @@ async function syncWithGist(quiet = false) {
   if (!cfg.token) return;
   if (app.syncBusy) return;
   app.syncBusy = true;
+  const activeProf = getActiveProfileId();
   setSyncIndicator("busy", "正在同步...");
   try {
     const gist = await findOrCreateSyncGist(cfg.token, cfg.gistId);
@@ -1101,35 +1232,39 @@ async function syncWithGist(quiet = false) {
     const idInput = document.getElementById("gistIdInput");
     if (idInput) idInput.value = gist.id;
 
+    let remoteRaw = null;
     const fileObj = gist.files && gist.files[GIST_FILENAME];
     if (fileObj && fileObj.content) {
       try {
-        const remoteBundle = JSON.parse(fileObj.content);
-        mergeRemoteBundle(remoteBundle);
+        remoteRaw = JSON.parse(fileObj.content);
+        mergeRemoteBundle(remoteRaw, activeProf);
       } catch {
-        // 忽略损坏内容
+        remoteRaw = null;
       }
     }
 
-    const merged = collectFullLocalBundle();
+    const nextPayload = buildUpdatedCloudPayload(remoteRaw, activeProf);
     await gistApi(cfg.token, "PATCH", `/gists/${gist.id}`, {
       files: {
         [GIST_FILENAME]: {
-          content: JSON.stringify(merged, null, 2)
+          content: JSON.stringify(nextPayload, null, 2)
         }
       }
     });
 
+    const cloudProfiles = Object.keys(nextPayload.profiles || {}).map((k) => getProfileLabel(k)).join("+");
     const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     saveSyncCfg({ lastSyncAt: nowMs() });
-    setSyncIndicator("ok", `已同步 ${timeStr}`);
+    setSyncIndicator("ok", `已同步 ${timeStr}（云端含 ${cloudProfiles}）`);
 
     if (app.currentView === "bookshelf") renderBookshelf();
     else if (app.currentView === "quiz" && app.activePaper) {
       app.activeState = loadPaperState(app.activePaper.paper_id);
       renderQuizView();
+    } else if (app.currentView === "mistakes") {
+      renderMistakesList();
     }
-    if (!quiet) showToast("云端同步完成");
+    if (!quiet) showToast(`「${getProfileLabel(activeProf)}」云端同步完成`);
   } catch (err) {
     setSyncIndicator("err", "同步失败");
     if (!quiet) showToast(`同步失败：${err.message}`);
@@ -1193,17 +1328,25 @@ function bindEvents() {
     showToast("已清除本机 Token");
   });
 
-  // 导出导入 JSON
+  // 双人身份切换（首页 + 同步抽屉共用）
+  document.addEventListener("click", (e) => {
+    const profBtn = e.target.closest("[data-switch-profile]");
+    if (!profBtn) return;
+    switchActiveProfile(profBtn.getAttribute("data-switch-profile"));
+  });
+
+  // 导出导入 JSON（绑定当前身份）
   document.getElementById("exportBackupBtn").addEventListener("click", () => {
-    const data = collectFullLocalBundle();
+    const profId = getActiveProfileId();
+    const data = buildUpdatedCloudPayload(null, profId);
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `politics-quiz-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `politics-quiz-${profId}-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast("已导出本地备份文件");
+    showToast(`已导出「${getProfileLabel(profId)}」本地备份`);
   });
   document.getElementById("importBackupBtn").addEventListener("click", () => {
     document.getElementById("importFileInput").click();
@@ -1215,8 +1358,14 @@ function bindEvents() {
     reader.onload = () => {
       try {
         const parsed = JSON.parse(String(reader.result || "{}"));
-        mergeRemoteBundle(parsed);
-        showToast("备份导入合并成功");
+        const profId = getActiveProfileId();
+        if (parsed.schema === "politics_quiz_pwa_sync_v2" && parsed.profiles) {
+          const profData = parsed.profiles[profId] || Object.values(parsed.profiles)[0];
+          if (profData) mergeProfileIntoLocal(profId, profData);
+        } else {
+          mergeRemoteBundle(parsed, profId);
+        }
+        showToast(`已导入合并至「${getProfileLabel(profId)}」`);
         if (app.currentView === "bookshelf") renderBookshelf();
         else if (app.currentView === "quiz" && app.activePaper) {
           app.activeState = loadPaperState(app.activePaper.paper_id);
@@ -1576,11 +1725,35 @@ function bindEvents() {
   });
 }
 
+function syncStickyOffsets() {
+  const topbar = document.getElementById("topbar");
+  const subbar = document.getElementById("quizSubbar");
+  if (topbar) {
+    document.documentElement.style.setProperty("--topbar-h", `${topbar.offsetHeight}px`);
+  }
+  if (subbar && subbar.offsetHeight > 0) {
+    document.documentElement.style.setProperty("--subbar-h", `${subbar.offsetHeight}px`);
+  }
+}
+
 // ---------------- 初始化 ----------------
 async function initApp() {
+  migrateLegacyV1KeysIfNeeded();
+  syncProfileUi();
   const settings = loadSettings();
   applyTheme(settings.theme || "warm");
   bindEvents();
+  syncStickyOffsets();
+
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(syncStickyOffsets);
+    const tb = document.getElementById("topbar");
+    const sb = document.getElementById("quizSubbar");
+    if (tb) ro.observe(tb);
+    if (sb) ro.observe(sb);
+  } else {
+    window.addEventListener("resize", syncStickyOffsets);
+  }
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").catch(() => {});

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'politics-quiz-pwa-v2';
+const CACHE_NAME = 'politics-quiz-pwa-v3';
 
 const APP_SHELL_ASSETS = [
   './',
