@@ -1,12 +1,12 @@
-const CACHE = 'trad706-v2.0.1';
+const CACHE = 'trad706-v2.0.2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon.svg',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon.svg?v=2',
+  './icons/icon-180.png?v=2',
+  './icons/icon-192.png?v=2',
+  './icons/icon-512.png?v=2'
 ];
 
 self.addEventListener('install', e => {
