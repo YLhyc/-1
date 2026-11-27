@@ -1,0 +1,169 @@
+{
+  "version": "2026-11-27",
+  "total_papers": 18,
+  "total_questions": 594,
+  "papers": [
+    {
+      "paper_id": "xiao8_s01",
+      "series": "xiao8",
+      "set_no": 1,
+      "title": "27肖八·冲刺试卷（一）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（一）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s02",
+      "series": "xiao8",
+      "set_no": 2,
+      "title": "27肖八·冲刺试卷（二）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（二）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s03",
+      "series": "xiao8",
+      "set_no": 3,
+      "title": "27肖八·冲刺试卷（三）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（三）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s04",
+      "series": "xiao8",
+      "set_no": 4,
+      "title": "27肖八·冲刺试卷（四）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（四）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s05",
+      "series": "xiao8",
+      "set_no": 5,
+      "title": "27肖八·冲刺试卷（五）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（五）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s06",
+      "series": "xiao8",
+      "set_no": 6,
+      "title": "27肖八·冲刺试卷（六）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（六）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s07",
+      "series": "xiao8",
+      "set_no": 7,
+      "title": "27肖八·冲刺试卷（七）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（七）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xiao8_s08",
+      "series": "xiao8",
+      "set_no": 8,
+      "title": "27肖八·冲刺试卷（八）选择题全真实战验收",
+      "short_title": "27肖八·冲刺试卷（八）",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s01",
+      "series": "xutao10",
+      "set_no": 1,
+      "title": "27徐涛十套卷·冲刺试卷（一）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（一）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s02",
+      "series": "xutao10",
+      "set_no": 2,
+      "title": "27徐涛十套卷·冲刺试卷（二）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（二）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s03",
+      "series": "xutao10",
+      "set_no": 3,
+      "title": "27徐涛十套卷·冲刺试卷（三）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（三）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s04",
+      "series": "xutao10",
+      "set_no": 4,
+      "title": "27徐涛十套卷·冲刺试卷（四）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（四）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s05",
+      "series": "xutao10",
+      "set_no": 5,
+      "title": "27徐涛十套卷·冲刺试卷（五）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（五）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s06",
+      "series": "xutao10",
+      "set_no": 6,
+      "title": "27徐涛十套卷·冲刺试卷（六）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（六）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s07",
+      "series": "xutao10",
+      "set_no": 7,
+      "title": "27徐涛十套卷·冲刺试卷（七）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（七）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s08",
+      "series": "xutao10",
+      "set_no": 8,
+      "title": "27徐涛十套卷·冲刺试卷（八）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（八）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s09",
+      "series": "xutao10",
+      "set_no": 9,
+      "title": "27徐涛十套卷·冲刺试卷（九）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（九）套",
+      "question_count": 33,
+      "max_score": 50
+    },
+    {
+      "paper_id": "xutao10_s10",
+      "series": "xutao10",
+      "set_no": 10,
+      "title": "27徐涛十套卷·冲刺试卷（十）选择题全真实战验收",
+      "short_title": "徐涛十套卷·第（十）套",
+      "question_count": 33,
+      "max_score": 50
+    }
+  ]
+}

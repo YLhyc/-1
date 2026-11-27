@@ -1,0 +1,35 @@
+{
+  "name": "2027考研政治刷题 · 肖八与徐涛十套卷",
+  "short_name": "政治刷题",
+  "description": "2027考研政治冲刺客观题全真模拟（肖八全8套 + 徐涛十套卷全10套），支持离线刷题、触控划线、错题本与GitHub Gist云同步。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#faf9f5",
+  "theme_color": "#faf9f5",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

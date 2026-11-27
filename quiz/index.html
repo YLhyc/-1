@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="warm">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#faf9f5" id="metaThemeColor">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="政治刷题">
+  <title>2027考研政治刷题 · 肖八与徐涛十套卷</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <button id="backBtn" class="icon-btn hidden" type="button" aria-label="返回书架">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <span>书架</span>
+        </button>
+        <div id="topbarTitle" class="topbar-title">2027 考研政治刷题</div>
+      </div>
+      <div class="topbar-actions">
+        <button id="mistakesNavBtn" class="icon-btn" type="button" title="本地错题本">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span id="mistakesCountBadge">错题 0</span>
+        </button>
+        <button id="syncOpenBtn" class="icon-btn" type="button" title="云同步与备份">
+          <span id="syncDot" class="sync-dot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span class="hide-xs">同步</span>
+        </button>
+        <button id="themeBtn" class="icon-btn" type="button" aria-label="切换深浅主题" title="切换主题">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <!-- 1. 书架首页 -->
+    <section id="bookshelfView">
+      <div class="hero-card">
+        <div class="hero-head">
+          <div>
+            <h1>冲刺客观题全真模拟库</h1>
+            <p class="hero-sub">27《肖八》全 8 套 + 27《徐涛十套卷》全 10 套 · 共 594 题离线可用</p>
+          </div>
+        </div>
+        <div class="stats-row" id="libraryStats">
+          <div class="stat-box"><div class="stat-label">已交卷</div><div class="stat-val" id="statDone">0 / 18</div></div>
+          <div class="stat-box"><div class="stat-label">均分</div><div class="stat-val" id="statAvg">--</div></div>
+          <div class="stat-box"><div class="stat-label">错题本</div><div class="stat-val" id="statWrong">0</div></div>
+          <div class="stat-box"><div class="stat-label">标疑待核</div><div class="stat-val" id="statMarked">0</div></div>
+        </div>
+      </div>
+
+      <div class="seg-tabs" id="seriesTabs">
+        <button class="seg-tab active" type="button" data-series="all">全部套卷 (18)</button>
+        <button class="seg-tab" type="button" data-series="xiao8">27 肖八 (8)</button>
+        <button class="seg-tab" type="button" data-series="xutao10">徐涛十套卷 (10)</button>
+        <button class="seg-tab" type="button" data-series="todo">未完成</button>
+      </div>
+
+      <div class="paper-grid" id="paperGrid"></div>
+    </section>
+
+    <!-- 2. 刷题视图 -->
+    <section id="quizView" class="hidden">
+      <div class="quiz-subbar">
+        <div class="progress-wrap">
+          <span class="p-text" id="quizProgressText">0 / 33</span>
+          <div class="progress-track"><div class="progress-fill" id="quizProgressFill"></div></div>
+        </div>
+        <div class="quiz-sub-actions">
+          <button id="timerToggleBtn" class="pill-btn" type="button" title="点击暂停或继续计时">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span id="timerText">00:00</span>
+          </button>
+          <button id="viewModeBtn" class="pill-btn" type="button" title="切换长列表与单题翻页">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"></rect><rect x="3" y="13" width="18" height="7" rx="2"></rect></svg>
+            <span id="viewModeText">单题模式</span>
+          </button>
+          <button id="filterReviewBtn" class="pill-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <span id="filterReviewText">错题/标记</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="resultSummaryCard" class="result-card hidden"></div>
+      <div id="questionContainer" class="q-list"></div>
+    </section>
+
+    <!-- 3. 本地错题本视图 -->
+    <section id="mistakesView" class="hidden">
+      <div class="hero-card">
+        <div class="hero-head">
+          <div>
+            <h1>跨套卷错题与标疑本</h1>
+            <p class="hero-sub">自动汇总所有已交卷错题及标疑题，支持独立重做演练（不影响原卷成绩）与斩题归档</p>
+          </div>
+          <button id="mistakesPracticeResetBtn" class="pill-btn" type="button">清空重做记录</button>
+        </div>
+        <div class="seg-tabs" id="mistakeTypeTabs">
+          <button class="seg-tab active" type="button" data-mtype="wrong">仅错题</button>
+          <button class="seg-tab" type="button" data-mtype="both">错题 + 标疑</button>
+          <button class="seg-tab" type="button" data-mtype="marked">仅标疑</button>
+        </div>
+        <div class="seg-tabs" id="mistakeModTabs" style="padding-top:4px;">
+          <button class="seg-tab active" type="button" data-mmod="all">全部模块</button>
+          <button class="seg-tab" type="button" data-mmod="马原">马原</button>
+          <button class="seg-tab" type="button" data-mmod="毛中特">毛中特</button>
+          <button class="seg-tab" type="button" data-mmod="新思想">新思想</button>
+          <button class="seg-tab" type="button" data-mmod="史纲">史纲</button>
+          <button class="seg-tab" type="button" data-mmod="思修">思修</button>
+          <button class="seg-tab" type="button" data-mmod="时政">时政</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <label style="font-size:12.5px;color:var(--text-secondary);display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="checkbox" id="hideMasteredChk" checked> 隐藏已掌握（斩题）
+          </label>
+          <span id="mistakeCountLabel" class="p-text">共 0 题</span>
+        </div>
+      </div>
+      <div id="mistakesList" class="q-list"></div>
+    </section>
+  </main>
+
+  <!-- 刷题底部操作栏 -->
+  <div id="bottomDock" class="bottom-dock hidden">
+    <div class="bottom-dock-inner">
+      <button id="dockPrevBtn" class="dock-btn hidden" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>上一题</span>
+      </button>
+      <button id="dockSheetBtn" class="dock-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+        <span id="dockSheetLabel">答题卡</span>
+      </button>
+      <button id="dockCopyBtn" class="dock-btn hidden" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span>复制战绩</span>
+      </button>
+      <button id="dockNextOrSubmitBtn" class="dock-btn primary" type="button">
+        <span id="dockNextLabel">交卷结算</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 触控选区高亮浮条 -->
+  <div id="hlFloatBar" class="hl-float-bar hidden">
+    <span>已选中文字</span>
+    <button id="hlApplyBtn" class="hl-float-btn" type="button">标记高光</button>
+    <button id="hlCancelBtn" class="hl-float-close" type="button" aria-label="关闭">✕</button>
+  </div>
+
+  <!-- 答题卡底部抽屉 -->
+  <div id="sheetBackdrop" class="sheet-backdrop hidden">
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="答题卡">
+      <div class="sheet-head">
+        <h3>答题卡与本卷操作</h3>
+        <button id="closeSheetBtn" class="icon-btn" type="button">关闭</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">单项选择题（1–16 题 · 每题 1 分）</div>
+      <div id="sheetSingleGrid" class="nav-grid"></div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">多项选择题（17–33 题 · 每题 2 分）</div>
+      <div id="sheetMultiGrid" class="nav-grid"></div>
+      <div class="btn-row">
+        <button id="sheetSubmitBtn" class="dock-btn primary" type="button">交卷结算</button>
+        <button id="sheetCopyBtn" class="dock-btn hidden" type="button">复制标准答题结果</button>
+        <button id="sheetResetBtn" class="dock-btn" type="button" style="color:var(--error);">重置本卷</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 云同步与备份抽屉 -->
+  <div id="syncBackdrop" class="sheet-backdrop hidden">
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="云端同步与备份">
+      <div class="sheet-head">
+        <h3>GitHub Gist 云同步与本地备份</h3>
+        <button id="closeSyncBtn" class="icon-btn" type="button">关闭</button>
+      </div>
+      <div class="help-note">
+        <strong>如何实现电脑与手机进度互通：</strong><br>
+        1. 在 GitHub 生成一个仅勾选 <code>gist</code> 权限的 Token（Fine-grained token 选 <em>Account permissions → Gists: Read and write</em> 或 Classic token 选 <code>gist</code>）。<br>
+        2. 在电脑和手机填入同一个 Token 后点击「连接并立即同步」，系统会自动查找或创建一个<strong>私有 Gist</strong>（不会公开），按每套试卷最近修改时间自动合并进度、标疑与划线。
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="gistTokenInput">GitHub Personal Access Token（仅存本机浏览器）</label>
+        <input id="gistTokenInput" class="field-input" type="password" placeholder="ghp_... 或 github_pat_...">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="gistIdInput">私有 Gist ID（留空则自动按描述查找或创建）</label>
+        <input id="gistIdInput" class="field-input" type="text" placeholder="自动识别，无需手动填写">
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;">
+        <label style="font-size:13px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+          <input id="autoSyncChk" type="checkbox" checked> 交卷/切题后自动静默同步
+        </label>
+        <span id="syncStatusText" style="font-size:12px;color:var(--text-secondary);">未连接</span>
+      </div>
+      <div class="btn-row" style="margin-bottom:14px;">
+        <button id="syncNowBtn" class="dock-btn primary" type="button">连接并立即双向同步</button>
+        <button id="clearTokenBtn" class="dock-btn" type="button">清除本机 Token</button>
+      </div>
+      <hr style="border:none;border-top:var(--hairline) solid var(--border);margin:14px 0;">
+      <div class="field-label">离线文件兜底（导出 / 导入 JSON）</div>
+      <div class="btn-row">
+        <button id="exportBackupBtn" class="dock-btn" type="button">导出全部进度 JSON</button>
+        <button id="importBackupBtn" class="dock-btn" type="button">导入备份 JSON</button>
+        <input id="importFileInput" type="file" accept=".json,application/json" class="hidden">
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div id="toast" class="toast hidden">
+    <span id="toastMsg"></span>
+    <button id="toastUndoBtn" class="toast-undo hidden" type="button">撤销</button>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
