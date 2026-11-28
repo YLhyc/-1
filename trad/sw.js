@@ -1,4 +1,4 @@
-const CACHE = 'trad706-v2.0.2';
+const CACHE = 'trad706-v2.0.3';
 const ASSETS = [
   './',
   './index.html',
