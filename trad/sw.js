@@ -1,4 +1,4 @@
-const CACHE = 'trad706-v2.0.3';
+const CACHE = 'trad706-v2.1.0';
 const ASSETS = [
   './',
   './index.html',
@@ -22,11 +22,21 @@ self.addEventListener('activate', e => {
   );
 });
 
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
-  // Network-first for HTML so updates reach iPhone PWA promptly
+  // Never cache version.json so update checks always hit network
+  if (url.pathname.endsWith('version.json')) {
+    e.respondWith(fetch(e.request, { cache: 'no-store' }));
+    return;
+  }
   if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
     e.respondWith(
       fetch(e.request).then(res => {

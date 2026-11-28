@@ -72,12 +72,12 @@
     html, body {
       width: 100%;
       height: 100%;
-      height: 100dvh;
       overflow: hidden;
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
       -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
     }
 
     button { font: inherit; color: inherit; }
@@ -103,7 +103,6 @@
       width: 100%;
       max-width: 480px;
       height: 100%;
-      height: 100dvh;
       margin: 0 auto;
       overflow: hidden;
       background: var(--bg);
@@ -113,26 +112,45 @@
       position: absolute;
       inset: 0;
       display: none;
-      flex-direction: column;
       overflow-y: auto;
       overflow-x: hidden;
-      overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
-      padding: calc(12px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom));
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+      padding: calc(12px + env(safe-area-inset-top)) 16px calc(96px + env(safe-area-inset-bottom));
     }
 
     .app-view.active {
-      display: flex;
+      display: block;
     }
 
     .app-view::-webkit-scrollbar { display: none; }
 
-    /* Recite View is Full-Viewport Locked (No Vertical Scroll) */
-    #view-recite {
+    /* Recite View is Full-Viewport Locked */
+    #view-recite.active {
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       padding: calc(10px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom));
       touch-action: pan-y;
     }
+
+    .app-version {
+      border: 0;
+      padding: 2px 0;
+      background: transparent;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.3;
+      text-align: left;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .app-version.ok { color: var(--ok); }
+    .app-version.stale { color: var(--warn); font-weight: 600; }
 
     /* ── Top Chrome ── */
     .topbar {
@@ -915,6 +933,7 @@
         <div class="brand-group">
           <div class="brand-title">706 繁体识记</div>
           <div class="brand-sub" id="examCountdown">距初试 22 天 · 2026-12-19</div>
+          <button type="button" class="app-version" id="appVersionBadge">版本 2.1.0 · 检查更新…</button>
         </div>
         <div class="tool-btns">
           <button class="icon-btn" id="themeBtn" aria-label="切换日夜模式">
@@ -1938,12 +1957,74 @@
         saveState();
       });
 
+      // ── Version Display & Update Checker (Words Style) ──
+      const APP_VERSION = '2.1.0';
+      const versionBadge = document.getElementById('appVersionBadge');
+
+      function compareVersions(a, b) {
+        const pa = String(a || '0').split('.').map(Number);
+        const pb = String(b || '0').split('.').map(Number);
+        for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+          const da = pa[i] || 0, db = pb[i] || 0;
+          if (da !== db) return da > db ? 1 : -1;
+        }
+        return 0;
+      }
+
+      async function checkAppVersion(manual = false) {
+        if (location.protocol === 'file:') {
+          versionBadge.className = 'app-version ok';
+          versionBadge.textContent = `版本 ${APP_VERSION} · 本地直开`;
+          if (manual) showToast(`当前为本地版本 ${APP_VERSION}`);
+          return;
+        }
+        if (manual) {
+          versionBadge.className = 'app-version';
+          versionBadge.textContent = `版本 ${APP_VERSION} · 检查中…`;
+        }
+        try {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 5000);
+          const res = await fetch('version.json?t=' + Date.now(), { cache: 'no-store', signal: ctrl.signal });
+          clearTimeout(timer);
+          if (!res.ok) throw new Error('http');
+          const data = await res.json();
+          const remote = data && data.version;
+          if (!remote) throw new Error('invalid');
+
+          if (compareVersions(remote, APP_VERSION) > 0) {
+            versionBadge.className = 'app-version stale';
+            versionBadge.textContent = `发现新版 ${remote} · 点此立即更新`;
+            if (manual) {
+              showToast(`正在更新至 ${remote}…`);
+              if ('serviceWorker' in navigator) {
+                const reg = await navigator.serviceWorker.register('sw.js?v=' + encodeURIComponent(remote), { updateViaCache: 'none' });
+                await reg.update();
+                if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+              }
+              setTimeout(() => location.reload(), 450);
+            }
+          } else {
+            versionBadge.className = 'app-version ok';
+            versionBadge.textContent = `版本 ${APP_VERSION} · 已是最新`;
+            if (manual) showToast(`当前已是最新版本 (${APP_VERSION})`);
+          }
+        } catch (err) {
+          versionBadge.className = 'app-version';
+          versionBadge.textContent = navigator.onLine === false ? `版本 ${APP_VERSION} · 离线模式` : `版本 ${APP_VERSION} · 轻触检查`;
+          if (manual) showToast(navigator.onLine === false ? '当前离线，联网后可检查更新' : '检查失败，请稍后重试');
+        }
+      }
+
+      versionBadge.addEventListener('click', () => checkAppVersion(true));
+
       // Init
       renderToday();
+      checkAppVersion(false);
 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(() => {});
+          navigator.serviceWorker.register('./sw.js?v=' + APP_VERSION, { updateViaCache: 'none' }).catch(() => {});
         });
       }
     })();
