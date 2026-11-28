@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="warm">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>文学时间轴 · 706 古代 / 807 现当代</title>
+  <meta name="description" content="西华师大 706 古代文学与 807 现当代文学 T0-T3 历史流变与流派因果时间轴（iPhone / iPad 离线 PWA）" />
+
+  <!-- iOS PWA Meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="文学时间轴" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" id="metaThemeColor" content="#fbfaf7" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- 顶部固定导航栏（适配灵动岛/刘海安全区） -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="subject-switch" role="tablist" aria-label="科目切换">
+          <button type="button" class="sub-tab active" data-subject="706" role="tab" aria-selected="true">
+            <span class="sub-code">706</span>
+            <span class="sub-name">古代文学</span>
+          </button>
+          <button type="button" class="sub-tab" data-subject="807" role="tab" aria-selected="false">
+            <span class="sub-code">807</span>
+            <span class="sub-name">现当代</span>
+          </button>
+        </div>
+
+        <div class="topbar-actions">
+          <button type="button" class="icon-btn" id="btnQuiz" title="遮罩自检模式" aria-label="遮罩自检">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+            <span class="btn-label">遮罩</span>
+          </button>
+
+          <button type="button" class="icon-btn" id="btnFilterDrawer" title="筛选与母题链" aria-label="筛选与母题链">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            <span class="btn-label">筛选</span>
+            <span class="badge-dot" id="filterDot" hidden></span>
+          </button>
+
+          <button type="button" class="icon-btn" id="btnTheme" title="切换深浅色主题" aria-label="切换主题">
+            <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+              <line x1="12" y1="2" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="22"/>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/>
+              <line x1="2" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="22" y2="12"/>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>
+            </svg>
+            <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- iPad 常驻精简筛选行（iPhone 隐藏，改用筛选抽屉） -->
+      <div class="ipad-filter-strip" id="ipadFilterStrip"></div>
+
+      <!-- 紧凑时期缩略导航条 -->
+      <div class="minimap-wrap" id="minimapWrap">
+        <div class="minimap-head">
+          <div class="minimap-info" id="minimapInfo">八朝时空坐标</div>
+          <div class="minimap-right">
+            <span class="check-stat" id="checkStat"></span>
+            <button type="button" class="mini-toggle" id="btnMinimapCollapse" aria-label="折叠或展开时期条">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="minimap-track" id="minimapTrack"></div>
+      </div>
+    </header>
+
+    <!-- 单拎聚焦与因果流向图工作条 -->
+    <section class="focus-panel" id="focusPanel" hidden>
+      <div class="focus-bar">
+        <div class="focus-title-wrap">
+          <span class="focus-pill" id="focusPill">聚焦中</span>
+          <span class="focus-text" id="focusText"></span>
+        </div>
+        <div class="focus-actions">
+          <button type="button" class="pill-btn" id="btnToggleFocusOnly">单拎相关</button>
+          <button type="button" class="pill-btn" id="btnToggleEgo">流向图</button>
+          <button type="button" class="pill-btn ghost" id="btnClearSelect">取消</button>
+        </div>
+      </div>
+      <div class="ego-box" id="egoBox" hidden>
+        <div class="ego-hint" id="egoHint"></div>
+        <div class="ego-svg-wrap" id="egoSvgWrap"></div>
+      </div>
+    </section>
+
+    <!-- 母题链/跨代专题导读条 -->
+    <section class="chain-banner" id="chainBanner" hidden></section>
+
+    <!-- 主体区：iPhone 单栏时间轴 / iPad 左轴右详双栏 -->
+    <main class="workspace">
+      <div class="timeline-pane" id="timelinePane">
+        <div class="timeline-inner" id="timelineList"></div>
+      </div>
+
+      <!-- iPad 常驻右侧详情栏 / iPhone 底部弹出 Sheet -->
+      <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+      <aside class="inspector-pane" id="inspectorPane" aria-label="节点详情">
+        <div class="sheet-handle-bar" id="sheetHandleBar">
+          <div class="sheet-grabber"></div>
+          <div class="sheet-top-controls">
+            <button type="button" class="sheet-ctrl-btn" id="btnSheetExpand" title="半屏/全屏切换">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+              </svg>
+              <span>全屏</span>
+            </button>
+            <button type="button" class="sheet-ctrl-btn close" id="btnSheetClose" aria-label="关闭详情">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="inspector-body" id="inspectorBody"></div>
+      </aside>
+    </main>
+
+    <!-- iPhone 底部单手悬浮操作栏 -->
+    <nav class="mobile-dock" id="mobileDock" aria-label="快捷工具栏">
+      <button type="button" class="dock-btn" id="dockSearch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span>搜索</span>
+      </button>
+      <button type="button" class="dock-btn" id="dockChains">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <span>母题链</span>
+      </button>
+      <button type="button" class="dock-btn" id="dockUnchecked">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span>只看未过</span>
+      </button>
+      <button type="button" class="dock-btn" id="dockExtra">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span id="dockExtraLabel">过渡锚点</span>
+      </button>
+      <button type="button" class="dock-btn" id="dockReset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        <span>重置</span>
+      </button>
+    </nav>
+
+    <!-- 筛选 / 搜索 / 母题链 / 807理论卡 统一弹出面板 -->
+    <div class="modal-backdrop" id="modalBackdrop" hidden></div>
+    <div class="drawer-modal" id="drawerModal" hidden role="dialog" aria-modal="true" aria-label="筛选与工具">
+      <div class="drawer-head">
+        <h2 id="drawerTitle">筛选与母题链</h2>
+        <button type="button" class="sheet-ctrl-btn close" id="btnCloseDrawer" aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-body" id="drawerBody"></div>
+    </div>
+  </div>
+
+  <!-- 轻提示 Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./data-706.js"></script>
+  <script src="./data-807.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
