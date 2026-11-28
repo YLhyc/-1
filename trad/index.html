@@ -384,6 +384,17 @@
 
     .deck-row:active { background: var(--surface-hover); }
 
+    .deck-row.pool-highlight {
+      background: var(--surface-card);
+      border: 0.5px solid var(--accent);
+    }
+
+    .deck-row.pool-highlight .count-pill {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .deck-row-title {
       font-family: var(--font-serif);
       font-size: 15px;
@@ -722,6 +733,8 @@
     .rate-btn.vague { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
     .rate-btn.familiar { color: var(--ok); background: var(--ok-soft); border-color: var(--ok); }
     .rate-btn.mastered { color: var(--indigo); background: var(--indigo-soft); border-color: var(--indigo); }
+    .rate-btn.pool-skip { color: var(--ok); background: var(--ok-soft); border-color: var(--ok); }
+    .rate-btn.pool-add { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
 
     .summary-card {
       width: 100%;
@@ -817,6 +830,15 @@
 
     .lib-simp { font-weight: 700; font-size: 14px; }
     .lib-words { font-size: 12px; color: var(--accent); font-weight: 600; }
+    .lib-badge {
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 5px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 0.5px solid var(--accent);
+      font-weight: 600;
+    }
     .lib-tip { font-size: 12px; color: var(--text-2); line-height: 1.45; }
 
     .lib-act {
@@ -933,7 +955,7 @@
         <div class="brand-group">
           <div class="brand-title">706 繁体识记</div>
           <div class="brand-sub" id="examCountdown">距初试 22 天 · 2026-12-19</div>
-          <button type="button" class="app-version" id="appVersionBadge">版本 2.1.0 · 检查更新…</button>
+          <button type="button" class="app-version" id="appVersionBadge">版本 2.2.0 · 检查更新…</button>
         </div>
         <div class="tool-btns">
           <button class="icon-btn" id="themeBtn" aria-label="切换日夜模式">
@@ -988,6 +1010,12 @@
         <span>点击直接开练</span>
       </div>
       <div class="deck-list" id="deckList"></div>
+
+      <div class="section-head">
+        <h2>考前新字盲测筛选池</h2>
+        <span id="poolHeadSub">自测跳过已知 · 不认识自动汇入主库</span>
+      </div>
+      <div class="deck-list" id="poolEntryWrap"></div>
 
       <div class="section-head">
         <h2>总体掌握概览</h2>
@@ -1075,6 +1103,7 @@
             <div class="metric-cell"><div class="metric-val" id="sumFamiliar" style="color:var(--ok)">0</div><div class="metric-lbl">一次熟知</div></div>
             <div class="metric-cell"><div class="metric-val" id="sumHard" style="color:var(--err)">0</div><div class="metric-lbl">回炉巩固</div></div>
           </div>
+          <button class="primary-cta" id="summaryNextBtn" style="display:none;background:var(--accent);border-color:var(--accent);color:#fff;">继续下一批筛选</button>
           <button class="primary-cta" id="summaryBackBtn">返回今日首页</button>
         </div>
       </div>
@@ -1108,6 +1137,7 @@
         <button class="filter-pill" data-filter="learning">学习中</button>
         <button class="filter-pill" data-filter="mastered">已斩归档</button>
         <button class="filter-pill" data-filter="fresh">未首测</button>
+        <button class="filter-pill" data-filter="added">自选新增</button>
       </div>
       <div class="lib-list" id="libList"></div>
     </section>
@@ -1120,6 +1150,12 @@
           <div class="brand-sub">艾宾浩斯间隔封顶至考前 3 天</div>
         </div>
         <button class="util-btn" id="resetAllBtn" style="color:var(--err);border-color:var(--err);">清空记录</button>
+      </div>
+
+      <div class="prog-panel">
+        <div class="prog-title">新字筛选池统计</div>
+        <div id="poolStatsSummary" style="font-size:13px;color:var(--text-2);margin-bottom:10px;"></div>
+        <button class="util-btn" id="resetPoolSkipBtn">重测已跳过的候选字</button>
       </div>
 
       <div class="prog-panel">
@@ -1282,6 +1318,2241 @@
         { id: "p41", deck: "prev", tag: "前期盲区 · 盲测", trad: "網", simp: "网", words: "羅網", tip: "糹+ 罔，渔网罗网。" }
       ];
 
+      const POOL_DATA = [
+        {
+                "id": "x001",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "復 / 複 / 覆",
+                "simp": "复",
+                "words": "反復 / 複雜 / 顛覆",
+                "tip": "“復”表反复/再（双人旁）；“複”表复杂/重复（衣字旁）；“覆”表覆盖/颠覆（1986年后不作“复”繁体）。"
+        },
+        {
+                "id": "x002",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "乾 / 幹 / 榦",
+                "simp": "干",
+                "words": "乾燥 / 才幹 / 乾坤",
+                "tip": "“干”表干戈；“乾”表干燥（gān）或乾坤（qián，读音不同不可简化）；“幹”表才干；“榦”表树榦。"
+        },
+        {
+                "id": "x003",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "適 / 适",
+                "simp": "适",
+                "words": "適從 / 南宮适",
+                "tip": "到某地、恰好作“適”；《论语》“南宫适”、宋人“洪适”读 kuò，繁体原写作“适”，切勿误转！"
+        },
+        {
+                "id": "x004",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "葉 / 叶",
+                "simp": "叶",
+                "words": "枝葉 / 叶韻",
+                "tip": "草木树叶作“葉”；“叶音”“叶韵”读 xié（同“协”），繁简同形不转“葉”（2017真题考点）。"
+        },
+        {
+                "id": "x005",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "藉 / 借",
+                "simp": "借",
+                "words": "慰藉 / 狼藉 / 借貸",
+                "tip": "借贷作“借”；慰藉（jiè）与狼藉（jí）作“藉”（艹头，注意狼藉不简作借）。"
+        },
+        {
+                "id": "x006",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "獲 / 穫",
+                "simp": "获",
+                "words": "獲得 / 收穫",
+                "tip": "左边犭“獲”表捕获、获得；左边禾“穫”表收割庄稼（如《七月》“八月其穫”）。"
+        },
+        {
+                "id": "x007",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "纔 / 才",
+                "simp": "才",
+                "words": "方纔 / 才能",
+                "tip": "才华、才能作“才”（绝不与纔通）；副词“始、仅、刚刚”作“纔”。"
+        },
+        {
+                "id": "x008",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "衝 / 冲",
+                "simp": "冲",
+                "words": "衝擊 / 要衝 / 沖天",
+                "tip": "突击、冲撞、要冲路口作“衝”（行字框）；幼小、空虚、上冲作“冲”。"
+        },
+        {
+                "id": "x009",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "裏 / 里",
+                "simp": "里",
+                "words": "表裏 / 鄉里",
+                "tip": "里外、内部作“裏”（或“裡”，衣字旁）；乡里、长度单位“里”繁简同形。"
+        },
+        {
+                "id": "x010",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "麵 / 面",
+                "simp": "面",
+                "words": "麵粉 / 顏面",
+                "tip": "脸面、方位作“面”；麦子磨成的粉作“麵”（左麥右面）。"
+        },
+        {
+                "id": "x011",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "昇 / 陞 / 升",
+                "simp": "升",
+                "words": "昇平 / 晉陞 / 斗升",
+                "tip": "容量单位作“升”；日出升起作“昇”；官职提升作“陞”。"
+        },
+        {
+                "id": "x012",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "薦 / 荐",
+                "simp": "荐",
+                "words": "舉薦 / 草薦",
+                "tip": "“薦”本义兽食之草，引申进献、推荐；“荐”本义草垫、重复，古可通用，但推荐义多用“薦”。"
+        },
+        {
+                "id": "x013",
+                "deck": "pool_multi",
+                "tag": "新字筛查 · 一简多繁",
+                "trad": "臘 / 腊",
+                "simp": "腊",
+                "words": "臘祭 / 乾腊",
+                "tip": "“臘”指岁终祭祀、腊月（《左传》“虞不臘矣”）；“腊”本读 xī，指干肉（2017真题考“腊肉”）。"
+        },
+        {
+                "id": "x014",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "爲",
+                "simp": "为",
+                "words": "以爲 / 爲政",
+                "tip": "极高频虚词！上爪下象牵象劳作，草书楷化成“为”，作介词“替、被”或动词“做”。"
+        },
+        {
+                "id": "x015",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "於",
+                "simp": "于",
+                "words": "至於 / 死於",
+                "tip": "左“方”右“人/丶”，极高频介词“在、对、比、被”；注意“於戲”读 wū hū。"
+        },
+        {
+                "id": "x016",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "與",
+                "simp": "与",
+                "words": "與共 / 黨與",
+                "tip": "中间“與（一勺/牙）”外双手捧举，表“和、给予、参加、赞许”。"
+        },
+        {
+                "id": "x017",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "無",
+                "simp": "无",
+                "words": "無乃 / 無窮",
+                "tip": "中间一排竖笔如林，“無”本像人舞袖，借作有无之“无”。"
+        },
+        {
+                "id": "x018",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "稱",
+                "simp": "称",
+                "words": "稱讚 / 稱臣",
+                "tip": "左“禾”右“爯”，用秤称量、诉说、宣称、相称（第01篇实战盲区）。"
+        },
+        {
+                "id": "x019",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "興",
+                "simp": "兴",
+                "words": "夙興 / 興師",
+                "tip": "四角四手抬“同”，起身、兴起、兴盛（《左传》“再拜而興”）。"
+        },
+        {
+                "id": "x020",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "舉",
+                "simp": "举",
+                "words": "舉兵 / 舉賢",
+                "tip": "上“與”下“手”，双手托起、推荐、攻克、全（“舉國”）。"
+        },
+        {
+                "id": "x021",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "聽",
+                "simp": "听",
+                "words": "聽命 / 聽獄",
+                "tip": "左“耳+王”右“十+四+心”，耳听心受，在古文中常指“听从、治理判断”。"
+        },
+        {
+                "id": "x022",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "從",
+                "simp": "从",
+                "words": "從軍 / 侍從",
+                "tip": "左“彳”+“从”+“止”，两人前后相随行走，表跟随、听从、放任（纵）。"
+        },
+        {
+                "id": "x023",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "學",
+                "simp": "学",
+                "words": "學習 / 太學",
+                "tip": "上双手教爻，下“冖+子”，孩童在屋下习算学习。"
+        },
+        {
+                "id": "x024",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "齊",
+                "simp": "齐",
+                "words": "齊國 / 齊等",
+                "tip": "整整齐齐的麦穗头，草书化为“齐”，战国大国“齊”必认。"
+        },
+        {
+                "id": "x025",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "將",
+                "simp": "将",
+                "words": "將軍 / 將欲",
+                "tip": "左“爿”右“肉+寸”，手持肉进献，引申为带领、将帅、将要。"
+        },
+        {
+                "id": "x026",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "軍",
+                "simp": "军",
+                "words": "軍旅 / 駐軍",
+                "tip": "上“冖”（军营围栏）下“車”（战车），战车布围成军。"
+        },
+        {
+                "id": "x027",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "賓",
+                "simp": "宾",
+                "words": "賓客 / 賓服",
+                "tip": "宝盖头下藏“少+貝”，古来作客须持贝礼，上似“萬”实为“宀+丏”。"
+        },
+        {
+                "id": "x028",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "陽",
+                "simp": "阳",
+                "words": "襄陽 / 陰陽",
+                "tip": "左“阝”右“昜（日+一+勿）”，太阳高照山南水北。"
+        },
+        {
+                "id": "x029",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "雲",
+                "simp": "云",
+                "words": "雲夢 / 浮雲",
+                "tip": "雨字头下加“云”，自然云彩作“雲”；言说“曰/云”繁简皆作“云”。"
+        },
+        {
+                "id": "x030",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "羣",
+                "simp": "群",
+                "words": "羣臣 / 離羣",
+                "tip": "上“君”下“羊”（或左君右羊），羊群聚而有首。"
+        },
+        {
+                "id": "x031",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "飛",
+                "simp": "飞",
+                "words": "飛鳥 / 突飛",
+                "tip": "像大鸟展双翼腾飞，简化字“飞”只保留一角。"
+        },
+        {
+                "id": "x032",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "統",
+                "simp": "统",
+                "words": "統率 / 龐統",
+                "tip": "糹+充，丝头总束，引申为率领、系统（《三国志》高频）。"
+        },
+        {
+                "id": "x033",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "漢",
+                "simp": "汉",
+                "words": "漢室 / 河漢",
+                "tip": "氵+雚省（廿口夫），汉水与汉朝，高频朝代名。"
+        },
+        {
+                "id": "x034",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "還",
+                "simp": "还",
+                "words": "還師 / 往還",
+                "tip": "辶里藏“睘”，归还、返回（注意还读 xuán 通“旋”）。"
+        },
+        {
+                "id": "x035",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "晉",
+                "simp": "晋",
+                "words": "晉國 / 晉侯",
+                "tip": "上“臸”下“日”，春秋大国名，日出万象进。"
+        },
+        {
+                "id": "x036",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "養",
+                "simp": "养",
+                "words": "養老 / 供養",
+                "tip": "上“羊”下“食”，用美食供养、抚育。"
+        },
+        {
+                "id": "x037",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "張",
+                "simp": "张",
+                "words": "張儀 / 主張",
+                "tip": "弓+長，拉开弓弦，常见姓氏与动词“张大/陈设”。"
+        },
+        {
+                "id": "x038",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "強",
+                "simp": "强",
+                "words": "強弱 / 富強",
+                "tip": "左“弓”右上“口”下“虫”，古文作彊，今用“強”指强盛、勉强。"
+        },
+        {
+                "id": "x039",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "亂",
+                "simp": "乱",
+                "words": "亂世 / 治亂",
+                "tip": "左爪丝乱绕“爫+絲+又”，右“乚”，既表混乱，反训也可表“治理”。"
+        },
+        {
+                "id": "x040",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "觀",
+                "simp": "观",
+                "words": "觀望 / 奇觀",
+                "tip": "左“雚”右“見”，睁大猫头鹰般的眼睛细看。"
+        },
+        {
+                "id": "x041",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "魯",
+                "simp": "鲁",
+                "words": "魯國 / 愚魯",
+                "tip": "上“魚”下“日”，春秋鲁国，莫看成“魚日”认不出。"
+        },
+        {
+                "id": "x042",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "猶",
+                "simp": "犹",
+                "words": "猶豫 / 猶且",
+                "tip": "犭+酋，猿猴多疑故表“好像、尚且”。"
+        },
+        {
+                "id": "x043",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "親",
+                "simp": "亲",
+                "words": "親戚 / 親征",
+                "tip": "左“辛+木”右“見”，贴近相见，双亲、亲自。"
+        },
+        {
+                "id": "x044",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "數",
+                "simp": "数",
+                "words": "數年 / 曆數",
+                "tip": "左“婁”右“攵”，计算、数目，又读 shuò 表“屡次”。"
+        },
+        {
+                "id": "x045",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "廢",
+                "simp": "废",
+                "words": "廢弛 / 廢立",
+                "tip": "广+發，房屋倾颓、废除（区别于病字头的“癈”）。"
+        },
+        {
+                "id": "x046",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "廣",
+                "simp": "广",
+                "words": "廣袤 / 推廣",
+                "tip": "广+黃，宽大辽阔；注意“广”字头与里面“黃”合体。"
+        },
+        {
+                "id": "x047",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "荊",
+                "simp": "荆",
+                "words": "荊楚 / 負荊",
+                "tip": "艹+刑，古楚地别称“荊”，高频国名/地名。"
+        },
+        {
+                "id": "x048",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "隨",
+                "simp": "随",
+                "words": "隨從 / 跟隨",
+                "tip": "阝+左/右半“隓”，跟随、顺从。"
+        },
+        {
+                "id": "x049",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "劉",
+                "simp": "刘",
+                "words": "劉備 / 劉邦",
+                "tip": "卯+金+刂，汉代国姓，莫看左边“卯金刀”不认得“刘”。"
+        },
+        {
+                "id": "x050",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "牽",
+                "simp": "牵",
+                "words": "牽牛 / 牽制",
+                "tip": "上“玄”+“冖”+下“牛”，用绳索牵着牛鼻走。"
+        },
+        {
+                "id": "x051",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "龐",
+                "simp": "庞",
+                "words": "龐統 / 龐盛",
+                "tip": "广+龍，12篇实战《三国志》《后汉书》高频大姓！"
+        },
+        {
+                "id": "x052",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "譽",
+                "simp": "誉",
+                "words": "名譽 / 稱譽",
+                "tip": "上“與”下“言”，众人同声称赞、声誉。"
+        },
+        {
+                "id": "x053",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "媼",
+                "simp": "媪",
+                "words": "衛媼 / 老媼",
+                "tip": "女+昷，12篇实战《卫将军骠骑列传》中“衛媼”多次出现，指老妇。"
+        },
+        {
+                "id": "x054",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "氣",
+                "simp": "气",
+                "words": "氣節 / 雲氣",
+                "tip": "外“气”内“米”，古人见炊烟米气而造（注意原初“气”繁简另有古字关系）。"
+        },
+        {
+                "id": "x055",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "聲",
+                "simp": "声",
+                "words": "聲名 / 聲色",
+                "tip": "上“殸（磬）”+“殳”下“耳”，敲石磬入耳听见声音。"
+        },
+        {
+                "id": "x056",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "難",
+                "simp": "难",
+                "words": "難易 / 患難",
+                "tip": "左“堇（莫/𦰩）”右“隹”，鸟难捉、困难，去声读 nàn 表灾祸。"
+        },
+        {
+                "id": "x057",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "獨",
+                "simp": "独",
+                "words": "獨斷 / 孤獨",
+                "tip": "犭+蜀，蜀地大虫独居，单独、仅仅。"
+        },
+        {
+                "id": "x058",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "戰",
+                "simp": "战",
+                "words": "戰國 / 戰車",
+                "tip": "左“單”右“戈”，手持干戈相战。"
+        },
+        {
+                "id": "x059",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "愛",
+                "simp": "爱",
+                "words": "愛戴 / 仁愛",
+                "tip": "上爪头中间“心”下“夊”，心里有爱缓缓行（“愛”中有心）。"
+        },
+        {
+                "id": "x060",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "縣",
+                "simp": "县",
+                "words": "郡縣 / 縣令",
+                "tip": "左“目+系”倒挂“系”头，本义“悬”，借作州县之“县”。"
+        },
+        {
+                "id": "x061",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "樹",
+                "simp": "树",
+                "words": "樹立 / 桑樹",
+                "tip": "木+尌（豆+寸），手植树木，古文常作动词“种植、树立”。"
+        },
+        {
+                "id": "x062",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "業",
+                "simp": "业",
+                "words": "功業 / 産業",
+                "tip": "上像乐架锯齿，下“木”，本指大版，引申事业、已经。"
+        },
+        {
+                "id": "x063",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "開",
+                "simp": "开",
+                "words": "開闢 / 開發",
+                "tip": "門里双手“幵”拉开门闩，勿与“關”混。"
+        },
+        {
+                "id": "x064",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "莊",
+                "simp": "庄",
+                "words": "莊重 / 莊周",
+                "tip": "艹+壯，草木繁盛，人名《莊子》与严肃义高频。"
+        },
+        {
+                "id": "x065",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "趙",
+                "simp": "赵",
+                "words": "趙國 / 趙雲",
+                "tip": "走+肖，战国赵国、2026真题“趙雲字子龍”。"
+        },
+        {
+                "id": "x066",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "異",
+                "simp": "异",
+                "words": "異同 / 奇異",
+                "tip": "上“田”下“共”，两手共举鬼面具，表示不同、怪异。"
+        },
+        {
+                "id": "x067",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "塗",
+                "simp": "涂",
+                "words": "塗炭 / 當塗",
+                "tip": "氵+余+土，泥涂道路（《周群传》“當塗高”）。"
+        },
+        {
+                "id": "x068",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "遺",
+                "simp": "遗",
+                "words": "遺忘 / 遺書",
+                "tip": "辶+貴，丢失、遗留，读 wèi 表“赠送”（“遺先主書”）。"
+        },
+        {
+                "id": "x069",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "晝",
+                "simp": "昼",
+                "words": "晝夜 / 白晝",
+                "tip": "上“聿”下“日+一”，太阳正中界定白昼。"
+        },
+        {
+                "id": "x070",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "敵",
+                "simp": "敌",
+                "words": "敵國 / 匹敵",
+                "tip": "左“啻”右“攵”，相匹敌、仇敌。"
+        },
+        {
+                "id": "x071",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "鱠",
+                "simp": "鲙（同脍）",
+                "words": "魚鱠 / 膾炙",
+                "tip": "魚+會，《后汉书·姜诗妻》“嗜魚鱠”，细切鱼肉。"
+        },
+        {
+                "id": "x072",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "瓚",
+                "simp": "瓒",
+                "words": "公孫瓚 / 圭瓚",
+                "tip": "王+贊，12篇实战“本屬公孫瓚”，礼玉器名，常作人名。"
+        },
+        {
+                "id": "x073",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "俠",
+                "simp": "侠",
+                "words": "遊俠 / 豪俠",
+                "tip": "亻+夾（大夹两人），仗义助人。"
+        },
+        {
+                "id": "x074",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "禮",
+                "simp": "礼",
+                "words": "禮樂 / 冠禮",
+                "tip": "礻+豊（祭器），行礼奉神器。"
+        },
+        {
+                "id": "x075",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "實",
+                "simp": "实",
+                "words": "誠實 / 其實",
+                "tip": "宀+貫（田+貝），屋里串满贝钱，充实、果实、确实。"
+        },
+        {
+                "id": "x076",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "車",
+                "simp": "车",
+                "words": "車馬 / 兵車",
+                "tip": "象形两轮一轴一厢，古书读 jū 或 chē。"
+        },
+        {
+                "id": "x077",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "沒",
+                "simp": "没",
+                "words": "沒收 / 湮沒",
+                "tip": "氵+殳（非几+又），水中沉没（mò）或没有。"
+        },
+        {
+                "id": "x078",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "會",
+                "simp": "会",
+                "words": "會盟 / 會計",
+                "tip": "上“人”像盖，中合众器，下“曰”，聚会、领悟。"
+        },
+        {
+                "id": "x079",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "經",
+                "simp": "经",
+                "words": "經傳 / 經營",
+                "tip": "糹+巠，织布纵线，引申常道、典籍、治理。"
+        },
+        {
+                "id": "x080",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "惡",
+                "simp": "恶",
+                "words": "善惡 / 厭惡",
+                "tip": "上“亞”下“心”，读 è 表凶恶，读 wù 表厌恶，读 wū 表何/哪里。"
+        },
+        {
+                "id": "x081",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "殺",
+                "simp": "杀",
+                "words": "殺身 / 殺敵",
+                "tip": "左“乂木”右“殳”，手持兵器砍杀。"
+        },
+        {
+                "id": "x082",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "傳",
+                "simp": "传",
+                "words": "列傳 / 傳道",
+                "tip": "亻+專，传递（chuán）、传记/经传注释（zhuàn）。"
+        },
+        {
+                "id": "x083",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "鄭",
+                "simp": "郑",
+                "words": "鄭國 / 鄭伯",
+                "tip": "奠+阝，《郑伯克段于鄢》高频国名。"
+        },
+        {
+                "id": "x084",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "處",
+                "simp": "处",
+                "words": "處士 / 處置",
+                "tip": "虍+几+夂，上虎头坐凳休息，读 chǔ（居住/处理）或 chù（处所）。"
+        },
+        {
+                "id": "x085",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "書",
+                "simp": "书",
+                "words": "書簡 / 上書",
+                "tip": "上“聿”（毛笔）下“曰”（口言/扁箱），毛笔写字成书。"
+        },
+        {
+                "id": "x086",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "勝",
+                "simp": "胜",
+                "words": "勝利 / 勝任",
+                "tip": "月（肉）+ 券（力），力量超群获胜（shèng）或禁得起（shēng）。"
+        },
+        {
+                "id": "x087",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "萬",
+                "simp": "万",
+                "words": "萬民 / 萬一",
+                "tip": "上艹下禺（像蝎子），假借作数字“万”。"
+        },
+        {
+                "id": "x088",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "歲",
+                "simp": "岁",
+                "words": "歲月 / 饑歲",
+                "tip": "上“步”拆开藏“戌（戈）”，年岁、收成。"
+        },
+        {
+                "id": "x089",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "終",
+                "simp": "终",
+                "words": "始終 / 臨終",
+                "tip": "糹+冬，丝线末尾打结。"
+        },
+        {
+                "id": "x090",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "專",
+                "simp": "专",
+                "words": "專權 / 專一",
+                "tip": "上“叀”（纺锤）下“寸”（手），手持纺锤专心捻线。"
+        },
+        {
+                "id": "x091",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "傷",
+                "simp": "伤",
+                "words": "傷亡 / 悲傷",
+                "tip": "亻+昜（省日作矢），受伤、悲痛。"
+        },
+        {
+                "id": "x092",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "飲",
+                "simp": "饮",
+                "words": "飲酒 / 飲食",
+                "tip": "飠+欠，张口喝汤饮水（注意去声 yìn 表给牲畜喝水）。"
+        },
+        {
+                "id": "x093",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "離",
+                "simp": "离",
+                "words": "離散 / 離騷",
+                "tip": "左“离”右“隹”，本指黄鹂鸟，借作离开、分离。"
+        },
+        {
+                "id": "x094",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "輔",
+                "simp": "辅",
+                "words": "輔佐 / 輔車",
+                "tip": "車+甫，车轮旁夹木“辅车相依”，引申辅助。"
+        },
+        {
+                "id": "x095",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "婦",
+                "simp": "妇",
+                "words": "婦人 / 媳婦",
+                "tip": "女+帚，女子持帚持家。"
+        },
+        {
+                "id": "x096",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "鄉",
+                "simp": "乡",
+                "words": "鄉黨 / 故鄉",
+                "tip": "左右相对两人跪向食器（皀），古基层行政区“乡”。"
+        },
+        {
+                "id": "x097",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "橫",
+                "simp": "横",
+                "words": "縱橫 / 橫行",
+                "tip": "木+黃，门前横木，引申东西方向或蛮横。"
+        },
+        {
+                "id": "x098",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "蕩",
+                "simp": "荡",
+                "words": "掃蕩 / 放蕩",
+                "tip": "艹+湯，水大漫溢、摇动扫除。"
+        },
+        {
+                "id": "x099",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "節",
+                "simp": "节",
+                "words": "節操 / 節度",
+                "tip": "竹+即，竹节，引申节制、符节、气节。"
+        },
+        {
+                "id": "x100",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "竊",
+                "simp": "窃",
+                "words": "竊聞 / 盜竊",
+                "tip": "穴+米+禸（虫咬米），洞里老鼠偷米，自谦常作“窃以为”。"
+        },
+        {
+                "id": "x101",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "淵",
+                "simp": "渊",
+                "words": "深淵 / 淵源",
+                "tip": "氵+左右岸中间旋涡水，深潭。"
+        },
+        {
+                "id": "x102",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "斷",
+                "simp": "断",
+                "words": "斷絕 / 決斷",
+                "tip": "左两串丝中间砍断“𢇅”，右“斤”（斧头），斧砍丝断。"
+        },
+        {
+                "id": "x103",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "術",
+                "simp": "术",
+                "words": "學術 / 權術",
+                "tip": "行（十字路口）中“朮”，城中道路、方法技艺。"
+        },
+        {
+                "id": "x104",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "劍",
+                "simp": "剑",
+                "words": "劍客 / 佩劍",
+                "tip": "僉+刂，双刃武器。"
+        },
+        {
+                "id": "x105",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "駕",
+                "simp": "驾",
+                "words": "駕馭 / 車駕",
+                "tip": "加+馬，套马驾车。"
+        },
+        {
+                "id": "x106",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "賊",
+                "simp": "贼",
+                "words": "盜賊 / 殘賊",
+                "tip": "貝+戎，持兵器抢贝财，坏人、伤害（“残贼之人”）。"
+        },
+        {
+                "id": "x107",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "敗",
+                "simp": "败",
+                "words": "成敗 / 敗績",
+                "tip": "貝+攵，打碎贝壳、失败打败。"
+        },
+        {
+                "id": "x108",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "兒",
+                "simp": "儿",
+                "words": "兒童 / 小兒",
+                "tip": "上“臼”（婴儿囟门未合之头）下“儿”，小儿。"
+        },
+        {
+                "id": "x109",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "雜",
+                "simp": "杂",
+                "words": "雜糅 / 雜處",
+                "tip": "衣拆上下包“九”，右“隹”，五彩丝衣相杂。"
+        },
+        {
+                "id": "x110",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "襲",
+                "simp": "袭",
+                "words": "襲擊 / 世襲",
+                "tip": "上“龍”下“衣”，披衣穿重衣、偷袭、继承。"
+        },
+        {
+                "id": "x111",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "斂",
+                "simp": "敛",
+                "words": "收斂 / 賦斂",
+                "tip": "僉+攵，聚集征收。"
+        },
+        {
+                "id": "x112",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "驚",
+                "simp": "惊",
+                "words": "驚駭 / 大驚",
+                "tip": "敬+馬，马受惊骇。"
+        },
+        {
+                "id": "x113",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "飾",
+                "simp": "饰",
+                "words": "修飾 / 飾辭",
+                "tip": "飠+人+巾，擦拭干净修饰。"
+        },
+        {
+                "id": "x114",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "違",
+                "simp": "违",
+                "words": "違背 / 相違",
+                "tip": "辶+韋，背离、违抗。"
+        },
+        {
+                "id": "x115",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "諡",
+                "simp": "谥",
+                "words": "諡號 / 追諡",
+                "tip": "言+兮+皿，古代君臣死后评定封号（注意不是“謚”）。"
+        },
+        {
+                "id": "x116",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "寵",
+                "simp": "宠",
+                "words": "寵信 / 榮寵",
+                "tip": "宀+龍，家中有龙，受尊宠。"
+        },
+        {
+                "id": "x117",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "勳",
+                "simp": "勋",
+                "words": "功勳 / 勳業",
+                "tip": "員+灬+力，用火光功劳刻记大功。"
+        },
+        {
+                "id": "x118",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "鑑",
+                "simp": "鉴",
+                "words": "殷鑑 / 鑑戒",
+                "tip": "钅+監，古代铜镜，用来照容察理。"
+        },
+        {
+                "id": "x119",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "螻",
+                "simp": "蝼",
+                "words": "螻蟻 / 螻蛄",
+                "tip": "虫+婁，微贱小虫，常与“蟻”连用。"
+        },
+        {
+                "id": "x120",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "篤",
+                "simp": "笃",
+                "words": "篤厚 / 危篤",
+                "tip": "竹+馬，马行稳重实在、病重。"
+        },
+        {
+                "id": "x121",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "毀",
+                "simp": "毁",
+                "words": "毀謗 / 毀壞",
+                "tip": "臼+工+殳，捣毁土器，破坏或诽谤。"
+        },
+        {
+                "id": "x122",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "樸",
+                "simp": "朴",
+                "words": "質樸 / 樸素",
+                "tip": "木+菐，未雕琢的原木，朴实（另“朴”作姓读 piáo）。"
+        },
+        {
+                "id": "x123",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "慚",
+                "simp": "惭",
+                "words": "慚愧 / 羞慚",
+                "tip": "忄+斬，内心惭愧。"
+        },
+        {
+                "id": "x124",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "寧",
+                "simp": "宁",
+                "words": "安寧 / 寧可",
+                "tip": "宀+心+皿+丁，安居有食心安宁，反问副词“难道”。"
+        },
+        {
+                "id": "x125",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "壞",
+                "simp": "坏",
+                "words": "敗壞 / 毀壞",
+                "tip": "土+褱，土墙倒塌破坏（注意与“懷”偏旁对照）。"
+        },
+        {
+                "id": "x126",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "啓",
+                "simp": "启",
+                "words": "啓發 / 啓行",
+                "tip": "戶+攵+口，开门发动（也作“啟”）。"
+        },
+        {
+                "id": "x127",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "勵",
+                "simp": "励",
+                "words": "勉勵 / 勵精",
+                "tip": "厲+力，磨砺用力劝勉。"
+        },
+        {
+                "id": "x128",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "務",
+                "simp": "务",
+                "words": "務農 / 急務",
+                "tip": "矛+攵+力，持兵器大力奔赴事务。"
+        },
+        {
+                "id": "x129",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "齒",
+                "simp": "齿",
+                "words": "齒德 / 唇齒",
+                "tip": "上“止”（声旁）下口中四颗牙齿，年龄、同列。"
+        },
+        {
+                "id": "x130",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "驥",
+                "simp": "骥",
+                "words": "騏驥 / 附驥",
+                "tip": "馬+冀，千里良马。"
+        },
+        {
+                "id": "x131",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "餒",
+                "simp": "馁",
+                "words": "凍餒 / 氣餒",
+                "tip": "飠+妥，缺食挨饿（《孟子》“老弱轉乎溝壑…凍餒”）。"
+        },
+        {
+                "id": "x132",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "閬",
+                "simp": "阆",
+                "words": "閬中",
+                "tip": "門+良，西华师大本省真题《周群传》“巴西閬中人也”。"
+        },
+        {
+                "id": "x133",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "輒",
+                "simp": "辄",
+                "words": "動輒 / 輒止",
+                "tip": "車+取，车厢两旁木，副词“往往、就”。"
+        },
+        {
+                "id": "x134",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "讖",
+                "simp": "谶",
+                "words": "讖緯 / 春秋讖",
+                "tip": "言+韯，《周群传》“春秋讖曰”，预言吉凶的隐语。"
+        },
+        {
+                "id": "x135",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "翫",
+                "simp": "玩",
+                "words": "翫寇 / 翫好",
+                "tip": "習+元，12篇实战“寇不可翫”，轻视玩忽（“玩”的异体/古写）。"
+        },
+        {
+                "id": "x136",
+                "deck": "pool_p12",
+                "tag": "新字筛查 · 12篇实战",
+                "trad": "亞",
+                "simp": "亚",
+                "words": "亞父 / 亞卿",
+                "tip": "古代宗庙宫室形，次一等。"
+        },
+        {
+                "id": "x137",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "輿",
+                "simp": "舆",
+                "words": "輿論 / 乘輿",
+                "tip": "两手（舁）抬车，车厢、大地、众人（勿与“與”混）。"
+        },
+        {
+                "id": "x138",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "參",
+                "simp": "参",
+                "words": "參差 / 參謀",
+                "tip": "上三颗星（厽）+人+彡，星宿参星，引申参与、考察、参差（cēn cī）。"
+        },
+        {
+                "id": "x139",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "喪",
+                "simp": "丧",
+                "words": "喪亂 / 喪禮",
+                "tip": "上“哭”省下“亡”，失掉（sàng）、丧葬（sāng）。"
+        },
+        {
+                "id": "x140",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "應",
+                "simp": "应",
+                "words": "應對 / 應當",
+                "tip": "广+雁（亻隹）+心，鹰声相应，回答、应当。"
+        },
+        {
+                "id": "x141",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "讓",
+                "simp": "让",
+                "words": "禪讓 / 退讓",
+                "tip": "言+襄，谦让、责备（《左传》高频义：责让）。"
+        },
+        {
+                "id": "x142",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "聖",
+                "simp": "圣",
+                "words": "聖賢 / 聖人",
+                "tip": "耳+口+壬（王），耳聪口通的圣贤。"
+        },
+        {
+                "id": "x143",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "畝",
+                "simp": "亩",
+                "words": "田畝 / 畝畝",
+                "tip": "田+十+久，田地面积单位（《孟子》“百畝之田”）。"
+        },
+        {
+                "id": "x144",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "堯",
+                "simp": "尧",
+                "words": "堯舜 / 堯典",
+                "tip": "上三“土”下“兀”，高耸土堆，上古圣王名。"
+        },
+        {
+                "id": "x145",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "類",
+                "simp": "类",
+                "words": "同類 / 類比",
+                "tip": "米+犬+頁，种类、相似。"
+        },
+        {
+                "id": "x146",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "恆",
+                "simp": "恒",
+                "words": "恆心 / 恆産",
+                "tip": "忄+亘，上下两天之间一轮弯月常在，长久不变。"
+        },
+        {
+                "id": "x147",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "體",
+                "simp": "体",
+                "words": "國體 / 身體",
+                "tip": "骨+豊，身体、体式、体察（简作人+本）。"
+        },
+        {
+                "id": "x148",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "頭",
+                "simp": "头",
+                "words": "頭顱 / 叩頭",
+                "tip": "豆+頁，脑袋、顶端。"
+        },
+        {
+                "id": "x149",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "選",
+                "simp": "选",
+                "words": "選舉 / 選拔",
+                "tip": "辶+巽，推选挑选。"
+        },
+        {
+                "id": "x150",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "奪",
+                "simp": "夺",
+                "words": "爭奪 / 奪門",
+                "tip": "上“大+隹”下“寸”，张开大手抓鸟，强取（勿与“奮”下“田”混）。"
+        },
+        {
+                "id": "x151",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "釋",
+                "simp": "释",
+                "words": "解釋 / 釋放",
+                "tip": "采+睪，解开纠缠、放下。"
+        },
+        {
+                "id": "x152",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "邊",
+                "simp": "边",
+                "words": "邊境 / 邊陲",
+                "tip": "辶+自+穴+方，边界边缘。"
+        },
+        {
+                "id": "x153",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "賈",
+                "simp": "贾",
+                "words": "商賈 / 餘勇可賈",
+                "tip": "西+貝，坐在店铺里做生意，读 gǔ 表商人/卖，读 jiǎ 表姓。"
+        },
+        {
+                "id": "x154",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "罷",
+                "simp": "罢",
+                "words": "罷兵 / 罷黜",
+                "tip": "罒（网）+能，用网罩住能干者（免职），又可通“疲”（读 pí）。"
+        },
+        {
+                "id": "x155",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "盜",
+                "simp": "盗",
+                "words": "盜賊 / 盜名",
+                "tip": "上“次（涎水）”下“皿”，对着器皿流口水想偷窃。"
+        },
+        {
+                "id": "x156",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "寶",
+                "simp": "宝",
+                "words": "寶器 / 國寶",
+                "tip": "宀+王（玉）+缶+貝，屋里藏玉器贝钱，珍宝。"
+        },
+        {
+                "id": "x157",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "厭",
+                "simp": "厌",
+                "words": "厭倦 / 貪得無厭",
+                "tip": "厂+日+月+犬，原指吃饱满足（yān），后作讨厌（yàn）。"
+        },
+        {
+                "id": "x158",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "勢",
+                "simp": "势",
+                "words": "形勢 / 權勢",
+                "tip": "埶+力，力量、情势。"
+        },
+        {
+                "id": "x159",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "顓",
+                "simp": "颛",
+                "words": "顓臾 / 顓頊",
+                "tip": "《论语·季氏将伐颛臾》核心篇目高危人地名专字！"
+        },
+        {
+                "id": "x160",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "際",
+                "simp": "际",
+                "words": "際遇 / 天際",
+                "tip": "阝+祭，两墙交接处、边际、时机。"
+        },
+        {
+                "id": "x161",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "載",
+                "simp": "载",
+                "words": "載舟 / 記載",
+                "tip": "上“哉”省下“車”，车装载、记录、一年（读 zǎi）。"
+        },
+        {
+                "id": "x162",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "貳",
+                "simp": "贰",
+                "words": "貳心 / 貳過",
+                "tip": "弋+二+貝，二心背叛、不专一（《左传》“既而大叔命西鄙北鄙貳於己”）。"
+        },
+        {
+                "id": "x163",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "舊",
+                "simp": "旧",
+                "words": "故舊 / 依舊",
+                "tip": "艹+隹+臼，猫头鹰站在臼上，长久、老交情。"
+        },
+        {
+                "id": "x164",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "職",
+                "simp": "职",
+                "words": "職守 / 官職",
+                "tip": "耳+音+戈，古代掌记事官职。"
+        },
+        {
+                "id": "x165",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "穎",
+                "simp": "颖",
+                "words": "穎考叔 / 脫穎",
+                "tip": "《郑伯克段于鄢》“穎考叔為穎谷封人”高频考字（上为禾+頃）。"
+        },
+        {
+                "id": "x166",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "牆",
+                "simp": "墙",
+                "words": "蕭牆 / 築牆",
+                "tip": "爿+嗇，围墙（《论语》“禍起蕭牆”）。"
+        },
+        {
+                "id": "x167",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "權",
+                "simp": "权",
+                "words": "權衡 / 權變",
+                "tip": "木+雚，秤锤（权衡），引申临时变通、权力。"
+        },
+        {
+                "id": "x168",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "懷",
+                "simp": "怀",
+                "words": "懷柔 / 忘懷",
+                "tip": "忄+褱，藏在衣袖里，心念、安抚（与“壞”对照记）。"
+        },
+        {
+                "id": "x169",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "喫",
+                "simp": "吃",
+                "words": "喫飯 / 喫虧",
+                "tip": "口+契，古吃东西正字多写作“喫”。"
+        },
+        {
+                "id": "x170",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "備",
+                "simp": "备",
+                "words": "戒備 / 完備",
+                "tip": "亻+备（艹+厂+用），预先防备、完备。"
+        },
+        {
+                "id": "x171",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "慮",
+                "simp": "虑",
+                "words": "思慮 / 遠慮",
+                "tip": "虍+思，反复思虑谋划。"
+        },
+        {
+                "id": "x172",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "悅",
+                "simp": "悦",
+                "words": "悅服 / 喜悅",
+                "tip": "忄+兌，开心喜悦（古常通假作“說”）。"
+        },
+        {
+                "id": "x173",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "徹",
+                "simp": "彻",
+                "words": "徹侯 / 徹底",
+                "tip": "彳+育+攵，通透、周代十抽一税制“徹”（《论语》“盍徹乎”）。"
+        },
+        {
+                "id": "x174",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "幾",
+                "simp": "几",
+                "words": "庶幾 / 幾微",
+                "tip": "两串丝“幺幺”+“戍”，细微征兆（jī）或问多少（jǐ）。"
+        },
+        {
+                "id": "x175",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "厲",
+                "simp": "厉",
+                "words": "厲兵 / 嚴厲",
+                "tip": "厂+萬，磨刀石，磨快兵器（“厲兵秣馬”）、严厉、疫病。"
+        },
+        {
+                "id": "x176",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "卻",
+                "simp": "却",
+                "words": "卻步 / 忘卻",
+                "tip": "去+卩，退缩、推辞（副词表转折）。"
+        },
+        {
+                "id": "x177",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "馮",
+                "simp": "冯",
+                "words": "馮諼 / 馮河",
+                "tip": "冫+馬，姓冯（féng）或暴虎冯河（píng，徒步涉水）。"
+        },
+        {
+                "id": "x178",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "雞",
+                "simp": "鸡",
+                "words": "殺雞 / 雞鳴",
+                "tip": "奚+鳥，家禽鸡（《论语》“殺雞爲黍”）。"
+        },
+        {
+                "id": "x179",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "階",
+                "simp": "阶",
+                "words": "階級 / 臺階",
+                "tip": "阝+皆，台阶等级。"
+        },
+        {
+                "id": "x180",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "隊",
+                "simp": "队",
+                "words": "軍隊 / 成隊",
+                "tip": "阝+㒸，成列队列、坠落（古也通“墜”）。"
+        },
+        {
+                "id": "x181",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "賦",
+                "simp": "赋",
+                "words": "賦稅 / 賦詩",
+                "tip": "貝+武，按田收军赋，引申吟诗作赋。"
+        },
+        {
+                "id": "x182",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蠟",
+                "simp": "蜡",
+                "words": "蠟燭 / 味同嚼蠟",
+                "tip": "虫+巤，蜂蜡；注意“臘（月肉旁）”表腊祭/腊月，“蠟（虫旁）”表蜂蜡！"
+        },
+        {
+                "id": "x183",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "糧",
+                "simp": "粮",
+                "words": "糧食 / 裹糧",
+                "tip": "米+量，出门携带的米粮。"
+        },
+        {
+                "id": "x184",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "畫",
+                "simp": "画",
+                "words": "畫地 / 謀畫",
+                "tip": "上“聿”下“田+一”，拿笔在田界画框，绘图、谋划。"
+        },
+        {
+                "id": "x185",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "槨",
+                "simp": "椁",
+                "words": "棺槨 / 石槨",
+                "tip": "木+郭，套在棺材外面的大外棺（《礼记》《孟子》高频）。"
+        },
+        {
+                "id": "x186",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "攝",
+                "simp": "摄",
+                "words": "攝政 / 攝齊",
+                "tip": "扌+聶（三耳），一手提三耳，代理兼管、提起衣襟（“攝齊升堂”）。"
+        },
+        {
+                "id": "x187",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鵠",
+                "simp": "鹄",
+                "words": "鴻鵠 / 鵠的",
+                "tip": "告+鳥，天鹅（hú）或箭靶中心（gǔ）。"
+        },
+        {
+                "id": "x188",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "驅",
+                "simp": "驱",
+                "words": "驅馳 / 先驅",
+                "tip": "馬+區，策马疾驰、赶走。"
+        },
+        {
+                "id": "x189",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "輩",
+                "simp": "辈",
+                "words": "吾輩 / 前輩",
+                "tip": "非+車，战车分行列队，同类同辈。"
+        },
+        {
+                "id": "x190",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蹠",
+                "simp": "跖",
+                "words": "盜蹠 / 雞蹠",
+                "tip": "足+庶，脚掌，或古代大盗“盜蹠”（亦作“跖”）。"
+        },
+        {
+                "id": "x191",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "藝",
+                "simp": "艺",
+                "words": "六藝 / 藝業",
+                "tip": "艹+埶+云，种植农艺、六艺才能。"
+        },
+        {
+                "id": "x192",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "積",
+                "simp": "积",
+                "words": "積累 / 積穀",
+                "tip": "禾+責，堆积谷物。"
+        },
+        {
+                "id": "x193",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "畢",
+                "simp": "毕",
+                "words": "畢竟 / 畢命",
+                "tip": "田+華省，长柄捕鸟网，引申完结、全部。"
+        },
+        {
+                "id": "x194",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "濟",
+                "simp": "济",
+                "words": "濟河 / 濟世",
+                "tip": "氵+齊，渡水过河、救济成功。"
+        },
+        {
+                "id": "x195",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "殤",
+                "simp": "殇",
+                "words": "國殤 / 夭殤",
+                "tip": "歹+昜省，未成年而死或战死异乡（楚辞《國殤》）。"
+        },
+        {
+                "id": "x196",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "歡",
+                "simp": "欢",
+                "words": "歡心 / 歡宴",
+                "tip": "雚+欠，高兴快乐，与“歎”同右“欠”而左异！"
+        },
+        {
+                "id": "x197",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "挾",
+                "simp": "挟",
+                "words": "挾持 / 挾泰山",
+                "tip": "扌+夾，腋下夹着、挟制（《孟子》“挾泰山以超北海”）。"
+        },
+        {
+                "id": "x198",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "憲",
+                "simp": "宪",
+                "words": "憲章 / 憲法",
+                "tip": "宀+丰+目+心，法度纲纪。"
+        },
+        {
+                "id": "x199",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "彈",
+                "simp": "弹",
+                "words": "彈鋏 / 彈劾",
+                "tip": "弓+單，拉弓打弹丸，拨弦、弹劾（《战国策·冯谖客孟尝君》“彈其劍”）。"
+        },
+        {
+                "id": "x200",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "寢",
+                "simp": "寝",
+                "words": "寢食 / 廢寢",
+                "tip": "宀+爿+帚+又，卧室安睡。"
+        },
+        {
+                "id": "x201",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "創",
+                "simp": "创",
+                "words": "創傷 / 創始",
+                "tip": "倉+刂，刀伤（chuāng）、开创（chuàng）。"
+        },
+        {
+                "id": "x202",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "齡",
+                "simp": "龄",
+                "words": "年齡 / 夢齡",
+                "tip": "齒+令，看牙齿知岁数。"
+        },
+        {
+                "id": "x203",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "齕",
+                "simp": "龁",
+                "words": "齕之 / 齧齕",
+                "tip": "齒+乞，用牙齿咬。"
+        },
+        {
+                "id": "x204",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鳳",
+                "simp": "凤",
+                "words": "鳳凰 / 鳳鳥",
+                "tip": "凡+鳥，百鸟之王凤凰（《论语》“鳳鳥不至”）。"
+        },
+        {
+                "id": "x205",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "馳",
+                "simp": "驰",
+                "words": "馳騁 / 驅馳",
+                "tip": "馬+也，快马奔跑。"
+        },
+        {
+                "id": "x206",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "饋",
+                "simp": "馈",
+                "words": "饋贈 / 饋餉",
+                "tip": "飠+貴，送食物礼物给别人。"
+        },
+        {
+                "id": "x207",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "闕",
+                "simp": "阙",
+                "words": "宮闕 / 闕如",
+                "tip": "門+敫，宫门双观楼（què），缺漏（quē，通“缺”）。"
+        },
+        {
+                "id": "x208",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "芻",
+                "simp": "刍",
+                "words": "芻蕘 / 芻豢",
+                "tip": "像双手拔草喂牛羊，割草人、草料（“芻蕘”指平民）。"
+        },
+        {
+                "id": "x209",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "繼",
+                "simp": "继",
+                "words": "繼嗣 / 相繼",
+                "tip": "糹+四个断丝“㡭”，把断线重新接上。"
+        },
+        {
+                "id": "x210",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "繩",
+                "simp": "绳",
+                "words": "繩墨 / 準繩",
+                "tip": "糹+黽，墨绳，引申规矩准则、制裁。"
+        },
+        {
+                "id": "x211",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "縱",
+                "simp": "纵",
+                "words": "縱橫 / 縱釋",
+                "tip": "糹+從，放开丝线，南北向、放任、即使。"
+        },
+        {
+                "id": "x212",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "澤",
+                "simp": "泽",
+                "words": "川澤 / 恩澤",
+                "tip": "氵+睪，聚水沼泽、润泽恩惠。"
+        },
+        {
+                "id": "x213",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "機",
+                "simp": "机",
+                "words": "機巧 / 樞機",
+                "tip": "木+幾，弩牙机关、纺织机、关键契机。"
+        },
+        {
+                "id": "x214",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "斃",
+                "simp": "毙",
+                "words": "倒斃 / 斃之",
+                "tip": "敝+死，倒下、杀死。"
+        },
+        {
+                "id": "x215",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "廩",
+                "simp": "廪",
+                "words": "倉廩 / 廩祿",
+                "tip": "广+稟，公家谷仓。"
+        },
+        {
+                "id": "x216",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "廚",
+                "simp": "厨",
+                "words": "庖廚 / 廚傳",
+                "tip": "广+尌，厨房（《孟子》“君子遠庖廚”）。"
+        },
+        {
+                "id": "x217",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "劃",
+                "simp": "划",
+                "words": "劃分 / 籌劃",
+                "tip": "畫+刂，用刀划开分割。"
+        },
+        {
+                "id": "x218",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "剝",
+                "simp": "剥",
+                "words": "剝削 / 剝棗",
+                "tip": "录+刂，用刀剥皮。"
+        },
+        {
+                "id": "x219",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "倉",
+                "simp": "仓",
+                "words": "倉廩 / 倉皇",
+                "tip": "人+戶+口，谷仓。"
+        },
+        {
+                "id": "x220",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "黽",
+                "simp": "黾",
+                "words": "黽勉",
+                "tip": "象形青蛙，“黽勉”即勤勉努力（读 mǐn）。"
+        },
+        {
+                "id": "x221",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鹹",
+                "simp": "咸",
+                "words": "鹹淡 / 鹽鹹",
+                "tip": "鹵+咸，卤水味咸（“咸”作全、皆义仍作“咸”）。"
+        },
+        {
+                "id": "x222",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鴻",
+                "simp": "鸿",
+                "words": "鴻鵠 / 鴻門",
+                "tip": "氵+江+鳥，大雁（《战国策》《史记》高频）。"
+        },
+        {
+                "id": "x223",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鰥",
+                "simp": "鳏",
+                "words": "鰥寡 / 鰥夫",
+                "tip": "魚+眔，老而无妻（“鰥寡孤獨”）。"
+        },
+        {
+                "id": "x224",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鬥",
+                "simp": "斗",
+                "words": "格鬥 / 鬭爭",
+                "tip": "两人徒手相搏，“鬥”为格斗正字，“斗”为量器，“鬭”为异体繁写。"
+        },
+        {
+                "id": "x225",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "驛",
+                "simp": "驿",
+                "words": "驛站 / 驛使",
+                "tip": "馬+睪，传递公文的驿马驿站。"
+        },
+        {
+                "id": "x226",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "騁",
+                "simp": "骋",
+                "words": "馳騁 / 騁懷",
+                "tip": "馬+甹，纵马疾奔。"
+        },
+        {
+                "id": "x227",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "駟",
+                "simp": "驷",
+                "words": "駟馬 / 千駟",
+                "tip": "馬+四，四匹马拉的车（《论语》“齊景公有馬千駟”）。"
+        },
+        {
+                "id": "x228",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "餚",
+                "simp": "肴",
+                "words": "佳餚 / 菜餚",
+                "tip": "飠+肴，熟肉美味（正字也作“肴”）。"
+        },
+        {
+                "id": "x229",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "顛",
+                "simp": "颠",
+                "words": "顛沛 / 顛覆",
+                "tip": "真+頁，头顶、倒伏跌倒（《论语》“顛沛必於是”）。"
+        },
+        {
+                "id": "x230",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "隸",
+                "simp": "隶",
+                "words": "奴隸 / 隸書",
+                "tip": "手+尾+氺，捕捉追及、附属奴仆。"
+        },
+        {
+                "id": "x231",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "闊",
+                "simp": "阔",
+                "words": "迂闊 / 廣闊",
+                "tip": "門+活，宽广、疏远不切实际（“迂闊”）。"
+        },
+        {
+                "id": "x232",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "釁",
+                "simp": "衅",
+                "words": "挑釁 / 釁鐘",
+                "tip": "《孟子》“將以釁鐘”，杀牲取血涂抹新钟祭祀，引申争端。"
+        },
+        {
+                "id": "x233",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "轡",
+                "simp": "辔",
+                "words": "按轡 / 執轡",
+                "tip": "兩串絲+車+口，驾马的缰绳（注意“按轡徐行”高频）。"
+        },
+        {
+                "id": "x234",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "轅",
+                "simp": "辕",
+                "words": "南轅 / 轅門",
+                "tip": "車+袁，车前驾牲口的两根直木（“南轅北轍”）。"
+        },
+        {
+                "id": "x235",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "讎",
+                "simp": "雠",
+                "words": "報讎 / 校讎",
+                "tip": "左右两只鳥（雔）中间“言”，对答、仇敌（通“仇”）。"
+        },
+        {
+                "id": "x236",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蠻",
+                "simp": "蛮",
+                "words": "蠻夷 / 南蠻",
+                "tip": "䜌+虫，古代对南方少数民族的泛称。"
+        },
+        {
+                "id": "x237",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蟲",
+                "simp": "虫",
+                "words": "蟲蛇 / 昆蟲",
+                "tip": "三条“虫”聚在一起才读 chóng（单“虫”本读 huǐ 毒蛇）。"
+        },
+        {
+                "id": "x238",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蝕",
+                "simp": "蚀",
+                "words": "日蝕 / 侵蝕",
+                "tip": "飠+虫，虫蛀慢慢吃掉、日月食。"
+        },
+        {
+                "id": "x239",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蕭",
+                "simp": "萧",
+                "words": "蕭牆 / 蕭條",
+                "tip": "艹+肅，艾蒿，常用姓氏、风声萧瑟。"
+        },
+        {
+                "id": "x240",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "蒞",
+                "simp": "莅",
+                "words": "蒞臨 / 蒞政",
+                "tip": "艹+位，到、临（“蒞中國而撫四夷”）。"
+        },
+        {
+                "id": "x241",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "茲",
+                "simp": "兹",
+                "words": "茲事 / 今茲",
+                "tip": "上艹下两个“幺”（丝），代词“这、此”，时间“现在”。"
+        },
+        {
+                "id": "x242",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "臨",
+                "simp": "临",
+                "words": "臨終 / 臨淵",
+                "tip": "臣+人+品，从高处俯身视物、来到。"
+        },
+        {
+                "id": "x243",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "羅",
+                "simp": "罗",
+                "words": "羅網 / 羅列",
+                "tip": "罒（网）+維，捕鸟的丝网。"
+        },
+        {
+                "id": "x244",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "纖",
+                "simp": "纤",
+                "words": "纖微 / 纖悉",
+                "tip": "糹+韱，细微丝缕。"
+        },
+        {
+                "id": "x245",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "鑿",
+                "simp": "凿",
+                "words": "穿鑿 / 鑿池",
+                "tip": "上复杂凿头下“金”，打孔开凿（《孟子》“鑿斯池也”）。"
+        },
+        {
+                "id": "x246",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "贏",
+                "simp": "赢",
+                "words": "贏餘 / 贏得",
+                "tip": "亡+口+月+貝+凡，盈余获利。"
+        },
+        {
+                "id": "x247",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "贍",
+                "simp": "赡",
+                "words": "贍養 / 豐贍",
+                "tip": "貝+詹，供给使足。"
+        },
+        {
+                "id": "x248",
+                "deck": "pool_wl",
+                "tag": "新字筛查 · 王力高频",
+                "trad": "讒",
+                "simp": "谗",
+                "words": "讒言 / 進讒",
+                "tip": "言+毚，在君王面前说人坏话（《屈原》最痛恨的“讒諂”）。"
+        }
+];
+
       const DAY_MS = 86400000;
       const EXAM_TS = new Date('2026-12-19T09:00:00').getTime();
       const STORAGE_KEY = 'trad706_words_engine_v2';
@@ -1298,11 +3569,18 @@
             meta: parsed.meta || {},
             daily: parsed.daily || {},
             dark: !!parsed.dark,
-            limit: parsed.limit === undefined ? 30 : parsed.limit
+            limit: parsed.limit === undefined ? 30 : parsed.limit,
+            pool: parsed.pool || {}
           };
         } catch (e) {
-          return { meta: {}, daily: {}, dark: false, limit: 30 };
+          return { meta: {}, daily: {}, dark: false, limit: 30, pool: {} };
         }
+      }
+
+      const POOL_MAP = new Map(POOL_DATA.map(i => [i.id, i]));
+      function getAllActiveItems() {
+        const added = POOL_DATA.filter(i => state.pool[i.id] === 'added');
+        return DECK_DATA.concat(added);
       }
 
       let state = loadState();
@@ -1407,8 +3685,9 @@
         const daysLeft = Math.max(0, Math.ceil((EXAM_TS - now) / DAY_MS));
         document.getElementById('examCountdown').textContent = `距初试 ${daysLeft} 天 · 2026-12-19`;
 
+        const activeItems = getAllActiveItems();
         let due = 0, hard = 0, fresh = 0, mastered = 0, familiar = 0;
-        DECK_DATA.forEach(item => {
+        activeItems.forEach(item => {
           const st = getStatus(item);
           if (st === 'mastered') mastered++;
           else if (st === 'hard') hard++;
@@ -1428,7 +3707,7 @@
         document.getElementById('segHard').style.width = ((hard / sum) * 100).toFixed(1) + '%';
         document.getElementById('segFresh').style.width = ((fresh / sum) * 100).toFixed(1) + '%';
 
-        document.getElementById('mTotal').textContent = DECK_DATA.length;
+        document.getElementById('mTotal').textContent = activeItems.length;
         document.getElementById('mToday').textContent = state.daily[todayKey()] || 0;
         document.getElementById('mMastered').textContent = mastered;
         document.getElementById('mFamiliar').textContent = familiar;
@@ -1450,7 +3729,7 @@
         list.innerHTML = '';
         decks.forEach(d => {
           const items = d.id === 'hard_only'
-            ? DECK_DATA.filter(i => getStatus(i) === 'hard')
+            ? activeItems.filter(i => getStatus(i) === 'hard')
             : DECK_DATA.filter(i => i.deck === d.id && getStatus(i) !== 'mastered');
           const btn = document.createElement('button');
           btn.className = 'deck-row';
@@ -1466,6 +3745,27 @@
           btn.addEventListener('click', () => startSession(d.id, d.title));
           list.appendChild(btn);
         });
+
+        // Pool screening entry
+        const poolUnscreened = POOL_DATA.filter(i => !state.pool[i.id]);
+        const poolAdded = POOL_DATA.filter(i => state.pool[i.id] === 'added');
+        const poolSkipped = POOL_DATA.filter(i => state.pool[i.id] === 'skip');
+        const poolWrap = document.getElementById('poolEntryWrap');
+        poolWrap.innerHTML = '';
+        const poolBtn = document.createElement('button');
+        poolBtn.className = 'deck-row pool-highlight';
+        const pillText = poolUnscreened.length > 0 ? `待筛 ${poolUnscreened.length} 字` : `已筛完 · 汇入 ${poolAdded.length}`;
+        poolBtn.innerHTML = `
+          <div>
+            <div class="deck-row-title">王力一册 + 12篇实战 + 一简多繁筛选</div>
+            <div class="deck-row-sub">共 ${POOL_DATA.length} 候选 · 已汇入 ${poolAdded.length} 字 / 已跳过 ${poolSkipped.length} 字</div>
+          </div>
+          <div class="deck-row-right">
+            <span class="count-pill">${pillText}</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>`;
+        poolBtn.addEventListener('click', () => startSession('pool_screen', '考前新字盲测筛选'));
+        poolWrap.appendChild(poolBtn);
       }
 
       document.querySelectorAll('#limitRow .limit-btn').forEach(btn => {
@@ -1482,6 +3782,7 @@
 
       // ── Recite Session Engine (Words 2-Phase + 4-Tier + Undo + WordsMotion Swipe) ──
       let session = {
+        mode: 'smart_today',
         title: '今日智能调度',
         entries: [],
         idx: 0,
@@ -1494,9 +3795,16 @@
 
       function startSession(mode, title) {
         const now = Date.now();
+        const activeItems = getAllActiveItems();
         let pool = [];
-        if (mode === 'smart_today') {
-          const active = DECK_DATA.filter(i => getStatus(i) !== 'mastered');
+        if (mode === 'pool_screen') {
+          pool = POOL_DATA.filter(i => !state.pool[i.id]).slice(0, 40);
+          if (pool.length === 0) {
+            showToast('全部候选字已筛选完毕，可在档案重测跳过的字');
+            return;
+          }
+        } else if (mode === 'smart_today') {
+          const active = activeItems.filter(i => getStatus(i) !== 'mastered');
           const dueItems = active.filter(i => isDue(i, now));
           const hardItems = active.filter(i => !isDue(i, now) && getStatus(i) === 'hard');
           const freshItems = active.filter(i => !isDue(i, now) && getStatus(i) === 'fresh');
@@ -1505,7 +3813,7 @@
           if (pool.length === 0) pool = restItems;
           if (state.limit > 0) pool = pool.slice(0, state.limit);
         } else if (mode === 'hard_only') {
-          pool = DECK_DATA.filter(i => getStatus(i) === 'hard');
+          pool = activeItems.filter(i => getStatus(i) === 'hard');
         } else {
           pool = DECK_DATA.filter(i => i.deck === mode && getStatus(i) !== 'mastered');
         }
@@ -1516,6 +3824,7 @@
         }
 
         session = {
+          mode: mode,
           title: title,
           entries: pool.map(item => ({ item: item, isRepeat: false, repeatCount: 0 })),
           idx: 0,
@@ -1540,6 +3849,12 @@
         document.getElementById('reciteDeckName').textContent = session.title;
         document.getElementById('undoBtn').disabled = !session.undo;
 
+        const isPool = session.mode === 'pool_screen';
+        const stampL = vocabCard.querySelector('.swipe-stamp.left');
+        const stampR = vocabCard.querySelector('.swipe-stamp.right');
+        stampL.textContent = isPool ? '认识 · 跳过' : '熟知';
+        stampR.textContent = isPool ? '查看 / 汇入' : '查看 / 忘记';
+
         if (session.done || session.idx >= session.entries.length) {
           vocabCard.style.display = 'none';
           rateBar.style.display = 'none';
@@ -1550,6 +3865,27 @@
           document.getElementById('sumDone').textContent = session.stats.done;
           document.getElementById('sumFamiliar').textContent = session.stats.familiar;
           document.getElementById('sumHard').textContent = session.stats.hard;
+          const lbls = summaryCard.querySelectorAll('.metric-lbl');
+          const nextBtn = document.getElementById('summaryNextBtn');
+          if (isPool) {
+            const rem = POOL_DATA.filter(i => !state.pool[i.id]).length;
+            summaryCard.querySelector('.hero-title').textContent = '本批筛选已完成';
+            document.getElementById('summaryDesc').textContent = rem > 0
+              ? `新汇入主库的字已进入今日调度，还剩 ${rem} 个候选字待筛选。`
+              : '全部候选字已筛选完毕，新汇入字已直接进入今日调度。';
+            lbls[0].textContent = '本批已筛';
+            lbls[1].textContent = '认识跳过';
+            lbls[2].textContent = '汇入主库';
+            nextBtn.style.display = rem > 0 ? 'flex' : 'none';
+            nextBtn.textContent = `继续下一批筛选（剩 ${rem} 字）`;
+          } else {
+            summaryCard.querySelector('.hero-title').textContent = '本轮识记已完成';
+            document.getElementById('summaryDesc').textContent = '所有待复测与回炉字均已过关，调度间隔已自动更新。';
+            lbls[0].textContent = '本次完成';
+            lbls[1].textContent = '一次熟知';
+            lbls[2].textContent = '回炉巩固';
+            nextBtn.style.display = 'none';
+          }
           return;
         }
 
@@ -1570,7 +3906,7 @@
 
         document.getElementById('vcTag').textContent = item.tag;
         const lapsesEl = document.getElementById('vcLapses');
-        if (m && m.lapses > 0) {
+        if (!isPool && m && m.lapses > 0) {
           lapsesEl.style.display = 'inline-block';
           lapsesEl.textContent = `错 ${m.lapses} 次`;
         } else {
@@ -1583,8 +3919,16 @@
         document.getElementById('vcWords').textContent = item.words;
         document.getElementById('vcTip').textContent = item.tip;
 
+        const promptSub = phase1Prompt.querySelector('.vc-prompt-sub');
+        promptSub.textContent = isPool
+          ? '认得直接左滑跳过（不入库）；不确定请点开确认'
+          : '先在心里写出简体与熟词，左滑直接过关';
+
         const dueHint = document.getElementById('nextDueHint');
-        if (m && m.intervalDays) {
+        if (isPool) {
+          const remTotal = POOL_DATA.filter(i => !state.pool[i.id]).length;
+          dueHint.textContent = `筛选池剩余 ${remTotal} 字`;
+        } else if (m && m.intervalDays) {
           dueHint.textContent = `当前间隔 ${m.intervalDays} 天`;
         } else {
           dueHint.textContent = '首次检验';
@@ -1596,6 +3940,32 @@
       function updatePhaseUI() {
         phase1Prompt.classList.toggle('hidden', session.shown);
         phase2Content.classList.toggle('hidden', !session.shown);
+
+        if (session.mode === 'pool_screen') {
+          rateBar.className = 'rate-grid phase1';
+          if (!session.shown) {
+            rateBar.innerHTML = `
+              <button class="rate-btn reveal" data-act="reveal">
+                <span class="r-name">看答案 / 不确定</span>
+                <span class="r-hint">点击卡片 / 空格</span>
+              </button>
+              <button class="rate-btn pool-skip" data-act="rate" data-val="pool_skip">
+                <span class="r-name">我认识 · 跳过</span>
+                <span class="r-hint">左滑 / 3</span>
+              </button>`;
+          } else {
+            rateBar.innerHTML = `
+              <button class="rate-btn pool-add" data-act="rate" data-val="pool_add">
+                <span class="r-name">不认识 · 汇入词库</span>
+                <span class="r-hint">右滑 / 1</span>
+              </button>
+              <button class="rate-btn pool-skip" data-act="rate" data-val="pool_skip">
+                <span class="r-name">原来认识 · 跳过</span>
+                <span class="r-hint">左滑 / 3</span>
+              </button>`;
+          }
+          return;
+        }
 
         if (!session.shown) {
           rateBar.className = 'rate-grid phase1';
@@ -1653,25 +4023,57 @@
         const entry = session.entries[session.idx];
         const prevStats = Object.assign({}, session.stats);
         let reviewUndo = null;
-        if (!entry.isRepeat) {
-          reviewUndo = applyReview(entry.item.id, rating);
-          session.stats.done++;
-          if (rating === 'familiar' || rating === 'mastered') session.stats.familiar++;
-          else session.stats.hard++;
-        }
-
-        // Words-style queue re-insertion
+        let poolUndo = null;
         let insertedAt = null;
-        if (rating === 'forget') {
-          const step = Math.min(session.entries.length, session.idx + 3);
-          const reEntry = { item: entry.item, isRepeat: true, repeatCount: entry.repeatCount + 1 };
-          session.entries.splice(step, 0, reEntry);
-          insertedAt = step;
-        } else if (rating === 'uncertain') {
-          const step = Math.min(session.entries.length, session.idx + 6);
-          const reEntry = { item: entry.item, isRepeat: true, repeatCount: entry.repeatCount + 1 };
-          session.entries.splice(step, 0, reEntry);
-          insertedAt = step;
+
+        if (session.mode === 'pool_screen') {
+          const prevPoolVal = state.pool[entry.item.id];
+          const prevMeta = state.meta[entry.item.id] ? Object.assign({}, state.meta[entry.item.id]) : null;
+          if (rating === 'pool_add') {
+            state.pool[entry.item.id] = 'added';
+            const now = Date.now();
+            state.meta[entry.item.id] = {
+              streak: 0,
+              lapses: 1,
+              intervalDays: 0,
+              hardHits: 1,
+              lastRating: 'forget',
+              lastReviewAt: now,
+              nextDueAt: now
+            };
+            const dk = todayKey();
+            state.daily[dk] = (state.daily[dk] || 0) + 1;
+            session.stats.done++;
+            session.stats.hard++;
+            poolUndo = { prevPoolVal: prevPoolVal, prevMeta: prevMeta, dailyKey: dk };
+            showToast(`已将「${entry.item.trad}」汇入主词库`);
+          } else {
+            state.pool[entry.item.id] = 'skip';
+            session.stats.done++;
+            session.stats.familiar++;
+            poolUndo = { prevPoolVal: prevPoolVal, prevMeta: prevMeta, dailyKey: null };
+          }
+          saveState();
+        } else {
+          if (!entry.isRepeat) {
+            reviewUndo = applyReview(entry.item.id, rating);
+            session.stats.done++;
+            if (rating === 'familiar' || rating === 'mastered') session.stats.familiar++;
+            else session.stats.hard++;
+          }
+
+          // Words-style queue re-insertion
+          if (rating === 'forget') {
+            const step = Math.min(session.entries.length, session.idx + 3);
+            const reEntry = { item: entry.item, isRepeat: true, repeatCount: entry.repeatCount + 1 };
+            session.entries.splice(step, 0, reEntry);
+            insertedAt = step;
+          } else if (rating === 'uncertain') {
+            const step = Math.min(session.entries.length, session.idx + 6);
+            const reEntry = { item: entry.item, isRepeat: true, repeatCount: entry.repeatCount + 1 };
+            session.entries.splice(step, 0, reEntry);
+            insertedAt = step;
+          }
         }
 
         session.undo = {
@@ -1679,6 +4081,7 @@
           itemId: entry.item.id,
           wasRepeat: entry.isRepeat,
           reviewUndo: reviewUndo,
+          poolUndo: poolUndo,
           prevStats: prevStats,
           insertedAt: insertedAt
         };
@@ -1710,6 +4113,16 @@
         if (u.insertedAt !== null && u.insertedAt < session.entries.length) {
           session.entries.splice(u.insertedAt, 1);
         }
+        if (u.poolUndo) {
+          if (u.poolUndo.prevPoolVal === undefined) delete state.pool[u.itemId];
+          else state.pool[u.itemId] = u.poolUndo.prevPoolVal;
+          if (u.poolUndo.prevMeta) state.meta[u.itemId] = u.poolUndo.prevMeta;
+          else delete state.meta[u.itemId];
+          if (u.poolUndo.dailyKey) {
+            state.daily[u.poolUndo.dailyKey] = Math.max(0, (state.daily[u.poolUndo.dailyKey] || 1) - 1);
+          }
+          saveState();
+        }
         if (u.reviewUndo) {
           if (u.reviewUndo.prevMeta) state.meta[u.itemId] = u.reviewUndo.prevMeta;
           else delete state.meta[u.itemId];
@@ -1728,6 +4141,7 @@
       document.getElementById('undoBtn').addEventListener('click', undoLast);
       document.getElementById('backHomeBtn').addEventListener('click', () => switchTab('today'));
       document.getElementById('summaryBackBtn').addEventListener('click', () => switchTab('today'));
+      document.getElementById('summaryNextBtn').addEventListener('click', () => startSession('pool_screen', '考前新字盲测筛选'));
 
       document.getElementById('shuffleSessionBtn').addEventListener('click', () => {
         if (session.done || session.idx >= session.entries.length - 1) return;
@@ -1815,15 +4229,15 @@
             return;
           }
           if (d.x < -80) {
-            // Left swipe -> Familiar (just like words!)
-            commitRating('familiar', -1);
+            // Left swipe -> Familiar or Pool Skip
+            commitRating(session.mode === 'pool_screen' ? 'pool_skip' : 'familiar', -1);
           } else if (d.x > 80) {
-            // Right swipe -> Phase 1 reveals answer, Phase 2 marks forget
+            // Right swipe -> Phase 1 reveals answer, Phase 2 marks forget / pool_add
             if (!session.shown) {
               settleHome();
               revealPhase2();
             } else {
-              commitRating('forget', 1);
+              commitRating(session.mode === 'pool_screen' ? 'pool_add' : 'forget', 1);
             }
           } else {
             settleHome();
@@ -1843,47 +4257,52 @@
         } else if (e.key === 'z' || e.key === 'Z') {
           undoLast();
         } else if (e.key === '1' && session.shown) {
-          commitRating('forget', 1);
-        } else if (e.key === '2' && session.shown) {
+          commitRating(session.mode === 'pool_screen' ? 'pool_add' : 'forget', 1);
+        } else if (e.key === '2' && session.shown && session.mode !== 'pool_screen') {
           commitRating('uncertain', 0);
         } else if (e.key === '3' || e.key === 'ArrowLeft') {
-          commitRating('familiar', -1);
-        } else if (e.key === '4' && session.shown) {
+          commitRating(session.mode === 'pool_screen' ? 'pool_skip' : 'familiar', -1);
+        } else if (e.key === '4' && session.shown && session.mode !== 'pool_screen') {
           commitRating('mastered', -1);
         } else if (e.key === 'ArrowRight') {
           if (!session.shown) revealPhase2();
-          else commitRating('forget', 1);
+          else commitRating(session.mode === 'pool_screen' ? 'pool_add' : 'forget', 1);
         }
       });
 
       // ── Library View ──
       let libFilter = 'all';
       function renderLibrary() {
+        const activeItems = getAllActiveItems();
         const q = (document.getElementById('libSearch').value || '').trim().toLowerCase();
-        const filtered = DECK_DATA.filter(item => {
+        const filtered = activeItems.filter(item => {
           const st = getStatus(item);
           if (libFilter === 'hard' && st !== 'hard') return false;
           if (libFilter === 'learning' && st !== 'familiar') return false;
           if (libFilter === 'mastered' && st !== 'mastered') return false;
           if (libFilter === 'fresh' && st !== 'fresh') return false;
+          if (libFilter === 'added' && state.pool[item.id] !== 'added') return false;
           if (!q) return true;
           return (item.trad + item.simp + item.words + item.tip).toLowerCase().includes(q);
         });
 
-        document.getElementById('libCountSub').textContent = `显示 ${filtered.length} / ${DECK_DATA.length} 条`;
+        document.getElementById('libCountSub').textContent = `显示 ${filtered.length} / ${activeItems.length} 条`;
         const list = document.getElementById('libList');
         list.innerHTML = '';
         filtered.forEach(item => {
           const st = getStatus(item);
+          const isAddedPool = state.pool[item.id] === 'added';
           const row = document.createElement('div');
           row.className = 'lib-item';
           const actLabel = st === 'mastered' ? '恢复' : '斩掉';
+          const badgeHtml = isAddedPool ? '<span class="lib-badge">自选新增</span>' : '';
           row.innerHTML = `
             <div class="lib-trad">${item.trad}</div>
             <div class="lib-info">
               <div class="lib-top">
                 <span class="lib-simp">${item.simp}</span>
                 <span class="lib-words">${item.words}</span>
+                ${badgeHtml}
               </div>
               <div class="lib-tip">${item.tip}</div>
             </div>
@@ -1914,7 +4333,16 @@
 
       // ── Progress View ──
       function renderProgress() {
-        const leeches = DECK_DATA
+        const pTotal = POOL_DATA.length;
+        const pAdded = POOL_DATA.filter(i => state.pool[i.id] === 'added').length;
+        const pSkipped = POOL_DATA.filter(i => state.pool[i.id] === 'skip').length;
+        const pRest = pTotal - pAdded - pSkipped;
+        document.getElementById('poolStatsSummary').textContent =
+          `候选 ${pTotal} 字 · 待筛 ${pRest} 字 · 已跳过 ${pSkipped} 字 · 已汇入主库 ${pAdded} 字`;
+        const resetSkipBtn = document.getElementById('resetPoolSkipBtn');
+        resetSkipBtn.disabled = pSkipped === 0;
+
+        const leeches = getAllActiveItems()
           .map(item => ({ item, meta: state.meta[item.id] }))
           .filter(x => x.meta && (x.meta.lapses > 0 || x.meta.hardHits > 0))
           .sort((a, b) => (b.meta.lapses * 3 + b.meta.hardHits) - (a.meta.lapses * 3 + a.meta.hardHits))
@@ -1939,10 +4367,22 @@
         });
       }
 
+      document.getElementById('resetPoolSkipBtn').addEventListener('click', () => {
+        if (confirm('将“已跳过”的候选字重新放回筛选池（已汇入主库的字及学习进度会完整保留），确定吗？')) {
+          Object.keys(state.pool).forEach(k => {
+            if (state.pool[k] === 'skip') delete state.pool[k];
+          });
+          saveState();
+          renderProgress();
+          showToast('已重置跳过的候选字');
+        }
+      });
+
       document.getElementById('resetAllBtn').addEventListener('click', () => {
-        if (confirm('确定清空全部学习进度与错题记录吗？')) {
+        if (confirm('确定清空全部学习进度、错题记录与新字筛选状态吗？')) {
           state.meta = {};
           state.daily = {};
+          state.pool = {};
           saveState();
           renderProgress();
           showToast('进度已全部重置');
@@ -1958,7 +4398,7 @@
       });
 
       // ── Version Display & Update Checker (Words Style) ──
-      const APP_VERSION = '2.1.0';
+      const APP_VERSION = '2.2.0';
       const versionBadge = document.getElementById('appVersionBadge');
 
       function compareVersions(a, b) {
