@@ -53,7 +53,7 @@
       showBridge: sub === '706',
       selectedId: null,
       focusOnly: false,
-      showEgo: true,
+      showEgo: window.innerWidth >= 820,
       relTab: 'all',
       scrollTop: 0
     };
@@ -63,7 +63,8 @@
     subject: localStorage.getItem(LS_SUBJECT) === '807' ? '807' : '706',
     theme: localStorage.getItem(LS_THEME) || 'warm',
     quizMode: false,
-    minimapCollapsed: false,
+    minimapCollapsed: window.innerWidth < 820,
+    chainCollapsed: window.innerWidth < 820,
     sheetOpen: false,
     sheetExpanded: false,
     checked: loadJson(LS_CHECKED, {}),
@@ -663,21 +664,33 @@
       return;
     }
     el.chainBanner.hidden = false;
+    el.chainBanner.classList.toggle('collapsed', appState.chainCollapsed);
+    const toggleTxt = appState.chainCollapsed ? '展开演进' : '收起';
     if (sub === '706') {
       el.chainBanner.innerHTML = `
         <div class="chain-banner-head">
           <span class="chain-banner-title">${esc(ch.name)}</span>
-          <button type="button" class="pill-btn ghost" data-clear-chain>退出母题链</button>
+          <div style="display:flex;gap:4px;flex-shrink:0;">
+            <button type="button" class="pill-btn" data-toggle-chain-body>${toggleTxt}</button>
+            <button type="button" class="pill-btn ghost" data-clear-chain>退出</button>
+          </div>
         </div>
-        <div class="chain-banner-desc">${esc(ch.desc)}</div>
-        ${ch.stages ? `<div class="chain-banner-desc" style="margin-top:4px;color:var(--text);">${esc(ch.stages)}</div>` : ''}`;
+        <div class="chain-banner-body">
+          <div class="chain-banner-desc">${esc(ch.desc)}</div>
+          ${ch.stages ? `<div class="chain-banner-desc" style="margin-top:4px;color:var(--text);">${esc(ch.stages)}</div>` : ''}
+        </div>`;
     } else {
       el.chainBanner.innerHTML = `
         <div class="chain-banner-head">
           <span class="chain-banner-title">${esc(ch.title)}</span>
-          <button type="button" class="pill-btn ghost" data-clear-chain>退出母题链</button>
+          <div style="display:flex;gap:4px;flex-shrink:0;">
+            <button type="button" class="pill-btn" data-toggle-chain-body>${toggleTxt}</button>
+            <button type="button" class="pill-btn ghost" data-clear-chain>退出</button>
+          </div>
         </div>
-        <div class="chain-banner-desc">${esc(ch.exam || '')} · ${safeMark(ch.summary || '')}</div>`;
+        <div class="chain-banner-body">
+          <div class="chain-banner-desc">${esc(ch.exam || '')} · ${safeMark(ch.summary || '')}</div>
+        </div>`;
     }
   }
 
@@ -719,8 +732,8 @@
             <h2 class="era-name">${esc(p.name)}</h2>
             <span class="era-range">${esc(eraRange)}</span>
           </div>
-          <p class="era-bg">${esc(eraBg)}</p>
         </div>
+        <p class="era-bg-block">${esc(eraBg)}</p>
         <div class="era-nodes">`;
 
       items.forEach(n => {
@@ -1205,16 +1218,23 @@
   el.btnCloseDrawer.addEventListener('click', closeDrawer);
   el.modalBackdrop.addEventListener('click', closeDrawer);
 
-  el.btnMinimapCollapse.addEventListener('click', () => {
-    appState.minimapCollapsed = !appState.minimapCollapsed;
-    el.minimapWrap.classList.toggle('collapsed', appState.minimapCollapsed);
-  });
+  const minimapHead = el.minimapWrap.querySelector('.minimap-head');
+  if (minimapHead) {
+    minimapHead.addEventListener('click', () => {
+      appState.minimapCollapsed = !appState.minimapCollapsed;
+      el.minimapWrap.classList.toggle('collapsed', appState.minimapCollapsed);
+    });
+  }
 
   el.minimapTrack.addEventListener('click', e => {
     const btn = e.target.closest('[data-jump-era]');
     if (!btn) return;
     const target = document.getElementById('era-' + btn.dataset.jumpEra);
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (isPhone()) {
+      appState.minimapCollapsed = true;
+      el.minimapWrap.classList.add('collapsed');
+    }
   });
 
   el.btnToggleFocusOnly.addEventListener('click', () => {
@@ -1247,6 +1267,9 @@
     if (e.target.closest('[data-clear-chain]')) {
       S().chainId = null;
       renderAll();
+    } else if (e.target.closest('[data-toggle-chain-body]')) {
+      appState.chainCollapsed = !appState.chainCollapsed;
+      renderChainBanner();
     }
   });
 

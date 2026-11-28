@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lit-timeline-20261128-213753';
+const CACHE_NAME = 'lit-timeline-20261128-214834';
 const ASSETS = [
   './',
   './index.html',
